@@ -10,7 +10,6 @@ Run the following commands in the project directory where you want _transforms_ 
 
 ```
 remote add -f transforms git@github.com:commoncriteria/transforms.git
-git merge -s ours --no-commit transforms
 git merge -s ours --no-commit transforms/master
 git read-tree --prefix=transforms/ -u transforms/master
 git commit -m "Transforms subtree merged into test"
