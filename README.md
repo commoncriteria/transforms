@@ -21,6 +21,8 @@ To pull changes from the transform project
 git pull -s subtree transforms master
 ```
 
+* We've had problems using the squash (-s) option, so use it at your own peril.
+
 ### Pushing new updates to transforms
 Run inside the parent project, but outside the subtree.
 
