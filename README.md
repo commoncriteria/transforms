@@ -10,16 +10,22 @@ Run the following commands in the project directory where you want _transforms_ 
 
 ```
 git remote add -f transforms git@github.com:commoncriteria/transforms.git
-git merge -s ours --no-commit transforms/master
-git read-tree --prefix=transforms/ -u transforms/master
+git subtree add --prefix=transforms/ transforms master
 git commit -m "Transforms subtree merged into test"
 ```
 
-### Updating
+### Pulling new updates from transforms
 
 To pull changes from the transform project
 ```
 git pull -s subtree transforms master
+```
+
+### Pushing new updates to transforms
+Run inside the parent project, but outside the subtree.
+
+```
+git subtree push --prefix transforms transforms master
 ```
 
 These commands were adapted from a
