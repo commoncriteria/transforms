@@ -24,5 +24,4 @@ git pull -s subtree transforms master
 
 These commands were adapted from a
 [github subtree tutorial](https://help.github.com/articles/about-git-subtree-merges/#adding-a-new-repository-as-a-subtree)
-
-
+.
