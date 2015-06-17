@@ -596,12 +596,12 @@
 	<xsl:if test="$appendicize!='on'">
 	  <div class="statustag">
           <p/><i><b> This is an objective requirement.
-	<xsl:if test="../@targetdate">It is scheduled to be mandatory for applications entering evaluation after <xsl:value-of select="../@targetdate"/> .</xsl:if></b></i>
+	<xsl:if test="../@targetdate">It is scheduled to be mandatory for products entering evaluation after <xsl:value-of select="../@targetdate"/> .</xsl:if></b></i>
 	  </div>
 	</xsl:if>
 	<xsl:if test="$appendicize='on' and ../@targetdate">
 	  <div class="statustag">
-          <p/><i><b> This requirement is scheduled to be mandatory for applications entering evaluations after <xsl:value-of select="../@targetdate"/>.</b></i>
+          <p/><i><b> This requirement is scheduled to be mandatory for products entering evaluations after <xsl:value-of select="../@targetdate"/>.</b></i>
 	  </div>
 	</xsl:if>
     </xsl:if>
