@@ -160,7 +160,7 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 			Criteria evaluation, facilitated in the U.S. by the National Information
 			Assurance Partnership (NIAP), is required for IA and IA-enabled products in
 			National Security Systems according to CNSS Policy #11. 
-			This representation of the Protection Profile includes:
+			<b>Using this document.</b> This representation of the Protection Profile includes:
 			<ul> 
 			<li><a href="#SFRs"><i>Security Functional Requirements</i></a> for use in evaluation.  These are featured without the formal
 			Assurance Activities specified in the Protection Profile, to assist the reader who is interested only in the requirements.
@@ -181,6 +181,15 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 			</ul>
 			<p/>
+			<xsl:if test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+			In addition to providing these security requirements for vetting
+			apps, this document provides a basis for discussion and consideration
+			of the vetting provided by commercially-available app stores.  
+			This document does not imply to Authorizing Officials that the vetting provided by 
+			commercially-available app stores is either adequate or inadequate for the context in which they
+			must weigh risks.  Rather, it is intended to help inform and support decision-making with regard to
+			investment in app vetting processes.
+			</xsl:if>
 			<p/>
 		</div>
 			<br/>
