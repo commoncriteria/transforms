@@ -160,7 +160,9 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 			Criteria evaluation, facilitated in the U.S. by the National Information
 			Assurance Partnership (NIAP), is required for IA and IA-enabled products in
 			National Security Systems according to CNSS Policy #11. 
+			<p></p>			
 			<b>Using this document.</b> This representation of the Protection Profile includes:
+			<p></p>
 			<ul> 
 			<li><a href="#SFRs"><i>Security Functional Requirements</i></a> for use in evaluation.  These are featured without the formal
 			Assurance Activities specified in the Protection Profile, to assist the reader who is interested only in the requirements.
