@@ -435,18 +435,10 @@
 	  Addressed by: 
 	  <span class="SOlist"> 
 	    <xsl:for-each select="cc:component-refer">
-	      <xsl:variable name="referId" select="@ref" />
-	      <xsl:if test="not(//*[@id=$referId])">
-		<xsl:message> Missing target for component-refer with id:<xsl:value-of select="$referId"/>
-		</xsl:message>
-	      </xsl:if>
-	      <xsl:element name="a"> <!-- Add a link to the actual section -->
-		<xsl:attribute name="href">
-		  <xsl:text>#</xsl:text>
-		  <xsl:value-of select="translate(@ref,$lower,$upper)" />
-		</xsl:attribute>
-		<xsl:value-of select="translate(@ref,$lower,$upper)" />
-	      </xsl:element>
+	      <xsl:variable name='capped-req'><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
+	      <xsl:call-template name='req-refs'>
+		<xsl:with-param name="req" select="@ref"/>
+	      </xsl:call-template>
 	      <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> <!-- If it's not the last, put a comma-->
 	    </xsl:for-each> 
 	  </span>
@@ -547,6 +539,17 @@
 
   <xsl:template name="component-template">
     <xsl:param name="selected-statuses"/>
+    <!-- 
+	 Set id-suffix to "" "_objective_" "_optional_" "_sel-based_" 
+	 based on what it is (or "" if not appendicizing).
+    -->
+    <xsl:variable name="id-suffix">
+      <xsl:choose>
+	<xsl:when test="$appendicize!='on'"/>
+	<xsl:when test="$selected-statuses='__'"/>
+	<xsl:otherwise><xsl:value-of select="$selected-statuses"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <!-- If we're not appendicizing or status is normal. Include-->
     <xsl:if test="count(./*[contains($selected-statuses, concat('_', concat(@status, '_')))])>0">
       <xsl:variable name="family" select="substring(@id,1,7)" />
@@ -555,7 +558,7 @@
       <!-- Make an anchor here -->
       <xsl:element name="div">
 	<xsl:attribute name="class">comp</xsl:attribute>
-	<xsl:attribute name="id"><xsl:value-of select="translate(@id, $lower, $upper)"/><xsl:if test="$selected-statuses='_objective_'">-objective</xsl:if><xsl:if test="$selected-statuses='_optional_'">-optional</xsl:if></xsl:attribute>
+	<xsl:attribute name="id"><xsl:value-of select="translate(@id, $lower, $upper)"/><xsl:value-of select="$id-suffix"/></xsl:attribute>
 	<h4>
 	  <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')" />
 	  <xsl:value-of select="@name" />
@@ -809,19 +812,10 @@
   </xsl:template>
 
   <xsl:template match="cc:linkref">
-<!--
-    <xsl:variable name="linkId" select="@linkend" />
-    <xsl:if test="not(//*[@id=$linkId])">
-      <xsl:message> Missing target for component-refer with id:<xsl:value-of select="$linkId"/>
-      </xsl:message>
-    </xsl:if>
--->
-    <xsl:variable name="linkend" select="@linkend" />
-    <a class="linkref" href="#{$linkend}"><xsl:value-of select="$linkend" /></a>
-
-
-
-
+    <xsl:call-template name="req-refs">
+      <xsl:with-param name="class">linkref</xsl:with-param>
+      <xsl:with-param name="req"><xsl:value-of select="translate(@linkend, $upper, $lower)" /></xsl:with-param>
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="cc:secref">
@@ -904,6 +898,31 @@
     </span>
   </xsl:template>
 
+  <xsl:template name="req-refs">
+    <xsl:param name="class"/>
+    <xsl:param name="req"/>
+    <xsl:variable name="req-anchor">
+      <xsl:choose>
+	<xsl:when test="$appendicize!='on'"/>
+	<xsl:when test="//*[@id=$req and not(@status)]"/>
+	<xsl:when test="//*[@id=$req and @status='sel-based']">_sel-based_</xsl:when>
+	<xsl:when test="//*[@id=$req and @status='objective']">_objective_</xsl:when>
+	<xsl:when test="//*[@id=$req and @status='optional']">_optional_</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message>
+    	    Broken linked element at <xsl:value-of select="$req"/>
+	  </xsl:message>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name='capped-req'><xsl:value-of select="translate(@ref,$lower,$upper)" /></xsl:variable>
+    <xsl:element name="a">
+      <xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
+      <xsl:attribute name="href">#<xsl:value-of select="concat($capped-req,$req-anchor)"/></xsl:attribute>
+      <xsl:value-of select="$capped-req"/>
+    </xsl:element>
 
+
+  </xsl:template>
 
 </xsl:stylesheet>
