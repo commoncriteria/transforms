@@ -915,7 +915,7 @@
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name='capped-req'><xsl:value-of select="translate(@ref,$lower,$upper)" /></xsl:variable>
+    <xsl:variable name='capped-req'><xsl:value-of select="translate($req,$lower,$upper)" /></xsl:variable>
     <xsl:element name="a">
       <xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
       <xsl:attribute name="href">#<xsl:value-of select="concat($capped-req,$req-anchor)"/></xsl:attribute>
