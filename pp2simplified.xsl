@@ -115,13 +115,31 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
     	</style>
 
 		<head>
-			<title>Requirements from the <i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i></title>
+			<xsl:choose>
+				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+					<title>Requirements for Vetting Mobile Apps from the Protection Profile for Application Software</title>
+				</xsl:when>
+				<xsl:otherwise>
+					<title>Requirements from the <i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i></title>
+				</xsl:otherwise>
+			</xsl:choose>
 		</head>
 		<body>
-		<h1 class="title">
-			Requirements from the
-			<br/><i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>
-		</h1>
+			<xsl:choose>
+				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+					<h1 class="title">
+						Requirements for Vetting Mobile Apps from the
+						<br/><i>Protection Profile for Application Software</i>
+					</h1>
+				</xsl:when>
+				<xsl:otherwise>
+					<h1 class="title">
+						Requirements from the
+						<br/><i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>
+					</h1>
+				</xsl:otherwise>
+			</xsl:choose>
+		
 		<div class="center">
 			<img src="images/niaplogo.png" />
 			<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion" />
@@ -153,13 +171,29 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 		</div>
 		<h2>Introduction</h2>
 		<div class="intro">
-			<b>Purpose.</b> This document presents simplified view of the functional and
-			assurance requirements found in the 
-			<i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>.
-			Common
-			Criteria evaluation, facilitated in the U.S. by the National Information
-			Assurance Partnership (NIAP), is required for IA and IA-enabled products in
-			National Security Systems according to CNSS Policy #11. 
+			<xsl:choose>
+				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+					<b>Purpose.</b> This document presents functional and assurance requirements 
+					found in the <i>Protection Profile for Application Software</i> which are 
+					appropriate for vetting mobile application software	("apps") <b>outside</b> 
+					formal Common Criteria (ISO/IEC 15408) evaluations.  Common Criteria evaluation, 
+					facilitated in the U.S. by the National Information Assurance Partnership 
+					(NIAP), is required for IA and IA-enabled products in National Security Systems 
+					according to CNSS Policy #11. Such evaluations, including those for mobile apps, 
+					must use the complete Protection Profile.  However, even apps without IA 
+					functionality may impose some security risks, and concern about these risks has 
+					motivated the vetting of such apps in government and industry.
+				</xsl:when>
+				<xsl:otherwise>
+					<b>Purpose.</b> This document presents simplified view of the functional and
+					assurance requirements found in the 
+					<i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>.
+					Common Criteria evaluation, facilitated in the U.S. by the National Information
+					Assurance Partnership (NIAP), is required for IA and IA-enabled products in
+					National Security Systems according to CNSS Policy #11.
+				</xsl:otherwise>
+			</xsl:choose>
+			 
 			<p></p>			
 			<b>Using this document.</b> This representation of the Protection Profile includes:
 			<p></p>
@@ -208,7 +242,14 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 				Security Assurance Requirements
 			</div>
 			<table>
-			<xsl:apply-templates select="//cc:a-element"/>
+				<xsl:choose>
+				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+					<xsl:apply-templates select="//cc:a-element[@id='alc_cmc.1.1c' or @id='ate_ind.1.2e' or @id='ava_van.1.1c' or @id='ava_van.1.2e']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="//cc:a-element"/>
+				</xsl:otherwise>
+			</xsl:choose>
 			</table>
 	
 			<div class="tabletitle" id="selbasedSFRs">
