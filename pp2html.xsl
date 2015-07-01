@@ -900,6 +900,11 @@
     <xsl:variable name="req-anchor">
       <xsl:choose>
 	<xsl:when test="$appendicize!='on'"/>
+	<!-- 
+	     Elements, whether selectable or not, never get the 
+	     suffix in the 'id' attribute in their resulting element 
+	-->
+	<xsl:when test="//cc:f-element[@id=$req]|//cc:a-element[@id=$req]"/>
 	<xsl:when test="//*[@id=$req and not(@status)]"/>
 	<xsl:when test="//*[@id=$req and @status='sel-based']">_sel-based_</xsl:when>
 	<xsl:when test="//*[@id=$req and @status='objective']">_objective_</xsl:when>
