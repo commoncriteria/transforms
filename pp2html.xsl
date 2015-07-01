@@ -801,13 +801,10 @@
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
   <xsl:template match="cc:xref">
-    <xsl:variable name="linkend" select="@linkend" />
+    <xsl:variable name="needle"> <xsl:value-of select="@linkend" /></xsl:variable>
     <xsl:element name="a">
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend" />
-      </xsl:attribute>
-      <xsl:value-of select="//*[@id=$linkend]/@title" />
+      <xsl:attribute name="href">#<xsl:value-of select="$needle" /></xsl:attribute>
+      <xsl:value-of select="//*[@id=$needle]/@title" />
     </xsl:element>
   </xsl:template>
 
@@ -819,14 +816,13 @@
   </xsl:template>
 
   <xsl:template match="cc:secref">
-    <xsl:variable name="linkend" select="@linkend" />
     <xsl:element name="a">
       <xsl:attribute name="href">
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend" />
+        <xsl:value-of select="@linkend" />
       </xsl:attribute>
       Section 
-		<xsl:apply-templates select="//cc:chapter" mode="secreflookup"><xsl:with-param name="linkend" select="$linkend" /></xsl:apply-templates></xsl:element>
+    <xsl:apply-templates select="//cc:chapter" mode="secreflookup"><xsl:with-param name="linkend" select="@linkend" /></xsl:apply-templates></xsl:element>
   </xsl:template>
 
 
