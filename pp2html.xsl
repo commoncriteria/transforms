@@ -11,7 +11,6 @@
   <!-- release variable, overridden to "final" for release versions -->
   <xsl:param name="release" select="'draft'"/>
 
-
   <xsl:param name="appendicize" select="''"/>
 
 
@@ -22,11 +21,8 @@
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
-
-
+  
   <xsl:template match="/cc:PP">
-    <xsl:apply-templates select="//cc:inline-comment" />
-
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
         <script type="text/javascript">
@@ -212,8 +208,6 @@
                 <xsl:value-of select="cc:subject" />
               </td>
             </tr>
-	    <xsl:text>
-	    </xsl:text>
           </xsl:for-each>
         </table>
         <h2>Contents</h2>
@@ -289,8 +283,6 @@
             <xsl:apply-templates select="cc:description" />
           </td>
         </tr>
-	<xsl:text>
-	</xsl:text>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -307,8 +299,6 @@
         <th>Identifier</th>
         <th>Title</th>
       </tr>
-      <xsl:text>
-      </xsl:text>
       <xsl:for-each select="cc:entry">
         <tr>
           <td>
@@ -323,9 +313,6 @@
             <xsl:apply-templates select="cc:description" />
           </td>
         </tr>
-	<xsl:text>
-	</xsl:text>
-
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -345,8 +332,6 @@
             <xsl:apply-templates select="cc:description" />
           </td>
         </tr>
-	<xsl:text>
-	</xsl:text>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -486,8 +471,6 @@
             </xsl:for-each>
           </td>
         </tr>
-	<xsl:text>
-	</xsl:text>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -498,8 +481,6 @@
         <td>SFR ID</td>
         <td>NIST SP 800-53 Controls</td>
       </tr>
-      <xsl:text>
-      </xsl:text>
       <xsl:for-each select="(//cc:f-element)">
         <tr>
           <td>
@@ -514,8 +495,6 @@
             </xsl:for-each>
           </td>
         </tr>
-	<xsl:text>
-	</xsl:text>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -622,12 +601,19 @@
 	</xsl:if>
 
 	<xsl:for-each select="../cc:selection-depends">
-          <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" />
-          <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a>
-	  <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
+	  <b><i>
+	    <xsl:variable name='capped-req'><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
+	    <xsl:call-template name='req-refs'>
+	      <xsl:with-param name="req" select="@req"/>
+	    </xsl:call-template>
+	    <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> <!-- If it's not the last, put a comma-->
+            <!-- <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" /> -->
+            <!-- <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a> -->
+	    <!-- <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> -->
+	  </i></b>
 	  </xsl:for-each>.
 	</i></b>
-      </div>
+	</div>
     </xsl:if>
     
 
@@ -635,7 +621,7 @@
     <xsl:if test="$appendicize!='on'">
       <xsl:if test="../@status='optional'">
 	<div class="statustag">
-          <p/><i><b>This is an optional requirement.</b></i>
+          <p/><i><b>This is an optional requirement.  It may be required by Extended Packages of this Protection Profile.</b></i>
 	</div>
       </xsl:if>
 
@@ -801,10 +787,13 @@
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
   <xsl:template match="cc:xref">
-    <xsl:variable name="needle"> <xsl:value-of select="@linkend" /></xsl:variable>
+    <xsl:variable name="linkend" select="@linkend" />
     <xsl:element name="a">
-      <xsl:attribute name="href">#<xsl:value-of select="$needle" /></xsl:attribute>
-      <xsl:value-of select="//*[@id=$needle]/@title" />
+      <xsl:attribute name="href">
+        <xsl:text>#</xsl:text>
+        <xsl:value-of select="$linkend" />
+      </xsl:attribute>
+      <xsl:value-of select="//*[@id=$linkend]/@title" />
     </xsl:element>
   </xsl:template>
 
@@ -816,13 +805,14 @@
   </xsl:template>
 
   <xsl:template match="cc:secref">
+    <xsl:variable name="linkend" select="@linkend" />
     <xsl:element name="a">
       <xsl:attribute name="href">
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="@linkend" />
+        <xsl:value-of select="$linkend" />
       </xsl:attribute>
       Section 
-    <xsl:apply-templates select="//cc:chapter" mode="secreflookup"><xsl:with-param name="linkend" select="@linkend" /></xsl:apply-templates></xsl:element>
+    <xsl:apply-templates select="//cc:chapter" mode="secreflookup"><xsl:with-param name="linkend" select="$linkend" /></xsl:apply-templates></xsl:element>
   </xsl:template>
 
 
@@ -900,6 +890,11 @@
     <xsl:variable name="req-anchor">
       <xsl:choose>
 	<xsl:when test="$appendicize!='on'"/>
+	<!-- 
+	     Elements, whether selectable or not, never get the 
+	     suffix in the 'id' attribute in their resulting element 
+	-->
+	<xsl:when test="//cc:f-element[@id=$req]|//cc:a-element[@id=$req]"/>
 	<xsl:when test="//*[@id=$req and not(@status)]"/>
 	<xsl:when test="//*[@id=$req and @status='sel-based']">_sel-based_</xsl:when>
 	<xsl:when test="//*[@id=$req and @status='objective']">_objective_</xsl:when>
