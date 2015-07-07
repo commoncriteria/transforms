@@ -887,6 +887,8 @@
   <xsl:template name="req-refs">
     <xsl:param name="class"/>
     <xsl:param name="req"/>
+    <!--lower req-->
+    <xsl:variable name="lreq"><xsl:value-of select="translate($req,$upper,$lower)" /></xsl:variable>
     <xsl:variable name="req-anchor">
       <xsl:choose>
 	<xsl:when test="$appendicize!='on'"/>
@@ -894,19 +896,19 @@
 	     Elements, whether selectable or not, never get the 
 	     suffix in the 'id' attribute in their resulting element 
 	-->
-	<xsl:when test="//cc:f-element[@id=$req]|//cc:a-element[@id=$req]"/>
-	<xsl:when test="//*[@id=$req and not(@status)]"/>
-	<xsl:when test="//*[@id=$req and @status='sel-based']">_sel-based_</xsl:when>
-	<xsl:when test="//*[@id=$req and @status='objective']">_objective_</xsl:when>
-	<xsl:when test="//*[@id=$req and @status='optional']">_optional_</xsl:when>
+	<xsl:when test="//cc:f-element[@id=$lreq]|//cc:a-element[@id=$lreq]"/>
+	<xsl:when test="//*[@id=$lreq and not(@status)]"/>
+	<xsl:when test="//*[@id=$lreq and @status='sel-based']">_sel-based_</xsl:when>
+	<xsl:when test="//*[@id=$lreq and @status='objective']">_objective_</xsl:when>
+	<xsl:when test="//*[@id=$lreq and @status='optional']">_optional_</xsl:when>
 	<xsl:otherwise>
 	  <xsl:message>
-    	    Broken linked element at <xsl:value-of select="$req"/>
+    	    Broken linked element at <xsl:value-of select="$lreq"/>
 	  </xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name='capped-req'><xsl:value-of select="translate($req,$lower,$upper)" /></xsl:variable>
+    <xsl:variable name='capped-req'><xsl:value-of select="translate($lreq,$lower,$upper)"/></xsl:variable>
     <xsl:element name="a">
       <xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
       <xsl:attribute name="href">#<xsl:value-of select="concat($capped-req,$req-anchor)"/></xsl:attribute>
