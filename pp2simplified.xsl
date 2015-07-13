@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<xsl:stylesheet version="1.0" 
-xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-xmlns:cc="http://common-criteria.rhcloud.com/ns/cc"
-xmlns:dc="http://purl.org/dc/elements/1.1/" 
-xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:cc="http://common-criteria.rhcloud.com/ns/cc" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-<!-- This style sheet takes as input a Protection Profile expressed in XML and
+	<!-- This style sheet takes as input a Protection Profile expressed in XML and
 	outputs a table of the SFRs and SARs. -->
-	
 
-  <!-- Put all common templates into ProtectionProfileCommons -->
-  <!-- They can be redefined/overridden  -->
-  <xsl:include href="ppcommons.xsl"/>
 
-  <!-- release variable, overridden to "final" for release versions -->
-  <xsl:param name="release" select="'draft'"/>
+	<!-- Put all common templates into ProtectionProfileCommons -->
+	<!-- They can be redefined/overridden  -->
+	<xsl:include href="ppcommons.xsl"/>
 
-  <!-- very important, for special characters and umlauts iso8859-1-->
-  <xsl:output method="html" encoding="UTF-8" indent="yes" />
+	<!-- release variable, overridden to "final" for release versions -->
+	<xsl:param name="release" select="'draft'"/>
 
-  <xsl:template match="/cc:PP">
-    <html>
-      <style type="text/css">
+	<!-- very important, for special characters and umlauts iso8859-1-->
+	<xsl:output method="html" encoding="UTF-8" indent="yes"/>
+
+	<xsl:template match="/cc:PP">
+		<html>
+			<style type="text/css">
 		h1   { text-align: left; font-size: 200%;  margin-top: 2em; margin-bottom: 2em;
              font-family: verdana, arial, helvetica, sans-serif;
              margin-bottom: 1.0em; }
@@ -114,203 +112,223 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
     	</style>
 
-		<head>
-			<xsl:choose>
-				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-					<title>Requirements for Vetting Mobile Apps from the Protection Profile for Application Software</title>
-				</xsl:when>
-				<xsl:otherwise>
-					<title>Requirements from the <i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i></title>
-				</xsl:otherwise>
-			</xsl:choose>
-		</head>
-		<body>
-			<xsl:choose>
-				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-					<h1 class="title">
-						Requirements for Vetting Mobile Apps from the
-						<br/><i>Protection Profile for Application Software</i>
-					</h1>
-				</xsl:when>
-				<xsl:otherwise>
-					<h1 class="title">
-						Requirements from the
-						<br/><i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>
-					</h1>
-				</xsl:otherwise>
-			</xsl:choose>
-		
-		<div class="center">
-			<img src="images/niaplogo.png" />
-			<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion" />
-			<p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate" />
-			<p/><b><xsl:value-of select="//cc:PPAuthor" /></b>
-		</div>
-		<h2>Revision History</h2>
-		<div class="center">
-			<table class="revisionhistory">
-				<tr class="header">
-					<th>Version</th>
-					<th>Date</th>
-					<th>Comment</th>
-				</tr>
-				<xsl:for-each select="cc:RevisionHistory[@role=$release]/cc:entry">
-					<tr>
-					<td>
-					<xsl:value-of select="cc:version" />
-					</td>
-					<td>
-					<xsl:value-of select="cc:date" />
-					</td>
-					<td>
-					<xsl:value-of select="cc:subject" />
-					</td>
-					</tr>
-				</xsl:for-each>
-			</table>
-		</div>
-		<h2>Introduction</h2>
-		<div class="intro">
-			<xsl:choose>
-				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-					<b>Purpose.</b> This document presents functional and assurance requirements 
-					found in the <i>Protection Profile for Application Software</i> which are 
-					appropriate for vetting mobile application software	("apps") <b>outside</b> 
-					formal Common Criteria (ISO/IEC 15408) evaluations.  Common Criteria evaluation, 
-					facilitated in the U.S. by the National Information Assurance Partnership 
-					(NIAP), is required for IA and IA-enabled products in National Security Systems 
-					according to CNSS Policy #11. Such evaluations, including those for mobile apps, 
-					must use the complete Protection Profile.  However, even apps without IA 
-					functionality may impose some security risks, and concern about these risks has 
-					motivated the vetting of such apps in government and industry.
-				</xsl:when>
-				<xsl:otherwise>
-					<b>Purpose.</b> This document presents simplified view of the functional and
-					assurance requirements found in the 
-					<i><xsl:apply-templates select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>.
-					Common Criteria evaluation, facilitated in the U.S. by the National Information
-					Assurance Partnership (NIAP), is required for IA and IA-enabled products in
-					National Security Systems according to CNSS Policy #11.
-				</xsl:otherwise>
-			</xsl:choose>
-			 
-			<p></p>			
-			<b>Using this document.</b> This representation of the Protection Profile includes:
-			<p></p>
-			<ul> 
-			<li><a href="#SFRs"><i>Security Functional Requirements</i></a> for use in evaluation.  These are featured without the formal
-			Assurance Activities specified in the Protection Profile, to assist the reader who is interested only in the requirements.
-			<p/> It also includes, in
-			tables shown later, particular types of security functional requirements that are not strictly required in all cases.
-			These are:</li>
-			<p/>
-				<ul>
-				<li><a href="#selbasedSFRs"><i>Selection-based Security Functional Requirements</i></a> which become required when certain selections are made inside the regular
-				Security Functionality Requirements (as indicated by the <b>[selection:]</b> construct).</li>
-				<li><a href="#objSFRs"><i>Objective Security Functional Requirements</i></a> which are highly desired but not yet widely-available in commercial technology.</li>
-				<li><a href="#optSFRs"><i>Optional Security Functional Requirements</i></a> which are available for evaluation and which some customers may insist upon.</li>
-				</ul>
-			
-			<p/>
-			<li><a href="#SARs"><i>Security Assurance Requirements</i></a> which relate to developer support for the product under evaluation,
-			development processes, and other non-functionality security relevant requirements.</li>
-
-			</ul>
-			<p/>
-			<xsl:if test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-			In addition to providing these security requirements for vetting
-			apps, this document provides a basis for discussion and consideration
-			of the vetting provided by commercially-available app stores.  
-			This document does not imply to Authorizing Officials that the vetting provided by 
-			commercially-available app stores is either adequate or inadequate for the context in which they
-			must weigh risks.  Rather, it is intended to help inform and support decision-making with regard to
-			investment in app vetting processes.
-			</xsl:if>
-			<p/>
-		</div>
-			<br/>
-
-			<div class="tabletitle" id="SFRs">
-				Security Functional Requirements
-			</div>
-			<table>
-			<xsl:apply-templates select="//cc:f-element[not(@status)]"/>
-			</table>
-			<!-- <xsl:apply-templates select="//cc:f-component[not(@status='sel-based')]"/> -->
-
-			<div class="tabletitle" id="SARs">
-				Security Assurance Requirements
-			</div>
-			<table>
+			<head>
 				<xsl:choose>
-				<xsl:when test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-					<xsl:apply-templates select="//cc:a-element[@id='alc_cmc.1.1c' or @id='ate_ind.1.2e' or @id='ava_van.1.1c' or @id='ava_van.1.2e']"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="//cc:a-element"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			</table>
-	
-			<div class="tabletitle" id="selbasedSFRs">
-				Selection-Based Security Functional Requirements
-			</div>
-			<table>
-			<xsl:apply-templates select="//cc:f-element[@status='sel-based']"/>
-			</table>
+					<xsl:when
+						test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+						<title>Requirements for Vetting Mobile Apps from the Protection Profile for
+							Application Software</title>
+					</xsl:when>
+					<xsl:otherwise>
+						<title>Requirements from the <i><xsl:apply-templates
+									select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"
+							/></i></title>
+					</xsl:otherwise>
+				</xsl:choose>
+			</head>
+			<body>
+				<xsl:choose>
+					<xsl:when
+						test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+						<h1 class="title"> Requirements for Vetting Mobile Apps from the
+								<br/><i>Protection Profile for Application Software</i>
+						</h1>
+					</xsl:when>
+					<xsl:otherwise>
+						<h1 class="title"> Requirements from the <br/><i><xsl:apply-templates
+									select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>
+						</h1>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<div class="center">
+					<img src="images/niaplogo.png"/>
+					<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+					<p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
+					<p/><b><xsl:value-of select="//cc:PPAuthor"/></b>
+				</div>
+				<h2>Revision History</h2>
+				<div class="center">
+					<table class="revisionhistory">
+						<tr class="header">
+							<th>Version</th>
+							<th>Date</th>
+							<th>Comment</th>
+						</tr>
+						<xsl:for-each select="cc:RevisionHistory[@role=$release]/cc:entry">
+							<tr>
+								<td>
+									<xsl:value-of select="cc:version"/>
+								</td>
+								<td>
+									<xsl:value-of select="cc:date"/>
+								</td>
+								<td>
+									<xsl:value-of select="cc:subject"/>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</table>
+				</div>
+				<h2>Introduction</h2>
+				<div class="intro">
+					<xsl:choose>
+						<xsl:when
+							test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+							<b>Purpose.</b> This document presents functional and assurance
+							requirements found in the <i>Protection Profile for Application
+								Software</i> which are appropriate for vetting mobile application
+							software ("apps") <b>outside</b> formal Common Criteria (ISO/IEC 15408)
+							evaluations. Common Criteria evaluation, facilitated in the U.S. by the
+							National Information Assurance Partnership (NIAP), is required for IA
+							and IA-enabled products in National Security Systems according to CNSS
+							Policy #11. Such evaluations, including those for mobile apps, must use
+							the complete Protection Profile. However, even apps without IA
+							functionality may impose some security risks, and concern about these
+							risks has motivated the vetting of such apps in government and industry. </xsl:when>
+						<xsl:otherwise>
+							<b>Purpose.</b> This document presents simplified view of the functional
+							and assurance requirements found in the <i><xsl:apply-templates
+									select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>.
+							Common Criteria evaluation, facilitated in the U.S. by the National
+							Information Assurance Partnership (NIAP), is required for IA and
+							IA-enabled products in National Security Systems according to CNSS
+							Policy #11. </xsl:otherwise>
+					</xsl:choose>
+					<p/>
+					<b>Using this document.</b> This representation of the Protection Profile
+					includes: <p/>
+					<ul>
+						<li><a href="#SFRs"><i>Security Functional Requirements</i></a> for use in
+							evaluation. These are featured without the formal Assurance Activities
+							specified in the Protection Profile, to assist the reader who is
+							interested only in the requirements. <p/> It also includes, in tables
+							shown later, particular types of security functional requirements that
+							are not strictly required in all cases. These are:</li>
+						<p/>
+						<ul>
+							<li><a href="#selbasedSFRs"><i>Selection-based Security Functional
+										Requirements</i></a> which become required when certain
+								selections are made inside the regular Security Functionality
+								Requirements (as indicated by the <b>[selection:]</b>
+								construct).</li>
+							<li><a href="#objSFRs"><i>Objective Security Functional
+									Requirements</i></a> which are highly desired but not yet
+								widely-available in commercial technology.</li>
+							<li><a href="#optSFRs"><i>Optional Security Functional
+									Requirements</i></a> which are available for evaluation and
+								which some customers may insist upon.</li>
+						</ul> <p/>
+						<li><a href="#SARs"><i>Security Assurance Requirements</i></a> which relate
+							to developer support for the product under evaluation, development
+							processes, and other non-functionality security relevant
+							requirements.</li> </ul>
+					<p/>
+					<xsl:if
+						test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'"
+						> In addition to providing these security requirements for vetting apps,
+						this document provides a basis for discussion and consideration of the
+						vetting provided by commercially-available app stores. This document does
+						not imply to Authorizing Officials that the vetting provided by
+						commercially-available app stores is either adequate or inadequate for the
+						context in which they must weigh risks. Rather, it is intended to help
+						inform and support decision-making with regard to investment in app vetting
+						processes. </xsl:if>
+					<p/>
+				</div>
+				<br/>
+
+				<div class="tabletitle" id="SFRs"> Security Functional Requirements </div>
+				<table>
+					<xsl:apply-templates select="//cc:f-element[not(@status)]"/>
+				</table>
+				<!-- <xsl:apply-templates select="//cc:f-component[not(@status='sel-based')]"/> -->
+
+				<div class="tabletitle" id="SARs"> Security Assurance Requirements </div>
+				<table>
+					<xsl:choose>
+						<xsl:when
+							test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
+							<xsl:apply-templates
+								select="//cc:a-element[@id='alc_cmc.1.1c' or @id='ate_ind.1.2e' or @id='ava_van.1.1c' or @id='ava_van.1.2e']"
+							/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="//cc:a-element"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</table>
+
+				<div class="tabletitle" id="selbasedSFRs"> Selection-Based Security Functional
+					Requirements </div>
+				<table>
+					<xsl:apply-templates select="//cc:f-element[@status='sel-based']"/>
+				</table>
 
 
-			<div class="tabletitle" id="objSFRs">
-				Objective Security Functional Requirements
-			</div>
-			<table>
-			<xsl:apply-templates select="//cc:f-element[@status='objective']"/>
-			</table>
+				<div class="tabletitle" id="objSFRs"> Objective Security Functional Requirements </div>
+				<table>
+					<xsl:apply-templates select="//cc:f-element[@status='objective']"/>
+				</table>
 
-			<div class="tabletitle" id="optSFRs">
-				Optional Security Functional Requirements
-			</div>
-			<table>
-			<xsl:apply-templates select="//cc:f-element[@status='optional']"/>
-			</table>
+				<div class="tabletitle" id="optSFRs"> Optional Security Functional Requirements </div>
+				<table>
+					<xsl:apply-templates select="//cc:f-element[@status='optional']"/>
+				</table>
 
-		</body>
+			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template match="cc:f-component | cc:a-component">
-		<xsl:variable name="componentid" select="translate(@id,$lower,$upper)" />	
-		<div id="{$componentid}" class="componenttitle"><a class="abbr" href="#{$componentid}"><xsl:value-of select="@name"/></a></div>
+		<xsl:variable name="componentid" select="translate(@id,$lower,$upper)"/>
+		<div id="{$componentid}" class="componenttitle">
+			<a class="abbr" href="#{$componentid}">
+				<xsl:value-of select="@name"/>
+			</a>
+		</div>
 		<table>
-		<xsl:apply-templates select=".//cc:f-element | .//cc:a-element"/>
+			<xsl:apply-templates select=".//cc:f-element | .//cc:a-element"/>
 		</table>
 	</xsl:template>
 
 	<xsl:template match="cc:f-element | cc:a-element">
-		<xsl:variable name="elementid" select="translate(@id,$lower,$upper)" />	
-		<xsl:variable name="componentid" select="translate(../@id,$lower,$upper)" />	
+		<xsl:variable name="elementid" select="translate(@id,$lower,$upper)"/>
+		<xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
 		<!-- this will result in duplicate IDs for TRs (as link targets), but this does not create a problem in practice -->
 		<tr id="{$componentid}">
-		    <td id="{$elementid}" class="elementidstyle"><a class="abbr" href="#{$elementid}"><xsl:value-of select="$elementid"/></a></td>
-			<td class="element"><xsl:apply-templates select="cc:title"/><br/>
-				 <xsl:choose>
-				 <xsl:when test="@status='objective'">
-       		        <p/><i><b>This is currently an objective requirement.
-					<xsl:if test="@targetdate">It is targeted for <xsl:value-of select="@targetdate"/>.</xsl:if></b></i>
-					<br/>
-         		 </xsl:when>
-       		     <xsl:when test="@status='sel-based'">
-        		     <p/><b><i>This is a selection-based requirement.
-					 Its inclusion depends upon selection in 
-					<xsl:for-each select="cc:selection-depends">
-        				<xsl:value-of select="translate(@req, $lower, $upper)" />
-						<xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
-					</xsl:for-each>.
-			 		</i></b>
-					<br/>
-					<br/>
-         		 </xsl:when>
-				 </xsl:choose>
+			<td id="{$elementid}" class="elementidstyle">
+				<a class="abbr" href="#{$elementid}">
+					<xsl:value-of select="$elementid"/>
+				</a>
+			</td>
+			<td class="element">
+				<xsl:apply-templates select="cc:title"/>
+				<br/>
+				<xsl:choose>
+					<xsl:when test="@status='objective'">
+						<p/>
+						<i>
+							<b>This is currently an objective requirement. <xsl:if
+									test="@targetdate">It is targeted for <xsl:value-of
+										select="@targetdate"/>.</xsl:if></b>
+						</i>
+						<br/>
+					</xsl:when>
+					<xsl:when test="@status='sel-based'">
+						<p/>
+						<b>
+							<i>This is a selection-based requirement. Its inclusion depends upon
+								selection in <xsl:for-each select="cc:selection-depends">
+									<xsl:value-of select="translate(@req, $lower, $upper)"/>
+									<xsl:if test="position() != last()"
+										><xsl:text>, </xsl:text></xsl:if>
+								</xsl:for-each>. </i>
+						</b>
+						<br/>
+						<br/>
+					</xsl:when>
+				</xsl:choose>
 
 				<xsl:apply-templates select="cc:note[@role='application']"/>
 			</td>
@@ -318,31 +336,31 @@ xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	</xsl:template>
 
 	<xsl:template match="cc:title">
-	      		<xsl:apply-templates />
+		<xsl:apply-templates/>
 	</xsl:template>
 
-  <xsl:template match="cc:subaactivity">
-    <div class="subaact">
-      <i>
-        <b>For <xsl:call-template name="OSabbrev2name"><xsl:with-param name="osname" select="@platform" /></xsl:call-template>:
-	  </b>
-      </i>
-      <xsl:apply-templates />
-    </div>
-  </xsl:template>
+	<xsl:template match="cc:subaactivity">
+		<div class="subaact">
+			<i>
+				<b>For <xsl:call-template name="OSabbrev2name"><xsl:with-param name="osname"
+							select="@platform"/></xsl:call-template>: </b>
+			</i>
+			<xsl:apply-templates/>
+		</div>
+	</xsl:template>
 
 	<!-- getting rid of XHTML namespace -->
 	<xsl:template match="xhtml:*">
 		<xsl:element name="{local-name()}">
- 			<xsl:apply-templates select="node()|@*"/>
+			<xsl:apply-templates select="node()|@*"/>
 		</xsl:element>
 	</xsl:template>
 
 	<xsl:template match="cc:aactivity">
-		<xsl:apply-templates select="@*|node()" />
+		<xsl:apply-templates select="@*|node()"/>
 	</xsl:template>
 
 
 
-	
+
 </xsl:stylesheet>
