@@ -223,6 +223,8 @@
 
 					<xsl:apply-templates select="//cc:a-element"/>
 				</table>
+				<div class="tabletitle">Glossary</div>
+				<xsl:apply-templates select="//cc:glossary"/>
 			</body>
 		</html>
 	</xsl:template>
@@ -326,5 +328,28 @@
 		<xsl:apply-templates select="@*|node()"/>
 	</xsl:template>
 
+
+	<xsl:template match="cc:glossary">
+	  <table style="width: 100%;">
+	    <xsl:for-each select="cc:entry">
+              <tr>
+		<td>
+		  <xsl:apply-templates select="cc:term"/>
+		</td>
+		<td>
+		  <xsl:apply-templates select="cc:description"/>
+		</td>
+              </tr>
+	    </xsl:for-each>
+	  </table>
+	</xsl:template>
+	<xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
+	  <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"
+          /></abbr>)</span>
+	</xsl:template>
+	<xsl:template
+	    match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]">
+	<xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>) </xsl:template>
+	
 
 </xsl:stylesheet>
