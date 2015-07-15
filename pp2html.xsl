@@ -1017,7 +1017,7 @@
 
     <xsl:variable name="subsection-num">
       <xsl:choose>
-	<xsl:when test="cc:a-component">
+	<xsl:when test="cc:a-component or not(cc:f-component)">
 	  <xsl:number/>
 	</xsl:when>
 	<xsl:otherwise>
