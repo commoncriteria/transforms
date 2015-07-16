@@ -1,6 +1,5 @@
-# transforms
+# Transforms
 Repository for various transforms that are common across CC projects.
-(Just testing this right now...)
 
 ## Using in other projects
 
