@@ -504,9 +504,9 @@
 	  <choice><value>yes</value><value>no</value></choice>
         </attribute>
       </optional>
-      <ref name="selectable"/>
+      <ref name="selectable-group"/>
       <oneOrMore>
-	<ref name="selectable"/>
+	<ref name="selectable-group"/>
       </oneOrMore>
     </element>
   </define>
