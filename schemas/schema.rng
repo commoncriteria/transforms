@@ -380,9 +380,9 @@
   </define>
   <define name="ul">
     <element name="ul">
-      <zeroOrMore>
+      <oneOrMore>
         <ref name="li"/>
-      </zeroOrMore>
+      </oneOrMore>
     </element>
   </define>
   <define name="br">
@@ -436,40 +436,33 @@
   </define>
   <define name="aactivity">
     <element name="aactivity">
-      <ref name="basic-content"/>
+      <oneOrMore><choice>
+	<element name="tss">
+	  <ref name="basic-content"/>
+	</element>
+	<ref name="basic-content"/>
+      </choice></oneOrMore>
     </element>
   </define>
   <define name="title">
     <element name="title">
-      <oneOrMore>
-        <choice>
-	  <ref name="html-element"/>
-          <ref name="abbr"/>
-          <ref name="assignable"/>
-          <text/>
-          <ref name="linkref"/>
-          <ref name="selectables"/>
-          <element name="management-function-set">
-            <oneOrMore>
-              <element name="manager">
-                <data type="NCName"/>
-              </element>
-            </oneOrMore>
-            <oneOrMore>
-              <element name="management-function">
-                <optional>
-                  <attribute name="user">
-                    <data type="NCName"/>
-                  </attribute>
-                </optional>
-                <oneOrMore>
-                  <choice>
-                    <text/>
-                    <ref name="abbr"/>
-                    <ref name="assignable"/>
-                    <ref name="selectables"/>
-                  </choice>
-                </oneOrMore>
+      <oneOrMore><choice>
+	<ref name="basic-content"/>
+        <element name="management-function-set">
+          <oneOrMore>
+            <element name="manager">
+              <data type="NCName"/>
+            </element>
+          </oneOrMore>
+          <oneOrMore>
+            <element name="management-function">
+              <optional>
+		<attribute name="admin"/>
+              </optional>
+              <optional>
+                <attribute name="user"/>
+	      </optional>
+	      <ref name="basic-content"/>
               </element>
             </oneOrMore>
           </element>
@@ -505,9 +498,6 @@
         </attribute>
       </optional>
       <ref name="selectable-group"/>
-      <oneOrMore>
-	<ref name="selectable-group"/>
-      </oneOrMore>
     </element>
   </define>
   <define name="assignable">
@@ -533,7 +523,6 @@
 	<ref name="i"/>
 	<ref name="ul"/>
 	<ref name="ol"/>
-	<ref name="li"/>
 	<ref name="br"/>
 	<ref name="pre"/>
         <element name="indent">
@@ -549,6 +538,7 @@
         <ref name="testlist"/>
 	<ref name="selectables"/>
 	<ref name="assignable"/>
+        <ref name="appref"/>
       </choice>
     </oneOrMore>
   </define>
@@ -562,12 +552,16 @@
     </element>
   </define>
   <define name="pre">
-    <text/>
+    <element name="pre">
+      <text/>
+    </element>
   </define>
   <define name="ol">
-    <oneOrMore>
-      <ref name="li"/>
-    </oneOrMore>
+    <element name="ol">
+      <oneOrMore>
+	<ref name="li"/>
+      </oneOrMore>
+    </element>
   </define>
   <define name="li">
     <element name="li">
@@ -602,7 +596,7 @@
 
   <define name="p">
     <element name="p">
-      <empty/>
+      <ref name="basic-content"/>
     </element>
   </define>
 
