@@ -436,12 +436,7 @@
   </define>
   <define name="b">
     <element name="b">
-      <oneOrMore>
-        <choice>
-          <text></text>
-          <ref name="i"></ref>
-        </choice>
-      </oneOrMore>
+      <ref name="basic-content"/>
     </element>
   </define>
   <define name="appref">
