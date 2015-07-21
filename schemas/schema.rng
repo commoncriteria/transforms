@@ -408,7 +408,10 @@
   <define name="ul">
     <element name="ul">
       <oneOrMore>
-        <ref name="li"/>
+        <choice>
+          <ref name="li"/>
+          <ref name="selectables"></ref>
+        </choice>
       </oneOrMore>
     </element>
   </define>
