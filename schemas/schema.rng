@@ -36,10 +36,14 @@
           <ref name="entry"/>
         </element>
       </element>
-      <element name="RevisionHistory">
-        <attribute name="role"/>
-        <ref name="entry"/>
-      </element>
+      <oneOrMore>
+        <element name="RevisionHistory">
+          <attribute name="role"/>
+          <oneOrMore>
+            <ref name="entry"/>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
       <oneOrMore>
         <element name="chapter">
           <attribute name="id">
@@ -48,7 +52,10 @@
           <attribute name="title"/>
           <oneOrMore>
             <choice>
-              <text/>
+              <text/>  
+              <zeroOrMore>
+                <ref name="br"></ref>
+              </zeroOrMore>
               <ref name="abbr"/>
               <ref name="cite"/>
               <ref name="section"/>
@@ -230,6 +237,9 @@
             <oneOrMore>
               <choice>
                 <text/>
+                <zeroOrMore>
+                  <ref name="br"></ref>
+                </zeroOrMore>
                 <ref name="abbr"/>
                 <ref name="cite"/>
                 <ref name="secref"/>
@@ -275,6 +285,9 @@
 		      <optional>
 			<ref name="status"/>
 		      </optional>
+                      <optional>
+                        <attribute name="targetdate"></attribute>
+                      </optional>
                       <oneOrMore>
                         <choice>
                           <text/>
@@ -320,9 +333,11 @@
           <element name="usecases">
             <oneOrMore>
               <element name="usecase">
-                <attribute name="id">
-                  <data type="NCName"/>
-                </attribute>
+                <optional>
+                  <attribute name="id">
+                    <data type="NCName"/>
+                  </attribute>
+                </optional>
                 <attribute name="title"/>
                 <ref name="description"/>
               </element>
@@ -330,6 +345,16 @@
           </element>
         </choice>
       </oneOrMore>
+      <zeroOrMore>
+        <element name="figure">
+            <attribute name="id"></attribute>
+            <attribute name="title"></attribute>
+            <attribute name="entity"></attribute>
+            <optional>
+              <attribute name="max-width"></attribute>
+            </optional>
+        </element>
+      </zeroOrMore>
     </element>
   </define>
   <define name="abbr">
@@ -358,6 +383,7 @@
           <ref name="a"/>
           <ref name="abbr"/>
           <ref name="appref"/>
+          <ref name="b"/>
           <ref name="br"/>
           <ref name="cite"/>
           <ref name="i"/>
@@ -367,6 +393,7 @@
           <element name="InsertAppendixExplainer">
             <empty/>
           </element>
+          <ref name="secref"></ref>
         </choice>
       </oneOrMore>
     </element>
@@ -409,7 +436,12 @@
   </define>
   <define name="b">
     <element name="b">
-      <text/>
+      <oneOrMore>
+        <choice>
+          <text></text>
+          <ref name="i"></ref>
+        </choice>
+      </oneOrMore>
     </element>
   </define>
   <define name="appref">
@@ -436,18 +468,57 @@
   </define>
   <define name="aactivity">
     <element name="aactivity">
-      <oneOrMore><choice>
-	<element name="tss">
-	  <ref name="basic-content"/>
-	</element>
-	<ref name="basic-content"/>
-      </choice></oneOrMore>
+      <oneOrMore>
+        <choice>
+          <element name="subaactivity">
+            <attribute name="platform">
+              <choice>
+                <value>android</value>
+                <value>blackberry</value>
+                <value>ios</value>
+                <value>linux</value>
+                <value>OS X</value>
+                <value>Solaris</value>
+                <value>windows</value>
+              </choice>
+            </attribute>
+            <oneOrMore>
+              <choice>
+                <ref name="basic-content"></ref>
+                <element name="code">
+                  <oneOrMore>
+                    <choice>
+                      <text></text>
+                      <ref name="i"></ref>
+                    </choice>
+                  </oneOrMore>
+                  <text></text>
+                </element>
+                <element name="path">
+                  <oneOrMore>
+                    <choice>
+                      <text></text>
+                      <ref name="i"></ref>
+                    </choice>
+                  </oneOrMore>
+                </element>
+                <element name="util">
+                  <text></text>
+                </element>
+              </choice>
+            </oneOrMore>
+          </element>
+          <ref name="basic-content"></ref>
+          <ref name="appref"></ref>
+        </choice>
+      </oneOrMore>
     </element>
   </define>
   <define name="title">
     <element name="title">
       <oneOrMore><choice>
 	<ref name="basic-content"/>
+        <ref name="note"></ref>
         <element name="management-function-set">
           <oneOrMore>
             <element name="manager">
@@ -502,7 +573,12 @@
   </define>
   <define name="assignable">
     <element name="assignable">
-      <text/>
+      <oneOrMore>
+        <choice>
+          <text/>
+          <ref name="abbr"></ref>
+        </choice>
+      </oneOrMore>
     </element>
   </define>
   <define name="i">
@@ -536,6 +612,19 @@
         <ref name="cite"/>
         <ref name="secref"/>
         <ref name="testlist"/>
+  <element name="tss">
+    <ref name="basic-content"></ref>
+  </element>
+        <element name="guidance">
+          <ref name="basic-content"></ref>
+        </element>
+        <element name="requires">
+          <attribute name="req"></attribute>
+          <empty></empty>
+        </element>
+        <element name="tests">
+          <ref name="basic-content"></ref>
+        </element>
 	<ref name="selectables"/>
 	<ref name="assignable"/>
         <ref name="appref"/>
@@ -548,7 +637,12 @@
       <attribute name="href">
         <data type="anyURI"/>
       </attribute>
-      <text/>
+      <oneOrMore>
+        <choice>
+          <text></text>
+          <ref name="i"></ref>
+        </choice>
+      </oneOrMore>
     </element>
   </define>
   <define name="pre">
@@ -612,15 +706,22 @@
   </define>
 
   <define name="selectable-group">
-    <ref name="selectable-single"/>
-    <oneOrMore>
-      <ref name="selectable-single"/>
-    </oneOrMore>
+    <!--<choice>-->
+      <oneOrMore>
+        <ref name="selectable-single"/>
+      </oneOrMore>
+      <!--<text></text>-->
+    <!--</choice>-->
   </define>
 
   <define name="selectable-single">
     <element name="selectable">
-      <ref name="basic-content"/>
+        <oneOrMore>
+          <choice>
+            <ref name="basic-content"/>
+              <ref name="selectables"></ref>
+          </choice>
+        </oneOrMore>
     </element>
   </define>
 
