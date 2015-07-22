@@ -8,6 +8,8 @@
   <start>
     <element name="PP">
       <attribute name="name"/>
+	<ref name="html-element"/>
+
       <element name="PPReference">
         <attribute name="id"/>
         <attribute name="title"/>
@@ -626,17 +628,8 @@
 
   <define name="html-element">
     <element ns="http://www.w3.org/1999/xhtml">
-      <anyName>
-	<except>
-	  <nsName ns=""/>
-	</except>
-      </anyName>
-      <zeroOrMore>
-	<interleave>
-	  <ref name="html-element"/>
-	  
-	</interleave>
-      </zeroOrMore>
+      <anyName/>
+      <ref name="basic-content"/>
     </element>
   </define>
 </grammar>
