@@ -10,6 +10,8 @@
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <attribute name="name"/>
+	<ref name="html-element"/>
+
       <element name="PPReference">
         <attribute name="id"/>
         <attribute name="title"/>
@@ -411,7 +413,10 @@
   <define name="ul">
     <element name="ul">
       <oneOrMore>
-        <ref name="li"/>
+        <choice>
+          <ref name="li"/>
+          <ref name="selectables"></ref>
+        </choice>
       </oneOrMore>
     </element>
   </define>
@@ -732,17 +737,8 @@
 
   <define name="html-element">
     <element ns="http://www.w3.org/1999/xhtml">
-      <anyName>
-	<except>
-	  <nsName ns=""/>
-	</except>
-      </anyName>
-      <zeroOrMore>
-	<interleave>
-	  <ref name="html-element"/>
-	  
-	</interleave>
-      </zeroOrMore>
+      <anyName/>
+      <ref name="basic-content"/>
     </element>
   </define>
 </grammar>
