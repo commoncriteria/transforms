@@ -10,8 +10,6 @@
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <attribute name="name"/>
-	<ref name="html-element"/>
-
       <element name="PPReference">
         <attribute name="id"/>
         <attribute name="title"/>
