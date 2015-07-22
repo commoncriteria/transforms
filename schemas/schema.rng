@@ -3,10 +3,12 @@
 	 xmlns="http://relaxng.org/ns/structure/1.0" 
 	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
 	 xmlns:htm="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 	 >
-  <htm:h1>Relax NG Syntax for Protection Profile input</htm:h1>
+
   <start>
     <element name="PP">
+      <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <attribute name="name"/>
       <element name="PPReference">
         <attribute name="id"/>
@@ -46,6 +48,7 @@
       </oneOrMore>
       <oneOrMore>
         <element name="chapter">
+	  <a:documentation>Major grouping for the document.</a:documentation>
           <attribute name="id">
             <data type="NCName"/>
           </attribute>
@@ -431,6 +434,7 @@
   </define>
   <define name="linkref">
     <element name="linkref">
+      <a:annotation>QQQ</a:annotation>
       <attribute name="linkend"/>
     </element>
   </define>
@@ -553,6 +557,9 @@
   </define>
   <define name="selectables">
     <element name="selectables">
+      <a:documentation>
+	A grouping of selectable elements.
+      </a:documentation>
       <optional>
         <attribute name="atleastone">
 	  <choice><value>yes</value><value>no</value></choice>
@@ -584,6 +591,9 @@
 
 
   <define name="basic-content">
+    <a:documentation>
+    Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
     <oneOrMore>
       <choice>
 	<text/>
