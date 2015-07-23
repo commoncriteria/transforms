@@ -212,7 +212,9 @@
                 <attribute name="id">
                   <data type="NCName"/>
                 </attribute>
-                <ref name="description"/>
+		<optional>
+                  <ref name="description"/>
+		</optional>
                 <oneOrMore>
                   <element name="component-refer">
                     <attribute name="ref"/>
@@ -327,9 +329,9 @@
                   <data type="NCName"/>
                 </attribute>
                 <ref name="description"/>
-                <oneOrMore>
+                <zeroOrMore>
                   <ref name="objective-refer"/>
-                </oneOrMore>
+                </zeroOrMore>
               </element>
             </oneOrMore>
           </element>
