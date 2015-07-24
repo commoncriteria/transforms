@@ -96,8 +96,8 @@
 		<b>Approved by: </b>
 		<xsl:apply-templates select="esr:approver"/>
 		<p/>
-		<b>Supercedes: </b>
-		<xsl:apply-templates select="esr:superceded"/>
+		<b>Supersedes: </b>
+		<xsl:apply-templates select="esr:superseded"/>
 		<p/>
 	</xsl:template>
 
