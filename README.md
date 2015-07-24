@@ -8,7 +8,7 @@ This project is meant to be used as a submodule to other CC projects.
 Run the following commands in the project directory where you want _transforms_ to be created.
 
 ```
-git submodule add git@github.com:commoncriteria/transforms.git
+git submodule add https://github.com/commoncriteria/transforms.git
 git commit -am "Added the Transforms submodule to the project"
 git push
 ```
