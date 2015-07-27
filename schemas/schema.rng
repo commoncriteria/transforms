@@ -602,6 +602,12 @@
     <oneOrMore>
       <choice>
 	<text/>
+
+	<!-- 
+	"html-content" should replace all the html tags with CC namespace garbage 
+	that follows it. It leads to serious namespace pollution in the output.
+	-->
+	<ref name="html-element"/>
 	<ref name="a"/>
 	<ref name="abbr"/>
         <ref name="p"/>
@@ -737,8 +743,18 @@
 
   <define name="html-element">
     <element ns="http://www.w3.org/1999/xhtml">
-      <anyName/>
+      <anyName>
+	<except>
+	  <nsName ns="http://common-criteria.rhcloud.com/ns/cc"/>
+	</except>
+      </anyName>
+      <zeroOrMore>
+	<attribute>
+	  <anyName/>
+	</attribute>
+      </zeroOrMore>
       <ref name="basic-content"/>
     </element>
   </define>
+
 </grammar>
