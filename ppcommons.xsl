@@ -110,6 +110,19 @@
   <!-- Eat all comments! -->
   <xsl:template match="comment()"/>
 
+  <!-- 
+       Change all xhtml tags to tags with no namespace.
+       This should help the transition from output w/ polluted
+       namespace to output all in xhtml namespace. For right now
+       this is what we have.
+  -->
+  <xsl:template match="xhtml:*">
+    <xsl:element name="{local-name()}">
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
+
+
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
