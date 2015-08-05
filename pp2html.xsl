@@ -6,8 +6,10 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:cc="http://common-criteria.rhcloud.com/ns/cc" xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:fn="http://www.w3.org/2005/xpath-functions" version="1.0">
+  xmlns:cc="http://common-criteria.rhcloud.com/ns/cc"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:htm="http://www.w3.org/1999/xhtml"  
+  version="1.0">
 
   <!-- release variable, overridden to "final" for release versions -->
   <xsl:param name="release" select="'draft'"/>
@@ -801,9 +803,22 @@
           <xsl:value-of select="@name"/>
         </h4>
 
-        <xsl:for-each select="cc:f-element | cc:a-element">
+	<xsl:call-template name="group">
+	  <xsl:with-param name="type" select="'dev-action'"/>
+	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
+	</xsl:call-template>
+	<xsl:call-template name="group">
+	  <xsl:with-param name="type" select="'con-pres'"/>
+	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
+	</xsl:call-template>
+	<xsl:call-template name="group">
+	  <xsl:with-param name="type" select="'eval-action'"/>
+	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
+	</xsl:call-template>
+
+        <xsl:for-each select="cc:f-element">
           <xsl:call-template name="element-template">
-            <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
+	    <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
           </xsl:call-template>
         </xsl:for-each>
       </xsl:element>
@@ -980,8 +995,8 @@
 
     <xsl:for-each select="//cc:f-component[cc:f-element/@status=$selected-status]">
       <xsl:call-template name="component-template">
-        <xsl:with-param name="selected-statuses" select="concat('_', concat($selected-status,'_'))"
-        />
+        <xsl:with-param name="selected-statuses" 
+			select="concat('_', concat($selected-status,'_'))"/>
       </xsl:call-template>
     </xsl:for-each>
   </xsl:template>
@@ -1212,8 +1227,25 @@
         /></xsl:attribute>
       <xsl:value-of select="$capped-req"/>
     </xsl:element>
+  </xsl:template>
 
-
+  <xsl:template name="group">
+    <xsl:param name="type"/>
+    <xsl:param name="selected-statuses"/>
+    <xsl:if test="cc:group[@type=$type]">
+      <h4>
+	<xsl:choose>
+	  <xsl:when test="$type='dev-action'">Developer action elements</xsl:when>
+	  <xsl:when test="$type='con-pres'">Content and presentation</xsl:when>
+	  <xsl:when test="$type='eval-action'">Evaluator action</xsl:when>
+	</xsl:choose>
+      elements:</h4>
+      <xsl:for-each select="./cc:group[@type=$type]/cc:a-element">
+        <xsl:call-template name="element-template">
+	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
+        </xsl:call-template>
+      </xsl:for-each>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

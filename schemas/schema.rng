@@ -259,23 +259,26 @@
                       <ref name="aactivity"/>
                       <ref name="abbr"/>
                       <ref name="secref"/>
-                      <element name="a-element">
-                        <attribute name="id">
-                          <data type="NCName"/>
-                        </attribute>
-                        <ref name="title"/>
-                        <optional>
-                          <ref name="note"/>
-                        </optional>
-                        <optional>
-                          <ref name="aactivity"/>
-                        </optional>
-                      </element>
-                      <element name="h4">
-                        <text/>
-                      </element>
                     </choice>
                   </oneOrMore>
+		  <optional>
+                    <element name="group">
+		      <attribute name="type"><value>dev-action</value></attribute>
+		      <ref name="a-elements"/>
+		    </element>
+		  </optional>
+		  <optional>
+                    <element name="group">
+		      <attribute name="type"><value>con-pres</value></attribute>
+		      <ref name="a-elements"/>
+		    </element>
+		  </optional>
+		  <optional>
+                    <element name="group">
+		      <attribute name="type"><value>eval-action</value></attribute>
+		      <ref name="a-elements"/>
+		    </element>
+		  </optional>
                 </element>
                 <element name="f-component">
                   <attribute name="id"/>
@@ -291,7 +294,7 @@
 			<ref name="status"/>
 		      </optional>
                       <optional>
-                        <attribute name="targetdate"></attribute>
+                        <attribute name="targetdate"/>
                       </optional>
                       <oneOrMore>
                         <choice>
@@ -352,11 +355,11 @@
       </oneOrMore>
       <zeroOrMore>
         <element name="figure">
-            <attribute name="id"></attribute>
-            <attribute name="title"></attribute>
-            <attribute name="entity"></attribute>
+            <attribute name="id"/>
+            <attribute name="title"/>
+            <attribute name="entity"/>
             <optional>
-              <attribute name="max-width"></attribute>
+              <attribute name="max-width"/>
             </optional>
         </element>
       </zeroOrMore>
@@ -628,9 +631,9 @@
         <ref name="cite"/>
         <ref name="secref"/>
         <ref name="testlist"/>
-  <element name="tss">
-    <ref name="basic-content"></ref>
-  </element>
+	<element name="tss">
+	  <ref name="basic-content"></ref>
+	</element>
         <element name="guidance">
           <ref name="basic-content"></ref>
         </element>
@@ -645,6 +648,23 @@
 	<ref name="assignable"/>
         <ref name="appref"/>
       </choice>
+    </oneOrMore>
+  </define>
+
+  <define name="a-elements">
+    <oneOrMore>
+      <element name="a-element">
+	<attribute name="id">
+          <data type="NCName"/>
+	</attribute>
+	<ref name="title"/>
+	<optional>
+          <ref name="note"/>
+	</optional>
+	<optional>
+          <ref name="aactivity"/>
+	</optional>
+      </element>
     </oneOrMore>
   </define>
 
