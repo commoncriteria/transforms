@@ -1235,7 +1235,7 @@
     <xsl:if test="cc:group[@type=$type]">
       <h4>
 	<xsl:choose>
-	  <xsl:when test="$type='dev-action'">Developer action elements</xsl:when>
+	  <xsl:when test="$type='dev-action'">Developer action</xsl:when>
 	  <xsl:when test="$type='con-pres'">Content and presentation</xsl:when>
 	  <xsl:when test="$type='eval-action'">Evaluator action</xsl:when>
 	</xsl:choose>
