@@ -326,6 +326,12 @@
               color:black;
               text-decoration:none;
           }
+
+	  sup{
+   	      position: relative;
+	      bottom: .5ex;
+	      font-size: 80%;
+	  }
           
           @media screen{
               *.reqid{
