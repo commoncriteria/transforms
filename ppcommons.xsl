@@ -117,8 +117,6 @@
        this is what we have.
   -->
   <xsl:template match="xhtml:*">
-    <xsl:message>Entering xhtml element:    <xsl:value-of select="local-name()"/>
-    </xsl:message>
     <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
@@ -126,7 +124,6 @@
       </xsl:for-each>
       <xsl:apply-templates/>
     </xsl:element>
-    <xsl:message>Exiting xhtml element</xsl:message>
   </xsl:template>
 
 
