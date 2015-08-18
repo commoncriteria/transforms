@@ -86,6 +86,7 @@
               foreground:black;
           }
           h1{
+              page-break-before:always;
               text-align:left;
               font-size:200%;
               margin-top:2em;
@@ -358,6 +359,7 @@
                   box-shadow:4px 4px 3px #888888;
               }
           }
+
           
           @media print{
               *.reqid{
@@ -380,10 +382,13 @@
                   border-radius:3px;
                   display:block;
               }
+
+	      img[src="images/collapsed.png"] { display:none;} 
+
           }</style>
       </head>
       <body onLoad="init()">
-        <h1 class="title">
+        <h1 class="title" style="page-break-before:auto;">
           <xsl:value-of select="//cc:ReferenceTable/cc:PPTitle"/>
         </h1>
 
