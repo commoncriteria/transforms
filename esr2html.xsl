@@ -33,6 +33,11 @@
 					    font-weight:bold;
 					    box-shadow:2px 2px 2px #888888;
 					}
+					div.note{
+					    margin-left:10%;
+					    margin-right:10%;
+					    margin-top:1em;
+					}
 					
 					table.intro{
 					    table-layout:fixed;
@@ -108,6 +113,13 @@
 			<xsl:value-of select="@title"/>
 		</div>
 		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="esr:note">
+		<div class="note">
+			<b>Note: </b>
+			<i><xsl:apply-templates/></i>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="@*|node()">
