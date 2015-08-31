@@ -109,7 +109,7 @@
 
 
 	<xsl:template match="esr:section">
-		<div class="section">
+		<div class="section" id="{@id}">
 			<xsl:value-of select="@title"/>
 		</div>
 		<xsl:apply-templates/>
