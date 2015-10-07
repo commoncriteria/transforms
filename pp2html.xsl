@@ -442,6 +442,7 @@
 	      <xsl:for-each select="./cc:subsection">
 		<xsl:variable name="lastnum">
 		  <xsl:choose>
+		    <!-- -->
 		    <xsl:when test="$appendicize='on' and ./cc:f-component">
 		      <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/>
 		    </xsl:when>

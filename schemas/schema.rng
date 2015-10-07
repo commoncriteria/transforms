@@ -296,6 +296,10 @@
                       <optional>
                         <attribute name="targetdate"/>
                       </optional>
+		      <optional>
+			  <ref name="selection-depends"/>
+		      </optional>
+                      <ref name="title"/>
                       <oneOrMore>
                         <choice>
                           <text/>
@@ -303,8 +307,6 @@
                           <ref name="assignable"/>
                           <ref name="note"/>
                           <ref name="selectables"/>
-                          <ref name="title"/>
-			  <ref name="selection-depends"/>
                         </choice>
                       </oneOrMore>
                     </element>
