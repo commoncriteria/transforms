@@ -20,6 +20,7 @@
 	<xsl:template match="/cc:PP">
 		<html>
 			<style type="text/css">
+			  <xsl:call-template name="common_css"/>
 				h1
 				{
 				    text-align:left;

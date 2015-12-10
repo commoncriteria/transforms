@@ -79,6 +79,8 @@
           }
         </script>
         <style type="text/css">
+	  <xsl:call-template name="common_css"/>
+
           /*       { background-color: #FFFFFF; } */
           body{
               margin-left:8%;

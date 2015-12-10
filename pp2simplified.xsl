@@ -19,7 +19,8 @@
 
 	<xsl:template match="/cc:PP">
 		<html>
-			<style type="text/css">
+		  <style type="text/css">
+		    <xsl:call-template name="common_css"/>
 		h1   { text-align: left; font-size: 200%;  margin-top: 2em; margin-bottom: 2em;
              font-family: verdana, arial, helvetica, sans-serif;
              margin-bottom: 1.0em; }

@@ -6,6 +6,12 @@
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
+  <!-- Common CSS rules for all files-->
+  <xsl:template name="common_css">
+    .assignable-content{
+      font-stye: italic;
+    }
+  </xsl:template>
   <xsl:template name="OSabbrev2name">
     <xsl:param name="osname"/>
     <xsl:choose>
