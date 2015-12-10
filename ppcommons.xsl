@@ -76,7 +76,7 @@
             test="position() != last()"
         ><xsl:text>, </xsl:text></xsl:if></xsl:otherwise></xsl:choose></xsl:for-each>] </xsl:template>
 
-  <xsl:template match="cc:assignable"> [<b>assignment</b>: <xsl:apply-templates/>] </xsl:template>
+  <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
 
   <xsl:template match="cc:note[@role='application']">
     <div class="appnote">
