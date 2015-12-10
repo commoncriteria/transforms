@@ -9,7 +9,7 @@
   <!-- Common CSS rules for all files-->
   <xsl:template name="common_css">
     .assignable-content{
-      font-stye: italic;
+      font-style: italic;
     }
   </xsl:template>
   <xsl:template name="OSabbrev2name">
