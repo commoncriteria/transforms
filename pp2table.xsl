@@ -131,26 +131,7 @@
 				    padding-bottom:0.25em;
 				    padding-top:0.25em;
 				}
-				a.abbr:link{
-				    color:black;
-				    text-decoration:none;
-				}
-				a.abbr:visited{
-				    color:black;
-				    text-decoration:none;
-				}
-				a.abbr:hover{
-				    color:blue;
-				    text-decoration:none;
-				}
-				a.abbr:hover:visited{
-				    color:purple;
-				    text-decoration:none;
-				}
-				a.abbr:active{
-				    color:red;
-				    text-decoration:none;
-				}</style>
+			</style>
 
 			<head>
 				<title>Tabular Presentation of the <xsl:value-of

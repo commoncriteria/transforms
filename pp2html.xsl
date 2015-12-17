@@ -25,6 +25,7 @@
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
 
+
   <xsl:template match="/cc:PP">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -153,26 +154,6 @@
               font-family:verdana, arial, helvetica, sans-serif;
           }
           
-          a.abbr:link{
-              color:black;
-              text-decoration:none;
-          }
-          a.abbr:visited{
-              color:black;
-              text-decoration:none;
-          }
-          a.abbr:hover{
-              color:blue;
-              text-decoration:none;
-          }
-          a.abbr:hover:visited{
-              color:purple;
-              text-decoration:none;
-          }
-          a.abbr:active{
-              color:red;
-              text-decoration:none;
-          }
           a.linkref{
               font-family:verdana, arial, helvetica, sans-serif;
               font-size:90%;

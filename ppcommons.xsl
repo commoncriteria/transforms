@@ -11,6 +11,28 @@
     .assignable-content{
       font-style: italic;
     }
+    a.abbr:link{
+      color:black;
+      text-decoration:none;
+    }
+    a.abbr:visited{
+      color:black;
+      text-decoration:none;
+    }
+    a.abbr:hover{
+      color:blue;
+      text-decoration:none;
+    }
+    a.abbr:hover:visited{
+      color:purple;
+      text-decoration:none;
+    }
+    a.abbr:active{
+      color:red;
+      text-decoration:none;
+    }
+
+
   </xsl:template>
   <xsl:template name="OSabbrev2name">
     <xsl:param name="osname"/>
