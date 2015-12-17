@@ -63,6 +63,7 @@
               <ref name="cite"/>
               <ref name="section"/>
               <ref name="ul"/>
+	      <ref name="html-element"/>
               <element name="cclaims">
                 <oneOrMore>
                   <element name="cclaim">
@@ -609,7 +610,7 @@
 	<text/>
 
 	<!-- 
-	"html-content" should replace all the html tags with CC namespace garbage 
+	"html-element" should replace all the html tags with CC namespace garbage 
 	that follows it. It leads to serious namespace pollution in the output.
 	-->
 	<ref name="html-element"/>
