@@ -753,11 +753,12 @@
   <!-- Used to match regular ?-components -->
   <xsl:template match="cc:f-component | cc:a-component">
     <xsl:variable name="sel">
-      <xsl:if test="$appendicize!='on'">
-        <xsl:value-of select="'__,_objective_, _optional_, _sel-based_'"/>
+      <!-- when we are not appending -->
+      <xsl:if test="$appendicize!='on' or name()='a-component'">
+        <xsl:value-of select="'_threshold_,_objective_, _optional_, _sel-based_'"/>
       </xsl:if>
       <xsl:if test="$appendicize='on'">
-        <xsl:value-of select="'__'"/>
+        <xsl:value-of select="'_threshold_'"/>
       </xsl:if>
     </xsl:variable>
     <xsl:call-template name="component-template">
@@ -769,20 +770,25 @@
   <xsl:template name="component-template">
     <xsl:param name="selected-statuses"/>
     <!-- 
-	 Set id-suffix to "" "_objective_" "_optional_" "_sel-based_" 
+	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_" 
 	 based on what it is (or "" if not appendicizing).
     -->
     <xsl:variable name="id-suffix">
       <xsl:choose>
+	<!-- set to nothing if appendicize is not on or we're selecting only threshold-->
         <xsl:when test="$appendicize!='on'"/>
-        <xsl:when test="$selected-statuses='__'"/>
+        <xsl:when test="$selected-statuses='_threshold_'"/>
+        <xsl:when test="$selected-statuses='_threshold_,_objective_, _optional_, _sel-based__threshold_'"/>
         <xsl:otherwise>
           <xsl:value-of select="$selected-statuses"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+
+
+
     <!-- If we're not appendicizing or status is normal. Include-->
-    <xsl:if test="count(./*[contains($selected-statuses, concat('_', concat(@status, '_')))])>0">
+    <xsl:if test="count(./*[contains($selected-statuses, concat('_', concat(../@status, '_')))])>0">
       <xsl:variable name="family" select="substring(@id,1,7)"/>
       <xsl:variable name="component" select="substring(@id,1,9)"/>
       <xsl:variable name="SFRID" select="@id"/>
@@ -823,12 +829,11 @@
   <!-- Prints out only those templates whose status is inside selected-statuses-->
   <xsl:template name="element-template">
     <xsl:param name="selected-statuses"/>
-    <!-- QQQ      Haystack: <xsl:value-of select="$selected-statuses"/> -->
-    <!-- QQQ      Needle: <xsl:value-of select="concat('_', concat(@status, '_'))"/> -->
-    <xsl:if test="contains($selected-statuses, concat('_', concat(@status, '_')))">
+
+    <xsl:if test="contains($selected-statuses, concat('_', concat(../@status, '_')))">
       <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
       <xsl:element name="div">
-        <xsl:attribute name="class">req <xsl:value-of select="@status"/></xsl:attribute>
+        <xsl:attribute name="class">req <xsl:value-of select="../@status"/></xsl:attribute>
         <div class="reqid" id="{$reqid}">
           <a href="#{$reqid}" class="abbr">
             <xsl:value-of select="$reqid"/>
@@ -844,7 +849,7 @@
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
 
-    <xsl:if test="../@status='objective'">
+    <xsl:if test="../../@status='objective'">
       <xsl:if test="$appendicize!='on'">
         <div class="statustag">
           <p/>
@@ -855,18 +860,18 @@
           </i>
         </div>
       </xsl:if>
-      <xsl:if test="$appendicize='on' and ../@targetdate">
+      <xsl:if test="$appendicize='on' and ../../@targetdate">
         <div class="statustag">
           <p/>
           <i>
             <b> This requirement is scheduled to be mandatory for products entering evaluations
-              after <xsl:value-of select="../@targetdate"/>.</b>
+              after <xsl:value-of select="../../@targetdate"/>.</b>
           </i>
         </div>
       </xsl:if>
     </xsl:if>
 
-    <xsl:if test="../@status='sel-based'">
+    <xsl:if test="../../@status='sel-based'">
       <div class="statustag">
         <b>
           <i>
@@ -894,7 +899,7 @@
 
 
     <xsl:if test="$appendicize!='on'">
-      <xsl:if test="../@status='optional'">
+      <xsl:if test="../../@status='optional'">
         <div class="statustag">
           <p/>
           <i>
@@ -988,7 +993,7 @@
     <xsl:param name="selected-status"/>
     <!-- Select all f-componenets which have an f-element with a selected-status-->
 
-    <xsl:for-each select="//cc:f-component[cc:f-element/@status=$selected-status]">
+    <xsl:for-each select="//cc:f-component[@status=$selected-status][cc:f-element]">
       <xsl:call-template name="component-template">
         <xsl:with-param name="selected-statuses" 
 			select="concat('_', concat($selected-status,'_'))"/>
@@ -1235,6 +1240,8 @@
 	  <xsl:when test="$type='eval-action'">Evaluator action</xsl:when>
 	</xsl:choose>
       elements:</h4>
+
+
       <xsl:for-each select="./cc:group[@type=$type]/cc:a-element">
         <xsl:call-template name="element-template">
 	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>

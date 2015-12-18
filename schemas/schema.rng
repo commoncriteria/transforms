@@ -291,15 +291,9 @@
                   <oneOrMore>
                     <element name="f-element">
                       <attribute name="id"/>
-		      <optional>
-			<ref name="status"/>
-		      </optional>
                       <optional>
                         <attribute name="targetdate"/>
                       </optional>
-		      <optional>
-			  <ref name="selection-depends"/>
-		      </optional>
                       <ref name="title"/>
                       <oneOrMore>
                         <choice>
