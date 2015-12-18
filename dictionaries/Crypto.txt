@@ -89,3 +89,8 @@ hmac
 CCM
 CCMP
 GCMP
+KWP
+TGi
+XTS
+XTSAES
+

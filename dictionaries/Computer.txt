@@ -28,6 +28,7 @@ HTTPS
 instantiation
 tuple
 tuples
+pseudorandom
 pseudorandomly
 Pseudorandomly
 randomizer
@@ -99,3 +100,10 @@ executables
 OSs
 EEPROM
 IEEE
+virtualization
+Virtualization
+WLAN
+PaaS
+SaaS
+IaaS
+TPM
