@@ -27,6 +27,7 @@
 
 
   <xsl:template match="/cc:PP">
+
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
         <script type="text/javascript">
@@ -769,6 +770,7 @@
 
   <xsl:template name="component-template">
     <xsl:param name="selected-statuses"/>
+
     <!-- 
 	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_" 
 	 based on what it is (or "" if not appendicizing).
@@ -778,7 +780,6 @@
 	<!-- set to nothing if appendicize is not on or we're selecting only threshold-->
         <xsl:when test="$appendicize!='on'"/>
         <xsl:when test="$selected-statuses='_threshold_'"/>
-        <xsl:when test="$selected-statuses='_threshold_,_objective_, _optional_, _sel-based__threshold_'"/>
         <xsl:otherwise>
           <xsl:value-of select="$selected-statuses"/>
         </xsl:otherwise>
@@ -788,7 +789,11 @@
 
 
     <!-- If we're not appendicizing or status is normal. Include-->
-    <xsl:if test="count(./*[contains($selected-statuses, concat('_', concat(../@status, '_')))])>0">
+    <xsl:variable name="eff-status">_<xsl:choose>
+    <xsl:when test="@status"><xsl:value-of select="@status"/></xsl:when>
+    <xsl:otherwise>threshold</xsl:otherwise>
+    </xsl:choose>_</xsl:variable>
+    <xsl:if test="count(./*[contains($selected-statuses, $eff-status)])>0">
       <xsl:variable name="family" select="substring(@id,1,7)"/>
       <xsl:variable name="component" select="substring(@id,1,9)"/>
       <xsl:variable name="SFRID" select="@id"/>
@@ -830,10 +835,16 @@
   <xsl:template name="element-template">
     <xsl:param name="selected-statuses"/>
 
-    <xsl:if test="contains($selected-statuses, concat('_', concat(../@status, '_')))">
+    <xsl:variable name="eff-status"><xsl:choose>
+    <xsl:when test="../@status"><xsl:value-of select="../@status"/></xsl:when>
+    <xsl:otherwise>threshold</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="ueff-status">_<xsl:value-of select="$eff-status"/>_</xsl:variable>
+
+    <xsl:if test="contains($selected-statuses, $ueff-status)">
       <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
       <xsl:element name="div">
-        <xsl:attribute name="class">req <xsl:value-of select="../@status"/></xsl:attribute>
+        <xsl:attribute name="class">req <xsl:value-of select="$eff-status"/></xsl:attribute>
         <div class="reqid" id="{$reqid}">
           <a href="#{$reqid}" class="abbr">
             <xsl:value-of select="$reqid"/>
@@ -878,7 +889,7 @@
             <xsl:if test="$appendicize!='on'"> This is a selection-based requirement. Its inclusion
               depends upon selection in </xsl:if>
             <xsl:if test="$appendicize='on'"> This requirement depends upon selection in </xsl:if>
-            <xsl:for-each select="../cc:selection-depends">
+            <xsl:for-each select="../../cc:selection-depends">
               <b><i>
                   <xsl:variable name="capped-req"><xsl:value-of
                       select="translate(@ref,$lower,$upper)"/></xsl:variable>
@@ -992,7 +1003,7 @@
   <xsl:template name="requirement-stealer">
     <xsl:param name="selected-status"/>
     <!-- Select all f-componenets which have an f-element with a selected-status-->
-
+    
     <xsl:for-each select="//cc:f-component[@status=$selected-status][cc:f-element]">
       <xsl:call-template name="component-template">
         <xsl:with-param name="selected-statuses" 
