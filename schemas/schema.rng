@@ -56,13 +56,9 @@
           <oneOrMore>
             <choice>
               <text/>  
-              <zeroOrMore>
-                <ref name="br"></ref>
-              </zeroOrMore>
               <ref name="abbr"/>
               <ref name="cite"/>
               <ref name="section"/>
-              <ref name="ul"/>
 	      <ref name="html-element"/>
               <element name="cclaims">
                 <oneOrMore>
@@ -85,10 +81,8 @@
           <oneOrMore>
             <choice>
               <text/>
-              <ref name="abbr"/>
+	      <ref name="html-element"/>
               <ref name="appref"/>
-              <ref name="b"/>
-              <ref name="br"/>
               <ref name="cite"/>
               <ref name="secref"/>
               <ref name="section"/>
@@ -180,9 +174,7 @@
       <attribute name="title"/>
       <oneOrMore>
         <choice>
-          <text/>
-          <ref name="abbr"/>
-          <ref name="br"/>
+	  <ref name="basic-content"/>
           <ref name="cite"/>
           <ref name="secref"/>
           <element name="InsertSPDCorrespondence">
@@ -243,9 +235,6 @@
             <oneOrMore>
               <choice>
                 <text/>
-                <zeroOrMore>
-                  <ref name="br"></ref>
-                </zeroOrMore>
                 <ref name="abbr"/>
                 <ref name="cite"/>
                 <ref name="secref"/>
@@ -384,17 +373,12 @@
     <element name="description">
       <oneOrMore>
         <choice>
+	  <ref name="basic-content"/>
           <text/>
-          <ref name="a"/>
-          <ref name="abbr"/>
           <ref name="appref"/>
-          <ref name="b"/>
-          <ref name="br"/>
           <ref name="cite"/>
-          <ref name="i"/>
           <ref name="linkref"/>
 	  <ref name="xref"/>
-          <ref name="ul"/>
           <element name="InsertAppendixExplainer">
             <empty/>
           </element>
@@ -408,21 +392,6 @@
       <attribute name="linkend">
         <data type="NCName"/>
       </attribute>
-    </element>
-  </define>
-  <define name="ul">
-    <element name="ul">
-      <oneOrMore>
-        <choice>
-          <ref name="li"/>
-          <ref name="selectables"></ref>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="br">
-    <element name="br">
-      <empty/>
     </element>
   </define>
   <define name="secref">
@@ -441,11 +410,6 @@
     <element name="linkref">
       <a:annotation>QQQ</a:annotation>
       <attribute name="linkend"/>
-    </element>
-  </define>
-  <define name="b">
-    <element name="b">
-      <ref name="basic-content"/>
     </element>
   </define>
   <define name="appref">
@@ -489,20 +453,11 @@
             <oneOrMore>
               <choice>
                 <ref name="basic-content"></ref>
-                <element name="code">
-                  <oneOrMore>
-                    <choice>
-                      <text></text>
-                      <ref name="i"></ref>
-                    </choice>
-                  </oneOrMore>
-                  <text></text>
-                </element>
                 <element name="path">
                   <oneOrMore>
                     <choice>
                       <text></text>
-                      <ref name="i"></ref>
+                      <element name="i"><text/></element>
                     </choice>
                   </oneOrMore>
                 </element>
@@ -588,11 +543,6 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="i">
-    <element name="i">
-      <text/>
-    </element>
-  </define>
 
 
   <define name="basic-content">
@@ -608,15 +558,7 @@
 	that follows it. It leads to serious namespace pollution in the output.
 	-->
 	<ref name="html-element"/>
-	<ref name="a"/>
 	<ref name="abbr"/>
-        <ref name="p"/>
-	<ref name="b"/>
-	<ref name="i"/>
-	<ref name="ul"/>
-	<ref name="ol"/>
-	<ref name="br"/>
-	<ref name="pre"/>
         <element name="indent">
 	  <ref name="basic-content"/>
 	</element>
@@ -665,36 +607,19 @@
     </oneOrMore>
   </define>
 
-  <define name="a">
-    <element name="a">
-      <attribute name="href">
-        <data type="anyURI"/>
-      </attribute>
-      <oneOrMore>
-        <choice>
-          <text></text>
-          <ref name="i"></ref>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="pre">
-    <element name="pre">
-      <text/>
-    </element>
-  </define>
-  <define name="ol">
-    <element name="ol">
-      <oneOrMore>
-	<ref name="li"/>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="li">
-    <element name="li">
-      <ref name="basic-content"/>
-    </element>
-  </define>
+  <!-- <define name="a"> -->
+  <!--   <element name="a"> -->
+  <!--     <attribute name="href"> -->
+  <!--       <data type="anyURI"/> -->
+  <!--     </attribute> -->
+  <!--     <oneOrMore> -->
+  <!--       <choice> -->
+  <!--         <text></text> -->
+  <!--         <ref name="i"></ref> -->
+  <!--       </choice> -->
+  <!--     </oneOrMore> -->
+  <!--   </element> -->
+  <!-- </define> -->
   <define name="testlist">
     <element name="testlist">
       <oneOrMore>
@@ -718,12 +643,6 @@
       <attribute name="req">
         <data type="NCName"/>
       </attribute>
-    </element>
-  </define>
-
-  <define name="p">
-    <element name="p">
-      <ref name="basic-content"/>
     </element>
   </define>
 
