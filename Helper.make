@@ -1,3 +1,10 @@
+# This file is intentially not called [Mm]akefile, because it is not meant to be called
+# directly. Rather the project directory should have a "Makefile" that includes this, eg-
+#   ```
+#   TRANS?=transforms
+#   include $(TRANS)/Helper.make
+#   ```
+
 IN ?= input
 OUT ?= output
 # You can easily build with another set of transforms (ie the developer ones) by running
@@ -60,8 +67,8 @@ rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
 	trang -I rng -O rnc  $(TRANS)/schemas/schema.rng $(TRANS)/schemas/schema.rnc
 help:
-	echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"
-	grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Makefile -h | grep -v -e "^\$$"
+	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
+	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Helper.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
 clean:
 	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML); do \
 		if [ -f $$f ]; then \
