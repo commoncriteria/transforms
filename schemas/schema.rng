@@ -9,61 +9,133 @@
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <attribute name="name"/>
+      <attribute name="name">
+      </attribute>
       <element name="PPReference">
-        <attribute name="id"/>
-        <attribute name="title"/>
+	<a:documentation>
+	  A wrapper element for document meta-data.
+	</a:documentation>
+	
+	<optional><attribute name="id">
+	  <a:documentation>NOT USED</a:documentation>
+	</attribute></optional>
+
+        <attribute name="title">
+	  <a:documentation>Unknown usage. Only seen "PP Reference".</a:documentation>
+	</attribute>
         <element name="ReferenceTable">
+	  <a:documentation>
+	    A second wrapper element for document meta-data.
+	  </a:documentation>
           <element name="PPTitle">
+	    <a:documentation>Title of this document</a:documentation>
             <text/>
           </element>
           <element name="PPVersion">
+	    <a:documentation>
+	      Version of Common Criteria this document follows.
+	      It should be the version listed in the CCPart1/2/3 files consulted.
+	      Last known value is "3.1R4".
+	    </a:documentation>
             <data type="NMTOKEN"/>
           </element>
           <element name="PPAuthor">
+	    <a:documentation>
+	      Organization that developed this PP (e.g. National Information Assurance Partnership)
+	    </a:documentation>
             <text/>
           </element>
           <element name="PPPubDate">
-            <data type="NMTOKEN"/>
+	    <a:documentation>
+	      Date of publication for this PP.
+	    </a:documentation>
+            <data type="date"/>
           </element>
           <element name="PPCertificationID">
+	    <a:documentation>
+	      NOT USED. Currently I've only seen 'unassigned' as a value.
+	    </a:documentation>
             <data type="NCName"/>
           </element>
           <element name="CCVersion">
+	    <a:documentation>
+	      Version of Common Criteria PP this meets. 
+	      It should match the version described in Part 1, Part 2, and Part 3. 
+	      Currently its value is "3.1 R4".
+	    </a:documentation>
             <text/>
           </element>
           <element name="Keywords">
+	    <a:documentation>
+	      NOT USED. A list of keywords associated with this document.
+	    </a:documentation>
             <text/>
           </element>
-          <ref name="entry"/>
+	  <element name="entry">
+	    <a:documentation>NOT USED</a:documentation>
+	    <element name="name">
+	      <a:documentation>NOT USED</a:documentation>
+	      <text/>
+	    </element>
+	    <element name="description">
+	      <a:documentation>NOT USED</a:documentation>
+	      <text/>
+	    </element>
+	  </element>
         </element>
       </element>
       <oneOrMore>
         <element name="RevisionHistory">
-          <attribute name="role"/>
-          <oneOrMore>
-            <ref name="entry"/>
-          </oneOrMore>
+	  <a:documentation>Documents the major changes to releases.</a:documentation>
+          <attribute name="role">
+	    <a:documentation>
+	      Documents whether the changes listed are release or drafts
+	    </a:documentation>
+	    <choice><value>final</value><value>draft</value></choice>
+	  </attribute>
+	  <zeroOrMore>
+	    <element name="entry">
+	      <a:documentation>Container for individual revisions.</a:documentation>
+	      <element name="version">
+		<a:documentation>Text describing the revision.</a:documentation>
+		<text/>
+	      </element>
+	      <element name="date">
+		<a:documentation>Date of the revision.</a:documentation>
+		<data type="date"/>
+	      </element>
+	      <element name="subject">
+		<a:documentation>Description of the revision.</a:documentation>
+		<text/>
+	      </element>
+	    </element>
+	  </zeroOrMore>
         </element>
       </oneOrMore>
+
       <oneOrMore>
         <element name="chapter">
 	  <a:documentation>Major grouping for the document.</a:documentation>
-          <attribute name="id">
-            <data type="NCName"/>
-          </attribute>
-          <attribute name="title"/>
+	  <ref name="id-attr"/>
+	  <ref name="title-attr"/>
           <oneOrMore>
             <choice>
-              <text/>  
-              <ref name="abbr"/>
-              <ref name="cite"/>
+	      <ref name="basic-content"/>
               <ref name="section"/>
-	      <ref name="html-element"/>
               <element name="cclaims">
+		<a:documentation>
+		  Container element for the individual Conformance Claims.
+		</a:documentation>
                 <oneOrMore>
                   <element name="cclaim">
-                    <attribute name="id"/>
+		    <a:documentation>
+		      Element containing a description of Conformance claims. See CCPART1 section A.5.
+		    </a:documentation>
+                    <attribute name="id">
+		      <a:documentation>
+			This is really the title of the section.
+		      </a:documentation>
+		    </attribute>
                     <ref name="description"/>
                   </element>
                 </oneOrMore>
@@ -73,216 +145,269 @@
         </element>
       </oneOrMore>
       <oneOrMore>
-        <element name="appendix">
-          <attribute name="id">
-            <data type="NCName"/>
-          </attribute>
-          <attribute name="title"/>
-          <oneOrMore>
-            <choice>
-              <text/>
-	      <ref name="html-element"/>
-              <ref name="appref"/>
-              <ref name="cite"/>
-              <ref name="secref"/>
-              <ref name="section"/>
-              <element name="acronyms">
-                <oneOrMore>
-                  <ref name="entry"/>
-                </oneOrMore>
-              </element>
-              <element name="bibliography">
-                <oneOrMore>
-                  <ref name="entry"/>
-                </oneOrMore>
-              </element>
-              <element name="table">
-                <oneOrMore>
-                  <element name="tr">
-                    <optional>
-                      <attribute name="class">
-                        <data type="NCName"/>
-                      </attribute>
-                    </optional>
-                    <oneOrMore>
-                      <element name="td">
-                        <oneOrMore>
-                          <choice>
-                            <text/>
-                            <ref name="linkref"/>
-                          </choice>
-                        </oneOrMore>
-                      </element>
-                    </oneOrMore>
-                  </element>
-                </oneOrMore>
-              </element>
-            </choice>
-          </oneOrMore>
-        </element>
+	<ref name="appendix"/>
       </oneOrMore>
     </element>
   </start>
-  <define name="entry">
-    <element name="entry">
-      <optional>
-        <attribute name="id">
-          <data type="NCName"/>
-        </attribute>
-      </optional>
-      <optional>
-        <element name="term">
-          <oneOrMore>
-            <choice>
-              <text/>
-              <ref name="abbr"/>
-            </choice>
-          </oneOrMore>
-        </element>
-      </optional>
-      <optional>
-        <element name="version">
-          <text/>
-        </element>
-        <element name="date">
-          <data type="NMTOKEN"/>
-        </element>
-        <element name="subject">
-          <text/>
-        </element>
-      </optional>
-      <optional>
-        <choice>
-          <element name="name">
-            <data type="NCName"/>
-          </element>
-          <element name="tag">
-            <data type="NCName"/>
-          </element>
-        </choice>
-      </optional>
-      <optional>
-        <ref name="description"/>
-      </optional>
-    </element>
+
+  <define name="title-attr">
+    <attribute name="title">
+      <a:documentation>Header that is visible to the user.</a:documentation>
+    </attribute>
   </define>
-  <define name="section">
-    <element name="section">
+  <define name="id-attr">
+    <attribute name="id">
+      <a:documentation>A document-wide unique string.</a:documentation>
+      <data type="NCName"/>
+    </attribute>
+  </define>
+
+  <define name="appendix">
+    <element name="appendix">
+      <a:documentation>
+	Element that defines an appendix.
+      </a:documentation>
       <attribute name="id">
+	<a:documentation>A document-wide unique string.</a:documentation>
         <data type="NCName"/>
       </attribute>
-      <attribute name="title"/>
+      <ref name="title-attr"/>
       <oneOrMore>
         <choice>
 	  <ref name="basic-content"/>
-          <ref name="cite"/>
-          <ref name="secref"/>
+          <ref name="appref"/>
+          <ref name="section"/>
+          <element name="acronyms">
+	    <a:documentation>
+	      Section to define the acronyms used in the document.
+	    </a:documentation>
+            <oneOrMore>
+	      <element name="entry">
+		<a:documentation>
+		  Wrapper for terms and descriptions.
+		</a:documentation>
+		<element name="term">
+		  <a:documentation>
+		    The characters of the acronym.
+		  </a:documentation>
+		  <text/>
+		</element>
+		<ref name="description"/>
+	      </element>
+            </oneOrMore>
+          </element>
+          <element name="bibliography">
+	    <a:documentation>
+	      Section to define the items references.
+	    </a:documentation>
+            <oneOrMore>
+              <element name="entry">
+		<a:documentation>
+		  Groups bibliograph entries.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<element name="tag">
+		  <a:documentation>
+		    A visible bibliography-wide unique identifier. 
+		  </a:documentation>
+		  <ref name="basic-content"/>
+		</element>
+		<ref name="description"/>
+	      </element>
+            </oneOrMore>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="section">
+    <element name="section">
+      <a:documentation>
+	A block smaller than a chapter.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content"/>
           <element name="InsertSPDCorrespondence">
+	    <a:documentation>
+	      Tags the spot where the table mapping threats 
+	      to objectives to requirements should go.
+	    </a:documentation>
             <empty/>
           </element>
           <element name="OSPs">
+	    <a:documentation>
+	      Grouping for Organizational Security Policies
+	    </a:documentation>
             <element name="OSP">
-              <attribute name="id">
-                <data type="NCName"/>
-              </attribute>
+	      <a:documentation>
+		Entry for each security policy.
+	      </a:documentation>
+	      <ref name="id-attr"/>
               <ref name="description"/>
               <ref name="objective-refer"/>
             </element>
           </element>
           <element name="SOEs">
+	    <a:documentation>
+	      Grouping for Security Objectives for the Operational environment.
+	    </a:documentation>
             <oneOrMore>
               <element name="SOE">
-                <attribute name="id">
-                  <data type="NCName"/>
-                </attribute>
+		<a:documentation>
+		  Security Objective for the Operational environment.
+		</a:documentation>
+		<ref name="id-attr"/>
                 <ref name="description"/>
               </element>
             </oneOrMore>
           </element>
           <element name="SOs">
+	    <a:documentation>
+	      Grouping for Security Objective entries.
+	    </a:documentation>
             <oneOrMore>
               <element name="SO">
-                <attribute name="id">
-                  <data type="NCName"/>
-                </attribute>
-		<optional>
-                  <ref name="description"/>
-		</optional>
+		<a:documentation>
+		  Entry for a security objective
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="description"/>
                 <oneOrMore>
                   <element name="component-refer">
-                    <attribute name="ref"/>
+		    <a:documentation>
+		      Cross-references a component.
+		    </a:documentation>
+                    <attribute name="ref">
+		      <a:documentation>
+			Id of the referenced component.
+		      </a:documentation>
+		    </attribute>
+		    <empty/>
                   </element>
                 </oneOrMore>
               </element>
             </oneOrMore>
           </element>
           <element name="assumptions">
+	    <a:documentation>
+	      Grouping of assumptions.
+	    </a:documentation>
             <oneOrMore>
               <element name="assumption">
-                <attribute name="id">
-                  <data type="NCName"/>
-                </attribute>
+		<a:documentation>
+		  Assumption made.
+		</a:documentation>
+		<attribute name="id">
+		  <a:documentation>
+		    An assumption-wide unique ID that is also displayed to the user.
+		  </a:documentation>
+		</attribute>
                 <ref name="description"/>
                 <ref name="objective-refer"/>
               </element>
             </oneOrMore>
           </element>
           <element name="subsection">
-            <attribute name="id">
-              <data type="NCName"/>
-            </attribute>
-            <attribute name="title"/>
+	    <a:documentation>
+	      Lower level of grouping
+	    </a:documentation>
+	    <ref name="id-attr"/>
+            <ref name="title-attr"/>
             <oneOrMore>
               <choice>
-                <text/>
-                <ref name="abbr"/>
-                <ref name="cite"/>
-                <ref name="secref"/>
+		<ref name="basic-content"/>
                 <element name="a-component">
-                  <attribute name="id">
-                    <data type="NCName"/>
-                  </attribute>
-                  <attribute name="name"/>
-                  <oneOrMore>
-                    <choice>
-                      <text/>
-                      <ref name="aactivity"/>
-                      <ref name="abbr"/>
-                      <ref name="secref"/>
-                    </choice>
-                  </oneOrMore>
+		  <a:document>
+		    Specifies a component under Security Assurance Requirements section.
+		  </a:document>
+		  <ref name="id-attr"/>
+                  <attribute name="name">
+		    <a:document>
+		      A readable title for this component
+		    </a:document>
+		  </attribute>
+		  <ref name="basic-content"/>
 		  <optional>
                     <element name="group">
+		      <a:document>
+			Actions levied on the developer: <i>The developer shall...</i>
+		      </a:document>
 		      <attribute name="type"><value>dev-action</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
 		  </optional>
 		  <optional>
                     <element name="group">
+		      <a:document>
+			Requirements for content and presentation.
+		      </a:document>
 		      <attribute name="type"><value>con-pres</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
 		  </optional>
 		  <optional>
                     <element name="group">
+		      <a:document>
+			Actions levied on the evaluator: <i>The evaluator shall...</i>
+		      </a:document>
 		      <attribute name="type"><value>eval-action</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
 		  </optional>
                 </element>
                 <element name="f-component">
-                  <attribute name="id"/>
-                  <attribute name="name"/>
-		  <ref name="status"/>
+		  <a:document>
+		    Specifies a component under Security Functional Requirements section..
+		  </a:document>
+		  <attribute name="id">
+		    <a:documentation>
+		      A document-wide unique id. Not really read by a person, but it
+		      should be the base for its child requirements' ids.
+		    </a:documentation>
+		  </attribute>
+		  <attribute name="name">
+		    <a:documentation>
+		      Readable title for this requirement.
+		    </a:documentation>
+		  </attribute>
 		  <optional>
-		    <ref name="selection-depends"/>
+		    <attribute name="targetdate">
+		      <a:documentation>
+			Target date that the requirements under this component become
+			manandory. It only makes sense for _objective_ components.
+		      </a:documentation>
+		      <data type="date"/>
+		    </attribute>
 		  </optional>
+		  <ref name="status"/>
+		  <zeroOrMore>
+		    <element name="selection-depends">
+		      <a:documentation>
+			Defines the other requirements whose selection affects whether this component must be also applied.
+		      </a:documentation>
+		      <attribute name="req">
+			<a:documentation>
+			  The value of the id attribute of the requirement is component depends on.
+			</a:documentation>
+			<data type="NCName"/>
+		      </attribute>
+		    </element>
+		  </zeroOrMore>
                   <oneOrMore>
                     <element name="f-element">
-                      <attribute name="id"/>
-                      <optional>
-                        <attribute name="targetdate"/>
-                      </optional>
+		      <a:documentation>
+			Defines a functional requirement.
+		      </a:documentation>
+                      <attribute name="id">
+			<a:documentation>
+			  A document-wide unique ID that is also displayed to the user. 
+			  It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+			</a:documentation>
+		      </attribute>
                       <ref name="title"/>
                       <oneOrMore>
                         <choice>
@@ -296,225 +421,249 @@
                     </element>
                   </oneOrMore>
                 </element>
-                <element name="figure">
-                  <attribute name="entity"/>
-                  <attribute name="id">
-                    <data type="NCName"/>
-                  </attribute>
-                  <attribute name="title"/>
-                </element>
                 <element name="glossary">
+		  <a:documentation>
+		    Section to define terms.
+		  </a:documentation>
                   <oneOrMore>
-                    <ref name="entry"/>
+		    <element name="entry">
+		      <a:documentation>
+			Wrapper element for terms.
+		      </a:documentation>
+                      <element name="term">
+			<a:documentation>
+			  The term of phrase to be defined.
+			</a:documentation>
+			<ref name="basic-content"/>
+		      </element>
+		      <ref name="description"/>
+		    </element>
                   </oneOrMore>
                 </element>
               </choice>
             </oneOrMore>
           </element>
           <element name="threats">
+	    <a:documentation>
+	      Wrapper element for various threats.
+	    </a:documentation>
             <oneOrMore>
               <element name="threat">
+		<a:documentation>
+		  Defines a threat.
+		</a:documentation>
                 <attribute name="id">
-                  <data type="NCName"/>
+                  <data type="NCName">
+		    <param name="pattern">T\.[_A-Z]+</param>
+		  </data>
                 </attribute>
                 <ref name="description"/>
-                <zeroOrMore>
+                <oneOrMore>
                   <ref name="objective-refer"/>
-                </zeroOrMore>
+                </oneOrMore>
               </element>
             </oneOrMore>
           </element>
           <element name="usecases">
+	    <a:documentation>
+	      Wrapper element for uses cases.
+	    </a:documentation>
             <oneOrMore>
               <element name="usecase">
-                <optional>
-                  <attribute name="id">
-                    <data type="NCName"/>
-                  </attribute>
-                </optional>
-                <attribute name="title"/>
+		<a:documentation>
+		  A referrable section on how the protection profiled item is used.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="title-attr"/>
                 <ref name="description"/>
               </element>
             </oneOrMore>
           </element>
         </choice>
       </oneOrMore>
-      <zeroOrMore>
-        <element name="figure">
-            <attribute name="id"/>
-            <attribute name="title"/>
-            <attribute name="entity"/>
-            <optional>
-              <attribute name="max-width"/>
-            </optional>
-        </element>
-      </zeroOrMore>
-    </element>
-  </define>
-  <define name="abbr">
-    <element name="abbr">
-      <optional>
-        <attribute name="class">
-          <data type="NCName"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="linkend">
-          <data type="NCName"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="title"/>
-      </optional>
-      <text/>
     </element>
   </define>
   <define name="description">
     <element name="description">
+      <a:documentation>
+	A description section. Basically just has basic content and 
+      </a:documentation>
       <oneOrMore>
         <choice>
 	  <ref name="basic-content"/>
-          <text/>
-          <ref name="appref"/>
-          <ref name="cite"/>
-          <ref name="linkref"/>
 	  <ref name="xref"/>
           <element name="InsertAppendixExplainer">
-            <empty/>
+	    <a:documentation>
+	      Tag that denotes where an explanation of where the different types (objective, threshold, optional) 
+	      of requirements are located.
+	    </a:documentation>
+	    <empty/>
           </element>
-          <ref name="secref"></ref>
         </choice>
       </oneOrMore>
     </element>
   </define>
   <define name="cite">
     <element name="cite">
-      <attribute name="linkend">
-        <data type="NCName"/>
-      </attribute>
+      <a:documentation>Cites something in the bibliography.</a:documentation>
+      <ref name="linkend-attr"/>
     </element>
   </define>
   <define name="secref">
     <element name="secref">
-      <attribute name="linkend">
-        <data type="NCName"/>
-      </attribute>
+      <a:documentation>References a section (Adds word 'section').</a:documentation>
+      <ref name="linkend-attr"/> 
     </element>
   </define>
   <define name="xref">
     <element name="xref">
-      <attribute name="linkend"/>
+      <a:documentation>Cross references something with a title.</a:documentation>
+      <ref name="linkend-attr"/>
     </element>
   </define>
   <define name="linkref">
     <element name="linkref">
-      <a:annotation>QQQ</a:annotation>
-      <attribute name="linkend"/>
+      <a:documentation>Cross references components </a:documentation>
+      <ref name="linkend-attr"/>
     </element>
   </define>
   <define name="appref">
     <element name="appref">
-      <attribute name="linkend">
-        <data type="NCName"/>
-      </attribute>
+      <a:documentation>Cross references an item in the appendex</a:documentation>
+      <ref name="linkend-attr"/>
     </element>
   </define>
   <define name="objective-refer">
     <element name="objective-refer">
+      <a:documentation>Element that denotes an objective</a:documentation>
       <attribute name="ref">
-        <data type="NCName"/>
+	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
+        <data type="NCName">
+	  <param name="pattern">O(E?)\.[_A-Z]+</param>
+	</data>
       </attribute>
       <element name="rationale">
-        <oneOrMore>
-          <choice>
-            <text/>
-            <ref name="abbr"/>
-          </choice>
-        </oneOrMore>
+	<a:documentation>Argument as to why the objective applies</a:documentation>
+	<ref name="basic-content"/>
       </element>
     </element>
   </define>
   <define name="aactivity">
     <element name="aactivity">
+      <a:documentation>Element containing an Assurance Activity.</a:documentation>
       <oneOrMore>
         <choice>
-          <element name="subaactivity">
-            <attribute name="platform">
-              <choice>
-                <value>android</value>
-                <value>blackberry</value>
-                <value>ios</value>
-                <value>linux</value>
-                <value>OS X</value>
-                <value>Solaris</value>
-                <value>windows</value>
-              </choice>
-            </attribute>
-            <oneOrMore>
-              <choice>
-                <ref name="basic-content"></ref>
-                <element name="path">
-                  <oneOrMore>
-                    <choice>
-                      <text></text>
-                      <element name="i"><text/></element>
-                    </choice>
-                  </oneOrMore>
-                </element>
-                <element name="util">
-                  <text></text>
-                </element>
-              </choice>
-            </oneOrMore>
-          </element>
-          <ref name="basic-content"></ref>
-          <ref name="appref"></ref>
+      	  <ref name="subaactivity"/>
+          <ref name="basic-content"/>
         </choice>
       </oneOrMore>
     </element>
   </define>
-  <define name="title">
-    <element name="title">
-      <oneOrMore><choice>
-	<ref name="basic-content"/>
-        <ref name="note"></ref>
-        <element name="management-function-set">
-          <oneOrMore>
-            <element name="manager">
-              <data type="NCName"/>
-            </element>
-          </oneOrMore>
-          <oneOrMore>
-            <element name="management-function">
-              <optional>
-		<attribute name="admin"/>
-              </optional>
-              <optional>
-                <attribute name="user"/>
-	      </optional>
-	      <ref name="basic-content"/>
-              </element>
+  <!-- ######################### -->
+  <!-- Section should be removed -->
+  <!-- ######################### -->
+  <define name="subaactivity">
+    <element name="subaactivity">
+      <attribute name="platform">
+        <choice>
+          <value>android</value>
+          <value>blackberry</value>
+          <value>ios</value>
+          <value>linux</value>
+          <value>OS X</value>
+          <value>Solaris</value>
+          <value>windows</value>
+        </choice>
+      </attribute>
+      <oneOrMore>
+        <choice>
+          <ref name="basic-content"></ref>
+          <element name="path">
+            <oneOrMore>
+              <choice>
+                <text></text>
+                <element name="i"><text/></element>
+              </choice>
             </oneOrMore>
           </element>
-          <element name="requires">
-            <attribute name="req">
-              <data type="NCName"/>
-            </attribute>
+          <element name="util">
+            <text></text>
           </element>
         </choice>
       </oneOrMore>
+    </element>
+  </define>
+
+  <define name="title">
+    <element name="title">
+      <a:documentation>
+	Contains the formal wording for the requirement (either for a-elements or f-elements).
+	Must match requirements in CC Part 2 (unless it is an _ext requirement).
+      </a:documentation>
+      <oneOrMore><choice>
+	<ref name="basic-content"/>
+        <ref name="note"/>
+        <element name="management-function-set">
+	  <a:documentation>
+	    Table defining functions that are to be done and what role is required to do them.
+	  </a:documentation>
+          <element name="manager">
+	    <a:documentation>
+	      Readable role name for the administrator.
+	    </a:documentation>
+            <data type="NCName"/>
+          </element>
+          <element name="manager">
+	    <a:documentation>
+	      Readable role name for the user.
+	    </a:documentation>
+            <data type="NCName"/>
+          </element>
+          <oneOrMore>
+            <element name="management-function">
+	      <a:documentation>Describes the management function.</a:documentation>
+              <optional>
+		<attribute name="admin">
+		  <a:documentation>
+		    Indicates whether management by the administrator is mandatory or optional
+		  </a:documentation>
+		  <choice><value>X</value><value>O</value></choice>
+		</attribute>
+              </optional>
+              <optional>
+                <attribute name="user">
+		  <a:documentation>
+		    Indicates whether management by the user is mandatory or optional
+		  </a:documentation>
+		  <choice><value>X</value><value>O</value></choice>
+		</attribute>
+	      </optional>
+	      <ref name="basic-content"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </choice></oneOrMore>
     </element>
   </define>
   <define name="note">
     <element name="note">
+      <a:documentation>
+	Any further instructions associated with the requirement.
+      </a:documentation>
       <optional>
         <attribute name="role">
-          <data type="NCName"/>
+	  <a:documentation>Indicates who is associated with this role</a:documentation>
+	  <choice>
+	    <value>application</value><value>Application</value>
+	    <value>developer</value><value>Developer</value>
+	  </choice>
         </attribute>
       </optional>
       <ref name="basic-content"/>
     </element>
   </define>
+
+
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
@@ -522,79 +671,197 @@
       </a:documentation>
       <optional>
         <attribute name="atleastone">
-	  <choice><value>yes</value><value>no</value></choice>
+	  <a:documentation>
+	    Dictates if the user is suppose to select all that apply
+	    or just one.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
         </attribute>
       </optional>
       <optional>
         <attribute name="linebreak">
-	  <choice><value>yes</value><value>no</value></choice>
+	  <a:documentation>
+	    Indicates that new lines should be appended to every selectable.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
         </attribute>
       </optional>
       <ref name="selectable-group"/>
     </element>
   </define>
+
   <define name="assignable">
     <element name="assignable">
-      <oneOrMore>
-        <choice>
-          <text/>
-          <ref name="abbr"></ref>
-        </choice>
-      </oneOrMore>
+      <a:documentation>
+	Incidates the beginning of an assignable section.
+      </a:documentation>
+      <ref name="basic-content"/>
     </element>
   </define>
 
 
   <define name="basic-content">
     <a:documentation>
-    Content that can go anywhere (Although some items are only suitable for title elements).
+      Content that can go anywhere (Although some items are only suitable for title elements).
     </a:documentation>
     <oneOrMore>
       <choice>
 	<text/>
-
-	<!-- 
-	"html-element" should replace all the html tags with CC namespace garbage 
-	that follows it. It leads to serious namespace pollution in the output.
-	-->
 	<ref name="html-element"/>
-	<ref name="abbr"/>
-        <element name="indent">
-	  <ref name="basic-content"/>
-	</element>
-	<!-- 
-	     Kinda need these here b/c li elements can have either of these when used in an
-	     f-element/title.
-	-->
 	<ref name="linkref"/>
         <ref name="cite"/>
         <ref name="secref"/>
         <ref name="testlist"/>
-	<element name="tss">
-	  <ref name="basic-content"></ref>
-	</element>
-        <element name="guidance">
-          <ref name="basic-content"></ref>
-        </element>
-        <element name="requires">
-          <attribute name="req"></attribute>
-          <empty></empty>
-        </element>
-        <element name="tests">
-          <ref name="basic-content"></ref>
-        </element>
 	<ref name="selectables"/>
 	<ref name="assignable"/>
         <ref name="appref"/>
+        <element name="figure">
+	  <a:documentation>
+	    Tag allow that inserts a picture.
+	  </a:documentation>
+          <attribute name="entity">
+	    <a:documentation>
+	      Path to the image file.
+	    </a:documentation>
+	  </attribute>
+	  <ref name="id-attr"/>
+	  <ref name="title-attr"/>
+          <optional>
+            <attribute name="max-width"/>
+          </optional>
+        </element>
+	<element name="table">
+	  <a:documentation>
+	    Redefinition of the html table element so that it can include 
+	    CC elements.
+	  </a:documentation>
+	  <optional> 
+	    <attribute name="class">
+	      <a:documentation>
+		Redefinition html class table attribute.
+	      </a:documentation>
+	    </attribute>
+	  </optional>
+	  <zeroOrMore>
+	    <element name="tr">
+	      <a:documentation>
+		Redefinition of the tr table element so that it can include 
+		CC elements.
+	      </a:documentation>
+	      <optional><attribute name="class">
+		<a:documentation>
+		  Redefinition of the class tr attribute.
+		</a:documentation>
+	      </attribute></optional>
+	      <oneOrMore><element name="td">
+		<a:documentation>
+		  Redefinition of the tr td element so that it can include 
+		  CC elements.
+		</a:documentation>
+		<ref name="basic-content"/>
+	      </element></oneOrMore>
+	    </element>
+	  </zeroOrMore>
+	</element>
+	<element name="ol">
+	  <a:documentation>
+	    Redefinition of the html ol element so that it can include 
+	    CC elements.
+	  </a:documentation>
+	  <optional><attribute name="type">
+	    <a:documentation>
+	      Redefinition of the ol's type attribute.
+	    </a:documentation>
+	  </attribute></optional>
+	  <ref name="li"/>
+	</element>
+	<element name="ul">
+	  <a:documentation>
+	    Redefinition of the html ul element so that it can include 
+	    CC elements.
+	  </a:documentation>
+	  <ref name="li"/>
+	</element>
+        <element name="b">
+	  <a:documentation>
+	    Redefinition of the html b element so that it can include 
+	    CC elements.
+	  </a:documentation>
+	  <ref name="basic-content"/>
+	</element>
+        <element name="indent">
+	  <a:documentation>
+	    Tags that this section should be indented(left) 2em.
+	  </a:documentation>
+	  <ref name="basic-content"/>
+	</element>
+	<element name="tss">
+	  <a:documentation>
+	    Denotes a TSS section.
+	  </a:documentation>
+	  <ref name="basic-content"></ref>
+	</element>
+        <element name="guidance">
+	  <a:documentation>
+	    Denotes a Guidance section.
+	  </a:documentation>
+          <ref name="basic-content"></ref>
+        </element>
+	<!-- QQQ: REMOVE -->
+        <element name="tests">
+	  <a:documentation>
+	    Denotes a tests section.
+	  </a:documentation>
+          <ref name="basic-content"></ref>
+        </element>
       </choice>
     </oneOrMore>
+  </define>
+  
+
+  <!-- 
+       These are elements that also exist in the html namespace, but
+       since they can have descendents that are in the cc namespace,
+       we've declared them here.
+  -->
+  <define name="li">
+    <oneOrMore>
+      <element name="li">
+	<a:documentation>
+	  List Item element in the CC namespace, b/c it can have CC children.
+	</a:documentation>
+	<ref name="basic-content"/>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="ol">
+    <element name="ol">
+      <a:documentation>
+	Ordered List element in the CC namespace, b/c it can have CC descendants.
+      </a:documentation>
+      <ref name="li"/>
+    </element>
+  </define>
+  <define name="ul">
+    <element name="ul">
+      <a:documentation>
+	Unordered List element in the CC namespace, b/c it can have CC descendants.
+      </a:documentation>
+      <ref name="li"/>
+    </element>
   </define>
 
   <define name="a-elements">
     <oneOrMore>
       <element name="a-element">
+	<a:documentation>
+	  Defines a functional requirement.
+	</a:documentation>
 	<attribute name="id">
-          <data type="NCName"/>
+	  <a:documentation>
+	    A document-wide unique ID that is also displayed to the user. 
+	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	  </a:documentation>
 	</attribute>
 	<ref name="title"/>
 	<optional>
@@ -607,25 +874,18 @@
     </oneOrMore>
   </define>
 
-  <!-- <define name="a"> -->
-  <!--   <element name="a"> -->
-  <!--     <attribute name="href"> -->
-  <!--       <data type="anyURI"/> -->
-  <!--     </attribute> -->
-  <!--     <oneOrMore> -->
-  <!--       <choice> -->
-  <!--         <text></text> -->
-  <!--         <ref name="i"></ref> -->
-  <!--       </choice> -->
-  <!--     </oneOrMore> -->
-  <!--   </element> -->
-  <!-- </define> -->
   <define name="testlist">
     <element name="testlist">
+      <a:documentation>
+	Defines a lists of tests to evaluate a requirement.
+      </a:documentation>
       <oneOrMore>
         <choice>
 	  <ref name="basic-content"/>
           <element name="test">
+	    <a:documentation>
+	      Denotes a single test.
+	    </a:documentation>
 	    <oneOrMore>
 	      <choice>
 		<ref name="basic-content"/>
@@ -638,16 +898,12 @@
     </element>
   </define>
 
-  <define name="selection-depends">
-    <element name="selection-depends">
-      <attribute name="req">
-        <data type="NCName"/>
-      </attribute>
-    </element>
-  </define>
 
   <define name="status">
     <attribute name="status">
+      <a:documentation>
+	Denotes the status of a requirement.
+      </a:documentation>
       <choice>
 	<value>threshold</value>
 	<value>sel-based</value>
@@ -658,23 +914,26 @@
   </define>
 
   <define name="selectable-group">
-    <!--<choice>-->
-      <oneOrMore>
-        <ref name="selectable-single"/>
-      </oneOrMore>
-      <!--<text></text>-->
-    <!--</choice>-->
+    <ref name="selectable-single"/>
+    <oneOrMore>
+      <ref name="selectable-single"/>
+    </oneOrMore>
   </define>
 
   <define name="selectable-single">
     <element name="selectable">
-        <oneOrMore>
-          <choice>
-            <ref name="basic-content"/>
-              <ref name="selectables"></ref>
-          </choice>
-        </oneOrMore>
+      <a:documentation>
+	Denotes the start of a selectable in a selectables section.
+      </a:documentation>
+      <ref name="basic-content"/>
     </element>
+  </define>
+
+  <define name="linkend-attr">
+    <attribute name="linkend">
+      <a:documentation>References an ID of the referenced item.</a:documentation>
+      <!--      <data type="NCName"/> -->
+    </attribute>
   </define>
 
   <define name="html-element">
@@ -684,12 +943,18 @@
 	  <nsName ns="http://common-criteria.rhcloud.com/ns/cc"/>
 	</except>
       </anyName>
+      <a:documentation>Defines all html-elements with an optional number of html attributes and descendants.</a:documentation>
       <zeroOrMore>
 	<attribute>
 	  <anyName/>
 	</attribute>
       </zeroOrMore>
-      <ref name="basic-content"/>
+      <zeroOrMore>
+	<choice>
+	  <text/>
+	  <ref name="html-element"/>
+	</choice>
+      </zeroOrMore>
     </element>
   </define>
 

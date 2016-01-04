@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if [ $# == 1 ]; then
+    IN=$1
+    OUT=${1%%.*}.html
+elif [ $# == 2 ]; then
+    IN=$1
+    OUT=$2
+elif [ $# == 3 ]; then
+    IN=$1
+    OUT=$2
+    verbose=on
+else
+    echo "Usage: rng-to-html <rng-path> [<output-dir>]"
+    exit 0
+fi
+
+
+
+function findDirectory() {
+    it=$1
+
+    #-- Is it called via the PATH
+    if which $it  1>/dev/null 2>&1 ; then # If it's in the path
+    	it=$(which $it)			  # Get where it is
+    fi					  #
+    #-- Check to see if it's a symlink #
+    if readlink $it >/dev/null; then # If it's a link
+	it=$(readlink $it)	     # Then resolve it
+    fi				     # 
+    #-- Fix it up
+    DIR=${it%/*}		 # Strip off the end
+    if [ "$DIR" == "$it" ]; then # If they're equal (no directories)
+    	DIR="."			 # Set the current directory
+    fi
+    echo $DIR			# Need to echo it
+}
+DIR=$(findDirectory $0)/..
+
+tfile=$(mktemp)
+
+(
+    echo '<?xml version="1.0"?>'
+    echo -n '<!DOCTYPE article SYSTEM "'
+    echo -n $DIR/lib/xml-dtd-4.1.2/docbookx.dtd
+    echo '">'
+    xsltproc $DIR/lib/RngDoc.xsl $IN 2>/dev/null | tail -n +3
+) > $tfile
+
+
+docbook2html $tfile -o $OUT
+rm -f $tfile
