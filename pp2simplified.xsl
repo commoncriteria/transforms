@@ -289,46 +289,48 @@
 	</xsl:template>
 
 	<xsl:template match="cc:f-element | cc:a-element">
-		<xsl:variable name="elementid" select="translate(@id,$lower,$upper)"/>
-		<xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
-		<!-- this will result in duplicate IDs for TRs (as link targets), but this does not create a problem in practice -->
-		<tr id="{$componentid}">
-			<td id="{$elementid}" class="elementidstyle">
-				<a class="abbr" href="#{$elementid}">
-					<xsl:value-of select="$elementid"/>
-				</a>
-			</td>
-			<td class="element">
-				<xsl:apply-templates select="cc:title"/>
-				<br/>
-				<xsl:choose>
-					<xsl:when test="@status='objective'">
-						<p/>
-						<i>
-							<b>This is currently an objective requirement. <xsl:if
-									test="@targetdate">It is targeted for <xsl:value-of
-										select="@targetdate"/>.</xsl:if></b>
-						</i>
-						<br/>
-					</xsl:when>
-					<xsl:when test="@status='sel-based'">
-						<p/>
-						<b>
-							<i>This is a selection-based requirement. Its inclusion depends upon
-								selection in <xsl:for-each select="cc:selection-depends">
-									<xsl:value-of select="translate(@req, $lower, $upper)"/>
-									<xsl:if test="position() != last()"
-										><xsl:text>, </xsl:text></xsl:if>
-								</xsl:for-each>. </i>
-						</b>
-						<br/>
-						<br/>
-					</xsl:when>
-				</xsl:choose>
+	  <xsl:variable name="elementid" select="translate(@id,$lower,$upper)"/>
+	  <xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
+	  <!-- this will result in duplicate IDs for TRs (as link targets), but this does not create a problem in practice -->
+	  <tr id="{$componentid}">
+	    <td id="{$elementid}" class="elementidstyle">
+	      <a class="abbr" href="#{$elementid}">
+		<xsl:value-of select="$elementid"/>
+	      </a>
+	    </td>
+	    <td class="element">
+	      <xsl:apply-templates select="cc:title"/>
+	      <br/>
+	      <xsl:choose>
+		<xsl:when test="@status='objective'">
+		  <p/>
+		  <i>
+		    <b>This is currently an objective requirement. 
+		    <xsl:if test="../@targetdate">
+		      It is targeted for <xsl:value-of select="../@targetdate"/>.
+		    </xsl:if>
+		    </b>
+		  </i>
+		  <br/>
+		</xsl:when>
+		<xsl:when test="@status='sel-based'">
+		  <p/>
+		  <b>
+		    <i>This is a selection-based requirement. Its inclusion depends upon
+		    selection in <xsl:for-each select="cc:selection-depends">
+		    <xsl:value-of select="translate(@req, $lower, $upper)"/>
+		    <xsl:if test="position() != last()"
+			    ><xsl:text>, </xsl:text></xsl:if>
+		    </xsl:for-each>. </i>
+		  </b>
+		  <br/>
+		  <br/>
+		</xsl:when>
+	      </xsl:choose>
 
-				<xsl:apply-templates select="cc:note[@role='application']"/>
-			</td>
-		</tr>
+	      <xsl:apply-templates select="cc:note[@role='application']"/>
+	    </td>
+	  </tr>
 	</xsl:template>
 
 	<xsl:template match="cc:title">

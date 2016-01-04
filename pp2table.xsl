@@ -213,57 +213,58 @@
 
 
 	<xsl:template match="cc:f-element | cc:a-element">
-		<xsl:variable name="reqid" select="translate(@id,$lower,$upper)"/>
-		<xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
-		<tr id="{$componentid}">
-			<td id="{$reqid}">
-				<a class="abbr" href="#{$reqid}">
-					<xsl:value-of select="$reqid"/>
-				</a>
-			</td>
-			<td>
-				<xsl:apply-templates select="cc:title"/>
-				<br/>
-				<xsl:choose>
-					<xsl:when test="@status='objective'">
-						<br/>
-						<i>
-							<b>This is currently an objective requirement. <xsl:if
-									test="@targetdate">It is targeted for <xsl:value-of
-										select="@targetdate"/>.</xsl:if></b>
-						</i>
-						<br/>
-					</xsl:when>
-					<xsl:when test="../@status='optional'">
-						<div class="statustag">
-							<p/>
-							<i>
-								<b>This is an optional requirement. It may be required by Extended
-									Packages of this Protection Profile.</b>
-							</i>
-						</div>
-					</xsl:when>
-
-					<xsl:when test="@status='sel-based'">
-						<br/>
-						<b>
-							<i>This is a selection-based requirement. Its inclusion depends upon
-								selection in <xsl:for-each select="cc:selection-depends">
-									<xsl:value-of select="translate(@req, $lower, $upper)"/>
-									<xsl:if test="position() != last()"
-										><xsl:text>, </xsl:text></xsl:if>
-								</xsl:for-each>. </i>
-						</b>
-						<br/>
-					</xsl:when>
-				</xsl:choose>
-
-				<xsl:apply-templates select="cc:note[@role='application']"/>
-			</td>
-			<td>
-				<xsl:apply-templates select="cc:aactivity"/>
-			</td>
-		</tr>
+	  <xsl:variable name="reqid" select="translate(@id,$lower,$upper)"/>
+	  <xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
+	  <tr id="{$componentid}">
+	    <td id="{$reqid}">
+	      <a class="abbr" href="#{$reqid}">
+		<xsl:value-of select="$reqid"/>
+	      </a>
+	    </td>
+	    <td>
+	      <xsl:apply-templates select="cc:title"/>
+	      <br/>
+	      <xsl:choose>
+		<xsl:when test="../@status='objective'">
+		  <br/>
+		  <i>
+		    <b>This is currently an objective requirement. 
+		    <xsl:if test="../@targetdate">
+		      It is targeted for <xsl:value-of select="../@targetdate"/>.
+		    </xsl:if></b>
+		  </i>
+		  <br/>
+		</xsl:when>
+		<xsl:when test="../@status='optional'">
+		  <div class="statustag">
+		    <p/>
+		    <i>
+		      <b>This is an optional requirement. It may be required by Extended
+		      Packages of this Protection Profile.</b>
+		    </i>
+		  </div>
+		</xsl:when>
+		
+		<xsl:when test="../@status='sel-based'">
+		  <br/>
+		  <b>
+		    <i>This is a selection-based requirement. Its inclusion depends upon
+		    selection in <xsl:for-each select="cc:selection-depends">
+		    <xsl:value-of select="translate(@req, $lower, $upper)"/>
+		    <xsl:if test="position() != last()"
+			    ><xsl:text>, </xsl:text></xsl:if>
+		    </xsl:for-each>. </i>
+		  </b>
+		  <br/>
+		</xsl:when>
+	      </xsl:choose>
+	      
+	      <xsl:apply-templates select="cc:note[@role='application']"/>
+	    </td>
+	    <td>
+	      <xsl:apply-templates select="cc:aactivity"/>
+	    </td>
+	  </tr>
 	</xsl:template>
 
 	<xsl:template match="cc:title">

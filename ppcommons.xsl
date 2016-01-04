@@ -100,9 +100,13 @@
 
   <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
 
-  <xsl:template match="cc:note[@role='application']">
+  <xsl:template match="cc:note">
     <div class="appnote">
-      <b>Application Note: </b>
+      <b><xsl:choose>
+	<xsl:when test="@role='application'">Application</xsl:when>
+	<xsl:when test="@role='developer'">Developer</xsl:when>
+	<xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
+      </xsl:choose> Note: </b>
       <xsl:apply-templates/>
     </div>
   </xsl:template>

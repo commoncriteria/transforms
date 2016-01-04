@@ -865,9 +865,12 @@
         <div class="statustag">
           <p/>
           <i>
-            <b> This is an objective requirement. <xsl:if test="../@targetdate">It is scheduled to
-                be mandatory for products entering evaluation after <xsl:value-of
-                  select="../@targetdate"/> .</xsl:if></b>
+            <b> This is an objective requirement. 
+	    <xsl:if test="../../@targetdate">
+	      It is scheduled to  be mandatory for products entering evaluation after 
+	      <xsl:value-of select="../../@targetdate"/>.
+	    </xsl:if>
+	    </b>
           </i>
         </div>
       </xsl:if>
@@ -913,10 +916,8 @@
       <xsl:if test="../../@status='optional'">
         <div class="statustag">
           <p/>
-          <i>
-            <b>This is an optional requirement. It may be required by Extended Packages of this
-              Protection Profile.</b>
-          </i>
+          <i><b>This is an optional requirement. It may be required by Extended Packages of this
+              Protection Profile.</b></i>
         </div>
       </xsl:if>
 
