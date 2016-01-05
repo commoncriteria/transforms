@@ -1,4 +1,4 @@
-all: docs/t1.html rnc
+default: docs/t1.html
 
 docs/t1.html: schema.rng docs
 	rng-to-html/bin/rng-to-html schema.rng docs
