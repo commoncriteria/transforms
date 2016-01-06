@@ -39,7 +39,16 @@
 	position:relative;
 	top:1px;
 	}
-	
+	.buttondiv{
+	  padding-top:8px;
+	}
+	.attrtab{
+	  border: thin solid black;
+	  border-collapse: collapse;
+	}
+	.attrtab td{
+	  padding: 5px;  
+	}
       </style>
     </head>
     <body>
@@ -97,14 +106,6 @@
       </h2>
 
       <table role="element">
-	<caption>
-	<xsl:attribute name="id">
-	  <xsl:call-template name="makeid">
-	    <xsl:with-param name="node" select="."/>
-	  </xsl:call-template>
-	</xsl:attribute>
-	<h2>Element: <xsl:value-of select="$qname"/></h2>
-	</caption>
 	    <xsl:if test="not($nsuri='')">
 	      <tr>
 		<td style="font-weight: bold">Namespace</td>
@@ -137,7 +138,7 @@
 	    <xsl:if test="starts-with($hasatts, 'true')">
 	      <tr>
 		<td style="font-weight: bold">Attributes: </td>
-		<table border="1" style="border: thin solid black">
+		<table class="attrtab" border="1">
 		  <tr>
 		      <td style="font-weight: bold">Attribute</td>
 		      <td style="font-weight: bold">Type</td>
@@ -154,7 +155,7 @@
 	    </xsl:if>
       </table>
       <div onClick="var cn=this.getElementsByTagName('code')[0]; cn.style.display=cn.style.display=='none'?'block':'none'">
-	<a class="myButton">Show/Hide Source</a><br/>
+	<div class="buttondiv"><a class="myButton">Show/Hide Source</a></div><br/>
       <code style="display: none">
 	<xsl:apply-templates select="." mode='print-direct'/>
       </code>
