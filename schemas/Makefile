@@ -1,13 +1,13 @@
-default: docs/t1.html
+BASE=CCProtectionProfile
+default: docs
+all: docs rnc
+docs: $(BASE).html
+$(BASE).html: $(BASE).rng
+	rng-to-html/bin/rng-to-html $(BASE).rng
 
-docs/t1.html: schema.rng docs
-	rng-to-html/bin/rng-to-html schema.rng docs
-docs:
-	mkdir docs
-
-rnc: schema.rnc
-schema.rnc: schema.rng
-	trang -I rng -O rnc  schema.rng schema.rnc
+rnc: $(BASE).rnc
+$(BASE).rnc: $(BASE).rng
+	trang -I rng -O rnc  $(BASE).rng $(BASE).rnc
 
 clean: 
-	rm -rf schema.rnc docs
+	rm -rf $(BASE).rnc $(BASE).html

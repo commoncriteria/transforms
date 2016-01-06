@@ -78,6 +78,7 @@
     </li>
   </xsl:template>
 
+  <!-- Overloaded abbr here-->
   <xsl:template match="cc:abbr[@linkend]">
     <xsl:variable name="target" select="key('abbr', @linkend)"/>
     <xsl:variable name="abbr" select="$target/text()"/>
