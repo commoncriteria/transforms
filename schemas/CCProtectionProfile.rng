@@ -71,17 +71,7 @@
 	    </a:documentation>
             <text/>
           </element>
-	  <element name="entry">
-	    <a:documentation>NOT USED</a:documentation>
-	    <element name="name">
-	      <a:documentation>NOT USED</a:documentation>
-	      <text/>
-	    </element>
-	    <element name="description">
-	      <a:documentation>NOT USED</a:documentation>
-	      <text/>
-	    </element>
-	  </element>
+	  <ref name="entry-el"/>
         </element>
       </element>
       <oneOrMore>
@@ -191,18 +181,7 @@
 	      Section to define the acronyms used in the document.
 	    </a:documentation>
             <oneOrMore>
-	      <element name="entry">
-		<a:documentation>
-		  Wrapper for terms and descriptions.
-		</a:documentation>
-		<element name="term">
-		  <a:documentation>
-		    The characters of the acronym.
-		  </a:documentation>
-		  <text/>
-		</element>
-		<ref name="description"/>
-	      </element>
+	      <ref name="entry-el"/>
             </oneOrMore>
           </element>
           <element name="bibliography">
@@ -342,27 +321,27 @@
 		  <ref name="basic-content"/>
 		  <optional>
                     <element name="group">
-		      <a:document>
+		      <a:documentation>
 			Actions levied on the developer: <i>The developer shall...</i>
-		      </a:document>
+		      </a:documentation>
 		      <attribute name="type"><value>dev-action</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
 		  </optional>
 		  <optional>
                     <element name="group">
-		      <a:document>
+		      <a:documentation>
 			Requirements for content and presentation.
-		      </a:document>
+		      </a:documentation>
 		      <attribute name="type"><value>con-pres</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
 		  </optional>
 		  <optional>
                     <element name="group">
-		      <a:document>
+		      <a:documentation>
 			Actions levied on the evaluator: <i>The evaluator shall...</i>
-		      </a:document>
+		      </a:documentation>
 		      <attribute name="type"><value>eval-action</value></attribute>
 		      <ref name="a-elements"/>
 		    </element>
@@ -435,18 +414,7 @@
 		    Section to define terms.
 		  </a:documentation>
                   <oneOrMore>
-		    <element name="entry">
-		      <a:documentation>
-			Wrapper element for terms.
-		      </a:documentation>
-                      <element name="term">
-			<a:documentation>
-			  The term of phrase to be defined.
-			</a:documentation>
-			<ref name="basic-content"/>
-		      </element>
-		      <ref name="description"/>
-		    </element>
+		    <ref name="entry"/>
                   </oneOrMore>
                 </element>
               </choice>
@@ -991,6 +959,30 @@
 	  <ref name="html-element"/>
 	</choice>
       </zeroOrMore>
+    </element>
+  </define>
+  
+  <define name="entry-el">
+    <element name="entry">
+      <a:documentation>
+	Wrapper for terms and descriptions.
+      </a:documentation>
+      <choice>
+	<element name="name">
+	  <a:documentation></a:documentation>
+	  <text/>
+	</element>
+	<element name="term">
+	  <a:documentation>
+	    The characters of the acronym.
+	  </a:documentation>
+	  <text/>
+	</element>
+      </choice>
+      <element name="description">
+	<a:documentation>Description of the term/name.</a:documentation>
+	<text/>
+      </element>
     </element>
   </define>
 

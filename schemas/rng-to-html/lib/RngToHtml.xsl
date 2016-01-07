@@ -54,6 +54,12 @@
        	.attrtab td{
        	  padding: 5px;  
        	}
+	.mdl-layout__drawer .mdl-navigation .mdl-navigation__link{
+	   padding-top: 0px;
+	   padding-left: 10px;
+	   padding-bottom: 4px;
+	   padding-right: 0px;
+	}
       </style>
     </head>
     <body>
@@ -70,10 +76,23 @@
         <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">Index</span>
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="#">Link 1</a>
-            <a class="mdl-navigation__link" href="#">Link 2</a>
-            <a class="mdl-navigation__link" href="#">Link 3</a>
-            <a class="mdl-navigation__link" href="#">Link 4</a>
+
+
+	    <xsl:for-each select="//rng:element">
+	      <xsl:sort select="@name|rng:name" order="ascending"/>
+	      <a class="mdl-navigation__link">
+		<xsl:attribute name="href">#<xsl:call-template name="makeid"><xsl:with-param name="node" select="."/></xsl:call-template></xsl:attribute>
+		<xsl:value-of select="@name"/>
+		</a><br/>
+	    </xsl:for-each>
+	    <h2>Patterns</h2>
+	    <xsl:for-each select="//rng:define">
+	      <xsl:sort select="@name|rng:name" order="ascending"/>
+	      <a class="mdl-navigation__link">
+		<xsl:attribute name="href">#<xsl:value-of select="@name"/></xsl:attribute>
+		%<xsl:value-of select="@name"/>
+		</a><br/>
+	    </xsl:for-each>
           </nav>
         </div>
         <main class="mdl-layout__content">
@@ -134,6 +153,7 @@
 
     <hr/>
       <h4>
+	<xsl:attribute name="id"><xsl:call-template name="makeid"><xsl:with-param name="node" select="."/></xsl:call-template></xsl:attribute>
         <b>Element: </b><xsl:value-of select="$qname"/>
       </h4>
 
@@ -216,9 +236,10 @@
 	      <xsl:if test="following-sibling::*"> | </xsl:if>
 	    </xsl:for-each> 
 	  </xsl:when>
-	  <xsl:otherwise>
-	    TEXT
-	  </xsl:otherwise>
+	  <xsl:when test="rng:value">
+	    "<xsl:value-of select="."/>"
+	  </xsl:when>
+	  <xsl:otherwise>TEXT</xsl:otherwise>
 	</xsl:choose>
       </td>
       <!-- Use -->
@@ -366,7 +387,7 @@
 	    <xsl:if test="starts-with($hasatts, 'true')">
 	      <tr>
 		<td style="font-weight: bold">Attributes:</td><br/>
-		  <table border="1">
+		  <table class="attrtab" border="1"> 
 		    <tr>
 		      <td style="font-weight: bold">Attribute</td>
 		      <td style="font-weight: bold">Type</td>
