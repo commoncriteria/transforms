@@ -5,7 +5,7 @@
 		version="1.0"
 		extension-element-prefixes="rng a">
 
-  <xsl:param name="title">RELAX-NG Schema Documentation</xsl:param>
+  <xsl:param name="title">Common Criteria Protection Profile Schema Documentation</xsl:param>
   <xsl:param name="target"/>
 
   <xsl:output encoding="utf-8" indent="yes"/>
@@ -14,60 +14,92 @@
   <html>
     <head>
       <title><xsl:value-of select="$title"/></title>
+      <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css"/>
+      <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+      <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css"/>
       <style type="text/css">
-        
-	
-	.myButton {
-	background-color:#44c767;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #18ab29;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:17px;
-	padding:3px 25px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #2f6627;
-	}
-	.myButton:hover {
-	background-color:#5cbf2a;
-	}
-	.myButton:active {
-	position:relative;
-	top:1px;
-	}
-	.buttondiv{
-	  padding-top:8px;
-	}
-	.attrtab{
-	  border: thin solid black;
-	  border-collapse: collapse;
-	}
-	.attrtab td{
-	  padding: 5px;  
-	}
+        .material-icons {
+          line-height: 2;
+          }
+       	.myButton {
+       	background-color:#44c767;
+       	-moz-border-radius:28px;
+       	-webkit-border-radius:28px;
+       	border-radius:28px;
+       	border:1px solid #18ab29;
+       	display:inline-block;
+       	cursor:pointer;
+       	color:#ffffff;
+       	font-family:Arial;
+       	font-size:17px;
+       	padding:3px 25px;
+       	text-decoration:none;
+       	text-shadow:0px 1px 0px #2f6627;
+       	}
+       	.myButton:hover {
+       	background-color:#5cbf2a;
+       	}
+       	.myButton:active {
+       	position:relative;
+       	top:1px;
+       	}
+       	.buttondiv{
+       	  padding-top:8px;
+       	}
+       	.attrtab{
+       	  border: thin solid black;
+       	  border-collapse: collapse;
+       	}
+       	.attrtab td{
+       	  padding: 5px;  
+       	}
       </style>
     </head>
     <body>
-	<h2>Grammar Documentation</h2>
-	<h2>Namespace: <xsl:value-of select="@ns"/></h2>
-	<xsl:choose>
-	  <xsl:when test="$target">
-	    <xsl:apply-templates select="//rng:element[@name=$target or rng:name=$target]"/>
-	    <xsl:apply-templates select="//rng:define[@name=$target]"/>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <xsl:apply-templates select="//rng:element">
-	      <xsl:sort select="@name|rng:name" order="ascending"/>
-	    </xsl:apply-templates>
-	    <xsl:apply-templates select="//rng:define">
-	      <xsl:sort select="@name" order="ascending"/>
-	    </xsl:apply-templates>
-	  </xsl:otherwise>
-	</xsl:choose>
+      <!-- The drawer is always open in large screens. The header is always shown,
+  			 even in small screens. -->
+      <div class="mdl-layout mdl-js-layout
+        mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+          <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Common Criteria Protection Profile Schema Documentation</span>
+            <div class="mdl-layout-spacer"></div>
+          </div>
+        </header>
+        <div class="mdl-layout__drawer">
+          <span class="mdl-layout-title">Index</span>
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="#">Link 1</a>
+            <a class="mdl-navigation__link" href="#">Link 2</a>
+            <a class="mdl-navigation__link" href="#">Link 3</a>
+            <a class="mdl-navigation__link" href="#">Link 4</a>
+          </nav>
+        </div>
+        <main class="mdl-layout__content">
+          <div class="page-content">
+            <!-- Your content goes here -->
+            <div style="padding-left:1em;padding-top:1em">
+             	<h4>Grammar Documentation</h4>
+             	<h5>Namespace: <xsl:value-of select="@ns"/></h5>
+             	<xsl:choose>
+             	  <xsl:when test="$target">
+             	    <xsl:apply-templates select="//rng:element[@name=$target or rng:name=$target]"/>
+             	    <xsl:apply-templates select="//rng:define[@name=$target]"/>
+             	  </xsl:when>
+             	  <xsl:otherwise>
+             	    <xsl:apply-templates select="//rng:element">
+             	      <xsl:sort select="@name|rng:name" order="ascending"/>
+             	    </xsl:apply-templates>
+             	    <xsl:apply-templates select="//rng:define">
+             	      <xsl:sort select="@name" order="ascending"/>
+             	    </xsl:apply-templates>
+             	  </xsl:otherwise>
+             	</xsl:choose>
+            </div>
+          </div>
+        </main>
+      </div>
     </body>
   </html>
   </xsl:template>
@@ -101,9 +133,9 @@
     </xsl:variable>
 
     <hr/>
-      <h2>
-	Element: <xsl:value-of select="$qname"/>
-      </h2>
+      <h4>
+        <b>Element: </b><xsl:value-of select="$qname"/>
+      </h4>
 
       <table role="element">
 	    <xsl:if test="not($nsuri='')">
@@ -299,7 +331,7 @@
     <div>
       <xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
       <table>
-	<h2>Pattern: <xsl:value-of select="@name"/></h2>
+        <h4><b>Pattern: </b><xsl:value-of select="@name"/></h4>
 	<tr>
 	  <td style="font-weight: bold">Namespace</td>
 	  <td><xsl:value-of select="$nsuri"/></td>
