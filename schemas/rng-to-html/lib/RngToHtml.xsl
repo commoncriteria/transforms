@@ -18,6 +18,21 @@
       <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
       <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css"/>
+      <script type="text/javascript">
+	function hideOrShow(divnod){
+          var cn=divnod.getElementsByTagName('code')[0]; 
+          var but=divnod.getElementsByTagName('div')[0].getElementsByTagName('a')[0];
+	  if(cn.style.display=='none'){
+	    cn.style.display='block';
+	    but.text='Hide Source';
+          }
+	  else{
+	    cn.style.display='none';
+	    but.text='Show Source';
+	  }
+	}
+      </script>
+
       <style type="text/css">
         .material-icons {
           line-height: 2;
@@ -206,8 +221,8 @@
 	      </tr>
 	    </xsl:if>
       </table>
-      <div onClick="var cn=this.getElementsByTagName('code')[0]; cn.style.display=cn.style.display=='none'?'block':'none'">
-	<div class="buttondiv"><a class="myButton">Show/Hide Source</a></div><br/>
+      <div onClick="hideOrShow(this)">
+	<div class="buttondiv"><a class="myButton">Show Source</a></div><br/>
       <code style="display: none">
 	<xsl:apply-templates select="." mode='print-direct'/>
       </code>
