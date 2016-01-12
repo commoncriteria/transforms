@@ -287,7 +287,7 @@
             <oneOrMore>
               <element name="assumption">
 		<a:documentation>
-		  Assumption made.
+		  Describes assumptions made.
 		</a:documentation>
 		<attribute name="id">
 		  <a:documentation>
@@ -524,49 +524,11 @@
       </element>
     </element>
   </define>
+
   <define name="aactivity">
     <element name="aactivity">
       <a:documentation>Element containing an Assurance Activity.</a:documentation>
-      <oneOrMore>
-        <choice>
-      	  <ref name="subaactivity"/>
-          <ref name="basic-content"/>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-  <!-- ######################### -->
-  <!-- Section should be removed -->
-  <!-- ######################### -->
-  <define name="subaactivity">
-    <element name="subaactivity">
-      <attribute name="platform">
-        <choice>
-          <value>android</value>
-          <value>blackberry</value>
-          <value>ios</value>
-          <value>linux</value>
-          <value>OS X</value>
-          <value>Solaris</value>
-          <value>windows</value>
-        </choice>
-      </attribute>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content"></ref>
-          <element name="path">
-            <oneOrMore>
-              <choice>
-                <text></text>
-                <element name="i"><text/></element>
-              </choice>
-            </oneOrMore>
-          </element>
-          <element name="util">
-            <text></text>
-          </element>
-        </choice>
-      </oneOrMore>
+      <ref name="basic-content"/>
     </element>
   </define>
 
@@ -929,6 +891,18 @@
       <a:documentation>
 	Denotes the start of a selectable in a selectables section.
       </a:documentation>
+      <zeroOrMore>
+	<element name="requires">
+	  <a:documentation>
+	    Denotes a selection-based element that is required should this selection chosen.
+	  </a:documentation>
+	  <attribute name="req">
+	    <a:documentation>
+	      The ID of the required element.
+	    </a:documentation>
+	  </attribute>
+	</element>
+      </zeroOrMore>
       <ref name="basic-content"/>
     </element>
   </define>
