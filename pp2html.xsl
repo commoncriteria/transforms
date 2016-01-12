@@ -406,7 +406,7 @@
                 <xsl:value-of select="cc:date"/>
               </td>
               <td>
-                <xsl:value-of select="cc:subject"/>
+                <xsl:apply-templates select="cc:subject"/>
               </td>
             </tr>
           </xsl:for-each>
