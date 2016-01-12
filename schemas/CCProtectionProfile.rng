@@ -414,7 +414,7 @@
 		    Section to define terms.
 		  </a:documentation>
                   <oneOrMore>
-		    <ref name="entry"/>
+		    <ref name="entry-el"/>
                   </oneOrMore>
                 </element>
               </choice>
@@ -468,7 +468,6 @@
       <oneOrMore>
         <choice>
 	  <ref name="basic-content"/>
-	  <ref name="xref"/>
           <element name="InsertAppendixExplainer">
 	    <a:documentation>
 	      Tag that denotes where an explanation of where the different types (objective, threshold, optional) 
@@ -719,6 +718,7 @@
 	<ref name="assignable"/>
         <ref name="appref"/>
 	<ref name="abbr-el"/>
+	<ref name="xref"/>
         <element name="figure">
 	  <a:documentation>
 	    Tag allow that inserts a picture.
@@ -941,13 +941,19 @@
   </define>
 
   <define name="html-element">
+    <a:documentation>
+      Pattern defines the html-element, which is any element in the xhtml namespace.
+      They have no knowledge of the CC element, and so cannot have any CC descendants.
+    </a:documentation>
     <element ns="http://www.w3.org/1999/xhtml">
       <anyName>
 	<except>
 	  <nsName ns="http://common-criteria.rhcloud.com/ns/cc"/>
 	</except>
       </anyName>
-      <a:documentation>Defines all html-elements with an optional number of html attributes and descendants.</a:documentation>
+      <a:documentation>
+	Defines all html-elements with an optional number of html attributes and descendants.
+      </a:documentation>
       <zeroOrMore>
 	<attribute>
 	  <anyName/>
@@ -970,18 +976,18 @@
       <choice>
 	<element name="name">
 	  <a:documentation></a:documentation>
-	  <text/>
+	  <ref name="basic-content"/>
 	</element>
 	<element name="term">
 	  <a:documentation>
 	    The characters of the acronym.
 	  </a:documentation>
-	  <text/>
+	  <ref name="basic-content"/>
 	</element>
       </choice>
       <element name="description">
 	<a:documentation>Description of the term/name.</a:documentation>
-	<text/>
+	<ref name="basic-content"/>
       </element>
     </element>
   </define>
