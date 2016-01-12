@@ -70,10 +70,10 @@
        	  padding: 5px;  
        	}
 	.mdl-layout__drawer .mdl-navigation .mdl-navigation__link{
-	   padding-top: 0px;
-	   padding-left: 10px;
-	   padding-bottom: 4px;
-	   padding-right: 0px;
+	   padding-top: 0em;
+	   padding-left: 1em;
+	   padding-bottom: 1em;
+	   padding-right: 0em;
 	}
       </style>
     </head>
@@ -98,15 +98,17 @@
 	      <a class="mdl-navigation__link">
 		<xsl:attribute name="href">#<xsl:call-template name="makeid"><xsl:with-param name="node" select="."/></xsl:call-template></xsl:attribute>
 		<xsl:value-of select="@name"/>
-		</a><br/>
+		</a>
 	    </xsl:for-each>
-	    <h2>Patterns</h2>
+            <hr></hr>
+            <span class="mdl-layout-title">Patterns</span>
+            <br></br>
 	    <xsl:for-each select="//rng:define">
 	      <xsl:sort select="@name|rng:name" order="ascending"/>
 	      <a class="mdl-navigation__link">
 		<xsl:attribute name="href">#<xsl:value-of select="@name"/></xsl:attribute>
 		%<xsl:value-of select="@name"/>
-		</a><br/>
+		</a>
 	    </xsl:for-each>
           </nav>
         </div>
