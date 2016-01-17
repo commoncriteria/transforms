@@ -211,5 +211,6 @@
     </tr>
   </xsl:template>
 
-
+  <!-- Do not write xml-model processing instruction to HTML output. -->
+  <xsl:template match="processing-instruction('xml-model')" />
 </xsl:stylesheet>
