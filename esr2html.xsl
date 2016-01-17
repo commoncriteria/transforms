@@ -9,6 +9,8 @@
 
 
 	<xsl:template match="/esr:ESR">
+	    <!-- Start with !doctype preamble for valid (X)HTML document. -->
+	    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
 				<style type="text/css">

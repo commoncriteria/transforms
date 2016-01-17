@@ -18,7 +18,9 @@
 	<xsl:output method="html" encoding="UTF-8" indent="yes"/>
 
 	<xsl:template match="/cc:PP">
-		<html>
+	    <!-- Start with !doctype preamble for valid (X)HTML document. -->
+	    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
+		<html xmlns="http://www.w3.org/1999/xhtml">
 			<style type="text/css">
 			  <xsl:call-template name="common_css"/>
 				h1
