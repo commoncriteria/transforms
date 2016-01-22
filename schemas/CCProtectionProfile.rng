@@ -362,29 +362,57 @@
 		      Readable title for this requirement.
 		    </a:documentation>
 		  </attribute>
-		  <optional>
-		    <attribute name="targetdate">
-		      <a:documentation>
-			Target date that the requirements under this component become
-			manandory. It only makes sense for _objective_ components.
-		      </a:documentation>
-		      <data type="date"/>
-		    </attribute>
-		  </optional>
-		  <ref name="status"/>
-		  <zeroOrMore>
-		    <element name="selection-depends">
-		      <a:documentation>
-			Defines the other requirements whose selection affects whether this component must be also applied.
-		      </a:documentation>
-		      <attribute name="req">
+
+
+		  <choice>
+		    <group>
+		      <optional>
+			<attribute name="targetdate">
+			  <a:documentation>
+			    Target date that the requirements under this component become
+			    manandory. It only makes sense for _objective_ components.
+			  </a:documentation>
+			  <data type="date"/>
+			</attribute>
+		      </optional>
+		      <attribute name="status">
 			<a:documentation>
-			  The value of the id attribute of the requirement is component depends on.
+			  Denotes the status of a requirement.
 			</a:documentation>
-			<data type="NCName"/>
+			<value>objective</value>
 		      </attribute>
-		    </element>
-		  </zeroOrMore>
+		    </group>
+		    <attribute name="status">
+		      <a:documentation>
+			Denotes the status of a requirement.
+		      </a:documentation>
+		      <choice>
+			<value>threshold</value>
+			<value>optional</value>
+		      </choice>
+		    </attribute>
+		    <group>
+		      <attribute name="status">
+			<a:documentation>
+			  Denotes the status of a requirement.
+			</a:documentation>
+			  <value>sel-based</value>
+		      </attribute>
+		      <oneOrMore>
+			<element name="selection-depends">
+			  <a:documentation>
+			    Defines the other requirements whose selection affects whether this component must be also applied.
+			  </a:documentation>
+			  <attribute name="req">
+			    <a:documentation>
+			      The value of the id attribute of the requirement is component depends on.
+			    </a:documentation>
+			    <data type="NCName"/>
+			  </attribute>
+			</element>
+		      </oneOrMore>
+		    </group>
+		  </choice>
                   <oneOrMore>
                     <element name="f-element">
 		      <a:documentation>
