@@ -292,9 +292,7 @@
 
 	<xsl:template match="cc:f-element | cc:a-element">
 	  <xsl:variable name="elementid" select="translate(@id,$lower,$upper)"/>
-	  <xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
-	  <!-- this will result in duplicate IDs for TRs (as link targets), but this does not create a problem in practice -->
-	  <tr id="{$componentid}">
+	  <tr>
 	    <td id="{$elementid}" class="elementidstyle">
 	      <a class="abbr" href="#{$elementid}">
 		<xsl:value-of select="$elementid"/>

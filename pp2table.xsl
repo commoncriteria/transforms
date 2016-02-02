@@ -217,7 +217,7 @@
 	<xsl:template match="cc:f-element | cc:a-element">
 	  <xsl:variable name="reqid" select="translate(@id,$lower,$upper)"/>
 	  <xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
-	  <tr id="{$componentid}">
+	  <tr>
 	    <td id="{$reqid}">
 	      <a class="abbr" href="#{$reqid}">
 		<xsl:value-of select="$reqid"/>
