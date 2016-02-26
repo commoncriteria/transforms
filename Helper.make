@@ -14,7 +14,13 @@ TRANS ?= transforms
 
 # If base not set, grab it from the directory name
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
-PP_XML=$(IN)/$(BASE).xml
+PP_XML ?= $(IN)/$(BASE).xml
+
+PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
+PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+PP2TABLE_XSL ?= $(TRANS)/pp2table.xsl
+PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
+
 ESR_XML=$(IN)/esr.xml
 TABLE=$(OUT)/$(BASE)-table.html
 SIMPLIFIED=$(OUT)/$(BASE)-table-reqs.html
@@ -22,6 +28,7 @@ PP_HTML=$(OUT)/$(BASE).html
 ESR_HTML=$(OUT)/$(BASE)-esr.html
 PP_OP_HTML=$(OUT)/$(BASE)-optionsappendix.html
 PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
+
 
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
