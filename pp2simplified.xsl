@@ -73,29 +73,29 @@
 			margin-left: 12%; margin-right: 12%; 
 			padding-top: 1em;
 		}
-		div.tabletitle, div.componenttitle
+		div.componenttitle
+		{ 
+			text-align: left; font-size: large; font-weight:bold;
+            font-family: verdana,arial,sans-serif;
+			margin-top: 3em;
+			border-top: solid 2px gray; 
+			border-bottom: solid 2px gray; 
+			padding-bottom: 0.25em; padding-top: 0.25em; 
+		}
+		div.sectiontitle
 		{ 
 			text-align: left; font-size: x-large; font-weight:bold;
             font-family: verdana,arial,sans-serif;
 			margin-top: 3em;
 			border-top: solid 2px gray; 
 			border-bottom: solid 2px gray; 
-			padding-bottom: 0.25em; padding-top: 0.25em; }
-
+			padding-bottom: 0.25em; padding-top: 0.25em;
+		}
 		div.componenttitle
 		{ 
             background-color: #dedede;
 		}
 	    div.appnote    { margin-left: 0%; margin-top: 1em; }
-		td.tabletitle
-		{ 
-			text-align: left; font-size: x-large; font-weight:bold;
-            font-family: verdana,arial,sans-serif;
-			margin-top: 6em;
-			border-top: solid 2px gray; 
-			border-bottom: solid 2px gray; 
-			padding-bottom: 0.25em; padding-top: 1.25em;
-		}
 		td.element, td.elementidstyle
 		{ 
 			padding-top: 1em;
@@ -162,7 +162,7 @@
 									<xsl:value-of select="cc:date"/>
 								</td>
 								<td>
-									<xsl:value-of select="cc:subject"/>
+									<xsl:apply-templates select="cc:subject"/>
 								</td>
 							</tr>
 						</xsl:for-each>
@@ -185,7 +185,7 @@
 							functionality may impose some security risks, and concern about these
 							risks has motivated the vetting of such apps in government and industry. </xsl:when>
 						<xsl:otherwise>
-							<b>Purpose.</b> This document presents simplified view of the functional
+							<b>Purpose.</b> This document presents the functional
 							and assurance requirements found in the <i><xsl:apply-templates
 									select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>.
 							Common Criteria evaluation, facilitated in the U.S. by the National
@@ -236,13 +236,13 @@
 				</div>
 				<br/>
 
-				<div class="tabletitle" id="SFRs"> Security Functional Requirements </div>
+				<div class="sectiontitle" id="SFRs"> Security Functional Requirements </div>
 				<table>
-					<xsl:apply-templates select="//cc:f-element[not(@status)]"/>
+					<xsl:apply-templates select="//cc:f-component[not(@status) or @status='threshold']"/>
 				</table>
 				<!-- <xsl:apply-templates select="//cc:f-component[not(@status='sel-based')]"/> -->
 
-				<div class="tabletitle" id="SARs"> Security Assurance Requirements </div>
+				<div class="sectiontitle" id="SARs"> Security Assurance Requirements </div>
 				<table>
 					<xsl:choose>
 						<xsl:when
@@ -257,21 +257,21 @@
 					</xsl:choose>
 				</table>
 
-				<div class="tabletitle" id="selbasedSFRs"> Selection-Based Security Functional
+				<div class="sectiontitle" id="selbasedSFRs"> Selection-Based Security Functional
 					Requirements </div>
 				<table>
-					<xsl:apply-templates select="//cc:f-element[@status='sel-based']"/>
+					<xsl:apply-templates select="//cc:f-component[@status='sel-based']"/>
 				</table>
 
 
-				<div class="tabletitle" id="objSFRs"> Objective Security Functional Requirements </div>
+				<div class="sectiontitle" id="objSFRs"> Objective Security Functional Requirements </div>
 				<table>
-					<xsl:apply-templates select="//cc:f-element[@status='objective']"/>
+					<xsl:apply-templates select="//cc:f-component[@status='objective']"/>
 				</table>
 
-				<div class="tabletitle" id="optSFRs"> Optional Security Functional Requirements </div>
+				<div class="sectiontitle" id="optSFRs"> Optional Security Functional Requirements </div>
 				<table>
-					<xsl:apply-templates select="//cc:f-element[@status='optional']"/>
+					<xsl:apply-templates select="//cc:f-component[@status='optional']"/>
 				</table>
 
 			</body>
@@ -280,11 +280,11 @@
 
 	<xsl:template match="cc:f-component | cc:a-component">
 		<xsl:variable name="componentid" select="translate(@id,$lower,$upper)"/>
-		<div id="{$componentid}" class="componenttitle">
+		<!-- <div id="{$componentid}" class="componenttitle">
 			<a class="abbr" href="#{$componentid}">
 				<xsl:value-of select="@name"/>
 			</a>
-		</div>
+		</div> -->
 		<table>
 			<xsl:apply-templates select=".//cc:f-element | .//cc:a-element"/>
 		</table>
