@@ -49,26 +49,26 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 
 
 pp:$(PP_HTML)
-$(PP_HTML):  $(TRANS)/pp2html.xsl $(TRANS)/ppcommons.xsl $(PP_XML)
-	xsltproc -o $(PP_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
+$(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
+	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-$(PP_RELEASE_HTML): $(TRANS)/pp2html.xsl $(TRANS)/ppcommons.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
+$(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 
 esr:$(ESR_HTML)
-$(ESR_HTML):  $(TRANS)/esr2html.xsl $(TRANS)/ppcommons.xsl $(ESR_XML)
+$(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 	xsltproc -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
 
 table: $(TABLE)
-$(TABLE): $(TRANS)/pp2table.xsl $(PP_XML)
-	xsltproc  --stringparam release final -o $(TABLE) $(TRANS)/pp2table.xsl $(PP_XML)
+$(TABLE): $(PP2TABLE_XSL) $(PP_XML)
+	xsltproc  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
 simplified: $(SIMPLIFIED)
-$(SIMPLIFIED): $(TRANS)/pp2simplified.xsl $(PP_XML)
-	xsltproc --stringparam release final -o $(SIMPLIFIED) $(TRANS)/pp2simplified.xsl $(PP_XML)
+$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
+	xsltproc --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
