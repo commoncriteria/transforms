@@ -96,7 +96,12 @@
 	      </element>
 	      <element name="subject">
 		<a:documentation>Description of the revision.</a:documentation>
-		<text/>
+	      <oneOrMore>
+	      	<choice>
+	      		<text/>
+	      		<ref name="html-element"></ref>
+	      	</choice>
+	      </oneOrMore>
 	      </element>
 	    </element>
 	  </zeroOrMore>
