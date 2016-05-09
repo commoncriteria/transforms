@@ -66,8 +66,8 @@ table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
 	xsltproc  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
-simplified: $(SIMPLIFIED)
-$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
+simplified: $(SIMPLIFIED) 
+$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 	xsltproc --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 rnc: $(TRANS)/schemas/schema.rnc
