@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-    Stylesheet for Protection Profile Schema  
+<!--
+    Stylesheet for Protection Profile Schema
     Based on original work by Dennis Orth
     Subsequent modifications in support of US NIAP
 -->
@@ -8,7 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="http://common-criteria.rhcloud.com/ns/cc"
   xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:htm="http://www.w3.org/1999/xhtml"  
+  xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
   <!-- release variable, overridden to "final" for release versions -->
@@ -69,7 +69,7 @@
 
           <!--
                     Expands all assurance activities//-->
-          function expand(){  
+          function expand(){
               var divID = "";
               var imgID = "link-";
               var hidden_elements = document.getElementsByClassName('aacthidden');
@@ -78,7 +78,7 @@
                 imgID += divID;
                 toggle(divID,imgID);
                 imgID = "link-";
-              }    
+              }
           }
         </script>
         <style type="text/css">
@@ -129,7 +129,7 @@
               font-family:verdana, arial, helvetica, sans-serif;
           }
           p{
-              margin-bottom:0.2em;
+              margin-bottom:0.6em;
               margin-top:0.2em;
           }
           pre{
@@ -155,12 +155,12 @@
               font-weight:bold;
               font-family:verdana, arial, helvetica, sans-serif;
           }
-          
+
           a.linkref{
               font-family:verdana, arial, helvetica, sans-serif;
               font-size:90%;
           }
-          
+
           *.simpleText{
               margin-left:10%;
           }
@@ -209,7 +209,7 @@
           div.optional-appendicies{
               display:none;
           }
-          
+
           div.statustag{
               margin-left:0%;
               margin-top:1em;
@@ -218,7 +218,7 @@
               border:2px solid #888888;
               border-radius:3px;
           }
-          
+
           div.toc{
               margin-left:8%;
               margin-bottom:4em;
@@ -318,7 +318,7 @@
 	      bottom: .5ex;
 	      font-size: 80%;
 	  }
-          
+
           @media screen{
               *.reqid{
                   float:left;
@@ -345,12 +345,12 @@
               }
           }
 
-          
+
           @media print{
               *.reqid{
                   font-size:90%;
-                  font-family:verdana, arial, 
-          helvetica, 
+                  font-family:verdana, arial,
+          helvetica,
           sans-serif;
               }
               *.req{
@@ -368,7 +368,7 @@
                   display:block;
               }
 
-	      img[src="images/collapsed.png"] { display:none;} 
+	      img[src="images/collapsed.png"] { display:none;}
 
           }</style>
       </head>
@@ -535,13 +535,14 @@
       </xsl:for-each>
     </table>
   </xsl:template>
+
   <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
-    <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"
-        /></abbr>)</span>
+    <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
-  <xsl:template
-    match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]">
-    <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>) </xsl:template>
+
+  <xsl:template match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]">
+    <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>)
+  </xsl:template>
 
   <xsl:template match="cc:bibliography">
     <table>
@@ -772,8 +773,8 @@
   <xsl:template name="component-template">
     <xsl:param name="selected-statuses"/>
 
-    <!-- 
-	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_" 
+    <!--
+	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_"
 	 based on what it is (or "" if not appendicizing).
     -->
     <xsl:variable name="id-suffix">
@@ -866,9 +867,9 @@
         <div class="statustag">
           <p/>
           <i>
-            <b> This is an objective requirement. 
+            <b> This is an objective requirement.
 	    <xsl:if test="../../@targetdate">
-	      It is scheduled to  be mandatory for products entering evaluation after 
+	      It is scheduled to be mandatory for products entering evaluation after
 	      <xsl:value-of select="../../@targetdate"/>.
 	    </xsl:if>
 	    </b>
@@ -1005,10 +1006,10 @@
   <xsl:template name="requirement-stealer">
     <xsl:param name="selected-status"/>
     <!-- Select all f-componenets which have an f-element with a selected-status-->
-    
+
     <xsl:for-each select="//cc:f-component[@status=$selected-status][cc:f-element]">
       <xsl:call-template name="component-template">
-        <xsl:with-param name="selected-statuses" 
+        <xsl:with-param name="selected-statuses"
 			select="concat('_', concat($selected-status,'_'))"/>
       </xsl:call-template>
     </xsl:for-each>
@@ -1213,9 +1214,9 @@
     <xsl:variable name="req-anchor">
       <xsl:choose>
         <xsl:when test="$appendicize!='on'"/>
-        <!-- 
-	     Elements, whether selectable or not, never get the 
-	     suffix in the 'id' attribute in their resulting element 
+        <!--
+	     Elements, whether selectable or not, never get the
+	     suffix in the 'id' attribute in their resulting element
 	-->
 	<xsl:when test="//cc:f-element[@id=$lreq]|//cc:a-element[@id=$lreq]"/>
 	<xsl:when test="//*[@id=$lreq and @status='threshold']"/>
