@@ -96,7 +96,12 @@
 	      </element>
 	      <element name="subject">
 		<a:documentation>Description of the revision.</a:documentation>
-		<text/>
+	      <oneOrMore>
+	      	<choice>
+	      		<text/>
+	      		<ref name="html-element"></ref>
+	      	</choice>
+	      </oneOrMore>
 	      </element>
 	    </element>
 	  </zeroOrMore>
@@ -407,7 +412,9 @@
 			    <a:documentation>
 			      The value of the id attribute of the requirement is component depends on.
 			    </a:documentation>
-			    <data type="NCName"/>
+			    <data type="string">
+			      <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
+			    </data>
 			  </attribute>
 			</element>
 		      </oneOrMore>

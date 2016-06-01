@@ -23,90 +23,104 @@
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		  <style type="text/css">
 		    <xsl:call-template name="common_css"/>
-		h1   { text-align: left; font-size: 200%;  margin-top: 2em; margin-bottom: 2em;
-             font-family: verdana, arial, helvetica, sans-serif;
-             margin-bottom: 1.0em; }
-		h1.title { text-align: center; }
-		h2   { font-size: 125%;
-             border-bottom: solid 1px gray; margin-bottom: 1.0em;
-             margin-top: 2em; margin-bottom: 0.75em;
-             font-family: verdana, arial, helvetica, sans-serif; }
-        table.revisionhistory
-        {
-			margin: auto; margin-top: 1em; border-collapse:collapse;  }
-        }
-		tr.header
-		{
-			border-bottom: 3px solid gray; padding: 8px 8px; text-align:left; font-weight: bold;
-		} 
-        table, th, td
-        {
-			border-collapse: collapse;
-            border: 2px solid #dcdcdc;
-            border-left: none;
-            border-right: none;
-            vertical-align: top;
-			text-align: left;
-            padding: 2px;
-            font-family: verdana,arial,sans-serif;
-            font-size:14px;
-			padding-right: 20px; 
-        }
+		html {
+			font-family: verdana, arial, helvetica, sans-serif;
+		}
+		h1 {
+			text-align: center;
+			font-size: x-large;
+			margin-top: 2em; margin-bottom: 2em;
+    }
+		h2 {
+			font-size: large;
+      border-bottom: solid 1px gray;
+      margin-top: 2em; margin-bottom: 1em;
+		}
+    table.revisionhistory {
+			margin: auto; margin-top: 1em; border-collapse:collapse;
+				font-size:14px;
+		}
+		th.revisionhistory  {
+        border-bottom: 3px solid #dcdcdc;
+        border-left: none;
+        border-right: none;
+        vertical-align: bottom;
+				text-align: left;
+        padding: 2px;
+				padding-right: 20px;
+    }
+		td.revisionhistory  {
+        border: 2px solid #dcdcdc;
+        border-left: none;
+        border-right: none;
+        vertical-align: top;
+				text-align: left;
+        padding: 2px;
+				padding-right: 20px;
+    }
 
-        pre {
-            white-space: pre-wrap;
-            white-space: -moz-pre-wrap !important;
-            word-wrap:break-word;
-        }
+		div.componenttitle
+		{
+			text-align: left; font-size: large; font-weight:bold;
+			margin-top: 1em;
+			margin-left: 2.5em;
+			margin-right: 3em;
+			border: solid 2px gray;
+      background-color: #dedede;
+			padding: 0.25em;
+		}
+		table.elementstyle
+		{
+				text-align: left;
+				font-size:14px;
+				margin-left: 3.5em;
+				margin-right: 6em;
+				margin-bottom: 2em;
+		}
+		tr.elementstyle {
+			vertical-align: top;
+
+		}
+		td.elementidstyle
+		{
+			font-weight: bold;
+			padding-right: 1em;
+			padding-top: 1em;
+		}
+		td.elementstyle {
+			padding-top: 1em;
+		}
+
+    pre {
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap !important;
+        word-wrap:break-word;
+    }
 		div.title
-		{ 
+		{
 			text-align: center; font-size: xx-large; font-weight:bold;
             font-family: verdana,arial,sans-serif;
 			<!--border-bottom: solid 1px gray; -->
-			margin-left: 8%; margin-right: 8%; 
+			margin-left: 8%; margin-right: 8%;
 		}
 		div.center	{ display: block; margin-left: auto; margin-right: auto; text-align:center; }
 		div.intro
-		{ 
-			text-align: left; font-size: normal; 
-            font-family: verdana,arial,sans-serif;
-			margin-left: 12%; margin-right: 12%; 
+		{
+			text-align: left; font-size: normal;
+			margin-left: 12%; margin-right: 12%;
 			padding-top: 1em;
 		}
-		div.componenttitle
-		{ 
-			text-align: left; font-size: large; font-weight:bold;
-            font-family: verdana,arial,sans-serif;
-			margin-top: 3em;
-			border-top: solid 2px gray; 
-			border-bottom: solid 2px gray; 
-			padding-bottom: 0.25em; padding-top: 0.25em; 
-		}
+
 		div.sectiontitle
-		{ 
+		{
 			text-align: left; font-size: x-large; font-weight:bold;
-            font-family: verdana,arial,sans-serif;
 			margin-top: 3em;
-			border-top: solid 2px gray; 
-			border-bottom: solid 2px gray; 
+			border-top: solid 2px gray;
+			border-bottom: solid 2px gray;
 			padding-bottom: 0.25em; padding-top: 0.25em;
 		}
-		div.componenttitle
-		{ 
-            background-color: #dedede;
-		}
 	    div.appnote    { margin-left: 0%; margin-top: 1em; }
-		td.element, td.elementidstyle
-		{ 
-			padding-top: 1em;
-			padding-bottom: 2em;
-			padding-right: 1em;
-		}
-		td.elementidstyle
-		{ 
-			font-weight: bold;
-            font-family: verdana,arial,sans-serif;
-		}
+
 
     	</style>
 
@@ -128,12 +142,12 @@
 				<xsl:choose>
 					<xsl:when
 						test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
-						<h1 class="title"> Requirements for Vetting Mobile Apps from the
-								<br/><i>Protection Profile for Application Software</i>
+						<h1> Requirements for Vetting Mobile Apps from the
+								<p/><i>Protection Profile for Application Software</i>
 						</h1>
 					</xsl:when>
 					<xsl:otherwise>
-						<h1 class="title"> Requirements from the <br/><i><xsl:apply-templates
+						<h1> Requirements from the <br/><i><xsl:apply-templates
 									select="cc:PPReference/cc:ReferenceTable/cc:PPTitle"/></i>
 						</h1>
 					</xsl:otherwise>
@@ -148,20 +162,20 @@
 				<h2>Revision History</h2>
 				<div class="center">
 					<table class="revisionhistory">
-						<tr class="header">
-							<th>Version</th>
-							<th>Date</th>
-							<th>Comment</th>
+						<tr>
+							<th class="revisionhistory">Version</th>
+							<th class="revisionhistory">Date</th>
+							<th class="revisionhistory">Comment</th>
 						</tr>
 						<xsl:for-each select="cc:RevisionHistory[@role=$release]/cc:entry">
 							<tr>
-								<td>
+								<td class="revisionhistory">
 									<xsl:value-of select="cc:version"/>
 								</td>
-								<td>
+								<td class="revisionhistory">
 									<xsl:value-of select="cc:date"/>
 								</td>
-								<td>
+								<td class="revisionhistory">
 									<xsl:apply-templates select="cc:subject"/>
 								</td>
 							</tr>
@@ -237,13 +251,11 @@
 				<br/>
 
 				<div class="sectiontitle" id="SFRs"> Security Functional Requirements </div>
-				<table>
 					<xsl:apply-templates select="//cc:f-component[not(@status) or @status='threshold']"/>
-				</table>
 				<!-- <xsl:apply-templates select="//cc:f-component[not(@status='sel-based')]"/> -->
 
 				<div class="sectiontitle" id="SARs"> Security Assurance Requirements </div>
-				<table>
+				<table class="elementstyle">
 					<xsl:choose>
 						<xsl:when
 							test="//cc:ReferenceTable/cc:PPTitle='Protection Profile for Application Software'">
@@ -259,20 +271,14 @@
 
 				<div class="sectiontitle" id="selbasedSFRs"> Selection-Based Security Functional
 					Requirements </div>
-				<table>
 					<xsl:apply-templates select="//cc:f-component[@status='sel-based']"/>
-				</table>
 
 
 				<div class="sectiontitle" id="objSFRs"> Objective Security Functional Requirements </div>
-				<table>
 					<xsl:apply-templates select="//cc:f-component[@status='objective']"/>
-				</table>
 
 				<div class="sectiontitle" id="optSFRs"> Optional Security Functional Requirements </div>
-				<table>
-					<xsl:apply-templates select="//cc:f-component[@status='optional']"/>
-				</table>
+				<xsl:apply-templates select="//cc:f-component[@status='optional']"/>
 
 			</body>
 		</html>
@@ -280,32 +286,32 @@
 
 	<xsl:template match="cc:f-component | cc:a-component">
 		<xsl:variable name="componentid" select="translate(@id,$lower,$upper)"/>
-		<!-- <div id="{$componentid}" class="componenttitle">
+		<div id="{$componentid}" class="componenttitle">
 			<a class="abbr" href="#{$componentid}">
 				<xsl:value-of select="@name"/>
 			</a>
-		</div> -->
-		<table>
+		</div>
+		<table class="elementstyle">
 			<xsl:apply-templates select=".//cc:f-element | .//cc:a-element"/>
 		</table>
 	</xsl:template>
 
 	<xsl:template match="cc:f-element | cc:a-element">
 	  <xsl:variable name="elementid" select="translate(@id,$lower,$upper)"/>
-	  <tr>
+	  <tr class="elementstyle">
 	    <td id="{$elementid}" class="elementidstyle">
 	      <a class="abbr" href="#{$elementid}">
 		<xsl:value-of select="$elementid"/>
 	      </a>
 	    </td>
-	    <td class="element">
+	    <td class="elementstyle">
 	      <xsl:apply-templates select="cc:title"/>
 	      <br/>
 	      <xsl:choose>
 		<xsl:when test="@status='objective'">
 		  <p/>
 		  <i>
-		    <b>This is currently an objective requirement. 
+		    <b>This is currently an objective requirement.
 		    <xsl:if test="../@targetdate">
 		      It is targeted for <xsl:value-of select="../@targetdate"/>.
 		    </xsl:if>
@@ -335,16 +341,6 @@
 
 	<xsl:template match="cc:title">
 		<xsl:apply-templates/>
-	</xsl:template>
-
-	<xsl:template match="cc:subaactivity">
-		<div class="subaact">
-			<i>
-				<b>For <xsl:call-template name="OSabbrev2name"><xsl:with-param name="osname"
-							select="@platform"/></xsl:call-template>: </b>
-			</i>
-			<xsl:apply-templates/>
-		</div>
 	</xsl:template>
 
 	<!-- getting rid of XHTML namespace -->

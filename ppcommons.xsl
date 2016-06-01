@@ -11,6 +11,9 @@
     .assignable-content{
       font-style: italic;
     }
+    a {
+      word-wrap: break-word;
+    }
     a.abbr:link{
       color:black;
       text-decoration:none;

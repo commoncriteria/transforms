@@ -341,7 +341,7 @@
                   box-shadow:4px 4px 3px #888888;
               }
               div.aact{
-                  box-shadow:4px 4px 3px #888888;
+                box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
               }
           }
 
@@ -939,15 +939,6 @@
       <i>
         <xsl:apply-templates/>
       </i>
-    </div>
-  </xsl:template>
-  <xsl:template match="cc:subaactivity">
-    <div class="subaact">
-      <i>
-        <b>For <xsl:call-template name="OSabbrev2name"><xsl:with-param name="osname"
-              select="@platform"/></xsl:call-template>: </b>
-      </i>
-      <xsl:apply-templates/>
     </div>
   </xsl:template>
 

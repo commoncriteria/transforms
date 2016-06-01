@@ -14,7 +14,13 @@ TRANS ?= transforms
 
 # If base not set, grab it from the directory name
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
-PP_XML=$(IN)/$(BASE).xml
+PP_XML ?= $(IN)/$(BASE).xml
+
+PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
+PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+PP2TABLE_XSL ?= $(TRANS)/pp2table.xsl
+PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
+
 ESR_XML=$(IN)/esr.xml
 TABLE=$(OUT)/$(BASE)-table.html
 SIMPLIFIED=$(OUT)/$(BASE)-table-reqs.html
@@ -22,6 +28,7 @@ PP_HTML=$(OUT)/$(BASE).html
 ESR_HTML=$(OUT)/$(BASE)-esr.html
 PP_OP_HTML=$(OUT)/$(BASE)-optionsappendix.html
 PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
+
 
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
@@ -42,26 +49,26 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 
 
 pp:$(PP_HTML)
-$(PP_HTML):  $(TRANS)/pp2html.xsl $(TRANS)/ppcommons.xsl $(PP_XML)
-	xsltproc -o $(PP_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
+$(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
+	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-$(PP_RELEASE_HTML): $(TRANS)/pp2html.xsl $(TRANS)/ppcommons.xsl $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(TRANS)/pp2html.xsl $(PP_XML)
+$(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
+	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 
 esr:$(ESR_HTML)
-$(ESR_HTML):  $(TRANS)/esr2html.xsl $(TRANS)/ppcommons.xsl $(ESR_XML)
+$(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 	xsltproc -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
 
 table: $(TABLE)
-$(TABLE): $(TRANS)/pp2table.xsl $(PP_XML)
-	xsltproc  --stringparam release final -o $(TABLE) $(TRANS)/pp2table.xsl $(PP_XML)
+$(TABLE): $(PP2TABLE_XSL) $(PP_XML)
+	xsltproc  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
-simplified: $(SIMPLIFIED)
-$(SIMPLIFIED): $(TRANS)/pp2simplified.xsl $(PP_XML)
-	xsltproc --stringparam release final -o $(SIMPLIFIED) $(TRANS)/pp2simplified.xsl $(PP_XML)
+simplified: $(SIMPLIFIED) 
+$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
+	xsltproc --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
@@ -70,7 +77,7 @@ help:
 	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
 	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Helper.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
 clean:
-	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML); do \
+	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML); do \
 		if [ -f $$f ]; then \
 			rm "$$f"; \
 		fi; \

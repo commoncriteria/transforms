@@ -118,6 +118,14 @@
             <div style="padding-left:1em;padding-top:1em">
              	<h4>Grammar Documentation</h4>
              	<h5>Namespace: <xsl:value-of select="@ns"/></h5>
+		<h5>Root Element: 
+		<a>
+		  <xsl:attribute name="href">
+		    #<xsl:value-of select="/rng:grammar/rng:start/rng:element/@name"/>
+		  </xsl:attribute>
+		  <xsl:value-of select="/rng:grammar/rng:start/rng:element/@name"/> 
+		</a>
+		</h5>
              	<xsl:choose>
              	  <xsl:when test="$target">
              	    <xsl:apply-templates select="//rng:element[@name=$target or rng:name=$target]"/>
