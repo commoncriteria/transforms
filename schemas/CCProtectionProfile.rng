@@ -972,6 +972,8 @@
 	<choice>
 	  <text/>
 	  <ref name="html-element"/>
+	  <ref name="selectables"/>
+	  <ref name="assignable"/>
 	</choice>
       </zeroOrMore>
     </element>

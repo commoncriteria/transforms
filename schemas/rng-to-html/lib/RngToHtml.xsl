@@ -195,7 +195,7 @@
 		<td>
 		  <xsl:choose>
 		    <xsl:when test="a:documentation">
-		      <p><xsl:apply-templates select="a:documentation"/></p>
+		      <xsl:apply-templates select="a:documentation"/>
 		    </xsl:when>
 		    <xsl:otherwise>
 		      <para></para>
@@ -405,28 +405,36 @@
 	      </xsl:if>
 	    </td>
 	  </tr>
-	    </xsl:if>
-	    <xsl:variable name="hasatts">
-	      <xsl:apply-templates select="." mode="has-attributes"/>
-	    </xsl:variable>
-	    <xsl:if test="starts-with($hasatts, 'true')">
+	</xsl:if>
+	<xsl:variable name="hasatts">
+	  <xsl:apply-templates select="." mode="has-attributes"/>
+	</xsl:variable>
+	<xsl:if test="starts-with($hasatts, 'true')">
+	  <tr>
+	    <td style="font-weight: bold">Attributes:</td><br/>
+	    <table class="attrtab" border="1"> 
 	      <tr>
-		<td style="font-weight: bold">Attributes:</td><br/>
-		  <table class="attrtab" border="1"> 
-		    <tr>
-		      <td style="font-weight: bold">Attribute</td>
-		      <td style="font-weight: bold">Type</td>
-		      <td style="font-weight: bold">Use</td>
-		      <td style="font-weight: bold">Documentation</td>
-		    </tr>
-		    <xsl:variable name="nesting" select="count(ancestor::rng:element)"/>
-		    <xsl:apply-templates select=".//rng:attribute[count(ancestor::rng:element)=$nesting] | .//rng:ref[count(ancestor::rng:element)=$nesting]" mode="attributes">
-		      <xsl:with-param name="matched" select="."/>
-		    </xsl:apply-templates>
-		  </table>
+		<td style="font-weight: bold">Attribute</td>
+		<td style="font-weight: bold">Type</td>
+		<td style="font-weight: bold">Use</td>
+		<td style="font-weight: bold">Documentation</td>
 	      </tr>
-	    </xsl:if>
+	      <xsl:variable name="nesting" select="count(ancestor::rng:element)"/>
+	      <xsl:apply-templates select=".//rng:attribute[count(ancestor::rng:element)=$nesting] | .//rng:ref[count(ancestor::rng:element)=$nesting]" mode="attributes">
+		<xsl:with-param name="matched" select="."/>
+	      </xsl:apply-templates>
+	    </table>
+	  </tr>
+	</xsl:if>
       </table>
+
+      <div onClick="hideOrShow(this)">
+	<div class="buttondiv"><a class="myButton">Show Source</a></div><br/>
+      <code style="display: none">
+	<xsl:apply-templates select="." mode='print-direct'/>
+      </code>
+      </div>
+
     </div>
   </xsl:template>
   
