@@ -731,65 +731,6 @@
             <attribute name="max-width"/>
           </optional>
         </element>
-	<element name="table">
-	  <a:documentation>
-	    Redefinition of the html table element so that it can include 
-	    CC elements.
-	  </a:documentation>
-	  <optional> 
-	    <attribute name="class">
-	      <a:documentation>
-		Redefinition html class table attribute.
-	      </a:documentation>
-	    </attribute>
-	  </optional>
-	  <zeroOrMore>
-	    <element name="tr">
-	      <a:documentation>
-		Redefinition of the tr table element so that it can include 
-		CC elements.
-	      </a:documentation>
-	      <optional><attribute name="class">
-		<a:documentation>
-		  Redefinition of the class tr attribute.
-		</a:documentation>
-	      </attribute></optional>
-	      <oneOrMore><element name="td">
-		<a:documentation>
-		  Redefinition of the tr td element so that it can include 
-		  CC elements.
-		</a:documentation>
-		<ref name="basic-content"/>
-	      </element></oneOrMore>
-	    </element>
-	  </zeroOrMore>
-	</element>
-	<element name="ol">
-	  <a:documentation>
-	    Redefinition of the html ol element so that it can include 
-	    CC elements.
-	  </a:documentation>
-	  <optional><attribute name="type">
-	    <a:documentation>
-	      Redefinition of the ol's type attribute.
-	    </a:documentation>
-	  </attribute></optional>
-	  <ref name="li"/>
-	</element>
-	<element name="ul">
-	  <a:documentation>
-	    Redefinition of the html ul element so that it can include 
-	    CC elements.
-	  </a:documentation>
-	  <ref name="li"/>
-	</element>
-        <element name="b">
-	  <a:documentation>
-	    Redefinition of the html b element so that it can include 
-	    CC elements.
-	  </a:documentation>
-	  <ref name="basic-content"/>
-	</element>
         <element name="indent">
 	  <a:documentation>
 	    Tags that this section should be indented(left) 2em.
@@ -819,38 +760,6 @@
     </oneOrMore>
   </define>
   
-
-  <!-- 
-       These are elements that also exist in the html namespace, but
-       since they can have descendents that are in the cc namespace,
-       we've declared them here.
-  -->
-  <define name="li">
-    <oneOrMore>
-      <element name="li">
-	<a:documentation>
-	  List Item element in the CC namespace, b/c it can have CC children.
-	</a:documentation>
-	<ref name="basic-content"/>
-      </element>
-    </oneOrMore>
-  </define>
-  <define name="ol">
-    <element name="ol">
-      <a:documentation>
-	Ordered List element in the CC namespace, b/c it can have CC descendants.
-      </a:documentation>
-      <ref name="li"/>
-    </element>
-  </define>
-  <define name="ul">
-    <element name="ul">
-      <a:documentation>
-	Unordered List element in the CC namespace, b/c it can have CC descendants.
-      </a:documentation>
-      <ref name="li"/>
-    </element>
-  </define>
 
   <define name="a-elements">
     <oneOrMore>
@@ -974,6 +883,7 @@
 	  <ref name="html-element"/>
 	  <ref name="selectables"/>
 	  <ref name="assignable"/>
+	  <ref name="linkref"/>
 	</choice>
       </zeroOrMore>
     </element>
