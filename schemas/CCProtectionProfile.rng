@@ -575,7 +575,6 @@
       </a:documentation>
       <oneOrMore><choice>
 	<ref name="basic-content"/>
-        <ref name="note"/>
         <element name="management-function-set">
 	  <a:documentation>
 	    Table defining functions that are to be done and what role is required to do them.
@@ -877,15 +876,7 @@
 	  <anyName/>
 	</attribute>
       </zeroOrMore>
-      <zeroOrMore>
-	<choice>
-	  <text/>
-	  <ref name="html-element"/>
-	  <ref name="selectables"/>
-	  <ref name="assignable"/>
-	  <ref name="linkref"/>
-	</choice>
-      </zeroOrMore>
+      <ref name="basic-content"/>
     </element>
   </define>
   
