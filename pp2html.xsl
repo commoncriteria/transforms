@@ -769,10 +769,11 @@
     </xsl:call-template>
   </xsl:template>
 
-
+<!--##############################################################-->
+<!--  Component template                                          -->
+<!--##############################################################-->
   <xsl:template name="component-template">
     <xsl:param name="selected-statuses"/>
-
     <!--
 	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_"
 	 based on what it is (or "" if not appendicizing).
@@ -787,7 +788,6 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
 
 
     <!-- If we're not appendicizing or status is normal. Include-->
@@ -806,10 +806,73 @@
           <xsl:value-of select="translate(@id, $lower, $upper)"/>
           <xsl:value-of select="$id-suffix"/>
         </xsl:attribute>
+
         <h4>
           <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
           <xsl:value-of select="@name"/>
         </h4>
+
+<!-- BEGIN -->
+    <xsl:if test="@status='objective'">
+      <xsl:if test="$appendicize!='on'">
+        <div class="statustag">
+          <p/>
+          <i>
+            <b> This is an objective component.
+	    <xsl:if test="@targetdate">
+	      It is scheduled to be mandatory for products entering evaluation after
+	      <xsl:value-of select="@targetdate"/>.
+	    </xsl:if>
+	    </b>
+          </i>
+        </div>
+      </xsl:if>
+      <xsl:if test="$appendicize='on' and @targetdate">
+        <div class="statustag">
+          <p/>
+          <i>
+            <b> This component is scheduled to be mandatory for products entering evaluations
+              after <xsl:value-of select="@targetdate"/>.</b>
+          </i>
+        </div>
+      </xsl:if>
+    </xsl:if>
+
+    <xsl:if test="@status='sel-based'">
+      <div class="statustag">
+        <b>
+          <i>
+            <xsl:if test="$appendicize!='on'"> This is a selection-based component. Its inclusion
+              depends upon selection in </xsl:if>
+            <xsl:if test="$appendicize='on'"> This component depends upon selection in </xsl:if>
+            <xsl:for-each select="cc:selection-depends">
+              <b><i>
+                <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
+                <xsl:call-template name="req-refs">
+                  <xsl:with-param name="req" select="@req"/>
+                </xsl:call-template>
+<!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
+                <!-- If it's not the last, put a comma-->
+                <!-- <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" /> -->
+                <!-- <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a> -->
+                <!-- <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> -->
+              </i></b>
+            </xsl:for-each>. </i>
+        </b>
+      </div>
+    </xsl:if>
+    <xsl:if test="$appendicize!='on'">
+      <xsl:if test="@status='optional'">
+        <div class="statustag">
+          <p/>
+          <i><b>This is an optional component; however Extended Packages of this
+              Protection Profile might redefine it as non-optional.</b></i>
+        </div>
+      </xsl:if>
+    </xsl:if>
+<!-- END -->
+
+
 
 	<xsl:call-template name="group">
 	  <xsl:with-param name="type" select="'dev-action'"/>
@@ -859,71 +922,11 @@
     </xsl:if>
   </xsl:template>
 
+
+
+
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
-
-    <xsl:if test="../../@status='objective'">
-      <xsl:if test="$appendicize!='on'">
-        <div class="statustag">
-          <p/>
-          <i>
-            <b> This is an objective requirement.
-	    <xsl:if test="../../@targetdate">
-	      It is scheduled to be mandatory for products entering evaluation after
-	      <xsl:value-of select="../../@targetdate"/>.
-	    </xsl:if>
-	    </b>
-          </i>
-        </div>
-      </xsl:if>
-      <xsl:if test="$appendicize='on' and ../../@targetdate">
-        <div class="statustag">
-          <p/>
-          <i>
-            <b> This requirement is scheduled to be mandatory for products entering evaluations
-              after <xsl:value-of select="../../@targetdate"/>.</b>
-          </i>
-        </div>
-      </xsl:if>
-    </xsl:if>
-
-    <xsl:if test="../../@status='sel-based'">
-      <div class="statustag">
-        <b>
-          <i>
-            <xsl:if test="$appendicize!='on'"> This is a selection-based requirement. Its inclusion
-              depends upon selection in </xsl:if>
-            <xsl:if test="$appendicize='on'"> This requirement depends upon selection in </xsl:if>
-            <xsl:for-each select="../../cc:selection-depends">
-              <b><i>
-                  <xsl:variable name="capped-req"><xsl:value-of
-                      select="translate(@ref,$lower,$upper)"/></xsl:variable>
-                  <xsl:call-template name="req-refs">
-                    <xsl:with-param name="req" select="@req"/>
-                  </xsl:call-template>
-                  <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
-                  <!-- If it's not the last, put a comma-->
-                  <!-- <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" /> -->
-                  <!-- <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a> -->
-                  <!-- <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> -->
-                </i></b>
-            </xsl:for-each>. </i>
-        </b>
-      </div>
-    </xsl:if>
-
-
-
-    <xsl:if test="$appendicize!='on'">
-      <xsl:if test="../../@status='optional'">
-        <div class="statustag">
-          <p/>
-          <i><b>This is an optional requirement. It may be required by Extended Packages of this
-              Protection Profile.</b></i>
-        </div>
-      </xsl:if>
-
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="cc:aactivity">
