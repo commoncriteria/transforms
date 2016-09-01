@@ -865,7 +865,7 @@
       <xsl:if test="@status='optional'">
         <div class="statustag">
           <p/>
-          <i><b>This is an optional component; however Extended Packages of this
+          <i><b>This is an optional component; however, Extended Packages of this
               Protection Profile might redefine it as non-optional.</b></i>
         </div>
       </xsl:if>
