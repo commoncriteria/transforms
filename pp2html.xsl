@@ -214,7 +214,7 @@
               margin-left:0%;
               margin-top:1em;
               margin-bottom:1em;
-              padding:1em;
+              padding: 0.6em;
               border:2px solid #888888;
               border-radius:3px;
           }
