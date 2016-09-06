@@ -31,6 +31,7 @@ ciphersuites
 ciphertext
 ECC
 decrypt
+decrypts
 decrypted
 decrypting
 p1
@@ -93,4 +94,8 @@ KWP
 TGi
 XTS
 XTSAES
-
+passphrase
+Passphrase
+passphrases
+nonces
+Nonces

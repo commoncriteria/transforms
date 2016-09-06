@@ -108,3 +108,8 @@ SaaS
 IaaS
 TPM
 SSL
+submasks
+submask
+zeroization
+zeroized
+XORed
