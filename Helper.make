@@ -9,7 +9,7 @@ IN ?= input
 OUT ?= output
 # You can easily build with another set of transforms (ie the developer ones) by running
 #    make <target> TRANS=/path/to/transforms
-PROJDICTIONARY ?= Dictionary.txt
+PROJDICTIONARY ?= local/Dictionary.txt
 TRANS ?= transforms
 
 # If base not set, grab it from the directory name
