@@ -22,3 +22,5 @@ TSS
 IFC
 TST
 selectable
+misconfigure
+misconfigured
