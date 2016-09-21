@@ -89,7 +89,7 @@
 
   <xsl:template match="cc:step">
     <li>
-      <b>Test <xsl:for-each select="ancestor::cc:step"><xsl:value-of
+      <b>Step <xsl:for-each select="ancestor::cc:step"><xsl:value-of
             select="count(preceding-sibling::cc:step) + 1"/>.</xsl:for-each><xsl:value-of
           select="count(preceding-sibling::cc:step) + 1"/>: </b>
       <xsl:apply-templates/>
