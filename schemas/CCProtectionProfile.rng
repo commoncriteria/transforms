@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://common-criteria.rhcloud.com/ns/cc" 
-	 xmlns="http://relaxng.org/ns/structure/1.0" 
+<grammar ns="http://common-criteria.rhcloud.com/ns/cc"
+	 xmlns="http://relaxng.org/ns/structure/1.0"
 	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
 	 xmlns:htm="http://www.w3.org/1999/xhtml"
 	 xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
@@ -15,7 +15,7 @@
 	<a:documentation>
 	  A wrapper element for document meta-data.
 	</a:documentation>
-	
+
 	<optional><attribute name="id">
 	  <a:documentation>NOT USED</a:documentation>
 	</attribute></optional>
@@ -59,8 +59,8 @@
           </element>
           <element name="CCVersion">
 	    <a:documentation>
-	      Version of Common Criteria PP this meets. 
-	      It should match the version described in Part 1, Part 2, and Part 3. 
+	      Version of Common Criteria PP this meets.
+	      It should match the version described in Part 1, Part 2, and Part 3.
 	      Currently its value is "3.1 R4".
 	    </a:documentation>
             <text/>
@@ -164,7 +164,7 @@
   </define>
 
   <define name="appendix">
-    <a:documentation>    
+    <a:documentation>
       Pattern for title attribute.
     </a:documentation>
     <element name="appendix">
@@ -201,7 +201,7 @@
 		<ref name="id-attr"/>
 		<element name="tag">
 		  <a:documentation>
-		    A visible bibliography-wide unique identifier. 
+		    A visible bibliography-wide unique identifier.
 		  </a:documentation>
 		  <ref name="basic-content"/>
 		</element>
@@ -226,7 +226,7 @@
 	  <ref name="basic-content"/>
           <element name="InsertSPDCorrespondence">
 	    <a:documentation>
-	      Tags the spot where the table mapping threats 
+	      Tags the spot where the table mapping threats
 	      to objectives to requirements should go.
 	    </a:documentation>
             <empty/>
@@ -427,7 +427,7 @@
 		      </a:documentation>
                       <attribute name="id">
 			<a:documentation>
-			  A document-wide unique ID that is also displayed to the user. 
+			  A document-wide unique ID that is also displayed to the user.
 			  It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
 			</a:documentation>
 		      </attribute>
@@ -498,14 +498,14 @@
   <define name="description">
     <element name="description">
       <a:documentation>
-	A description section. Basically just has basic content and 
+	A description section. Basically just has basic content and
       </a:documentation>
       <oneOrMore>
         <choice>
 	  <ref name="basic-content"/>
           <element name="InsertAppendixExplainer">
 	    <a:documentation>
-	      Tag that denotes where an explanation of where the different types (objective, threshold, optional) 
+	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
 	      of requirements are located.
 	    </a:documentation>
 	    <empty/>
@@ -523,7 +523,7 @@
   <define name="secref">
     <element name="secref">
       <a:documentation>References a section (Adds word 'section').</a:documentation>
-      <ref name="linkend-attr"/> 
+      <ref name="linkend-attr"/>
     </element>
   </define>
   <define name="xref">
@@ -758,7 +758,7 @@
       </choice>
     </oneOrMore>
   </define>
-  
+
 
   <define name="a-elements">
     <oneOrMore>
@@ -768,7 +768,7 @@
 	</a:documentation>
 	<attribute name="id">
 	  <a:documentation>
-	    A document-wide unique ID that is also displayed to the user. 
+	    A document-wide unique ID that is also displayed to the user.
 	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
 	  </a:documentation>
 	</attribute>
@@ -799,6 +799,7 @@
 	      <choice>
 		<ref name="basic-content"/>
 		<ref name="testlist"/>
+	    <ref name="steplist"/>
 	      </choice>
 	    </oneOrMore>
           </element>
@@ -807,6 +808,29 @@
     </element>
   </define>
 
+  <define name="steplist">
+	<element name="steplist">
+	  <a:documentation>
+  Defines a list of steps to perform a test.
+	  </a:documentation>
+	  <oneOrMore>
+		<choice>
+	<ref name="basic-content"/>
+		  <element name="step">
+	  <a:documentation>
+		Denotes a single step.
+	  </a:documentation>
+	  <oneOrMore>
+		<choice>
+	  <ref name="basic-content"/>
+	  <ref name="steplist"/>
+		</choice>
+	  </oneOrMore>
+		  </element>
+		</choice>
+	  </oneOrMore>
+	</element>
+  </define>
 
   <define name="status">
     <attribute name="status">
@@ -879,7 +903,7 @@
       <ref name="basic-content"/>
     </element>
   </define>
-  
+
   <define name="entry-el">
     <element name="entry">
       <a:documentation>

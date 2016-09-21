@@ -81,6 +81,21 @@
     </li>
   </xsl:template>
 
+  <xsl:template match="cc:steplist">
+    <ul>
+      <xsl:apply-templates/>
+    </ul>
+  </xsl:template>
+
+  <xsl:template match="cc:step">
+    <li>
+      <b>Test <xsl:for-each select="ancestor::cc:step"><xsl:value-of
+            select="count(preceding-sibling::cc:step) + 1"/>.</xsl:for-each><xsl:value-of
+          select="count(preceding-sibling::cc:step) + 1"/>: </b>
+      <xsl:apply-templates/>
+    </li>
+  </xsl:template>
+
   <!-- Overloaded abbr here-->
   <xsl:template match="cc:abbr[@linkend]">
     <xsl:variable name="target" select="key('abbr', @linkend)"/>
@@ -146,7 +161,7 @@
   <!-- Eat all comments! -->
   <xsl:template match="comment()"/>
 
-  <!-- 
+  <!--
        Change all xhtml tags to tags with no namespace.
        This should help the transition from output w/ polluted
        namespace to output all in xhtml namespace. For right now
