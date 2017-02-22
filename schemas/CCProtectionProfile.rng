@@ -698,6 +698,15 @@
     </element>
   </define>
 
+  <define name="refinement-type">
+    <a:documentation>
+      Denotes a refinement.
+    </a:documentation>
+    <element name="refinement">
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
   <define name="basic-content">
     <a:documentation>
       Content that can go anywhere (Although some items are only suitable for title elements).
@@ -715,6 +724,7 @@
         <ref name="appref"/>
 	<ref name="abbr-el"/>
 	<ref name="xref"/>
+	<ref name="refinement-type"/>
         <element name="figure">
 	  <a:documentation>
 	    Tag allow that inserts a picture.

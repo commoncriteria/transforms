@@ -11,6 +11,10 @@
     .assignable-content{
       font-style: italic;
     }
+    .refinement{
+      text-decoration: underline;
+    }
+    
     a {
       word-wrap: break-word;
     }
@@ -118,6 +122,8 @@
         ><xsl:text>, </xsl:text></xsl:if></xsl:otherwise></xsl:choose></xsl:for-each>] </xsl:template>
 
   <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
+
+  <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
   <xsl:template match="cc:note">
     <div class="appnote">
