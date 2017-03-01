@@ -9,28 +9,53 @@
 
 #- Path to input files
 IN ?= input
+
 #- Path where output files are written
 OUT ?= output
+
 #- Local dictionary file
 PROJDICTIONARY ?= local/Dictionary.txt
+
 #- FPath
 TRANS ?= transforms
+
 #- Base name(with extensions) of input and output files
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
+
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
-#- XSL that transforms to 
+
+#- XSL that creates regular HTML document
 PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
-PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+
+#- XSL that creates the tabularized HTML document
 PP2TABLE_XSL ?= $(TRANS)/pp2table.xsl
+
+#- XSL that creates the tabularized HTML document with just the requirements
 PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
 
+#- XSL containing templates common to the other transforms
+PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+
+#- Path to input XML document for the esr
 ESR_XML=$(IN)/esr.xml
+
+#- Path where tabularized html document
 TABLE=$(OUT)/$(BASE)-table.html
+
+#- Path where tabularized html document with just the requirements
 SIMPLIFIED=$(OUT)/$(BASE)-table-reqs.html
+
+#- Path where the basic report is written
 PP_HTML=$(OUT)/$(BASE).html
+
+#- Path where the ESR is written
 ESR_HTML=$(OUT)/$(BASE)-esr.html
+
+#- Path where the report that has the different appendices for the different types of requirements is written
 PP_OP_HTML=$(OUT)/$(BASE)-optionsappendix.html
+
+#- Path where the release report is written
 PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
 
 
@@ -84,9 +109,23 @@ $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
 help:
 	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
 	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Helper.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
+
+help-hooks:
+	grep -A 1 '#-' Makefile $(TRANS)/Helper.make -h
+
+
 clean:
 	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML); do \
 		if [ -f $$f ]; then \
 			rm "$$f"; \
 		fi; \
 	done
+
+git-safe-push:
+	git pull origin
+	make clean
+	make
+	echo git push origin
+
+git-update-transforms:
+	git submodule update --remote transforms
