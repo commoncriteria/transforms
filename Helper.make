@@ -1,21 +1,25 @@
-# This file is intentially not called [Mm]akefile, because it is not meant to be called
-# directly. Rather the project directory should have a "Makefile" that includes this, eg-
-#   ```
-#   TRANS?=transforms
-#   include $(TRANS)/Helper.make
-#   ```
+#- This file is intentially not called [Mm]akefile, because it is not meant to be called
+#- directly. Rather the project directory should have a "Makefile" that 
+#- defines all the environment variables then includes this one.
+#- For example:
+#-   ```
+#-   TRANS?=transforms
+#-   include $(TRANS)/Helper.make
+#-   ```
 
+#- Path to input files
 IN ?= input
+#- Path where output files are written
 OUT ?= output
-# You can easily build with another set of transforms (ie the developer ones) by running
-#    make <target> TRANS=/path/to/transforms
+#- Local dictionary file
 PROJDICTIONARY ?= local/Dictionary.txt
+#- FPath
 TRANS ?= transforms
-
-# If base not set, grab it from the directory name
+#- Base name(with extensions) of input and output files
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
+#- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
-
+#- XSL that transforms to 
 PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
 PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
 PP2TABLE_XSL ?= $(TRANS)/pp2table.xsl
@@ -49,8 +53,12 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 
 
 pp:$(PP_HTML)
+# Personallized CSS file
+#EXTRA_CSS ?= 
+#	xsltproc --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	xsltproc  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
 	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 

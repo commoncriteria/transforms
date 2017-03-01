@@ -16,6 +16,7 @@
 
   <xsl:param name="appendicize" select="''"/>
 
+  <xsl:param name="custom-css-file" select="''"/>
 
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
@@ -370,7 +371,22 @@
 
 	      img[src="images/collapsed.png"] { display:none;}
 
-          }</style>
+          }
+
+		
+	  .SOlist .optional::after { 
+	    content: "(OPTIONAL)"
+          } 
+	  .SOlist .objective::after { 
+	    content: "(OPTIONAL)"
+          } 
+
+	  <!-- Tyring to get this to work -->
+	  <!-- <xsl:if test="not($custom-css-file='')"> -->
+	  <!--   <xsl:value-of select="document('file:///home/kevin/work/protection-profiles/mobile-device/mobile-device/input/Local.xml')/*)"/> -->
+	  <!-- </xsl:if> -->
+
+	</style>
       </head>
       <body onLoad="init()">
         <h1 class="title" style="page-break-before:auto;">
@@ -665,11 +681,25 @@
           <xsl:apply-templates select="cc:description"/>
           <p/> Addressed by: <span class="SOlist">
             <xsl:for-each select="cc:component-refer">
-              <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"
-                /></xsl:variable>
-              <xsl:call-template name="req-refs">
-                <xsl:with-param name="req" select="@ref"/>
-              </xsl:call-template>
+	      <!-- -->
+	      <xsl:variable name="uncapped-req">
+		<xsl:value-of select="translate(@ref,$upper,$lower)"/>
+	      </xsl:variable>
+
+	      <xsl:element name="span">
+		<xsl:attribute name="class">
+		  <xsl:value-of select="//cc:f-component[@id=$uncapped-req]/@status"/>
+		</xsl:attribute>
+		<xsl:call-template name="req-refs">
+                  <xsl:with-param name="req" select="@ref"/>
+		</xsl:call-template>
+		<!-- 
+		     This is here so that if we wanted to added text
+		     but make it different font.
+		-->
+		<span class="after"/>
+	      </xsl:element>
+
               <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
               <!-- If it's not the last, put a comma-->
             </xsl:for-each>
@@ -1198,6 +1228,9 @@
     </span>
   </xsl:template>
 
+  <!-- -->
+  <!-- -->
+  <!-- -->
   <xsl:template name="req-refs">
     <xsl:param name="class"/>
     <xsl:param name="req"/>
@@ -1236,6 +1269,10 @@
       <xsl:value-of select="$capped-req"/>
     </xsl:element>
   </xsl:template>
+
+  <!-- -->
+  <!-- -->
+  <!-- -->
 
   <xsl:template name="group">
     <xsl:param name="type"/>
