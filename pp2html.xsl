@@ -72,7 +72,6 @@
                   if(getQueryVariable("expand") == "on"){
                     expand();
                   }
-		  alert("Hello");
         	}
 
           <!--
