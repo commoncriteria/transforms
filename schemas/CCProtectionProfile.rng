@@ -117,6 +117,7 @@
             <choice>
 	      <ref name="basic-content"/>
               <ref name="section"/>
+		
               <element name="cclaims">
 		<a:documentation>
 		  Container element for the individual Conformance Claims.
@@ -733,6 +734,22 @@
             <attribute name="max-width"/>
           </optional>
         </element>
+	<element name="figref">
+	  <a:documentation>
+	    References a figure
+	  </a:documentation>
+	  <attribute name="refid">
+	    <a:documentation>
+	      Contains the ID of the figure being referenced.
+	    </a:documentation>
+	  </attribute>
+	  <attribute name="pre">
+	    <a:documentation>
+	      String prefix. (It will be included in the anchor).
+	    </a:documentation>
+	  </attribute>
+	</element>
+
         <element name="indent">
 	  <a:documentation>
 	    Tags that this section should be indented(left) 2em.

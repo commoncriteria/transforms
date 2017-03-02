@@ -35,6 +35,21 @@
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
         <script type="text/javascript">
 	  const AMPERSAND=String.fromCharCode(38);
+          function fixReferences(type){
+            var figs = document.getElementsByClassName("counted-"+type);
+     	    var aa;
+            for(aa=0; aa!= figs.length; aa++){
+	       figs[aa].innerHTML = (aa+1)+"";
+	       var figId = figs[aa].getAttribute("id");
+	       var figRefs = document.getElementsByClassName(figId+"-ref");
+	       var bb;
+               for(bb=0; bb!=figRefs.length; bb++){
+	          figRefs[bb].innerHTML = figRefs[bb].innerHTML + " " + (aa+1);
+		  figRefs[bb].setAttribute("href", "#"+figId.substring( type.length+1 ));
+	       }
+            }
+          }
+
 
           <!--
                     Function to expand and contract a given div//-->
@@ -53,9 +68,11 @@
           <!--
                     Called on page load to parse URL parameters and perform actions on them.//-->
          	function init(){
-                if(getQueryVariable("expand") == "on"){
-                  expand();
-                }
+		  fixReferences("figure");
+                  if(getQueryVariable("expand") == "on"){
+                    expand();
+                  }
+		  alert("Hello");
         	}
 
           <!--
@@ -94,6 +111,9 @@
               margin-right:8%;
               foreground:black;
           }
+	  .figure{
+              font-weight:bold;
+	  }
           h1{
               page-break-before:always;
               text-align:left;
@@ -1123,10 +1143,18 @@
         </xsl:attribute>
       </img>
       <p/>
-      <b>
-        <xsl:value-of select="@title"/>
-      </b>
+      Figure <span class="counted-figure" id="figure-{@id}"></span>: 
+      <xsl:value-of select="@title"/>
     </div>
+  </xsl:template>
+
+  <xsl:template match="cc:figref">
+    <a class="figure-{@refid}-ref">
+      <xsl:choose>
+	<xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
+	<xsl:otherwise>Figure </xsl:otherwise>
+      </xsl:choose>
+    </a>
   </xsl:template>
 
   <!-- templates for creating references -->
