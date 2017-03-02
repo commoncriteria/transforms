@@ -68,7 +68,7 @@ PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
 #- Builds all 
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
-
+#- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u"
 
@@ -78,12 +78,13 @@ spellcheck-esr: $(ESR_HTML)
 spellcheck-os:  $(PP_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(PP_HTML) | sort -u"
 
+#- Checks the internal links to make sure they point to an existing anchor
 linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELEASE_HTML)
 	for bb in $(OUT)/*.html; do for aa in $$(\
 	  sed "s/href=['\"]/\nhref=\"/g" $$bb | grep "^href=[\"']#" | sed "s/href=[\"']#//g" | sed "s/[\"'].*//g"\
         ); do grep "id=[\"']$${aa}[\"']" -q  $$bb || echo "Detected missing link $$bb-$$aa"; done; done
 
-
+#- Target to build the normal report
 pp:$(PP_HTML)
 # Personallized CSS file
 #EXTRA_CSS ?= 
@@ -94,18 +95,22 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
 	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
+#- Target to build the release report
+release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-
+#- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 	xsltproc -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
 
+#- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
 	xsltproc  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
+#- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED) 
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 	xsltproc --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
@@ -113,14 +118,17 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
 	trang -I rng -O rnc  $(TRANS)/schemas/schema.rng $(TRANS)/schemas/schema.rnc
+
+#- Builds quick help
 help:
 	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
 	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Helper.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
 
-help-hooks:
-	grep -A 1 '#-' Makefile $(TRANS)/Helper.make -h
+#- Builds more detailed help
+more-help:
+	grep -A 1 '^#-' Makefile $(TRANS)/Helper.make -h
 
-
+#- Build to clean the system
 clean:
 	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML); do \
 		if [ -f $$f ]; then \
@@ -128,11 +136,13 @@ clean:
 		fi; \
 	done
 
+#- Does a git safe push
 git-safe-push:
 	git pull origin
 	make clean
 	make
-	echo git push origin
+	git push origin
 
+#- Pulls in the latest transforms module into the project
 git-update-transforms:
 	git submodule update --remote transforms
