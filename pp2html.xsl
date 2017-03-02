@@ -32,7 +32,10 @@
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
+	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
         <script type="text/javascript">
+	  const AMPERSAND=String.fromCharCode(38);
+
           <!--
                     Function to expand and contract a given div//-->
         	function toggle(divID, imgID) {
@@ -60,8 +63,8 @@
           function getQueryVariable(variable)
           {
                  var query = window.location.search.substring(1);
-                 var vars = query.split("&amp;");
-                 for (var i=0;i&lt;vars.length;i++) {
+                 var vars = query.split(AMPERSAND);
+                 for (var i=0;i!=vars.length;i++) {
                          var pair = vars[i].split("=");
                          if(pair[0] == variable){return pair[1];}
                  }
@@ -400,8 +403,8 @@
         </noscript>
         <div class="center">
           <xsl:choose>
-            <xsl:when test="$release='final'"><img src="images/niaplogo.png"/></xsl:when>
-            <xsl:when test="$release='draft'"><img src="images/niaplogodraft.png"/></xsl:when>
+            <xsl:when test="$release='final'"><img src="images/niaplogo.png" alt="NIAP"/></xsl:when>
+            <xsl:when test="$release='draft'"><img src="images/niaplogodraft.png" alt="NIAP"/></xsl:when>
           </xsl:choose>
           <br/>
           <p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
@@ -931,8 +934,8 @@
     <xsl:param name="selected-statuses"/>
 
     <xsl:variable name="eff-status"><xsl:choose>
-    <xsl:when test="../@status"><xsl:value-of select="../@status"/></xsl:when>
-    <xsl:otherwise>threshold</xsl:otherwise>
+      <xsl:when test="../@status"><xsl:value-of select="../@status"/></xsl:when>
+      <xsl:otherwise>threshold</xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:variable name="ueff-status">_<xsl:value-of select="$eff-status"/>_</xsl:variable>
 

@@ -7,6 +7,10 @@
 #-   include $(TRANS)/Helper.make
 #-   ```
 
+#---
+#- Build targets
+#---
+
 #- Path to input files
 IN ?= input
 
@@ -58,7 +62,10 @@ PP_OP_HTML=$(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
 
-
+#---
+#- Build targets
+#---
+#- Builds all 
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 

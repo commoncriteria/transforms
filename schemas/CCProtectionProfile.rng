@@ -223,6 +223,7 @@
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
+	  <ref name="glossary-section"/>
 	  <ref name="basic-content"/>
           <element name="InsertSPDCorrespondence">
 	    <a:documentation>
@@ -442,14 +443,6 @@
                         </choice>
                       </oneOrMore>
                     </element>
-                  </oneOrMore>
-                </element>
-                <element name="glossary">
-		  <a:documentation>
-		    Section to define terms.
-		  </a:documentation>
-                  <oneOrMore>
-		    <ref name="entry-el"/>
                   </oneOrMore>
                 </element>
               </choice>
@@ -935,6 +928,16 @@
 	<a:documentation>Description of the term/name.</a:documentation>
 	<ref name="basic-content"/>
       </element>
+    </element>
+  </define>
+  <define name="glossary-section">
+    <element name="glossary">
+      <a:documentation>
+	Section to define terms.
+      </a:documentation>
+      <oneOrMore>
+	<ref name="entry-el"/>
+      </oneOrMore>
     </element>
   </define>
 

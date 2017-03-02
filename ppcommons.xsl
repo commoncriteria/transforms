@@ -208,9 +208,9 @@
 
   </xsl:template>
 
-  <!-- Eat all comments! -->
+  <!-- Eat all comments and processing instructions-->
   <xsl:template match="comment()"/>
-
+  <xsl:template match="processing-instruction()"/>
   <!--
        Change all xhtml tags to tags with no namespace.
        This should help the transition from output w/ polluted
