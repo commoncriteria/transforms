@@ -847,6 +847,7 @@
     <xsl:when test="@status"><xsl:value-of select="@status"/></xsl:when>
     <xsl:otherwise>threshold</xsl:otherwise>
     </xsl:choose>_</xsl:variable>
+
     <xsl:if test="count(./*[contains($selected-statuses, $eff-status)])>0">
       <xsl:variable name="family" select="substring(@id,1,7)"/>
       <xsl:variable name="component" select="substring(@id,1,9)"/>
@@ -863,7 +864,7 @@
           <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
           <xsl:value-of select="@name"/>
         </h4>
-
+	<xsl:apply-templates select="cc:summary"/>
 <!-- BEGIN -->
     <xsl:if test="@status='objective'">
       <xsl:if test="$appendicize!='on'">
@@ -888,7 +889,7 @@
           </i>
         </div>
       </xsl:if>
-    </xsl:if>
+    </xsl:if> <!-- End if objective -->
 
     <xsl:if test="@status='sel-based'">
       <div class="statustag">

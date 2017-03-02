@@ -327,6 +327,14 @@
 		  </attribute>
 		  <ref name="basic-content"/>
 		  <optional>
+		    <element name="summary">
+		      <a:documentation>
+			Summary of this component.
+		      </a:documentation>
+		      <ref name="basic-content"/>
+		    </element>
+		  </optional>
+		  <optional>
                     <element name="group">
 		      <a:documentation>
 			Actions levied on the developer: <i>The developer shall...</i>
