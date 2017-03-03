@@ -562,14 +562,22 @@
   <xsl:template match="cc:glossary">
     <table>
       <xsl:for-each select="cc:entry">
-        <tr>
+        <xsl:element name="tr">
+
+	  <xsl:attribute name="id">
+	    <xsl:choose>
+	      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+	      <xsl:when test="cc:term"><xsl:value-of select="cc:term/text()"/></xsl:when>
+	      <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:attribute>
           <td>
             <xsl:apply-templates select="cc:term"/>
           </td>
           <td>
             <xsl:apply-templates select="cc:description"/>
           </td>
-        </tr>
+	</xsl:element>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -1166,7 +1174,22 @@
         <xsl:text>#</xsl:text>
         <xsl:value-of select="$linkend"/>
       </xsl:attribute>
-      <xsl:value-of select="//*[@id=$linkend]/@title"/>
+      <xsl:choose>
+	<xsl:when test="//*[@id=$linkend]/@title"> 
+	  <xsl:value-of select="//*[@id=$linkend]/@title"/>
+	</xsl:when>
+	<xsl:when test="//*[@id=$linkend]/cc:term"> 
+	  <xsl:value-of select="//*[@id=$linkend]/cc:term"/>
+	</xsl:when>
+	<xsl:when test="//*/cc:term[text()=$linkend]">
+	  <xsl:value-of select="//*/cc:term[text()=$linkend]/text()"/>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message>Cant find
+	  <xsl:value-of select="$linkend"/>
+	  </xsl:message>
+	</xsl:otherwise>
+      </xsl:choose>
     </xsl:element>
   </xsl:template>
 

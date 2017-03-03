@@ -937,6 +937,15 @@
       <a:documentation>
 	Wrapper for terms and descriptions.
       </a:documentation>
+      <optional>
+	<attribute name="id">
+	  <a:documentation>
+	    Unique ID for this entry so it can be linked. 
+	    If omitted, it can still be linked with the name or term.
+	  </a:documentation>
+	</attribute>
+      </optional>
+
       <choice>
 	<element name="name">
 	  <a:documentation></a:documentation>
@@ -944,7 +953,7 @@
 	</element>
 	<element name="term">
 	  <a:documentation>
-	    The characters of the acronym.
+	    Thing being defined.
 	  </a:documentation>
 	  <ref name="basic-content"/>
 	</element>
