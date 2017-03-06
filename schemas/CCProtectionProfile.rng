@@ -709,6 +709,27 @@
     </element>
   </define>
 
+  <define name="counted-object-ref">
+    <element name="counted-object-ref">
+      <attribute name="refid"/>
+    </element>
+  </define>
+
+  <define name="counted-object">
+    <element name="counted-object">
+      <attribute name="id"/>
+      <optional><attribute name="counted-class"/></optional>
+      <optional>
+	<attribute name="pre">
+	  <a:documentation>
+	    Text that goes before the counter (e.g. 'Table '). It will be included in every reference. By default it is table.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
   <define name="basic-content">
     <a:documentation>
       Content that can go anywhere (Although some items are only suitable for title elements).
@@ -727,10 +748,19 @@
 	<ref name="abbr-el"/>
 	<ref name="xref"/>
 	<ref name="refinement-type"/>
+	<ref name="counted-object-ref"/>
+	<ref name="counted-object"/>
         <element name="figure">
 	  <a:documentation>
 	    Tag allow that inserts a picture.
 	  </a:documentation>
+	  <optional>
+	    <attribute name="pre">
+	      <a:documentation>
+		Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
+	      </a:documentation>
+	    </attribute>
+	  </optional>
           <attribute name="entity">
 	    <a:documentation>
 	      Path to the image file.
@@ -749,11 +779,6 @@
 	  <attribute name="refid">
 	    <a:documentation>
 	      Contains the ID of the figure being referenced.
-	    </a:documentation>
-	  </attribute>
-	  <attribute name="pre">
-	    <a:documentation>
-	      String prefix. (It will be included in the anchor).
 	    </a:documentation>
 	  </attribute>
 	</element>
@@ -964,6 +989,7 @@
       </element>
     </element>
   </define>
+
   <define name="glossary-section">
     <element name="glossary">
       <a:documentation>

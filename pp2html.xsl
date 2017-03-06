@@ -35,20 +35,38 @@
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
         <script type="text/javascript">
 	  const AMPERSAND=String.fromCharCode(38);
+
+	  function changeMyCounter(subroot, val){
+               var bb;
+	       for(bb=0; bb!=subroot.childNodes.length; bb++){
+	          if( subroot.childNodes[bb] instanceof Element &amp;&amp;
+	              "counter"==subroot.childNodes[bb].getAttribute("class")){
+	             subroot.childNodes[bb].innerHTML = val;
+	             return;
+	          } 
+	       }
+	  }
+
           function fixReferences(type){
-            var figs = document.getElementsByClassName("counted-"+type);
-     	    var aa;
-            for(aa=0; aa!= figs.length; aa++){
-	       figs[aa].innerHTML = (aa+1)+"";
-	       var figId = figs[aa].getAttribute("id");
+            var figs = document.getElementsByClassName("counted-object");
+	    var occurs = {};                                         // Map that stores how many times we've seen each thing
+     	    var aa;                                                  
+            for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
+	       var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
+	       var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
+	       occurs[ ct ] = curr + 1;                              // Save off increment for next time
+	       changeMyCounter( figs[aa], curr);
+
+	       var figId = figs[aa].getAttribute("data-myid");
 	       var figRefs = document.getElementsByClassName(figId+"-ref");
 	       var bb;
                for(bb=0; bb!=figRefs.length; bb++){
-	          figRefs[bb].innerHTML = figRefs[bb].innerHTML + " " + (aa+1);
-		  figRefs[bb].setAttribute("href", "#"+figId.substring( type.length+1 ));
-	       }
+	          changeMyCounter(figRefs[bb], curr);
+	       } 
             }
           }
+
+
 
 
           <!--
@@ -1139,7 +1157,6 @@
     </xsl:if>
   </xsl:template>
 
-
   <xsl:template match="cc:subsubsection">
     <h4 id="{@id}">
       <xsl:value-of select="@title"/>
@@ -1147,8 +1164,41 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+
+  <xsl:template match="cc:counted-object-ref">
+    <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
+      <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
+      <xsl:for-each select="//cc:counted-object[@id=$refid]">
+	<xsl:call-template name="getPre"/>
+      </xsl:for-each>
+ <!--      <xsl:value-of select="//cc:counted-object[@id=$refid]/@pre"/> -->
+      <span class="counter"><xsl:value-of select="$refid"/></span>
+    </a>
+  </xsl:template>
+
+  <!-- Need at least two objects -->
+  <xsl:template match="cc:counted-object">
+    <span class="counted-object" data-myid="cc-{@id}" data-counter-type="ct-{@counted-class}" id="cc-{@id}">
+      <xsl:call-template name="getPre"/>
+      <span class="counter"><xsl:value-of select="@id"/></span>
+      <xsl:apply-templates/>
+    </span>
+  </xsl:template>
+
+  <xsl:template match="cc:figref">
+    <a onclick="showTarget('figure-{@refid}')" href="#figure-{@refid}" class="figure-{@refid}-ref">
+      <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
+
+      <xsl:for-each select="//cc:figure[@id=$refid]">
+	<xsl:call-template name="getPre"/>
+      </xsl:for-each>
+<!--      <xsl:value-of select="//cc:counted-object[@id=$refid]">"/>-->
+      <span class="counter"><xsl:value-of select="$refid"/></span>
+    </a>
+  </xsl:template>
+
   <xsl:template match="cc:figure">
-    <div class="figure">
+    <div class="figure" id="figure-{@id}">
       <img>
         <xsl:attribute name="id">
           <xsl:value-of select="@id"/>
@@ -1164,18 +1214,20 @@
         </xsl:attribute>
       </img>
       <p/>
-      Figure <span class="counted-figure" id="figure-{@id}"></span>: 
+      <span class="counted-object" data-myid="figure-{@id}" data-counter-type="ct-figure">
+	<xsl:call-template name="getPre"/>
+	<span class="counter"><xsl:value-of select="@id"/></span>
+      </span>: 
       <xsl:value-of select="@title"/>
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:figref">
-    <a class="figure-{@refid}-ref">
-      <xsl:choose>
-	<xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
-	<xsl:otherwise>Figure </xsl:otherwise>
-      </xsl:choose>
-    </a>
+  <xsl:template name="getPre">
+    <xsl:choose>
+      <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
+      <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
+      <xsl:otherwise><xsl:text>Table </xsl:text></xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- templates for creating references -->
