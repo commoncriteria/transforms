@@ -65,6 +65,19 @@
         			}
         	}
 
+	  <!-- Expands targets if they're hidden-->
+	  function showTarget(id){
+	     var element = document.getElementById(id);
+	     while (element != document.body.rootNode ){
+	         if ( "aacthidden" == element.getAttribute("class") ){
+	            toggle( element.id, "link-"+element.id );
+	            return;
+	         }
+	         element = element.parentElement;
+	     }
+	  }
+
+
           <!--
                     Called on page load to parse URL parameters and perform actions on them.//-->
          	function init(){
@@ -1170,6 +1183,7 @@
   <xsl:template match="cc:xref">
     <xsl:variable name="linkend" select="@linkend"/>
     <xsl:element name="a">
+      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkend"/>')</xsl:attribute>
       <xsl:attribute name="href">
         <xsl:text>#</xsl:text>
         <xsl:value-of select="$linkend"/>
