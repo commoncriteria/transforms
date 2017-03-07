@@ -760,9 +760,7 @@
 		-->
 		<span class="after"/>
 	      </xsl:element>
-
-              <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
-              <!-- If it's not the last, put a comma-->
+	      <xsl:call-template name="commaifnotlast"/>
             </xsl:for-each>
           </span>
           <xsl:apply-templates select="cc:appnote"/></dd>
@@ -944,6 +942,8 @@
                   <xsl:with-param name="req" select="@req"/>
                 </xsl:call-template>
 <!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
+                <xsl:call-template name="commaifnotlast"/>
+
                 <!-- If it's not the last, put a comma-->
                 <!-- <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" /> -->
                 <!-- <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a> -->
