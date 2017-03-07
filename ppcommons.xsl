@@ -279,6 +279,12 @@
     </tr>
   </xsl:template>
 
+  <!-- By default eat all cc elements -->
+  <xsl:template match="cc:*">
+    <xsl:message> Unmatched CC tag: <xsl:value-of select="name()"/></xsl:message>
+    <xsl:apply-templates/>
+  </xsl:template>
+
   <!-- Do not write xml-model processing instruction to HTML output. -->
   <xsl:template match="processing-instruction('xml-model')" />
 </xsl:stylesheet>
