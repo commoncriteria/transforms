@@ -711,14 +711,32 @@
 
   <define name="counted-object-ref">
     <element name="counted-object-ref">
-      <attribute name="refid"/>
+	<a:documentation>
+	  References a counted object.
+	</a:documentation>
+      <attribute name="refid">
+	<a:documentation>
+	  The unique ID of the object being referenced.
+	</a:documentation>
+      </attribute>
     </element>
   </define>
 
   <define name="counted-object">
     <element name="counted-object">
-      <attribute name="id"/>
-      <optional><attribute name="counted-class"/></optional>
+      <attribute name="id">
+	<a:documentation>
+	  Unique ID for this object.
+	</a:documentation>
+      </attribute>
+
+      <optional>
+	<attribute name="counted-class">
+	  <a:documentation>
+	    References the specific counter.
+	  </a:documentation>
+	</attribute>
+      </optional>
       <optional>
 	<attribute name="pre">
 	  <a:documentation>
