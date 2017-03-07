@@ -48,7 +48,7 @@
 	  }
 
           function fixReferences(type){
-            var figs = document.getElementsByClassName("counted-object");
+            var figs = document.getElementsByClassName("ctr");
 	    var occurs = {};                                         // Map that stores how many times we've seen each thing
      	    var aa;                                                  
             for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
@@ -1165,20 +1165,20 @@
   </xsl:template>
 
 
-  <xsl:template match="cc:counted-object-ref">
+  <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
-      <xsl:for-each select="//cc:counted-object[@id=$refid]">
+      <xsl:for-each select="//cc:ctr[@id=$refid]">
 	<xsl:call-template name="getPre"/>
       </xsl:for-each>
- <!--      <xsl:value-of select="//cc:counted-object[@id=$refid]/@pre"/> -->
+ <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
       <span class="counter"><xsl:value-of select="$refid"/></span>
     </a>
   </xsl:template>
 
   <!-- Need at least two objects -->
-  <xsl:template match="cc:counted-object">
-    <span class="counted-object" data-myid="cc-{@id}" data-counter-type="ct-{@counted-class}" id="cc-{@id}">
+  <xsl:template match="cc:ctr">
+    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{@ctr-class}" id="cc-{@id}">
       <xsl:call-template name="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
       <xsl:apply-templates/>
@@ -1192,7 +1192,7 @@
       <xsl:for-each select="//cc:figure[@id=$refid]">
 	<xsl:call-template name="getPre"/>
       </xsl:for-each>
-<!--      <xsl:value-of select="//cc:counted-object[@id=$refid]">"/>-->
+<!--      <xsl:value-of select="//cc:ctr[@id=$refid]">"/>-->
       <span class="counter"><xsl:value-of select="$refid"/></span>
     </a>
   </xsl:template>
@@ -1214,7 +1214,7 @@
         </xsl:attribute>
       </img>
       <p/>
-      <span class="counted-object" data-myid="figure-{@id}" data-counter-type="ct-figure">
+      <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
 	<xsl:call-template name="getPre"/>
 	<span class="counter"><xsl:value-of select="@id"/></span>
       </span>: 

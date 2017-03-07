@@ -709,8 +709,8 @@
     </element>
   </define>
 
-  <define name="counted-object-ref">
-    <element name="counted-object-ref">
+  <define name="ctr-ref">
+    <element name="ctr-ref">
 	<a:documentation>
 	  References a counted object.
 	</a:documentation>
@@ -722,8 +722,8 @@
     </element>
   </define>
 
-  <define name="counted-object">
-    <element name="counted-object">
+  <define name="ctr">
+    <element name="ctr">
       <attribute name="id">
 	<a:documentation>
 	  Unique ID for this object.
@@ -731,7 +731,7 @@
       </attribute>
 
       <optional>
-	<attribute name="counted-class">
+	<attribute name="ctr-type">
 	  <a:documentation>
 	    References the specific counter.
 	  </a:documentation>
@@ -766,8 +766,8 @@
 	<ref name="abbr-el"/>
 	<ref name="xref"/>
 	<ref name="refinement-type"/>
-	<ref name="counted-object-ref"/>
-	<ref name="counted-object"/>
+	<ref name="ctr-ref"/>
+	<ref name="ctr"/>
         <element name="figure">
 	  <a:documentation>
 	    Tag allow that inserts a picture.
