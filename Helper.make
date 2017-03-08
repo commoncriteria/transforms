@@ -23,6 +23,9 @@ PROJDICTIONARY ?= local/Dictionary.txt
 #- FPath
 TRANS ?= transforms
 
+#- Debugging levels '','v','vv' make sense right now.
+DEBUG ?= v
+
 #- Base name(with extensions) of input and output files
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
 
@@ -42,26 +45,31 @@ PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
 PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
 
 #- Path to input XML document for the esr
-ESR_XML=$(IN)/esr.xml
+ESR_XML ?= $(IN)/esr.xml
 
 #- Path where tabularized html document
-TABLE=$(OUT)/$(BASE)-table.html
+TABLE ?= $(OUT)/$(BASE)-table.html
 
 #- Path where tabularized html document with just the requirements
-SIMPLIFIED=$(OUT)/$(BASE)-table-reqs.html
+SIMPLIFIED ?= $(OUT)/$(BASE)-table-reqs.html
 
 #- Path where the basic report is written
-PP_HTML=$(OUT)/$(BASE).html
+PP_HTML ?= $(OUT)/$(BASE).html
 
 #- Path where the ESR is written
-ESR_HTML=$(OUT)/$(BASE)-esr.html
+ESR_HTML ?= $(OUT)/$(BASE)-esr.html
 
 #- Path where the report that has the different appendices for the different types of requirements is written
-PP_OP_HTML=$(OUT)/$(BASE)-optionsappendix.html
+PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 
 #- Path where the release report is written
-PP_RELEASE_HTML=$(OUT)/$(BASE)-release.html
+PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
+#- Your xsl transformer.
+#- It should be at least XSL level-1 compliant.
+#- It should be able to handle commands of the form
+#- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
+XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 #---
 #- Build targets
 #---
@@ -86,34 +94,36 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 
 #- Target to build the normal report
 pp:$(PP_HTML)
+
+
 # Personallized CSS file
 #EXTRA_CSS ?= 
-#	xsltproc --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+#	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	xsltproc  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
-	xsltproc --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE)  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE) --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE) --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	xsltproc --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE) --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
-	xsltproc -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
+	$(XSL_EXE) -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
 
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	xsltproc  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
+	$(XSL_EXE)  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED) 
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
-	xsltproc --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
+	$(XSL_EXE) --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng

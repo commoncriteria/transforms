@@ -279,12 +279,42 @@
     </tr>
   </xsl:template>
 
-  <!-- By default eat all cc elements -->
+
+
+
+  <!-- By default, quietly unwrap all cc elements -->
   <xsl:template match="cc:*">
-    <xsl:message> Unmatched CC tag: <xsl:value-of select="name()"/></xsl:message>
+    <xsl:if test="contains($debug,'vv')">
+      <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
+    </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
 
+  <!-- -->
+  <xsl:template name="debug-2">
+    <xsl:param name="msg"/>
+    <xsl:if test="contains($debug, 'vv')">
+      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- -->
+  <xsl:template name="debug-1">
+    <xsl:param name="msg"/>
+    <xsl:if test="contains($debug, 'v')">
+      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Debugging function -->
+  <xsl:template name="path">
+    <xsl:for-each select="parent::*">
+      <xsl:call-template name="path"/>
+    </xsl:for-each>
+    <xsl:value-of select="name()"/>
+    <xsl:text>/</xsl:text>
+  </xsl:template>
+  
   <!-- Do not write xml-model processing instruction to HTML output. -->
   <xsl:template match="processing-instruction('xml-model')" />
 </xsl:stylesheet>

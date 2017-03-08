@@ -18,6 +18,9 @@
 
   <xsl:param name="custom-css-file" select="''"/>
 
+  <!-- Variable for selecting how much debugging we want -->
+  <xsl:param name="debug" select="'v'"/>
+
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
 
@@ -713,7 +716,7 @@
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
-          <xsl:apply-templates select="cc:description"/>
+          <xsl:apply-templates select="cc:description/*"/>
           <xsl:apply-templates select="cc:appnote"/>
         </dd>
       </xsl:for-each>
@@ -1178,7 +1181,12 @@
 
   <!-- Need at least two objects -->
   <xsl:template match="cc:ctr">
-    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{@ctr-class}" id="cc-{@id}">
+    <xsl:variable name="ctrtype"><xsl:choose>
+	<xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
+    </xsl:variable>
+    
+    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
       <xsl:call-template name="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
       <xsl:apply-templates/>
@@ -1414,5 +1422,9 @@
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
+
+
+
+
 
 </xsl:stylesheet>
