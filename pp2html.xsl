@@ -24,11 +24,9 @@
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
 
-
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
-
 
   <xsl:template match="/cc:PP">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
@@ -36,105 +34,100 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
+	
         <script type="text/javascript">
-	  const AMPERSAND=String.fromCharCode(38);
+const AMPERSAND=String.fromCharCode(38);
 
-	  function changeMyCounter(subroot, val){
-               var bb;
-	       for(bb=0; bb!=subroot.childNodes.length; bb++){
-	          if( subroot.childNodes[bb] instanceof Element &amp;&amp;
-	              "counter"==subroot.childNodes[bb].getAttribute("class")){
-	             subroot.childNodes[bb].innerHTML = val;
-	             return;
-	          } 
-	       }
-	  }
+function changeMyCounter(subroot, val){
+    var bb;
+    for(bb=0; bb!=subroot.childNodes.length; bb++){
+    	if( subroot.childNodes[bb] instanceof Element &amp;&amp;
+    	    "counter"==subroot.childNodes[bb].getAttribute("class")){
+    	    subroot.childNodes[bb].innerHTML = val;
+    	    return;
+    	} 
+    }
+}
 
-          function fixReferences(type){
-            var figs = document.getElementsByClassName("ctr");
-	    var occurs = {};                                         // Map that stores how many times we've seen each thing
-     	    var aa;                                                  
-            for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
-	       var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
-	       var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
-	       occurs[ ct ] = curr + 1;                              // Save off increment for next time
-	       changeMyCounter( figs[aa], curr);
+function fixReferences(type){
+    var figs = document.getElementsByClassName("ctr");
+    var occurs = {};                                         // Map that stores how many times we've seen each thing
+    var aa;                                                  
+    for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
+    	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
+    	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
+    	occurs[ ct ] = curr + 1;                              // Save off increment for next time
+    	changeMyCounter( figs[aa], curr);
+	
+    	var figId = figs[aa].getAttribute("data-myid");
+    	var figRefs = document.getElementsByClassName(figId+"-ref");
+    	var bb;
+        for(bb=0; bb!=figRefs.length; bb++){
+    	    changeMyCounter(figRefs[bb], curr);
+    	} 
+    }
+}
 
-	       var figId = figs[aa].getAttribute("data-myid");
-	       var figRefs = document.getElementsByClassName(figId+"-ref");
-	       var bb;
-               for(bb=0; bb!=figRefs.length; bb++){
-	          changeMyCounter(figRefs[bb], curr);
-	       } 
-            }
-          }
+// Function to expand and contract a given div
+function toggle(divID, imgID) {
+    var item = document.getElementById(divID);
+    var img = document.getElementById(imgID);
+    if (item) {
+        item.className = (item.className=='aacthidden') ? 'aact':'aacthidden';
+    }
+    if (img) {
+        var currimage = img.src.substring(img.src.lastIndexOf('/')+1);
+        img.src=(currimage=='collapsed.png')?'images/expanded.png':'images/collapsed.png';
+    }
+}
+
+// Expands targets if they are hidden
+function showTarget(id){
+    var element = document.getElementById(id);
+    while (element != document.body.rootNode ){
+	if ( "aacthidden" == element.getAttribute("class") ){
+	    toggle( element.id, "link-"+element.id );
+	    return;
+	}
+	element = element.parentElement;
+    }
+}
+
+// Called on page load to parse URL parameters and perform actions on them.
+function init(){
+    fixReferences("figure");
+    if(getQueryVariable("expand") == "on"){
+	expand();
+    }
+}
+
+// Pass a URL variable to this function and it will return it 's value
+function getQueryVariable(variable)
+{
+    var query = window.location.search.substring(1);
+    var vars = query.split(AMPERSAND);
+    for (var i=0;i!=vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
+}
 
 
-
-
-          <!--
-                    Function to expand and contract a given div//-->
-        	function toggle(divID, imgID) {
-        		var item = document.getElementById(divID);
-        		var img = document.getElementById(imgID);
-        		if (item) {
-        			item.className = (item.className=='aacthidden') ? 'aact':'aacthidden';
-        		}
-        		if (img) {
-        			var currimage = img.src.substring(img.src.lastIndexOf('/')+1);
-        			img.src=(currimage=='collapsed.png')?'images/expanded.png':'images/collapsed.png';
-        			}
-        	}
-
-	  <!-- Expands targets if they're hidden-->
-	  function showTarget(id){
-	     var element = document.getElementById(id);
-	     while (element != document.body.rootNode ){
-	         if ( "aacthidden" == element.getAttribute("class") ){
-	            toggle( element.id, "link-"+element.id );
-	            return;
-	         }
-	         element = element.parentElement;
-	     }
-	  }
-
-
-          <!--
-                    Called on page load to parse URL parameters and perform actions on them.//-->
-         	function init(){
-		  fixReferences("figure");
-                  if(getQueryVariable("expand") == "on"){
-                    expand();
-                  }
-        	}
-
-          <!--
-                    Pass a URL variable to this function and it will return it 's value//-->
-          function getQueryVariable(variable)
-          {
-                 var query = window.location.search.substring(1);
-                 var vars = query.split(AMPERSAND);
-                 for (var i=0;i!=vars.length;i++) {
-                         var pair = vars[i].split("=");
-                         if(pair[0] == variable){return pair[1];}
-                 }
-                 return(false);
-          }
-
-          <!--
-                    Expands all assurance activities//-->
-          function expand(){
-              var divID = "";
-              var imgID = "link-";
-              var hidden_elements = document.getElementsByClassName('aacthidden');
-              for (var i = hidden_elements.length - 1; i >= 0; --i) {
-                divID = hidden_elements[i].id;
-                imgID += divID;
-                toggle(divID,imgID);
-                imgID = "link-";
-              }
-          }
+//    Expands all assurance activities
+function expand(){
+    var divID = "";
+    var imgID = "link-";
+    var hidden_elements = document.getElementsByClassName('aacthidden');
+    for (var i = hidden_elements.length - 1; i >= 0; --i) {
+        divID = hidden_elements[i].id;
+        imgID += divID;
+        toggle(divID,imgID);
+        imgID = "link-";
+    }
+}
         </script>
+
         <style type="text/css">
 	  <xsl:call-template name="common_css"/>
 

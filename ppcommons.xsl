@@ -38,8 +38,8 @@
       color:red;
       text-decoration:none;
     }
-
-
+    <xsl:value-of select="//cc:extra-css"/>
+    
   </xsl:template>
   <xsl:template name="OSabbrev2name">
     <xsl:param name="osname"/>
