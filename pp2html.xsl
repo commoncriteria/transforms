@@ -709,7 +709,7 @@ function expand(){
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
-          <xsl:apply-templates select="cc:description/*"/>
+          <xsl:apply-templates select="cc:description"/>
           <xsl:apply-templates select="cc:appnote"/>
         </dd>
       </xsl:for-each>
