@@ -423,12 +423,6 @@ function expand(){
           }
 
 		
-	  .SOlist .optional::after { 
-	    content: "(OPTIONAL)"
-          } 
-	  .SOlist .objective::after { 
-	    content: "(OPTIONAL)"
-          } 
 
 	  <!-- Tyring to get this to work -->
 	  <!-- <xsl:if test="not($custom-css-file='')"> -->
