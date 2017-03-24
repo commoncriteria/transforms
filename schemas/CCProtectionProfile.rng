@@ -245,14 +245,16 @@
 	    <a:documentation>
 	      Grouping for Organizational Security Policies
 	    </a:documentation>
-            <element name="OSP">
-	      <a:documentation>
-		Entry for each security policy.
-	      </a:documentation>
-	      <ref name="id-attr"/>
-              <ref name="description"/>
-              <ref name="objective-refer"/>
-            </element>
+	    <oneOrMore>
+              <element name="OSP">
+		<a:documentation>
+		  Entry for each security policy.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="description"/>
+		<ref name="objective-refer"/>
+              </element>
+	    </oneOrMore>
           </element>
           <element name="SOEs">
 	    <a:documentation>
