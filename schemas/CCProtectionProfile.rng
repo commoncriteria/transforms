@@ -540,7 +540,15 @@
   </define>
   <define name="xref">
     <element name="xref">
-      <a:documentation>Cross references something with a title.</a:documentation>
+      <a:documentation>
+      Cross references something 
+      <htm:ul>
+	<htm:li>with a title attribute,</htm:li> 
+	<htm:li>with a name attribute, </htm:li>
+	<htm:li>with a term element, or </htm:li>
+	<htm:li>a term element, where its contents(i.e. name) matches the linkend-attr.</htm:li>
+      </htm:ul>
+      </a:documentation>
       <ref name="linkend-attr"/>
     </element>
   </define>

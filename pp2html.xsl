@@ -1239,6 +1239,9 @@ function expand(){
 	<xsl:when test="//*[@id=$linkend]/@title"> 
 	  <xsl:value-of select="//*[@id=$linkend]/@title"/>
 	</xsl:when>
+	<xsl:when test="//*[@id=$linkend]/@name">
+	  <xsl:value-of select="//*[@id=$linkend]/@name"/>
+	</xsl:when>
 	<xsl:when test="//*[@id=$linkend]/cc:term"> 
 	  <xsl:value-of select="//*[@id=$linkend]/cc:term"/>
 	</xsl:when>
