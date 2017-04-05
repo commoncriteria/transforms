@@ -1228,7 +1228,8 @@ function expand(){
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
   <xsl:template match="cc:xref">
-    <xsl:variable name="linkend" select="@linkend"/>
+    <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
+    <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
     <xsl:element name="a">
       <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkend"/>')</xsl:attribute>
       <xsl:attribute name="href">
@@ -1236,21 +1237,21 @@ function expand(){
         <xsl:value-of select="$linkend"/>
       </xsl:attribute>
       <xsl:choose>
-	<xsl:when test="//*[@id=$linkend]/@title"> 
-	  <xsl:value-of select="//*[@id=$linkend]/@title"/>
+	<xsl:when test="//*[@id=$linkendlower]/@title"> 
+	  <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
 	</xsl:when>
-	<xsl:when test="//*[@id=$linkend]/@name">
-	  <xsl:value-of select="//*[@id=$linkend]/@name"/>
+	<xsl:when test="//*[@id=$linkendlower]/@name">
+	  <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
 	</xsl:when>
-	<xsl:when test="//*[@id=$linkend]/cc:term"> 
-	  <xsl:value-of select="//*[@id=$linkend]/cc:term"/>
+	<xsl:when test="//*[@id=$linkendlower]/cc:term"> 
+	  <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
 	</xsl:when>
-	<xsl:when test="//*/cc:term[text()=$linkend]">
-	  <xsl:value-of select="//*/cc:term[text()=$linkend]/text()"/>
+	<xsl:when test="//*/cc:term[text()=$linkendlower]">
+	  <xsl:value-of select="//*/cc:term[text()=$linkendlower]/text()"/>
 	</xsl:when>
 	<xsl:otherwise>
 	  <xsl:message>Cant find
-	  <xsl:value-of select="$linkend"/>
+	  <xsl:value-of select="$linkendlower"/>
 	  </xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
