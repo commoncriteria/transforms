@@ -40,6 +40,7 @@
               margin-left:8%;
               margin-right:8%;
               foreground:black;
+              font-family:verdana, arial, helvetica, sans-serif;
           }
 	  .figure{
               font-weight:bold;
@@ -50,11 +51,17 @@
               font-size:200%;
               margin-top:2em;
               margin-bottom:2em;
+              border-bottom:solid 2px black;
+              padding-bottom:0.5em;
               font-family:verdana, arial, helvetica, sans-serif;
-              margin-bottom:1.0em;
+              margin-bottom:.5em;
           }
           h1.title{
-              text-align:center;
+              font-weight:normal;
+              margin-bottom:1.0em;
+              page-break-before:avoid;
+              padding-bottom:0.5em;
+              border-bottom:solid 4px #0c7a99;
           }
           h2{
               font-size:125%;
@@ -63,6 +70,12 @@
               margin-top:2em;
               margin-bottom:0.75em;
               font-family:verdana, arial, helvetica, sans-serif;
+          }
+          h2.subtitle{
+              font-weight:normal;
+              margin-top:.25em;
+              margin-bottom:0.25em;
+              border-bottom: none;
           }
           h3{
               font-size:110%;
@@ -159,6 +172,18 @@
               margin-top:1em;
               border-collapse:collapse; /*border: 1px solid black;*/
           }
+          table.audience{
+              margin-left:2em;
+              margin-right:2em;
+              margin-top:1em;
+              border-collapse:collapse; /*border: 1px solid black;*/
+          }
+          table.config{
+              margin-left:2em;
+              margin-right:2em;
+              margin-top:1em;
+              border-collapse:collapse; /*border: 1px solid black;*/
+          }
           td{
               text-align:left;
               padding:8px 8px;
@@ -193,26 +218,28 @@
 
 	</style>
       </head>
-      <body onLoad="init()">
+      <body>
 
         <noscript>
+
           <h1
             style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
             >This page is best viewed with JavaScript enabled!</h1>
         </noscript>
-          <img src="images/niaplogo.png" alt="NIAP" style="width:300;height:260"/>
-          <h1>Configuration Annex</h1>
-          <h1 style="nobold">to the</h1>
-          <h1><xsl:value-of select="//co:ConfigAnnexReference/co:PPType"/> for
-            <xsl:value-of select="//co:ConfigAnnexReference/co:PPTechnology"/>
-          </h1>
-          <hr/>
-          <h2>Version: <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
-          <h2>Release: <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
           <br/>
-          <h2><xsl:value-of select="//co:ConfigAnnexReference/co:PubDate"/></h2>
+          <img src="images/niaplogo.png" alt="NIAP" width="200" height="160"/>
+          <h1 class="title"><b>Configuration Annex</b>
+          to the <p/>
+          <b><xsl:value-of select="//co:ConfigAnnexReference/co:PPType"/> for
+            <xsl:value-of select="//co:ConfigAnnexReference/co:PPTechnology"/></b>
+          </h1>
 
-          <h2 style="page-break-before:always;"/>
+          <h2 class="subtitle">Version <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
+          <h2 class="subtitle">Release <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
+          <br/>
+          <h2 class="subtitle"><b><xsl:value-of select="//co:ConfigAnnexReference/co:PubDate"/></b></h2>
+          <br/>
+          <br/>
 
         <!-- process each toplevel chapter -->
         <xsl:apply-templates select="//co:chapter"/>
@@ -292,6 +319,49 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="co:chapter">
+    <xsl:variable name="chapter-num" select="concat(position(), '.')"/>
+    <h1 id="{@id}">
+      <xsl:value-of select="concat($chapter-num, ' ')"/>
+      <xsl:value-of select="@title"/>
+    </h1>
+    <xsl:apply-templates>
+      <xsl:with-param name="section-prefix" select="$chapter-num"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="co:section">
+    <xsl:param name="section-prefix"/>
+    <xsl:variable name="section-num">
+      <xsl:number/>
+    </xsl:variable>
+    <h2 id="{@id}">
+      <xsl:value-of select="$section-prefix"/>
+      <xsl:value-of select="concat($section-num,' ')"/>
+      <xsl:value-of select="@title"/>
+    </h2>
+    <xsl:apply-templates>
+      <xsl:with-param name="subsection-prefix" select="concat($section-prefix, $section-num, '.')"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="co:subsection">
+    <xsl:param name="subsection-prefix" />
+    <xsl:variable name="subsection-num">
+	  <xsl:number/>
+    </xsl:variable>
+      <h3 id="{@id}">
+	<xsl:value-of select="$subsection-prefix" />
+	<xsl:value-of select="concat($subsection-num, ' ')" />
+	<xsl:value-of select="@title" />
+      </h3>
+      <xsl:apply-templates>
+	<xsl:with-param name="subsubsection-prefix" select="concat($subsection-prefix, $subsection-num, '.')" />
+      </xsl:apply-templates>
+
+  </xsl:template>
+
+
   <xsl:template match="co:cite">
     <xsl:variable name="linkend" select="@linkend"/>
     <xsl:element name="a">
@@ -305,8 +375,76 @@
     </xsl:element>
   </xsl:template>
 
+  <xsl:template match="co:audiencetable">
+  <table class="audience">
+    <tr class="header">
+      <th>Audience</th>
+      <th>Purpose</th>
+    </tr>
+    <xsl:for-each select="co:audience">
+      <tr>
+        <td style="white-space: nowrap">
+          <xsl:value-of select="co:audiencename"/>
+        </td>
+        <td>
+          <xsl:value-of select="co:audiencepurpose"/>
+        </td>
+      </tr>
+    </xsl:for-each>
+  </table>
+</xsl:template>
 
+<xsl:template match="co:configtable">
+<table class="config">
+  <tr class="header">
+    <th>Title</th>
+    <th>Description</th>
+    <th>PP References</th>
+    <th>NIST References</th>
+  </tr>
+  <xsl:for-each select="co:config">
+    <tr>
+      <td>
+        <xsl:value-of select="co:configtitle"/>
+      </td>
+      <td>
+        <xsl:value-of select="co:instruction"/>
+      </td>
+      <td>
+      <xsl:for-each select="co:references/co:reference[@ref='PP']">
+        <xsl:value-of select="."/>
+      </xsl:for-each>
+      </td>
+      <td>
+      <xsl:for-each select="co:references/co:reference[@ref='NIST 800-53']">
+        <xsl:value-of select="."/><p/>
+      </xsl:for-each>
+      </td>
+    </tr>
+  </xsl:for-each>
+</table>
+</xsl:template>
 
-
+<xsl:template match="co:bibliography">
+  <table class="audience">
+    <tr class="header">
+      <th>Identifier</th>
+      <th>Title</th>
+    </tr>
+    <xsl:for-each select="co:entry">
+      <tr>
+        <td style="white-space: nowrap">
+          <xsl:element name="span">
+            <xsl:attribute name="id">
+              <xsl:value-of select="@id"/>
+            </xsl:attribute> [<xsl:value-of select="co:tag"/>] </xsl:element>
+        </td>
+        <td>
+          <xsl:apply-templates select="co:description"/>
+        </td>
+      </tr>
+    </xsl:for-each>
+  </table>
+</xsl:template>
 
 </xsl:stylesheet>
