@@ -34,7 +34,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
-	
+	    <script src='http://common-criteria.rhcloud.com/MathJax/MathJax.js?config=TeX-MML-AM_CHTML'></script>
         <script type="text/javascript">
 const AMPERSAND=String.fromCharCode(38);
 
@@ -45,26 +45,26 @@ function changeMyCounter(subroot, val){
     	    "counter"==subroot.childNodes[bb].getAttribute("class")){
     	    subroot.childNodes[bb].innerHTML = val;
     	    return;
-    	} 
+    	}
     }
 }
 
 function fixReferences(type){
     var figs = document.getElementsByClassName("ctr");
     var occurs = {};                                         // Map that stores how many times we've seen each thing
-    var aa;                                                  
+    var aa;
     for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
     	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
     	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
     	occurs[ ct ] = curr + 1;                              // Save off increment for next time
     	changeMyCounter( figs[aa], curr);
-	
+
     	var figId = figs[aa].getAttribute("data-myid");
     	var figRefs = document.getElementsByClassName(figId+"-ref");
     	var bb;
         for(bb=0; bb!=figRefs.length; bb++){
     	    changeMyCounter(figRefs[bb], curr);
-    	} 
+    	}
     }
 }
 
@@ -422,7 +422,7 @@ function expand(){
 
           }
 
-		
+
 
 	  <!-- Tyring to get this to work -->
 	  <!-- <xsl:if test="not($custom-css-file='')"> -->
@@ -744,7 +744,7 @@ function expand(){
 		<xsl:call-template name="req-refs">
                   <xsl:with-param name="req" select="@ref"/>
 		</xsl:call-template>
-		<!-- 
+		<!--
 		     This is here so that if we wanted to added text
 		     but make it different font.
 		-->
@@ -1172,7 +1172,7 @@ function expand(){
 	<xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
 	<xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
     </xsl:variable>
-    
+
     <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
       <xsl:call-template name="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
@@ -1212,7 +1212,7 @@ function expand(){
       <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
 	<xsl:call-template name="getPre"/>
 	<span class="counter"><xsl:value-of select="@id"/></span>
-      </span>: 
+      </span>:
       <xsl:value-of select="@title"/>
     </div>
   </xsl:template>
@@ -1237,13 +1237,13 @@ function expand(){
         <xsl:value-of select="$linkend"/>
       </xsl:attribute>
       <xsl:choose>
-	<xsl:when test="//*[@id=$linkendlower]/@title"> 
+	<xsl:when test="//*[@id=$linkendlower]/@title">
 	  <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
 	</xsl:when>
 	<xsl:when test="//*[@id=$linkendlower]/@name">
 	  <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
 	</xsl:when>
-	<xsl:when test="//*[@id=$linkendlower]/cc:term"> 
+	<xsl:when test="//*[@id=$linkendlower]/cc:term">
 	  <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
 	</xsl:when>
 	<xsl:when test="//*/cc:term[text()=$linkendlower]">
