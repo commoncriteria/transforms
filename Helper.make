@@ -51,12 +51,6 @@ PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
 #- XSL containing templates common to the other transforms
 PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
 
-#- Path to input XML document for the config annex
-CONFIGANNEX_XML ?= $(IN)/configannex.xml
-
-#- XSL that creates regular config annex document
-CONFIGANNEX2HTML_XSL ?= $(TRANS)/configannex2html.xsl
-
 #- Path to input XML document for the esr
 ESR_XML ?= $(IN)/esr.xml
 
@@ -74,9 +68,6 @@ PP_HTML ?= $(OUT)/$(BASE).html
 #- Path where the ESR is written
 ESR_HTML ?= $(OUT)/$(BASE)-esr.html
 
-#- Path where the config annex is written
-CONFIGANNEX_HTML ?= $(OUT)/configannex.html
-
 #- Path where the report that has the different appendices for the different types of requirements is written
 PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 
@@ -92,7 +83,7 @@ XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 #- Build targets
 #---
 #- Builds all
-all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(CONFIGANNEX_HTML) $(PP_RELEASE_HTML)
+all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
@@ -128,9 +119,6 @@ release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on --stringparam release final -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-$(CONFIGANNEX_HTML): $(CONFIGANNEX2HTML_XSL) $(PPCOMMONS_XSL) $(CONFIGANNEX_XML)
-	$(XSL_EXE) -o $(CONFIGANNEX_HTML) $(CONFIGANNEX2HTML_XSL) $(CONFIGANNEX_XML)
-
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
@@ -161,7 +149,7 @@ more-help:
 
 #- Build to clean the system
 clean:
-	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(CONFIGANNEX_HTML) $(ESR_HTML); do \
+	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML) $(CONFIGANNEX_HTML); do \
 		if [ -f $$f ]; then \
 			rm "$$f"; \
 		fi; \
