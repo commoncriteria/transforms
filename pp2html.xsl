@@ -34,7 +34,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
-	    <script src='http://common-criteria.rhcloud.com/MathJax/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+	    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
         <script type="text/javascript">
 const AMPERSAND=String.fromCharCode(38);
 
