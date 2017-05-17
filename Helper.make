@@ -1,11 +1,18 @@
-#- This file is intentially not called [Mm]akefile, because it is not meant to be called
-#- directly. Rather the project directory should have a "Makefile" that
-#- defines all the environment variables then includes this one.
-#- For example:
-#-   ```
-#-   TRANS?=transforms
-#-   include $(TRANS)/Helper.make
-#-   ```
+# Comments in this file are structured thusly:
+#   Comments that are internal to this file are commented only with '#' such as this
+#   current comment.
+#   Comments that are used in a javadoc fashion, describe hooks and sections
+#   (such as the one preceding 'IN ?= input' line) are commented with '#-'. Also if they describe
+#   something, that line should immediately follow the javadoc comment.
+#
+# This file is intentially not called [Mm]akefile, because it is not meant to be called
+# directly. Rather the project directory should have a "Makefile" that
+# defines all the environment variables then includes this one.
+# For example:
+#   ```
+#   TRANS?=transforms
+#   include $(TRANS)/Helper.make
+#   ```
 
 #---
 #- Build targets
