@@ -11,8 +11,12 @@
 # For example:
 #   ```
 #   TRANS?=transforms
+#   -include LocalUser.make
 #   include $(TRANS)/Helper.make
 #   ```
+# LocalUser.make is where each user would add their appropriate hooks. The file should not be committed 
+# to git.
+
 
 #---
 #- Build targets

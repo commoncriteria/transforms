@@ -44,7 +44,7 @@ XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 #- Build targets
 #---
 #- Builds all
-all: $(CONFIGANNEX_HTML)
+default: all $(CONFIGANNEX_HTML)
 
 #- Build Config Annex
 $(CONFIGANNEX_HTML): $(CONFIGANNEX2HTML_XSL) $(PPCOMMONS_XSL) $(CONFIGANNEX_XML)
