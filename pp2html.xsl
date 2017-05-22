@@ -50,7 +50,7 @@
                 ".MathJax_Display": {
                 "text-align": "left !important",
                 margin:       "0em 0em !important"
-            }
+            }}
             });
         </script>
         <script type="text/javascript">
