@@ -40,11 +40,16 @@
             extensions: ["tex2jax.js"],
             jax: ["input/TeX", "output/HTML-CSS"],
             showMathMenu: false,
-            displayAlign: "left",
             tex2jax: {
               inlineMath: [ ['$','$'], ["\\(","\\)"] ],
               displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
               processEscapes: true
+            },
+            styles: {
+
+                ".MathJax_Display": {
+                "text-align": "left !important",
+                margin:       "0em 0em !important"
             }
             });
         </script>
