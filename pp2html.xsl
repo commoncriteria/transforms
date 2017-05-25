@@ -35,6 +35,24 @@
       <head>
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
 	    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            showMathMenu: false,
+            tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+              processEscapes: true
+            },
+            styles: {
+
+                ".MathJax_Display": {
+                "text-align": "left !important",
+                margin:       "0em 0em !important"
+            }}
+            });
+        </script>
         <script type="text/javascript">
 const AMPERSAND=String.fromCharCode(38);
 
