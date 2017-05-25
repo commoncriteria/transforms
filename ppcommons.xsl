@@ -114,41 +114,23 @@
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
-  <xsl:template match="cc:selectables"> [<b>selection</b>
+  <xsl:template match="cc:selectables">[<b>selection</b>
     <xsl:if test="@exclusive">, choose one of</xsl:if> 
     <xsl:if test="@atleastone">, at least one of</xsl:if>: 
-    <xsl:choose>
+    <xsl:choose>      
       <xsl:when test="@linebreak='yes'">
 	<ul>
-	<xsl:for-each select="cc:selectable">
-	  <li>
-	    <i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
-	  </li>
-	</xsl:for-each>
-	  <!-- <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->
-	</ul>
+	  <xsl:for-each select="cc:selectable">
+	    <li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+	  </xsl:for-each>
+	  <!-- <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->	
+	  </ul>
       </xsl:when>
-      <xsl:when test="@linebreak='no'">
-	<xsl:for-each select="cc:selectable">
-	  <i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
-	</xsl:for-each>
-      </xsl:when>
+      <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
 
-      <xsl:when test=".//cc:selectables">
-	<ul>
-	<xsl:for-each select="cc:selectable">
-	  <li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
-	</xsl:for-each>
-	</ul>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:for-each select="cc:selectable">
-	  <i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
-	</xsl:for-each>
-      </xsl:otherwise>
-    </xsl:choose>
-    ] 
-  </xsl:template>
+      <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
+
+      <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise></xsl:choose>]</xsl:template>
 
     <!-- <xsl:for-each select="cc:selectable"> -->
     <!--   <xsl:choose> -->
@@ -161,9 +143,7 @@
     <!--   </xsl:choose> -->
     <!-- </xsl:for-each> -->
 
-  <xsl:template name="commaifnotlast">
-    <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
-  </xsl:template>
+  <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
   <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
 

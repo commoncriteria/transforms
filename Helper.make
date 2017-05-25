@@ -19,7 +19,7 @@
 
 
 #---
-#- Build targets
+#- Hooks
 #---
 
 #- Path to input files
@@ -145,11 +145,11 @@ $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
 #- Builds quick help
 help:
 	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
-	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/Helper.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
+	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/*.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
 
 #- Builds more detailed help
 more-help:
-	grep -A 1 '^#-' Makefile $(TRANS)/Helper.make -h
+	grep -A 1 '^#-' Makefile $(TRANS)/*.make -h
 
 #- Build to clean the system
 clean:
