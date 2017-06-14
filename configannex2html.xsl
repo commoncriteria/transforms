@@ -397,17 +397,17 @@
 <xsl:template match="co:configtable">
 <table class="config">
   <tr class="header">
-    <th>Configuration Action</th>
-    <th>NIST Control</th>
+    <th style="white-space: nowrap">Configuration Action</th>
+    <th style="white-space: nowrap">NIST Control</th>
     <th>CNSSI 1253 Value</th>
     <th>NIAP PP Reference</th>
   </tr>
   <xsl:for-each select="co:config">
     <tr>
-      <td>
+      <td style="white-space: nowrap">
         <xsl:value-of select="co:configtitle"/>
       </td>
-      <td>
+      <td >
       <xsl:for-each select="co:references/co:reference[@ref='NIST 800-53']">
         <xsl:value-of select="."/><p/>
       </xsl:for-each>
