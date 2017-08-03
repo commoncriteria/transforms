@@ -1,4 +1,4 @@
-# Transforms
+# Transforms [![Build Status](https://jenkins-criteria.rhcloud.com/buildStatus/icon?job=protection-profiles/transforms)](https://jenkins-criteria.rhcloud.com/job/protection-profiles/job/transforms/)
 This poorly named _transforms_ project (should really be called 'commons' or something similiar as it is meant to be used as a submodule to other CC projects),
 contains three basic file types (and one subproject) that are common resources to various protection profile projects.
 These three types are:
