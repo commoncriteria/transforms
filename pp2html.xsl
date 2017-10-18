@@ -904,17 +904,15 @@ function expand(){
           <xsl:value-of select="translate(@id, $lower, $upper)"/>
           <xsl:value-of select="$id-suffix"/>
         </xsl:attribute>
-
         <h4>
           <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
           <xsl:value-of select="@name"/>
         </h4>
-	<xsl:apply-templates select="cc:summary"/>
+	<xsl:apply-templates select="cc:note/text()"/>
 <!-- BEGIN -->
     <xsl:if test="@status='objective'">
       <xsl:if test="$appendicize!='on'">
         <div class="statustag">
-          <p/>
           <i>
             <b> This is an objective component.
 	    <xsl:if test="@targetdate">
@@ -927,7 +925,6 @@ function expand(){
       </xsl:if>
       <xsl:if test="$appendicize='on' and @targetdate">
         <div class="statustag">
-          <p/>
           <i>
             <b> This component is scheduled to be mandatory for products entering evaluations
               after <xsl:value-of select="@targetdate"/>.</b>
@@ -964,7 +961,6 @@ function expand(){
     <xsl:if test="$appendicize!='on'">
       <xsl:if test="@status='optional'">
         <div class="statustag">
-          <p/>
           <i><b>This is an optional component; however, Extended Packages of this
               Protection Profile might redefine it as non-optional.</b></i>
         </div>
@@ -1431,9 +1427,5 @@ function expand(){
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
-
-
-
-
 
 </xsl:stylesheet>

@@ -1,5 +1,5 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:cc="http://common-criteria.rhcloud.com/ns/cc" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  xmlns:cc="http://common-criteria.rhcloud.com/ns/cc" xmlns:htm="http://www.w3.org/1999/xhtml">
 
   <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
 
@@ -192,12 +192,12 @@
   <xsl:template match="comment()"/>
   <xsl:template match="processing-instruction()"/>
   <!--
-       Change all xhtml tags to tags with no namespace.
+       Change all htm tags to tags with no namespace.
        This should help the transition from output w/ polluted
-       namespace to output all in xhtml namespace. For right now
+       namespace to output all in htm namespace. For right now
        this is what we have.
   -->
-  <xsl:template match="xhtml:*">
+  <xsl:template match="htm:*">
     <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
