@@ -52,7 +52,7 @@
       <xsl:when test="$osname='OS X'">macOS X</xsl:when>
       <xsl:when test="$osname='z/OS'">z/OS</xsl:when>
       <xsl:when test="$osname='Solaris'">Solaris</xsl:when>
-      <xsl:when test="$osname='other">All Other Platforms</xsl:when>
+      <xsl:when test="$osname='other'">All Other Platforms</xsl:when>
       <xsl:otherwise> Undefined operating system platform </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
