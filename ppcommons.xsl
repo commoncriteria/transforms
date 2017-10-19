@@ -1,5 +1,5 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:cc="http://common-criteria.rhcloud.com/ns/cc" xmlns:htm="http://www.w3.org/1999/xhtml">
+  xmlns:cc="http://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
 
   <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
 
@@ -219,7 +219,7 @@
 
 
   <xsl:template match="cc:management-function-set">
-    <table style="width: 100%;" xmlns="http://common-criteria.rhcloud.com/ns/cc">
+    <table style="width: 100%;">
       <tr class="header">
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
