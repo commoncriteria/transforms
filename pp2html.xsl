@@ -607,7 +607,7 @@ function expand(){
 	  <xsl:attribute name="id">
 	    <xsl:choose>
 	      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-	      <xsl:when test="cc:term"><xsl:value-of select="cc:term/text()"/></xsl:when>
+	      <xsl:when test="cc:term"><xsl:value-of select="translate(cc:term/text(), $lower, $upper)"/></xsl:when>
 	      <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
 	    </xsl:choose>
 	  </xsl:attribute>
@@ -1243,6 +1243,7 @@ function expand(){
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
   <xsl:template match="cc:xref">
+    <xsl:variable name="linkendorig" select="@linkend"/>
     <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
     <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
     <xsl:element name="a">
@@ -1252,6 +1253,7 @@ function expand(){
         <xsl:value-of select="$linkend"/>
       </xsl:attribute>
       <xsl:choose>
+	<xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
 	<xsl:when test="//*[@id=$linkendlower]/@title">
 	  <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
 	</xsl:when>
@@ -1261,8 +1263,8 @@ function expand(){
 	<xsl:when test="//*[@id=$linkendlower]/cc:term">
 	  <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
 	</xsl:when>
-	<xsl:when test="//*/cc:term[text()=$linkendlower]">
-	  <xsl:value-of select="//*/cc:term[text()=$linkendlower]/text()"/>
+	<xsl:when test="//*/cc:term[text()=$linkendorig]">
+	  <xsl:value-of select="$linkendorig"/>
 	</xsl:when>
 	<xsl:otherwise>
 	  <xsl:message>Cant find
