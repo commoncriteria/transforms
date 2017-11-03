@@ -11,6 +11,11 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
+
+<!--The target variable can be passed on to the stylesheet processing and determines, which document is actually created-->
+
+  <xsl:param name="target" select="'BIO'"/>
+  
   <!-- release variable, overridden to "final" for release versions -->
   <xsl:param name="release" select="'draft'"/>
 
@@ -493,7 +498,7 @@ function expand(){
         <h2>Contents</h2>
         <div class="toc">
           <!-- generate table of contents -->
-	  <xsl:for-each select="./cc:chapter">
+	  <xsl:for-each select="./cc:chapter[contains(@toe-type, $target) or not(@toe-type)]">
 	    <xsl:variable name="chapnum"><xsl:value-of select="position()"/></xsl:variable>
 	    <xsl:call-template name="TocElement">
 	      <xsl:with-param name="prefix">
@@ -529,7 +534,7 @@ function expand(){
 	      </xsl:for-each>
 	    </xsl:for-each>
 	  </xsl:for-each>
-	  <xsl:for-each select="./cc:appendix">
+	  <xsl:for-each select="./cc:appendix[contains(@toe-type, $target) or not(@toe-type)]">
 	    <xsl:call-template name="TocAppendix"/>
 	  </xsl:for-each>
           <!-- <xsl:apply-templates mode="toc" select="./cc:chapter" /> -->
@@ -591,7 +596,7 @@ function expand(){
 
   <xsl:template match="cc:usecases">
     <dl>
-      <xsl:for-each select="cc:usecase">
+      <xsl:for-each select="cc:usecase[contains(@toe-type, $target) or not(@toe-type)]">
         <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/></dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
@@ -682,28 +687,56 @@ function expand(){
       /></xsl:for-each></xsl:template>
   <xsl:template match="cc:assumptions">
     <dl>
-      <xsl:for-each select="cc:assumption">
+      <xsl:for-each select="cc:assumption[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
         </dd>
+
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
+
+
+
       </xsl:for-each>
     </dl>
   </xsl:template>
 
   <xsl:template match="cc:cclaims">
     <dl>
-      <xsl:for-each select="cc:cclaim">
+      <xsl:for-each select="cc:cclaim[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
         </dd>
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+              
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
       </xsl:for-each>
     </dl>
   </xsl:template>
@@ -717,33 +750,57 @@ function expand(){
 
   <xsl:template match="cc:threats">
     <dl>
-      <xsl:for-each select="cc:threat">
+      <xsl:for-each select="cc:threat[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
         </dd>
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+              
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
       </xsl:for-each>
     </dl>
   </xsl:template>
   <xsl:template match="cc:OSPs">
     <dl>
-      <xsl:for-each select="cc:OSP">
+      <xsl:for-each select="cc:OSP[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
         </dd>
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+              
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
       </xsl:for-each>
     </dl>
   </xsl:template>
   <xsl:template match="cc:SOs">
     <dl>
-      <xsl:for-each select="cc:SO">
+      <xsl:for-each select="cc:SO[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
@@ -772,20 +829,45 @@ function expand(){
 	      <xsl:call-template name="commaifnotlast"/>
             </xsl:for-each>
           </span>
-          <xsl:apply-templates select="cc:appnote"/></dd>
+          </dd>
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+              
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
       </xsl:for-each>
     </dl>
   </xsl:template>
   <xsl:template match="cc:SOEs">
     <dl>
-      <xsl:for-each select="cc:SOE">
+      <xsl:for-each select="cc:SOE[contains(@toe-type, $target) or not(@toe-type)]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
         </dd>
+        <xsl:if test="cc:appnote">
+          <table>
+            <xsl:for-each select="cc:appnote">
+              
+              <tr>
+                <td>Application Note</td>
+                <td>
+                  <xsl:value-of select="current()"/>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </table>
+        </xsl:if>
       </xsl:for-each>
     </dl>
   </xsl:template>
@@ -796,7 +878,7 @@ function expand(){
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
-      <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
+      <xsl:for-each select="(//cc:threat[contains(@toe-type, $target) or not(@toe-type)] | //cc:OSP[contains(@toe-type, $target) or not(@toe-type)] | //cc:assumption[contains(@toe-type, $target) or not(@toe-type)])">
         <tr>
           <td>
             <xsl:value-of select="@id"/>
