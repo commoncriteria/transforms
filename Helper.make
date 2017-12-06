@@ -119,7 +119,7 @@ pp:$(PP_HTML)
 
 module-target:
 	$(XSL_EXE) -o $(PP_HTML) $(TRANS)/module2html.xsl $(PP_XML)
-	$(XSL_EXE) -o $(SD_HTML) $(TRANS)/$(PP2HTML_XSL) $(SD_XML)
+	$(XSL_EXE) -o $(SD_HTML) $(PP2HTML_XSL) $(SD_XML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE)  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
