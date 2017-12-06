@@ -969,7 +969,6 @@
       </zeroOrMore>
     </element>
   </define>    
-
   <define name="subsection-pattern">
     <element name="subsection">
       <a:documentation>

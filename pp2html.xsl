@@ -1108,7 +1108,7 @@ function expand(){
 
   <xsl:template match="cc:chapter">
     <xsl:variable name="chapter-num" select="concat(position(), '.')"/>
-    <h1 id="{@id}">
+    <h1 id="{@id}" class="indexable"><div class="num"></div>
       <xsl:value-of select="concat($chapter-num, ' ')"/>
       <xsl:value-of select="@title"/>
     </h1>
@@ -1122,7 +1122,7 @@ function expand(){
     <xsl:variable name="section-num">
       <xsl:number/>
     </xsl:variable>
-    <h2 id="{@id}">
+    <h2 id="{@id}" class="indexable"><div class="num"></div>
       <xsl:value-of select="$section-prefix"/>
       <xsl:value-of select="concat($section-num,' ')"/>
       <xsl:value-of select="@title"/>
@@ -1151,7 +1151,7 @@ function expand(){
     </xsl:variable>
 
     <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}">
+      <h3 id="{@id}" class="indexable"><div class="num"></div>
 	<xsl:value-of select="$subsection-prefix" />
 	<xsl:value-of select="concat($subsection-num, ' ')" />
 	<xsl:value-of select="@title" />
