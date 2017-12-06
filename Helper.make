@@ -43,6 +43,9 @@ BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
 
+#- Input XML file
+SD_XML ?= $(IN)/$(BASE)-sd.xml
+
 #- XSL that creates regular HTML document
 PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
 
@@ -58,7 +61,8 @@ PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
 #- Path to input XML document for the esr
 ESR_XML ?= $(IN)/esr.xml
 
-
+#- Output of the SD Document
+SD_HTML ?= $(OUT)/$(BASE)-sd.html
 
 #- Path where tabularized html document
 TABLE ?= $(OUT)/$(BASE)-table.html
@@ -112,6 +116,10 @@ pp:$(PP_HTML)
 # Personalized CSS file
 #EXTRA_CSS ?=
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+
+module-target:
+	$(XSL_EXE) -o $(PP_HTML) $(TRANS)/module2html.xsl $(PP_XML)
+	$(XSL_EXE) -o $(SD_HTML) $(TRANS)/$(PP2HTML_XSL) $(SD_XML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE)  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)

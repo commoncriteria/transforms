@@ -97,12 +97,12 @@
 	      </element>
 	      <element name="subject">
 		<a:documentation>Description of the revision.</a:documentation>
-	      <oneOrMore>
-	      	<choice>
-	      		<text/>
-	      		<ref name="html-element"></ref>
-	      	</choice>
-	      </oneOrMore>
+		<oneOrMore>
+	      	  <choice>
+	      	    <text/>
+	      	    <ref name="html-element"></ref>
+	      	  </choice>
+		</oneOrMore>
 	      </element>
 	    </element>
 	  </zeroOrMore>
@@ -118,7 +118,7 @@
             <choice>
 	      <ref name="basic-content"/>
               <ref name="section"/>
-		
+	      
               <element name="cclaims">
 		<a:documentation>
 		  Container element for the individual Conformance Claims.
@@ -316,158 +316,7 @@
               </element>
             </oneOrMore>
           </element>
-          <element name="subsection">
-	    <a:documentation>
-	      Lower level of grouping
-	    </a:documentation>
-	    <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <oneOrMore>
-              <choice>
-		<ref name="basic-content"/>
-                <element name="a-component">
-		  <a:document>
-		    Specifies a component under Security Assurance Requirements section.
-		  </a:document>
-		  <ref name="id-attr"/>
-                  <attribute name="name">
-		    <a:document>
-		      A readable title for this component
-		    </a:document>
-		  </attribute>
-		  <ref name="basic-content"/>
-		  <optional>
-		    <element name="summary">
-		      <a:documentation>
-			Summary of this component.
-		      </a:documentation>
-		      <ref name="basic-content"/>
-		    </element>
-		  </optional>
-		  <optional>
-                    <element name="group">
-		      <a:documentation>
-			Actions levied on the developer: <i>The developer shall...</i>
-		      </a:documentation>
-		      <attribute name="type"><value>dev-action</value></attribute>
-		      <ref name="a-elements"/>
-		    </element>
-		  </optional>
-		  <optional>
-                    <element name="group">
-		      <a:documentation>
-			Requirements for content and presentation.
-		      </a:documentation>
-		      <attribute name="type"><value>con-pres</value></attribute>
-		      <ref name="a-elements"/>
-		    </element>
-		  </optional>
-		  <optional>
-                    <element name="group">
-		      <a:documentation>
-			Actions levied on the evaluator: <i>The evaluator shall...</i>
-		      </a:documentation>
-		      <attribute name="type"><value>eval-action</value></attribute>
-		      <ref name="a-elements"/>
-		    </element>
-		  </optional>
-                </element>
-                <element name="f-component">
-		  <a:document>
-		    Specifies a component under Security Functional Requirements section..
-		  </a:document>
-		  <attribute name="id">
-		    <a:documentation>
-		      A document-wide unique id. Not really read by a person, but it
-		      should be the base for its child requirements' ids.
-		    </a:documentation>
-		  </attribute>
-		  <attribute name="name">
-		    <a:documentation>
-		      Readable title for this requirement.
-		    </a:documentation>
-		  </attribute>
-
-
-		  <choice>
-		    <group>
-		      <optional>
-			<attribute name="targetdate">
-			  <a:documentation>
-			    Target date that the requirements under this component become
-			    manandory. It only makes sense for _objective_ components.
-			  </a:documentation>
-			  <data type="date"/>
-			</attribute>
-		      </optional>
-		      <attribute name="status">
-			<a:documentation>
-			  Denotes the status of a requirement.
-			</a:documentation>
-			<value>objective</value>
-		      </attribute>
-		    </group>
-		    <attribute name="status">
-		      <a:documentation>
-			Denotes the status of a requirement.
-		      </a:documentation>
-		      <choice>
-			<value>threshold</value>
-			<value>optional</value>
-		      </choice>
-		    </attribute>
-		    <group>
-		      <attribute name="status">
-			<a:documentation>
-			  Denotes the status of a requirement.
-			</a:documentation>
-			  <value>sel-based</value>
-		      </attribute>
-		      <oneOrMore>
-			<element name="selection-depends">
-			  <a:documentation>
-			    Defines the other requirements whose selection affects whether this component must be also applied.
-			  </a:documentation>
-			  <attribute name="req">
-			    <a:documentation>
-			      The value of the id attribute of the requirement is component depends on.
-			    </a:documentation>
-			    <data type="string">
-			      <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
-			    </data>
-			  </attribute>
-			</element>
-		      </oneOrMore>
-		    </group>
-		  </choice>
-		  <optional><ref name="note"/></optional>
-                  <zeroOrMore>
-                    <element name="f-element">
-		      <a:documentation>
-			Defines a functional requirement.
-		      </a:documentation>
-                      <attribute name="id">
-			<a:documentation>
-			  A document-wide unique ID that is also displayed to the user.
-			  It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-			</a:documentation>
-		      </attribute>
-                      <ref name="title"/>
-                      <oneOrMore>
-                        <choice>
-                          <text/>
-                          <ref name="aactivity"/>
-                          <ref name="assignable"/>
-                          <ref name="note"/>
-                          <ref name="selectables"/>
-                        </choice>
-                      </oneOrMore>
-                    </element>
-                  </zeroOrMore>
-                </element>
-              </choice>
-            </oneOrMore>
-          </element>
+	  <ref name="subsection-pattern"/>
           <element name="threats">
 	    <a:documentation>
 	      Wrapper element for various threats.
@@ -542,13 +391,13 @@
   <define name="xref">
     <element name="xref">
       <a:documentation>
-      Cross references something 
-      <htm:ul>
-	<htm:li>with a title attribute,</htm:li> 
-	<htm:li>with a name attribute, </htm:li>
-	<htm:li>with a term element, or </htm:li>
-	<htm:li>a term element, where its contents(i.e. name) matches the linkend-attr.</htm:li>
-      </htm:ul>
+	Cross references something 
+	<htm:ul>
+	  <htm:li>with a title attribute,</htm:li> 
+	  <htm:li>with a name attribute, </htm:li>
+	  <htm:li>with a term element, or </htm:li>
+	  <htm:li>a term element, where its contents(i.e. name) matches the linkend-attr.</htm:li>
+	</htm:ul>
       </a:documentation>
       <ref name="linkend-attr"/>
     </element>
@@ -730,9 +579,9 @@
 
   <define name="ctr-ref">
     <element name="ctr-ref">
-	<a:documentation>
-	  References a counted object.
-	</a:documentation>
+      <a:documentation>
+	References a counted object.
+      </a:documentation>
       <attribute name="refid">
 	<a:documentation>
 	  The unique ID of the object being referenced.
@@ -889,7 +738,7 @@
 	      <choice>
 		<ref name="basic-content"/>
 		<ref name="testlist"/>
-	    <ref name="steplist"/>
+		<ref name="steplist"/>
 	      </choice>
 	    </oneOrMore>
           </element>
@@ -899,27 +748,27 @@
   </define>
 
   <define name="steplist">
-	<element name="steplist">
-	  <a:documentation>
-  Defines a list of steps to perform a test.
-	  </a:documentation>
-	  <oneOrMore>
-		<choice>
-	<ref name="basic-content"/>
-		  <element name="step">
-	  <a:documentation>
-		Denotes a single step.
-	  </a:documentation>
-	  <oneOrMore>
-		<choice>
+    <element name="steplist">
+      <a:documentation>
+	Defines a list of steps to perform a test.
+      </a:documentation>
+      <oneOrMore>
+	<choice>
 	  <ref name="basic-content"/>
-	  <ref name="steplist"/>
-		</choice>
-	  </oneOrMore>
-		  </element>
-		</choice>
-	  </oneOrMore>
-	</element>
+	  <element name="step">
+	    <a:documentation>
+	      Denotes a single step.
+	    </a:documentation>
+	    <oneOrMore>
+	      <choice>
+		<ref name="basic-content"/>
+		<ref name="steplist"/>
+	      </choice>
+	    </oneOrMore>
+	  </element>
+	</choice>
+      </oneOrMore>
+    </element>
   </define>
 
   <define name="status">
@@ -1027,6 +876,166 @@
     </element>
   </define>
 
+  <define name="f-component-pattern">
+    <element name="f-component">
+      <a:document>
+	Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <attribute name="id">
+	<a:documentation>
+	  A document-wide unique id. Not really read by a person, but it
+	  should be the base for its child requirements' ids.
+	</a:documentation>
+      </attribute>
+      <attribute name="name">
+	<a:documentation>
+	  Readable title for this requirement.
+	</a:documentation>
+      </attribute>
+      <choice>
+	<group>
+	  <optional>
+	    <attribute name="targetdate">
+	      <a:documentation>
+		Target date that the requirements under this component become
+		manandory. It only makes sense for _objective_ components.
+	      </a:documentation>
+	      <data type="date"/>
+	    </attribute>
+	  </optional>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <value>objective</value>
+	  </attribute>
+	</group>
+	<attribute name="status">
+	  <a:documentation>
+	    Denotes the status of a requirement.
+	  </a:documentation>
+	  <choice>
+	    <value>threshold</value>
+	    <value>optional</value>
+	  </choice>
+	</attribute>
+	<group>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <value>sel-based</value>
+	  </attribute>
+	  <oneOrMore>
+	    <element name="selection-depends">
+	      <a:documentation>
+		Defines the other requirements whose selection affects whether this component must be also applied.
+	      </a:documentation>
+	      <attribute name="req">
+		<a:documentation>
+		  The value of the id attribute of the requirement is component depends on.
+		</a:documentation>
+		<data type="string">
+		  <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
+		</data>
+	      </attribute>
+	    </element>
+	  </oneOrMore>
+	</group>
+      </choice>
+      <optional><ref name="note"/></optional>
+      <zeroOrMore>
+        <element name="f-element">
+	  <a:documentation>
+	    Defines a functional requirement.
+	  </a:documentation>
+          <attribute name="id">
+	    <a:documentation>
+	      A document-wide unique ID that is also displayed to the user.
+	      It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	    </a:documentation>
+	  </attribute>
+          <ref name="title"/>
+          <oneOrMore>
+            <choice>
+              <text/>
+              <ref name="aactivity"/>
+              <ref name="assignable"/>
+              <ref name="note"/>
+              <ref name="selectables"/>
+            </choice>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>    
+
+  <define name="subsection-pattern">
+    <element name="subsection">
+      <a:documentation>
+	Lower level of grouping
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content"/>
+	  <ref name="a-component-pattern"/>
+	  <ref name="f-component-pattern"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  
+  <define name="a-component-pattern">
+    <element name="a-component">
+      <a:document>
+	Specifies a component under Security Assurance Requirements section.
+      </a:document>
+      <ref name="id-attr"/>
+      <attribute name="name">
+	<a:document>
+	  A readable title for this component
+	</a:document>
+      </attribute>
+      <ref name="basic-content"/>
+      <optional>
+	<element name="summary">
+	  <a:documentation>
+	    Summary of this component.
+	  </a:documentation>
+	  <ref name="basic-content"/>
+	</element>
+      </optional>
+      <optional>
+        <element name="group">
+	  <a:documentation>
+	    Actions levied on the developer: <i>The developer shall...</i>
+	  </a:documentation>
+	  <attribute name="type"><value>dev-action</value></attribute>
+	  <ref name="a-elements"/>
+	</element>
+      </optional>
+      <optional>
+        <element name="group">
+	  <a:documentation>
+	    Requirements for content and presentation.
+	  </a:documentation>
+	  <attribute name="type"><value>con-pres</value></attribute>
+	  <ref name="a-elements"/>
+	</element>
+      </optional>
+      <optional>
+        <element name="group">
+	  <a:documentation>
+	    Actions levied on the evaluator: <i>The evaluator shall...</i>
+	  </a:documentation>
+	  <attribute name="type"><value>eval-action</value></attribute>
+	  <ref name="a-elements"/>
+	</element>
+      </optional>
+    </element>
+  </define>
   <define name="glossary-section">
     <element name="glossary">
       <a:documentation>

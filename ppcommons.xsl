@@ -141,7 +141,7 @@
 	<xsl:when test="@role='application'">Application</xsl:when>
 	<xsl:when test="@role='developer'">Developer</xsl:when>
 	<xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note: </b>
+      </xsl:choose> Note </b><br/> 
       <xsl:apply-templates/>
     </div>
   </xsl:template>

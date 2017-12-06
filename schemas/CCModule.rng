@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<grammar ns="https://niap-ccevs.org/cc/v1"
+	 xmlns="http://relaxng.org/ns/structure/1.0" 
+	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+	 xmlns:htm="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	 >
+  <include href="CCProtectionProfile.rng">
+    <!-- We're redefining subsection -->
+    <define name="subsection-pattern">
+      <element name="subsection">
+	<a:documentation>
+	  Lower level of grouping
+	</a:documentation>
+	<ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <oneOrMore>
+          <choice>
+	    <ref name="subsection-pattern"/>
+	    <ref name="basic-content"/>
+	    <ref name="a-component-pattern"/>
+	    <ref name="f-component-pattern"/>
+          </choice>
+        </oneOrMore>
+      </element>
+    </define>
+  </include>
+</grammar>
