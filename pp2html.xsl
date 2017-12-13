@@ -21,9 +21,11 @@
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
 
+  <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
+  
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
-
+  
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
@@ -91,10 +93,9 @@ function buildIndex(){
 		appeariod="."
 		spacer+=NBSP;
 	}
-	prefix+=(isAlpha?":":".");
-	prefix+=NBSP;
-        // Set the number
-        eles[aa].firstElementChild.innerHTML=prefix;
+
+	// Set the number
+        eles[aa].firstElementChild.innerHTML=prefix
 
 	// Build the toc entry
 	var div= document.createElement('div');
@@ -131,7 +132,7 @@ function changeMyCounter(subroot, val){
 }
 
 
-function fixReferences(type){
+function fixCounters(type){
     var figs = document.getElementsByClassName("ctr");
     var occurs = {};                                         // Map that stores how many times we've seen each thing
     var aa;
@@ -174,11 +175,21 @@ function showTarget(id){
 	element = element.parentElement;
     }
 }
+function fixIndexRefs(){
+    var brokeRefs = document.getElementsByClassName("dynref");
+    var aa=0;
+    for(aa=0; brokeRefs.length>aa; aa++){
+       var linkend=(""+brokeRefs[aa].getAttribute("href")).substring(1);
+       brokeRefs[aa].innerHTML+=document.getElementById(linkend).firstElementChild.textContent;
+    }
+}
 
 // Called on page load to parse URL parameters and perform actions on them.
 function init(){
-    fixReferences("figure");
+    fixCounters("figure");
     buildIndex();
+    fixIndexRefs();
+
     if(getQueryVariable("expand") == "on"){
 	expand();
     }
@@ -558,50 +569,6 @@ function expand(){
 	<div class="toc" id="toc">
 	</div>
 
-        <!-- <div class="toc"> -->
-        <!-- generate table of contents -\-> -->
-	<!--   <xsl:for-each select="./cc:chapter"> -->
-	<!--     <xsl:variable name="chapnum"><xsl:value-of select="position()"/></xsl:variable> -->
-	<!--     <xsl:call-template name="TocElement"> -->
-	<!--       <xsl:with-param name="prefix"> -->
-	<!-- 	<xsl:value-of select="$chapnum"/> -->
-	<!--       </xsl:with-param> -->
-	<!--     </xsl:call-template> -->
-	<!--     <xsl:for-each select="./cc:section"> -->
-	<!--       <xsl:variable name="sectnum"><xsl:value-of select="position()"/></xsl:variable> -->
-	<!--       <xsl:call-template name="TocElement"> -->
-	<!-- 	<xsl:with-param name="prefix"> -->
-	<!-- 	  <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/> -->
-	<!-- 	</xsl:with-param> -->
-	<!--       </xsl:call-template> -->
-	<!--       <xsl:for-each select="./cc:subsection"> -->
-	<!-- 	<xsl:variable name="lastnum"> -->
-	<!-- 	  <xsl:choose> -->
-	<!-- 	    <xsl:when test="$appendicize='on' and ./cc:f-component"> -->
-	<!-- 	      <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/> -->
-	<!-- 	    </xsl:when> -->
-	<!-- 	    <xsl:otherwise> -->
-	<!-- 	      <xsl:value-of select="position()"/> -->
-	<!-- 	    </xsl:otherwise> -->
-	<!-- 	  </xsl:choose> -->
-	<!-- 	</xsl:variable> -->
-	<!-- 	<xsl:if test="$appendicize!='on' or not(./cc:f-component) or ./cc:f-component[@status='threshold']"> -->
-	<!-- 	  <xsl:call-template name="TocElement"> -->
-	<!-- 	    <xsl:with-param name="prefix"> -->
-	<!-- 	      <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/>.<xsl:value-of select="$lastnum"/> -->
-	<!-- 	    </xsl:with-param> -->
-	<!-- 	</xsl:call-template> -->
-	<!-- 	</xsl:if> -->
-	<!--       </xsl:for-each> -->
-	<!--     </xsl:for-each> -->
-	<!--   </xsl:for-each> -->
-	<!--   <xsl:for-each select="./cc:appendix"> -->
-	<!--     <xsl:call-template name="TocAppendix"/> -->
-	<!--   </xsl:for-each> -->
-        <!-- <xsl:apply-templates mode="toc" select="./cc:chapter" /> -->
-        <!-- <xsl:apply-templates mode="toc" select="./cc:appendix" /> -->
-        <!-- </div> -->
-        <!-- process each toplevel chapter -->
         <xsl:apply-templates select="//cc:chapter"/>
         <xsl:apply-templates select="//cc:appendix"/>
       </body>
@@ -615,44 +582,24 @@ function expand(){
     </p>
   </xsl:template>
 
-  <!-- Template for toc entries, for top 3 levels -->
-  <!-- <xsl:template match="cc:chapter | cc:section | cc:class | cc:subsection" mode="toc"> -->
-  <!--   <\!- - <xsl:variable name="shouldshow"> -\-> -->
-  <!--   <\!- -   <xsl:if test="$appendicize!='on' or not(cc:f-component) or (*/@status='threshold')">yes</xsl:if> -\-> -->
-  <!--   <\!- - </xsl:variable> -\-> -->
-  <!--   <xsl:param name="section-prefix" /> -->
-  <!--   <xsl:param name="section-num" select="position()" /> -->
-  <!--   <p xmlns="http://www.w3.org/1999/xhtml" class="toc2"> -->
-  <!--     <xsl:value-of select="$section-prefix" /> -->
-  <!--     <xsl:value-of select="$section-num" /> -->
-  <!--     <xsl:text>. </xsl:text> -->
-  <!--     <a class="toc" href="#{@id}"> -->
-  <!--       <xsl:value-of select="@title" /> -->
-  <!--     </a> -->
-  <!--   </p> -->
-  <!--   <xsl:apply-templates mode="toc" select="./cc:chapter | ./cc:section | ./cc:subsection"> -->
-  <!--     <xsl:with-param name="section-prefix" select="concat($section-prefix,$section-num,'.')" /> -->
-  <!--   </xsl:apply-templates> -->
+  <!-- <xsl:template match="cc:appendix" name="TocAppendix"> -->
+  <!--   <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')"> -->
+  <!--     <xsl:variable name="appendix-num"> -->
+  <!--       <xsl:choose> -->
+  <!--         <xsl:when test="$appendicize='on'"> -->
+  <!--           <xsl:number format="A"/> -->
+  <!--         </xsl:when> -->
+  <!--         <xsl:otherwise> -->
+  <!--           <xsl:number format="A" -->
+  <!--             count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/> -->
+  <!--         </xsl:otherwise> -->
+  <!--       </xsl:choose> -->
+  <!--     </xsl:variable> -->
+  <!--     <p xmlns="http://www.w3.org/1999/xhtml" class="toc2"> Appendix <xsl:value-of -->
+  <!--         select="$appendix-num"/><xsl:text>: </xsl:text><a class="toc" href="#{@id}"><xsl:value-of -->
+  <!--           select="@title"/></a></p> -->
+  <!--   </xsl:if> -->
   <!-- </xsl:template> -->
-  <!-- For the table of contents-->
-  <xsl:template match="cc:appendix" name="TocAppendix">
-    <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')">
-      <xsl:variable name="appendix-num">
-        <xsl:choose>
-          <xsl:when test="$appendicize='on'">
-            <xsl:number format="A"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:number format="A"
-              count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <p xmlns="http://www.w3.org/1999/xhtml" class="toc2"> Appendix <xsl:value-of
-          select="$appendix-num"/><xsl:text>: </xsl:text><a class="toc" href="#{@id}"><xsl:value-of
-            select="@title"/></a></p>
-    </xsl:if>
-  </xsl:template>
 
 
   <xsl:template match="cc:usecases">
@@ -1016,10 +963,6 @@ function expand(){
 <!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
                 <xsl:call-template name="commaifnotlast"/>
 
-                <!-- If it's not the last, put a comma-->
-                <!-- <xsl:variable name="reqid" select="translate(@req, $lower, $upper)" /> -->
-                <!-- <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid" /></a> -->
-                <!-- <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if> -->
               </i></b>
             </xsl:for-each>. </i>
         </b>
@@ -1132,27 +1075,12 @@ function expand(){
 
   <xsl:template match="cc:appendix">
     <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')">
-      <!-- <xsl:variable name="appendix-num"> -->
-      <!--   <xsl:choose> -->
-      <!--     <xsl:when test="$appendicize='on'"> -->
-      <!--       <xsl:number format="A."/> -->
-      <!--     </xsl:when> -->
-      <!--     <xsl:otherwise> -->
-      <!--       <\- Don't count ones with these special IDs -\-> -->
-      <!--       <xsl:number format="A." -->
-      <!--         count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/> -->
-      <!--     </xsl:otherwise> -->
-      <!--   </xsl:choose> -->
-      <!-- </xsl:variable> -->
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
-	<span></span>
-<!--        <xsl:value-of select="concat($appendix-num, ' ')"/> -->
-        <xsl:value-of select="@title"/>
+	Appendix
+	<span class="num"></span>:<xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
       </h1>
       <!-- Convert the words -->
       <xsl:apply-templates/>
-      <!--   <xsl:with-param name="section-prefix" select="$appendix-num"/> -->
-      <!-- </xsl:apply-templates> -->
 
       <!-- If we need to steal templates from the rest of the document -->
       <xsl:call-template name="requirement-stealer">
@@ -1163,7 +1091,7 @@ function expand(){
 
   <xsl:template name="requirement-stealer">
     <xsl:param name="selected-status"/>
-    <!-- Select all f-componenets which have an f-element with a selected-status-->
+    <!-- Select all f-components which have an f-element with a selected-status-->
 
     <xsl:for-each select="//cc:f-component[@status=$selected-status][cc:f-element]">
       <xsl:call-template name="component-template">
@@ -1174,52 +1102,30 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:chapter">
-    <!-- <xsl:variable name="chapter-num" select="concat(position(), '.')"/> -->
-    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span>
-      <!-- <xsl:value-of select="concat($chapter-num, ' ')"/> -->
+    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span>.<xsl:value-of select="$space3"/>
+
       <xsl:value-of select="@title"/>
     </h1>
     <xsl:apply-templates/>
-    <!--   <xsl:with-param name="section-prefix" select="$chapter-num"/> -->
-    <!-- </xsl:apply-templates> -->
   </xsl:template>
 
   <xsl:template match="cc:section">
-    <!-- <xsl:param name="section-prefix"/> -->
-    <!-- <xsl:variable name="section-num"> -->
-    <!--   <xsl:number/> -->
-    <!-- </xsl:variable> -->
-    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span>
-      <!-- <xsl:value-of select="$section-prefix"/> -->
-      <!-- <xsl:value-of select="concat($section-num,' ')"/> -->
+    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span>.<xsl:value-of select="$space3"/>
+
       <xsl:value-of select="@title"/>
     </h2>
     <xsl:apply-templates/>
-      <!-- <xsl:with-param name="subsection-prefix" select="concat($section-prefix, $section-num, '.')"/> -->
-    <!-- </xsl:apply-templates> -->
   </xsl:template>
 
   <xsl:template match="cc:subsection">
-    <!-- <xsl:param name="subsection-prefix" /> -->
-    <!-- <xsl:variable name="subsection-num"> -->
-    <!--   <xsl:choose> -->
-    <!-- 	<xsl:when test="cc:a-component or not(cc:f-component)"> -->
-    <!-- 	  <xsl:number/> -->
-    <!-- 	</xsl:when> -->
-    <!-- 	<xsl:otherwise> -->
-    <!-- 	  <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/> -->
-    <!-- 	</xsl:otherwise> -->
-    <!--   </xsl:choose> -->
-    <!-- </xsl:variable> -->
 
     <xsl:variable name="shouldshow">
       <xsl:if test="$appendicize!='on' or not(cc:f-component) or (*/@status='threshold')">yes</xsl:if>
     </xsl:variable>
 
     <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><span class="num"></span>
-	<!-- <xsl:value-of select="$subsection-prefix" /> -->
-	<!-- <xsl:value-of select="concat($subsection-num, ' ')" /> -->
+      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
+	<span class="num"></span>.<xsl:value-of select="$space3"/>
 	<xsl:value-of select="@title" />
       </h3>
       <xsl:apply-templates/>
@@ -1342,25 +1248,12 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:secref">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:element name="a">
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend"/>
-      </xsl:attribute> Section <xsl:apply-templates select="//cc:chapter" mode="secreflookup"
-          ><xsl:with-param name="linkend" select="$linkend"/></xsl:apply-templates></xsl:element>
+    <a href="#{@linkend}" class="dynref">Section </a>
   </xsl:template>
 
 
   <xsl:template match="cc:appref">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:element name="a">
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend"/>
-      </xsl:attribute> Appendix <xsl:apply-templates select="//cc:appendix" mode="secreflookup"
-          ><xsl:with-param name="linkend" select="$linkend"/></xsl:apply-templates>
-    </xsl:element>
+    <a href="#{@linkend}" class="dynref">Appendix </a>
   </xsl:template>
 
   <xsl:template match="cc:chapter | cc:section | cc:subsection | cc:appendix" mode="secreflookup">
