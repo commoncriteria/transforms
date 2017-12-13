@@ -56,19 +56,8 @@
         </script>
         <script type="text/javascript">
 const AMPERSAND=String.fromCharCode(38);
+const NBSP=String.fromCharCode(160,160,160);
 
-// WARNING: This will not work for sections with greater than 26 elements
-function convertToAlpha(index){
-     var ret="", appeariod="";
-     var aa=0;
-     console.log("Indy length: " + index.length);
-     for(aa=0; index.length>aa; aa++){
-          
-          ret= ret + appeariod + String.fromCharCode(64 +index[aa]);
-          appeariod=".";
-     }
-     return ret;
-}
 
 function buildIndex(){
     
@@ -77,12 +66,13 @@ function buildIndex(){
     var aa=0, bb=0;
     var ret=[];
     var isAlpha=false;
-
     // Run through all the indexable
     while(eles.length > aa){
+        var spacer="";
         if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
            ret=[];
-           isAlpha=true;	 
+           isAlpha=true;
+	   console.log("SHold only be here once.");
         }
     
         // Build levels
@@ -94,28 +84,24 @@ function buildIndex(){
         ret[level-1]++;
 
         var prefix="";
-	if(isAlpha){
-            console.log("Labasdf: " + prefix);
-            prefix=convertToAlpha(ret);
-            console.log("HERERE: " + prefix);
-	}
-	else{
-            var appeariod="";
-            for(bb=0; level>bb; bb++){
-		prefix+=appeariod+ret[bb];
+	// WARNING: This will not work for documents with greater than 26 appendices
+	prefix=""+(isAlpha?String.fromCharCode(64 +ret[0]):ret[0]);
+        for(bb=1; level>bb; bb++){
+		prefix+="."+ret[bb];
 		appeariod="."
-            }
-        }
-
-
-	
+		spacer+=NBSP;
+	}
+	prefix+=(isAlpha?":":".");
+	prefix+=NBSP;
         // Set the number
         eles[aa].firstElementChild.innerHTML=prefix;
 
 	// Build the toc entry
 	var div= document.createElement('div');
 	toc.appendChild(div);
-	var line = document.createElement('a');
+	var line = document.createTextNode(spacer);
+        div.appendChild(line);
+	line = document.createElement('a');
 	line.href="#"+eles[aa].id;
 	line.class="toc-link"
 	line.innerHTML=eles[aa].textContent;
@@ -572,50 +558,49 @@ function expand(){
 	<div class="toc" id="toc">
 	</div>
 
-        <div class="toc">
-          <!-- generate table of contents -->
-	  <xsl:for-each select="./cc:chapter">
-	    <xsl:variable name="chapnum"><xsl:value-of select="position()"/></xsl:variable>
-	    <xsl:call-template name="TocElement">
-	      <xsl:with-param name="prefix">
-		<xsl:value-of select="$chapnum"/>
-	      </xsl:with-param>
-	    </xsl:call-template>
-	    <xsl:for-each select="./cc:section">
-	      <xsl:variable name="sectnum"><xsl:value-of select="position()"/></xsl:variable>
-	      <xsl:call-template name="TocElement">
-		<xsl:with-param name="prefix">
-		  <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/>
-		</xsl:with-param>
-	      </xsl:call-template>
-	      <xsl:for-each select="./cc:subsection">
-		<xsl:variable name="lastnum">
-		  <xsl:choose>
-		    <!-- -->
-		    <xsl:when test="$appendicize='on' and ./cc:f-component">
-		      <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/>
-		    </xsl:when>
-		    <xsl:otherwise>
-		      <xsl:value-of select="position()"/>
-		    </xsl:otherwise>
-		  </xsl:choose>
-		</xsl:variable>
-		<xsl:if test="$appendicize!='on' or not(./cc:f-component) or ./cc:f-component[@status='threshold']">
-		  <xsl:call-template name="TocElement">
-		    <xsl:with-param name="prefix">
-		      <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/>.<xsl:value-of select="$lastnum"/>
-		    </xsl:with-param>
-		</xsl:call-template>
-		</xsl:if>
-	      </xsl:for-each>
-	    </xsl:for-each>
-	  </xsl:for-each>
-	  <xsl:for-each select="./cc:appendix">
-	    <xsl:call-template name="TocAppendix"/>
-	  </xsl:for-each>
-          <!-- <xsl:apply-templates mode="toc" select="./cc:chapter" /> -->
-          <!-- <xsl:apply-templates mode="toc" select="./cc:appendix" /> -->
-        </div>
+        <!-- <div class="toc"> -->
+        <!-- generate table of contents -\-> -->
+	<!--   <xsl:for-each select="./cc:chapter"> -->
+	<!--     <xsl:variable name="chapnum"><xsl:value-of select="position()"/></xsl:variable> -->
+	<!--     <xsl:call-template name="TocElement"> -->
+	<!--       <xsl:with-param name="prefix"> -->
+	<!-- 	<xsl:value-of select="$chapnum"/> -->
+	<!--       </xsl:with-param> -->
+	<!--     </xsl:call-template> -->
+	<!--     <xsl:for-each select="./cc:section"> -->
+	<!--       <xsl:variable name="sectnum"><xsl:value-of select="position()"/></xsl:variable> -->
+	<!--       <xsl:call-template name="TocElement"> -->
+	<!-- 	<xsl:with-param name="prefix"> -->
+	<!-- 	  <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/> -->
+	<!-- 	</xsl:with-param> -->
+	<!--       </xsl:call-template> -->
+	<!--       <xsl:for-each select="./cc:subsection"> -->
+	<!-- 	<xsl:variable name="lastnum"> -->
+	<!-- 	  <xsl:choose> -->
+	<!-- 	    <xsl:when test="$appendicize='on' and ./cc:f-component"> -->
+	<!-- 	      <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/> -->
+	<!-- 	    </xsl:when> -->
+	<!-- 	    <xsl:otherwise> -->
+	<!-- 	      <xsl:value-of select="position()"/> -->
+	<!-- 	    </xsl:otherwise> -->
+	<!-- 	  </xsl:choose> -->
+	<!-- 	</xsl:variable> -->
+	<!-- 	<xsl:if test="$appendicize!='on' or not(./cc:f-component) or ./cc:f-component[@status='threshold']"> -->
+	<!-- 	  <xsl:call-template name="TocElement"> -->
+	<!-- 	    <xsl:with-param name="prefix"> -->
+	<!-- 	      <xsl:value-of select="$chapnum"/>.<xsl:value-of select="$sectnum"/>.<xsl:value-of select="$lastnum"/> -->
+	<!-- 	    </xsl:with-param> -->
+	<!-- 	</xsl:call-template> -->
+	<!-- 	</xsl:if> -->
+	<!--       </xsl:for-each> -->
+	<!--     </xsl:for-each> -->
+	<!--   </xsl:for-each> -->
+	<!--   <xsl:for-each select="./cc:appendix"> -->
+	<!--     <xsl:call-template name="TocAppendix"/> -->
+	<!--   </xsl:for-each> -->
+        <!-- <xsl:apply-templates mode="toc" select="./cc:chapter" /> -->
+        <!-- <xsl:apply-templates mode="toc" select="./cc:appendix" /> -->
+        <!-- </div> -->
         <!-- process each toplevel chapter -->
         <xsl:apply-templates select="//cc:chapter"/>
         <xsl:apply-templates select="//cc:appendix"/>
@@ -1147,27 +1132,27 @@ function expand(){
 
   <xsl:template match="cc:appendix">
     <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')">
-      <xsl:variable name="appendix-num">
-        <xsl:choose>
-          <xsl:when test="$appendicize='on'">
-            <xsl:number format="A."/>
-          </xsl:when>
-          <xsl:otherwise>
-            <!-- Don't count ones with these special IDs -->
-            <xsl:number format="A."
-              count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
+      <!-- <xsl:variable name="appendix-num"> -->
+      <!--   <xsl:choose> -->
+      <!--     <xsl:when test="$appendicize='on'"> -->
+      <!--       <xsl:number format="A."/> -->
+      <!--     </xsl:when> -->
+      <!--     <xsl:otherwise> -->
+      <!--       <\- Don't count ones with these special IDs -\-> -->
+      <!--       <xsl:number format="A." -->
+      <!--         count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/> -->
+      <!--     </xsl:otherwise> -->
+      <!--   </xsl:choose> -->
+      <!-- </xsl:variable> -->
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
 	<span></span>
-        <xsl:value-of select="concat($appendix-num, ' ')"/>
+<!--        <xsl:value-of select="concat($appendix-num, ' ')"/> -->
         <xsl:value-of select="@title"/>
       </h1>
       <!-- Convert the words -->
-      <xsl:apply-templates>
-        <xsl:with-param name="section-prefix" select="$appendix-num"/>
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
+      <!--   <xsl:with-param name="section-prefix" select="$appendix-num"/> -->
+      <!-- </xsl:apply-templates> -->
 
       <!-- If we need to steal templates from the rest of the document -->
       <xsl:call-template name="requirement-stealer">
@@ -1189,66 +1174,56 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:chapter">
-    <xsl:variable name="chapter-num" select="concat(position(), '.')"/>
+    <!-- <xsl:variable name="chapter-num" select="concat(position(), '.')"/> -->
     <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span>
-      <xsl:value-of select="concat($chapter-num, ' ')"/>
+      <!-- <xsl:value-of select="concat($chapter-num, ' ')"/> -->
       <xsl:value-of select="@title"/>
     </h1>
-    <xsl:apply-templates>
-      <xsl:with-param name="section-prefix" select="$chapter-num"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
+    <!--   <xsl:with-param name="section-prefix" select="$chapter-num"/> -->
+    <!-- </xsl:apply-templates> -->
   </xsl:template>
 
   <xsl:template match="cc:section">
-    <xsl:param name="section-prefix"/>
-    <xsl:variable name="section-num">
-      <xsl:number/>
-    </xsl:variable>
+    <!-- <xsl:param name="section-prefix"/> -->
+    <!-- <xsl:variable name="section-num"> -->
+    <!--   <xsl:number/> -->
+    <!-- </xsl:variable> -->
     <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span>
-      <xsl:value-of select="$section-prefix"/>
-      <xsl:value-of select="concat($section-num,' ')"/>
+      <!-- <xsl:value-of select="$section-prefix"/> -->
+      <!-- <xsl:value-of select="concat($section-num,' ')"/> -->
       <xsl:value-of select="@title"/>
     </h2>
-    <xsl:apply-templates>
-      <xsl:with-param name="subsection-prefix" select="concat($section-prefix, $section-num, '.')"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates/>
+      <!-- <xsl:with-param name="subsection-prefix" select="concat($section-prefix, $section-num, '.')"/> -->
+    <!-- </xsl:apply-templates> -->
   </xsl:template>
 
   <xsl:template match="cc:subsection">
-    <xsl:param name="subsection-prefix" />
-
-    <xsl:variable name="subsection-num">
-      <xsl:choose>
-	<xsl:when test="cc:a-component or not(cc:f-component)">
-	  <xsl:number/>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/>
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <!-- <xsl:param name="subsection-prefix" /> -->
+    <!-- <xsl:variable name="subsection-num"> -->
+    <!--   <xsl:choose> -->
+    <!-- 	<xsl:when test="cc:a-component or not(cc:f-component)"> -->
+    <!-- 	  <xsl:number/> -->
+    <!-- 	</xsl:when> -->
+    <!-- 	<xsl:otherwise> -->
+    <!-- 	  <xsl:value-of select="count(preceding-sibling::*[cc:f-component/@status='threshold'])+1"/> -->
+    <!-- 	</xsl:otherwise> -->
+    <!--   </xsl:choose> -->
+    <!-- </xsl:variable> -->
 
     <xsl:variable name="shouldshow">
       <xsl:if test="$appendicize!='on' or not(cc:f-component) or (*/@status='threshold')">yes</xsl:if>
     </xsl:variable>
 
     <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}" class="indexable" data-level="3"><span class="num"></span>
-	<xsl:value-of select="$subsection-prefix" />
-	<xsl:value-of select="concat($subsection-num, ' ')" />
+      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><span class="num"></span>
+	<!-- <xsl:value-of select="$subsection-prefix" /> -->
+	<!-- <xsl:value-of select="concat($subsection-num, ' ')" /> -->
 	<xsl:value-of select="@title" />
       </h3>
-      <xsl:apply-templates>
-	<xsl:with-param name="subsubsection-prefix" select="concat($subsection-prefix, $subsection-num, '.')" />
-      </xsl:apply-templates>
+      <xsl:apply-templates/>
     </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="cc:subsubsection">
-    <h4 id="{@id}">
-      <xsl:value-of select="@title"/>
-    </h4>
-    <xsl:apply-templates/>
   </xsl:template>
 
 
