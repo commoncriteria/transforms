@@ -57,6 +57,82 @@
         <script type="text/javascript">
 const AMPERSAND=String.fromCharCode(38);
 
+// WARNING: This will not work for sections with greater than 26 elements
+function convertToAlpha(index){
+     var ret="", appeariod="";
+     var aa=0;
+     console.log("Indy length: " + index.length);
+     for(aa=0; index.length>aa; aa++){
+          
+          ret= ret + appeariod + String.fromCharCode(64 +index[aa]);
+          appeariod=".";
+     }
+     return ret;
+}
+
+function buildIndex(){
+    
+    var eles = document.getElementsByClassName("indexable");
+    var toc = document.getElementById("toc");
+    var aa=0, bb=0;
+    var ret=[];
+    var isAlpha=false;
+
+    // Run through all the indexable
+    while(eles.length > aa){
+        if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
+           ret=[];
+           isAlpha=true;	 
+        }
+    
+        // Build levels
+	level = eles[aa].getAttribute("data-level");
+	while( level > ret.length ){
+	    ret.push(0);
+	}
+        // Increment the one we're on
+        ret[level-1]++;
+
+        var prefix="";
+	if(isAlpha){
+            console.log("Labasdf: " + prefix);
+            prefix=convertToAlpha(ret);
+            console.log("HERERE: " + prefix);
+	}
+	else{
+            var appeariod="";
+            for(bb=0; level>bb; bb++){
+		prefix+=appeariod+ret[bb];
+		appeariod="."
+            }
+        }
+
+
+	
+        // Set the number
+        eles[aa].firstElementChild.innerHTML=prefix;
+
+	// Build the toc entry
+	var div= document.createElement('div');
+	toc.appendChild(div);
+	var line = document.createElement('a');
+	line.href="#"+eles[aa].id;
+	line.class="toc-link"
+	line.innerHTML=eles[aa].textContent;
+	div.appendChild(line);
+
+	
+        // Zero out the ones after
+        while(ret.length > level ){
+            ret[level]=0;
+            level++;
+        }
+        // Go to the next element
+	aa++;
+    }
+}
+
+
 function changeMyCounter(subroot, val){
     var bb;
     for(bb=0; bb!=subroot.childNodes.length; bb++){
@@ -67,6 +143,7 @@ function changeMyCounter(subroot, val){
     	}
     }
 }
+
 
 function fixReferences(type){
     var figs = document.getElementsByClassName("ctr");
@@ -115,6 +192,7 @@ function showTarget(id){
 // Called on page load to parse URL parameters and perform actions on them.
 function init(){
     fixReferences("figure");
+    buildIndex();
     if(getQueryVariable("expand") == "on"){
 	expand();
     }
@@ -491,6 +569,9 @@ function expand(){
           </xsl:for-each>
         </table>
         <h2>Contents</h2>
+	<div class="toc" id="toc">
+	</div>
+
         <div class="toc">
           <!-- generate table of contents -->
 	  <xsl:for-each select="./cc:chapter">
@@ -1078,7 +1159,8 @@ function expand(){
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <h1 id="{@id}">
+      <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
+	<span></span>
         <xsl:value-of select="concat($appendix-num, ' ')"/>
         <xsl:value-of select="@title"/>
       </h1>
@@ -1108,7 +1190,7 @@ function expand(){
 
   <xsl:template match="cc:chapter">
     <xsl:variable name="chapter-num" select="concat(position(), '.')"/>
-    <h1 id="{@id}" class="indexable"><div class="num"></div>
+    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span>
       <xsl:value-of select="concat($chapter-num, ' ')"/>
       <xsl:value-of select="@title"/>
     </h1>
@@ -1122,7 +1204,7 @@ function expand(){
     <xsl:variable name="section-num">
       <xsl:number/>
     </xsl:variable>
-    <h2 id="{@id}" class="indexable"><div class="num"></div>
+    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span>
       <xsl:value-of select="$section-prefix"/>
       <xsl:value-of select="concat($section-num,' ')"/>
       <xsl:value-of select="@title"/>
@@ -1151,7 +1233,7 @@ function expand(){
     </xsl:variable>
 
     <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}" class="indexable"><div class="num"></div>
+      <h3 id="{@id}" class="indexable" data-level="3"><span class="num"></span>
 	<xsl:value-of select="$subsection-prefix" />
 	<xsl:value-of select="concat($subsection-num, ' ')" />
 	<xsl:value-of select="@title" />
