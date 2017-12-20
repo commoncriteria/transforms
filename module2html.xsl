@@ -13,9 +13,12 @@
 
   <xsl:include href="pp2html.xsl"/>
 
+  <xsl:variable name="is_mod">1</xsl:variable>
   <!--
       Eat all assurance activities
       We might just move these totally off to the SDs.
   -->
   <xsl:template match="cc:aactivity"/>
+  <xsl:template name="optmessage"/>
+  
 </xsl:stylesheet>

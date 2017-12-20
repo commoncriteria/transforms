@@ -971,8 +971,7 @@ function expand(){
     <xsl:if test="$appendicize!='on'">
       <xsl:if test="@status='optional'">
         <div class="statustag">
-          <i><b>This is an optional component; however, Extended Packages of this
-              Protection Profile might redefine it as non-optional.</b></i>
+          <i><b>This is an optional component<xsl:if test="not($is_mod)">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:if>.</b></i>
         </div>
       </xsl:if>
     </xsl:if>
@@ -1380,5 +1379,4 @@ function expand(){
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
-
 </xsl:stylesheet>
