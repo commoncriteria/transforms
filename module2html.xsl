@@ -11,14 +11,12 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <xsl:include href="pp2html.xsl"/>
+  <xsl:import href="pp2html.xsl"/>
 
-  <xsl:variable name="is_mod">1</xsl:variable>
   <!--
       Eat all assurance activities
       We might just move these totally off to the SDs.
   -->
   <xsl:template match="cc:aactivity"/>
-  <xsl:template name="optmessage"/>
-  
+  <xsl:template name="opt_text"/>
 </xsl:stylesheet>

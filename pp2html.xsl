@@ -74,7 +74,6 @@ function buildIndex(){
         if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
            ret=[];
            isAlpha=true;
-	   console.log("SHold only be here once.");
         }
     
         // Build levels
@@ -85,15 +84,14 @@ function buildIndex(){
         // Increment the one we're on
         ret[level-1]++;
 
-        var prefix="";
 	// WARNING: This will not work for documents with greater than 26 appendices
-	prefix=""+(isAlpha?String.fromCharCode(64 +ret[0]):ret[0]);
+	var prefix=""+(isAlpha?String.fromCharCode(64 +ret[0]):ret[0]);
         for(bb=1; level>bb; bb++){
 		prefix+="."+ret[bb];
-		appeariod="."
 		spacer+=NBSP;
 	}
-
+	prefix=prefix+(isAlpha?":":".");
+	
 	// Set the number
         eles[aa].firstElementChild.innerHTML=prefix
 
@@ -541,10 +539,17 @@ function expand(){
             <xsl:when test="$release='draft'"><img src="images/niaplogodraft.png" alt="NIAP"/></xsl:when>
           </xsl:choose>
           <br/>
-          <p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+
+	  <!-- Might think about getting rid of this and just making it part of the foreword -->
+	  
+	  <p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
           <p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-          <p/><b><xsl:value-of select="//cc:PPAuthor"/></b></div>
-        <h2 style="page-break-before:always;">Revision History</h2>
+        <p/><b><xsl:value-of select="//cc:PPAuthor"/></b></div>
+
+	<xsl:apply-templates select="//cc:foreword"/>
+
+
+	<h2 style="page-break-before:always;">Revision History</h2>
         <table>
           <tr class="header">
             <th>Version</th>
@@ -565,7 +570,9 @@ function expand(){
             </tr>
           </xsl:for-each>
         </table>
-        <h2>Contents</h2>
+
+
+	<h2>Contents</h2>
 	<div class="toc" id="toc">
 	</div>
 
@@ -971,7 +978,7 @@ function expand(){
     <xsl:if test="$appendicize!='on'">
       <xsl:if test="@status='optional'">
         <div class="statustag">
-          <i><b>This is an optional component<xsl:if test="not($is_mod)">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:if>.</b></i>
+          <i><b>This is an optional component<xsl:call-template name='opt_text'/>.</b></i>
         </div>
       </xsl:if>
     </xsl:if>
@@ -1027,7 +1034,12 @@ function expand(){
     </xsl:if>
   </xsl:template>
 
-
+  <xsl:template match="cc:foreword">
+    <div class="foreword">
+      <h1 style="text-align: center">Foreword</h1>
+      <xsl:apply-templates/>      
+    </div>
+  </xsl:template>
 
 
   <xsl:template match="cc:title">
@@ -1076,7 +1088,7 @@ function expand(){
     <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')">
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
 	Appendix
-	<span class="num"></span>:<xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
+	<span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
       </h1>
       <!-- Convert the words -->
       <xsl:apply-templates/>
@@ -1101,7 +1113,7 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:chapter">
-    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span>.<xsl:value-of select="$space3"/>
+    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span><xsl:value-of select="$space3"/>
 
       <xsl:value-of select="@title"/>
     </h1>
@@ -1109,7 +1121,7 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span>.<xsl:value-of select="$space3"/>
+    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span><xsl:value-of select="$space3"/>
 
       <xsl:value-of select="@title"/>
     </h2>
@@ -1121,10 +1133,15 @@ function expand(){
     <xsl:variable name="shouldshow">
       <xsl:if test="$appendicize!='on' or not(cc:f-component) or (*/@status='threshold')">yes</xsl:if>
     </xsl:variable>
-
+    <xsl:variable name="is_index"><xsl:choose>
+      <xsl:when test="ancestor::*[@stopindex]"/>
+      <xsl:otherwise>indexable</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    
     <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
-	<span class="num"></span>.<xsl:value-of select="$space3"/>
+      <h3 id="{@id}" class="{$is_index}" data-level="{count(ancestor::*)}">
+	<span class="num"></span>
+	<xsl:if test="not(ancestor::*[@stopindex])"><xsl:value-of select="$space3"/></xsl:if>
 	<xsl:value-of select="@title" />
       </h3>
       <xsl:apply-templates/>
@@ -1379,4 +1396,6 @@ function expand(){
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template name="opt_text">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:template>
 </xsl:stylesheet>

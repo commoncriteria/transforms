@@ -9,8 +9,7 @@
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <attribute name="name">
-      </attribute>
+      <attribute name="name"></attribute>
       
       <element name="PPReference">
 	<a:documentation>
@@ -108,7 +107,12 @@
 	  </zeroOrMore>
         </element>
       </oneOrMore>
-
+      <optional>
+	<element name="foreword">
+	  <a:documentation>Flexible section for a foreword.</a:documentation>
+	  <zeroOrMore><ref name="html-element"/></zeroOrMore>
+	</element>
+      </optional>
       <oneOrMore>
         <element name="chapter">
 	  <a:documentation>Major grouping for the document.</a:documentation>
