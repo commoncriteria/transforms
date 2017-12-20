@@ -16,6 +16,7 @@
     }
     
     a {
+      text-decoration: none;
       word-wrap: break-word;
     }
     a.abbr:link{
