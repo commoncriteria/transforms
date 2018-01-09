@@ -97,6 +97,16 @@ function sortTable(tableid, n) {
       color:red;
       text-decoration:none;
     }
+    .note-header{
+      font-weight: bold;
+    }
+    .note-header::after{
+      content: ":"
+    }
+    .note p:first-child{
+      display: inline;
+    }
+    
     <xsl:value-of select="//cc:extra-css"/>
     
   </xsl:template>
@@ -196,12 +206,13 @@ function sortTable(tableid, n) {
 
   <xsl:template match="cc:note">
     <div class="appnote">
-      <b><xsl:choose>
+      <span class="note-header"><xsl:choose>
 	<xsl:when test="@role='application'">Application</xsl:when>
 	<xsl:when test="@role='developer'">Developer</xsl:when>
 	<xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note </b><br/> 
+      </xsl:choose> Note</span> <span class="note">
       <xsl:apply-templates/>
+      </span>
     </div>
   </xsl:template>
 
