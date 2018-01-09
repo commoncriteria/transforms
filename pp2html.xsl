@@ -735,7 +735,7 @@ function expand(){
   <xsl:template match="cc:InsertAppendixExplainer">
     <xsl:if test="$appendicize='on'"> Unconditional requirements are found in the main body of the
       document, while appendices contain the selection-based, optional, and objective requirements. </xsl:if>
-    <xsl:if test="$appendicize!='on'"> The type of each requirement is identified inline with the
+    <xsl:if test="$appendicize!='on'"> The type of each requirement is identified in line with the
       text. </xsl:if>
   </xsl:template>
 

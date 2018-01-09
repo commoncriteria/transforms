@@ -113,3 +113,14 @@ submask
 zeroization
 zeroized
 XORed
+USB
+Bluetooth
+WiFi
+gcc
+logons
+Logons
+logoffs
+Logoffs
+Online
+online
+Locator
