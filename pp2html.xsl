@@ -57,6 +57,8 @@
             });
         </script>
         <script type="text/javascript">
+<xsl:call-template name="common_js"/>	  
+
 const AMPERSAND=String.fromCharCode(38);
 const NBSP=String.fromCharCode(160,160,160);
 
@@ -90,10 +92,12 @@ function buildIndex(){
 		prefix+="."+ret[bb];
 		spacer+=NBSP;
 	}
-	prefix=prefix+(isAlpha?":":".");
 	
-	// Set the number
+	// Set the number for the references
         eles[aa].firstElementChild.innerHTML=prefix
+
+	prefix=prefix+(isAlpha?":":".");
+
 
 	// Build the toc entry
 	var div= document.createElement('div');
