@@ -525,6 +525,12 @@
         </attribute>
       </optional>
       <optional>
+	<attribute name="id">
+	  <a:documentation>A document-wide unique string.</a:documentation>
+	  <data type="NCName"/>
+	</attribute>
+      </optional>
+      <optional>
         <attribute name="linebreak">
 	  <a:documentation>
 	    Indicates that new lines should be appended to every selectable.
@@ -801,6 +807,15 @@
       <a:documentation>
 	Denotes the start of a selectable in a selectables section.
       </a:documentation>
+      <optional>
+	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
+      </optional>
+      <optional>
+	<attribute name="id">
+	  <a:documentation>A document-wide unique string.</a:documentation>
+	  <data type="NCName"/>
+	</attribute>
+      </optional>
       <zeroOrMore>
 	<element name="requires">
 	  <a:documentation>
@@ -943,6 +958,13 @@
 		  <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
 		</data>
 	      </attribute>
+	      <optional>
+		<attribute name="ids">
+		  <a:documentation>
+		    Format should be $REQUIREMENT_ID:$SELECTABLE_ID
+		  </a:documentation>
+		</attribute>
+	      </optional>
 	    </element>
 	  </oneOrMore>
 	</group>
