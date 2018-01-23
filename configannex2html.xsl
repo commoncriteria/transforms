@@ -237,8 +237,8 @@
             <xsl:value-of select="//co:ConfigAnnexReference/co:PPTechnology"/></b>
           </h1>
 
-          <h2 class="subtitle">Version <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
-          <h2 class="subtitle">Release <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
+          <h2 class="subtitle">Annex Release <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
+          <h2 class="subtitle">For Protection Profile Version <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
           <br/>
           <h2 class="subtitle"><b><xsl:value-of select="//co:ConfigAnnexReference/co:PubDate"/></b></h2>
           <br/>
