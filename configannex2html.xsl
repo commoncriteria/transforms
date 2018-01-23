@@ -399,7 +399,7 @@
   <tr class="header">
     <th style="white-space: nowrap">Configuration Action</th>
     <th style="white-space: nowrap">NIST Control</th>
-    <th>CNSSI 1253 Value</th>
+    <th>CNSSI 1253 Value or DoD-specific Value</th>
     <th>NIAP PP Reference</th>
   </tr>
   <xsl:for-each select="co:config">
@@ -409,15 +409,17 @@
       </td>
       <td >
       <xsl:for-each select="co:references/co:reference[@ref='NIST 800-53']">
-        <xsl:value-of select="."/><p/>
+        <xsl:apply-templates select="."/><p/>
       </xsl:for-each>
       </td>
       <td>
-        <xsl:value-of select="co:references/co:reference[@ref='CNSSI-1253']"/>
+      <xsl:for-each select="co:references/co:reference[@ref='CNSSI-1253']">
+        <xsl:apply-templates select="."/><p/>
+      </xsl:for-each>
       </td>
       <td>
       <xsl:for-each select="co:references/co:reference[@ref='PP']">
-        <xsl:value-of select="."/>
+        <xsl:apply-templates select="."/>
       </xsl:for-each>
       </td>
     </tr>
