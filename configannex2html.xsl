@@ -95,6 +95,9 @@
               margin-bottom:0.5em;
               font-family:verdana, arial, helvetica, sans-serif;
           }
+		  br{
+		      line-height:0.2em;
+		  }
           p{
               margin-bottom:0.6em;
               margin-top:0.2em;
@@ -425,6 +428,11 @@
     </tr>
   </xsl:for-each>
 </table>
+</xsl:template>
+
+
+<xsl:template match="co:reference | co:description">
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="co:bibliography">
