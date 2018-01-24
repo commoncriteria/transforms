@@ -95,6 +95,9 @@
               margin-bottom:0.5em;
               font-family:verdana, arial, helvetica, sans-serif;
           }
+		  br{
+		      line-height:0.2em;
+		  }
           p{
               margin-bottom:0.6em;
               margin-top:0.2em;
@@ -234,8 +237,8 @@
             <xsl:value-of select="//co:ConfigAnnexReference/co:PPTechnology"/></b>
           </h1>
 
-          <h2 class="subtitle">Version <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
-          <h2 class="subtitle">Release <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
+          <h2 class="subtitle">Annex Release <xsl:value-of select="//co:ConfigAnnexReference/co:Release"/></h2>
+          <h2 class="subtitle">For Protection Profile Version <xsl:value-of select="//co:ConfigAnnexReference/co:PPVersion"/></h2>
           <br/>
           <h2 class="subtitle"><b><xsl:value-of select="//co:ConfigAnnexReference/co:PubDate"/></b></h2>
           <br/>
@@ -399,7 +402,7 @@
   <tr class="header">
     <th style="white-space: nowrap">Configuration Action</th>
     <th style="white-space: nowrap">NIST Control</th>
-    <th>CNSSI 1253 Value</th>
+    <th>CNSSI 1253 Value or DoD-specific Value</th>
     <th>NIAP PP Reference</th>
   </tr>
   <xsl:for-each select="co:config">
@@ -409,20 +412,27 @@
       </td>
       <td >
       <xsl:for-each select="co:references/co:reference[@ref='NIST 800-53']">
-        <xsl:value-of select="."/><p/>
+        <xsl:apply-templates select="."/><p/>
       </xsl:for-each>
       </td>
       <td>
-        <xsl:value-of select="co:references/co:reference[@ref='CNSSI-1253']"/>
+      <xsl:for-each select="co:references/co:reference[@ref='CNSSI-1253']">
+        <xsl:apply-templates select="."/><p/>
+      </xsl:for-each>
       </td>
       <td>
       <xsl:for-each select="co:references/co:reference[@ref='PP']">
-        <xsl:value-of select="."/>
+        <xsl:apply-templates select="."/>
       </xsl:for-each>
       </td>
     </tr>
   </xsl:for-each>
 </table>
+</xsl:template>
+
+
+<xsl:template match="co:reference | co:description">
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="co:bibliography">
