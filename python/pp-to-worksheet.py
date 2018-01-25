@@ -250,6 +250,10 @@ function retrieveFromCookieJar(elem, id){
 }
 
 function init(){
+    if( document.URL.startsWith("file:///") ){
+        alert("Most browsers do not store cookies from local pages (i.e, 'file:///...').\\n"+
+              "When you close this page, all data will most likely be lost." );
+    }
     cookieJar = readAllCookies();
     performActionOnVals(retrieveFromCookieJar);
 }
