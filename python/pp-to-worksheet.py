@@ -146,13 +146,21 @@ class State:
 
 
 
-
-if len(sys.argv) != 2:
-    print("Usage: <check-it.py> <protection-profile>")
+if len(sys.argv) < 2:
+    print("Usage: <check-it.py> <protection-profile>[:<output-file>]")
     sys.exit(0)
 
+# Split on colon
+out=sys.argv[1].split(':')
+infile=out[0]
+outfile=""
+if len(out) < 2:
+    outfile=infile.split('.')[0]+"-worksheet.html"
+else:
+    outfile=out[1]
+
 # Parse the PP
-root = minidom.parse(sys.argv[1]).documentElement
+root = minidom.parse(infile).documentElement
 
 state=State()
 
@@ -484,4 +492,6 @@ form +="""
 """
 #      <button type="button" onclick="saveVals()">SaveOff</button>
 
-print(form)
+with open(outfile, "w") as out:
+    out.write(form)
+
