@@ -525,12 +525,6 @@
         </attribute>
       </optional>
       <optional>
-	<attribute name="id">
-	  <a:documentation>A document-wide unique string.</a:documentation>
-	  <data type="NCName"/>
-	</attribute>
-      </optional>
-      <optional>
         <attribute name="linebreak">
 	  <a:documentation>
 	    Indicates that new lines should be appended to every selectable.
@@ -811,10 +805,7 @@
 	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
       <optional>
-	<attribute name="id">
-	  <a:documentation>A document-wide unique string.</a:documentation>
-	  <data type="NCName"/>
-	</attribute>
+	<ref name="id-attr"/>
       </optional>
       <zeroOrMore>
 	<element name="requires">
