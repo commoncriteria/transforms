@@ -459,7 +459,8 @@ function toggleFirstCheckboxExcept(root, exc){
    <body onload='init();'><div id="main">
 """
 
-form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>"
+form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
+form +=  "         <h2 id='file-url-warning'></h2>
 
 form += state.descend(root)
 form += """
