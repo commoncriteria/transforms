@@ -25,6 +25,7 @@ class State:
         self.index=""
 
     def handle_selectables(self, node):
+        """Handles selectables elements"""
         sels=[]
         contentCtr=0
         ret="<span class='selectables' data-rindex='"+ str(self.selectables_index) +"'>"
@@ -32,7 +33,7 @@ class State:
         rindex=0
         for child in node.childNodes: # Hopefully only selectable
             if child.nodeType == xml.dom.Node.ELEMENT_NODE and child.tagName == "selectable":
-                contents = self.title_to_form(child)
+                contents = self.handle_node(child,True)
                 contentCtr+=len(contents)
                 chk = "<input type='checkbox'"
                 onChange=""
@@ -66,39 +67,80 @@ class State:
             ret+="</ul>\n"
         return ret+"</span>"
 
-    def node_to_text(self, node):
-        ret=""
-        if node.nodeType == xml.dom.Node.TEXT_NODE:
-            ret += escape(node.data)
+    def handle_node(self, node, show_text):
+        """Converts singular XML nodes to text."""
+        if show_text and node.nodeType == xml.dom.Node.TEXT_NODE:
+            return escape(node.data)
         elif node.nodeType == xml.dom.Node.ELEMENT_NODE:
-            # sys.stderr.write("Tagname is"+ node.tagName)
+            print("Handling " + node.tagName);
             if node.tagName == "selectables":
-                ret += self.handle_selectables(node)
+                return self.handle_selectables(node)
             elif node.tagName == "refinement":
-                ret += "<span class='refinement'>"
-                ret += self.title_to_form(node)
+                ret = "<span class='refinement'>"
+                ret += self.handle_node(node, True)
                 ret += "</span>"
+                return ret
             elif node.tagName == "assignable":
-                ret += "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
-                ret += ' '.join(self.title_to_form(node).split())
+                ret = "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
+                ret += ' '.join(self.handle_parent(node, True).split())
                 ret +="'></textarea>"
-
+                return ret
             elif node.tagName == "abbr" or node.tagName == "linkref":
-                ret += node.getAttribute("linkend")
+                return node.getAttribute("linkend")
+            elif node.tagName == "section":
+                idAttr=node.getAttribute("id")
+                ret =""
+                if "SFRs" == idAttr or "SARs" == idAttr:
+                    ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
+                ret += self.handle_parent(node, False)
+                return ret
+            elif node.tagName == "f-component" or node.tagName == "a-component":
+                id=node.getAttribute("id")
+                self.index+="<tr><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
+                ret = "<div id='"+id+"'"
+                # The only direct descendants are possible should be the children
+                child=node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 
+                                            'selection-depends')
+                if child.length > 0:
+                    ret+=" class='disabled'"
+                ret+=">"
+                ret+="<h3>"+id+" &mdash; "+ node.getAttribute("name")+"</h3>\n"
+                ret+=self.handle_parent(node, True)
+                ret+="</div>"
+                return ret
+            elif node.tagName == "title":
+                self.selectables_index=0
+                ret=""
+                ret+="<div id='"+node.parentNode.getAttribute('id') +"' data-id='" + node.parentNode.getAttribute('id') + "'>"
+                ret+=self.handle_parent(node, True)
+                # ret+="<br></br>"
+                # ret+="<textarea rows='5' cols='70' class='notes'></textarea>"
+                ret+="</div>\n"
+                return ret
             elif node.tagName == "h:strike":
                 pass
             elif ":" in node.tagName:
-                tag = re.sub(r'.*:', '', node.tagName)
-                ret += "<"+tag
-                attrs = node.attributes
-                for aa in range(0,attrs.length) :
-                    attr =attrs.item(aa)
-                    ret+=" " + attr.name + "='" + escape(attr.value) +"'"
-                ret += ">"
-                ret += self.title_to_form(node)
-                ret += "</"+tag+">"
-        return ret
+                if show_text:
+                    # Just remove the HTML prefix and recur.
+                    tag = re.sub(r'.*:', '', node.tagName)
+                    ret = "<"+tag
+                    attrs = node.attributes
+                    for aa in range(0,attrs.length) :
+                        attr =attrs.item(aa)
+                        ret+=" " + attr.name + "='" + escape(attr.value) +"'"
+                    ret += ">"
+                    ret += self.handle_parent(node, True)
+                    ret += "</"+tag+">"
+                    return ret;
+            else:
+                return self.handle_parent(node, show_text)
+        return ""
 
+    def handle_parent(self, node, show_text):
+        ret=""
+        for child in node.childNodes:
+            ret +=self.handle_node(child, show_text)
+        return ret
 
     def makeSelectionMap(self, root):
         """
@@ -119,51 +161,7 @@ class State:
 
 
 
-    def title_to_form(self, title):
-        """ 
-        Converts subtrees under title to HTML forms.
-        """
-        ret=""
-        for node in title.childNodes:
-            ret+=self.node_to_text(node)
-        return ret
 
-    def descend(self, root):
-        """ 
-        Converts PP trees to an HTML form. Handles sections, *-components, and 
-        title. 
-        """
-        ret=""
-        for node in root.childNodes:
-            if node.nodeType == xml.dom.Node.ELEMENT_NODE:
-                if node.tagName == "section":
-                    idAttr=node.getAttribute("id")
-                    if "SFRs" == idAttr or "SARs" == idAttr:
-                        ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
-                elif node.tagName == "f-component" or node.tagName == "a-component":
-                    id=node.getAttribute("id")
-                    self.index+="<tr><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
-
-                    ret+="<div id='"+id+"'"
-                    # The only direct descendants are possible should be the children
-                    child=node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 
-                                                'selection-depends')
-                    if child.length > 0:
-                        ret+=" class='disabled'"
-                    ret+=">"
-                    ret+="<h3>"+id+" &mdash; "+ node.getAttribute("name")+"</h3>\n"
-                    ret+=self.descend(node)
-                    ret+="</div>"
-                    continue
-                elif node.tagName == "title":
-                    self.selectables_index=0
-                    ret+="<div id='"+node.parentNode.getAttribute('id') +"' data-id='" + node.parentNode.getAttribute('id') + "'>"
-                    ret+=self.title_to_form(node)
-                    # ret+="<br></br>"
-                    # ret+="<textarea rows='5' cols='70' class='notes'></textarea>"
-                    ret+="</div>\n"
-                ret+=self.descend(node)
-        return ret
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -194,13 +192,13 @@ if __name__ == "__main__":
        opacity: .2;
        pointer-events: none;
     }
-    /*
-    .disabled *{
-       display: none;
+    
+    .warning{
+       text-align:center;
+       border-style: dashed;
+       border-width: medium;
+       border-color: red;
     }
-    */
-
-
     .sidenav {
         height: 100%;            /* 100% Full-height */
         position: fixed;         /* Stay in place */
@@ -279,6 +277,8 @@ if __name__ == "__main__":
 
     function init(){
         if( document.URL.startsWith("file:///") ){
+           var warn = document.getElementById("url-warning");
+           warn.style.display='block';
         }
         cookieJar = readAllCookies();
         performActionOnVals(retrieveFromCookieJar);
@@ -485,18 +485,20 @@ if __name__ == "__main__":
     }
 
            </script>
-       </head>
-       <body onload='init();'><div id="main">
+       </head>       <body onload='init();'><div id="main">
     """
 
     form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
-    form +=  """         <h2 id='file-url-warning'>\n"
-    Most browsers do not store cookies from local pages (i.e, 'file:///...').
-    When you close this page, all data will most likely be lost.
+    form +=  """
+<noscript>
+    <h1 class="warning">This page requires JavaScript.</h1></noscript>
+    <h2 class="warning" id='url-warning' style="display: none;">
+Most browsers do not store cookies from local pages (i.e, 'file:///...').
+When you close this page, all data will most likely be lost.
              </h2>\n
     """
 
-    form += state.descend(root)
+    form += state.handle_node(root, False)
     form += """
           <br/>
           <button type="button" onclick="generateReport()">Generate Report</button>
