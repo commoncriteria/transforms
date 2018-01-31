@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+""" 
+Module that converts PP xml documents to an HTML worksheet
+"""
 
 from io import StringIO 
 import re
@@ -8,7 +11,9 @@ from xml.dom import minidom
 from xml.sax.saxutils import escape
 
 class State:
+    """Keeps track of certain values for a PP """
     def __init__(self):
+        """ Initializes State"""
         # Maps selection IDs to Requirements
         # If the selection is made, then the requirement is included
         self.selMap={}
@@ -19,6 +24,48 @@ class State:
         # index
         self.index=""
 
+    def handle_selectables(self, node):
+        sels=[]
+        contentCtr=0
+        ret="<span class='selectables' data-rindex='"+ str(self.selectables_index) +"'>"
+        self.selectables_index+=1
+        rindex=0
+        for child in node.childNodes: # Hopefully only selectable
+            if child.nodeType == xml.dom.Node.ELEMENT_NODE and child.tagName == "selectable":
+                contents = self.title_to_form(child)
+                contentCtr+=len(contents)
+                chk = "<input type='checkbox'"
+                onChange=""
+                classes=""
+                if child.getAttribute("exclusive") == "yes":
+                    onChange+="chooseMe(this);"
+                id=child.getAttribute("id")
+                if id!="" and id in self.selMap:
+                    onChange+="updateDependency(this,"
+                    delim="["
+                    for sel in self.selMap[id]:
+                        classes=sel+"_m "
+                        onChange+=delim+"\""+sel+"\""
+                        delim=","
+                    onChange+="]);"
+                chk+= " onchange='update(); "+onChange+"'";
+                chk+= " data-rindex='"+str(rindex)+"'"
+                chk +=" class='val "+classes+"'"
+                chk +=">"+ contents+"</input>\n";
+                sels.append(chk)
+                rindex+=1
+        # If the text is short, put it on one line
+        if contentCtr < 50:
+            for sel in sels:
+                ret+= sel
+        # Else convert them to bullets
+        else:
+            ret+="<ul>\n"
+            for sel in sels:
+                ret+= "<li>"+sel+"</li>\n"
+            ret+="</ul>\n"
+        return ret+"</span>"
+
     def node_to_text(self, node):
         ret=""
         if node.nodeType == xml.dom.Node.TEXT_NODE:
@@ -26,44 +73,7 @@ class State:
         elif node.nodeType == xml.dom.Node.ELEMENT_NODE:
             # sys.stderr.write("Tagname is"+ node.tagName)
             if node.tagName == "selectables":
-                sels=[]
-                contentCtr=0
-                ret+="<span class='selectables' data-rindex='"+ str(self.selectables_index) +"'>"
-                self.selectables_index+=1
-                rindex=0
-                for child in node.childNodes: # Hopefully only selectable
-                    if child.nodeType == xml.dom.Node.ELEMENT_NODE and child.tagName == "selectable":
-                        contents = self.title_to_form(child)
-                        contentCtr+=len(contents)
-                        chk = "<input type='checkbox'"
-                        onChange=""
-                        classes=""
-                        if child.getAttribute("exclusive") == "yes":
-                            onChange+="chooseMe(this);"
-                        id=child.getAttribute("id")
-                        if id!="" and id in self.selMap:
-                            onChange+="updateDependency(this,"
-                            delim="["
-                            for sel in self.selMap[id]:
-                                classes=sel+"_m "
-                                onChange+=delim+"\""+sel+"\""
-                                delim=","
-                            onChange+="]);"
-                        chk+= " onchange='update(); "+onChange+"'";
-                        chk+= " data-rindex='"+str(rindex)+"'"
-                        chk +=" class='val "+classes+"'"
-                        chk +=">"+ contents+"</input>\n";
-                        sels.append(chk)
-                        rindex+=1
-                if contentCtr < 50:
-                    for sel in sels:
-                        ret+= sel
-                else:
-                    ret+="<ul>\n"
-                    for sel in sels:
-                        ret+= "<li>"+sel+"</li>\n"
-                    ret+="</ul>\n"
-                ret+="</span>"
+                ret += self.handle_selectables(node)
             elif node.tagName == "refinement":
                 ret += "<span class='refinement'>"
                 ret += self.title_to_form(node)
@@ -91,6 +101,10 @@ class State:
 
 
     def makeSelectionMap(self, root):
+        """
+        Makes a dictionary that maps the master requirement ID
+        to an array of slave component IDs
+        """
         for element in root.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 
                                                    'selection-depends'):
             # req=element.getAttribute("req");
@@ -106,12 +120,19 @@ class State:
 
 
     def title_to_form(self, title):
+        """ 
+        Converts subtrees under title to HTML forms.
+        """
         ret=""
         for node in title.childNodes:
             ret+=self.node_to_text(node)
         return ret
 
     def descend(self, root):
+        """ 
+        Converts PP trees to an HTML form. Handles sections, *-components, and 
+        title. 
+        """
         ret=""
         for node in root.childNodes:
             if node.nodeType == xml.dom.Node.ELEMENT_NODE:
@@ -144,355 +165,356 @@ class State:
                 ret+=self.descend(node)
         return ret
 
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: <pp-to-worksheet.py> <protection-profile>[:<output-file>]")
+        sys.exit(0)
 
+    # Split on colon
+    out=sys.argv[1].split(':')
+    infile=out[0]
+    outfile=""
+    if len(out) < 2:
+        outfile=infile.split('.')[0]+"-worksheet.html"
+    else:
+        outfile=out[1]
 
-if len(sys.argv) < 2:
-    print("Usage: <check-it.py> <protection-profile>[:<output-file>]")
-    sys.exit(0)
+    # Parse the PP
+    root = minidom.parse(infile).documentElement
 
-# Split on colon
-out=sys.argv[1].split(':')
-infile=out[0]
-outfile=""
-if len(out) < 2:
-    outfile=infile.split('.')[0]+"-worksheet.html"
-else:
-    outfile=out[1]
+    state=State()
 
-# Parse the PP
-root = minidom.parse(infile).documentElement
+    state.makeSelectionMap(root);
 
-state=State()
-
-state.makeSelectionMap(root);
-
-form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n   <head>"
-form += "<meta charset='utf-8'></meta><title>"+root.getAttribute("name")+"</title>"
-form += """
-       <style type="text/css">
-.disabled {
-   opacity: .2;
-   pointer-events: none;
-}
-/*
-.disabled *{
-   display: none;
-}
-*/
-
-
-.sidenav {
-    height: 100%;            /* 100% Full-height */
-    position: fixed;         /* Stay in place */
-    z-index: 1;              /* Stay on top */
-    top: 0;                  /* Stay at the top */
-    left: 0;
-    width: 40px; 
-    overflow-x: hidden;      /* Disable horizontal scroll */
-    transition: 0.5s;        /* 0.5 second transition effect to slide in the sidenav */
-    background-color: #FFF;  /* Black*/
-    border-right: thin dotted #AAA;
- }
-
-.sidenav:hover{
-    width: 160px;
-}
-
-.sidenav a{
-    display: none;
-    text-decoration: none;
-}
-
-
-.sidenav:hover a{
-    display: inline;
-}
-#main{
-   margin-left:50px;
-}
-
-
-       </style>
-       <script type='text/javascript'>
-
-const AMPERSAND=String.fromCharCode(38);
-const LT=String.fromCharCode(60);
-
-var cookieJar=[];
-
-function performActionOnVals(fun){
-    // Run through all the elements with possible
-    // values
-    var aa;
-    var elems = document.getElementsByClassName("val");
-    for(aa=0; elems.length> aa; aa++){
-       fun(elems[aa], "v_"+aa);
+    form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n   <head>"
+    form += "<meta charset='utf-8'></meta><title>"+root.getAttribute("name")+"</title>"
+    form += """
+           <style type="text/css">
+    .disabled {
+       opacity: .2;
+       pointer-events: none;
     }
-}
-
-function isCheckbox(elem){
-    return elem.getAttribute("type") == "checkbox";
-}
-
-function saveToCookieJar(elem, id){
-    if( isCheckbox(elem)){
-        cookieJar[id]=elem.checked;
+    /*
+    .disabled *{
+       display: none;
     }
-    else{
-        if(elem.value != undefined && elem.value != "undefined" ){
-           console.log("Saving " + elem.value + " to " + id + "("+elem.tagName+")");
-           cookieJar[id]=elem.value;
+    */
+
+
+    .sidenav {
+        height: 100%;            /* 100% Full-height */
+        position: fixed;         /* Stay in place */
+        z-index: 1;              /* Stay on top */
+        top: 0;                  /* Stay at the top */
+        left: 0;
+        width: 40px; 
+        overflow-x: hidden;      /* Disable horizontal scroll */
+        transition: 0.5s;        /* 0.5 second transition effect to slide in the sidenav */
+        background-color: #FFF;  /* Black*/
+        border-right: thin dotted #AAA;
+     }
+
+    .sidenav:hover{
+        width: 160px;
+    }
+
+    .sidenav a{
+        display: none;
+        text-decoration: none;
+    }
+
+
+    .sidenav:hover a{
+        display: inline;
+    }
+    #main{
+       margin-left:50px;
+    }
+
+
+           </style>
+           <script type='text/javascript'>
+
+    const AMPERSAND=String.fromCharCode(38);
+    const LT=String.fromCharCode(60);
+
+    var cookieJar=[];
+
+    function performActionOnVals(fun){
+        // Run through all the elements with possible
+        // values
+        var aa;
+        var elems = document.getElementsByClassName("val");
+        for(aa=0; elems.length> aa; aa++){
+           fun(elems[aa], "v_"+aa);
         }
     }
-}
 
-function retrieveFromCookieJar(elem, id){
-    if( isCheckbox(elem)){
-        elem.checked= (cookieJar[id] == "true");
+    function isCheckbox(elem){
+        return elem.getAttribute("type") == "checkbox";
     }
-    else{
-        if( id in cookieJar && cookieJar[id] != "undefined"){
-            elem.value= cookieJar[id];
+
+    function saveToCookieJar(elem, id){
+        if( isCheckbox(elem)){
+            cookieJar[id]=elem.checked;
         }
-    }
-}
-
-function init(){
-    if( document.URL.startsWith("file:///") ){
-        alert("Most browsers do not store cookies from local pages (i.e, 'file:///...').\\n"+
-              "When you close this page, all data will most likely be lost." );
-    }
-    cookieJar = readAllCookies();
-    performActionOnVals(retrieveFromCookieJar);
-}
-
-function readAllCookies() {
-        ret=[];
-	var ca = document.cookie.split(';');
-        console.log("Cookies are " + document.cookie);
-        var aa,bb;
-	for(aa=0;aa != ca.length; aa++) {
-            if (3>ca[aa].length){ continue;}
-            var blah=ca[aa].split('=');
-            if (2 != blah.length){
-               console.log("Malformed Cookie.");
-               continue;
+        else{
+            if(elem.value != undefined && elem.value != "undefined" ){
+               console.log("Saving " + elem.value + " to " + id + "("+elem.tagName+")");
+               cookieJar[id]=elem.value;
             }
-            key=blah[0].trim();
-            val=decodeURIComponent(blah[1]);
-//            console.log("Reading " + val+" for |" + key+"|");
-            ret[key]=val;
-	}
-        return ret;
-}
-
-function saveAllCookies(cookies){
-//    var ca = document.cookie.split(';');
-//    var aa,bb;
-//    // Delete all existing cookies
-//    for(aa=0;aa != ca.length; aa++) {
-//       if (3>ca[aa].length){ continue;}
-//       var blah=ca[aa].split('=');
-//       if (2 != blah.length)  continue;
-//       eraseCookie( blah[0] );
-//    }
-//    // Save off everything in the cookie jar
-    var key;
-    for (key in cookies) {
-//       console.log("Saving off " + cookies[key] + " to "+key);
-       createCookie(key, cookies[key] );
+        }
     }
-}
 
-function createCookie(name,value) {
-    var date = new Date();
-    // 10 day timeout
-    date.setTime(date.getTime()+(10*24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
-    console.log("Creating: " + name+"="+encodeURIComponent(value)+expires+"; path=/");
-    document.cookie = name+"="+encodeURIComponent(value)+expires+"; path=/";
+    function retrieveFromCookieJar(elem, id){
+        if( isCheckbox(elem)){
+            elem.checked= (cookieJar[id] == "true");
+        }
+        else{
+            if( id in cookieJar && cookieJar[id] != "undefined"){
+                elem.value= cookieJar[id];
+            }
+        }
+    }
 
-}
+    function init(){
+        if( document.URL.startsWith("file:///") ){
+        }
+        cookieJar = readAllCookies();
+        performActionOnVals(retrieveFromCookieJar);
+    }
 
-function eraseCookie(name) {
-    createCookie(name,"",-1);
-}
+    function readAllCookies() {
+            ret=[];
+            var ca = document.cookie.split(';');
+            console.log("Cookies are " + document.cookie);
+            var aa,bb;
+            for(aa=0;aa != ca.length; aa++) {
+                if (3>ca[aa].length){ continue;}
+                var blah=ca[aa].split('=');
+                if (2 != blah.length){
+                   console.log("Malformed Cookie.");
+                   continue;
+                }
+                key=blah[0].trim();
+                val=decodeURIComponent(blah[1]);
+    //            console.log("Reading " + val+" for |" + key+"|");
+                ret[key]=val;
+            }
+            return ret;
+    }
 
-function generateReport(){
-    var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
-    report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
-    report += generateReportHelper(document.body);
-    report += LT+"/report>"
-    initiateDownload('Report.text', report);
-}
-function getRequirements(nodes){
-  ret="";
-  var bb=0;
-  for(bb=0; bb!=nodes.length; bb++){
-    ret+=getRequirement(nodes[bb]);
-  }
-  return ret;
-}
+    function saveAllCookies(cookies){
+    //    var ca = document.cookie.split(';');
+    //    var aa,bb;
+    //    // Delete all existing cookies
+    //    for(aa=0;aa != ca.length; aa++) {
+    //       if (3>ca[aa].length){ continue;}
+    //       var blah=ca[aa].split('=');
+    //       if (2 != blah.length)  continue;
+    //       eraseCookie( blah[0] );
+    //    }
+    //    // Save off everything in the cookie jar
+        var key;
+        for (key in cookies) {
+    //       console.log("Saving off " + cookies[key] + " to "+key);
+           createCookie(key, cookies[key] );
+        }
+    }
 
-function getRequirement(node){
-    var ret = ""
-    if(node.nodeType==1){
-       if(isCheckbox(node)){
-           if(node.checked){
-              ret+=LT+"selectable index='"+node.getAttribute('data-rindex')+"'>"; 
-              ret+=getRequirements(node.children);
-              ret+=LT+"/selectable>";
+    function createCookie(name,value) {
+        var date = new Date();
+        // 10 day timeout
+        date.setTime(date.getTime()+(10*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+        console.log("Creating: " + name+"="+encodeURIComponent(value)+expires+"; path=/");
+        document.cookie = name+"="+encodeURIComponent(value)+expires+"; path=/";
+
+    }
+
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
+    }
+
+    function generateReport(){
+        var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
+        report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
+        report += generateReportHelper(document.body);
+        report += LT+"/report>"
+        initiateDownload('Report.text', report);
+    }
+    function getRequirements(nodes){
+      ret="";
+      var bb=0;
+      for(bb=0; bb!=nodes.length; bb++){
+        ret+=getRequirement(nodes[bb]);
+      }
+      return ret;
+    }
+
+    function getRequirement(node){
+        var ret = ""
+        if(node.nodeType==1){
+           if(isCheckbox(node)){
+               if(node.checked){
+                  ret+=LT+"selectable index='"+node.getAttribute('data-rindex')+"'>"; 
+                  ret+=getRequirements(node.children);
+                  ret+=LT+"/selectable>";
+               }
            }
-       }
-       else if(node.classList.contains("selectables")){
-           ret+=LT+"selectables>"
-           ret+=getRequirements(node.children);
-           ret+=LT+"/selectables>"
-       }
-       else if(node.classList.contains("assignment")){
-           var val = "";
-           if(node.value){
-             val=node.value;
+           else if(node.classList.contains("selectables")){
+               ret+=LT+"selectables>"
+               ret+=getRequirements(node.children);
+               ret+=LT+"/selectables>"
            }
-           ret+=LT+"assignment>";
-           ret+=val;
-           ret+=LT+"/assignment>\\n";
+           else if(node.classList.contains("assignment")){
+               var val = "";
+               if(node.value){
+                 val=node.value;
+               }
+               ret+=LT+"assignment>";
+               ret+=val;
+               ret+=LT+"/assignment>\\n";
+           }
+           else{
+               ret+=getRequirements(node.children);
+           }
+        }
+        else if(node.nodeType==3){
+           return node.textContent;
+        }
+        return ret;
+    }
+
+    function generateReportHelper(root){
+       var ret=""
+       var reqid = root.getAttribute('data-id');
+       if( reqid ){
+          ret+=LT+"req id='"+reqid+"'>";
+          ret+=getRequirements(root.children);
+          ret+=LT+"/req>\\n";
+          return ret;
        }
        else{
-           ret+=getRequirements(node.children);
+          var children = root.children;
+          var aa;
+          for (aa=0; aa!=children.length; aa++){
+             ret += generateReportHelper(children[aa]);
+          }
+          return ret;
        }
     }
-    else if(node.nodeType==3){
-       return node.textContent;
+
+    function initiateDownload(filename, data) {
+
+        var blob = new Blob([data], {type: 'text/xml'});
+        if(window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveBlob(blob, filename);
+        }
+        else{
+            var elem = window.document.createElement('a');
+            elem.href = window.URL.createObjectURL(blob);
+            elem.download = filename;        
+            document.body.appendChild(elem);
+            elem.click();        
+            document.body.removeChild(elem);
+        }
     }
-    return ret;
-}
 
-function generateReportHelper(root){
-   var ret=""
-   var reqid = root.getAttribute('data-id');
-   if( reqid ){
-      ret+=LT+"req id='"+reqid+"'>";
-      ret+=getRequirements(root.children);
-      ret+=LT+"/req>\\n";
-      return ret;
-   }
-   else{
-      var children = root.children;
-      var aa;
-      for (aa=0; aa!=children.length; aa++){
-         ret += generateReportHelper(children[aa]);
-      }
-      return ret;
-   }
-}
-
-function initiateDownload(filename, data) {
-
-    var blob = new Blob([data], {type: 'text/xml'});
-    if(window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveBlob(blob, filename);
+    function chooseMe(sel){
+       var common = sel.parentNode;
+       while( common.tagName != "SPAN" ){
+          common = common.parentNode;
+       }
+       toggleFirstCheckboxExcept(common, sel);
     }
-    else{
-        var elem = window.document.createElement('a');
-        elem.href = window.URL.createObjectURL(blob);
-        elem.download = filename;        
-        document.body.appendChild(elem);
-        elem.click();        
-        document.body.removeChild(elem);
+
+    var selbasedCtrs={}
+
+    function updateDependency(root, ids){
+       var aa, bb;
+       console.log("Here");
+
+       var delta=root.checked?1:-1;
+       for(aa=0; ids.length>aa; aa++){
+          id=ids[aa];
+
+          var masters = document.getElementsByClassName(id+"_m");
+          enabled=false;
+          console.log("Checking " + masters.length);
+          for(bb=0; masters.length>bb; bb++){
+                if (masters[bb].checked){
+                    enabled=true;
+                }
+          }
+          if(enabled){
+             document.getElementById(id).classList.remove('disabled');
+          }
+          else{
+             document.getElementById(id).classList.add('disabled');
+          }
+       }
     }
-}
 
-function chooseMe(sel){
-   var common = sel.parentNode;
-   while( common.tagName != "SPAN" ){
-      common = common.parentNode;
-   }
-   toggleFirstCheckboxExcept(common, sel);
-}
+    var sched;
+    function update(){
 
-var selbasedCtrs={}
+       if (sched != undefined){
+         clearTimeout(sched);
+       }
+       sched = setTimeout(saveVals, 1000);
+    }
 
-function updateDependency(root, ids){
-   var aa, bb;
-   console.log("Here");
+    function saveVals(){
+       performActionOnVals(saveToCookieJar);
+       saveAllCookies(cookieJar);
+       sched = undefined;
+    }
 
-   var delta=root.checked?1:-1;
-   for(aa=0; ids.length>aa; aa++){
-      id=ids[aa];
-     
-      var masters = document.getElementsByClassName(id+"_m");
-      enabled=false;
-      console.log("Checking " + masters.length);
-      for(bb=0; masters.length>bb; bb++){
-            if (masters[bb].checked){
-                enabled=true;
-            }
-      }
-      if(enabled){
-         document.getElementById(id).classList.remove('disabled');
-      }
-      else{
-         document.getElementById(id).classList.add('disabled');
-      }
-   }
-}
+    function toggleFirstCheckboxExcept(root, exc){
+       if (root == exc) return;
+       if ( isCheckbox(root)){
+          root.disabled=exc.checked;
+          return;
+       }
+       var children = root.children;
+       var aa;
+       for (aa=0; aa!=children.length; aa++){
+          toggleFirstCheckboxExcept(children[aa], exc);
+       }
+    }
 
-var sched;
-function update(){
+           </script>
+       </head>
+       <body onload='init();'><div id="main">
+    """
 
-   if (sched != undefined){
-     clearTimeout(sched);
-   }
-   sched = setTimeout(saveVals, 1000);
-}
+    form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
+    form +=  """         <h2 id='file-url-warning'>\n"
+    Most browsers do not store cookies from local pages (i.e, 'file:///...').
+    When you close this page, all data will most likely be lost.
+             </h2>\n
+    """
 
-function saveVals(){
-   performActionOnVals(saveToCookieJar);
-   saveAllCookies(cookieJar);
-   sched = undefined;
-}
+    form += state.descend(root)
+    form += """
+          <br/>
+          <button type="button" onclick="generateReport()">Generate Report</button>
+        </div> <!-- End of main -->
+       <div class="sidenav">
+       <div style="font-size: xx-large">&#187;</div>
+         <table>
+    """
+    form += state.index
+    form +="""
+         </table>
+       </div>
 
-function toggleFirstCheckboxExcept(root, exc){
-   if (root == exc) return;
-   if ( isCheckbox(root)){
-      root.disabled=exc.checked;
-      return;
-   }
-   var children = root.children;
-   var aa;
-   for (aa=0; aa!=children.length; aa++){
-      toggleFirstCheckboxExcept(children[aa], exc);
-   }
-}
+       </body>
+    </html>
+    """
+    #      <button type="button" onclick="saveVals()">SaveOff</button>
 
-       </script>
-   </head>
-   <body onload='init();'><div id="main">
-"""
-
-form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
-form +=  "         <h2 id='file-url-warning'></h2>
-
-form += state.descend(root)
-form += """
-      <br/>
-      <button type="button" onclick="generateReport()">Generate Report</button>
-    </div> <!-- End of main -->
-   <div class="sidenav">
-   <div style="font-size: xx-large">&#187;</div>
-     <table>
-"""
-form += state.index
-form +="""
-     </table>
-   </div>
-
-   </body>
-</html>
-"""
-#      <button type="button" onclick="saveVals()">SaveOff</button>
-
-with open(outfile, "w") as out:
-    out.write(form)
+    with open(outfile, "w") as out:
+        out.write(form)
 
