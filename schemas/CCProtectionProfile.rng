@@ -949,13 +949,12 @@
 		  <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
 		</data>
 	      </attribute>
-	      <optional>
-		<attribute name="ids">
-		  <a:documentation>
-		    Format should be $REQUIREMENT_ID:$SELECTABLE_ID
-		  </a:documentation>
-		</attribute>
-	      </optional>
+	      <attribute name="ids">
+		<a:documentation>
+		  A comma delimited list of IDs corresponding to specific 'selectable's which if chosen
+		  activate this component.
+		</a:documentation>
+	      </attribute>
 	    </element>
 	  </oneOrMore>
 	</group>
