@@ -284,9 +284,7 @@ function sortTable(tableid, n) {
   </xsl:template>
 
   <xsl:template match="cc:manager">
-    <td>
-      <xsl:apply-templates/>
-    </td>
+    <td> <xsl:apply-templates/> </td>
   </xsl:template>
 
   <xsl:template match="cc:management-function">

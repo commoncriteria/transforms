@@ -68,6 +68,7 @@ class State:
                 ret += "<span class='refinement'>"
                 ret += self.title_to_form(node)
                 ret += "</span>"
+
             elif node.tagName == "assignable":
                 ret += "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
                 ret += ' '.join(self.title_to_form(node).split())
@@ -75,8 +76,26 @@ class State:
 
             elif node.tagName == "abbr" or node.tagName == "linkref":
                 ret += node.getAttribute("linkend")
+
+            elif node.tagName == "management-function-set":
+                ret += "<table>\n"
+                ret += "<tr class='header'><td>Management Function</td><td>Administrator</td><td>User</td></tr>"
+                ret += self.title_to_form(node)
+                ret += "</table>"
+                
+            elif node.tagName == "management-function":
+                ret += "<tr><td>"+self.title_to_form(node) + "</td><td>"
+                for aa in ["admin", "user"]:
+                    ret += "<td>"
+                    if node.getAttribute(aa)=="X":
+                        ret += 'X'
+                    else:
+                        ret += '<select><option value="O">O</option><option value="X">X</option></select>'
+                    ret += "</td>"
+                ret += "</tr>"
             elif node.tagName == "h:strike":
                 pass
+
             elif ":" in node.tagName:
                 tag = re.sub(r'.*:', '', node.tagName)
                 ret += "<"+tag
