@@ -77,7 +77,7 @@ class State:
                 return self.handle_selectables(node)
             elif node.tagName == "refinement":
                 ret = "<span class='refinement'>"
-                ret += self.handle_node(node, True)
+                ret += self.handle_parent(node, True)
                 ret += "</span>"
                 return ret
             elif node.tagName == "assignable":
