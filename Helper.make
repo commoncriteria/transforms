@@ -82,6 +82,9 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
+#- Path to worksheet
+WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
@@ -145,6 +148,11 @@ $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
 simplified: $(SIMPLIFIED)
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 	$(XSL_EXE) --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
+
+#- Builds the PP worksheet
+worksheet: $(WORKSHEET_HTML)
+$(WORKSHEET_HTML): $(PP_XML)
+	python3 $(TRANS)/python/pp-to-worksheet.py $(PP_XML):$(WORKSHEET_HTML)
 
 rnc: $(TRANS)/schemas/schema.rnc
 $(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng

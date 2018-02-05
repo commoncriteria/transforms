@@ -300,7 +300,6 @@ function sortTable(tableid, n) {
           <xsl:otherwise>O</xsl:otherwise>
         </xsl:choose>
       </td>
-
       <td>
         <xsl:choose>
           <xsl:when test="@user">
@@ -309,7 +308,6 @@ function sortTable(tableid, n) {
           <xsl:otherwise>O</xsl:otherwise>
         </xsl:choose>
       </td>
-
     </tr>
   </xsl:template>
 
