@@ -154,10 +154,6 @@ worksheet: $(WORKSHEET_HTML)
 $(WORKSHEET_HTML): $(PP_XML)
 	python3 $(TRANS)/python/pp-to-worksheet.py $(PP_XML):$(WORKSHEET_HTML)
 
-rnc: $(TRANS)/schemas/schema.rnc
-$(TRANS)/schemas/schema.rnc: $(TRANS)/schemas/schema.rng
-	trang -I rng -O rnc  $(TRANS)/schemas/schema.rng $(TRANS)/schemas/schema.rnc
-
 #- Builds quick help
 help:
 	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
