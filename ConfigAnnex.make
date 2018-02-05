@@ -1,14 +1,14 @@
-#- This file is intentially not called [Mm]akefile, because it is not meant to be called
-#- directly. Rather the project directory should have a "Makefile" that
-#- defines all the environment variables then includes this one.
-#- For example:
-#-   ```
-#-   TRANS?=transforms
-#-   include $(TRANS)/ConfigAnnex.make
-#-   ```
+# This file is intentially not called [Mm]akefile, because it is not meant to be called
+# directly. Rather the project directory should have a "Makefile" that
+# defines all the environment variables then includes this one.
+# For example:
+#   ```
+#   TRANS?=transforms
+#   include $(TRANS)/ConfigAnnex.make
+#   ```
 
 #---
-#- Build targets
+#- Config Annex Build targets
 #---
 
 #- Path to input files

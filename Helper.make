@@ -165,7 +165,7 @@ more-help:
 
 #- Build to clean the system
 clean:
-	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML) $(CONFIGANNEX_HTML); do \
+	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML) $(WORKSHEET_HTML) $(CONFIGANNEX_HTML); do \
 		if [ -f $$f ]; then \
 			rm "$$f"; \
 		fi; \
