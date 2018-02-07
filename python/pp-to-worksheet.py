@@ -10,6 +10,9 @@ import xml.dom.minidom
 from xml.dom import minidom
 from xml.sax.saxutils import escape
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 class State:
     """Keeps track of certain values for a PP """
     def __init__(self):
@@ -52,7 +55,7 @@ class State:
                 chk+= " onchange='update(); "+onChange+"'";
                 chk+= " data-rindex='"+str(rindex)+"'"
                 chk +=" class='val "+classes+"'"
-                chk +=">"+ contents+"</input>\n";
+                chk +="><span>"+ contents+"</span></input>\n";
                 sels.append(chk)
                 rindex+=1
         # If the text is short, put it on one line
@@ -112,8 +115,9 @@ class State:
                     ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
                 ret += self.handle_parent(node, False)
                 return ret
-            elif node.tagName == "f-element":
-                return self.handle_parent( node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 'title')[0], True)
+
+            elif node.tagName == "f-element" or node.tagName == "a-element":
+                return self.handle_node( node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 'title')[0], True)
             elif node.tagName == "f-component" or node.tagName == "a-component":
                 id=node.getAttribute("id")
                 self.index+="<tr><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
@@ -131,13 +135,13 @@ class State:
             elif node.tagName == "title":
                 self.selectables_index=0
                 ret=""
-                ret+="<div id='"+node.parentNode.getAttribute('id') +"' data-id='" + node.parentNode.getAttribute('id') + "'>"
+                ret+="<div id='"+node.parentNode.getAttribute('id') +"' class='requirement'>"
                 ret+=self.handle_parent(node, True)
-                # ret+="<br></br>"
-                # ret+="<textarea rows='5' cols='70' class='notes'></textarea>"
                 ret+="</div>\n"
                 return ret
+                
             elif node.tagName == "h:strike":
+                # Just ignore text that is striken
                 pass
 
             elif ":" in node.tagName:
@@ -359,11 +363,19 @@ if __name__ == "__main__":
 
     function generateReport(){
         var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
+        var aa;
+       
         report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
-        report += generateReportHelper(document.body);
+        var kids = document.getElementsByClassName('requirement');
+        for(aa=0; kids.length>aa; aa++){
+            report += "\\n"+LT+"req id='"+kids[aa].id+"'>";
+            report +=getRequirement(kids[aa]);
+            report += LT+"/req>\\n";
+        }
         report += LT+"/report>"
         initiateDownload('Report.text', report);
     }
+
     function getRequirements(nodes){
       ret="";
       var bb=0;
@@ -405,25 +417,6 @@ if __name__ == "__main__":
            return node.textContent;
         }
         return ret;
-    }
-
-    function generateReportHelper(root){
-       var ret=""
-       var reqid = root.getAttribute('data-id');
-       if( reqid ){
-          ret+=LT+"req id='"+reqid+"'>";
-          ret+=getRequirements(root.children);
-          ret+=LT+"/req>\\n";
-          return ret;
-       }
-       else{
-          var children = root.children;
-          var aa;
-          for (aa=0; aa!=children.length; aa++){
-             ret += generateReportHelper(children[aa]);
-          }
-          return ret;
-       }
     }
 
     function initiateDownload(filename, data) {
@@ -495,7 +488,17 @@ if __name__ == "__main__":
     function toggleFirstCheckboxExcept(root, exc){
        if (root == exc) return;
        if ( isCheckbox(root)){
-          root.disabled=exc.checked;
+          if( exc.checked ){
+             root.disabled=true;
+             root.classList.add('disabled');
+             root.nextSibling.classList.add('disabled');
+             root.checked=false;
+          }
+          else{
+             root.disabled=false;
+             root.classList.remove('disabled');
+             root.nextSibling.classList.remove('disabled');
+          }
           return;
        }
        var children = root.children;
