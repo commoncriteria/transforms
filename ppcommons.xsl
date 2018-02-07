@@ -72,7 +72,20 @@ function sortTable(tableid, n) {
     .refinement{
       text-decoration: underline;
     }
-    
+    .toggler::before{
+       <!-- Seems like a hack -->
+       content: "\00a0\00a0\00a0\00a0";
+    }
+    .toggler{ 
+       size: 15px 15px;
+       background-size: 15px 15px;
+       background-repeat: no-repeat;
+       display: inline-block;
+    }
+    .activity_pane .toggler{
+       background-image: url('images/expanded.png');
+    }
+
     a {
       text-decoration: none;
       word-wrap: break-word;
@@ -106,7 +119,6 @@ function sortTable(tableid, n) {
     .note p:first-child{
       display: inline;
     }
-    
     <xsl:value-of select="//cc:extra-css"/>
     
   </xsl:template>

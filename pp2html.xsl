@@ -154,15 +154,13 @@ function fixCounters(type){
 }
 
 // Function to expand and contract a given div
-function toggle(divID, imgID) {
-    var item = document.getElementById(divID);
-    var img = document.getElementById(imgID);
-    if (item) {
-        item.className = (item.className=='aacthidden') ? 'aact':'aacthidden';
+function toggle(descendent) {
+    var cl = descendent.parentNode.parentNode.classList;
+    if (cl.contains('hide')){
+      cl.remove('hide');
     }
-    if (img) {
-        var currimage = img.src.substring(img.src.lastIndexOf('/')+1);
-        img.src=(currimage=='collapsed.png')?'images/expanded.png':'images/collapsed.png';
+    else{
+      cl.add('hide');
     }
 }
 
@@ -170,10 +168,7 @@ function toggle(divID, imgID) {
 function showTarget(id){
     var element = document.getElementById(id);
     while (element != document.body.rootNode ){
-	if ( "aacthidden" == element.getAttribute("class") ){
-	    toggle( element.id, "link-"+element.id );
-	    return;
-	}
+	element.classList.remove("hide");
 	element = element.parentElement;
     }
 }
@@ -212,14 +207,9 @@ function getQueryVariable(variable)
 
 //    Expands all assurance activities
 function expand(){
-    var divID = "";
-    var imgID = "link-";
-    var hidden_elements = document.getElementsByClassName('aacthidden');
-    for (var i = hidden_elements.length - 1; i >= 0; --i) {
-        divID = hidden_elements[i].id;
-        imgID += divID;
-        toggle(divID,imgID);
-        imgID = "link-";
+    var ap = document.getElementsByClassName('activity_pane');
+    for (var ii = ap.length - 1; ii >= 0; --ii) {
+        ap[ii].classList.remove('hide');
     }
 }
         </script>
@@ -330,15 +320,6 @@ function expand(){
               margin-left:0%;
               margin-top:1em;
           }
-          div.aact{
-              margin-left:0%;
-              margin-top:1em;
-              margin-bottom:1em;
-              padding:1em;
-              border:2px solid #888888;
-              border-radius:3px;
-              display:block;
-          }
           .comment-aa{
               background-color:beige;
               color:green;
@@ -348,6 +329,13 @@ function expand(){
               margin-top:1em;
           }
           div.aacthidden{
+              margin-left:0%;
+              margin-top:1em;
+              margin-bottom:1em;
+              padding:1em;
+              border:2px solid #888888;
+              border-radius:3px;
+              display:block;
               margin-left:0%;
               margin-top:1em;
               margin-bottom:1em;
@@ -480,9 +468,13 @@ function expand(){
               *.reqdesc{
                   margin-left:20%;
               }
-              div.aacthidden{
-                  display:none;
+
+	      .activity_pane.hide .toggler{
+	          background-image: url('images/collapsed.png');
               }
+              .activity_pane.hide .aacthidden{
+                  display:none;
+               }
               div.statustag{
                   box-shadow:4px 4px 3px #888888;
               }
@@ -1051,18 +1043,19 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:aactivity">
-    <xsl:variable name="aactID" select="concat('aactID-', generate-id())"/>
+<!--    <xsl:variable name="aactID" select="concat('aactID-', generate-id())"/> -->
+    <div class="activity_pane hide">
     <div class="expandstyle">
-      <a href="javascript:toggle('{$aactID}', 'link-{$aactID}');">
+      <a onclick="toggle(this);return false;" href="#">
         <span class="expandstyle"> Assurance Activity </span>
-        <img style="vertical-align:middle" id="link-{$aactID}" src="images/collapsed.png"
-          height="15" width="15"/>
+	<span class="toggler"/>
       </a>
     </div>
-    <div class="aacthidden" id="{$aactID}">
+    <div class="aacthidden"> <!-- id="{$aactID}"> -->
       <i>
         <xsl:apply-templates/>
       </i>
+    </div>
     </div>
   </xsl:template>
 
@@ -1104,6 +1097,7 @@ function expand(){
     </xsl:if>
   </xsl:template>
 
+  <!-- Only called when building appendices -->
   <xsl:template name="requirement-stealer">
     <xsl:param name="selected-status"/>
     <!-- Select all f-components which have an f-element with a selected-status-->
