@@ -294,7 +294,8 @@ function sortTable(tableid, n) {
       <xsl:apply-templates select="./cc:management-function"/>
     </table>
   </xsl:template>
-
+  
+  
   <xsl:template match="cc:manager">
     <td> <xsl:apply-templates/> </td>
   </xsl:template>
@@ -302,24 +303,15 @@ function sortTable(tableid, n) {
   <xsl:template match="cc:management-function">
     <tr>
       <td>
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="cc:text"/>
       </td>
-      <td>
-        <xsl:choose>
-          <xsl:when test="@admin">
-            <xsl:value-of select="@admin"/>
-          </xsl:when>
-          <xsl:otherwise>O</xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <xsl:choose>
-          <xsl:when test="@user">
-            <xsl:value-of select="@user"/>
-          </xsl:when>
-          <xsl:otherwise>O</xsl:otherwise>
-        </xsl:choose>
-      </td>
+	<xsl:variable name="manfunc" select="."/>
+	<xsl:for-each select="../cc:manager">
+	  <xsl:variable name="id" select="@id"/>
+	  <td>
+	    <xsl:if test="$manfunc/*[@ref=$id]"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:if>
+	  </td>
+	</xsl:for-each>
     </tr>
   </xsl:template>
 

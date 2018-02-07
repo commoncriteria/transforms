@@ -453,38 +453,32 @@
 	  <a:documentation>
 	    Table defining functions that are to be done and what role is required to do them.
 	  </a:documentation>
-          <element name="manager">
-	    <a:documentation>
-	      Readable role name for the administrator.
-	    </a:documentation>
-            <data type="NCName"/>
-          </element>
-          <element name="manager">
-	    <a:documentation>
-	      Readable role name for the user.
-	    </a:documentation>
-            <data type="NCName"/>
-          </element>
+	  <oneOrMore>
+            <element name="manager">
+	      <a:documentation>
+		Readable role name
+	      </a:documentation>
+	      <ref name="id-attr"/>
+	      <text/>
+            </element>
+	  </oneOrMore>
           <oneOrMore>
             <element name="management-function">
-	      <a:documentation>Describes the management function.</a:documentation>
-              <optional>
-		<attribute name="admin">
-		  <a:documentation>
-		    Indicates whether management by the administrator is mandatory or optional
-		  </a:documentation>
-		  <choice><value>X</value><value>O</value></choice>
-		</attribute>
-              </optional>
-              <optional>
-                <attribute name="user">
-		  <a:documentation>
-		    Indicates whether management by the user is mandatory or optional
-		  </a:documentation>
-		  <choice><value>X</value><value>O</value></choice>
-		</attribute>
-	      </optional>
-	      <ref name="basic-content"/>
+	      <element name="text">
+		<a:documentation>Describes the management function.</a:documentation>
+		<ref name="basic-content"/>
+	      </element>
+	      <zeroOrMore>
+		<choice>
+		  <element name="M">
+		    <a:documentation>References for which managers this function is mandatory</a:documentation>
+		    <attribute name="ref">
+		      <a:documentation>Should be the id of a mandatory manager</a:documentation>
+		    </attribute>
+		    <empty/>
+		  </element>
+		</choice>
+	      </zeroOrMore>
             </element>
           </oneOrMore>
         </element>

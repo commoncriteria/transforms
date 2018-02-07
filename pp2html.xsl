@@ -339,6 +339,7 @@ function expand(){
               margin-left:0%;
               margin-top:1em;
               margin-bottom:1em;
+              box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
           }
           div.optional-appendicies{
               display:none;
@@ -477,9 +478,6 @@ function expand(){
                }
               div.statustag{
                   box-shadow:4px 4px 3px #888888;
-              }
-              div.aact{
-                box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
               }
           }
 
@@ -1043,7 +1041,6 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:aactivity">
-<!--    <xsl:variable name="aactID" select="concat('aactID-', generate-id())"/> -->
     <div class="activity_pane hide">
     <div class="expandstyle">
       <a onclick="toggle(this);return false;" href="#">
@@ -1051,7 +1048,7 @@ function expand(){
 	<span class="toggler"/>
       </a>
     </div>
-    <div class="aacthidden"> <!-- id="{$aactID}"> -->
+    <div class="aacthidden">
       <i>
         <xsl:apply-templates/>
       </i>
