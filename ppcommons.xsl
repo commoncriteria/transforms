@@ -6,6 +6,14 @@
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
   <xsl:template name="common_js">
+function fixToolTips(){
+  var tooltipelements = document.getElementsByClassName("tooltiptext");
+  var aa;
+  for(aa=tooltipelements.length-1; aa>=0; aa--){
+      tooltipelements[aa].parentNode.classList.add("tooltipped");
+  }
+}
+
 // This was borrowed from a W3C example
 function sortTable(tableid, n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -62,6 +70,10 @@ function sortTable(tableid, n) {
     }
   }
 }
+
+
+  <xsl:value-of select="//cc:extra-js"/>
+
   </xsl:template>
 
   <!-- Common CSS rules for all files-->
@@ -122,14 +134,14 @@ function sortTable(tableid, n) {
 
 
     /* Tooltip container */
-    .tooltip {
+    .tooltipped {
        position: relative;
        display: inline-block;
        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
     }
 
     /* Tooltip text */
-    .tooltip .tooltiptext {
+    .tooltiptext {
        visibility: hidden;
        width: 120px;
        background-color: black;
@@ -144,7 +156,7 @@ function sortTable(tableid, n) {
    }
 
    /* Show the tooltip text when you mouse over the tooltip container */
-   .tooltip:hover .tooltiptext {
+   .tooltipped:hover .tooltiptext {
        visibility: visible;
    }
 
@@ -340,12 +352,25 @@ function sortTable(tableid, n) {
 	  <xsl:variable name="id" select="@id"/>
 	  <td>
 	    <xsl:choose>
+	      <!-- If we have something for that role -->
 	      <xsl:when test="$manfunc/*[@ref=$id]">
-		<xsl:variable name="code" select="name($manfunc/*[@ref=$id])"/>
-		<xsl:message>Code is <xsl:value-of select="$code"/></xsl:message>
-		<xsl:apply-templates select="../cc:value[@code=$code]"/>
+		<xsl:choose>
+		  <!-- And it is explicit, put it in there -->
+		  <xsl:when test="$manfunc/*[@ref=$id]/node()">
+		    <xsl:apply-templates select="$manfunc/*[@ref=$id]/."/>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <xsl:call-template name="make-management-value">
+		      <xsl:with-param name="type"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>
+		    </xsl:call-template>
+		  </xsl:otherwise>
+		</xsl:choose>
 	      </xsl:when>
-	      <xsl:otherwise><xsl:value-of select='../@default'/></xsl:otherwise>
+	      <xsl:otherwise>
+		<xsl:call-template name="make-management-value">
+		  <xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
+		</xsl:call-template>
+	      </xsl:otherwise>
 	    </xsl:choose>
 	  </td>
 	</xsl:for-each>
@@ -353,7 +378,21 @@ function sortTable(tableid, n) {
   </xsl:template>
 
 
+  <xsl:template name="make-management-value">
+    <xsl:param name="type"/>
+    <xsl:choose>
+      <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional</span></div></xsl:when>
+      <xsl:when test="$type='M'"><div>M<span class="tooltiptext">Mandatory</span></div></xsl:when>
+      <xsl:when test="$type='_'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
+      <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
+
+  <xsl:template name="make-tool-tip">
+    <xsl:param name="tip"/>
+    <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
+  </xsl:template>
 
   <!-- By default, quietly unwrap all cc elements -->
   <xsl:template match="cc:*">

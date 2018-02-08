@@ -453,6 +453,9 @@
 	  <a:documentation>
 	    Table defining functions that are to be done and what role is required to do them.
 	  </a:documentation>
+	  <attribute name="default">
+	    <ref name="mf-values"/>
+	  </attribute>
 	  <oneOrMore>
             <element name="manager">
 	      <a:documentation>
@@ -1054,6 +1057,12 @@
 	<ref name="entry-el"/>
       </oneOrMore>
     </element>
+  </define>
+
+  <define name="mf-values">
+    <choice><element name="M"><ref name="html-element"/></element></choice>
+    <choice><element name="O"><ref name="html-element"/></element></choice>
+    <choice><element name="_"><ref name="html-element"/></element></choice>
   </define>
 
 </grammar>

@@ -186,7 +186,7 @@ function init(){
     fixCounters("figure");
     buildIndex();
     fixIndexRefs();
-
+    fixToolTips();
     if(getQueryVariable("expand") == "on"){
 	expand();
     }
