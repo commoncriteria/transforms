@@ -119,6 +119,36 @@ function sortTable(tableid, n) {
     .note p:first-child{
       display: inline;
     }
+
+
+    /* Tooltip container */
+    .tooltip {
+       position: relative;
+       display: inline-block;
+       border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    }
+
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+       visibility: hidden;
+       width: 120px;
+       background-color: black;
+       color: #fff;
+       text-align: center;
+       padding: 5px 0;
+       border-radius: 6px;
+    
+       /* Position the tooltip text - see examples below! */
+       position: absolute;
+       z-index: 1;
+   }
+
+   /* Show the tooltip text when you mouse over the tooltip container */
+   .tooltip:hover .tooltiptext {
+       visibility: visible;
+   }
+
+
     <xsl:value-of select="//cc:extra-css"/>
     
   </xsl:template>
@@ -309,7 +339,14 @@ function sortTable(tableid, n) {
 	<xsl:for-each select="../cc:manager">
 	  <xsl:variable name="id" select="@id"/>
 	  <td>
-	    <xsl:if test="$manfunc/*[@ref=$id]"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:if>
+	    <xsl:choose>
+	      <xsl:when test="$manfunc/*[@ref=$id]">
+		<xsl:variable name="code" select="name($manfunc/*[@ref=$id])"/>
+		<xsl:message>Code is <xsl:value-of select="$code"/></xsl:message>
+		<xsl:apply-templates select="../cc:value[@code=$code]"/>
+	      </xsl:when>
+	      <xsl:otherwise><xsl:value-of select='../@default'/></xsl:otherwise>
+	    </xsl:choose>
 	  </td>
 	</xsl:for-each>
     </tr>
