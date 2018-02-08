@@ -160,6 +160,12 @@ function sortTable(tableid, n) {
        visibility: visible;
    }
 
+   table.mfs td{
+       text-align: center;
+   }
+   table.mfs td:first-child{
+       text-align: left;
+   }
 
     <xsl:value-of select="//cc:extra-css"/>
     
@@ -328,7 +334,7 @@ function sortTable(tableid, n) {
 
 
   <xsl:template match="cc:management-function-set">
-    <table style="width: 100%;">
+    <table class="mfs" style="width: 100%;">
       <tr class="header">
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>

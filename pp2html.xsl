@@ -177,7 +177,12 @@ function fixIndexRefs(){
     var aa=0;
     for(aa=0; brokeRefs.length>aa; aa++){
        var linkend=(""+brokeRefs[aa].getAttribute("href")).substring(1);
-       brokeRefs[aa].innerHTML+=document.getElementById(linkend).firstElementChild.textContent;
+       var target = document.getElementById(linkend);
+       if (target == null ){
+          console.log("Could not find element w/ id: " + linkend);
+          continue;
+       }
+       brokeRefs[aa].innerHTML+=target.firstElementChild.textContent;
     }
 }
 
