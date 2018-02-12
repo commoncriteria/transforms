@@ -10,8 +10,13 @@ import xml.dom.minidom
 from xml.dom import minidom
 from xml.sax.saxutils import escape
 
-def eprint(*args, **kwargs):
+PPNS='https://niap-ccevs.org/cc/v1'
+
+def warn(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
+def getPpEls(parent, name):
+    return parent.getElementsByTagNameNS(PPNS, name)
 
 class State:
     """Keeps track of certain values for a PP """
@@ -26,6 +31,51 @@ class State:
         self.selectables_index=0
         # index
         self.index=""
+        # Map from management function table values to HTML
+        self.man_fun_map={}
+        self.man_fun_map['M']="X"
+        self.man_fun_map['-']="-"
+        self.man_fun_map['O']="<select><option value='-'>-</option><option value='X'>X</option></select>"
+
+
+    def handle_management_function_set(self, elem):
+        ret = "<table>\n"
+        defaultVal = elem.getAttribute("default")
+        if defaultVal == "":
+            defaultVal="O"
+
+            
+        ret+= "<tr><th>Management Function</th>"
+        for col in getPpEls(elem, 'manager'):
+            ret += "<th>"
+            ret += self.handle_node(col, True);
+            ret += "</th>"
+        ret+= "</tr>\n"
+
+
+        for row in  getPpEls(elem, 'management-function'):
+            val={}
+            for man in getPpEls(row, 'M'):
+                val[man.getAttribute('ref')]='M'
+            for opt in getPpEls(row, 'O'):
+                val[man.getAttribute('ref')]='O'
+            for das in getPpEls(row, '_'):
+                val[man.getAttribute('ref')]='-'
+                
+            ret += "<tr>\n"
+            ret += "<td>"+self.handle_parent( getPpEls(row, 'text')[0], True) + "</td>"
+            for col in getPpEls(elem, 'manager'):
+                ret += "<td>"
+                colId = col.getAttribute("id");
+                if colId in val:
+                    ret += self.man_fun_map[ val[colId] ]
+                else:
+                    ret += self.man_fun_map[ defaultVal ]
+                ret += "</td>"
+            ret += "</tr>\n"
+        ret += "</table>\n"
+        return ret
+
 
     def handle_selectables(self, node):
         """Handles selectables elements"""
@@ -92,21 +142,7 @@ class State:
                 if show_text:
                     return node.getAttribute("linkend")
             elif node.tagName == "management-function-set":
-                ret = "<table>\n"
-                ret += "<tr class='header'><td>Management Function</td><td>Administrator</td><td>User</td></tr>"
-                ret += self.handle_parent(node, True)
-                ret += "</table>"
-                return ret
-            elif node.tagName == "management-function":
-                ret = "<tr><td>"+self.handle_parent(node, True) + "</td>"
-                for aa in ["admin", "user"]:
-                    ret += "<td>"
-                    if node.getAttribute(aa)=="X":
-                        ret += 'X'
-                    else:
-                        ret += '<select><option value="O">O</option><option value="X">X</option></select>'
-                    ret += "</td>"
-                ret += "</tr>"
+                ret=self.handle_management_function_set(node)
                 return ret
             elif node.tagName == "section":
                 idAttr=node.getAttribute("id")
@@ -115,15 +151,14 @@ class State:
                     ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
                 ret += self.handle_parent(node, False)
                 return ret
-
             elif node.tagName == "f-element" or node.tagName == "a-element":
-                return self.handle_node( node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 'title')[0], True)
+                return self.handle_node( getPpEls(node, 'title')[0], True)
             elif node.tagName == "f-component" or node.tagName == "a-component":
                 id=node.getAttribute("id")
                 self.index+="<tr><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
                 ret = "<div id='"+id+"'"
                 # The only direct descendants are possible should be the children
-                child=node.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 
+                child=getPpEls(node, 
                                             'selection-depends')
                 if child.length > 0:
                     ret+=" class='disabled'"
@@ -172,8 +207,7 @@ class State:
         Makes a dictionary that maps the master requirement ID
         to an array of slave component IDs
         """
-        for element in root.getElementsByTagNameNS('https://niap-ccevs.org/cc/v1', 
-                                                   'selection-depends'):
+        for element in getPpEls(root, 'selection-depends'):
             # req=element.getAttribute("req");
             selIds=element.getAttribute("ids");
             slaveId=element.parentNode.getAttribute("id");
@@ -267,9 +301,7 @@ if __name__ == "__main__":
         // Run through all the elements with possible
         // values
         var aa;
-        var elems = document.getElementsByClassName("val");
-        for(aa=0; elems.length> aa; aa++){
-           fun(elems[aa], "v_"+aa);
+        var elems = getPpEls(document, "v_"+aa);
         }
     }
 
@@ -366,14 +398,7 @@ if __name__ == "__main__":
         var aa;
        
         report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
-        var kids = document.getElementsByClassName('requirement');
-        for(aa=0; kids.length>aa; aa++){
-            report += "\\n"+LT+"req id='"+kids[aa].id+"'>";
-            report +=getRequirement(kids[aa]);
-            report += LT+"/req>\\n";
-        }
-        report += LT+"/report>"
-        initiateDownload('Report.text', report);
+        var kids = getPpEls(document, report);
     }
 
     function getRequirements(nodes){
@@ -453,30 +478,7 @@ if __name__ == "__main__":
        for(aa=0; ids.length>aa; aa++){
           id=ids[aa];
 
-          var masters = document.getElementsByClassName(id+"_m");
-          enabled=false;
-          console.log("Checking " + masters.length);
-          for(bb=0; masters.length>bb; bb++){
-                if (masters[bb].checked){
-                    enabled=true;
-                }
-          }
-          if(enabled){
-             document.getElementById(id).classList.remove('disabled');
-          }
-          else{
-             document.getElementById(id).classList.add('disabled');
-          }
-       }
-    }
-
-    var sched;
-    function update(){
-
-       if (sched != undefined){
-         clearTimeout(sched);
-       }
-       sched = setTimeout(saveVals, 1000);
+          var masters = getPpEls(document, 1000);
     }
 
     function saveVals(){
