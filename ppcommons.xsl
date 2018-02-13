@@ -6,6 +6,7 @@
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
   <xsl:template name="common_js">
+
 function fixToolTips(){
   var tooltipelements = document.getElementsByClassName("tooltiptext");
   var aa;
@@ -14,62 +15,6 @@ function fixToolTips(){
   }
 }
 
-// This was borrowed from a W3C example
-function sortTable(tableid, n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-
-  table = document.getElementById(tableid);
-  switching = true;
-  //Set the sorting direction to ascending:
-  dir = "asc"; 
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.getElementsByTagName("TR");
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; (rows.length - 1) > i; i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /*check if the two rows should switch place,
-      based on the direction, asc or desc:*/
-      if (dir == "asc") {
-        if (x.textContent.toLowerCase() > y.textContent.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (y.textContent.toLowerCase() > x.textContent.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      //Each time a switch is done, increase this count by 1:
-      switchcount ++;      
-    } else {
-      /*If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again.*/
-      if (switchcount == 0) if( dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
 
 
   <xsl:value-of select="//cc:extra-js"/>
@@ -267,11 +212,12 @@ function sortTable(tableid, n) {
   <xsl:template match="cc:note">
     <div class="appnote">
       <span class="note-header"><xsl:choose>
-	<xsl:when test="@role='application'">Application</xsl:when>
-	<xsl:when test="@role='developer'">Developer</xsl:when>
-	<xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note</span> <span class="note">
-      <xsl:apply-templates/>
+        <xsl:when test="@role='application'">Application</xsl:when>
+        <xsl:when test="@role='developer'">Developer</xsl:when>
+        <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
+      </xsl:choose> Note</span> 
+      <span class="note">
+        <xsl:apply-templates/>
       </span>
     </div>
   </xsl:template>
@@ -384,6 +330,7 @@ function sortTable(tableid, n) {
   </xsl:template>
 
 
+<<<<<<< HEAD
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
@@ -400,6 +347,8 @@ function sortTable(tableid, n) {
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
+=======
+>>>>>>> 05c1033d0cb015eb6618ccd949d151767dd7a449
   <!-- By default, quietly unwrap all cc elements -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
