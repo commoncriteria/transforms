@@ -330,7 +330,6 @@ function fixToolTips(){
   </xsl:template>
 
 
-<<<<<<< HEAD
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
@@ -347,8 +346,6 @@ function fixToolTips(){
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
-=======
->>>>>>> 05c1033d0cb015eb6618ccd949d151767dd7a449
   <!-- By default, quietly unwrap all cc elements -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
