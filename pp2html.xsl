@@ -985,13 +985,12 @@ function expand(){
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="cc:aactivity"> <!-- need to change this to cc:evalactivity-->
-<!--    <xsl:variable name="aactID" select="concat('aactID-', generate-id())"/> -->
+  <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
     <div class="expandstyle">
       <a onclick="toggle(this);return false;" href="#">
-        <span class="expandstyle"> Assurance Activity </span>
-	<span class="toggler"/>
+        <span class="expandstyle"> Evaluation Activity </span>
+        <span class="toggler"/>
       </a>
     </div>
     <div class="aacthidden">
