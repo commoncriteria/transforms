@@ -11,9 +11,6 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <!-- release variable, overridden to "final" for release versions -->
-  <xsl:param name="release" select="'draft'"/>
-
   <xsl:param name="appendicize" select="''"/>
 
   <xsl:param name="custom-css-file" select="''"/>
@@ -210,7 +207,7 @@ function getQueryVariable(variable)
 }
 
 
-//    Expands all assurance activities
+//    Expands all evaluation activities
 function expand(){
     var ap = document.getElementsByClassName('activity_pane');
     for (var ii = ap.length - 1; ii >= 0; --ii) {
@@ -319,6 +316,9 @@ function expand(){
           div.comp{
               margin-left:8%;
               margin-top:1em;
+              margin-bottom:1em;
+          }
+          div.element{
               margin-bottom:1em;
           }
           div.appnote{
@@ -513,8 +513,6 @@ function expand(){
 
           }
 
-
-
 	  <!-- Tyring to get this to work -->
 	  <!-- <xsl:if test="not($custom-css-file='')"> -->
 	  <!--   <xsl:value-of select="document('file:///home/kevin/work/protection-profiles/mobile-device/mobile-device/input/Local.xml')/*)"/> -->
@@ -533,10 +531,7 @@ function expand(){
             >This page is best viewed with JavaScript enabled!</h1>
         </noscript>
         <div class="center">
-          <xsl:choose>
-            <xsl:when test="$release='final'"><img src="images/niaplogo.png" alt="NIAP"/></xsl:when>
-            <xsl:when test="$release='draft'"><img src="images/niaplogodraft.png" alt="NIAP"/></xsl:when>
-          </xsl:choose>
+            <img src="images/niaplogo.png" alt="NIAP"/>
           <br/>
 
 	  <!-- Might think about getting rid of this and just making it part of the foreword -->
@@ -555,7 +550,7 @@ function expand(){
             <th>Date</th>
             <th>Comment</th>
           </tr>
-          <xsl:for-each select="cc:RevisionHistory[@role=$release]/cc:entry">
+          <xsl:for-each select="cc:RevisionHistory/cc:entry">
             <tr>
               <td>
                 <xsl:value-of select="cc:version"/>
@@ -872,171 +867,116 @@ function expand(){
 
   <!-- Used to match regular ?-components -->
   <xsl:template match="cc:f-component | cc:a-component">
-    <xsl:variable name="sel">
-      <!-- when we are not appending -->
-      <xsl:if test="$appendicize!='on' or name()='a-component'">
-        <xsl:value-of select="'_threshold_,_objective_, _optional_, _sel-based_'"/>
-      </xsl:if>
-      <xsl:if test="$appendicize='on'">
-        <xsl:value-of select="'_threshold_'"/>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:call-template name="component-template">
-      <xsl:with-param name="selected-statuses" select="$sel"/>
-    </xsl:call-template>
-  </xsl:template>
+  <div class="comp" id="{translate(@id, $lower, $upper)}">
+    <h4>
+      <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+      <xsl:value-of select="@name"/>
+    </h4>
 
-<!--##############################################################-->
-<!--  Component template                                          -->
-<!--##############################################################-->
-  <xsl:template name="component-template">
-    <xsl:param name="selected-statuses"/>
-    <!--
-	 Set id-suffix to "_threshold_" "_objective_" "_optional_" "_sel-based_"
-	 based on what it is (or "" if not appendicizing).
-    -->
-    <xsl:variable name="id-suffix">
-      <xsl:choose>
-	<!-- set to nothing if appendicize is not on or we're selecting only threshold-->
-        <xsl:when test="$appendicize!='on'"/>
-        <xsl:when test="$selected-statuses='_threshold_'"/>
-        <xsl:otherwise>
-          <xsl:value-of select="$selected-statuses"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-
-    <!-- If we're not appendicizing or status is normal. Include-->
-    <xsl:variable name="eff-status">_<xsl:choose>
-    <xsl:when test="@status"><xsl:value-of select="@status"/></xsl:when>
-    <xsl:otherwise>threshold</xsl:otherwise>
-    </xsl:choose>_</xsl:variable>
-
-    <xsl:if test="count(./*[contains($selected-statuses, $eff-status)])>0">
-      <xsl:variable name="family" select="substring(@id,1,7)"/>
-      <xsl:variable name="component" select="substring(@id,1,9)"/>
-      <xsl:variable name="SFRID" select="@id"/>
-      <!-- Make an anchor here -->
-      <xsl:element name="div">
-        <xsl:attribute name="class">comp</xsl:attribute>
-        <xsl:attribute name="id">
-          <xsl:value-of select="translate(@id, $lower, $upper)"/>
-          <xsl:value-of select="$id-suffix"/>
-        </xsl:attribute>
-        <h4>
-          <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-          <xsl:value-of select="@name"/>
-        </h4>
-	<xsl:apply-templates select="cc:note/text()"/>
-<!-- BEGIN -->
     <xsl:if test="@status='objective'">
-      <xsl:if test="$appendicize!='on'">
         <div class="statustag">
-          <i>
-            <b> This is an objective component.
-	    <xsl:if test="@targetdate">
-	      It is scheduled to be mandatory for products entering evaluation after
-	      <xsl:value-of select="@targetdate"/>.
-	    </xsl:if>
-	    </b>
-          </i>
+          <i><b> This is an objective component.
+            <xsl:if test="@targetdate">
+              It is scheduled to be mandatory for products entering evaluation after
+              <xsl:value-of select="@targetdate"/>.
+            </xsl:if>
+          </b></i>
         </div>
       </xsl:if>
-      <xsl:if test="$appendicize='on' and @targetdate">
-        <div class="statustag">
-          <i>
-            <b> This component is scheduled to be mandatory for products entering evaluations
-              after <xsl:value-of select="@targetdate"/>.</b>
-          </i>
-        </div>
-      </xsl:if>
-    </xsl:if> <!-- End if objective -->
 
     <xsl:if test="@status='sel-based'">
-      <div class="statustag">
-        <b>
-          <i>
-            <xsl:if test="$appendicize!='on'"> This is a selection-based component. Its inclusion
-              depends upon selection in </xsl:if>
-            <xsl:if test="$appendicize='on'"> This component depends upon selection in </xsl:if>
-            <xsl:for-each select="cc:selection-depends">
-              <b><i>
-                <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
-                <xsl:call-template name="req-refs">
-                  <xsl:with-param name="req" select="@req"/>
-                </xsl:call-template>
-<!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
-                <xsl:call-template name="commaifnotlast"/>
-
-              </i></b>
-            </xsl:for-each>. </i>
-        </b>
-      </div>
-    </xsl:if>
-    <xsl:if test="$appendicize!='on'">
-      <xsl:if test="@status='optional'">
         <div class="statustag">
-          <i><b>This is an optional component<xsl:call-template name='opt_text'/>.</b></i>
+          <b><i>This is a selection-based component. It inclusion depends upon selection from
+              <xsl:for-each select="cc:selection-depends">
+                <b><i>
+                  <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
+                  <xsl:call-template name="req-refs">
+                    <xsl:with-param name="req" select="@req"/>
+                  </xsl:call-template>
+                  <xsl:call-template name="commaifnotlast"/>
+                </i></b>
+              </xsl:for-each>.
+            </i></b>
+          </div>
+    </xsl:if>
+
+    <xsl:if test="@status='optional'">
+        <div class="statustag">
+          <i><b>This is an optional component. However, PP-Modules for this
+          Protection Profile might redefine it as non-optional.</b></i>
         </div>
+   </xsl:if>
+
+   <xsl:apply-templates/>
+  </div>
+</xsl:template>
+
+<xsl:template match="cc:f-component | cc:a-component" mode="appendicize">
+  <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
+  <xsl:if test="not(@status) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
+    <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="cc:f-component | cc:a-component" mode="appendicize-nofilter">
+  <div class="comp" id="{translate(@id, $lower, $upper)}">
+    <h4>
+      <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+      <xsl:value-of select="@name"/>
+    </h4>
+
+    <xsl:if test="@status='objective' and @targetdate">
+        <div class="statustag">
+          <i><b>
+              This objective component is scheduled to be mandatory for
+              products entering evaluation after
+              <xsl:value-of select="@targetdate"/>.
+          </b></i>
+          </div>
       </xsl:if>
-    </xsl:if>
-<!-- END -->
 
-
-
-	<xsl:call-template name="group">
-	  <xsl:with-param name="type" select="'dev-action'"/>
-	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
-	</xsl:call-template>
-	<xsl:call-template name="group">
-	  <xsl:with-param name="type" select="'con-pres'"/>
-	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
-	</xsl:call-template>
-	<xsl:call-template name="group">
-	  <xsl:with-param name="type" select="'eval-action'"/>
-	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
-	</xsl:call-template>
-
-        <xsl:for-each select="cc:f-element">
-          <xsl:call-template name="element-template">
-	    <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
-          </xsl:call-template>
-        </xsl:for-each>
-      </xsl:element>
-    </xsl:if>
+      <xsl:if test="@status='sel-based'">
+        <div class="statustag">
+          <b><i>This selection-based component depends upon selection in
+              <xsl:for-each select="cc:selection-depends">
+                <b><i>
+                  <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
+                  <xsl:call-template name="req-refs">
+                    <xsl:with-param name="req" select="@req"/>
+                  </xsl:call-template>
+                  <!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
+                  <xsl:call-template name="commaifnotlast"/>
+                </i></b>
+              </xsl:for-each>. </i>
+            </b>
+          </div>
+        </xsl:if>
+        <xsl:apply-templates/>
+      </div>
   </xsl:template>
 
-  <!-- Prints out only those templates whose status is inside selected-statuses-->
-  <xsl:template name="element-template">
-    <xsl:param name="selected-statuses"/>
-
-    <xsl:variable name="eff-status"><xsl:choose>
-      <xsl:when test="../@status"><xsl:value-of select="../@status"/></xsl:when>
-      <xsl:otherwise>threshold</xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    <xsl:variable name="ueff-status">_<xsl:value-of select="$eff-status"/>_</xsl:variable>
-
-    <xsl:if test="contains($selected-statuses, $ueff-status)">
+  <xsl:template match="cc:f-element | cc:a-element" >
+    <div class="element">
       <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
-      <xsl:element name="div">
-        <xsl:attribute name="class">req <xsl:value-of select="$eff-status"/></xsl:attribute>
-        <div class="reqid" id="{$reqid}">
-          <a href="#{$reqid}" class="abbr">
-            <xsl:value-of select="$reqid"/>
-          </a>
-        </div>
-        <div class="reqdesc">
-          <xsl:apply-templates/>
-        </div>
-      </xsl:element>
-    </xsl:if>
+      <div class="reqid" id="{$reqid}">
+        <a href="#{$reqid}" class="abbr">
+          <xsl:value-of select="$reqid"/>
+        </a>
+      </div>
+      <div class="reqdesc">
+        <xsl:apply-templates/>
+      </div>
+    </div>
   </xsl:template>
 
+  <xsl:template match="cc:evalactionlabel">
+    <h4><xsl:value-of select="@title"/></h4>
+  </xsl:template>
+  
   <xsl:template match="cc:foreword">
     <div class="foreword">
       <h1 style="text-align: center">Foreword</h1>
-      <xsl:apply-templates/>      
+      <xsl:apply-templates/>
     </div>
   </xsl:template>
 
@@ -1045,7 +985,8 @@ function expand(){
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="cc:aactivity">
+  <xsl:template match="cc:aactivity"> <!-- need to change this to cc:evalactivity-->
+<!--    <xsl:variable name="aactID" select="concat('aactID-', generate-id())"/> -->
     <div class="activity_pane hide">
     <div class="expandstyle">
       <a onclick="toggle(this);return false;" href="#">
@@ -1082,34 +1023,31 @@ function expand(){
     </div>
   </xsl:template>
 
-
   <xsl:template match="cc:appendix">
-    <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')">
+    <xsl:if test="$appendicize='on'">
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
-	Appendix
-	<span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
+         Appendix
+         <span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
       </h1>
-      <!-- Convert the words -->
-      <xsl:apply-templates/>
-
-      <!-- If we need to steal templates from the rest of the document -->
-      <xsl:call-template name="requirement-stealer">
-        <xsl:with-param name="selected-status" select="@id"/>
-      </xsl:call-template>
+      <!-- insert SFRs for "special" appendices, if @id is one of the "special" ones-->
+      <xsl:if test="@id='optional' or @id='sel-based' or @id='objective'" >
+        <xsl:apply-templates />
+        <!-- when @id of the appendix is optional/sel-based/objective,
+        match with the @status of the component, which is the same value -->
+        <xsl:apply-templates select="//cc:f-component[@status=current()/@id]" mode="appendicize-nofilter"/>
+      </xsl:if>
+      <xsl:if test="@id!='optional' and @id!='sel-based' and @id!='objective'" mode="appendicize-nofilter">
+        <xsl:apply-templates/>
+      </xsl:if>
     </xsl:if>
-  </xsl:template>
 
-  <!-- Only called when building appendices -->
-  <xsl:template name="requirement-stealer">
-    <xsl:param name="selected-status"/>
-    <!-- Select all f-components which have an f-element with a selected-status-->
-
-    <xsl:for-each select="//cc:f-component[@status=$selected-status][cc:f-element]">
-      <xsl:call-template name="component-template">
-        <xsl:with-param name="selected-statuses"
-			select="concat('_', concat($selected-status,'_'))"/>
-      </xsl:call-template>
-    </xsl:for-each>
+    <xsl:if test="$appendicize!='on' and @id!='optional' and @id!='sel-based' and @id!='objective'">
+      <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
+  	      Appendix
+  	      <span lass="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
+      </h1>
+      <xsl:apply-templates/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="cc:chapter">
@@ -1129,25 +1067,21 @@ function expand(){
   </xsl:template>
 
   <xsl:template match="cc:subsection">
-
-    <xsl:variable name="shouldshow">
-      <xsl:if test="$appendicize!='on' or not(cc:f-component) or (*/@status='threshold')">yes</xsl:if>
-    </xsl:variable>
-    <xsl:variable name="is_index"><xsl:choose>
-      <xsl:when test="ancestor::*[@stopindex]"/>
-      <xsl:otherwise>indexable</xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    
-    <xsl:if test="contains($shouldshow,'yes')">
-      <h3 id="{@id}" class="{$is_index}" data-level="{count(ancestor::*)}">
-	<span class="num"></span>
-	<xsl:if test="not(ancestor::*[@stopindex])"><xsl:value-of select="$space3"/></xsl:if>
-	<xsl:value-of select="@title" />
+    <!-- the "if" statement is to not display subsection headers when there are no
+    subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
+    <xsl:if test="$appendicize!='on' or ../@id!='SFRs' or count(.//cc:f-component[not(@status) or @status='threshold'])">
+      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
+	    <span class="num"></span><xsl:value-of select="$space3"/>
+      <xsl:value-of select="@title" />
       </h3>
-      <xsl:apply-templates/>
+      <xsl:if test="$appendicize = 'on'">
+        <xsl:apply-templates mode="appendicize" />
+      </xsl:if>
+      <xsl:if test="$appendicize != 'on'">
+        <xsl:apply-templates />
+      </xsl:if>
     </xsl:if>
   </xsl:template>
-
 
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
@@ -1188,20 +1122,7 @@ function expand(){
 
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
-      <img>
-        <xsl:attribute name="id">
-          <xsl:value-of select="@id"/>
-        </xsl:attribute>
-        <xsl:attribute name="src">
-          <xsl:value-of select="@entity"/>
-        </xsl:attribute>
-        <xsl:attribute name="width">
-          <xsl:value-of select="@width"/>
-        </xsl:attribute>
-        <xsl:attribute name="height">
-          <xsl:value-of select="@height"/>
-        </xsl:attribute>
-      </img>
+      <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}" />
       <p/>
       <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
 	<xsl:call-template name="getPre"/>
@@ -1308,15 +1229,7 @@ function expand(){
 
   <xsl:template match="cc:cite">
     <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:element name="a">
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend"/>
-      </xsl:attribute>
-      <xsl:text>[</xsl:text>
-      <xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>
-      <xsl:text>]</xsl:text>
-    </xsl:element>
+    <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
   </xsl:template>
 
   <xsl:template match="cc:util">
@@ -1340,61 +1253,25 @@ function expand(){
     <xsl:variable name="lreq">
       <xsl:value-of select="translate($req,$upper,$lower)"/>
     </xsl:variable>
-    <xsl:variable name="req-anchor">
-      <xsl:choose>
-        <xsl:when test="$appendicize!='on'"/>
-        <!--
-	     Elements, whether selectable or not, never get the
-	     suffix in the 'id' attribute in their resulting element
-	-->
-	<xsl:when test="//cc:f-element[@id=$lreq]|//cc:a-element[@id=$lreq]"/>
-	<xsl:when test="//*[@id=$lreq and @status='threshold']"/>
-	<xsl:when test="//*[@id=$lreq and @status='sel-based']">_sel-based_</xsl:when>
-	<xsl:when test="//*[@id=$lreq and @status='objective']">_objective_</xsl:when>
-	<xsl:when test="//*[@id=$lreq and @status='optional']">_optional_</xsl:when>
-	<xsl:otherwise>
-	  <xsl:message>
-    	    Broken linked element at <xsl:value-of select="$lreq"/>
-	  </xsl:message>
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+
     <xsl:variable name="capped-req">
       <xsl:value-of select="translate($lreq,$lower,$upper)"/>
     </xsl:variable>
-    <xsl:element name="a">
-      <xsl:attribute name="class">
-        <xsl:value-of select="$class"/>
-      </xsl:attribute>
-      <xsl:attribute name="href">#<xsl:value-of select="concat($capped-req,$req-anchor)"
-        /></xsl:attribute>
-      <xsl:value-of select="$capped-req"/>
-    </xsl:element>
+    <a class="{$class}" href="#{$capped-req}"><xsl:value-of select="$capped-req"/></a>
+  </xsl:template>
+  
+  <!-- identity transform - useful for debugging -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
   </xsl:template>
 
-  <!-- -->
-  <!-- -->
-  <!-- -->
-
-  <xsl:template name="group">
-    <xsl:param name="type"/>
-    <xsl:param name="selected-statuses"/>
-    <xsl:if test="cc:group[@type=$type]">
-      <h4>
-	<xsl:choose>
-	  <xsl:when test="$type='dev-action'">Developer action</xsl:when>
-	  <xsl:when test="$type='con-pres'">Content and presentation</xsl:when>
-	  <xsl:when test="$type='eval-action'">Evaluator action</xsl:when>
-	</xsl:choose>
-      elements:</h4>
-
-
-      <xsl:for-each select="./cc:group[@type=$type]/cc:a-element">
-        <xsl:call-template name="element-template">
-	  <xsl:with-param name="selected-statuses" select="$selected-statuses"/>
-        </xsl:call-template>
-      </xsl:for-each>
-    </xsl:if>
+  <!-- if no template matches when the mode is set to appendicize,
+       default to a template without the mode set.  this may default
+       to calling the identity transform above -->
+  <xsl:template match="@*|node()" mode="appendicize">
+      <xsl:apply-templates select="current()" />
   </xsl:template>
 
   <xsl:template name="opt_text">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:template>
