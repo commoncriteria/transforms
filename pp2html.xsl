@@ -618,13 +618,15 @@ function expand(){
       <xsl:for-each select="cc:entry">
         <xsl:element name="tr">
 
-	  <xsl:attribute name="id">
+	  <!-- Adding this attribute was causing ID errors since it was often empty,
+         and it's not clear that it is used for anything.  
+    <xsl:attribute name="id">
 	    <xsl:choose>
 	      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
 	      <xsl:when test="cc:term"><xsl:value-of select="translate(cc:term/text(), $lower, $upper)"/></xsl:when>
 	      <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
 	    </xsl:choose>
-	  </xsl:attribute>
+	  </xsl:attribute> -->
           <td>
             <xsl:apply-templates select="cc:term"/>
           </td>
