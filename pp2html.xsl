@@ -333,7 +333,7 @@ function expand(){
               margin-left:0%;
               margin-top:1em;
           }
-          div.aacthidden{
+          div.activity_pane_body{
               margin-left:0%;
               margin-top:1em;
               margin-bottom:1em;
@@ -420,12 +420,12 @@ function expand(){
               text-align:center;
               margin-top:1em;
           }
-          div.expandstyle{
+          div.activity_pane_header{
               display:table-cell;
               vertical-align:middle;
               padding-top:10px
           }
-          span.expandstyle{
+          span.activity_pane_label{
               vertical-align:middle;
               color:black;
               text-decoration:none;
@@ -475,12 +475,12 @@ function expand(){
                   margin-left:20%;
               }
 
-	      .activity_pane.hide .toggler{
-	          background-image: url('images/collapsed.png');
+	            .activity_pane.hide .toggler{
+	                background-image: url('images/collapsed.png');
               }
-              .activity_pane.hide .aacthidden{
+              .activity_pane.hide .activity_pane_body{
                   display:none;
-               }
+              }
               div.statustag{
                   box-shadow:4px 4px 3px #888888;
               }
@@ -502,14 +502,14 @@ function expand(){
               *.reqdesc{
                   margin-left:20%;
               }
-              div.aacthidden{
+              div.activity_pane_body{
                   padding:1em;
                   border:2px solid #888888;
                   border-radius:3px;
                   display:block;
               }
 
-	      img[src="images/collapsed.png"] { display:none;}
+	            img[src="images/collapsed.png"] { display:none;}
 
           }
 
@@ -989,13 +989,13 @@ function expand(){
 
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
-    <div class="expandstyle">
+    <div class="activity_pane_header">
       <a onclick="toggle(this);return false;" href="#">
-        <span class="expandstyle"> Evaluation Activity </span>
+        <span class="activity_pane_label"> Evaluation Activity </span>
         <span class="toggler"/>
       </a>
     </div>
-    <div class="aacthidden">
+    <div class="activity_pane_body">
       <i>
         <xsl:apply-templates/>
       </i>
@@ -1263,6 +1263,7 @@ function expand(){
   
   <!-- identity transform - useful for debugging -->
   <xsl:template match="@*|node()">
+    <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
