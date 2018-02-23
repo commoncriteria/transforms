@@ -167,7 +167,7 @@ class State:
                 if child.length > 0:
                     ret+=" class='disabled'"
                 ret+=">"
-                ret+="<h3>"+id+" &mdash; "+ node.getAttribute("name")+"</h3>\n"
+                ret+="<h3><a href='#"+id+"'>"+id+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
                 ret+=self.handle_parent(node, True)
                 ret+="</div>"
                 return ret
@@ -440,6 +440,14 @@ if __name__ == "__main__":
       return ret;
     }
 
+    function convertToXmlContent(val){
+        var ret = val;
+        ret = ret.replace(/\\&/g, '&amp;');
+        ret = ret.replace(/\\</g, '&lt;');
+        ret = ret.replace(/\\]\\]\\>/g, ']]&gt;');
+        return ret;
+    }
+
     function getRequirement(node){
         var ret = ""
         // If it's an element
@@ -462,7 +470,7 @@ if __name__ == "__main__":
                  val=node.value;
                }
                ret+=LT+"assignment>";
-               ret+=val;
+               ret+=convertToXmlContent(val);
                ret+=LT+"/assignment>\\n";
            }
            else if(node.classList.contains('mfun-table')){
