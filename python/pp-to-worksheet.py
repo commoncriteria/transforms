@@ -35,7 +35,7 @@ class State:
         self.man_fun_map={}
         self.man_fun_map['M']="X"
         self.man_fun_map['-']="-"
-        self.man_fun_map['O']="<select><option value='O'>O</option><option value='X'>X</option></select>"
+        self.man_fun_map['O']="<select onchange='update();' class='val'><option value='O'>O</option><option value='X'>X</option></select>"
 
 
     def handle_management_function_set(self, elem):
@@ -323,26 +323,34 @@ if __name__ == "__main__":
         return elem.getAttribute("type") == "checkbox";
     }
 
+    function getId(index){
+        return "v_" + index;
+    } 
+
     function saveToCookieJar(elem, index){
         var id = getId(index);
         if( isCheckbox(elem)){
             cookieJar[id]=elem.checked;
         }
+        else if( elem.tagName == 'SELECT' ){
+            cookieJar[id]=elem.selectedIndex;
+        }
         else{
             if(elem.value != undefined && elem.value != "undefined" ){
-               console.log("Saving " + elem.value + " to " + id + "("+elem.tagName+")");
                cookieJar[id]=elem.value;
             }
         }
     }
-    function getId(index){
-        return "v_" + index;
-    } 
 
     function retrieveFromCookieJar(elem, index){
         var id = getId(index);
         if( isCheckbox(elem)){
             elem.checked= (cookieJar[id] == "true");
+        }
+        else if( elem.tagName == 'SELECT' ){
+            if( id in cookieJar ){
+               elem.selectedIndex = cookieJar[id];
+            }
         }
         else{
             if( id in cookieJar && cookieJar[id] != "undefined"){
@@ -357,13 +365,12 @@ if __name__ == "__main__":
            warn.style.display='block';
         }
         cookieJar = readAllCookies();
-        performActionOnClass("vals", retrieveFromCookieJar);
+        performActionOnClass("val", retrieveFromCookieJar);
     }
 
     function readAllCookies() {
             ret=[];
             var ca = document.cookie.split(';');
-            console.log("Cookies are " + document.cookie);
             var aa,bb;
             for(aa=0;aa != ca.length; aa++) {
                 if (3>ca[aa].length){ continue;}
@@ -374,7 +381,6 @@ if __name__ == "__main__":
                 }
                 key=blah[0].trim();
                 val=decodeURIComponent(blah[1]);
-    //            console.log("Reading " + val+" for |" + key+"|");
                 ret[key]=val;
             }
             return ret;
@@ -393,7 +399,6 @@ if __name__ == "__main__":
     //    // Save off everything in the cookie jar
         var key;
         for (key in cookies) {
-    //       console.log("Saving off " + cookies[key] + " to "+key);
            createCookie(key, cookies[key] );
         }
     }
@@ -403,7 +408,6 @@ if __name__ == "__main__":
         // 10 day timeout
         date.setTime(date.getTime()+(10*24*60*60*1000));
         var expires = "; expires="+date.toGMTString();
-        console.log("Creating: " + name+"="+encodeURIComponent(value)+expires+"; path=/");
         document.cookie = name+"="+encodeURIComponent(value)+expires+"; path=/";
 
     }
@@ -553,11 +557,13 @@ if __name__ == "__main__":
        if (sched != undefined){
          clearTimeout(sched);
        }
+       console.log("At update");
        sched = setTimeout(saveVals, 1000);
     }
 
     function saveVals(){
-       performActionOnClass("vals", saveToCookieJar);
+       console.log("At saveVals");
+       performActionOnClass("val", saveToCookieJar);
        saveAllCookies(cookieJar);
        sched = undefined;
     }
