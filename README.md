@@ -1,5 +1,5 @@
 # Transforms 
-[![Build Status](https://jenkins-criteria.rhcloud.com/buildStatus/icon?job=protection-profiles/transforms)](https://jenkins-criteria.rhcloud.com/job/protection-profiles/job/transforms/)
+[![Build Status](https://travis-ci.org/commoncriteria/transforms.svg?branch=master)](https://travis-ci.org/commoncriteria/transforms)
 [![GitHub issues Open](https://img.shields.io/github/issues/commoncriteria/transforms.svg?maxAge=2592000)](https://github.com/commoncriteria/transforms/issues) 
 ![license](https://img.shields.io/badge/license-Unlicensed-blue.svg)
 
