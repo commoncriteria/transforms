@@ -39,7 +39,7 @@ class State:
 
 
     def handle_management_function_set(self, elem):
-        ret = "<table>\n"
+        ret = "<table class='mfun-table'>\n"
         defaultVal = elem.getAttribute("default")
         if defaultVal == "":
             defaultVal="O"
@@ -52,18 +52,22 @@ class State:
             ret += "</th>"
         ret+= "</tr>\n"
 
-
-        for row in  getPpEls(elem, 'management-function'):
+        # Step through the rows
+        for row in getPpEls(elem, 'management-function'):
             val={}
+            # Build a dictionary where the key is 'ref' and
+            # it maps to 'M', 'O', or '-'.
             for man in getPpEls(row, 'M'):
                 val[man.getAttribute('ref')]='M'
             for opt in getPpEls(row, 'O'):
                 val[man.getAttribute('ref')]='O'
             for das in getPpEls(row, '_'):
                 val[man.getAttribute('ref')]='-'
-                
+            # Now we convert this to the expected columns
             ret += "<tr>\n"
+            # First column is the management function text
             ret += "<td>"+self.handle_parent( getPpEls(row, 'text')[0], True) + "</td>"
+            # And step through every other column
             for col in getPpEls(elem, 'manager'):
                 ret += "<td>"
                 colId = col.getAttribute("id");
@@ -296,22 +300,31 @@ if __name__ == "__main__":
     const LT=String.fromCharCode(60);
 
     var cookieJar=[];
-
-    function performActionOnVals(fun){
+    /**
+     * This runs some sort of function on
+     * all elements of a class.
+     * @param classname Value of the class 
+     * @param fun Function that is run on all elements. 
+     *    For its 1st parameter, it takes the element. For the 2nd
+     *    it's the number of the element.
+     */
+    function performActionOnClass(classname, fun){
         // Run through all the elements with possible
         // values
         var aa;
-        var elems = document.getElementsByClassName("val");
+        var elems = document.getElementsByClassName(classname);
         for(aa=0; elems.length> aa; aa++){
-           fun(elems[aa], "v_"+aa);
+           fun(elems[aa], aa);
         }
     }
+    
 
     function isCheckbox(elem){
         return elem.getAttribute("type") == "checkbox";
     }
 
-    function saveToCookieJar(elem, id){
+    function saveToCookieJar(elem, index){
+        var id = getId(index);
         if( isCheckbox(elem)){
             cookieJar[id]=elem.checked;
         }
@@ -322,8 +335,12 @@ if __name__ == "__main__":
             }
         }
     }
+    function getId(index){
+        return "v_" + index;
+    } 
 
-    function retrieveFromCookieJar(elem, id){
+    function retrieveFromCookieJar(elem, index){
+        var id = getId(index);
         if( isCheckbox(elem)){
             elem.checked= (cookieJar[id] == "true");
         }
@@ -340,7 +357,7 @@ if __name__ == "__main__":
            warn.style.display='block';
         }
         cookieJar = readAllCookies();
-        performActionOnVals(retrieveFromCookieJar);
+        performActionOnClass("vals", retrieveFromCookieJar);
     }
 
     function readAllCookies() {
@@ -406,7 +423,7 @@ if __name__ == "__main__":
             report +=getRequirement(kids[aa]);
             report += LT+"/req>\\n";
         }
-        report += LT+"/report>"
+        report += LT+"/report>";
         initiateDownload('Report.text', report);
     }
 
@@ -421,6 +438,7 @@ if __name__ == "__main__":
 
     function getRequirement(node){
         var ret = ""
+        // If it's an element
         if(node.nodeType==1){
            if(isCheckbox(node)){
                if(node.checked){
@@ -443,10 +461,35 @@ if __name__ == "__main__":
                ret+=val;
                ret+=LT+"/assignment>\\n";
            }
+           else if(node.classList.contains('mfun-table')){
+               ret += LT+"management-function-table>"
+               var rows = node.getElementsByTagName("tr");
+               // Skip first row
+               for(var row=1; rows.length>row; row++){
+                  ret += LT+"management-function>";
+                  var cols=rows[row].getElementsByTagName("td");
+                  for( var col=1; cols.length>col; col++){
+                     ret += LT+"val>"; 
+                     if( cols[col].children.length == 0 ){
+                        ret += cols[col].textContent;
+                     }
+                     else{
+                        var si = cols[col].children[0].selectedIndex;
+                        if(si!=-1){
+                           ret += cols[col].children[0].children[si].textContent;
+                        }
+                     }
+                     ret += LT+"/val>";
+                  }
+                  ret += LT+"/management-function>\\n";
+               }
+               ret += LT+"/management-function-table>";
+           }
            else{
                ret+=getRequirements(node.children);
            }
         }
+        // If it's text
         else if(node.nodeType==3){
            return node.textContent;
         }
@@ -514,7 +557,7 @@ if __name__ == "__main__":
     }
 
     function saveVals(){
-       performActionOnVals(saveToCookieJar);
+       performActionOnClass("vals", saveToCookieJar);
        saveAllCookies(cookieJar);
        sched = undefined;
     }

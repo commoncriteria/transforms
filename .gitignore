@@ -4,3 +4,4 @@ schemas/*.rnc
 /**/*~
 /**/*.html
 Makefile
+/**/__pycache__
