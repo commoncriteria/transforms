@@ -217,7 +217,7 @@ function expand(){
         </script>
 
         <style type="text/css">
-	  <xsl:call-template name="common_css"/>
+        <xsl:call-template name="common_css"/>
 
           /*       { background-color: #FFFFFF; } */
           body{
@@ -225,9 +225,9 @@ function expand(){
               margin-right:8%;
               foreground:black;
           }
-	  .figure{
+          .figure{
               font-weight:bold;
-	  }
+          }
           h1{
               page-break-before:always;
               text-align:left;
@@ -432,32 +432,6 @@ function expand(){
               font-size:100%;
               font-weight:bold; /*font-family: verdana, arial, helvetica, sans-serif; */
           }
-          .expandstyle a{
-              color:black;
-              text-decoration:none;
-          }
-          .expandstyle a:link{
-              color:black;
-              text-decoration:none;
-          }
-          .expandstyle a:visited{
-              color:black;
-              text-decoration:none;
-          }
-          .expandstyle a:hover{
-              color:black;
-              text-decoration:none;
-          }
-          .expandstyle a:active{
-              color:black;
-              text-decoration:none;
-          }
-
-	  sup{
-   	      position: relative;
-	      bottom: .5ex;
-	      font-size: 80%;
-	  }
 
           @media screen{
               *.reqid{
@@ -490,9 +464,7 @@ function expand(){
           @media print{
               *.reqid{
                   font-size:90%;
-                  font-family:verdana, arial,
-          helvetica,
-          sans-serif;
+                  font-family:verdana, arial, helvetica, sans-serif;
               }
               *.req{
                   margin-left:0%;
@@ -1244,9 +1216,6 @@ function expand(){
     </span>
   </xsl:template>
 
-  <!-- -->
-  <!-- -->
-  <!-- -->
   <xsl:template name="req-refs">
     <xsl:param name="class"/>
     <xsl:param name="req"/>
