@@ -283,9 +283,6 @@ function fixToolTips(){
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="processing-instruction('xml-stylesheet')"/>
-
-
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
       <tr class="header">
@@ -386,6 +383,4 @@ function fixToolTips(){
     <xsl:text>/</xsl:text>
   </xsl:template>
   
-  <!-- Do not write xml-model processing instruction to HTML output. -->
-  <xsl:template match="processing-instruction('xml-model')" />
 </xsl:stylesheet>
