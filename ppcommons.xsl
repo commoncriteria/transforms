@@ -254,34 +254,8 @@ function fixToolTips(){
         </xsl:element>
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
 
-  <!-- Eat all comments and processing instructions-->
-  <xsl:template match="comment()"/>
-  <xsl:template match="processing-instruction()"/>
-  <!--
-       Change all htm tags to tags with no namespace.
-       This should help the transition from output w/ polluted
-       namespace to output all in htm namespace. For right now
-       this is what we have.
-  -->
-  <xsl:template match="htm:*">
-    <xsl:element name="{local-name()}">
-      <!-- Copy all the attributes -->
-      <xsl:for-each select="@*">
-	<xsl:copy/>
-      </xsl:for-each>
-      <xsl:apply-templates/>
-    </xsl:element>
-  </xsl:template>
-
-
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
 
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
@@ -350,7 +324,38 @@ function fixToolTips(){
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
-  <!-- By default, quietly unwrap all cc elements -->
+
+  <!-- Eat all comments and processing instructions-->
+  <xsl:template match="comment()"/>
+  <xsl:template match="processing-instruction()"/>
+  <!--
+       Change all htm tags to tags with no namespace.
+       This should help the transition from output w/ polluted
+       namespace to output all in htm namespace. For right now
+       this is what we have.
+  -->
+  <xsl:template match="htm:*">
+    <xsl:element name="{local-name()}">
+      <!-- Copy all the attributes -->
+      <xsl:for-each select="@*">
+	<xsl:copy/>
+      </xsl:for-each>
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
+
+  <!--
+      Recursively copy and unwrap unmatched things (elements, attributes, text)
+  -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- 
+       By default, quietly unwrap all cc elements that are otherwise unmatched
+  -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
       <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
