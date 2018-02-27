@@ -5,6 +5,10 @@
 
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+
+  <!-- 
+       Template for javascript common to all transforms
+  -->
   <xsl:template name="common_js">
 
 function fixToolTips(){
@@ -14,11 +18,8 @@ function fixToolTips(){
       tooltipelements[aa].parentNode.classList.add("tooltipped");
   }
 }
-
-
-
-  <xsl:value-of select="//cc:extra-js"/>
-
+    <!-- Include custom javascript defined in the pp -->
+    <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
   <!-- Common CSS rules for all files-->
@@ -118,7 +119,7 @@ function fixToolTips(){
    table.mfs td:first-child{
        text-align: left;
    }
-
+   <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
     
   </xsl:template>
@@ -158,6 +159,7 @@ function fixToolTips(){
     </ul>
   </xsl:template>
 
+  <!-- Steps in a steplist -->
   <xsl:template match="cc:step">
     <li>
       <b>Step <xsl:for-each select="ancestor::cc:step"><xsl:value-of
@@ -178,6 +180,7 @@ function fixToolTips(){
       </abbr>
     </a>
   </xsl:template>
+
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
@@ -227,33 +230,6 @@ function fixToolTips(){
         <xsl:apply-templates/>
       </span>
     </div>
-  </xsl:template>
-
-  <xsl:template match="cc:inline-comment[@level='critical']">
-    <xsl:if test="$release!='draft'">
-      <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
-        generated: <xsl:value-of select="text()"/>
-      </xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="cc:inline-comment">
-    <xsl:choose>
-      <xsl:when test="@linebreak='yes'">
-        <xsl:element name="div">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:element name="span">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
 
@@ -325,9 +301,7 @@ function fixToolTips(){
   </xsl:template>
 
 
-  <!-- Eat all comments and processing instructions-->
-  <xsl:template match="comment()"/>
-  <xsl:template match="processing-instruction()"/>
+
   <!--
        Change all htm tags to tags with no namespace.
        This should help the transition from output w/ polluted
@@ -343,6 +317,12 @@ function fixToolTips(){
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
+
+  <!-- Consume all comments -->
+  <xsl:template match="comment()"/>
+
+  <!-- Consume all processing-instructions -->
+  <xsl:template match="processing-instruction()"/>
 
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
@@ -362,6 +342,37 @@ function fixToolTips(){
     </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
+
+  <!--
+      Templates associated with debugging follow.
+  -->
+  <xsl:template match="cc:inline-comment[@level='critical']">
+    <xsl:if test="$release!='draft'">
+      <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
+        generated: <xsl:value-of select="text()"/>
+      </xsl:message>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="cc:inline-comment">
+    <xsl:choose>
+      <xsl:when test="@linebreak='yes'">
+        <xsl:element name="div">
+          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
+            /></xsl:attribute>
+          <xsl:value-of select="text()"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:element name="span">
+          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
+            /></xsl:attribute>
+          <xsl:value-of select="text()"/>
+        </xsl:element>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- -->
   <xsl:template name="debug-2">
