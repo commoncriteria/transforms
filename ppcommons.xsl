@@ -5,6 +5,10 @@
 
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+
+  <!-- 
+       Template for javascript common to all transforms
+  -->
   <xsl:template name="common_js">
 
 function fixToolTips(){
@@ -14,11 +18,8 @@ function fixToolTips(){
       tooltipelements[aa].parentNode.classList.add("tooltipped");
   }
 }
-
-
-
-  <xsl:value-of select="//cc:extra-js"/>
-
+    <!-- Include custom javascript defined in the pp -->
+    <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
   <!-- Common CSS rules for all files-->
@@ -33,7 +34,20 @@ function fixToolTips(){
     .activity_pane .toggler::after, .activity_pane .toggler{ 
        display: inline-block;
        height: auto;
-       content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGlVDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWRtTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjhFnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpYcpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUGUCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsDBIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafhaeyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0URoVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRWRfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZf7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygNv+jeFnAPAAAAAElFTkSuQmCC);
+       content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
+       AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
+       VDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWR\
+       tTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjh\
+       FnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+\
+       N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpY\
+       cpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUG\
+       UCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsD\
+       BIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafha\
+       eyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0UR\
+       oVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRW\
+       RfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZ\
+       f7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygN\
+       v+jeFnAPAAAAAElFTkSuQmCC');
        max-width: 15px;
     }
 
@@ -106,7 +120,7 @@ function fixToolTips(){
    table.mfs td:first-child{
        text-align: left;
    }
-
+   <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
     
   </xsl:template>
@@ -146,6 +160,7 @@ function fixToolTips(){
     </ul>
   </xsl:template>
 
+  <!-- Steps in a steplist -->
   <xsl:template match="cc:step">
     <li>
       <b>Step <xsl:for-each select="ancestor::cc:step"><xsl:value-of
@@ -166,6 +181,7 @@ function fixToolTips(){
       </abbr>
     </a>
   </xsl:template>
+
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
@@ -216,62 +232,6 @@ function fixToolTips(){
       </span>
     </div>
   </xsl:template>
-
-  <xsl:template match="cc:inline-comment[@level='critical']">
-    <xsl:if test="$release!='draft'">
-      <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
-        generated: <xsl:value-of select="text()"/>
-      </xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="cc:inline-comment">
-    <xsl:choose>
-      <xsl:when test="@linebreak='yes'">
-        <xsl:element name="div">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:element name="span">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:otherwise>
-    </xsl:choose>
-
-  </xsl:template>
-
-  <!-- Eat all comments and processing instructions-->
-  <xsl:template match="comment()"/>
-  <xsl:template match="processing-instruction()"/>
-  <!--
-       Change all htm tags to tags with no namespace.
-       This should help the transition from output w/ polluted
-       namespace to output all in htm namespace. For right now
-       this is what we have.
-  -->
-  <xsl:template match="htm:*">
-    <xsl:element name="{local-name()}">
-      <!-- Copy all the attributes -->
-      <xsl:for-each select="@*">
-	<xsl:copy/>
-      </xsl:for-each>
-      <xsl:apply-templates/>
-    </xsl:element>
-  </xsl:template>
-
-
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <xsl:template match="processing-instruction('xml-stylesheet')"/>
 
 
   <xsl:template match="cc:management-function-set">
@@ -341,13 +301,79 @@ function fixToolTips(){
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
-  <!-- By default, quietly unwrap all cc elements -->
+
+
+  <!--
+       Change all htm tags to tags with no namespace.
+       This should help the transition from output w/ polluted
+       namespace to output all in htm namespace. For right now
+       this is what we have.
+  -->
+  <xsl:template match="htm:*">
+    <xsl:element name="{local-name()}">
+      <!-- Copy all the attributes -->
+      <xsl:for-each select="@*">
+	<xsl:copy/>
+      </xsl:for-each>
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
+
+  <!-- Consume all comments -->
+  <xsl:template match="comment()"/>
+
+  <!-- Consume all processing-instructions -->
+  <xsl:template match="processing-instruction()"/>
+
+  <!--
+      Recursively copy and unwrap unmatched things (elements, attributes, text)
+  -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- 
+       By default, quietly unwrap all cc elements that are otherwise unmatched
+  -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
       <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
     </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
+
+  <!--
+      Templates associated with debugging follow.
+  -->
+  <xsl:template match="cc:inline-comment[@level='critical']">
+    <xsl:if test="$release!='draft'">
+      <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
+        generated: <xsl:value-of select="text()"/>
+      </xsl:message>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="cc:inline-comment">
+    <xsl:choose>
+      <xsl:when test="@linebreak='yes'">
+        <xsl:element name="div">
+          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
+            /></xsl:attribute>
+          <xsl:value-of select="text()"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:element name="span">
+          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
+            /></xsl:attribute>
+          <xsl:value-of select="text()"/>
+        </xsl:element>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- -->
   <xsl:template name="debug-2">
@@ -374,6 +400,4 @@ function fixToolTips(){
     <xsl:text>/</xsl:text>
   </xsl:template>
   
-  <!-- Do not write xml-model processing instruction to HTML output. -->
-  <xsl:template match="processing-instruction('xml-model')" />
 </xsl:stylesheet>
