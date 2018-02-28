@@ -37,6 +37,7 @@ function fixToolTips(){
        max-width: 15px;
     }
 
+
     a {
       text-decoration: none;
       word-wrap: break-word;
