@@ -274,7 +274,7 @@ function fixToolTips(){
 	      </xsl:when>
 	      <xsl:otherwise>
 		<xsl:call-template name="make-management-value">
-		  <xsl:with-param name="type"><xsl:value-of select='../@dval'/></xsl:with-param>
+		  <xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
 		</xsl:call-template>
 	      </xsl:otherwise>
 	    </xsl:choose>
