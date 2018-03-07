@@ -77,12 +77,6 @@
       <oneOrMore>
         <element name="RevisionHistory">
 	  <a:documentation>Documents the major changes to releases.</a:documentation>
-          <attribute name="role">
-	    <a:documentation>
-	      Documents whether the changes listed are release or drafts
-	    </a:documentation>
-	    <choice><value>final</value><value>draft</value></choice>
-	  </attribute>
 	  <zeroOrMore>
 	    <element name="entry">
 	      <a:documentation>Container for individual revisions.</a:documentation>
@@ -454,7 +448,12 @@
 	    Table defining functions that are to be done and what role is required to do them.
 	  </a:documentation>
 	  <attribute name="default">
-	    <ref name="mf-values"/>
+	    <a:documentation>Is the default value(index).</a:documentation>
+	    <choice>
+	      <value>M</value>
+	      <value>O</value>
+	      <value>_</value>
+	    </choice>
 	  </attribute>
 	  <oneOrMore>
             <element name="manager">
@@ -772,20 +771,6 @@
     </element>
   </define>
 
-  <define name="status">
-    <attribute name="status">
-      <a:documentation>
-	Denotes the status of a requirement.
-      </a:documentation>
-      <choice>
-	<value>threshold</value>
-	<value>sel-based</value>
-	<value>optional</value>
-	<value>objective</value>
-      </choice>
-    </attribute>
-  </define>
-
   <define name="selectable-group">
     <ref name="selectable-single"/>
     <oneOrMore>
@@ -900,6 +885,8 @@
 	</a:documentation>
       </attribute>
       <choice>
+	<!-- Choice of  status -->
+	<!-- If the status is objective, it must have a targetdate(?) -->
 	<group>
 	  <optional>
 	    <attribute name="targetdate">
@@ -917,15 +904,8 @@
 	    <value>objective</value>
 	  </attribute>
 	</group>
-	<attribute name="status">
-	  <a:documentation>
-	    Denotes the status of a requirement.
-	  </a:documentation>
-	  <choice>
-	    <value>threshold</value>
-	    <value>optional</value>
-	  </choice>
-	</attribute>
+
+	<!-- If the status is selection-based, it must have dependencies -->
 	<group>
 	  <attribute name="status">
 	    <a:documentation>
@@ -955,6 +935,20 @@
 	    </element>
 	  </oneOrMore>
 	</group>
+	
+	<!-- The status could also be optional or nothing (which is indicated here) -->
+	<optional>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <choice>
+	      <value>optional</value>
+	    </choice>
+	  </attribute>
+	</optional>
+
+
       </choice>
       <optional><ref name="note"/></optional>
       <zeroOrMore>
@@ -1019,33 +1013,16 @@
 	  <ref name="basic-content"/>
 	</element>
       </optional>
-      <optional>
-        <element name="group">
+
+      <oneOrMore>
+        <element name="evalactionlabel">
 	  <a:documentation>
-	    Actions levied on the developer: <i>The developer shall...</i>
+	    Actions levied on a role.
 	  </a:documentation>
-	  <attribute name="type"><value>dev-action</value></attribute>
-	  <ref name="a-elements"/>
+	  <attribute name="title"></attribute>
 	</element>
-      </optional>
-      <optional>
-        <element name="group">
-	  <a:documentation>
-	    Requirements for content and presentation.
-	  </a:documentation>
-	  <attribute name="type"><value>con-pres</value></attribute>
-	  <ref name="a-elements"/>
-	</element>
-      </optional>
-      <optional>
-        <element name="group">
-	  <a:documentation>
-	    Actions levied on the evaluator: <i>The evaluator shall...</i>
-	  </a:documentation>
-	  <attribute name="type"><value>eval-action</value></attribute>
-	  <ref name="a-elements"/>
-	</element>
-      </optional>
+	<ref name="a-elements"/>
+      </oneOrMore>
     </element>
   </define>
   <define name="glossary-section">
@@ -1059,10 +1036,5 @@
     </element>
   </define>
 
-  <define name="mf-values">
-    <choice><element name="M"><ref name="html-element"/></element></choice>
-    <choice><element name="O"><ref name="html-element"/></element></choice>
-    <choice><element name="_"><ref name="html-element"/></element></choice>
-  </define>
 
 </grammar>
