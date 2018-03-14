@@ -1227,23 +1227,30 @@ function expand(){
       <xsl:apply-templates/>
     </span>
   </xsl:template>
+
   <xsl:template match="cc:path">
     <span class="path">
       <xsl:apply-templates/>
     </span>
   </xsl:template>
 
+  <!-- Makes a ref to requirement -->
   <xsl:template name="req-refs">
+    <!-- Optional css classes -->
     <xsl:param name="class"/>
+    <!-- Requirement id -->
     <xsl:param name="req"/>
+
     <!--lower req-->
     <xsl:variable name="lreq">
       <xsl:value-of select="translate($req,$upper,$lower)"/>
     </xsl:variable>
 
+    <!--Uppercase req -->
     <xsl:variable name="capped-req">
       <xsl:value-of select="translate($lreq,$lower,$upper)"/>
     </xsl:variable>
+    
     <a class="{$class}" href="#{$capped-req}"><xsl:value-of select="$capped-req"/></a>
   </xsl:template>
   
@@ -1262,5 +1269,8 @@ function expand(){
       <xsl:apply-templates select="current()" />
   </xsl:template>
 
+
   <xsl:template name="opt_text">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:template>
 </xsl:stylesheet>
+
+
