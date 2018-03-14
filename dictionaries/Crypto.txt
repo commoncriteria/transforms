@@ -99,3 +99,14 @@ Passphrase
 passphrases
 nonces
 Nonces
+CAs
+KeyData
+kp
+KTS
+MACdata
+CGCM
+ChangeCipherSpec
+chk
+CKM
+CMC
+cmcRA
