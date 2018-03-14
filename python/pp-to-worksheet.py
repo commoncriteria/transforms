@@ -85,7 +85,10 @@ class State:
         """Handles selectables elements"""
         sels=[]
         contentCtr=0
-        ret="<span class='selectables' data-rindex='"+ str(self.selectables_index) +"'>"
+        ret="<span class='selectables"
+        if node.getAttribute("atleastone")=="yes":
+            ret+=" atleastone"
+        ret+=' data-rindex='"+ str(self.selectables_index) +"'>"
         self.selectables_index+=1
         rindex=0
         for child in node.childNodes: # Hopefully only selectable
@@ -536,7 +539,6 @@ if __name__ == "__main__":
 
     function updateDependency(root, ids){
        var aa, bb;
-       console.log("Here");
 
        var delta=root.checked?1:-1;
        for(aa=0; ids.length>aa; aa++){
@@ -570,7 +572,6 @@ if __name__ == "__main__":
     }
 
     function saveVals(){
-       console.log("At saveVals");
        performActionOnClass("val", saveToCookieJar);
        saveAllCookies(cookieJar);
        sched = undefined;

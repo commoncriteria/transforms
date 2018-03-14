@@ -514,8 +514,7 @@
       <optional>
         <attribute name="atleastone">
 	  <a:documentation>
-	    Dictates if the user is suppose to select all that apply
-	    or just one.
+	    Designates that at least one item must be selected.
 	  </a:documentation>
 	  <choice><value>yes</value></choice>
         </attribute>
