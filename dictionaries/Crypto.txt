@@ -15,6 +15,7 @@ DES
 plaintext
 Plaintext
 RBG
+RBGs	
 RNG
 RNGVS
 RSA
@@ -113,3 +114,10 @@ cmcRA
 ith
 GCD
 ECDHE
+DHE
+DKM
+DLC
+DSS
+DT
+OAEP
+PKV
