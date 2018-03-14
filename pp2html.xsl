@@ -500,7 +500,7 @@ function expand(){
           }
 
 	  <!-- Tyring to get this to work -->
-	  <xsl:if test="not($css-file='')">
+	  <xsl:if test="not($custom-css-file='')">
 	    <xsl:message>One was passed
 	       <xsl:value-of select="document($custom-css-file)/*"/>
 	    </xsl:message>
