@@ -201,19 +201,12 @@ function fixToolTips(){
 
       <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
 
-      <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise></xsl:choose>]</xsl:template>
+      <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise></xsl:choose>]
+  </xsl:template>
 
-    <!-- <xsl:for-each select="cc:selectable"> -->
-    <!--   <xsl:choose> -->
-    <!-- 	<xsl:when test="../@linebreak"> -->
-    <!-- 	  <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->
-    <!-- 	</xsl:when> -->
-    <!-- 	<xsl:otherwise><i> -->
-    <!-- 	  <xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/> -->
-    <!-- 	</xsl:otherwise> -->
-    <!--   </xsl:choose> -->
-    <!-- </xsl:for-each> -->
-
+  <!--
+      Delineates a list with commas
+  -->
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
   <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
@@ -295,7 +288,9 @@ function fixToolTips(){
     </xsl:choose>
   </xsl:template>
 
-
+  <!--
+      Template that makes a tool tip. Uses javascript
+  -->
   <xsl:template name="make-tool-tip">
     <xsl:param name="tip"/>
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>

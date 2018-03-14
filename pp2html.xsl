@@ -563,6 +563,13 @@ function expand(){
         <xsl:apply-templates select="//cc:appendix"/>
       </body>
     </html>
+
+    <!-- <xsl:for-each select="//cc:acronyms/cc:entry/cc:term"> -->
+    <!--   <xsl:variable name="tc"><xsl:value-of select="text()"/></xsl:variable> -->
+    <!--   <xsl:if test="not(//cc:abbr[@linkend=$tc])"> -->
+    <!-- 	<xsl:message>Abbr glossary term '<xsl:value-of select="$tc"/>' is never used.</xsl:message> -->
+    <!--   </xsl:if> -->
+    <!-- </xsl:for-each> -->
   </xsl:template>
   <xsl:template name="TocElement">
     <xsl:param name="prefix"/>
@@ -631,9 +638,11 @@ function expand(){
     <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
 
-  <xsl:template match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]">
-    <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>)
-  </xsl:template>
+  
+  <!-- <xsl:template match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]"> -->
+  <!--   <xsl:message>QQQ matching <xsl:value-of select="@title"/></xsl:message> -->
+  <!--   <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>) -->
+  <!-- </xsl:template> -->
 
   <xsl:template match="cc:bibliography">
     <table>
@@ -1271,6 +1280,10 @@ function expand(){
 
 
   <xsl:template name="opt_text">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:template>
+
+
+
+  
 </xsl:stylesheet>
 
 
