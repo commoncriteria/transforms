@@ -187,7 +187,8 @@ function fixToolTips(){
   <!-- -->
   <xsl:template match="cc:selectables">[<b>selection</b>
     <xsl:if test="@exclusive">, choose one of</xsl:if> 
-    <xsl:if test="@atleastone">, at least one of</xsl:if>: 
+    <!-- Selections are always 'atleastone -->
+<!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>      
       <xsl:when test="@linebreak='yes'">
 	<ul>

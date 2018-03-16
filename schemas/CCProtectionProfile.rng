@@ -512,9 +512,9 @@
 	A grouping of selectable elements.
       </a:documentation>
       <optional>
-        <attribute name="atleastone">
+        <attribute name="onlyone">
 	  <a:documentation>
-	    Designates that at least one item must be selected.
+	    Designates that at only one item may be selected.
 	  </a:documentation>
 	  <choice><value>yes</value></choice>
         </attribute>
