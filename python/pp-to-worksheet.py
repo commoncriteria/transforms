@@ -88,7 +88,8 @@ class State:
         ret="<span class='selectables"
         if node.getAttribute("atleastone")=="yes":
             ret+=" atleastone"
-        ret+=' data-rindex='"+ str(self.selectables_index) +"'>"
+        ret+=" data-rindex='"+ str(self.selectables_index) +"'>"
+
         self.selectables_index+=1
         rindex=0
         for child in node.childNodes: # Hopefully only selectable
@@ -112,7 +113,7 @@ class State:
                 chk+= " onchange='update(); "+onChange+"'";
                 chk+= " data-rindex='"+str(rindex)+"'"
                 chk +=" class='val "+classes+"'"
-                chk +="><span>"+ contents+"</span></input>\n";
+                chk +="></input><span>"+ contents+"</span>\n";
                 sels.append(chk)
                 rindex+=1
         # If the text is short, put it on one line
@@ -320,10 +321,15 @@ if __name__ == "__main__":
            fun(elems[aa], aa);
         }
     }
-    
+    var prevCheckbox = false;
+    function isPrevCheckbox(elem){
+        var ret = prevCheckbox;
+        prevCheckbox = false;
+        return ret;
+    }
 
     function isCheckbox(elem){
-        return elem.getAttribute("type") == "checkbox";
+        return prevCheckbox=(elem.getAttribute("type") == "checkbox");
     }
 
     function getId(index){
@@ -438,7 +444,7 @@ if __name__ == "__main__":
       ret="";
       var bb=0;
       for(bb=0; bb!=nodes.length; bb++){
-        ret+=getRequirement(nodes[bb]);
+         ret+=getRequirement(nodes[bb]);
       }
       return ret;
     }
@@ -455,10 +461,13 @@ if __name__ == "__main__":
         var ret = ""
         // If it's an element
         if(node.nodeType==1){
+           if(isPrevCheckbox(node)){
+               return "";
+           }
            if(isCheckbox(node)){
                if(node.checked){
                   ret+=LT+"selectable index='"+node.getAttribute('data-rindex')+"'>"; 
-                  ret+=getRequirements(node.children);
+                  ret+=getRequirement(node.nextSibling);
                   ret+=LT+"/selectable>";
                }
            }
@@ -546,7 +555,6 @@ if __name__ == "__main__":
 
           var masters = document.getElementsByClassName(id+"_m");
           enabled=false;
-          console.log("Checking " + masters.length);
           for(bb=0; masters.length>bb; bb++){
                 if (masters[bb].checked){
                     enabled=true;
@@ -567,7 +575,6 @@ if __name__ == "__main__":
        if (sched != undefined){
          clearTimeout(sched);
        }
-       console.log("At update");
        sched = setTimeout(saveVals, 1000);
     }
 
