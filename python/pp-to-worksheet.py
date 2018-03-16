@@ -329,7 +329,7 @@ if __name__ == "__main__":
     }
 
     function isCheckbox(elem){
-        return prevCheckbox=(elem.getAttribute("type") == "checkbox");
+        return elem.getAttribute("type") == "checkbox";
     }
 
     function getId(index){
@@ -470,6 +470,7 @@ if __name__ == "__main__":
                   ret+=getRequirement(node.nextSibling);
                   ret+=LT+"/selectable>";
                }
+               prevCheckbox=true;
            }
            else if(node.classList.contains("selectables")){
                ret+=LT+"selectables>"
