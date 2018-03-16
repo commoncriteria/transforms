@@ -255,6 +255,17 @@ if __name__ == "__main__":
     form += "<meta charset='utf-8'></meta><title>"+root.getAttribute("name")+"</title>"
     form += """
            <style type="text/css">
+
+    input[type=checkbox] + span {
+       opacity: .6;
+    }
+
+    input[type=checkbox]:checked + span {
+       opacity: 1;
+    }
+
+
+
     .disabled {
        opacity: .2;
        pointer-events: none;
@@ -296,7 +307,7 @@ if __name__ == "__main__":
        margin-left:50px;
     }
 
-
+    input[
            </style>
            <Script Type='text/javascript'>
 
