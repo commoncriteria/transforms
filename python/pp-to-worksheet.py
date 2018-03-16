@@ -86,9 +86,9 @@ class State:
         sels=[]
         contentCtr=0
         ret="<span class='selectables"
-        if node.getAttribute("atleastone")=="yes":
-            ret+=" atleastone"
-        ret+=" data-rindex='"+ str(self.selectables_index) +"'>"
+        if node.getAttribute("exclusive")=="yes":
+            ret+=" onlyone"
+        ret+="' data-rindex='"+ str(self.selectables_index) +"'>"
 
         self.selectables_index+=1
         rindex=0
@@ -164,7 +164,7 @@ class State:
                 return self.handle_node( getPpEls(node, 'title')[0], True)
             elif node.tagName == "f-component" or node.tagName == "a-component":
                 id=node.getAttribute("id")
-                self.index+="<tr><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
+                self.index+="<tr id='sn_"+id+"'><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
                 ret = "<div id='"+id+"'"
                 # The only direct descendants are possible should be the children
                 child=getPpEls(node, 'selection-depends')
@@ -264,7 +264,16 @@ if __name__ == "__main__":
        opacity: 1;
     }
 
+    td.invalid{
+       background-color: #F00;
+    }
+    td.valid{
+       background-color: #FFF;
+    }
 
+    .invalid {
+       background-color: #F00;
+    }
 
     .disabled {
        opacity: .2;
@@ -386,6 +395,7 @@ if __name__ == "__main__":
         }
         cookieJar = readAllCookies();
         performActionOnClass("val", retrieveFromCookieJar);
+        validateRequirements();
     }
 
     function readAllCookies() {
@@ -587,12 +597,82 @@ if __name__ == "__main__":
        if (sched != undefined){
          clearTimeout(sched);
        }
-       sched = setTimeout(saveVals, 1000);
+       sched = setTimeout(delayedUpdate, 1000);
     }
 
-    function saveVals(){
+    function validateSelectables(sel){
+
+       var child  = sel.firstElementChild;
+       if( child.tagName == 'UL' ){
+          child=child.firstElementChild;
+       }
+       var numChecked=0;
+       // Now we either have a checkbox or an li
+       while(child!=null){
+          if(child.tagName == "LI"){
+             if(child.firstElementChild.checked){
+                numChecked++;
+                if( !reqValidator(child) ){
+                   return false;
+                }
+             }
+          }
+          else if(child.checked){
+                numChecked++;
+                if( !reqValidator(child) ){
+                   return false;
+                }
+          }
+          child = child.nextElementSibling;
+       }
+       if(numChecked==0) return false;
+       if(numChecked==1) return true;
+       return !sel.classList.contains("onlyone");
+    }
+
+    function reqValidator(elem){
+        var child = elem.firstElementChild;
+        var ret;
+        while(child != null){
+           if( child.classList.contains("selectables")){
+              ret = validateSelectables(child);
+              if(!ret) return false;
+           }
+           else if( child.classList.contains("assignment")){
+              if(! child.value) return false;
+           }
+           else{
+              ret = reqValidator(child);
+              if(!ret) return false;
+           }
+           child = child.nextElementSibling;
+        }
+        return true;
+    }
+
+    function validateRequirements(){
+        var aa;
+        var reqs = document.getElementsByClassName('requirement');
+        for(aa=0; reqs.length > aa; aa++){
+
+             var indy =   document.getElementById("sn_"+reqs.id);
+             if(reqValidator(reqs[aa])){
+                 reqs[aa].classList.add('valid');
+                 reqs[aa].classList.remove('invalid');
+             }
+             else{
+                 reqs[aa].classList.add('invalid');
+                 reqs[aa].classList.remove('valid');
+             }
+        }
+    }
+
+
+    function delayedUpdate(){
        performActionOnClass("val", saveToCookieJar);
        saveAllCookies(cookieJar);
+
+       validateRequirements();
        sched = undefined;
     }
 
