@@ -886,7 +886,7 @@ function expand(){
 
     <xsl:if test="@status='sel-based'">
         <div class="statustag">
-          <b><i>This is a selection-based component. It inclusion depends upon selection from
+          <b><i>This is a selection-based component. Its inclusion depends upon selection from
               <xsl:for-each select="cc:selection-depends">
                 <b><i>
                   <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
