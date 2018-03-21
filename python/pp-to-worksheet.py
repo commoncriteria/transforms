@@ -158,7 +158,7 @@ class State:
                 return ret
 
             elif node.tagName == "section":
-                idAttr=node.getAttribute("id")
+                idAttr=node.getAttribute("id").upper()
                 ret =""
                 if "SFRs" == idAttr or "SARs" == idAttr:
                     ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
@@ -170,9 +170,11 @@ class State:
                 return self.handle_node( getPpEls(node, 'title')[0], True);
             
             elif node.tagName == "f-component" or node.tagName == "a-component":
-                id=node.getAttribute("id")
+                id=node.getAttribute("id").upper()
+
                 # This builds the side index.
-                self.index+="<tr id='sn_"+id+"'><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
+#                self.index+="<tr id='sn_"+id+"'><td colspan='2'><a href='#"+id+"'>"+id+"</a></td></tr>\n"
+
                 ret = "<div id='"+id+"'"
                 # The only direct descendants are possible should be the children
                 child=getPpEls(node, 'selection-depends')
@@ -186,11 +188,14 @@ class State:
             
             elif node.tagName == "title":
                 self.selectables_index=0
-                id = node.parentNode.getAttribute('id');
+                id = node.parentNode.getAttribute('id').upper();
                 ret=""
+                self.index+="<tr id='sn_"+id+"'><td><span class='stat'/></td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
                 ret+="<div id='"+ id +"' class='requirement'>"
                 ret+="<div class='f-el-title'>"+id+"</div>"
+                ret+="<div class='words'>"
                 ret+=self.handle_parent(node, True)
+                ret+="</div>\n"
                 ret+="</div>\n"
                 return ret
                 
@@ -274,23 +279,26 @@ if __name__ == "__main__":
        opacity: 1;
     }
 
-    td.invalid{
-       background-color: #F00;
+    .words{
+       padding-left: 40px;
     }
-    td.valid{
-       background-color: #FFF;
+    .f-el-title{
+       font-family: monospace;
+       font-size: x-large;
     }
 
+    .sidenav .valid .stat::before,
     .valid .f-el-title::before{
        content: "\\2713";
        color: #0F0;
     }
 
+    .sidenav .invalid .stat::before,
     .invalid .f-el-title::before{
        content: "\\2715";
        color: #F00;
     }
-
+    
     .disabled {
        opacity: .2;
        pointer-events: none;
@@ -316,7 +324,7 @@ if __name__ == "__main__":
      }
 
     .sidenav:hover{
-        width: 160px;
+        width: 200px;
     }
 
     .sidenav a{
@@ -332,7 +340,6 @@ if __name__ == "__main__":
        margin-left:50px;
     }
 
-    input[
            </style>
            <Script Type='text/javascript'>
 
@@ -668,13 +675,16 @@ if __name__ == "__main__":
         var aa;
         var reqs = document.getElementsByClassName('requirement');
         for(aa=0; reqs.length > aa; aa++){
-
-             var indy =   document.getElementById("sn_"+reqs.id);
+             var indy =   document.getElementById("sn_"+reqs[aa].id);
              if(reqValidator(reqs[aa])){
+                 indy.classList.add('valid');
+                 indy.classList.remove('invalid');
                  reqs[aa].classList.add('valid');
                  reqs[aa].classList.remove('invalid');
              }
              else{
+                 indy.classList.add('invalid');
+                 indy.classList.remove('valid');
                  reqs[aa].classList.add('invalid');
                  reqs[aa].classList.remove('valid');
              }
