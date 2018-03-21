@@ -158,7 +158,7 @@ class State:
                 return ret
 
             elif node.tagName == "section":
-                idAttr=node.getAttribute("id").upper()
+                idAttr=node.getAttribute("id")
                 ret =""
                 if "SFRs" == idAttr or "SARs" == idAttr:
                     ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
@@ -170,10 +170,8 @@ class State:
                 return self.handle_node( getPpEls(node, 'title')[0], True);
             
             elif node.tagName == "f-component" or node.tagName == "a-component":
-                id=node.getAttribute("id").upper()
+                id=node.getAttribute("id")
 
-                # This builds the side index.
-#                self.index+="<tr id='sn_"+id+"'><td colspan='2'><a href='#"+id+"'>"+id+"</a></td></tr>\n"
 
                 ret = "<div id='"+id+"'"
                 # The only direct descendants are possible should be the children
@@ -181,18 +179,23 @@ class State:
                 if child.length > 0:
                     ret+=" class='disabled'"
                 ret+=">"
-                ret+="<h3><a href='#"+id+"'>"+id+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
+                ret+="<h3><a href='#"+id+"'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
                 ret+=self.handle_parent(node, True)
                 ret+="</div>"
                 return ret
             
             elif node.tagName == "title":
                 self.selectables_index=0
-                id = node.parentNode.getAttribute('id').upper();
+                req_id = node.parentNode.getAttribute('id')
+                com_id = node.parentNode.parentNode.getAttribute('id')
+                slaves = getPpEls(node.parentNode.parentNode, 'selection-depends')
                 ret=""
-                self.index+="<tr id='sn_"+id+"'><td><span class='stat'/></td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
-                ret+="<div id='"+ id +"' class='requirement'>"
-                ret+="<div class='f-el-title'>"+id+"</div>"
+                self.index+="<tr class='"+com_id
+                if slaves.length > 0:
+                    self.index+= " disabled"
+                self.index+="' id='sn_"+req_id+"'><td><span class='stat'/></td><td><a href='#"+req_id+"'>"+req_id.upper()+"</a></td></tr>\n"
+                ret+="<div id='"+ req_id +"' class='requirement'>"
+                ret+="<div class='f-el-title'>"+req_id.upper()+"</div>"
                 ret+="<div class='words'>"
                 ret+=self.handle_parent(node, True)
                 ret+="</div>\n"
@@ -236,7 +239,7 @@ class State:
         for element in getPpEls(root, 'selection-depends'):
             # req=element.getAttribute("req");
             selIds=element.getAttribute("ids");
-            slaveId=element.parentNode.getAttribute("id");
+            slaveId=element.parentNode.getAttribute("id")
             for selId in selIds.split(','):
                 reqs=[]
                 if selId in self.selMap:
@@ -298,7 +301,8 @@ if __name__ == "__main__":
        content: "\\2715";
        color: #F00;
     }
-    
+
+
     .disabled {
        opacity: .2;
        pointer-events: none;
@@ -330,6 +334,10 @@ if __name__ == "__main__":
     .sidenav a{
         display: none;
         text-decoration: none;
+    }
+
+    .sidenav tr.disabled{
+        display: none;
     }
 
 
@@ -591,25 +599,41 @@ if __name__ == "__main__":
 
     var selbasedCtrs={}
 
+    function areAnyMastersSelected(id){
+       var masters = document.getElementsByClassName(id+"_m");
+       for(bb=0; masters.length>bb; bb++){
+          if (masters[bb].checked){
+             return true;
+          }
+       }
+       return false;
+    }
+
+    function modifyClass( el, clazz, isAdd ){
+      if(el == null){
+          console.log("Failed to find element with id: " + id);
+          return false;
+      }
+      if(isAdd) el.classList.add(clazz);
+      else      el.classList.remove(clazz);
+      return true;
+    }
+    /* 
+     * This design does not account for cascading dependent components .
+     * There are none currently, so this limitation is acceptable.
+     */
     function updateDependency(root, ids){
        var aa, bb;
 
-       var delta=root.checked?1:-1;
-       for(aa=0; ids.length>aa; aa++){
-          id=ids[aa];
-
-          var masters = document.getElementsByClassName(id+"_m");
-          enabled=false;
-          for(bb=0; masters.length>bb; bb++){
-                if (masters[bb].checked){
-                    enabled=true;
-                }
-          }
-          if(enabled){
-             document.getElementById(id).classList.remove('disabled');
-          }
-          else{
-             document.getElementById(id).classList.add('disabled');
+       // Run through all 
+       for(aa=0; ids.length>aa; aa++){     
+          var enabled = areAnyMastersSelected(ids[aa]);
+          // We might need to recur on these if the selection-based
+          // requirement had a dependent selection-based requirement.
+          modifyClass( document.getElementById(ids[aa]), "disabled", !enabled);
+          var sn_s = document.getElementsByClassName(ids[aa]);
+          for(bb=0; sn_s.length>bb; bb++){
+             modifyClass(sn_s[bb], "disabled", !enabled)
           }
        }
     }
