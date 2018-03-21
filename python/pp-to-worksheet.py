@@ -387,8 +387,9 @@ if __name__ == "__main__":
         return "v_" + index;
     } 
 
+    var prefix="";
     function saveToCookieJar(elem, index){
-        var id = getId(index);
+        var id = prefix+":"+getId(index);
         if( isCheckbox(elem)){
             cookieJar[id]=elem.checked;
         }
@@ -396,14 +397,14 @@ if __name__ == "__main__":
             cookieJar[id]=elem.selectedIndex;
         }
         else{
-            if(elem.value != undefined && elem.value != "undefined" ){
-               cookieJar[id]=elem.value;
+            if(elem.value != undefined){
+               if( elem.value != "undefined" ) cookieJar[id]=elem.value;
             }
         }
     }
 
     function retrieveFromCookieJar(elem, index){
-        var id = getId(index);
+        var id = prefix+":"+getId(index);
         if( isCheckbox(elem)){
             elem.checked= (cookieJar[id] == "true");
         }
@@ -413,17 +414,22 @@ if __name__ == "__main__":
             }
         }
         else{
-            if( id in cookieJar && cookieJar[id] != "undefined"){
-                elem.value= cookieJar[id];
+            if( id in cookieJar) {
+               if(cookieJar[id] != "undefined"){
+                  elem.value= cookieJar[id];
+               }
             }
         }
     }
+    var prefix="";
 
     function init(){
         if( document.URL.startsWith("file:///") ){
            var warn = document.getElementById("url-warning");
            warn.style.display='block';
         }
+        var url = new URL(document.URL);
+        prefix = url.searchParams.get("prefix");
         cookieJar = readAllCookies();
         performActionOnClass("val", retrieveFromCookieJar);
         validateRequirements();
@@ -433,7 +439,7 @@ if __name__ == "__main__":
             ret=[];
             var ca = document.cookie.split(';');
             var aa,bb;
-            for(aa=0;aa != ca.length; aa++) {
+            for(aa=0;ca.length > aa ; aa++) {
                 if (3>ca[aa].length){ continue;}
                 var blah=ca[aa].split('=');
                 if (2 != blah.length){
@@ -441,6 +447,7 @@ if __name__ == "__main__":
                    continue;
                 }
                 key=blah[0].trim();
+                console.log("Read " + key);
                 val=decodeURIComponent(blah[1]);
                 ret[key]=val;
             }
@@ -448,18 +455,10 @@ if __name__ == "__main__":
     }
 
     function saveAllCookies(cookies){
-    //    var ca = document.cookie.split(';');
-    //    var aa,bb;
-    //    // Delete all existing cookies
-    //    for(aa=0;aa != ca.length; aa++) {
-    //       if (3>ca[aa].length){ continue;}
-    //       var blah=ca[aa].split('=');
-    //       if (2 != blah.length)  continue;
-    //       eraseCookie( blah[0] );
-    //    }
-    //    // Save off everything in the cookie jar
         var key;
+        // run through the cookies
         for (key in cookies) {
+           console.log("Saving off "+key);
            createCookie(key, cookies[key] );
         }
     }
