@@ -136,22 +136,27 @@ class State:
 #            print("Handling " + node.tagName);
             if node.tagName == "selectables":
                 return self.handle_selectables(node)
+            
             elif node.tagName == "refinement":
                 ret = "<span class='refinement'>"
                 ret += self.handle_parent(node, True)
                 ret += "</span>"
                 return ret
+            
             elif node.tagName == "assignable":
                 ret = "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
                 ret += ' '.join(self.handle_parent(node, True).split())
                 ret +="'></textarea>"
                 return ret
+            
             elif node.tagName == "abbr" or node.tagName == "linkref":
                 if show_text:
                     return node.getAttribute("linkend")
+
             elif node.tagName == "management-function-set":
                 ret=self.handle_management_function_set(node)
                 return ret
+
             elif node.tagName == "section":
                 idAttr=node.getAttribute("id")
                 ret =""
@@ -161,9 +166,12 @@ class State:
                 return ret
 
             elif node.tagName == "f-element" or node.tagName == "a-element":
-                return self.handle_node( getPpEls(node, 'title')[0], True)
+                # Requirements are handled in the title section
+                return self.handle_node( getPpEls(node, 'title')[0], True);
+            
             elif node.tagName == "f-component" or node.tagName == "a-component":
                 id=node.getAttribute("id")
+                # This builds the side index.
                 self.index+="<tr id='sn_"+id+"'><td>&#x2714;</td><td><a href='#"+id+"'>"+id+"</a></td></tr>\n"
                 ret = "<div id='"+id+"'"
                 # The only direct descendants are possible should be the children
@@ -175,18 +183,23 @@ class State:
                 ret+=self.handle_parent(node, True)
                 ret+="</div>"
                 return ret
+            
             elif node.tagName == "title":
                 self.selectables_index=0
+                id = node.parentNode.getAttribute('id');
                 ret=""
-                ret+="<div id='"+node.parentNode.getAttribute('id') +"' class='requirement'>"
+                ret+="<div id='"+ id +"' class='requirement'>"
+                ret+="<div class='f-el-title'>"+id+"</div>"
                 ret+=self.handle_parent(node, True)
                 ret+="</div>\n"
                 return ret
                 
             elif node.tagName == "h:strike":
-                # Just ignore text that is striken
+                # Just ignore text that is striked out
                 pass
 
+            # This assumes that prefixed nodes are part of the html namespace
+            # and non prefix nodes are from the CC namespace.
             elif ":" in node.tagName:
                 if show_text:
                     # Just remove the HTML prefix and recur.
@@ -225,9 +238,6 @@ class State:
                     reqs =self.selMap[selId];
                 reqs.append(slaveId)
                 self.selMap[selId]=reqs
-
-
-
 
 
 if __name__ == "__main__":
@@ -271,8 +281,14 @@ if __name__ == "__main__":
        background-color: #FFF;
     }
 
-    .invalid {
-       background-color: #F00;
+    .valid .f-el-title::before{
+       content: "\\2713";
+       color: #0F0;
+    }
+
+    .invalid .f-el-title::before{
+       content: "\\2715";
+       color: #F00;
     }
 
     .disabled {
@@ -593,7 +609,6 @@ if __name__ == "__main__":
 
     var sched;
     function update(){
-
        if (sched != undefined){
          clearTimeout(sched);
        }
@@ -601,7 +616,6 @@ if __name__ == "__main__":
     }
 
     function validateSelectables(sel){
-
        var child  = sel.firstElementChild;
        if( child.tagName == 'UL' ){
           child=child.firstElementChild;
