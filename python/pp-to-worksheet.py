@@ -349,7 +349,7 @@ if __name__ == "__main__":
     }
 
            </style>
-           <Script Type='text/javascript'>
+           <script Type='text/javascript'>
 
     const AMPERSAND=String.fromCharCode(38);
     const LT=String.fromCharCode(60);
