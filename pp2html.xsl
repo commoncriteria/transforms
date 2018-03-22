@@ -65,56 +65,65 @@ function buildIndex(){
     var eles = document.getElementsByClassName("indexable");
     var toc = document.getElementById("toc");
     var aa=0, bb=0;
-    var ret=[];
+
+    // prefix_array tracks the current numbering as we iterate through the document
+    var prefix_array=[];
     var isAlpha=false;
     // Run through all the indexable
     while(eles.length > aa){
         var spacer="";
         if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
-           ret=[];
+           prefix_array=[];
            isAlpha=true;
         }
-    
-        // Build levels
-	level = eles[aa].getAttribute("data-level");
-	while( level > ret.length ){
-	    ret.push(0);
-	}
-        // Increment the one we're on
-        ret[level-1]++;
 
-	// WARNING: This will not work for documents with greater than 26 appendices
-	var prefix=""+(isAlpha?String.fromCharCode(64 +ret[0]):ret[0]);
-        for(bb=1; level>bb; bb++){
-		prefix+="."+ret[bb];
-		spacer+=NBSP;
-	}
-	
-	// Set the number for the references
-        eles[aa].firstElementChild.innerHTML=prefix
+        // Current numbering level depth
+        level = eles[aa].getAttribute("data-level");
 
-	prefix=prefix+(isAlpha?":":".");
+        // Add numbering levels to array if level of depth increases
+        while (level>prefix_array.length) {
+          prefix_array.push(0);
+	      }
 
-
-	// Build the toc entry
-	var div= document.createElement('div');
-	toc.appendChild(div);
-	var line = document.createTextNode(spacer);
-        div.appendChild(line);
-	line = document.createElement('a');
-	line.href="#"+eles[aa].id;
-	line.class="toc-link"
-	line.innerHTML=eles[aa].textContent;
-	div.appendChild(line);
-
-	
-        // Zero out the ones after
-        while(ret.length > level ){
-            ret[level]=0;
-            level++;
+        // Truncate levels of array if numbering level decreases
+        if(prefix_array.length>level){
+          prefix_array.length=level;
         }
+
+        // Increment the level we're currently on
+        prefix_array[level-1]++;
+
+        // Make appendices use an alphabetical identifier.
+        // This will not work for documents with greater than 26 appendices
+        var prefix=""+(isAlpha?String.fromCharCode(64 +prefix_array[0]):prefix_array[0]);
+
+        // If level is exactly 1, add a period for sake of appearance
+        if (level == 1) {
+          prefix+=".";
+        }
+
+        // Add numbering levels for each level higher than 1
+        for (bb=1; level>bb; bb++) {
+          prefix+="."+prefix_array[bb];
+          spacer+=NBSP;
+        }
+
+        // Insert the prefix/identifier into the document
+        eles[aa].firstElementChild.innerHTML=prefix;
+
+        // Build the toc entry
+        var div= document.createElement('div');
+        toc.appendChild(div);
+        var line = document.createTextNode(spacer);
+        div.appendChild(line);
+        line = document.createElement('a');
+        line.href="#"+eles[aa].id;
+        line.class="toc-link"
+        line.innerHTML=eles[aa].textContent;
+        div.appendChild(line);
+
         // Go to the next element
-	aa++;
+        aa++;
     }
 }
 
@@ -190,11 +199,11 @@ function init(){
     fixIndexRefs();
     fixToolTips();
     if(getQueryVariable("expand") == "on"){
-	expand();
+      expand();
     }
 }
 
-// Pass a URL variable to this function and it will return it 's value
+// Pass a URL variable to this function and it will return its value
 function getQueryVariable(variable)
 {
     var query = window.location.search.substring(1);
