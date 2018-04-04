@@ -208,7 +208,7 @@ function fixToolTips(){
   -->
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
-  <xsl:template match="cc:assignable"> [<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>] </span></xsl:template>
+  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>]</span></xsl:template>
 
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
@@ -322,11 +322,7 @@ function fixToolTips(){
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
+  <xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 
   <!-- 
        By default, quietly unwrap all cc elements that are otherwise unmatched

@@ -344,6 +344,17 @@ if __name__ == "__main__":
     .sidenav:hover a{
         display: inline;
     }
+    
+    @media print{
+       .sidenav {
+           display: none;
+       }
+       BUTTON{
+           display: none;
+       }
+       
+    }
+
     #main{
        margin-left:50px;
     }
