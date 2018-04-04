@@ -79,9 +79,6 @@ function fixToolTips(){
     .note-header{
       font-weight: bold;
     }
-    .note-header::after{
-      content: ": "
-    }
     .note p:first-child{
       display: inline;
     }
@@ -199,6 +196,7 @@ function fixToolTips(){
     </ul>
     </xsl:when>
     <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
+    <!-- If the selection has a nested selection -->
     <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
    <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise></xsl:choose>]
   </xsl:template>
@@ -208,7 +206,7 @@ function fixToolTips(){
   -->
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
-  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/>]</span></xsl:template>
+  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]</xsl:template>
 
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
@@ -218,7 +216,7 @@ function fixToolTips(){
         <xsl:when test="@role='application'">Application</xsl:when>
         <xsl:when test="@role='developer'">Developer</xsl:when>
         <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note</span> 
+      </xsl:choose> Note:</span> 
       <span class="note">
         <xsl:apply-templates/>
       </span>
