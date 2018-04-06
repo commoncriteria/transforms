@@ -334,13 +334,12 @@ if __name__ == "__main__":
        display: none;
     } 
 
-
     @media print{
-       BUTTON{
-           display: none;
+       .warning-pane, BUTTON{
+          display: none;
        }
        .hide{
-         display: block;
+          display: block;
        }
     }
 
@@ -416,7 +415,6 @@ if __name__ == "__main__":
         // Hide the rest
         var aa;
         var compDivs = document.getElementsByClassName('component');
-        console.log('here');
         for (aa= compDivs.length-1; aa>=0; aa--){
            // Skip the current one
            if(elem == compDivs[aa]) continue;
@@ -703,6 +701,50 @@ if __name__ == "__main__":
        if(numChecked==1) return true;
        return !sel.classList.contains("onlyone");
     }
+    function setFocusOnComponent(comp){
+       comp.getElementsByClassName('f-comp-title')[0].focus();
+       return true;
+    }
+ 
+    function handleKey(event){
+       if(! event.ctrlKey ) return;
+       var key = event.which || event.keyCode;
+       var curr = document.activeElement;
+       var comps = document.getElementsByClassName('component');
+       if (comps.length == 0) return;
+       if (curr==document.body){
+          curr=null;
+       }
+       var aa;
+       if( key == 28){
+          if (curr == null) curr =  comps[comps.length-1];
+          for(aa=comps.length-1; aa >= 0; aa--){
+             if(comps[aa] == curr) break;
+             if(comps[aa].contains(curr)) break;
+          }
+          for(aa--; aa>=0; aa--){
+             if(comps[aa].classList.contains('disabled')) continue;
+             if(comps[aa].classList.contains('invalid')){
+                return setFocusOnComponent(comps[aa]);
+             }
+          }
+          return "";
+       }
+       else if( key == 30){
+          if (curr == null) curr =  comps[0];
+          for(aa=0; comps.length > aa; aa++){
+             if(comps[aa] == curr) break;
+             if(comps[aa].contains(curr)) break;
+          }
+          for(aa++; comps.length > aa; aa++){
+             if(comps[aa].classList.contains('disabled')) continue;
+             if(comps[aa].classList.contains('invalid')){
+                return setFocusOnComponent(comps[aa]);
+             }
+          }
+          return "";
+       }
+    }
 
     function reqValidator(elem){
         var child = elem.firstElementChild;
@@ -783,24 +825,23 @@ if __name__ == "__main__":
     }
 
            </script>
-       </head>       <body onload='init();'><div id="main">
-    """
+       </head>       <body onkeypress='handleKey(event); return true;' onload='init();'>
+"""
 
     form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
     form +=  """
-<noscript>
-    <h1 class="warning">This page requires JavaScript.</h1></noscript>
+<div class='warning-pane'>
+   <noscript><h2 class="warning">This page requires JavaScript.</h1></noscript>
     <h2 class="warning" id='url-warning' style="display: none;">
-Most browsers do not store cookies from local pages (i.e, 'file:///...').
-When you close this page, all data will most likely be lost.
-             </h2>\n
+    Most browsers do not store cookies from local pages (i.e, 'file:///...').
+    When you close this page, all data will most likely be lost.</h1>
+</div>
     """
 
     form += state.handle_node(root, False)
     form += """
           <br/>
           <button type="button" onclick="generateReport()">Generate Report</button>
-        </div> <!-- End of main -->
        </body>
     </html>
 """
