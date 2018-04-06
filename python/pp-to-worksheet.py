@@ -11,6 +11,7 @@ from xml.dom import minidom
 from xml.sax.saxutils import escape
 
 PPNS='https://niap-ccevs.org/cc/v1'
+HTMNS="http://www.w3.org/1999/xhtml"
 
 def warn(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -93,7 +94,7 @@ class State:
         self.selectables_index+=1
         rindex=0
         for child in node.childNodes: # Hopefully only selectable
-            if child.nodeType == xml.dom.Node.ELEMENT_NODE and child.tagName == "selectable":
+            if child.nodeType == xml.dom.Node.ELEMENT_NODE and child.localName == "selectable":
                 contents = self.handle_node(child,True)
                 contentCtr+=len(contents)
                 chk = "<input type='checkbox'"
@@ -128,90 +129,88 @@ class State:
             ret+="</ul>\n"
         return ret+"</span>"
 
+    def handle_cc_node(self, node, show_text):
+        if node.localName == "selectables":
+            return self.handle_selectables(node)
+
+        elif node.localName == "refinement":
+            ret = "<span class='refinement'>"
+            ret += self.handle_parent(node, True)
+            ret += "</span>"
+            return ret
+
+        elif node.localName == "assignable":
+            ret = "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
+            ret += ' '.join(self.handle_parent(node, True).split())
+            ret +="'></textarea>"
+            return ret
+
+        elif node.localName == "abbr" or node.localName == "linkref":
+            if show_text:
+                return node.getAttribute("linkend")
+
+        elif node.localName == "management-function-set":
+            ret=self.handle_management_function_set(node)
+            return ret
+
+        elif node.localName == "section":
+            idAttr=node.getAttribute("id")
+            ret =""
+            if "SFRs" == idAttr or "SARs" == idAttr:
+                ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
+            ret += self.handle_parent(node, False)
+            return ret
+
+        elif node.localName == "f-element" or node.localName == "a-element":
+            # Requirements are handled in the title section
+            return self.handle_node( getPpEls(node, 'title')[0], True);
+
+        elif node.localName == "f-component" or node.localName == "a-component":
+            id=node.getAttribute("id")
+            ret = "<div id='"+id+"'"
+            # The only direct descendants are possible should be the children
+            child=getPpEls(node, 'selection-depends')
+            if child.length > 0:
+                ret+=" class='disabled'"
+            ret+=">"
+            ret+="<h3><a href='#"+id+"'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
+            ret+=self.handle_parent(node, True)
+            ret+="</div>"
+            return ret
+            
+        elif node.localName == "title":
+            self.selectables_index=0
+            req_id = node.parentNode.getAttribute('id')
+            com_id = node.parentNode.parentNode.getAttribute('id')
+            slaves = getPpEls(node.parentNode.parentNode, 'selection-depends')
+            ret=""
+            self.index+="<tr class='"+com_id
+            if slaves.length > 0:
+                self.index+= " disabled"
+            self.index+="' id='sn_"+req_id+"'><td><span class='stat'/></td><td><a href='#"+req_id+"'>"+req_id.upper()+"</a></td></tr>\n"
+            ret+="<div id='"+ req_id +"' class='requirement'>"
+            ret+="<div class='f-el-title'>"+req_id.upper()+"</div>"
+            ret+="<div class='words'>"
+            ret+=self.handle_parent(node, True)
+            ret+="</div>\n"
+            ret+="</div>\n"
+            return ret
+        else:
+            return self.handle_parent(node, show_text)
+        return ""
+
+            
     def handle_node(self, node, show_text):
         """Converts singular XML nodes to text."""
         if show_text and node.nodeType == xml.dom.Node.TEXT_NODE:
             return escape(node.data)
         elif node.nodeType == xml.dom.Node.ELEMENT_NODE:
-#            print("Handling " + node.tagName);
-            if node.tagName == "selectables":
-                return self.handle_selectables(node)
-            
-            elif node.tagName == "refinement":
-                ret = "<span class='refinement'>"
-                ret += self.handle_parent(node, True)
-                ret += "</span>"
-                return ret
-            
-            elif node.tagName == "assignable":
-                ret = "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
-                ret += ' '.join(self.handle_parent(node, True).split())
-                ret +="'></textarea>"
-                return ret
-            
-            elif node.tagName == "abbr" or node.tagName == "linkref":
-                if show_text:
-                    return node.getAttribute("linkend")
-
-            elif node.tagName == "management-function-set":
-                ret=self.handle_management_function_set(node)
-                return ret
-
-            elif node.tagName == "section":
-                idAttr=node.getAttribute("id")
-                ret =""
-                if "SFRs" == idAttr or "SARs" == idAttr:
-                    ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
-                ret += self.handle_parent(node, False)
-                return ret
-
-            elif node.tagName == "f-element" or node.tagName == "a-element":
-                # Requirements are handled in the title section
-                return self.handle_node( getPpEls(node, 'title')[0], True);
-            
-            elif node.tagName == "f-component" or node.tagName == "a-component":
-                id=node.getAttribute("id")
-
-
-                ret = "<div id='"+id+"'"
-                # The only direct descendants are possible should be the children
-                child=getPpEls(node, 'selection-depends')
-                if child.length > 0:
-                    ret+=" class='disabled'"
-                ret+=">"
-                ret+="<h3><a href='#"+id+"'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
-                ret+=self.handle_parent(node, True)
-                ret+="</div>"
-                return ret
-            
-            elif node.tagName == "title":
-                self.selectables_index=0
-                req_id = node.parentNode.getAttribute('id')
-                com_id = node.parentNode.parentNode.getAttribute('id')
-                slaves = getPpEls(node.parentNode.parentNode, 'selection-depends')
-                ret=""
-                self.index+="<tr class='"+com_id
-                if slaves.length > 0:
-                    self.index+= " disabled"
-                self.index+="' id='sn_"+req_id+"'><td><span class='stat'/></td><td><a href='#"+req_id+"'>"+req_id.upper()+"</a></td></tr>\n"
-                ret+="<div id='"+ req_id +"' class='requirement'>"
-                ret+="<div class='f-el-title'>"+req_id.upper()+"</div>"
-                ret+="<div class='words'>"
-                ret+=self.handle_parent(node, True)
-                ret+="</div>\n"
-                ret+="</div>\n"
-                return ret
-                
-            elif node.tagName == "h:strike":
-                # Just ignore text that is striked out
-                pass
-
-            # This assumes that prefixed nodes are part of the html namespace
-            # and non prefix nodes are from the CC namespace.
-            elif ":" in node.tagName:
-                if show_text:
+            if node.namespaceURI == PPNS:
+                return self.handle_cc_node(node, show_text)
+            elif node.namespaceURI == HTMNS:
+                if node.localName != "strike" and show_text:                     # Just ignore text that is striked out
                     # Just remove the HTML prefix and recur.
-                    tag = re.sub(r'.*:', '', node.tagName)
+                    tag = re.sub(r'.*:', '', node.localName)
                     ret = "<"+tag
                     attrs = node.attributes
                     for aa in range(0,attrs.length) :
@@ -221,14 +220,17 @@ class State:
                     ret += self.handle_parent(node, True)
                     ret += "</"+tag+">"
                     return ret;
-            else:
-                return self.handle_parent(node, show_text)
         return ""
 
     def handle_parent(self, node, show_text):
         ret=""
         for child in node.childNodes:
-            ret +=self.handle_node(child, show_text)
+            ret += self.handle_node(child, show_text)
+            # abc = self.handle_node(child, show_text)
+            # if abc is None:
+            #     print("---NONE---")
+            # else:
+            #     ret += abc
         return ret
 
     def makeSelectionMap(self, root):
