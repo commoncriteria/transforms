@@ -30,8 +30,6 @@ class State:
         self.compMap={}
         # Current index for the selectables
         self.selectables_index=0
-        # index
-        self.index=""
         # Map from management function table values to HTML
         self.man_fun_map={}
         self.man_fun_map['M']="X"
@@ -170,9 +168,11 @@ class State:
             ret = "<div id='"+id+"'"
             # The only direct descendants are possible should be the children
             child=getPpEls(node, 'selection-depends')
+            ret+=" class='component"
+
             if child.length > 0:
-                ret+=" class='disabled'"
-            ret+=">"
+                ret+=" disabled"
+            ret+="'>"
             ret+="<h3><a href='#"+id+"'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
             ret+=self.handle_parent(node, True)
             ret+="</div>"
@@ -184,10 +184,6 @@ class State:
             com_id = node.parentNode.parentNode.getAttribute('id')
             slaves = getPpEls(node.parentNode.parentNode, 'selection-depends')
             ret=""
-            self.index+="<tr class='"+com_id
-            if slaves.length > 0:
-                self.index+= " disabled"
-            self.index+="' id='sn_"+req_id+"'><td><span class='stat'/></td><td><a href='#"+req_id+"'>"+req_id.upper()+"</a></td></tr>\n"
             ret+="<div id='"+ req_id +"' class='requirement'>"
             ret+="<div class='f-el-title'>"+req_id.upper()+"</div>"
             ret+="<div class='words'>"
@@ -292,13 +288,11 @@ if __name__ == "__main__":
        font-size: x-large;
     }
 
-    .sidenav .valid .stat::before,
     .valid .f-el-title::before{
        content: "\\2713";
        color: #0F0;
     }
 
-    .sidenav .invalid .stat::before,
     .invalid .f-el-title::before{
        content: "\\2715";
        color: #F00;
@@ -316,41 +310,8 @@ if __name__ == "__main__":
        border-width: medium;
        border-color: red;
     }
-    .sidenav {
-        height: 100%;            /* 100% Full-height */
-        position: fixed;         /* Stay in place */
-        z-index: 1;              /* Stay on top */
-        top: 0;                  /* Stay at the top */
-        left: 0;
-        width: 40px; 
-        overflow-x: hidden;      /* Disable horizontal scroll */
-        transition: 0.5s;        /* 0.5 second transition effect to slide in the sidenav */
-        background-color: #FFF;  /* Black*/
-        border-right: thin dotted #AAA;
-     }
-
-    .sidenav:hover{
-        width: 200px;
-    }
-
-    .sidenav a{
-        display: none;
-        text-decoration: none;
-    }
-
-    .sidenav tr.disabled{
-        display: none;
-    }
-
-
-    .sidenav:hover a{
-        display: inline;
-    }
     
     @media print{
-       .sidenav {
-           display: none;
-       }
        BUTTON{
            display: none;
        }
@@ -711,22 +672,28 @@ if __name__ == "__main__":
         var aa;
         var reqs = document.getElementsByClassName('requirement');
         for(aa=0; reqs.length > aa; aa++){
-             var indy =   document.getElementById("sn_"+reqs[aa].id);
              if(reqValidator(reqs[aa])){
-                 indy.classList.add('valid');
-                 indy.classList.remove('invalid');
-                 reqs[aa].classList.add('valid');
-                 reqs[aa].classList.remove('invalid');
+                 addRemoveClasses(reqs[aa],'valid','invalid');
              }
              else{
-                 indy.classList.add('invalid');
-                 indy.classList.remove('valid');
-                 reqs[aa].classList.add('invalid');
-                 reqs[aa].classList.remove('valid');
+                 addRemoveClasses(reqs[aa],'invalid','valid');
              }
+        }
+        var components = document.getElementsByClassName('component');
+        for(aa=0; components.length > aa; aa++){
+           if(components[aa].getElementsByClassName('invalid').length == 0 ){
+              addRemoveClasses(components[aa],'valid','invalid');
+           }
+           else{
+              addRemoveClasses(components[aa],'invalid','valid');
+           }
         }
     }
 
+    function addRemoveClasses(elem, addClass, remClass){
+        elem.classList.remove(remClass);
+        elem.classList.add(addClass);
+    }
 
     function delayedUpdate(){
        performActionOnClass("val", saveToCookieJar);
@@ -778,20 +745,9 @@ When you close this page, all data will most likely be lost.
           <br/>
           <button type="button" onclick="generateReport()">Generate Report</button>
         </div> <!-- End of main -->
-       <div class="sidenav">
-       <div style="font-size: xx-large">&#187;</div>
-         <table>
-    """
-    form += state.index
-    form +="""
-         </table>
-       </div>
-
        </body>
     </html>
-    """
-    #      <button type="button" onclick="saveVals()">SaveOff</button>
-
+"""
     with open(outfile, "w") as out:
         out.write(form)
 

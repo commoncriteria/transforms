@@ -152,7 +152,7 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 #- Builds the PP worksheet
 worksheet: $(WORKSHEET_HTML)
 $(WORKSHEET_HTML): $(PP_XML)
-	python3 $(TRANS)/python/pp-to-worksheet.py $(PP_XML):$(WORKSHEET_HTML)
+	python3 $(TRANS)/worksheet/pp-to-worksheet.py $(PP_XML):$(WORKSHEET_HTML)
 
 #- Builds quick help
 help:
