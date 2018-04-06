@@ -79,7 +79,6 @@ class State:
         ret += "</table>\n"
         return ret
 
-
     def handle_selectables(self, node):
         """Handles selectables elements"""
         sels=[]
@@ -165,7 +164,7 @@ class State:
 
         elif node.localName == "f-component" or node.localName == "a-component":
             id=node.getAttribute("id")
-            ret = "<div id='"+id+"'"
+            ret = "<div onfocusin='handleEnter(this)' id='"+id+"'"
             # The only direct descendants are possible should be the children
             child=getPpEls(node, 'selection-depends')
             ret+=" class='component"
@@ -173,9 +172,10 @@ class State:
             if child.length > 0:
                 ret+=" disabled"
             ret+="'>"
-            ret+="<h3><a href='#"+id+"'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a></h3>\n"
+            #<a href='#"+id+"'>
+            ret+="<span class='f-comp-status'></span><a href='#"+id+"' class='f-comp-title'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a><div class='reqgroup'>\n"
             ret+=self.handle_parent(node, True)
-            ret+="</div>"
+            ret+="</div></div>"
             return ret
             
         elif node.localName == "title":
@@ -283,21 +283,38 @@ if __name__ == "__main__":
     .words{
        padding-left: 40px;
     }
-    .f-el-title{
+
+
+    div.component{
+       padding-top: 50px;
+    }
+
+    .f-comp-title{
        font-family: monospace;
        font-size: x-large;
     }
 
+    .f-el-title{
+       font-family: monospace;
+       font-size: large;
+       padding-left: 10px;
+    }
+
+    div{
+       transition: sliding-vertically 5s ease-in-out;
+    }
+
+    .component.valid .f-comp-status::before,
     .valid .f-el-title::before{
        content: "\\2713";
        color: #0F0;
     }
 
-    .invalid .f-el-title::before{
+    .component.invalid .f-comp-status::before,
+    .requirement.invalid .f-el-title::before{
        content: "\\2715";
        color: #F00;
     }
-
 
     .disabled {
        opacity: .2;
@@ -377,6 +394,31 @@ if __name__ == "__main__":
         }
     }
 
+    function handleEnter(elem){
+        var compDivs = document.getElementsByClassName('component');
+        var aa, bb;
+        elem.getElementsByClassName('reqgroup')[0].style.display='block';
+        var reqs = elem.getElementsByClassName('words');
+        for(bb=reqs.length-1; bb>=0; bb--){
+           reqs[bb].style.display='block';
+        }
+        console.log('here');
+        for (aa= compDivs.length-1; aa>=0; aa--){
+           // Skip the current one
+           if(elem == compDivs[aa]) continue;
+           if(compDivs[aa].classList.contains('valid')){
+              compDivs[aa].getElementsByClassName('reqgroup')[0].style.display='none';
+           }
+           else{
+              compDivs[aa].getElementsByClassName('reqgroup')[0].style.display='block';
+              reqs = compDivs[aa].getElementsByClassName('words');
+              for(bb=reqs.length-1; bb>=0; bb--){
+                 reqs[bb].style.display='none';
+              }
+           }
+        }
+    }
+
     function retrieveFromCookieJar(elem, index){
         var id = prefix+":"+getId(index);
         if( isCheckbox(elem)){
@@ -432,7 +474,6 @@ if __name__ == "__main__":
         var key;
         // run through the cookies
         for (key in cookies) {
-           console.log("Saving off "+key);
            createCookie(key, cookies[key] );
         }
     }
