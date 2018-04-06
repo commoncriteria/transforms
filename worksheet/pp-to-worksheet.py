@@ -222,11 +222,6 @@ class State:
         ret=""
         for child in node.childNodes:
             ret += self.handle_node(child, show_text)
-            # abc = self.handle_node(child, show_text)
-            # if abc is None:
-            #     print("---NONE---")
-            # else:
-            #     ret += abc
         return ret
 
     def makeSelectionMap(self, root):
@@ -284,9 +279,12 @@ if __name__ == "__main__":
        padding-left: 40px;
     }
 
+    a {
+      text-decoration: none;
+    }    
 
     div.component{
-       padding-top: 50px;
+       padding-top: 20px;
     }
 
     .f-comp-title{
@@ -320,6 +318,10 @@ if __name__ == "__main__":
        opacity: .2;
        pointer-events: none;
     }
+
+    .disabled .f-comp-status{
+       display: none;
+    }
     
     .warning{
        text-align:center;
@@ -327,12 +329,19 @@ if __name__ == "__main__":
        border-width: medium;
        border-color: red;
     }
-    
+
+    .hide{
+       display: none;
+    } 
+
+
     @media print{
        BUTTON{
            display: none;
        }
-       
+       .hide{
+         display: block;
+       }
     }
 
     #main{
@@ -395,25 +404,30 @@ if __name__ == "__main__":
     }
 
     function handleEnter(elem){
-        var compDivs = document.getElementsByClassName('component');
-        var aa, bb;
-        elem.getElementsByClassName('reqgroup')[0].style.display='block';
-        var reqs = elem.getElementsByClassName('words');
-        for(bb=reqs.length-1; bb>=0; bb--){
-           reqs[bb].style.display='block';
+        var bb;
+        // Show the current one and it's children
+        if(elem!=null){
+           elem.getElementsByClassName('reqgroup')[0].classList.remove('hide');
+           var reqs = elem.getElementsByClassName('words');
+           for(bb=reqs.length-1; bb>=0; bb--){
+              reqs[bb].classList.remove('hide');
+           }
         }
+        // Hide the rest
+        var aa;
+        var compDivs = document.getElementsByClassName('component');
         console.log('here');
         for (aa= compDivs.length-1; aa>=0; aa--){
            // Skip the current one
            if(elem == compDivs[aa]) continue;
            if(compDivs[aa].classList.contains('valid')){
-              compDivs[aa].getElementsByClassName('reqgroup')[0].style.display='none';
+              compDivs[aa].getElementsByClassName('reqgroup')[0].classList.add('hide');
            }
            else{
-              compDivs[aa].getElementsByClassName('reqgroup')[0].style.display='block';
+              compDivs[aa].getElementsByClassName('reqgroup')[0].classList.remove('hide');
               reqs = compDivs[aa].getElementsByClassName('words');
               for(bb=reqs.length-1; bb>=0; bb--){
-                 reqs[bb].style.display='none';
+                 reqs[bb].classList.add('hide');
               }
            }
         }
@@ -449,6 +463,7 @@ if __name__ == "__main__":
         cookieJar = readAllCookies();
         performActionOnClass("val", retrieveFromCookieJar);
         validateRequirements();
+        handleEnter(null);
     }
 
     function readAllCookies() {
