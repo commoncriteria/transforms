@@ -283,6 +283,10 @@ if __name__ == "__main__":
       text-decoration: none;
     }    
 
+    a:visited {
+       color: blue;
+    }
+
     div.component{
        padding-top: 20px;
     }
