@@ -266,6 +266,17 @@ if __name__ == "__main__":
     form += "<meta charset='utf-8'></meta><title>"+root.getAttribute("name")+"</title>"
     form += """
            <style type="text/css">
+    body{
+       margin-left: 8%;
+       margin-right: 8%;
+    }
+    h1{
+       border-bottom-style: double;
+    }
+
+    h2{
+       border-bottom-style: ridge;
+    }
 
     input[type=checkbox] + span {
        opacity: .6;
@@ -280,11 +291,12 @@ if __name__ == "__main__":
     }
 
     a {
-      text-decoration: none;
+       text-decoration: none;
+       color: cornflowerblue;
     }    
 
     a:visited {
-       color: blue;
+       color: cornflowerblue;
     }
 
     div.component{
@@ -334,10 +346,56 @@ if __name__ == "__main__":
        border-color: red;
     }
 
-    .hide{
-       display: none;
-    } 
-
+    @media screen{
+       .hide.component .f-el-title{
+          display: none;
+       } 
+   
+       .hide.component .invalid.f-el-title{
+          display: none;
+       } 
+   
+       .hide.component .words{
+          display: none;
+       } 
+   
+       .component .f-comp-title::after{
+          display: inline-block;
+          height: auto;
+          content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
+          AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
+          VDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWR\
+          tTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjh\
+          FnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+\
+          N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpY\
+          cpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUG\
+          UCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsD\
+          BIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafha\
+          eyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0UR\
+          oVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRW\
+          RfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZ\
+          f7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygN\
+          v+jeFnAPAAAAAElFTkSuQmCC');
+          max-width: 15px;
+       }
+   
+       .hide.component .f-comp-title::after{
+   	          content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
+   		  AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
+   		  VDz+AAAAB3RJTUUH4gIXFC4BR3keeQAAAfZJREFUKM+d0k1PE1EUBuB37h2nQ+30\
+   		  w5YObR0FhIppqBgWuDCaSBQjiQZNTIxLfoAkBHXh2vg7xID+ABPXBl3UdAMaN1CR\
+   		  j5ZijZ22DKW9d44LP1KMROvZnMU5z+KcvBzAAgADwCdV1RzXlYQ26tYhrYM6u/qX\
+   		  ATwCcKodrAOYv3z9IV28OuP6/NHPAGYZ45G/QQ5AAFjNbyzdTA2NewcGx7xeI5wu\
+   		  FZenQOQQuasHncN/9IJo1sn+unkpbqVFIJhgydQo13VjDKCJSnnLBJAHUPoTBoA3\
+   		  uzvlfiNgDhn+KMiVCB6xYCZSoaPHz5wrba/cbuztpBWFvQLI+R2DSGZqleKNuJX2\
+   		  cVVjAIExDo/uV7pPjGhSNntrleI9+n7Ox33Y549Wq/ZWTyh8rNcfjPlaZ4xzZvUM\
+   		  ezrNvnJ+fXFCiL2k2rpQq2wnAqH4tYjZFyZq/Y8CKZoim51z1nIZQ4jGNIC5fZhz\
+   		  7fHA4JVuj26AyIWiMDSbdTi1L/T29RO7ahdfKgqbInJLANCKZ6Kx5J24dVowztW6\
+   		  Y+8WNt91FNYXc4WN988BzAL4QOT+Aj/x8GFf+MHI+UlI2cBS9kVlLZfxSFdMS9GY\
+   		  V1WtKETDPShhz85emLRHx++TETBLAJ4qCov8c7ajsZMr/5PtBQB3AXSpqsbagd8A\
+   		  O+HMRUtPNsQAAAAASUVORK5CYII=');
+       }
+    }
     @media print{
        .warning-pane, BUTTON{
           display: none;
@@ -406,34 +464,19 @@ if __name__ == "__main__":
         }
     }
 
+    // elem is a component element
     function handleEnter(elem){
-        var bb;
-        // Show the current one and it's children
-        if(elem!=null){
-           elem.getElementsByClassName('reqgroup')[0].classList.remove('hide');
-           var reqs = elem.getElementsByClassName('words');
-           for(bb=reqs.length-1; bb>=0; bb--){
-              reqs[bb].classList.remove('hide');
-           }
-        }
-        // Hide the rest
-        var aa;
-        var compDivs = document.getElementsByClassName('component');
-        for (aa= compDivs.length-1; aa>=0; aa--){
-           // Skip the current one
-           if(elem == compDivs[aa]) continue;
-           if(compDivs[aa].classList.contains('valid')){
-              compDivs[aa].getElementsByClassName('reqgroup')[0].classList.add('hide');
-           }
-           else{
-              compDivs[aa].getElementsByClassName('reqgroup')[0].classList.remove('hide');
-              reqs = compDivs[aa].getElementsByClassName('words');
-              for(bb=reqs.length-1; bb>=0; bb--){
-                 reqs[bb].classList.add('hide');
-              }
-           }
-        }
-    }
+       if (elem != null){
+          elem.classList.remove('hide');
+       }
+
+       var compsIter, comps;
+       comps = document.getElementsByClassName('component');
+       for (compsIter=comps.length-1; compsIter>=0; compsIter--){
+          if (comps[compsIter]==elem) continue;
+          comps[compsIter].classList.add('hide');
+       }
+     }
 
     function retrieveFromCookieJar(elem, index){
         var id = prefix+":"+getId(index);
