@@ -1044,7 +1044,7 @@ function expand(){
         match with the @status of the component, which is the same value -->
         <xsl:apply-templates select="//cc:f-component[@status=current()/@id]" mode="appendicize-nofilter"/>
       </xsl:if>
-      <xsl:if test="@id!='optional' and @id!='sel-based' and @id!='objective'" mode="appendicize-nofilter">
+      <xsl:if test="@id!='optional' and @id!='sel-based' and @id!='objective'">
         <xsl:apply-templates/>
       </xsl:if>
     </xsl:if>

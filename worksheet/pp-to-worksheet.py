@@ -554,16 +554,22 @@ if __name__ == "__main__":
     function generateReport(){
         var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
         var aa;
-       
         report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
         var kids = document.getElementsByClassName('requirement');
+        var isInvalid = false;
         for(aa=0; kids.length>aa; aa++){
+            if( kids[aa].classList.contains("invalid") ){
+               isInvalid = true;
+            }
             report += "\\n"+LT+"req id='"+kids[aa].id+"'>";
             report +=getRequirement(kids[aa]);
             report += LT+"/req>\\n";
         }
         report += LT+"/report>";
-        initiateDownload('Report.text', report);
+        if( isInvalid ){
+            alert("Warning: You are downloading an incomplete report.");
+        }
+        initiateDownload('Report.txt', report);
     }
 
     function getRequirements(nodes){
@@ -791,7 +797,13 @@ if __name__ == "__main__":
           }
           return "";
        }
+       else if (key==31){
+          handleHelpRequest();
+       }
     }
+    function handleHelpRequest(){
+    }
+
 
     function reqValidator(elem){
         var child = elem.firstElementChild;
