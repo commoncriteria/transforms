@@ -113,7 +113,7 @@ class State:
                     onChange+="]);"
                 chk+= " onchange='update(); "+onChange+"'";
                 chk+= " data-rindex='"+str(rindex)+"'"
-                chk +=" class='val"+classes+"'"
+                chk +=" class='val selbox"+classes+"'"
                 chk +="></input><span>"+ contents+"</span>\n";
                 sels.append(chk)
                 rindex+=1
@@ -424,8 +424,6 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
     const AMPERSAND=String.fromCharCode(38);
     const LT=String.fromCharCode(60);
 
-    /// Holds the original PP xml document
-    var pp_xml = null;
 
     /// Holds the prefix for the settings we care about
     var prefix="";
@@ -535,9 +533,11 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
         performActionOnClass("val", retrieveFromCookieJar);
         validateRequirements();
         handleEnter(null);
-        pp_xml = new DOMParser().parseFromString(atob(ORIG64), "text/xml");
     }
-
+    function resolver(pre){
+       if(pre=='cc') return 'https://niap-ccevs.org/cc/v1';
+       else return "http://www.w3.org/1999/xhtml";
+    }
     function readAllCookies() {
             ret=[];
             var ca = document.cookie.split(';');
@@ -576,6 +576,46 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
     function eraseCookie(name) {
         createCookie(name,"",-1);
     }
+    function fullReport(){
+       var pp_xml = new DOMParser().parseFromString(atob(ORIG64), "text/xml");
+       // Fix up selections
+       var xsels = pp_xml.evaluate("//cc:selectable", pp_xml, resolver, XPathResult.ANY_TYPE, null);
+       var hsels = document.getElementsByClassName('selbox');
+       var hsindex = 0;
+       var choosens = new Set();
+       while(true){
+          var xmlsel = xsels.iterateNext();
+          if( xmlsel == null ) break;
+          if( hsindex == hsels.length) break;
+          if( hsels[hsindex].checked ){
+             // Can't mutate it while iterating
+             // Keep a set
+             //xmlsel.setAttribute("selected", "yes");
+             choosens.add(xmlsel);
+          }
+          hsindex++;
+       }
+       for(let choosen of choosens){
+          choosen.setAttribute("selected", "yes");
+       }
+       var ctr=0;
+       // Fix up assignments
+       var xassigns = pp_xml.evaluate("//cc:assignable", pp_xml, resolver, XPathResult.ANY_TYPE, null)
+       var assignments = [];
+       while(true){
+          var xassign = xassigns.iterateNext();
+          if(xassign == null) break;
+          assignments[ctr] = xassign;
+          ctr++;
+       }
+       var hassigns = document.getElementsByClassName('assignment');
+       for(ctr = 0; hassigns.length>ctr; ctr++){
+          if(hassigns[ctr].value){
+             assignments[ctr].setAttribute("val", hassigns[ctr].value);
+          }
+       }
+    }
+
 
     function generateReport(){
         var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
@@ -928,7 +968,8 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
     form += state.handle_node(root, False)
     form += """
           <br/>
-          <button type="button" onclick="generateReport()">Generate Report</button>
+          <button type="button" onclick="generateReport()">Download XML </button>
+          <button type="button" onclick="fullReport()">Download HTML</button>
        </body>
     </html>
 """
