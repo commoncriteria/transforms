@@ -265,10 +265,14 @@ if __name__ == "__main__":
 
     state.makeSelectionMap(root);
 
-    form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n   <head>"
-    form += "<meta charset='utf-8'></meta><title>"+root.getAttribute("name")+"</title>"
-    form += """
-           <style type="text/css">
+    with open(infile, "rb") as in_handle:
+        inb64 = base64.b64encode(in_handle.read()).decode('ascii')
+        
+    form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n"
+    form += "   <head>\n"
+    form += "      <meta charset='utf-8'></meta>\n"
+    form += "      <title>"+root.getAttribute("name")+"</title>\n"
+    form += """    <style type="text/css">
     body{
        margin-left: 8%;
        margin-right: 8%;
@@ -415,6 +419,8 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
 
            </style>
            <script type='text/javascript'>//<![CDATA[
+"""
+    form+= " const ORIG64='"+inb64+"""'
     const AMPERSAND=String.fromCharCode(38);
     const LT=String.fromCharCode(60);
 
@@ -529,7 +535,7 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
         performActionOnClass("val", retrieveFromCookieJar);
         validateRequirements();
         handleEnter(null);
-        retrieveBase(../input/
+        pp_xml = new DOMParser().parseFromString(atob(ORIG64), "text/xml");
     }
 
     function readAllCookies() {
@@ -544,7 +550,6 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
                    continue;
                 }
                 key=blah[0].trim();
-                console.log("Read " + key);
                 val=decodeURIComponent(blah[1]);
                 ret[key]=val;
             }
