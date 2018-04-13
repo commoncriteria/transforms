@@ -578,7 +578,7 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
     }
     function fullReport(){
        var pp_xml = new DOMParser().parseFromString(atob(ORIG64), "text/xml");
-       // Fix up selections
+       //- Fix up selections
        var xsels = pp_xml.evaluate("//cc:selectable", pp_xml, resolver, XPathResult.ANY_TYPE, null);
        var hsels = document.getElementsByClassName('selbox');
        var hsindex = 0;
@@ -599,7 +599,8 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
           choosen.setAttribute("selected", "yes");
        }
        var ctr=0;
-       // Fix up assignments
+
+       //- Fix up assignments
        var xassigns = pp_xml.evaluate("//cc:assignable", pp_xml, resolver, XPathResult.ANY_TYPE, null)
        var assignments = [];
        while(true){
@@ -615,11 +616,25 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
           }
        }
 
+       //- Fix up components
+       var xcomps = pp_xml.evaluate("//cc:f-component|//cc:a-component", pp_xml, resolver, XPathResult.ANY_TYPE, null);
+       var hcomps = document.getElementsByClassName('component');
+       var disableds = new Set();
+       for(ctr=0; hcomps.length>ctr; ctr++){
+          var xcomp = xcomps.iterateNext();
+          if(xcomp==null) break;
+          if( hcomps[ctr].classList.contains('disabled') ){
+             disableds.add(xcomp);
+             console.log("Adding something");
+          }
+       }
+       for(let disabled of disableds){
+          disabled.setAttribute("disabled", "yes");
+       }
+
        var serializer = new XMLSerializer();
        var xmlString = serializer.serializeToString(pp_xml);
        initiateDownload('FullReport.txt', xmlString, 'text/xml');
-
-
     }
 
 
