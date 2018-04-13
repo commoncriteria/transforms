@@ -614,6 +614,12 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
              assignments[ctr].setAttribute("val", hassigns[ctr].value);
           }
        }
+
+       var serializer = new XMLSerializer();
+       var xmlString = serializer.serializeToString(pp_xml);
+       initiateDownload('FullReport.txt', xmlString, 'text/xml');
+
+
     }
 
 
@@ -635,7 +641,7 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
         if( isInvalid ){
             alert("Warning: You are downloading an incomplete report.");
         }
-        initiateDownload('Report.txt', report);
+        initiateDownload('Report.txt', report, 'text/xml');
     }
 
     function getRequirements(nodes){
@@ -721,9 +727,8 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
         return ret;
     }
 
-    function initiateDownload(filename, data) {
-
-        var blob = new Blob([data], {type: 'text/xml'});
+    function initiateDownload(filename, data, mimetype) {
+        var blob = new Blob([data], {type: mimetype});
         if(window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveBlob(blob, filename);
         }
