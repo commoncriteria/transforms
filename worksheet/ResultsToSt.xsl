@@ -33,15 +33,41 @@
 
   <xsl:template match="cc:f-component|cc:a-component">
     <h4><xsl:value-of select="@id"/></h4>
+    <xsl:apply-templates/>
   </xsl:template>
-
+  
+  <xsl:template match="cc:selectable"/>
+  <xsl:template match="cc:selectable[@selected='yes']">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
   <xsl:template match="cc:section">
     This section specifies the <xsl:value-of select="@id"/> for the TOE.
     <xsl:apply-templates />
   </xsl:template>
 
 
+  <!--
+       Change all htm tags to tags with no namespace.
+       This should help the transition from output w/ polluted
+       namespace to output all in htm namespace. For right now
+       this is what we have.
+  -->
+  <xsl:template match="htm:*">
+    <xsl:element name="{local-name()}">
+      <!-- Copy all the attributes -->
+      <xsl:for-each select="@*">
+	<xsl:copy/>
+      </xsl:for-each>
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
 
+  
+  <xsl:template match="cc:selectables">
+    [<span class="selection"><xsl:apply-templates/></span>]
+    
+  </xsl:template>
   
   <!-- Consume all comments -->
   <xsl:template match="comment()"/>
