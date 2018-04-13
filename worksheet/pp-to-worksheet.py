@@ -3,13 +3,13 @@
 Module that converts PP xml documents to an HTML worksheet
 """
 
+import base64
 from io import StringIO 
 import re
 import sys
 import xml.dom.minidom
 from xml.dom import minidom
 from xml.sax.saxutils import escape
-
 PPNS='https://niap-ccevs.org/cc/v1'
 HTMNS="http://www.w3.org/1999/xhtml"
 
@@ -32,8 +32,11 @@ class State:
         self.selectables_index=0
         # Map from management function table values to HTML
         self.man_fun_map={}
+        # Value for mandatory requirement
         self.man_fun_map['M']="X"
+        # Value of N/A requirement
         self.man_fun_map['-']="-"
+        # Value for Optional requirement
         self.man_fun_map['O']="<select onchange='update();' class='val'><option value='O'>O</option><option value='X'>X</option></select>"
 
 
@@ -104,13 +107,13 @@ class State:
                     onChange+="updateDependency(this,"
                     delim="["
                     for sel in self.selMap[id]:
-                        classes=sel+"_m "
+                        classes+=" "+sel+"_m"
                         onChange+=delim+"\""+sel+"\""
                         delim=","
                     onChange+="]);"
                 chk+= " onchange='update(); "+onChange+"'";
                 chk+= " data-rindex='"+str(rindex)+"'"
-                chk +=" class='val "+classes+"'"
+                chk +=" class='val"+classes+"'"
                 chk +="></input><span>"+ contents+"</span>\n";
                 sels.append(chk)
                 rindex+=1
@@ -270,6 +273,7 @@ if __name__ == "__main__":
        margin-left: 8%;
        margin-right: 8%;
     }
+
     h1{
        border-bottom-style: double;
     }
@@ -363,37 +367,37 @@ if __name__ == "__main__":
           display: inline-block;
           height: auto;
           content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
-          AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
-          VDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWR\
-          tTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjh\
-          FnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+\
-          N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpY\
-          cpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUG\
-          UCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsD\
-          BIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafha\
-          eyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0UR\
-          oVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRW\
-          RfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZ\
-          f7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygN\
-          v+jeFnAPAAAAAElFTkSuQmCC');
+AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
+VDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWR\
+tTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjh\
+FnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+\
+N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpY\
+cpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUG\
+UCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsD\
+BIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafha\
+eyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0UR\
+oVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRW\
+RfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZ\
+f7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygN\
+v+jeFnAPAAAAAElFTkSuQmCC');
           max-width: 15px;
        }
    
        .hide.component .f-comp-title::after{
    	          content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
-   		  AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
-   		  VDz+AAAAB3RJTUUH4gIXFC4BR3keeQAAAfZJREFUKM+d0k1PE1EUBuB37h2nQ+30\
-   		  w5YObR0FhIppqBgWuDCaSBQjiQZNTIxLfoAkBHXh2vg7xID+ABPXBl3UdAMaN1CR\
-   		  j5ZijZ22DKW9d44LP1KMROvZnMU5z+KcvBzAAgADwCdV1RzXlYQ26tYhrYM6u/qX\
-   		  ATwCcKodrAOYv3z9IV28OuP6/NHPAGYZ45G/QQ5AAFjNbyzdTA2NewcGx7xeI5wu\
-   		  FZenQOQQuasHncN/9IJo1sn+unkpbqVFIJhgydQo13VjDKCJSnnLBJAHUPoTBoA3\
-   		  uzvlfiNgDhn+KMiVCB6xYCZSoaPHz5wrba/cbuztpBWFvQLI+R2DSGZqleKNuJX2\
-   		  cVVjAIExDo/uV7pPjGhSNntrleI9+n7Ox33Y549Wq/ZWTyh8rNcfjPlaZ4xzZvUM\
-   		  ezrNvnJ+fXFCiL2k2rpQq2wnAqH4tYjZFyZq/Y8CKZoim51z1nIZQ4jGNIC5fZhz\
-   		  7fHA4JVuj26AyIWiMDSbdTi1L/T29RO7ahdfKgqbInJLANCKZ6Kx5J24dVowztW6\
-   		  Y+8WNt91FNYXc4WN988BzAL4QOT+Aj/x8GFf+MHI+UlI2cBS9kVlLZfxSFdMS9GY\
-   		  V1WtKETDPShhz85emLRHx++TETBLAJ4qCov8c7ajsZMr/5PtBQB3AXSpqsbagd8A\
-   		  O+HMRUtPNsQAAAAASUVORK5CYII=');
+AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
+VDz+AAAAB3RJTUUH4gIXFC4BR3keeQAAAfZJREFUKM+d0k1PE1EUBuB37h2nQ+30\
+w5YObR0FhIppqBgWuDCaSBQjiQZNTIxLfoAkBHXh2vg7xID+ABPXBl3UdAMaN1CR\
+j5ZijZ22DKW9d44LP1KMROvZnMU5z+KcvBzAAgADwCdV1RzXlYQ26tYhrYM6u/qX\
+ATwCcKodrAOYv3z9IV28OuP6/NHPAGYZ45G/QQ5AAFjNbyzdTA2NewcGx7xeI5wu\
+FZenQOQQuasHncN/9IJo1sn+unkpbqVFIJhgydQo13VjDKCJSnnLBJAHUPoTBoA3\
+uzvlfiNgDhn+KMiVCB6xYCZSoaPHz5wrba/cbuztpBWFvQLI+R2DSGZqleKNuJX2\
+cVVjAIExDo/uV7pPjGhSNntrleI9+n7Ox33Y549Wq/ZWTyh8rNcfjPlaZ4xzZvUM\
+ezrNvnJ+fXFCiL2k2rpQq2wnAqH4tYjZFyZq/Y8CKZoim51z1nIZQ4jGNIC5fZhz\
+7fHA4JVuj26AyIWiMDSbdTi1L/T29RO7ahdfKgqbInJLANCKZ6Kx5J24dVowztW6\
+Y+8WNt91FNYXc4WN988BzAL4QOT+Aj/x8GFf+MHI+UlI2cBS9kVlLZfxSFdMS9GY\
+V1WtKETDPShhz85emLRHx++TETBLAJ4qCov8c7ajsZMr/5PtBQB3AXSpqsbagd8A\
+O+HMRUtPNsQAAAAASUVORK5CYII=');
        }
     }
     @media print{
@@ -410,11 +414,17 @@ if __name__ == "__main__":
     }
 
            </style>
-           <script Type='text/javascript'>
-
+           <script type='text/javascript'>//<![CDATA[
     const AMPERSAND=String.fromCharCode(38);
     const LT=String.fromCharCode(60);
 
+    /// Holds the original PP xml document
+    var pp_xml = null;
+
+    /// Holds the prefix for the settings we care about
+    var prefix="";
+
+    /// Dictionary to hold all the cookies
     var cookieJar=[];
     /**
      * This runs some sort of function on
@@ -448,7 +458,17 @@ if __name__ == "__main__":
         return "v_" + index;
     } 
 
-    var prefix="";
+    function retrieveBase(name){
+       var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+	     pp_xml = xhttp.responseXML.documentElement
+          }
+       };
+       xhttp.open("GET", name, true);
+       xhttp.send();
+    }
+
     function saveToCookieJar(elem, index){
         var id = prefix+":"+getId(index);
         if( isCheckbox(elem)){
@@ -496,7 +516,6 @@ if __name__ == "__main__":
             }
         }
     }
-    var prefix="";
 
     function init(){
         if( document.URL.startsWith("file:///") ){
@@ -504,11 +523,13 @@ if __name__ == "__main__":
            warn.style.display='block';
         }
         var url = new URL(document.URL);
-        prefix = url.searchParams.get("prefix");
+        prefix=url.searchParams.get("prefix");
+        if (prefix==null) prefix="";
         cookieJar = readAllCookies();
         performActionOnClass("val", retrieveFromCookieJar);
         validateRequirements();
         handleEnter(null);
+        retrieveBase(../input/
     }
 
     function readAllCookies() {
@@ -583,9 +604,9 @@ if __name__ == "__main__":
 
     function convertToXmlContent(val){
         var ret = val;
-        ret = ret.replace(/\\&/g, '&amp;');
-        ret = ret.replace(/\\</g, '&lt;');
-        ret = ret.replace(/\\]\\]\\>/g, ']]&gt;');
+        ret = ret.replace(/\\x26/g, AMPERSAND+'amp;');
+        ret = ret.replace(/\\x3c/g, AMPERSAND+'lt;');
+        ret = ret.replace(/\\]\\]\\>/g, ']]'+AMPERSAND+'gt;');
         return ret;
     }
 
@@ -599,9 +620,11 @@ if __name__ == "__main__":
            if(isCheckbox(node)){
                if(node.checked){
                   ret+=LT+"selectable index='"+node.getAttribute('data-rindex')+"'>"; 
+                  // Like a fake recurrence call here
                   ret+=getRequirement(node.nextSibling);
                   ret+=LT+"/selectable>";
                }
+               // Skip the next check.
                prevCheckbox=true;
            }
            else if(node.classList.contains("selectables")){
@@ -882,7 +905,7 @@ if __name__ == "__main__":
           toggleFirstCheckboxExcept(children[aa], exc);
        }
     }
-
+//]]>
            </script>
        </head>       <body onkeypress='handleKey(event); return true;' onload='init();'>
 """
@@ -890,10 +913,10 @@ if __name__ == "__main__":
     form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
     form +=  """
 <div class='warning-pane'>
-   <noscript><h2 class="warning">This page requires JavaScript.</h1></noscript>
+   <noscript><h2 class="warning">This page requires JavaScript.</h2></noscript>
     <h2 class="warning" id='url-warning' style="display: none;">
     Most browsers do not store cookies from local pages (i.e, 'file:///...').
-    When you close this page, all data will most likely be lost.</h1>
+    When you close this page, all data will most likely be lost.</h2>
 </div>
     """
 
