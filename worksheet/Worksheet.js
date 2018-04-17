@@ -210,9 +210,15 @@ function fullReport(){
         disabled.setAttribute("disabled", "yes");
     }
 
-    var serializer = new XMLSerializer();
-    var xmlString = serializer.serializeToString(pp_xml);
-    initiateDownload('FullReport.txt', xmlString, 'text/xml');
+    var xsl = new DOMParser().parseFromString(atob(XSL64), "text/xml");
+
+    var htmlReport = transform(xsl, pp_xml);
+
+    // var serializer = new XMLSerializer();
+    // var xmlString = serializer.serializeToString(pp_xml);
+    var resultStr = (new XMLSerializer()).serializeToString(htmlReport);
+    console.log("Result size: " +resultStr.length);
+    initiateDownload('FullReport.txt', resultStr, 'text/html');
 }
 
 
@@ -322,6 +328,7 @@ function getRequirement(node){
 
 function initiateDownload(filename, data, mimetype) {
     var blob = new Blob([data], {type: mimetype});
+    console.log(blob.size);
     if(window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveBlob(blob, filename);
     }
@@ -562,13 +569,14 @@ function toggle(descendent) {
 
 function transform(xsl, xml){
     // code for IE
-    if (window.ActiveXObject || xhttp.responseType == "msxml-document"){
+    if (window.ActiveXObject ){
         return xml.transformNode(xsl);
     }
     // code for Chrome, Firefox, Opera, etc.
     else if (document.implementation && document.implementation.createDocument){
-        var xsltProcessor = new XSLTProcessor().importStylesheet(xsl);
-        return xsltProcessor.transformToFragment(xml, document);
+        var xsltProcessor = new XSLTProcessor();
+	xsltProcessor.importStylesheet(xsl);
+        return xsltProcessor.transformToDocument(xml);
     }
 }
 

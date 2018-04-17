@@ -17,71 +17,25 @@
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
-
   <xsl:template match="/cc:PP">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-      <xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
-      <script type="text/javascript">
-function fixToolTips(){
-  var tooltipelements = document.getElementsByClassName("tooltiptext");
-  var aa;
-  for(aa=tooltipelements.length-1; aa>=0; aa--){
-      tooltipelements[aa].parentNode.classList.add("tooltipped");
-  }
+  <html xmlns="http://www.w3.org/1999/xhtml"> <head>
+    <xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
+<style type="text/css"> 
+*.reqid{
+   float:left;
+   font-size:90%;
+   font-family:verdana, arial, helvetica, sans-serif;
+   margin-right:1em;
 }
-      </script>
-      <style type="text/css">
-
-
-              *.reqid{
-                  float:left;
-                  font-size:90%;
-                  font-family:verdana, arial, helvetica, sans-serif;
-                  margin-right:1em;
-              }
-              *.req{
-                  margin-left:0%;
-                  margin-top:1em;
-                  margin-bottom:1em;
-              }
-              *.reqdesc{
-                  margin-left:20%;
-              }
-
-
-
-
-    /* Tooltip container */
-    .tooltipped {
-       position: relative;
-       display: inline-block;
-       border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-    }
-
-    /* Tooltip text */
-    .tooltiptext {
-       visibility: hidden;
-       width: 120px;
-       background-color: black;
-       color: #fff;
-       text-align: center;
-       padding: 5px 0;
-       border-radius: 6px;
-    
-       /* Position the tooltip text - see examples below! */
-       position: absolute;
-       z-index: 1;
-   }
-
-   /* Show the tooltip text when you mouse over the tooltip container */
-   .tooltipped:hover .tooltiptext {
-       visibility: visible;
-   }
-
-
-      </style>
-
+*.req{
+    margin-left:0%;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+*.reqdesc{
+    margin-left:20%;
+}
+</style>
     </head>
     <body>
       <h2>Security Function Requirements (SFRs)</h2>
@@ -99,21 +53,16 @@ function fixToolTips(){
   <xsl:template match="cc:note"/>
 
 
-  <xsl:template match="cc:section">
-    <xsl:apply-templates select="cc:subsection"/>
-  </xsl:template>
+  <xsl:template match="cc:section"><xsl:apply-templates select="cc:subsection"/></xsl:template>
 
-  <xsl:template match="cc:subsection">
-    <xsl:apply-templates select="cc:*"/>
-  </xsl:template>
+  <xsl:template match="cc:subsection"><xsl:apply-templates select="cc:*"/></xsl:template>
 
 
 
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
-  <xsl:template match="cc:selectables">[<span class="selection">
-    <xsl:choose>      
+  <xsl:template match="cc:selectables">[<span class="selection"><xsl:choose>      
     <xsl:when test="@linebreak='yes'"><ul><xsl:for-each select="cc:selectable[@selected='yes']"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
     <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable[@selected='yes']"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
@@ -126,117 +75,50 @@ function fixToolTips(){
 
 
   <!-- Used to match regular ?-components -->
-  <xsl:template match="cc:a-component">
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-	<xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-	<xsl:value-of select="@name"/>
-      </h4>
-        <xsl:apply-templates select="cc:evalactionlabel|cc:a-element"/>
-    </div>
+  <xsl:template match="cc:a-component"><div class="comp" id="{translate(@id, $lower, $upper)}">
+      <h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:evalactionlabel|cc:a-element"/></div>
   </xsl:template>
 
-  <xsl:template match="cc:evalactionlabel">
-    <h4><xsl:value-of select="@title"/></h4>
-  </xsl:template>
+  <xsl:template match="cc:evalactionlabel"><h4><xsl:value-of select="@title"/></h4></xsl:template>
 
   <!-- Used to match regular ?-components -->
-  <xsl:template match="cc:f-component">
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-	<xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-	<xsl:value-of select="@name"/>
-      </h4>
-      <xsl:apply-templates select="cc:f-element"/>
-    </div>
-  </xsl:template>
+  <xsl:template match="cc:f-component"><div class="comp" id="{translate(@id, $lower, $upper)}"><h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:f-element"/></div></xsl:template>
 
 
 
 <!-- THESE ARE BORROWED FROM OTHER XSL -->
 
-  <xsl:template match="cc:management-function-set">
-    <table class="mfs" style="width: 100%;">
-      <tr class="header">
-        <td>Management Function</td>
-        <xsl:apply-templates select="./cc:manager"/>
-      </tr>
-      <xsl:apply-templates select="./cc:management-function"/>
-    </table>
-  </xsl:template>
+  <xsl:template match="cc:management-function-set"><table class="mfs" style="width: 100%;"><tr class="header"><td>Management Function</td><xsl:apply-templates select="./cc:manager"/></tr><xsl:apply-templates select="./cc:management-function"/></table></xsl:template>
   
   
-  <xsl:template match="cc:manager">
-    <td> <xsl:apply-templates/> </td>
-  </xsl:template>
+  <xsl:template match="cc:manager"><td> <xsl:apply-templates/> </td></xsl:template>
 
-  <xsl:template match="cc:management-function">
-    <tr>
-      <td>
-        <xsl:apply-templates select="cc:text"/>
-      </td>
-	<xsl:variable name="manfunc" select="."/>
-	<xsl:for-each select="../cc:manager">
-	  <xsl:variable name="id" select="@id"/>
-	  <td>
-	    <xsl:choose>
+  <xsl:template match="cc:management-function"><tr><td><xsl:apply-templates select="cc:text"/></td><xsl:variable name="manfunc" select="."/><xsl:for-each select="../cc:manager"><xsl:variable name="id" select="@id"/><td><xsl:choose>
 	      <!-- If we have something for that role -->
 	      <xsl:when test="$manfunc/*[@ref=$id]">
 		<xsl:choose>
 		  <!-- And it is explicit, put it in there -->
-		  <xsl:when test="$manfunc/*[@ref=$id]/node()">
-		    <xsl:apply-templates select="$manfunc/*[@ref=$id]/."/>
-		  </xsl:when>
-		  <xsl:otherwise>
-		    <xsl:call-template name="make-management-value">
-		      <xsl:with-param name="type"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>
-		    </xsl:call-template>
-		  </xsl:otherwise>
-		</xsl:choose>
-	      </xsl:when>
-	      <xsl:otherwise>
-		<xsl:call-template name="make-management-value">
-		  <xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
-		</xsl:call-template>
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </td>
-	</xsl:for-each>
-    </tr>
-  </xsl:template>
+		  <xsl:when test="$manfunc/*[@ref=$id]/node()"><xsl:apply-templates select="$manfunc/*[@ref=$id]/."/></xsl:when>
+		  <xsl:otherwise><xsl:call-template name="make-management-value">
+		    <xsl:with-param name="type">
+		      <xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>  </xsl:call-template></xsl:otherwise>
+		</xsl:choose></xsl:when>
+	      <xsl:otherwise><xsl:call-template name="make-management-value">
+		<xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
+		</xsl:call-template></xsl:otherwise>
+	    </xsl:choose></td></xsl:for-each></tr></xsl:template>
 
 
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
-      <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional</span></div></xsl:when>
-      <xsl:when test="$type='M'"><div>X<span class="tooltiptext">Mandatory</span></div></xsl:when>
-      <xsl:when test="$type='_'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
-      <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
+      <xsl:when test="$type='O'"><div>O</div></xsl:when>
+      <xsl:when test="$type='M'"><div>X</div></xsl:when>
+      <xsl:when test="$type='_'"><div>-</div></xsl:when>
     </xsl:choose>
   </xsl:template>
 
-  <!--
-      Template that makes a tool tip. Uses javascript
-  -->
-  <xsl:template name="make-tool-tip">
-    <xsl:param name="tip"/>
-    <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
-  </xsl:template>
-
-  <xsl:template match="cc:f-element | cc:a-element" >
-    <div class="element">
-      <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
-      <div class="reqid" id="{$reqid}">
-        <a href="#{$reqid}" class="abbr">
-          <xsl:value-of select="$reqid"/>
-        </a>
-      </div>
-      <div class="reqdesc">
-        <xsl:apply-templates/>
-      </div>
-    </div>
-  </xsl:template>
+  <xsl:template match="cc:f-element | cc:a-element" ><div class="element"><xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/><div class="reqid" id="{$reqid}"><a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a></div><div class="reqdesc"><xsl:apply-templates/></div></div></xsl:template>
 
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
@@ -246,15 +128,11 @@ function fixToolTips(){
        namespace to output all in htm namespace. For right now
        this is what we have.
   -->
-  <xsl:template match="htm:*">
-    <xsl:element name="{local-name()}">
+  <xsl:template match="htm:*"><xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
 	<xsl:copy/>
-      </xsl:for-each>
-      <xsl:apply-templates/>
-    </xsl:element>
-  </xsl:template>
+      </xsl:for-each><xsl:apply-templates/></xsl:element></xsl:template>
 
   <!-- Consume all comments -->
   <xsl:template match="comment()"/>
@@ -270,10 +148,5 @@ function fixToolTips(){
   <!-- 
        By default, quietly unwrap all cc elements that are otherwise unmatched
   -->
-  <xsl:template match="cc:*">
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
-
+  <xsl:template match="cc:*"><xsl:apply-templates/></xsl:template>
 </xsl:stylesheet>

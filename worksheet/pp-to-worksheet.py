@@ -245,14 +245,16 @@ class State:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Usage: <js-file> <css-file> <protection-profile>[:<output-file>]")
+    if len(sys.argv) < 5:
+        #                1          2          3                 4
+        print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[:<output-file>]")
         sys.exit(0)
 
     jsfile=sys.argv[1]
     cssfile=sys.argv[2]
+    xslfile=sys.argv[3]
     # Split on colon
-    out=sys.argv[3].split(':')
+    out=sys.argv[4].split(':')
     infile=out[0]
     outfile=""
     if len(out) < 2:
@@ -267,6 +269,8 @@ if __name__ == "__main__":
 
     state.makeSelectionMap(root);
 
+
+
     with open(jsfile, "r") as in_handle:
         js = in_handle.read();
 
@@ -275,6 +279,11 @@ if __name__ == "__main__":
 
     with open(infile, "rb") as in_handle:
         inb64 = base64.b64encode(in_handle.read()).decode('ascii')
+
+    with open(xslfile, "rb") as in_handle:
+        xslb64 = base64.b64encode(in_handle.read()).decode('ascii')
+
+
 
     form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n"
     form += "   <head>\n"
@@ -286,6 +295,7 @@ if __name__ == "__main__":
            <script type='text/javascript'>//<![CDATA[
 """
     form+= " const ORIG64='"+inb64+"';\n"
+    form+= " const XSL64='"+xslb64+"';\n"
     form+= js
     form+="""
 //]]>
