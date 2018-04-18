@@ -18,8 +18,9 @@
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
   <xsl:template match="/cc:PP">
-  <html xmlns="http://www.w3.org/1999/xhtml"> <head>
-    <xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
+  <!-- <html xmlns="http://www.w3.org/1999/xhtml"> <head> -->
+  <!--   <xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element> -->
+
 <style type="text/css"> 
 *.reqid{
    float:left;
@@ -36,14 +37,14 @@
     margin-left:20%;
 }
 </style>
-    </head>
-    <body>
+    <!-- </head> -->
+    <!-- <body> -->
       <h2>Security Function Requirements (SFRs)</h2>
       <xsl:apply-templates select="//cc:section[@id='SFRs']"/>
       <h2>Security Assurance Requirements (SARs)</h2>
       <xsl:apply-templates select="//cc:section[@id='SARs']"/>
-    </body>
-  </html>
+  <!--   </body> -->
+  <!-- </html> -->
   </xsl:template>
 
   <!-- Eat these -->

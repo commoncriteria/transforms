@@ -318,6 +318,7 @@ if __name__ == "__main__":
           <br/>
           <button type="button" onclick="generateReport()">Download XML </button>
           <button type="button" onclick="fullReport()">Download HTML</button>
+          <div id='report-node' style="display: none;"/>
        </body>
     </html>
 """

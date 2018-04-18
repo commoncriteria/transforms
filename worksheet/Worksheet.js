@@ -212,18 +212,31 @@ function fullReport(){
 
     var xsl = new DOMParser().parseFromString(atob(XSL64), "text/xml");
 
-    var htmlReport = transform(xsl, pp_xml);
+    // var win = window.open("", "Report");
+    // var htmlReport = transform(xsl, pp_xml, win.document);
+    // win.document.body.appendChild( htmlReport );
 
+    // This doesn't work on Chrome. THe max string size cuts us off.
     // var serializer = new XMLSerializer();
     // var xmlString = serializer.serializeToString(pp_xml);
-    var resultStr = (new XMLSerializer()).serializeToString(htmlReport);
-    console.log("Result size: " +resultStr.length);
-    initiateDownload('FullReport.txt', resultStr, 'text/html');
+    // var resultStr = (new XMLSerializer()).serializeToString(htmlReport);
+    // console.log("Result size: " +resultStr.length);
+
+    var htmlReport = transform(xsl, pp_xml, document);
+    var rNode = document.getElementById('report-node');
+    rNode.appendChild( htmlReport );
+
+
+    var myBlobBuilder = new MyBlobBuilder();
+    myBlobBuilder.append("<html><head><title></title></head><body>");
+    myBlobBuilder.append(rNode.innerHTML);
+    myBlobBuilder.append("</body></html>");
+    initiateDownload('FullReport.html', myBlobBuilder.getBlob("text/html"));
 }
 
 
 function generateReport(){
-    var report = LT+"?xml version='1.0' encoding='utf-8'?>\\n"
+    var report = LT+"?xml version='1.0' encoding='utf-8'?>\n"
     var aa;
     report += LT+"report xmlns='https://niap-ccevs.org/cc/pp/report/v1'>"
     var kids = document.getElementsByClassName('requirement');
@@ -232,15 +245,18 @@ function generateReport(){
         if( kids[aa].classList.contains("invalid") ){
             isInvalid = true;
         }
-        report += "\\n"+LT+"req id='"+kids[aa].id+"'>";
+        report += "\n"+LT+"req id='"+kids[aa].id+"'>";
         report +=getRequirement(kids[aa]);
-        report += LT+"/req>\\n";
+        report += LT+"/req>\n";
     }
     report += LT+"/report>";
     if( isInvalid ){
         alert("Warning: You are downloading an incomplete report.");
     }
-    initiateDownload('Report.txt', report, 'text/xml');
+    var blobTheBuilder = new MyBlobBuilder();
+    blobTheBuilder.append(report);
+
+    initiateDownload('Report.xml', blobTheBuilder.getBlob("text/xml"));
 }
 
 function getRequirements(nodes){
@@ -254,9 +270,9 @@ function getRequirements(nodes){
 
 function convertToXmlContent(val){
     var ret = val;
-    ret = ret.replace(/\\x26/g, AMPERSAND+'amp;');
-    ret = ret.replace(/\\x3c/g, AMPERSAND+'lt;');
-    ret = ret.replace(/\\]\\]\\>/g, ']]'+AMPERSAND+'gt;');
+    ret = ret.replace(/\x26/g, AMPERSAND+'amp;');
+    ret = ret.replace(/\x3c/g, AMPERSAND+'lt;');
+    ret = ret.replace(/\]\]\>/g, ']]'+AMPERSAND+'gt;');
     return ret;
 }
 
@@ -289,7 +305,7 @@ function getRequirement(node){
             }
             ret+=LT+"assignment>";
             ret+=convertToXmlContent(val);
-            ret+=LT+"/assignment>\\n";
+            ret+=LT+"/assignment>\n";
         }
         else if(node.classList.contains('mfun-table')){
             ret += LT+"management-function-table>"
@@ -311,7 +327,7 @@ function getRequirement(node){
                     }
                     ret += LT+"/val>";
                 }
-                ret += LT+"/management-function>\\n";
+                ret += LT+"/management-function>\n";
             }
             ret += LT+"/management-function-table>";
         }
@@ -326,9 +342,8 @@ function getRequirement(node){
     return ret;
 }
 
-function initiateDownload(filename, data, mimetype) {
-    var blob = new Blob([data], {type: mimetype});
-    console.log(blob.size);
+function initiateDownload(filename, blob) {
+//    var blob = new Blob([data], {type: mimetype});
     if(window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveBlob(blob, filename);
     }
@@ -567,7 +582,7 @@ function toggle(descendent) {
     }
 }
 
-function transform(xsl, xml){
+function transform(xsl, xml, owner){
     // code for IE
     if (window.ActiveXObject ){
         return xml.transformNode(xsl);
@@ -576,9 +591,28 @@ function transform(xsl, xml){
     else if (document.implementation && document.implementation.createDocument){
         var xsltProcessor = new XSLTProcessor();
 	xsltProcessor.importStylesheet(xsl);
-        return xsltProcessor.transformToDocument(xml);
+        return xsltProcessor.transformToFragment(xml, owner);
     }
 }
+
+// Took this from stack overflow
+// Class
+var MyBlobBuilder = function() {
+  this.parts = [];
+}
+
+MyBlobBuilder.prototype.append = function(part) {
+  this.parts.push(part);
+  this.blob = undefined; // Invalidate the blob
+};
+
+MyBlobBuilder.prototype.getBlob = function(mimetype) {
+  if (!this.blob) {
+    this.blob = new Blob(this.parts, { type: mimetype });
+  }
+  return this.blob;
+};
+
 
 
 
