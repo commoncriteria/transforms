@@ -315,8 +315,8 @@ if __name__ == "__main__":
     form += state.handle_node(root, False)
     form += """
           <br/>
-          <button type="button" onclick="generateReport()">Download XML </button>
-          <button type="button" onclick="fullReport()">Download HTML</button>
+          <button type="button" onclick="generateReport()">XML Record</button>
+          <button type="button" onclick="fullReport()">HTML Report</button>
           <div id='report-node' style="display: none;"/>
        </body>
     </html>
