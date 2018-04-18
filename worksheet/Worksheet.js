@@ -1,3 +1,22 @@
+const PREAMBLE = "<html xmlns='http://www.w3.org/1999/xhtml'><head><title></title><style type='text/css'>\n"
+    + ".selection,.assignment{ font-weight:bold;}\n"
+    + ".reqid{  float:left;\n"
+    + "   font-size:90%;\n"
+    + "   font-family:verdana, arial, helvetica, sans-serif;\n"
+    + "   margin-right:1em;\n"
+    + "}\n"
+    + ".req{\n"
+    + "    margin-left:0%;\n"
+    + "    margin-top:1em;\n"
+    + "    margin-bottom:1em;\n"
+    + "}\n"
+    + "*.reqdesc{\n"
+    + "    margin-left:20%;\n"
+    + "}\n"
+    + "</style></head><body>\n";
+const EPILOGUE="</body></html>";
+
+
 const AMPERSAND=String.fromCharCode(38);
 const LT=String.fromCharCode(60);
 
@@ -203,34 +222,42 @@ function fullReport(){
         if(xcomp==null) break;
         if( hcomps[ctr].classList.contains('disabled') ){
             disableds.add(xcomp);
-            console.log("Adding something");
         }
     }
     for(let disabled of disableds){
         disabled.setAttribute("disabled", "yes");
     }
+    logit(pp_xml);
 
+    
     var xsl = new DOMParser().parseFromString(atob(XSL64), "text/xml");
 
-    // var win = window.open("", "Report");
-    // var htmlReport = transform(xsl, pp_xml, win.document);
-    // win.document.body.appendChild( htmlReport );
 
     // This doesn't work on Chrome. THe max string size cuts us off.
     // var serializer = new XMLSerializer();
     // var xmlString = serializer.serializeToString(pp_xml);
     // var resultStr = (new XMLSerializer()).serializeToString(htmlReport);
     // console.log("Result size: " +resultStr.length);
+    // This creates a separate window with the repot
+    // Intent was to use this to transform this to docx format.
+    // var win = window.open("", "Report");
+    // win.document.open();
+    // win.document.write(PREAMBLE);
+    // win.document.write(EPILOGUE);
+    // win.document.close();
+    // var htmlReport1 = transform(xsl, pp_xml, win.document);
+    // win.document.body.appendChild( htmlReport1 );
 
+    // This way seems to work with Chrome and Mozilla.
+    // A little more complicated than it should be b/c
+    // Chrome has a max string size.
     var htmlReport = transform(xsl, pp_xml, document);
     var rNode = document.getElementById('report-node');
     rNode.appendChild( htmlReport );
-
-
     var myBlobBuilder = new MyBlobBuilder();
-    myBlobBuilder.append("<html><head><title></title></head><body>");
+    myBlobBuilder.append(PREAMBLE);
     myBlobBuilder.append(rNode.innerHTML);
-    myBlobBuilder.append("</body></html>");
+    myBlobBuilder.append(EPILOGUE);
     initiateDownload('FullReport.html', myBlobBuilder.getBlob("text/html"));
 }
 
@@ -592,6 +619,12 @@ function transform(xsl, xml, owner){
         var xsltProcessor = new XSLTProcessor();
 	xsltProcessor.importStylesheet(xsl);
         return xsltProcessor.transformToFragment(xml, owner);
+    }
+}
+
+function logit(val){
+    if( prefix=='debug'){
+	console.log(val);
     }
 }
 

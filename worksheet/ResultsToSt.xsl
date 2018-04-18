@@ -10,42 +10,22 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
-
+  
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
+
+
   <!-- -->
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
   <xsl:template match="/cc:PP">
-  <!-- <html xmlns="http://www.w3.org/1999/xhtml"> <head> -->
-  <!--   <xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element> -->
-
-<style type="text/css"> 
-*.reqid{
-   float:left;
-   font-size:90%;
-   font-family:verdana, arial, helvetica, sans-serif;
-   margin-right:1em;
-}
-*.req{
-    margin-left:0%;
-    margin-top:1em;
-    margin-bottom:1em;
-}
-*.reqdesc{
-    margin-left:20%;
-}
-</style>
-    <!-- </head> -->
-    <!-- <body> -->
-      <h2>Security Function Requirements (SFRs)</h2>
-      <xsl:apply-templates select="//cc:section[@id='SFRs']"/>
-      <h2>Security Assurance Requirements (SARs)</h2>
-      <xsl:apply-templates select="//cc:section[@id='SARs']"/>
-  <!--   </body> -->
-  <!-- </html> -->
+    <h2>Security Function Requirements (SFRs)</h2>
+    <xsl:apply-templates select="//cc:section[@id='SFRs']"/>
+    <h2>Security Assurance Requirements (SARs)</h2>
+    <xsl:apply-templates select="//cc:section[@id='SARs']"/>
   </xsl:template>
+  
 
   <!-- Eat these -->
   <xsl:template match="cc:f-component[@disabled='yes']"/>
@@ -59,11 +39,10 @@
   <xsl:template match="cc:subsection"><xsl:apply-templates select="cc:*"/></xsl:template>
 
 
-
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
-  <xsl:template match="cc:selectables">[<span class="selection"><xsl:choose>      
+  <xsl:template match="cc:selectables">[<span class="selection">selection: <xsl:choose>      
     <xsl:when test="@linebreak='yes'"><ul><xsl:for-each select="cc:selectable[@selected='yes']"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
     <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable[@selected='yes']"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
@@ -72,6 +51,7 @@
   </xsl:choose></span>]</xsl:template>
 
   <xsl:template match="cc:assignable">[<span class="assignment"><xsl:value-of select="@val"/></span>]</xsl:template>
+
 
 
 

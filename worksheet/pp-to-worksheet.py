@@ -67,7 +67,7 @@ class State:
             # Now we convert this to the expected columns
             ret += "<tr>\n"
             # First column is the management function text
-            ret += "<td>"+self.handle_parent( getPpEls(row, 'text')[0], True) + "</td>"
+            ret += "<td>"+self.handle_collection( getPpEls(row, 'text')[0], True) + "</td>"
             # And step through every other column
             for col in getPpEls(elem, 'manager'):
                 ret += "<td>"
@@ -134,13 +134,13 @@ class State:
 
         elif node.localName == "refinement":
             ret = "<span class='refinement'>"
-            ret += self.handle_parent(node, True)
+            ret += self.handle_collection(node, True)
             ret += "</span>"
             return ret
 
         elif node.localName == "assignable":
             ret = "<textarea onchange='update();' class='assignment val' rows='1' placeholder='"
-            ret += ' '.join(self.handle_parent(node, True).split())
+            ret += ' '.join(self.handle_collection(node, True).split())
             ret +="'></textarea>"
             return ret
 
@@ -157,7 +157,7 @@ class State:
             ret =""
             if "SFRs" == idAttr or "SARs" == idAttr:
                 ret+="<h2>"+node.getAttribute("title")+"</h2>\n"
-            ret += self.handle_parent(node, False)
+            ret += self.handle_collection(node, False)
             return ret
 
         elif node.localName == "f-element" or node.localName == "a-element":
@@ -177,10 +177,9 @@ class State:
             ret+="'>"
             #<a href='#"+id+"'>
             ret+="<span class='f-comp-status'></span><a onclick='toggle(this); return false;' href='#"+id+"' class='f-comp-title'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a><div class='reqgroup'>\n"
-            ret+=self.handle_parent(node, True)
+            ret+=self.handle_collection(node, False)
             ret+="</div></div>"
             return ret
-            
         elif node.localName == "title":
             self.selectables_index=0
             req_id = node.parentNode.getAttribute('id')
@@ -190,12 +189,12 @@ class State:
             ret+="<div id='"+ req_id +"' class='requirement'>"
             ret+="<div class='f-el-title'>"+req_id.upper()+"</div>"
             ret+="<div class='words'>"
-            ret+=self.handle_parent(node, True)
+            ret+=self.handle_collection(node, True)
             ret+="</div>\n"
             ret+="</div>\n"
             return ret
         else:
-            return self.handle_parent(node, show_text)
+            return self.handle_collection(node, show_text)
         return ""
 
             
@@ -216,12 +215,12 @@ class State:
                         attr =attrs.item(aa)
                         ret+=" " + attr.name + "='" + escape(attr.value) +"'"
                     ret += ">"
-                    ret += self.handle_parent(node, True)
+                    ret += self.handle_collection(node, True)
                     ret += "</"+tag+">"
                     return ret;
         return ""
 
-    def handle_parent(self, node, show_text):
+    def handle_collection(self, node, show_text):
         ret=""
         for child in node.childNodes:
             ret += self.handle_node(child, show_text)
