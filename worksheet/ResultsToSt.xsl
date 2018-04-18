@@ -21,9 +21,9 @@
 
   <xsl:template match="/cc:PP">
     <h2>Security Function Requirements (SFRs)</h2>
-    <xsl:apply-templates select="//cc:section[@id='SFRs']"/>
+    <xsl:apply-templates select="//cc:section[//cc:f-component]"/>
     <h2>Security Assurance Requirements (SARs)</h2>
-    <xsl:apply-templates select="//cc:section[@id='SARs']"/>
+    <xsl:apply-templates select="//cc:section[//cc:a-component]"/>
   </xsl:template>
   
 
