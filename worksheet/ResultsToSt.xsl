@@ -36,7 +36,7 @@
 
   <xsl:template match="cc:section"><xsl:apply-templates select="cc:subsection"/></xsl:template>
 
-  <xsl:template match="cc:subsection"><xsl:apply-templates select="cc:*"/></xsl:template>
+  <xsl:template match="cc:subsection"><xsl:apply-templates select="cc:a-component|cc:f-component"/></xsl:template>
 
   <xsl:template match="cc:*[@linkend]"><xsl:value-of select="@linkend"/></xsl:template>
   
