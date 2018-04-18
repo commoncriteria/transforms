@@ -43,7 +43,7 @@
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
-  <xsl:template match="cc:selectables">[<span class="selection">selection: <xsl:choose>      
+  <xsl:template match="cc:selectables">[<span class="selection"><xsl:choose>      
     <xsl:when test="@linebreak='yes'"><ul><xsl:for-each select="cc:selectable[@selected='yes']"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
     <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable[@selected='yes']"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
