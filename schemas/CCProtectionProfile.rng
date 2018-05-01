@@ -536,7 +536,7 @@
       <a:documentation>
 	Incidates the beginning of an assignable section.
       </a:documentation>
-      <ref name="basic-content"/>
+      <text/>
     </element>
   </define>
 

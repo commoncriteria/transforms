@@ -408,7 +408,7 @@
   <xsl:for-each select="co:config">
     <tr>
       <td style="white-space: nowrap">
-        <xsl:value-of select="co:configtitle"/>
+        <xsl:apply-templates select="co:configtitle"/>
       </td>
       <td >
       <xsl:for-each select="co:references/co:reference[@ref='NIST 800-53']">
