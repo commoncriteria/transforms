@@ -90,12 +90,7 @@
 	      </element>
 	      <element name="subject">
 		<a:documentation>Description of the revision.</a:documentation>
-		<oneOrMore>
-	      	  <choice>
-	      	    <text/>
-	      	    <ref name="html-element"></ref>
-	      	  </choice>
-		</oneOrMore>
+		<ref name="textplus"/>
 	      </element>
 	    </element>
 	  </zeroOrMore>
@@ -534,9 +529,9 @@
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
-	Incidates the beginning of an assignable section.
+	Assignment section
       </a:documentation>
-      <text/>
+      <ref name="textplus"/>
     </element>
   </define>
 
@@ -990,6 +985,18 @@
         </choice>
       </oneOrMore>
     </element>
+  </define>
+  <define name="textplus">
+    <a:document>
+      text+html+abbr
+    </a:document>
+    <oneOrMore>
+      <choice>
+	<text/>
+	<ref name="html-element"/>
+	<ref name="abbr-el"/>
+      </choice>
+    </oneOrMore>
   </define>
   
   <define name="a-component-pattern">
