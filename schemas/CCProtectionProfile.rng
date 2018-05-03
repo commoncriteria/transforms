@@ -455,7 +455,12 @@
 	      <a:documentation>
 		Readable role name
 	      </a:documentation>
-	      <ref name="id-attr"/>
+	      <attribute name="id">
+		<a:documentation>
+		  ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+		  in the management-function.
+		</a:documentation>
+	      </attribute>
 	      <text/>
             </element>
 	  </oneOrMore>
@@ -470,7 +475,21 @@
 		  <element name="M">
 		    <a:documentation>References for which managers this function is mandatory</a:documentation>
 		    <attribute name="ref">
-		      <a:documentation>Should be the id of a mandatory manager</a:documentation>
+		      <a:documentation>ID respective manager</a:documentation>
+		    </attribute>
+		    <empty/>
+		  </element>
+		  <element name="O">
+		    <a:documentation>References for which managers this function is optional</a:documentation>
+		    <attribute name="ref">
+		      <a:documentation>ID respective manager</a:documentation>
+		    </attribute>
+		    <empty/>
+		  </element>
+		  <element name="_">
+		    <a:documentation>References for which managers this function is not applicable</a:documentation>
+		    <attribute name="ref">
+		      <a:documentation>ID respective manager</a:documentation>
 		    </attribute>
 		    <empty/>
 		  </element>
@@ -995,6 +1014,11 @@
 	<text/>
 	<ref name="html-element"/>
 	<ref name="abbr-el"/>
+	<ref name="linkref"/>
+	<ref name="appref"/>
+	<ref name="secref"/>
+	<ref name="cite"/>
+	<ref name="xref"/>
       </choice>
     </oneOrMore>
   </define>
