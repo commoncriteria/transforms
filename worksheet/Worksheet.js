@@ -25,9 +25,9 @@ var prefix="";
 /// Dictionary to hold all the cookies
 var cookieJar=[];
 
-//////////////////////////
+//////////////////////////////////////////////////
 // Stolen from the regular PP project
-//////////////////////////
+//////////////////////////////////////////////////
 function changeMyCounter(subroot, val){
     var bb;
     for(bb=0; bb!=subroot.childNodes.length; bb++){
@@ -57,6 +57,17 @@ function fixCounters(){
     	}
     }
 }
+// Expands targets if they are hidden
+function showTarget(id){
+    var element = document.getElementById(id);
+    while (element != document.body.rootNode ){
+	element.classList.remove("hide");
+	element = element.parentElement;
+    }
+}
+//////////////////////////////////////////////////
+// End stolen section
+//////////////////////////////////////////////////
 
 
 /**
@@ -295,6 +306,7 @@ function fullReport(){
     myBlobBuilder.append(EPILOGUE);
     initiateDownload('FullReport.html', myBlobBuilder.getBlob("text/html"));
 }
+
 
 
 function generateReport(){

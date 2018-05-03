@@ -40,7 +40,17 @@ class State:
         self.man_fun_map['O']="<select onchange='update();' class='val'><option value='O'>O</option><option value='X'>X</option></select>"
         # Holds the root
         self.root=theroot
-        
+        # Maps IDs to elements
+        self.idMap={}
+        self.harvest_ids(self.root)
+
+    # getElementById doesn't work well with minidom,
+    # so we're faking.
+    def harvest_ids(self, node):
+        if node.nodeType == xml.dom.Node.ELEMENT_NODE:
+            self.idMap[node.getAttribute("id")]=node
+            for child in node.childNodes:
+                self.harvest_ids(child)
 
     def handle_management_function_set(self, elem):
         ret = "<table class='mfun-table'>\n"
@@ -51,7 +61,7 @@ class State:
         ret+= "<tr><th>Management Function</th>"
         for col in getPpEls(elem, 'manager'):
             ret += "<th>"
-            ret += self.handle_node(col, True);
+            ret += self.handle_node(col, True)
             ret += "</th>"
         ret+= "</tr>\n"
 
@@ -73,7 +83,7 @@ class State:
             # And step through every other column
             for col in getPpEls(elem, 'manager'):
                 ret += "<td>"
-                colId = col.getAttribute("id");
+                colId = col.getAttribute("id")
                 if colId in val:
                     ret += self.man_fun_map[ val[colId] ]
                 else:
@@ -112,10 +122,10 @@ class State:
                         onChange+=delim+"\""+sel+"\""
                         delim=","
                     onChange+="]);"
-                chk+= " onchange='update(); "+onChange+"'";
+                chk+= " onchange='update(); "+onChange+"'"
                 chk+= " data-rindex='"+str(rindex)+"'"
                 chk +=" class='val selbox"+classes+"'"
-                chk +="></input><span>"+ contents+"</span>\n";
+                chk +="></input><span>"+ contents+"</span>\n"
                 sels.append(chk)
                 rindex+=1
         # If the text is short, put it on one line
@@ -162,28 +172,35 @@ class State:
             ret += self.handle_collection(node, False)
             return ret
 
-        elif node.localName == "ctr-ref":
-            refid=node.getAttribute('refid');
+        elif node.localName == "ctr-ref" and show_text:
+            refid=node.getAttribute('refid')
             ret="<a onclick='showTarget(\"cc-"+refid+"\")' href=\"#cc-"+refid+"\" class=\"cc-"+refid+"-ref\">"
+            target=self.idMap[refid]
+            prefix=target.getAttribute("ctr-type")+" "
+            if target.hasAttribute("pre"):
+                prefix=target.getAttribute("pre")
+            ret+="<span class=\"counter\">"+refid+"</span>"
+            ret+="</a>"
+            return ret
             
             
-        elif node.localName == "ctr":
-            ctrtype=node.getAttribute("ctr-type");
-            prefix=ctrtype
+        elif node.localName == "ctr" and show_text:
+            ctrtype=node.getAttribute("ctr-type")
+            prefix=ctrtype+" "
             if node.hasAttribute("pre"):
-                prefix=node.getAttribute("pre");
-            idAttr=node.getAttribute("id");
+                prefix=node.getAttribute("pre")
+            idAttr=node.getAttribute("id")
             ret="<span class='ctr' data-myid='"+idAttr+"+data-counter-type='ct-"
             ret+=ctrtype+"' id='cc-"+idAttr+"'>\n"
             ret+=prefix
             ret+="<span class='counter'>"+idAttr+"</span>"
-            ret+=self.handle_collection(node, True);
+            ret+=self.handle_collection(node, True)
             ret+="</span>"
             return ret
         
         elif node.localName == "f-element" or node.localName == "a-element":
             # Requirements are handled in the title section
-            return self.handle_node( getPpEls(node, 'title')[0], True);
+            return self.handle_node( getPpEls(node, 'title')[0], True)
 
         elif node.localName == "f-component" or node.localName == "a-component":
             id=node.getAttribute("id")
@@ -238,7 +255,7 @@ class State:
                     ret += ">"
                     ret += self.handle_collection(node, True)
                     ret += "</"+tag+">"
-                    return ret;
+                    return ret
         return ""
 
     def handle_collection(self, node, show_text):
@@ -253,13 +270,13 @@ class State:
         to an array of slave component IDs
         """
         for element in getPpEls(self.root, 'selection-depends'):
-            # req=element.getAttribute("req");
-            selIds=element.getAttribute("ids");
+            # req=element.getAttribute("req")
+            selIds=element.getAttribute("ids")
             slaveId=element.parentNode.getAttribute("id")
             for selId in selIds.split(','):
                 reqs=[]
                 if selId in self.selMap:
-                    reqs =self.selMap[selId];
+                    reqs =self.selMap[selId]
                 reqs.append(slaveId)
                 self.selMap[selId]=reqs
 
@@ -285,15 +302,15 @@ if __name__ == "__main__":
     # Parse the PP and make state from it
     state=State(minidom.parse(infile).documentElement)
 
-    state.makeSelectionMap();
+    state.makeSelectionMap()
 
 
 
     with open(jsfile, "r") as in_handle:
-        js = in_handle.read();
+        js = in_handle.read()
 
     with open(cssfile, "r") as in_handle:
-        css = in_handle.read();
+        css = in_handle.read()
 
     with open(infile, "rb") as in_handle:
         inb64 = base64.b64encode(in_handle.read()).decode('ascii')
