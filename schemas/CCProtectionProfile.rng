@@ -611,17 +611,17 @@
 	</a:documentation>
       </attribute>
 
-      <optional>
-	<attribute name="ctr-type">
-	  <a:documentation>
-	    References the specific counter.
-	  </a:documentation>
-	</attribute>
-      </optional>
+      <attribute name="ctr-type">
+	<a:documentation>
+	  References the counter family. If no prefix is given, this value
+	  plus a space is used as the prefix.
+	</a:documentation>
+      </attribute>
       <optional>
 	<attribute name="pre">
 	  <a:documentation>
-	    Text that goes before the counter (e.g. 'Table '). It will be included in every reference. By default it is table.
+	    Text that goes before the counter (e.g. 'Table ').
+	    If it's not present, this value is "@ctr-type" + " " 
 	  </a:documentation>
 	</attribute>
       </optional>

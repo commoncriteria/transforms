@@ -21,7 +21,7 @@ def getPpEls(parent, name):
 
 class State:
     """Keeps track of certain values for a PP """
-    def __init__(self):
+    def __init__(self, theroot):
         """ Initializes State"""
         # Maps selection IDs to Requirements
         # If the selection is made, then the requirement is included
@@ -38,7 +38,9 @@ class State:
         self.man_fun_map['-']="-"
         # Value for Optional requirement
         self.man_fun_map['O']="<select onchange='update();' class='val'><option value='O'>O</option><option value='X'>X</option></select>"
-
+        # Holds the root
+        self.root=theroot
+        
 
     def handle_management_function_set(self, elem):
         ret = "<table class='mfun-table'>\n"
@@ -160,6 +162,25 @@ class State:
             ret += self.handle_collection(node, False)
             return ret
 
+        elif node.localName == "ctr-ref":
+            refid=node.getAttribute('refid');
+            ret="<a onclick='showTarget(\"cc-"+refid+"\")' href=\"#cc-"+refid+"\" class=\"cc-"+refid+"-ref\">"
+            
+            
+        elif node.localName == "ctr":
+            ctrtype=node.getAttribute("ctr-type");
+            prefix=ctrtype
+            if node.hasAttribute("pre"):
+                prefix=node.getAttribute("pre");
+            idAttr=node.getAttribute("id");
+            ret="<span class='ctr' data-myid='"+idAttr+"+data-counter-type='ct-"
+            ret+=ctrtype+"' id='cc-"+idAttr+"'>\n"
+            ret+=prefix
+            ret+="<span class='counter'>"+idAttr+"</span>"
+            ret+=self.handle_collection(node, True);
+            ret+="</span>"
+            return ret
+        
         elif node.localName == "f-element" or node.localName == "a-element":
             # Requirements are handled in the title section
             return self.handle_node( getPpEls(node, 'title')[0], True);
@@ -226,12 +247,12 @@ class State:
             ret += self.handle_node(child, show_text)
         return ret
 
-    def makeSelectionMap(self, root):
+    def makeSelectionMap(self):
         """
         Makes a dictionary that maps the master requirement ID
         to an array of slave component IDs
         """
-        for element in getPpEls(root, 'selection-depends'):
+        for element in getPpEls(self.root, 'selection-depends'):
             # req=element.getAttribute("req");
             selIds=element.getAttribute("ids");
             slaveId=element.parentNode.getAttribute("id")
@@ -261,12 +282,10 @@ if __name__ == "__main__":
     else:
         outfile=out[1]
 
-    # Parse the PP
-    root = minidom.parse(infile).documentElement
+    # Parse the PP and make state from it
+    state=State(minidom.parse(infile).documentElement)
 
-    state=State()
-
-    state.makeSelectionMap(root);
+    state.makeSelectionMap();
 
 
 
@@ -287,7 +306,7 @@ if __name__ == "__main__":
     form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n"
     form += "   <head>\n"
     form += "      <meta charset='utf-8'></meta>\n"
-    form += "      <title>"+root.getAttribute("name")+"</title>\n"
+    form += "      <title>"+state.root.getAttribute("name")+"</title>\n"
     form += "      <style type='text/css'>\n"
     form += css
     form += """      </style>
@@ -302,7 +321,7 @@ if __name__ == "__main__":
        </head>       <body onkeypress='handleKey(event); return true;' onload='init();'>
 """
 
-    form +=  "      <h1>Worksheet for the " + root.getAttribute("name") + "</h1>\n"
+    form +=  "      <h1>Worksheet for the " + state.root.getAttribute("name") + "</h1>\n"
     form +=  """
 <div class='warning-pane'>
    <noscript><h2 class="warning">This page requires JavaScript.</h2></noscript>
@@ -312,7 +331,7 @@ if __name__ == "__main__":
 </div>
     """
 
-    form += state.handle_node(root, False)
+    form += state.handle_node(state.root, False)
     form += """
           <br/>
           <button type="button" onclick="generateReport()">XML Record</button>
