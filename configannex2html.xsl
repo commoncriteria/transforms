@@ -6,10 +6,10 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:co="http://common-criteria.rhcloud.com/ns/co"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:htm="http://www.w3.org/1999/xhtml"
-  version="1.0">
+		xmlns:co="https://niap-ccevs.org/configannex/v1"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:htm="http://www.w3.org/1999/xhtml"
+		version="1.0">
 
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
