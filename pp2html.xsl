@@ -97,11 +97,6 @@ function buildIndex(){
         // This will not work for documents with greater than 26 appendices
         var prefix=""+(isAlpha?String.fromCharCode(64 +prefix_array[0]):prefix_array[0]);
 
-        // If level is exactly 1, add a period for sake of appearance
-        if (level == 1) {
-          prefix+=".";
-        }
-
         // Add numbering levels for each level higher than 1
         for (bb=1; level>bb; bb++) {
           prefix+="."+prefix_array[bb];
