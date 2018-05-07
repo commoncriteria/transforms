@@ -911,8 +911,7 @@ function expand(){
 
     <xsl:if test="@status='optional'">
         <div class="statustag">
-          <i><b>This is an optional component. However, PP-Modules for this
-          Protection Profile might redefine it as non-optional.</b></i>
+          <i><b>This is an optional component. However, applied modules or packages might redefine it as non-optional.</b></i>
         </div>
    </xsl:if>
 
@@ -1288,7 +1287,6 @@ function expand(){
   </xsl:template>
 
 
-  <xsl:template name="opt_text">; however, Modules for this Protection Profile might redefine it as non-optional</xsl:template>
 
 
 
