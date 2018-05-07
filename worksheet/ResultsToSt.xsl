@@ -53,18 +53,13 @@
 
   <xsl:template match="cc:assignable">[<span class="assignment"><xsl:value-of select="@val"/></span>]</xsl:template>
 
-
-
-
   <!-- Used to match regular ?-components -->
-  <xsl:template match="cc:a-component"><div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:evalactionlabel|cc:a-element"/></div>
-  </xsl:template>
+  <xsl:template match="cc:a-component"><h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:evalactionlabel|cc:a-element"/></xsl:template>
 
   <xsl:template match="cc:evalactionlabel"><h4><xsl:value-of select="@title"/></h4></xsl:template>
 
   <!-- Used to match regular ?-components -->
-  <xsl:template match="cc:f-component"><div class="comp" id="{translate(@id, $lower, $upper)}"><h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:f-element"/></div></xsl:template>
+  <xsl:template match="cc:f-component"><h4><xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/><xsl:value-of select="@name"/></h4><xsl:apply-templates select="cc:f-element"/></xsl:template>
 
 
 
@@ -94,13 +89,13 @@
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
-      <xsl:when test="$type='O'"><div>O</div></xsl:when>
-      <xsl:when test="$type='M'"><div>X</div></xsl:when>
-      <xsl:when test="$type='_'"><div>-</div></xsl:when>
+      <xsl:when test="$type='O'">O</xsl:when>
+      <xsl:when test="$type='M'">X</xsl:when>
+      <xsl:when test="$type='_'">-</xsl:when>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="cc:f-element | cc:a-element" ><div class="element"><xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/><div class="reqid" id="{$reqid}"><a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a></div><div class="reqdesc"><xsl:apply-templates/></div></div></xsl:template>
+  <xsl:template match="cc:f-element | cc:a-element" ><div class="element"><xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/><div class="reqid" id="{$reqid}"><xsl:value-of select="$reqid"/></div><div class="reqdesc"><xsl:apply-templates/></div></div></xsl:template>
 
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 

@@ -16,7 +16,6 @@ const PREAMBLE = "<html xmlns='http://www.w3.org/1999/xhtml'><head><title></titl
     + "</style></head><body>\n";
 const EPILOGUE="</body></html>";
 
-
 const AMPERSAND=String.fromCharCode(38);
 const LT=String.fromCharCode(60);
 
@@ -25,6 +24,52 @@ var prefix="";
 
 /// Dictionary to hold all the cookies
 var cookieJar=[];
+
+//////////////////////////////////////////////////
+// Stolen from the regular PP project
+//////////////////////////////////////////////////
+function changeMyCounter(subroot, val){
+    var bb;
+    for(bb=0; bb!=subroot.childNodes.length; bb++){
+    	if( subroot.childNodes[bb] instanceof Element &&
+    	    "counter"==subroot.childNodes[bb].getAttribute("class")){
+    	    subroot.childNodes[bb].innerHTML = val;
+    	    return;
+    	}
+    }
+}
+
+function fixCounters(){
+    var figs = document.getElementsByClassName("ctr");
+    var occurs = {};                                         // Map that stores how many times we've seen each thing
+    var aa;
+    for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
+    	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
+    	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
+    	occurs[ ct ] = curr + 1;                              // Save off increment for next time
+    	changeMyCounter( figs[aa], curr);
+
+    	var figId = figs[aa].getAttribute("data-myid");
+    	var figRefs = document.getElementsByClassName(figId+"-ref");
+    	var bb;
+        for(bb=0; bb!=figRefs.length; bb++){
+    	    changeMyCounter(figRefs[bb], curr);
+    	}
+    }
+}
+// Expands targets if they are hidden
+function showTarget(id){
+    var element = document.getElementById(id);
+    while (element != document.body.rootNode ){
+	element.classList.remove("hide");
+	element = element.parentElement;
+    }
+}
+//////////////////////////////////////////////////
+// End stolen section
+//////////////////////////////////////////////////
+
+
 /**
  * This runs some sort of function on
  * all elements of a class.
@@ -130,6 +175,7 @@ function init(){
     performActionOnClass("val", retrieveFromCookieJar);
     validateRequirements();
     handleEnter(null);
+    fixCounters();
 }
 function resolver(pre){
     if(pre=='cc') return 'https://niap-ccevs.org/cc/v1';
@@ -260,6 +306,7 @@ function fullReport(){
     myBlobBuilder.append(EPILOGUE);
     initiateDownload('FullReport.html', myBlobBuilder.getBlob("text/html"));
 }
+
 
 
 function generateReport(){

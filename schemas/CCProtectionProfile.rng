@@ -90,12 +90,7 @@
 	      </element>
 	      <element name="subject">
 		<a:documentation>Description of the revision.</a:documentation>
-		<oneOrMore>
-	      	  <choice>
-	      	    <text/>
-	      	    <ref name="html-element"></ref>
-	      	  </choice>
-		</oneOrMore>
+		<ref name="textplus"/>
 	      </element>
 	    </element>
 	  </zeroOrMore>
@@ -460,7 +455,12 @@
 	      <a:documentation>
 		Readable role name
 	      </a:documentation>
-	      <ref name="id-attr"/>
+	      <attribute name="id">
+		<a:documentation>
+		  ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+		  in the management-function.
+		</a:documentation>
+	      </attribute>
 	      <text/>
             </element>
 	  </oneOrMore>
@@ -475,7 +475,21 @@
 		  <element name="M">
 		    <a:documentation>References for which managers this function is mandatory</a:documentation>
 		    <attribute name="ref">
-		      <a:documentation>Should be the id of a mandatory manager</a:documentation>
+		      <a:documentation>ID respective manager</a:documentation>
+		    </attribute>
+		    <empty/>
+		  </element>
+		  <element name="O">
+		    <a:documentation>References for which managers this function is optional</a:documentation>
+		    <attribute name="ref">
+		      <a:documentation>ID respective manager</a:documentation>
+		    </attribute>
+		    <empty/>
+		  </element>
+		  <element name="_">
+		    <a:documentation>References for which managers this function is not applicable</a:documentation>
+		    <attribute name="ref">
+		      <a:documentation>ID respective manager</a:documentation>
 		    </attribute>
 		    <empty/>
 		  </element>
@@ -534,9 +548,9 @@
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
-	Incidates the beginning of an assignable section.
+	Assignment section
       </a:documentation>
-      <text/>
+      <ref name="textplus"/>
     </element>
   </define>
 
@@ -597,17 +611,17 @@
 	</a:documentation>
       </attribute>
 
-      <optional>
-	<attribute name="ctr-type">
-	  <a:documentation>
-	    References the specific counter.
-	  </a:documentation>
-	</attribute>
-      </optional>
+      <attribute name="ctr-type">
+	<a:documentation>
+	  References the counter family. If no prefix is given, this value
+	  plus a space is used as the prefix.
+	</a:documentation>
+      </attribute>
       <optional>
 	<attribute name="pre">
 	  <a:documentation>
-	    Text that goes before the counter (e.g. 'Table '). It will be included in every reference. By default it is table.
+	    Text that goes before the counter (e.g. 'Table ').
+	    If it's not present, this value is "@ctr-type" + " " 
 	  </a:documentation>
 	</attribute>
       </optional>
@@ -990,6 +1004,23 @@
         </choice>
       </oneOrMore>
     </element>
+  </define>
+  <define name="textplus">
+    <a:document>
+      text+html+abbr
+    </a:document>
+    <oneOrMore>
+      <choice>
+	<text/>
+	<ref name="html-element"/>
+	<ref name="abbr-el"/>
+	<ref name="linkref"/>
+	<ref name="appref"/>
+	<ref name="secref"/>
+	<ref name="cite"/>
+	<ref name="xref"/>
+      </choice>
+    </oneOrMore>
   </define>
   
   <define name="a-component-pattern">

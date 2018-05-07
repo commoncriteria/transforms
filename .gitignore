@@ -5,4 +5,4 @@ schemas/*.rnc
 /**/*.html
 Makefile
 /**/__pycache__
-local
+tmp

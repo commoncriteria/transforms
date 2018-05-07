@@ -140,7 +140,7 @@ function changeMyCounter(subroot, val){
 }
 
 
-function fixCounters(type){
+function fixCounters(){
     var figs = document.getElementsByClassName("ctr");
     var occurs = {};                                         // Map that stores how many times we've seen each thing
     var aa;
@@ -194,7 +194,7 @@ function fixIndexRefs(){
 
 // Called on page load to parse URL parameters and perform actions on them.
 function init(){
-    fixCounters("figure");
+    fixCounters();
     buildIndex();
     fixIndexRefs();
     fixToolTips();
@@ -1093,6 +1093,7 @@ function expand(){
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
+      <!-- should only run through once, but this is how we're changing contexts -->
       <xsl:for-each select="//cc:ctr[@id=$refid]">
 	<xsl:call-template name="getPre"/>
       </xsl:for-each>
@@ -1143,6 +1144,7 @@ function expand(){
     <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:when>
       <xsl:otherwise><xsl:text>Table </xsl:text></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
