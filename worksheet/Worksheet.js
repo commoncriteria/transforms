@@ -460,6 +460,9 @@ function modifyClass( el, clazz, isAdd ){
     else      el.classList.remove(clazz);
     return true;
 }
+
+
+
 /* 
  * This design does not account for cascading dependent components .
  * There are none currently, so this limitation is acceptable.

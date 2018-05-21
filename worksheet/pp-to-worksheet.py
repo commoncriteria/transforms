@@ -32,11 +32,11 @@ class State:
         self.selectables_index=0
         # Map from management function table values to HTML
         self.man_fun_map={}
-        # Value for mandatory requirement
+        # Value for mandatory function
         self.man_fun_map['M']="X"
-        # Value of N/A requirement
+        # Value of N/A function
         self.man_fun_map['-']="-"
-        # Value for Optional requirement
+        # Value for Optional function
         self.man_fun_map['O']="<select onchange='update();' class='val'><option value='O'>O</option><option value='X'>X</option></select>"
         # Holds the root
         self.root=theroot
@@ -203,20 +203,29 @@ class State:
             return self.handle_node( getPpEls(node, 'title')[0], True)
 
         elif node.localName == "f-component" or node.localName == "a-component":
+            status= node.getAttribute("status")
+            ret=""
             id=node.getAttribute("id")
-            ret = "<div id='"+id+"'"
+            tooltip=""
+            if status == "optional" or status == "objective":
+                ret+="<div class='tooltipped'>"
+                ret+="<input type='checkbox' onchange='modifyClass(this.nextSibling, \"disabled\", !this.checked)'></input>"
+                tooltip="<span class='tooltiptext'>"+status+"</span>"
+
+            ret+= "<span id='"+id+"'"
             # ret = "<div onfocusin='handleEnter(this)' id='"+id+"'"
             # The only direct descendants are possible should be the children
             child=getPpEls(node, 'selection-depends')
             ret+=" class='component"
-
-            if child.length > 0:
+            if status!="":
                 ret+=" disabled"
             ret+="'>"
             #<a href='#"+id+"'>
-            ret+="<span class='f-comp-status'></span><a onclick='toggle(this); return false;' href='#"+id+"' class='f-comp-title'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a><div class='reqgroup'>\n"
+            ret+="<span class='f-comp-status'></span><a onclick='toggle(this); return false;' href='#"+id+"' class='f-comp-title'>"+id.upper()+" &mdash; "+ node.getAttribute("name")+"</a>"
+            ret+=tooltip
+            ret+="\n<div class='reqgroup'>\n"
             ret+=self.handle_collection(node, False)
-            ret+="</div></div>"
+            ret+="\n</div></span></div><br></br>"
             return ret
         elif node.localName == "title":
             self.selectables_index=0
