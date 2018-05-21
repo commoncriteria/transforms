@@ -299,6 +299,10 @@ function fullReport(){
     // Chrome has a max string size.
     var htmlReport = transform(xsl, pp_xml, document);
     var rNode = document.getElementById('report-node');
+    // Clear its children
+    while(rNode.firstChild){
+	rNode.removeChild( rNode.firstChild );
+    }
     rNode.appendChild( htmlReport );
     var myBlobBuilder = new MyBlobBuilder();
     myBlobBuilder.append(PREAMBLE);
