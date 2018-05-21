@@ -906,7 +906,7 @@ function expand(){
 
     <xsl:if test="@status='optional'">
         <div class="statustag">
-          <i><b>This is an optional component. However, applied modules or packages might redefine it as non-optional.</b></i>
+          <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
         </div>
    </xsl:if>
 
