@@ -129,6 +129,25 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
+
+#- Points to the daisydiff jar file
+DAISY_DIR ?= ../ExecuteDaisy
+
+#- Points to the current NIAP release
+PREV_RELEASE_PP_URL ?=
+
+#- 
+HTML_DIFF_FILE?=$(OUT)/Diff.html
+
+SHELL=/bin/bash
+
+#- Build the Diff file
+diff: $(HTML_DIFF_FILE)
+$(HTML_DIFF_FILE): $(PP_RELEASE_HTML)
+	[ "$(PREV_RELEASE_PP_URL)" == "" ] || \
+	  java -jar $(DAISY_DIR)/*.jar <(wget -O-  $(PREV_RELEASE_PP_URL)) $(PP_RELEASE_HTML)  --file=$(HTML_DIFF_FILE)
+
+
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
@@ -153,6 +172,9 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 worksheet: $(WORKSHEET_HTML)
 $(WORKSHEET_HTML): $(PP_XML)
 	python3 $(TRANS)/worksheet/pp-to-worksheet.py $(TRANS)/worksheet/Worksheet.js $(TRANS)/worksheet/Worksheet.css $(TRANS)/worksheet/ResultsToSt.xsl $(PP_XML):$(WORKSHEET_HTML)
+
+
+
 
 #- Builds quick help
 help:
