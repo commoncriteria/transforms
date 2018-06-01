@@ -145,7 +145,9 @@ SHELL=/bin/bash
 diff: $(HTML_DIFF_FILE)
 $(HTML_DIFF_FILE): $(PP_RELEASE_HTML)
 	[ "$(PREV_RELEASE_PP_URL)" == "" ] || \
-	  java -jar $(DAISY_DIR)/*.jar <(wget -O-  $(PREV_RELEASE_PP_URL)) $(PP_RELEASE_HTML)  --file=$(HTML_DIFF_FILE) && cp -r $(DAISY_DIR)/js  $(DAISY_DIR)/css $(OUT)
+	  java -jar $(DAISY_DIR)/*.jar <(wget -O-  $(PREV_RELEASE_PP_URL)) $(PP_RELEASE_HTML)  --file=$(HTML_DIFF_FILE) 
+	[ "-d" $(DAISY_DIR)/js ]  || cp -r $(DAISY_DIR)/js $(OUT)
+	[ "-d" $(DAISY_DIR)/css ] || cp -r $(DAISY_DIR)/css $(OUT)	
 
 
 #- Target to build the release report
@@ -192,6 +194,7 @@ clean:
 			rm "$$f"; \
 		fi; \
 	done
+	rm -rf $(HTML_DIFF_FILE) $(OUT)/js $(OUT)/css
 
 #- Does a git safe push
 git-safe-push:
