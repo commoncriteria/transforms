@@ -17,6 +17,8 @@
 # LocalUser.make is where each user would add their appropriate hooks. The file should not be committed 
 # to git.
 
+# If we don't specify it, make will default to the less featureful bourne shell
+SHELL=/bin/bash
 
 #---
 #- Hooks
@@ -39,6 +41,7 @@ DEBUG ?= v
 
 #- Base name(with extensions) of input and output files
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
+
 
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
@@ -85,6 +88,16 @@ PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 #- Path to worksheet
 WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
 
+#- Points to the daisydiff jar file
+DAISY_DIR ?= ../ExecuteDaisy
+
+#- Url of the current NIAP release
+PREV_RELEASE_PP_URL ?=
+
+#- Path where the diff file is written
+HTML_DIFF_FILE?=$(OUT)/$(BASE)-diff.html
+
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
@@ -130,16 +143,7 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 
-#- Points to the daisydiff jar file
-DAISY_DIR ?= ../ExecuteDaisy
-
-#- Points to the current NIAP release
-PREV_RELEASE_PP_URL ?=
-
-#- 
-HTML_DIFF_FILE?=$(OUT)/Diff.html
-
-SHELL=/bin/bash
+# We don't want the diff build to fail if we don't have the URL
 
 #- Build the Diff file
 diff: $(HTML_DIFF_FILE)
