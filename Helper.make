@@ -91,12 +91,9 @@ WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
 #- Points to the daisydiff jar file
 DAISY_DIR ?= ../ExecuteDaisy
 
-#- Url of the current NIAP release
-PREV_RELEASE_PP_URL ?=
-
-#- Path where the diff file is written
-HTML_DIFF_FILE?=$(OUT)/$(BASE)-diff.html
-
+#- Points to a folder containing files to diff the currently
+#- developed 'release' version against
+DIFF_DIR ?= diff-archive
 
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
@@ -146,12 +143,16 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 # We don't want the diff build to fail if we don't have the URL
 
 #- Build the Diff file
-diff: $(HTML_DIFF_FILE)
-$(HTML_DIFF_FILE): $(PP_RELEASE_HTML)
-	[ "$(PREV_RELEASE_PP_URL)" == "" ] || \
-	  java -jar $(DAISY_DIR)/*.jar <(wget -O-  $(PREV_RELEASE_PP_URL)) $(PP_RELEASE_HTML)  --file=$(HTML_DIFF_FILE) 
-	[ "-d" $(OUT)/js ]  || cp -r $(DAISY_DIR)/js $(OUT)
-	[ "-d" $(OUT)/css ] || cp -r $(DAISY_DIR)/css $(OUT)	
+diff: $(PP_RELEASE_HTML)
+	[ ! -d "$(DIFF_DIR)" ] ||\
+	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
+	     java -jar $(DAISY_DIR)/*.jar "$$old" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${old##*/}";\
+	   done;\
+           for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
+	     base=$${old%.url}; java -jar $(DAISY_DIR)/*.jar <(wget -O-  `cat $$old`) $(PP_RELEASE_HTML)   --file="$(OUT)/diff-$${base##*/}.html";\
+	   done
+	[ -d "$(OUT)/js" ]  || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
 
 
 #- Target to build the release report
