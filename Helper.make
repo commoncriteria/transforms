@@ -194,7 +194,7 @@ clean:
 			rm "$$f"; \
 		fi; \
 	done
-	rm -rf $(HTML_DIFF_FILE) $(OUT)/js $(OUT)/css
+	rm -rf $(OUT)/js $(OUT)/css
 
 #- Does a git safe push
 git-safe-push:
