@@ -68,6 +68,23 @@ div{
     color: #F00;
 }
 
+
+.component.valid.optional .f-comp-status::before,
+.valid.optional .f-el-title::before{
+    content: "\2713";
+    color: #2626FF; 
+}
+
+.component.invalid.optional .f-comp-status::before,
+.requirement.invalid.optional .f-el-title::before{
+    content: "\2715";
+    color: #2626FF; 
+
+
+}
+
+
+
 .disabled {
     opacity: .2;
     pointer-events: none;
@@ -146,4 +163,29 @@ O+HMRUtPNsQAAAAASUVORK5CYII=');
 #main{
     margin-left:50px;
 }
+
+
+
+
+/* Tooltip text */
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    
+    /* Position the tooltip text - see examples below! */
+
+    z-index: 1;
+    position: absolute;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltipped:hover .tooltiptext {
+    visibility: visible;
+}
+
 

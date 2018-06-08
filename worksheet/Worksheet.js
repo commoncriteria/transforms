@@ -299,6 +299,10 @@ function fullReport(){
     // Chrome has a max string size.
     var htmlReport = transform(xsl, pp_xml, document);
     var rNode = document.getElementById('report-node');
+    // Clear its children
+    while(rNode.firstChild){
+	rNode.removeChild( rNode.firstChild );
+    }
     rNode.appendChild( htmlReport );
     var myBlobBuilder = new MyBlobBuilder();
     myBlobBuilder.append(PREAMBLE);
@@ -460,6 +464,9 @@ function modifyClass( el, clazz, isAdd ){
     else      el.classList.remove(clazz);
     return true;
 }
+
+
+
 /* 
  * This design does not account for cascading dependent components .
  * There are none currently, so this limitation is acceptable.

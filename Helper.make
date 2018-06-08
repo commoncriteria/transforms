@@ -17,6 +17,8 @@
 # LocalUser.make is where each user would add their appropriate hooks. The file should not be committed 
 # to git.
 
+# If we don't specify it, make will default to the less featureful bourne shell
+SHELL=/bin/bash
 
 #---
 #- Hooks
@@ -39,6 +41,7 @@ DEBUG ?= v
 
 #- Base name(with extensions) of input and output files
 BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
+
 
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
@@ -85,6 +88,13 @@ PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 #- Path to worksheet
 WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
 
+#- Points to the daisydiff jar file
+DAISY_DIR ?= ../ExecuteDaisy
+
+#- Points to a folder containing files to diff the currently
+#- developed 'release' version against
+DIFF_DIR ?= diff-archive
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
@@ -129,6 +139,22 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
+
+# We don't want the diff build to fail if we don't have the URL
+
+#- Build the Diff file
+diff: $(PP_RELEASE_HTML)
+	[ ! -d "$(DIFF_DIR)" ] ||\
+	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
+	     java -jar $(DAISY_DIR)/*.jar "$$old" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${old##*/}";\
+	   done;\
+           for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
+	     base=$${old%.url}; java -jar $(DAISY_DIR)/*.jar <(wget -O-  `cat $$old`) $(PP_RELEASE_HTML)   --file="$(OUT)/diff-$${base##*/}.html";\
+	   done
+	[ -d "$(OUT)/js" ]  || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
+
+
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
@@ -154,13 +180,11 @@ worksheet: $(WORKSHEET_HTML)
 $(WORKSHEET_HTML): $(PP_XML)
 	python3 $(TRANS)/worksheet/pp-to-worksheet.py $(TRANS)/worksheet/Worksheet.js $(TRANS)/worksheet/Worksheet.css $(TRANS)/worksheet/ResultsToSt.xsl $(PP_XML):$(WORKSHEET_HTML)
 
+
+
+
 #- Builds quick help
 help:
-	$(info $(shell echo -e "Here are the possible make targets (Hopefully they are self-explanatory)\x3A\n"))
-	$(info $(shell grep -e $$(echo -e \\x3A) Makefile $(TRANS)/*.make -h | grep -v -e "^\\$$"| awk 'BEGIN { FS = "\x3A" } {print $$1}' ))
-
-#- Builds more detailed help
-more-help:
 	grep -A 1 '^#-' Makefile $(TRANS)/*.make -h
 
 #- Build to clean the system
@@ -170,6 +194,7 @@ clean:
 			rm "$$f"; \
 		fi; \
 	done
+	rm -rf $(OUT)/js $(OUT)/css
 
 #- Does a git safe push
 git-safe-push:
