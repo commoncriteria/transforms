@@ -22,7 +22,7 @@
   
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
-  
+
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
@@ -34,7 +34,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
 	<xsl:element name="title"><xsl:value-of select="//cc:PPTitle"/></xsl:element>
-	    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+	    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' ></script>
         <script type="text/x-mathjax-config">
             MathJax.Hub.Config({
             extensions: ["tex2jax.js"],
@@ -54,8 +54,8 @@
             });
         </script>
         <script type="text/javascript">
+<xsl:text disable-output-escaping="yes">// &lt;![CDATA[</xsl:text>
 <xsl:call-template name="common_js"/>	  
-
 const AMPERSAND=String.fromCharCode(38);
 const NBSP=String.fromCharCode(160,160,160);
 
@@ -218,6 +218,8 @@ function expand(){
         ap[ii].classList.remove('hide');
     }
 }
+
+// <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </script>
 
         <style type="text/css">
@@ -1046,7 +1048,7 @@ function expand(){
     <xsl:if test="$appendicize!='on' and @id!='optional' and @id!='sel-based' and @id!='objective'">
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
   	      Appendix
-  	      <span lass="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
+  	      <span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
       </h1>
       <xsl:apply-templates/>
     </xsl:if>

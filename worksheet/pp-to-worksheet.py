@@ -283,7 +283,7 @@ class State:
 
 if __name__ == "__main__":
     if len(sys.argv) < 5:
-        #                1          2          3                 4
+        #        0       1          2          3                 4
         print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[:<output-file>]")
         sys.exit(0)
 
