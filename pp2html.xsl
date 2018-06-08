@@ -21,7 +21,8 @@
   <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
   
   <!-- very important, for special characters and umlauts iso8859-1-->
-  <xsl:output method="html" encoding="UTF-8" indent="yes"/>
+  <xsl:output method="html" encoding="UTF-8"/>
+
 
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
@@ -54,8 +55,9 @@
             });
         </script>
         <script type="text/javascript">
-<xsl:text disable-output-escaping="yes">// &lt;![CDATA[</xsl:text>
-<xsl:call-template name="common_js"/>	  
+
+<xsl:call-template name="common_js"/>
+<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
 const AMPERSAND=String.fromCharCode(38);
 const NBSP=String.fromCharCode(160,160,160);
 
@@ -219,7 +221,7 @@ function expand(){
     }
 }
 
-// <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+// ]]&gt;</xsl:text>
         </script>
 
         <style type="text/css">
