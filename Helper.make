@@ -91,8 +91,12 @@ WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
 #- Points to the daisydiff jar file
 DAISY_DIR ?= ../ExecuteDaisy
 
-#- Points to a folder containing files to diff the currently
-#- developed 'release' version against
+#- Git tags that the current release should be diffed against
+DIFF_TAGS?=
+
+# This is not really a good way to do this
+# Points to a folder containing files to diff the currently
+# developed 'release' version against
 DIFF_DIR ?= diff-archive
 
 #- Your xsl transformer.
@@ -100,6 +104,10 @@ DIFF_DIR ?= diff-archive
 #- It should be able to handle commands of the form
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
+
+# A temporary directory 
+TMP?=/tmp
+
 #---
 #- Build targets
 #---
@@ -140,7 +148,6 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 
-# We don't want the diff build to fail if we don't have the URL
 
 #- Build the Diff file
 diff: $(PP_RELEASE_HTML)
@@ -151,8 +158,24 @@ diff: $(PP_RELEASE_HTML)
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url}; java -jar $(DAISY_DIR)/*.jar <(wget -O-  `cat $$old`) $(PP_RELEASE_HTML)   --file="$(OUT)/diff-$${base##*/}.html";\
 	   done
+	for aa in $(DIFF_TAGS); do\
+		orig=$$(pwd);\
+		cd $(TMP);\
+		rm -rf $$aa;\
+		mkdir $$aa;\
+		cd $$aa;\
+		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+		cd operatingsystem;\
+		make;\
+		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
+		cd $$orig;\
+		pwd;\
+		java -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
+#		rm -rf $(TMP)/$$aa;\
+	done
 	[ -d "$(OUT)/js" ]  || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
+
 
 
 #- Target to build the release report
