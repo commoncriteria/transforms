@@ -10,6 +10,7 @@
        Template for javascript common to all transforms
   -->
   <xsl:template name="common_js">
+    <xsl:text disable-output-escaping='yes'>
 
 function fixToolTips(){
   var tooltipelements = document.getElementsByClassName("tooltiptext");
@@ -18,6 +19,7 @@ function fixToolTips(){
       tooltipelements[aa].parentNode.classList.add("tooltipped");
   }
 }
+    </xsl:text>
     <!-- Include custom javascript defined in the pp -->
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
