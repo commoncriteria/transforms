@@ -165,7 +165,7 @@ diff: $(PP_RELEASE_HTML)
 		mkdir $$aa;\
 		cd $$aa;\
 		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
-		cd operatingsystem;\
+		cd $${orig##*/};\
 		make;\
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
 		cd $$orig;\
