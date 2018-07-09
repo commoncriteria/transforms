@@ -366,9 +366,6 @@ function expand(){
               border:2px solid #888888;
               border-radius:3px;
           }
-	  #toc a{
-	      display: block;
-	  }
 
           div.toc{
               margin-left:8%;
