@@ -998,6 +998,7 @@
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
+	  <ref name="subsection-pattern"/>
 	  <ref name="basic-content"/>
 	  <ref name="a-component-pattern"/>
 	  <ref name="f-component-pattern"/>
