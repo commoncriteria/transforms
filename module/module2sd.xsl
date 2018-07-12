@@ -30,7 +30,15 @@ XSL for Protection Profile Modules
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
 
     <html xmlns="http://www.w3.org/1999/xhtml">
-      <head> <title>Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</title>      </head>
+      <head> 
+	<title>Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</title>
+	<style type="text/css">
+	  #toc a{
+	     display: block;
+	  }
+
+	</style>
+      </head>
       <body>
 	<div style="text-align: center; margin-left: auto; margin-right: auto;">
 	  <h1 class="title" style="page-break-before:auto;">Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</h1>
@@ -41,7 +49,6 @@ XSL for Protection Profile Modules
           <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
           <br/><b><x:value-of select="//cc:PPAuthor"/></b>
 	</div>
-
 	<x:call-template name="foreward"/>
 	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>

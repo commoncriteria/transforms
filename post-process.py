@@ -128,7 +128,7 @@ class State:
                 level = 0
             else:
                 level=int(level)
-
+            # If we have to padd out
             while level > len(inums):
                 inums.append(0)
             # If we go up one set 
@@ -143,16 +143,17 @@ class State:
                 prefix = get_appendix_prefix(inums[0])
             else:
                 prefix = str(inums[0])
-
+            spacer=""
             for bb in range(1, level+1):
                 prefix = prefix + "." + str(inums[bb])
+                spacer=spacer+"&nbps;"
+                
             # Fix inline index number
-            debug("Prefix is: " + prefix)
-            debug("TExt is: " + eles[aa].text)
             eles[aa].text = prefix + " " + eles[aa].text
             # 
             entry = ET.Element("a")
             entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+            entry.attrib['style']= 'text-indent:'+str(level*10)+ 'px'
             entry.text=eles[aa].text
             toc.append(entry)
 
