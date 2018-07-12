@@ -3,6 +3,10 @@
 
   <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
 
+  <!-- #Adds 3 non-breaking spaces -->
+  <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
+
+
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
@@ -24,8 +28,22 @@ function fixToolTips(){
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
+
+  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
+    <div class="eacategory"><xsl:value-of select="name()"/></div>
+  </xsl:template>
+
+
   <!-- Common CSS rules for all files-->
   <xsl:template name="common_css">
+
+    body{
+       max-width: 900px;
+       margin: auto;
+    }
+    #toc span{
+       margin-left: 20px;
+    }
     .assignable-content{
       font-style: italic;
     }
@@ -119,6 +137,31 @@ function fixToolTips(){
    table.mfs td:first-child{
        text-align: left;
    }
+   table{
+              margin:auto;
+              margin-top:1em;
+              border-collapse:collapse; /*border: 1px solid black;*/
+          }
+          td{
+              text-align:left;
+              padding:8px 8px;
+          }
+          th{
+              padding:8px 8px;
+          }
+          tr.header{
+              border-bottom:3px solid gray;
+              padding:8px 8px;
+              text-align:left;
+              font-weight:bold; /*font-size: 90%; font-family: verdana, arial, helvetica, sans-serif; */
+          }
+          table tr:nth-child(2n+2){
+              background-color:#F4F4F4;
+          }
+
+
+
+
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
     
@@ -152,6 +195,31 @@ function fixToolTips(){
       <xsl:apply-templates/>
     </li>
   </xsl:template>
+
+
+  <xsl:template name="references">
+    <h1 id="biblio" class="indexable" data-level="A">References</h1>
+    <table>
+      <tr class='header'><th>Identifier</th><th>Title</th></tr>
+      <xsl:apply-templates select="//cc:bibliography"/>
+    </table>
+  </xsl:template>
+
+
+  <xsl:template match="cc:cc-entry">
+<tr><td><span id='bibCC'> [CC] </span></td><td>Common Criteria for Information Technology Security Evaluation - <ul>
+            <li><a href='http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf'>Part
+                1: Introduction and General Model</a>, CCMB-2017-04-001, Version 3.1 Revision 5,
+              April 2017.</li>
+            <li><a href='http://www.commoncriteriaportal.org/files/ccfiles/CCPART2V3.1R5.pdf'>Part
+                2: Security Functional Components</a>, CCMB-2017-04-002, Version 3.1 Revision 5,
+              April 2017.</li>
+            <li><a href='http://www.commoncriteriaportal.org/files/ccfiles/CCPART3V3.1R5.pdf'>Part
+                3: Security Assurance Components</a>, CCMB-2017-04-003, Version 3.1 Revision 5,
+              April 2017.</li>
+          </ul></td></tr>
+  </xsl:template>
+
 
   <xsl:template match="cc:steplist">
     <ul>
@@ -293,6 +361,15 @@ function fixToolTips(){
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
+  <xsl:template match="cc:bibliography/cc:entry"> 
+    <tr>
+      <xsl:variable name='id'><xsl:value-of select="@id"/></xsl:variable>
+      <xsl:for-each select="cc:*">
+	<td><xsl:choose><xsl:when test="not(preceding-sibling::*)"><span id="{$id}"/>[<xsl:apply-templates/>]</xsl:when><xsl:otherwise><xsl:apply-templates/></xsl:otherwise></xsl:choose></td>
+      </xsl:for-each>
+    </tr>
+  </xsl:template>
+
 
 
   <!--
@@ -362,8 +439,9 @@ function fixToolTips(){
     </xsl:choose>
   </xsl:template>
 
-
-  <!-- -->
+  <!--#####################-->
+  <!-- Debugging templates -->
+  <!--#####################-->
   <xsl:template name="debug-2">
     <xsl:param name="msg"/>
     <xsl:if test="contains($debug, 'vv')">

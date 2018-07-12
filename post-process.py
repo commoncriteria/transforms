@@ -55,6 +55,8 @@ class State:
     def to_html_helper(self, elem):
         tagr = elem.tag.split('}')
         noname=tagr[len(tagr)-1]
+        if noname=="br":
+            return "<br/>"
         ret="<" + noname
         for attrname in elem.attrib:
             ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
@@ -105,7 +107,6 @@ class State:
         brokeRefs = self.classmap["dynref"]
         for brokeRef in brokeRefs:
             linkend=brokeRef.attrib["href"][1:]
-            debug("Looing at " + linkend);
             target=root.find(".//*[@id='"+linkend+"']")
             brokeRef.text = target.text
 
@@ -149,12 +150,17 @@ class State:
                 spacer=spacer+"&nbps;"
                 
             # Fix inline index number
+            spany = ET.Element("span")
+            spany.text = eles[aa].text
+
             eles[aa].text = prefix + " " + eles[aa].text
             # 
             entry = ET.Element("a")
             entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
             entry.attrib['style']= 'text-indent:'+str(level*10)+ 'px'
-            entry.text=eles[aa].text
+
+            entry.text=prefix
+            entry.append(spany)
             toc.append(entry)
 
 

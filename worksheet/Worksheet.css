@@ -4,8 +4,8 @@ table tr:nth-child(2n+2){
 }
 
 body{
-    margin-left: 8%;
-    margin-right: 8%;
+    max-width: 900px;
+    margin: auto;
 }
 
 h1{

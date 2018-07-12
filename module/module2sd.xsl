@@ -12,19 +12,13 @@ XSL for Protection Profile Modules
   <!-- Variable for selecting how much debugging we want -->
   <x:param name="debug" select="'v'"/>
 
-  <x:variable name="space3">&#160;&#160;&#160;</x:variable>
-
-  
-  <!-- Forces output to make legitimate HTML and not XML -->
+  <!-- Forces output to make XML and thus needs to be 
+       HTMLized by another transformer  -->
   <x:output method="xml" encoding="UTF-8"/>
 
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <x:include href="../ppcommons.xsl"/>
-
-  <x:template match="cc:*">
-    <x:apply-templates/>
-  </x:template>
 
   <x:template match="/cc:PP">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
@@ -33,6 +27,7 @@ XSL for Protection Profile Modules
       <head> 
 	<title>Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</title>
 	<style type="text/css">
+	  <x:call-template name="common_css"/>
 	  #toc a{
 	     display: block;
 	  }
@@ -41,12 +36,15 @@ XSL for Protection Profile Modules
       </head>
       <body>
 	<div style="text-align: center; margin-left: auto; margin-right: auto;">
-	  <h1 class="title" style="page-break-before:auto;">Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</h1>
-	  <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
 	  <img src="images/niaplogo.png" alt="NIAP"/>
+	  <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
+	  Mandatory Technical Document</h1>
+	  <hr width="50%"/>
+	  <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
 
-	  <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+	  <br/>PP-Module for <x:value-of select="/cc:PP/@name"/>s
           <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
+	  <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
           <br/><b><x:value-of select="//cc:PPAuthor"/></b>
 	</div>
 	<x:call-template name="foreward"/>
@@ -55,6 +53,8 @@ XSL for Protection Profile Modules
 	<x:apply-templates select="/cc:PP/cc:chapter/cc:section[@id='glossary']"/>
 	<x:call-template name="sfrs"/>
 	<x:call-template name="sars"/>
+	<x:call-template name="sup-info"/>
+	<x:call-template name="references"/>
       </body>
     </html>
   </x:template>
@@ -63,6 +63,18 @@ XSL for Protection Profile Modules
     <h1>Table of Contents</h1>
     <div id="toc"/>
   </x:template>
+
+  <!-- <x:template name="acronyms"> -->
+  <!--   <h2 id="sup-info" class="indexable" data-level="A">Acronyms</h2> -->
+  <!--   <x:apply-templates select="//cc:*/cc:acronyms]"/> -->
+  <!-- </x:template> -->
+
+  <x:template name="sup-info">
+    <h2 id="sup-info" class="indexable" data-level="0">Required Supplementary Information</h2>
+    <p>This Supporting Document has no required supplementary information beyond the ST, operational
+guidance, and testing.</p>
+  </x:template>
+
 
   <x:template name="sfrs">
     <h2 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h2>
@@ -100,8 +112,8 @@ XSL for Protection Profile Modules
     <x:for-each select="/cc:PP/cc:chapter[@id='req']/cc:*">
       <h3 class="indexable" data-level="1" id="{@id}"><x:value-of select="@title"/></h3>
 
-      <x:apply-templates select="cc:subsection[@title='Applicable Modified SFRs']"/>
-      <x:if test="not(cc:subsection[@title='Applicable Modified SFRs']/cc:*)">
+      <x:apply-templates select="cc:subsection[@title='Modified SFRs']"/>
+      <x:if test="not(cc:subsection[@title='Modified SFRs']/cc:*)">
 	<h:p>This PP Module does not modify any requirements for this Base-PP.</h:p>
       </x:if>
       
@@ -115,7 +127,7 @@ XSL for Protection Profile Modules
   </x:template>
 
   <x:template name="sars">
-    <h2 id="sar_aas" class="indexable" data-level="0"> Assurance Activities for SARs</h2>
+    <h2 id="sar_aas" class="indexable" data-level="0">Assurance Activities for SARs</h2>
     <p>The PP-Module does not define any SARs beyond those defined within the <x:call-template name="bases"/> to which it can claim conformance.</p>
   </x:template>
 
@@ -129,15 +141,11 @@ XSL for Protection Profile Modules
 
     <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the EA. The CEM work units that are associated with the EAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     <x:apply-templates select="/cc:PP/cc:chapter[@id='req']"/>
-
   </x:template>
-
 
   <x:template name="intro">
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
-
-
     <p>The scope of the <x:value-of select="/cc:PP/@name"/> PP-Module is
     to describe the security functionality of 
     <x:value-of select="/cc:PP/@target-products"/> products in terms of 
@@ -237,7 +245,7 @@ XSL for Protection Profile Modules
   </x:template>
 
 
-  <x:template match="cc:glossary">
+  <x:template match="cc:glossary|cc:acronyms">
     <table>
       <x:for-each select="cc:entry">
         <tr>
@@ -257,15 +265,7 @@ XSL for Protection Profile Modules
     <x:apply-templates/>
   </x:template>
 
-  <!-- <x:template name="showifexist"> -->
-  <!--   <x:param name="bef"/> -->
-  <!--   <x:param name="it"/> -->
-  <!--   <x:param name="aft"/> -->
-  <!--   <x:if test="$it"><x:value-of select="concat($bef,$it,$aft)"/></x:if> -->
-  <!-- </x:template> -->
-
   <x:template match="cc:subsection">
-    <x:message>The ID is <x:value-of select="@id"/></x:message>
     <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)-1}">
       <x:value-of select="@title" />
     </h3>
@@ -282,25 +282,7 @@ XSL for Protection Profile Modules
     </div>
   </x:template>
 
-  <!-- Makes a ref to requirement -->
-  <x:template name="req-refs">
-    <!-- Optional css classes -->
-    <x:param name="class"/>
-    <!-- Requirement id -->
-    <x:param name="req"/>
 
-    <!--lower req-->
-    <x:variable name="lreq">
-      <x:value-of select="translate($req,$upper,$lower)"/>
-    </x:variable>
-
-    <!--Uppercase req -->
-    <x:variable name="capped-req">
-      <x:value-of select="translate($lreq,$lower,$upper)"/>
-    </x:variable>
-    
-    <a class="{$class}" href="#{$capped-req}"><x:value-of select="$capped-req"/></a>
-  </x:template>
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 </x:stylesheet>

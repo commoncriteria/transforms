@@ -138,9 +138,10 @@ pp:$(PP_HTML)
 #EXTRA_CSS ?=
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-#module-target:
-#	$(XSL_EXE) -o $(PP_HTML) $(TRANS)/module/module2html.xsl $(PP_XML)
-#	$(XSL_EXE) -o $(SD_HTML) $(PP2HTML_XSL) $(PP_XML)
+module-target:
+	$(XSL_EXE) -o $(PP_RELEASE_HTML) $(TRANS)/module/module2html.xsl $(PP_XML)
+	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
+	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(XSL_EXE)  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
@@ -208,16 +209,11 @@ $(WORKSHEET_HTML): $(PP_XML)
 
 #- Builds quick help
 help:
-	grep -A 1 '^#-' Makefile $(TRANS)/*.make -h
+	grep -A 1 '^#-' -r $(TRANS)/*.make --include='*.make' -h
 
 #- Build to clean the system
 clean:
-	@for f in a $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(PP_RELEASE_HTML) $(PP_OP_HTML) $(ESR_HTML) $(WORKSHEET_HTML) $(CONFIGANNEX_HTML); do \
-		if [ -f $$f ]; then \
-			rm "$$f"; \
-		fi; \
-	done
-	rm -rf $(OUT)/js $(OUT)/css
+	rm -rf $(OUT)/js $(OUT)/css $(OUT)/*.*
 
 #- Does a git safe push
 git-safe-push:

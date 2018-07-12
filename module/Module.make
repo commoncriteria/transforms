@@ -1,3 +1,3 @@
 # Point the default build to a module
-default: module-target
+thedefaulttarget: module-target
 include $(TRANS)/Helper.make

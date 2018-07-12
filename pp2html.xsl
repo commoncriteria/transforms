@@ -18,8 +18,6 @@
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
 
-  <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
-  
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8"/>
 
@@ -227,12 +225,6 @@ function expand(){
         <style type="text/css">
         <xsl:call-template name="common_css"/>
 
-          /*       { background-color: #FFFFFF; } */
-          body{
-              margin-left:8%;
-              margin-right:8%;
-              foreground:black;
-          }
           .figure{
               font-weight:bold;
           }
@@ -393,27 +385,6 @@ function expand(){
               margin-left:5em;
               margin-bottom:0.1em;
               margin-top:0.1em;
-          }
-          table{
-              margin:auto;
-              margin-top:1em;
-              border-collapse:collapse; /*border: 1px solid black;*/
-          }
-          td{
-              text-align:left;
-              padding:8px 8px;
-          }
-          th{
-              padding:8px 8px;
-          }
-          tr.header{
-              border-bottom:3px solid gray;
-              padding:8px 8px;
-              text-align:left;
-              font-weight:bold; /*font-size: 90%; font-family: verdana, arial, helvetica, sans-serif; */
-          }
-          table tr:nth-child(2n+2){
-              background-color:#F4F4F4;
           }
           div.center{
               display:block;
@@ -658,6 +629,7 @@ function expand(){
         <th>Identifier</th>
         <th>Title</th>
       </tr>
+      <xsl:apply-templates select="cc:cc-entry"/>
       <xsl:for-each select="cc:entry">
         <tr>
           <td>
