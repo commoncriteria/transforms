@@ -13,6 +13,7 @@ XSL for Protection Profile Modules
   <x:param name="debug" select="'v'"/>
 
   <x:variable name="space3">&#160;&#160;&#160;</x:variable>
+
   
   <!-- Forces output to make legitimate HTML and not XML -->
   <x:output method="xml" encoding="UTF-8"/>
@@ -27,7 +28,6 @@ XSL for Protection Profile Modules
 
   <x:template match="/cc:PP">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
-    <x:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</x:text>
 
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head> <title>Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</title>      </head>
@@ -43,84 +43,92 @@ XSL for Protection Profile Modules
 	</div>
 
 	<x:call-template name="foreward"/>
-	<div id="toc"/>
-
+	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>
 	<x:apply-templates select="/cc:PP/cc:chapter/cc:section[@id='glossary']"/>
-
-	<h2 id="sfr" class="indexable" data-level="2"><span class="num"></span>Evaluation Activities for SFRs</h2>
-	<p>The EAs presented in this section capture the actions the evaluator performs 
-	to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
-	ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units 
-	that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
-	
-	<p>Regarding design descriptions (designated by the subsections labelled TSS, as 
-	well as any required supplementary material that may be treated as proprietary), 
-	the evaluator must ensure there is specific information that satisfies the AA. 
-	For findings regarding the TSS section, the evaluator’s verdicts will be 
-	associated with the CEM work unit ASE_TSS.1-1.
-	Evaluator verdicts associated with the supplementary evidence will also be 
-	associated with ASE_TSS.1-1, 
-	since the requirement to provide such evidence is specified in ASE in the cPP.</p>
-
-	<p>For ensuring the guidance documentation provides sufficient information for 
-	the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
-	be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
-
-	<p>Finally, the subsection labelled Tests is where the authors have determined 
-	that testing of the product in the context of the associated SFR is necessary.
-	While the evaluator is expected to develop tests, there may be instances where 
-	it is more practical for the developer to construct tests, or where the 
-	developer may have existing tests. 
-	Therefore, it is acceptable for the evaluator to witness developer-generated 
-	tests in lieu of executing the tests. 
-	In this case, the evaluator must ensure the developer’s tests are executing both 
-	in the manner declared by the developer and as mandated by the AA. 
-	The CEM work units that are associated with the AAs specified in this section 
-	are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
-
-	<!-- Run through all the base modules -->
-	<x:for-each select="/cc:PP/cc:chapter[@id='req']/cc:*">
-	  <h3><x:value-of select="@title"/></h3>
-
-	  <x:apply-templates select="cc:subsection[@title='Applicable Modified SFRs']"/>
-	  <x:if test="not(cc:subsection[@title='Applicable Modified SFRs']/cc:*)">
-	    <h:p>This PP Module does not modify any requirements for this base.</h:p>
-	  </x:if>
-
-
-
-	  <x:choose>
-	    <x:when test="cc:subsection[@title='Additional SFRs']/cc:*">
-	      	  <x:apply-templates select="cc:subsection[@title='Additional SFRs']"/>
-	    </x:when>
-	    <x:otherwise><h:p>This PP Module does define any additional requirements for this particular base PP.</h:p></x:otherwise>
-	  </x:choose>
-
-	</x:for-each>
+	<x:call-template name="sfrs"/>
+	<x:call-template name="sars"/>
       </body>
     </html>
   </x:template>
 
-  
+  <x:template name="toc">
+    <h1>Table of Contents</h1>
+    <div id="toc"/>
+  </x:template>
+
+  <x:template name="sfrs">
+    <h2 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h2>
+    <p>The EAs presented in this section capture the actions the evaluator performs 
+    to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
+    ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units 
+    that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
+    
+    <p>Regarding design descriptions (designated by the subsections labelled TSS, as 
+    well as any required supplementary material that may be treated as proprietary), 
+    the evaluator must ensure there is specific information that satisfies the EA. 
+    For findings regarding the TSS section, the evaluator’s verdicts will be 
+    associated with the CEM work unit ASE_TSS.1-1.
+    Evaluator verdicts associated with the supplementary evidence will also be 
+    associated with ASE_TSS.1-1, 
+    since the requirement to provide such evidence is specified in ASE in the cPP.</p>
+    
+    <p>For ensuring the guidance documentation provides sufficient information for 
+    the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
+    be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
+
+    <p>Finally, the subsection labelled Tests is where the authors have determined 
+    that testing of the product in the context of the associated SFR is necessary.
+    While the evaluator is expected to develop tests, there may be instances where 
+    it is more practical for the developer to construct tests, or where the 
+    developer may have existing tests. 
+    Therefore, it is acceptable for the evaluator to witness developer-generated 
+    tests in lieu of executing the tests. 
+    In this case, the evaluator must ensure the developer’s tests are executing both 
+    in the manner declared by the developer and as mandated by the EA. 
+    The CEM work units that are associated with the EAs specified in this section 
+    are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
+    
+    <!-- Run through all the base modules -->
+    <x:for-each select="/cc:PP/cc:chapter[@id='req']/cc:*">
+      <h3 class="indexable" data-level="1" id="{@id}"><x:value-of select="@title"/></h3>
+
+      <x:apply-templates select="cc:subsection[@title='Applicable Modified SFRs']"/>
+      <x:if test="not(cc:subsection[@title='Applicable Modified SFRs']/cc:*)">
+	<h:p>This PP Module does not modify any requirements for this Base-PP.</h:p>
+      </x:if>
+      
+      <x:choose>
+	<x:when test="cc:subsection[@title='Additional SFRs']/cc:*">
+	  <x:apply-templates select="cc:subsection[@title='Additional SFRs']"/>
+	    </x:when>
+	    <x:otherwise><h:p>This PP Module does define any additional requirements for this Base-PP.</h:p></x:otherwise>
+      </x:choose>
+    </x:for-each>
+  </x:template>
+
+  <x:template name="sars">
+    <h2 id="sar_aas" class="indexable" data-level="0"> Assurance Activities for SARs</h2>
+    <p>The PP-Module does not define any SARs beyond those defined within the <x:call-template name="bases"/> to which it can claim conformance.</p>
+  </x:template>
 
   <x:template name="aaforsfrs">
-    <h1 id="mandatory_aas" class="indexable" data-level="1"><span class="num"></span>Assurance Activities for SFRs</h1>
-    <p>The AAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
+    <h1 id="mandatory_aas" class="indexable" data-level="0">Assurance Activities for SFRs</h1>
+    <p>The EAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
 
-    <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary material that may be treated as proprietary), the evaluator must ensure there is specific information that satisfies the AA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the CEM work unit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the cPP. </p>
+    <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary material that may be treated as proprietary), the evaluator must ensure there is specific information that satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the CEM work unit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the cPP. </p>
 
     <p>For ensuring the guidance documentation provides sufficient information for the administrators/users as it pertains to SFRs, the evaluator’s verdicts will be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
 
-    <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the AA. The CEM work units that are associated with the AAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
+    <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the EA. The CEM work units that are associated with the EAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     <x:apply-templates select="/cc:PP/cc:chapter[@id='req']"/>
 
   </x:template>
 
 
   <x:template name="intro">
-    <h1 id="introduction" class="indexable" data-level="1"><span class="num"></span>Introduction</h1>
-    <h2 id="scope" class="indexable" data-level="2"><span class="num"></span>Technology Area and Scope of Supporting Document</h2>
+    <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
+    <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
 
 
     <p>The scope of the <x:value-of select="/cc:PP/@name"/> PP-Module is
@@ -148,7 +156,7 @@ XSL for Protection Profile Modules
     Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly
     supplementary information (e.g. for entropy analysis or cryptographic key management architecture).</p>
 
-    <h2 id="structure" class="indexable" data-level="2"><span class="num"></span>Structure of the Document</h2>
+    <h2 id="structure" class="indexable" data-level="1">Structure of the Document</h2>
     <p>Evaluation Activities can be defined for both SFRs and Security Assurance Requirements (SAR),
     which are themselves defined in separate sections of the SD.</p>
 
@@ -238,13 +246,8 @@ XSL for Protection Profile Modules
   </x:template>
 
   <x:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span><x:value-of select="$space3"/><x:value-of select="@title"/></h2>
+    <h2 id="{@id}" class="indexable" data-level="1"><x:value-of select="@title"/></h2>
     <x:apply-templates/>
-  </x:template>
-
-  <x:template match="cc:section" mode="quiet">
-    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span><x:value-of select="$space3"/><x:value-of select="@title"/></h2>
-    <x:apply-templates select="cc:*"/>
   </x:template>
 
   <!-- <x:template name="showifexist"> -->
@@ -254,17 +257,9 @@ XSL for Protection Profile Modules
   <!--   <x:if test="$it"><x:value-of select="concat($bef,$it,$aft)"/></x:if> -->
   <!-- </x:template> -->
 
-  <x:template match="cc:chapter">
-    <h2 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
-      <span class="num"></span><x:value-of select="$space3"/>
-      <x:value-of select="@title" />
-    </h2>
-    <x:apply-templates select="cc:*"/>
-  </x:template>
-
   <x:template match="cc:subsection">
-    <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
-      <span class="num"></span><x:value-of select="$space3"/>
+    <x:message>The ID is <x:value-of select="@id"/></x:message>
+    <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)-1}">
       <x:value-of select="@title" />
     </h3>
     <x:apply-templates select="cc:*"/>
@@ -300,5 +295,5 @@ XSL for Protection Profile Modules
     <a class="{$class}" href="#{$capped-req}"><x:value-of select="$capped-req"/></a>
   </x:template>
 
-
+  <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 </x:stylesheet>

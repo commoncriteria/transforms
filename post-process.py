@@ -69,6 +69,9 @@ class State:
         return ret
 
     def fix_counters(self):
+        # Bail if there are no ctrs
+        if not "ctr" in self.classmap:
+            return
         countables = self.classmap['ctr']
         occurs={}
         for countable in countables:
@@ -95,11 +98,14 @@ class State:
                 attribs["class"]="tooltipped"
 
     def fix_index_refs(self):
+        # Bail if there are no dynamic references
         if not "dynref" in self.classmap:
             return
+        # Gather them
         brokeRefs = self.classmap["dynref"]
         for brokeRef in brokeRefs:
             linkend=brokeRef.attrib["href"][1:]
+            debug("Looing at " + linkend);
             target=root.find(".//*[@id='"+linkend+"']")
             brokeRef.text = target.text
 
@@ -141,6 +147,8 @@ class State:
             for bb in range(1, level+1):
                 prefix = prefix + "." + str(inums[bb])
             # Fix inline index number
+            debug("Prefix is: " + prefix)
+            debug("TExt is: " + eles[aa].text)
             eles[aa].text = prefix + " " + eles[aa].text
             # 
             entry = ET.Element("a")
@@ -155,11 +163,11 @@ class State:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         #        0                        1           
-        print("Usage: <protection-profile>[:<output-file>]")
+        print("Usage: <protection-profile>[::<output-file>]")
         sys.exit(0)
 
     # Split on colon
-    out=sys.argv[1].split(':')
+    out=sys.argv[1].split("::")
     infile=out[0]
     outfile=""
     if len(out) < 2:
