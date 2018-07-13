@@ -664,12 +664,7 @@ function expand(){
       </tr>
       <xsl:for-each select="cc:entry">
         <tr>
-          <td>
-            <xsl:apply-templates select="cc:term"/>
-          </td>
-          <td>
-            <xsl:apply-templates select="cc:description"/>
-          </td>
+	  <xsl:for-each select="cc:*"><td><xsl:apply-templates/></td></xsl:for-each>
         </tr>
       </xsl:for-each>
     </table>
