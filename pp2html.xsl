@@ -21,13 +21,13 @@
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="html" encoding="UTF-8"/>
 
-
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
 
-  <xsl:template match="/cc:PP">
-
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="/cc:PP|/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -59,9 +59,7 @@
 const AMPERSAND=String.fromCharCode(38);
 const NBSP=String.fromCharCode(160,160,160);
 
-
 function buildIndex(){
-    
     var eles = document.getElementsByClassName("indexable");
     var toc = document.getElementById("toc");
     var aa=0, bb=0;
@@ -550,6 +548,8 @@ function expand(){
     <!--   </xsl:if> -->
     <!-- </xsl:for-each> -->
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template name="TocElement">
     <xsl:param name="prefix"/>
     <p class="toc2">
@@ -578,6 +578,8 @@ function expand(){
   <!-- </xsl:template> -->
 
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:usecases">
     <dl>
       <xsl:for-each select="cc:usecase">
@@ -588,6 +590,8 @@ function expand(){
       </xsl:for-each>
     </dl>
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:glossary">
     <table>
       <xsl:for-each select="cc:entry">
@@ -613,6 +617,8 @@ function expand(){
     </table>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
     <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
@@ -623,6 +629,8 @@ function expand(){
   <!--   <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>) -->
   <!-- </xsl:template> -->
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:bibliography">
     <table>
       <tr class="header">
@@ -646,6 +654,8 @@ function expand(){
     </table>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:acronyms">
     <table>
       <tr class="header">
@@ -665,6 +675,8 @@ function expand(){
     </table>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:ReferenceTable"> PP-Title:<![CDATA[&]]><xsl:value-of select="cc:PPTitle"/>
       PP-Version:<![CDATA[&]]><xsl:value-of select="cc:PPVersion"/>
       PP-Author:<![CDATA[&]]><xsl:value-of select="cc:PPAuthor"/> PP-Publication
@@ -674,6 +686,8 @@ function expand(){
       Keywords:<![CDATA[&]]><xsl:value-of select="cc:Keywords"/><xsl:for-each select="cc:entry"
         ><xsl:value-of select="cc:name"/>:<![CDATA[&]]><xsl:value-of select="cc:description"
       /></xsl:for-each></xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:assumptions">
     <dl>
       <xsl:for-each select="cc:assumption">
@@ -688,6 +702,8 @@ function expand(){
     </dl>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:cclaims">
     <dl>
       <xsl:for-each select="cc:cclaim">
@@ -702,6 +718,8 @@ function expand(){
     </dl>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:InsertAppendixExplainer">
     <xsl:if test="$appendicize='on'"> Unconditional requirements are found in the main body of the
       document, while appendices contain the selection-based, optional, and objective requirements. </xsl:if>
@@ -709,6 +727,8 @@ function expand(){
       text. </xsl:if>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:threats">
     <dl>
       <xsl:for-each select="cc:threat">
@@ -722,6 +742,8 @@ function expand(){
       </xsl:for-each>
     </dl>
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:OSPs">
     <dl>
       <xsl:for-each select="cc:OSP">
@@ -735,6 +757,8 @@ function expand(){
       </xsl:for-each>
     </dl>
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:SOs">
     <dl>
       <xsl:for-each select="cc:SO">
@@ -770,6 +794,8 @@ function expand(){
       </xsl:for-each>
     </dl>
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:SOEs">
     <dl>
       <xsl:for-each select="cc:SOE">
@@ -783,6 +809,8 @@ function expand(){
       </xsl:for-each>
     </dl>
   </xsl:template>
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:InsertSPDCorrespondence">
     <table>
       <tr class="header">
@@ -816,6 +844,8 @@ function expand(){
     </table>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:InsertRefMapping">
     <table>
       <tr class="header">
@@ -846,6 +876,8 @@ function expand(){
 
 
   <!-- Used to match regular ?-components -->
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:f-component | cc:a-component">
   <div class="comp" id="{translate(@id, $lower, $upper)}">
     <h4>
@@ -869,7 +901,6 @@ function expand(){
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
               <xsl:for-each select="cc:selection-depends">
                 <b><i>
-                  <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
                   <xsl:call-template name="req-refs">
                     <xsl:with-param name="req" select="@req"/>
                   </xsl:call-template>
@@ -934,6 +965,8 @@ function expand(){
       </div>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:f-element | cc:a-element" >
     <div class="element">
       <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
@@ -948,10 +981,14 @@ function expand(){
     </div>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:evalactionlabel">
     <h4><xsl:value-of select="@title"/></h4>
   </xsl:template>
   
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:foreword">
     <div class="foreword">
       <h1 style="text-align: center">Foreword</h1>
@@ -960,10 +997,14 @@ function expand(){
   </xsl:template>
 
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
     <div class="activity_pane_header">
@@ -980,12 +1021,16 @@ function expand(){
     </div>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:indent">
     <div class="indent" style="margin-left:2em">
       <xsl:apply-templates/>
     </div>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:appendix">
     <xsl:if test="$appendicize='on'">
       <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
@@ -1013,6 +1058,8 @@ function expand(){
     </xsl:if>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:chapter">
     <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span><xsl:value-of select="$space3"/>
 
@@ -1021,6 +1068,8 @@ function expand(){
     <xsl:apply-templates/>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:section">
     <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span><xsl:value-of select="$space3"/>
 
@@ -1029,6 +1078,8 @@ function expand(){
     <xsl:apply-templates/>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
@@ -1046,6 +1097,8 @@ function expand(){
     </xsl:if>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
@@ -1059,6 +1112,8 @@ function expand(){
   </xsl:template>
 
   <!-- Need at least two objects -->
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:ctr">
     <xsl:variable name="ctrtype"><xsl:choose>
 	<xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
@@ -1072,6 +1127,8 @@ function expand(){
     </span>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:figref">
     <a onclick="showTarget('figure-{@refid}')" href="#figure-{@refid}" class="figure-{@refid}-ref">
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
@@ -1084,6 +1141,8 @@ function expand(){
     </a>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}" />
@@ -1096,6 +1155,8 @@ function expand(){
     </div>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template name="getPre">
     <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
@@ -1107,6 +1168,8 @@ function expand(){
 
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:xref">
     <xsl:variable name="linkendorig" select="@linkend"/>
     <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
@@ -1140,6 +1203,8 @@ function expand(){
     </xsl:element>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:linkref">
     <xsl:call-template name="req-refs">
       <xsl:with-param name="class">linkref</xsl:with-param>
@@ -1149,15 +1214,21 @@ function expand(){
     </xsl:call-template>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:secref">
     <a href="#{@linkend}" class="dynref">Section </a>
   </xsl:template>
 
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:appref">
     <a href="#{@linkend}" class="dynref">Appendix </a>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:chapter | cc:section | cc:subsection | cc:appendix" mode="secreflookup">
     <xsl:param name="linkend"/>
     <xsl:param name="prefix"/>
@@ -1192,17 +1263,23 @@ function expand(){
     </xsl:if>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:cite">
     <xsl:variable name="linkend" select="@linkend"/>
     <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:util">
     <span class="util">
       <xsl:apply-templates/>
     </span>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:path">
     <span class="path">
       <xsl:apply-templates/>
@@ -1210,6 +1287,8 @@ function expand(){
   </xsl:template>
 
   <!-- Makes a ref to requirement -->
+<!-- ############### -->
+<!--            -->
   <xsl:template name="req-refs">
     <!-- Optional css classes -->
     <xsl:param name="class"/>
@@ -1230,6 +1309,9 @@ function expand(){
   </xsl:template>
   
   <!-- identity transform - useful for debugging -->
+
+<!-- ############### -->
+<!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
     <xsl:copy>
@@ -1240,15 +1322,14 @@ function expand(){
   <!-- if no template matches when the mode is set to appendicize,
        default to a template without the mode set.  this may default
        to calling the identity transform above -->
+
+
+<!-- ############### -->
+<!--                 -->
   <xsl:template match="@*|node()" mode="appendicize">
       <xsl:apply-templates select="current()" />
   </xsl:template>
 
-
-
-
-
-  
 </xsl:stylesheet>
 
 
