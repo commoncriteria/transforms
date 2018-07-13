@@ -677,17 +677,6 @@ function expand(){
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:ReferenceTable"> PP-Title:<![CDATA[&]]><xsl:value-of select="cc:PPTitle"/>
-      PP-Version:<![CDATA[&]]><xsl:value-of select="cc:PPVersion"/>
-      PP-Author:<![CDATA[&]]><xsl:value-of select="cc:PPAuthor"/> PP-Publication
-      Date:<![CDATA[&]]><xsl:value-of select="cc:PPPubDate"/>
-      Certification-ID:<![CDATA[&]]><xsl:value-of select="cc:PPCertificationID"/>
-      CC-Version:<![CDATA[&]]><xsl:value-of select="cc:CCVersion"/>
-      Keywords:<![CDATA[&]]><xsl:value-of select="cc:Keywords"/><xsl:for-each select="cc:entry"
-        ><xsl:value-of select="cc:name"/>:<![CDATA[&]]><xsl:value-of select="cc:description"
-      /></xsl:for-each></xsl:template>
-<!-- ############### -->
-<!--            -->
   <xsl:template match="cc:assumptions">
     <dl>
       <xsl:for-each select="cc:assumption">
@@ -835,7 +824,7 @@ function expand(){
             <xsl:for-each select="cc:objective-refer">
               <xsl:apply-templates select="cc:rationale"/>
               <xsl:if test="position() != last()">
-                <p/>
+                <br/>
               </xsl:if>
             </xsl:for-each>
           </td>
