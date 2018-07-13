@@ -300,7 +300,7 @@ if __name__ == "__main__":
     cssfile=sys.argv[2]
     xslfile=sys.argv[3]
     # Split on colon
-    out=sys.argv[4].split(':')
+    out=sys.argv[4].split('::')
     infile=out[0]
     outfile=""
     if len(out) < 2:

@@ -149,17 +149,17 @@ guidance, and testing.</p>
     <p>The scope of the <x:value-of select="/cc:PP/@name"/> PP-Module is
     to describe the security functionality of 
     <x:value-of select="/cc:PP/@target-products"/> products in terms of 
-    [CC] and to define functional and assurance requirements for such products. 
+    [CC] and to define functional and assurance requirements for them.
     This PP-Module is intended for use with the
     <x:choose>
-      <x:when test="count(/cc:PP/cc:module/cc:base-pp)=1">
-	<a href="{/cc:PP/cc:module/cc:base-pp/@url}"><x:value-of select="/cc:PP/cc:module/cc:base-pp/@name"/></a>
+      <x:when test="count(//cc:base-pp)=1">
+	<a href="{//cc:base-pp/@url}"><x:value-of select="/cc:PP/cc:module/cc:base-pp/@name"/></a>
       </x:when>
       <x:otherwise>
 	following Base-PPs:
 	<ul>
-	  <x:for-each select="/cc:PP/cc:module/cc:base-pp">
-	    <li><a href="{/cc:PP/cc:module/cc:base-pp/@url}"><x:value-of select="/cc:PP/cc:module/cc:base-pp/@name"/></a></li>
+	  <x:for-each select="//cc:base-pp">
+	    <li><a href="{@url}"><x:value-of select="@name"/></a></li>
 	  </x:for-each>
 	</ul>
       </x:otherwise>
@@ -234,7 +234,7 @@ guidance, and testing.</p>
       </p>
       <p><b>General Purpose:</b><br/>
       The purpose of this SD is to define evaluation methods for the functional behavior of 
-      <x:value-of select="concat(/cc:PP/@name, /cc:PP/plural-suffix)"/>.
+      <x:value-of select="/cc:PP/@name"/>  products.
       </p>
       <p><b>Acknowledgements:</b><br/>
       This SD was developed with support from NIAP <x:value-of select="/cc:PP/@name"/> 
@@ -281,8 +281,6 @@ guidance, and testing.</p>
       <x:apply-templates select=".//cc:aactivity"/> 
     </div>
   </x:template>
-
-
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 </x:stylesheet>
