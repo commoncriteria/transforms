@@ -980,21 +980,6 @@ function expand(){
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:tss|cc:guidance|cc:tests">
-    <xsl:choose>
-      <xsl:when test="name()='tss'">
-        <h4>TSS</h4>
-      </xsl:when>
-      <xsl:when test="name()='guidance'">
-        <h4>Guidance</h4>
-      </xsl:when>
-      <xsl:when test="name()='tests'">
-        <h4>Tests</h4>
-      </xsl:when>
-    </xsl:choose>
-    <xsl:apply-templates/>
-  </xsl:template>
-
   <xsl:template match="cc:indent">
     <div class="indent" style="margin-left:2em">
       <xsl:apply-templates/>

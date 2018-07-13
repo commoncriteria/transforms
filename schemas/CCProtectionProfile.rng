@@ -688,24 +688,23 @@
 	  </a:documentation>
 	  <ref name="basic-content"/>
 	</element>
-	<element name="tss">
+	<element name="TSS">
 	  <a:documentation>
 	    Denotes a TSS section.
 	  </a:documentation>
-	  <ref name="basic-content"></ref>
+	  <empty/>
 	</element>
-        <element name="guidance">
+        <element name="Guidance">
 	  <a:documentation>
 	    Denotes a Guidance section.
 	  </a:documentation>
-          <ref name="basic-content"></ref>
+	  <empty/>
         </element>
-	<!-- QQQ: REMOVE -->
-        <element name="tests">
+        <element name="Tests">
 	  <a:documentation>
 	    Denotes a tests section.
 	  </a:documentation>
-          <ref name="basic-content"></ref>
+	  <empty/>
         </element>
       </choice>
     </oneOrMore>
