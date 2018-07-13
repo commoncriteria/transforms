@@ -844,82 +844,52 @@ function expand(){
     </table>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:InsertRefMapping">
-    <table>
-      <tr class="header">
-        <td>SFR ID</td>
-        <td>NIST SP 800-53 Controls</td>
-      </tr>
-      <xsl:for-each select="(//cc:f-element)">
-        <tr>
-          <td>
-            <xsl:value-of select="translate(@id,$lower,$upper)"/>
-          </td>
-          <td>
-            <xsl:if test="not(cc:refs/cc:ref)">
-              <xsl:text>None</xsl:text>
-            </xsl:if>
-            <xsl:for-each select="cc:refs/cc:ref">
-              <p/>
-              <a
-                href="http://common-criteria.rhcloud.com/references/output/nist800-53controls.html#{@sect}">
-                <xsl:value-of select="@sect"/>
-              </a>
-            </xsl:for-each>
-          </td>
-        </tr>
-      </xsl:for-each>
-    </table>
-  </xsl:template>
-
 
   <!-- Used to match regular ?-components -->
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:f-component | cc:a-component">
-  <div class="comp" id="{translate(@id, $lower, $upper)}">
-    <h4>
-      <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-      <xsl:value-of select="@name"/>
-    </h4>
+    <div class="comp" id="{translate(@id, $lower, $upper)}">
+      <h4>
+	<xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+	<xsl:value-of select="@name"/>
+      </h4>
 
-    <xsl:if test="@status='objective'">
+      <xsl:if test="@status='objective'">
         <div class="statustag">
           <i><b> This is an objective component.
-            <xsl:if test="@targetdate">
-              It is scheduled to be mandatory for products entering evaluation after
-              <xsl:value-of select="@targetdate"/>.
-            </xsl:if>
+          <xsl:if test="@targetdate">
+            It is scheduled to be mandatory for products entering evaluation after
+            <xsl:value-of select="@targetdate"/>.
+          </xsl:if>
           </b></i>
         </div>
       </xsl:if>
 
-    <xsl:if test="@status='sel-based'">
+      <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
-              <xsl:for-each select="cc:selection-depends">
-                <b><i>
-                  <xsl:call-template name="req-refs">
-                    <xsl:with-param name="req" select="@req"/>
-                  </xsl:call-template>
-                  <xsl:call-template name="commaifnotlast"/>
-                </i></b>
-              </xsl:for-each>.
+          <xsl:for-each select="cc:selection-depends">
+            <b><i>
+              <xsl:call-template name="req-refs">
+                <xsl:with-param name="req" select="@req"/>
+              </xsl:call-template>
+              <xsl:call-template name="commaifnotlast"/>
             </i></b>
-          </div>
-    </xsl:if>
+            </xsl:for-each>.
+          </i></b>
+        </div>
+      </xsl:if>
 
-    <xsl:if test="@status='optional'">
+      <xsl:if test="@status='optional'">
         <div class="statustag">
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
         </div>
-   </xsl:if>
+      </xsl:if>
 
-   <xsl:apply-templates/>
-  </div>
-</xsl:template>
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
 
 <xsl:template match="cc:f-component | cc:a-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
