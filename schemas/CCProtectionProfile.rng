@@ -196,19 +196,29 @@
 	      Section to define the items references.
 	    </a:documentation>
             <oneOrMore>
-              <element name="entry">
-		<a:documentation>
-		  Groups bibliograph entries.
-		</a:documentation>
-		<ref name="id-attr"/>
-		<element name="tag">
+	      <choice>
+		<element name="cc-entry">
 		  <a:documentation>
-		    A visible bibliography-wide unique identifier.
+		    Inserts the Common Criteria documents.
 		  </a:documentation>
-		  <ref name="basic-content"/>
+		  <empty/>
 		</element>
-		<ref name="description"/>
-	      </element>
+
+		<element name="entry">
+		  <a:documentation>
+		    Groups bibliograph entries.
+		  </a:documentation>
+		  <ref name="id-attr"/>
+		  <element name="tag">
+		    <a:documentation>
+		      A visible bibliography-wide unique identifier.
+		    </a:documentation>
+		    <ref name="basic-content"/>
+		  </element>
+		  <ref name="description"/>
+		</element>
+
+	      </choice>
             </oneOrMore>
           </element>
         </choice>

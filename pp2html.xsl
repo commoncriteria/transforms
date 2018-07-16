@@ -1226,6 +1226,10 @@ function expand(){
 
 <!-- ############### -->
 <!--            -->
+  <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
+
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:util">
     <span class="util">
       <xsl:apply-templates/>
