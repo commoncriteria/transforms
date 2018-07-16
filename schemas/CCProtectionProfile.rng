@@ -379,6 +379,14 @@
       </oneOrMore>
     </element>
   </define>
+
+  <define name="citeCC">
+    <element name="citeCC">
+      <a:documentation>Cites the CC documents.</a:documentation>
+      <empty/>
+    </element>
+  </define>
+
   <define name="cite">
     <element name="cite">
       <a:documentation>Cites something in the bibliography.</a:documentation>
@@ -648,6 +656,7 @@
 	<text/>
 	<ref name="html-element"/>
 	<ref name="linkref"/>
+	<ref name="citeCC"/>
         <ref name="cite"/>
         <ref name="secref"/>
         <ref name="testlist"/>
