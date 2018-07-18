@@ -97,7 +97,7 @@ class State:
             for opt in row.findall( 'cc:O', ns):
                 val[man.attrib['ref']]='O'
             for das in row.findall( 'cc:_', ns):
-                val[man.attrib['ref', ns]]='-'
+                val[man.attrib['ref']]='-'
             # Now we convert this to the expected columns
             ret += "<tr>\n"
             # First column is the management function text
@@ -196,9 +196,10 @@ class State:
         elif node.tag == cc("ctr-ref") and show_text:
             refid=node.attrib['refid']
             ret="<a onclick='showTarget(\"cc-"+refid+"\")' href=\"#cc-"+refid+"\" class=\"cc-"+refid+"-ref\">"
-            target=self.idMap[refid]
+            target=self.root.find(".//*[@id='"+refid+"']")
+            # What is prefix for?
             prefix=target.attrib["ctr-type"]+" "
-            if target.hasAttribute("pre"):
+            if "pre" in target.attrib:
                 prefix=target.attrib["pre"]
             ret+="<span class=\"counter\">"+refid+"</span>"
             ret+="</a>"
@@ -208,7 +209,7 @@ class State:
         elif node.tag == cc("ctr") and show_text:
             ctrtype=node.attrib["ctr-type"]
             prefix=ctrtype+" "
-            if node.hasAttribute("pre"):
+            if "pre" in node.attrib:
                 prefix=node.attrib["pre"]
             idAttr=node.attrib["id"]
             ret="<span class='ctr' data-myid='"+idAttr+"+data-counter-type='ct-"
@@ -246,7 +247,7 @@ class State:
             ret+=tooltip
             ret+="\n<div class='reqgroup'>\n"
             ret+=self.handle_contents(node, False)
-            ret+="\n</div></span></div><br></br>"
+            ret+="\n</div></span></div><br/>"
             return ret
         elif node.tag == cc("title"):
             self.selectables_index=0
@@ -267,19 +268,16 @@ class State:
 
 
     def handle_node(self, node, show_text):           
-        warn("Handling " + node.tag)
         if node.tag.startswith(cc("")):
             return self.handle_cc_node(node, show_text)
+        # If we're not showing things OR it's a strike, just leave.
+        elif not show_text or node.tag == htm("strike"):
+            return ""
         elif node.tag == htm("br"):
             return "<br/>"
         elif node.tag.startswith(htm("")):
-            warn("HERE")
-            # If we're not showing things OR it's a strike, just leave.
-            if not show_text or node.tag == htm("strike"):   
-                return ""
             # Just remove the HTML prefix and recur.
             tag = re.sub(r'{.*}', '', node.tag)
-            debug("Tag is " + tag);
             ret = "<"+tag
             for key in node.attrib:
                 ret+=" " + key + "='" + escape(node.attrib[key]) +"'"
