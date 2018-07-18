@@ -162,7 +162,10 @@ class State:
         return ret+"</span>"
 
     def handle_cc_node(self, node, show_text):
-        if node.tag == cc("selectables"):
+        if node.find( cc("base-pp") ) != None :
+            ret = ""
+        
+        elif node.tag == cc("selectables"):
             return self.handle_selectables(node)
 
         elif node.tag == cc("refinement"):
