@@ -25,6 +25,7 @@
   <!-- They can be redefined/overridden  -->
   <xsl:include href="ppcommons.xsl"/>
 
+  <xsl:include href="boilerplates.xsl"/>
 <!-- ############### -->
 <!--            -->
   <xsl:template match="/cc:PP|/cc:Module">
@@ -558,25 +559,6 @@ function expand(){
     </p>
   </xsl:template>
 
-  <!-- <xsl:template match="cc:appendix" name="TocAppendix"> -->
-  <!--   <xsl:if test="$appendicize='on' or (@id!='optional' and @id!='sel-based' and @id!='objective')"> -->
-  <!--     <xsl:variable name="appendix-num"> -->
-  <!--       <xsl:choose> -->
-  <!--         <xsl:when test="$appendicize='on'"> -->
-  <!--           <xsl:number format="A"/> -->
-  <!--         </xsl:when> -->
-  <!--         <xsl:otherwise> -->
-  <!--           <xsl:number format="A" -->
-  <!--             count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/> -->
-  <!--         </xsl:otherwise> -->
-  <!--       </xsl:choose> -->
-  <!--     </xsl:variable> -->
-  <!--     <p xmlns="http://www.w3.org/1999/xhtml" class="toc2"> Appendix <xsl:value-of -->
-  <!--         select="$appendix-num"/><xsl:text>: </xsl:text><a class="toc" href="#{@id}"><xsl:value-of -->
-  <!--           select="@title"/></a></p> -->
-  <!--   </xsl:if> -->
-  <!-- </xsl:template> -->
-
 
 <!-- ############### -->
 <!--            -->
@@ -637,7 +619,7 @@ function expand(){
         <th>Identifier</th>
         <th>Title</th>
       </tr>
-      <xsl:apply-templates select="cc:cc-entry"/>
+      <xsl:if test="/cc:*[@boilerplate='yes']"><xsl:call-template name="bp-biblio"/></xsl:if>
       <xsl:for-each select="cc:entry">
         <tr>
           <td>
@@ -1019,6 +1001,16 @@ function expand(){
 
       <xsl:value-of select="@title"/>
     </h1>
+    <xsl:if test="@title='Security Requirements' and /cc:*[@boilerplate='yes']">
+      <xsl:call-template name="bp-secreq"/>
+    </xsl:if>
+    <xsl:if test="@title='Conformance Claims' and  /cc:*[@boilerplate='yes']">
+      <xsl:call-template name="bp-con-state">
+	<xsl:with-param name="has_appendix"><xsl:value-of select="$appendicize"/></xsl:with-param>
+	<xsl:with-param name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
     <xsl:apply-templates/>
   </xsl:template>
 
@@ -1029,8 +1021,15 @@ function expand(){
 
       <xsl:value-of select="@title"/>
     </h2>
+
+    <xsl:if test="@title='Security Functional Requirements' and /cc:*[@boilerplate='yes']">
+      <xsl:call-template name="bp-sfrs"/>
+    </xsl:if>
+
+
     <xsl:apply-templates/>
   </xsl:template>
+
 
 <!-- ############### -->
 <!--            -->

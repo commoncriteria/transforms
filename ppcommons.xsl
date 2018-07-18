@@ -50,7 +50,10 @@ function fixToolTips(){
     .refinement{
       text-decoration: underline;
     }
-
+    div.eacategory{
+      font-style: italic;
+      font-weight: bold;
+    }
     .activity_pane .toggler::after, .activity_pane .toggler{ 
        display: inline-block;
        height: auto;
@@ -158,9 +161,6 @@ function fixToolTips(){
           table tr:nth-child(2n+2){
               background-color:#F4F4F4;
           }
-
-
-
 
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
