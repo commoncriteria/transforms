@@ -3,7 +3,8 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <xsl:template name="bp-con-state">
+  <!-- ############## -->
+  <xsl:template  name="bp-con-state">
     <xsl:param name="has_appendix"/>
     <xsl:param name="impsatreqid"/>
     <dl>
@@ -52,20 +53,23 @@ contain the component upon which there is a dependency.
           Profile.</dd><dt>Package Claim</dt><dd>This PP does not claim conformance to any packages.</dd></dl>
   </xsl:template>
 
-  <xsl:template name="verrev">Version 3.1, Revision 5</xsl:template>
+<!-- ############## -->
+   <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
-  <xsl:template name="bp-sfrs">
+   <!-- ############## -->
+   <xsl:template  name="bp-sfrs">
     The Security Functional Requirements included in this section 
     are derived from Part 2 of the Common Criteria for Information
     Technology Security Evaluation, <xsl:call-template name="verrev"/>,
     with additional extended functional components. 
-  </xsl:template>
+   </xsl:template>
 
-  <xsl:template name="bp-biblio">
+   <!-- ############## -->
+   <xsl:template  name="bp-biblio">
 <tr>
-<td><span id="bibCC"> [CC] </span></td>
-<td>Common Criteria for Information Technology Security Evaluation - <ul>
-<li>
+  <td><span id="bibCC"> [CC] </span></td>
+  <td>Common Criteria for Information Technology Security Evaluation - <ul>
+  <li>
 <a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf">Part
                 1: Introduction and General Model</a>, CCMB-2017-04-001, <xsl:call-template name="verrev"/>,
               April 2017.</li>
@@ -82,8 +86,71 @@ contain the component upon which there is a dependency.
 </tr>
   </xsl:template>
 
+  <xsl:template name="bp-optapp">
+    <xsl:param name="cclsec"/>
+    <xsl:param name="optappid"/>
+    <xsl:param name="selappid"/>
+    <xsl:param name="objappid"/>
+    <xsl:message>HHHHHHH</xsl:message>
+    As indicated in <a href="#{$cclsec}" class="dynref">Section </a>
+    the baseline requirements (those that must be performed by the TOE) are
+    contained in the body of this PP. Additionally, there are three other types of requirements
+    specified in 
+    <a href="#{$optappid}" class="dynref">Appendix </a>,
+    <a href="#{$selappid}" class="dynref">Appendix </a>, and 
+    <a href="#{$objappid}" class="dynref">Appendix </a>.
+    The first type (in this Appendix) are requirements that can be included
+    in the <abbr title="Security Target">ST</abbr>, 
+    but are not required in order for a TOE to claim conformance to
+    this PP. The second type 
+    (in <a href="#{$selappid}" class="dynref">Appendix </a>) are requirements based on selections
+    in the body of the PP: if certain selections are made, then additional requirements in that
+    appendix must be included. The third type (in 
+    <a href="#{$objappid}" class="dynref">Appendix </a>) are components that
+    are not required in order to conform to this PP, but will be included in the baseline
+    requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the
+    ST author is responsible for ensuring that requirements that may be associated with those in
+    <a href="#{$optappid}" class="dynref">Appendix </a>,
+    <a href="#{$selappid}" class="dynref">Appendix </a>, and 
+    <a href="#{$objappid}" class="dynref">Appendix </a>
+    but are not listed (e.g., FMT-type requirements) are also included in the ST.
+  </xsl:template>
 
-  <xsl:template name="bp-secreq">
+  <xsl:template name="bp-selapp">
+    As indicated in the introduction to
+    this PP, the baseline requirements (those that must be performed by the TOE or its underlying
+    platform) are contained in the body of this PP. There are additional requirements based on
+    selections in the body of the PP: if certain selections are made, then additional requirements
+    below will need to be included.
+  </xsl:template>
+  
+  <xsl:template name="bp-objapp">
+    This appendix includes requirements that
+    specify security functionality which also addresses threats. The requirements are not currently
+    mandated in the body of this PP as they describe security functionality not yet widely-available
+    in commercial technology. However, these requirements may be included in the ST such that the
+    TOE is still conformant to this PP, and it is expected that they be included as soon as
+    possible.
+  </xsl:template>
+
+  <xsl:template name="bp-impsatreqs">
+    <p>
+This appendix lists requirements that should be considered satisfied by products
+successfully evaluated against this Protection Profile.  
+However, these requirements are not featured explicitly as SFRs and should not be
+included in the <abbr linkend="ST"/>.  
+They are not included as standalone SFRs because it would
+increase the time, cost, and complexity of evaluation.  This approach is permitted
+by <a href="#bibCC">[CC]</a> Part 1, <b>8.2 Dependencies between components</b>.
+</p><p>
+This information benefits systems engineering activities which call for inclusion of 
+particular security controls.  Evaluation against the Protection Profile
+provides evidence that these controls are present and have been evaluated.
+</p>
+  </xsl:template>
+
+  <!-- ############## -->
+  <xsl:template  name="bp-secreq">
 This chapter describes the security requirements which have to be fulfilled by the TOE.
 Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>.
 The following notations are used: <ul>
