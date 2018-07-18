@@ -22,6 +22,9 @@ def htm(tag):
 def warn(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+def debug(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 def attr(el,at):
     if at in el.attrib: 
         return el.attrib[at]
@@ -159,7 +162,6 @@ class State:
         return ret+"</span>"
 
     def handle_cc_node(self, node, show_text):
-        warn("Handling "+ node.tag);
         if node.tag == cc("selectables"):
             return self.handle_selectables(node)
 
@@ -260,24 +262,27 @@ class State:
             ret+="</div>\n"
             return ret
         else:
-            warn("Skipped " + node.tag);
             return self.handle_contents(node, show_text)
         return ""
 
 
     def handle_node(self, node, show_text):           
+        warn("Handling " + node.tag)
         if node.tag.startswith(cc("")):
             return self.handle_cc_node(node, show_text)
+        elif node.tag == htm("br"):
+            return "<br/>"
         elif node.tag.startswith(htm("")):
-            if not show_text or node.tag!= "strike":                     # Just ignore text that is striked out
+            warn("HERE")
+            # If we're not showing things OR it's a strike, just leave.
+            if not show_text or node.tag == htm("strike"):   
                 return ""
             # Just remove the HTML prefix and recur.
-            tag = re.sub(r'.*:', '', node.tag)
+            tag = re.sub(r'{.*}', '', node.tag)
+            debug("Tag is " + tag);
             ret = "<"+tag
-            attrs = node.attributes
-            for aa in range(0,attrs.length) :
-                attr =attrs.item(aa)
-                ret+=" " + attr.name + "='" + escape(attr.value) +"'"
+            for key in node.attrib:
+                ret+=" " + key + "='" + escape(node.attrib[key]) +"'"
             ret += ">"
             ret += self.handle_contents(node, True)
             ret += "</"+tag+">"
