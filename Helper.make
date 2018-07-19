@@ -109,10 +109,12 @@ XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 TMP?=/tmp
 
 #---
-#- Build targets
+#- Builds everything but worksheet
 #---
-#- Builds all
-all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
+default: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
+
+#- Builds all outputs
+all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) $(WORKSHEET_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
