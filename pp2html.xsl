@@ -619,7 +619,7 @@ function expand(){
         <th>Identifier</th>
         <th>Title</th>
       </tr>
-      <xsl:if test="/cc:*[@boilerplate='yes']"><xsl:call-template name="bp-biblio"/></xsl:if>
+      <xsl:apply-templates mode="hook" select="."/>
       <xsl:for-each select="cc:entry">
         <tr>
           <td>
@@ -982,7 +982,7 @@ function expand(){
         <xsl:apply-templates select="//cc:f-component[@status=current()/@id]" mode="appendicize-nofilter"/>
       </xsl:if>
       <xsl:if test="@id!='optional' and @id!='sel-based' and @id!='objective'">
-	<xsl:if test="@title='Implicitly Satisfied Requirements' and /cc:*[@boilerplate='yes']"><xsl:call-template name="bp-impsatreqs"/></xsl:if>
+	<xsl:apply-templates select="." mode="hook"/>
         <xsl:apply-templates/>
       </xsl:if>
     </xsl:if>
@@ -992,6 +992,7 @@ function expand(){
   	      Appendix
   	      <span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
       </h1>
+      <xsl:apply-templates select="." mode="hook"/>
       <xsl:apply-templates/>
     </xsl:if>
   </xsl:template>
@@ -1024,11 +1025,7 @@ function expand(){
       <xsl:value-of select="@title"/>
     </h2>
 
-    <xsl:if test="@title='Security Functional Requirements' and /cc:*[@boilerplate='yes']">
-      <xsl:call-template name="bp-sfrs"/>
-    </xsl:if>
-
-
+    <xsl:apply-templates mode="hook" select="."/>
     <xsl:apply-templates/>
   </xsl:template>
 
@@ -1289,34 +1286,6 @@ function expand(){
       <xsl:apply-templates select="current()" />
   </xsl:template>
 
-
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']" 
-		mode="hook" xmlns="http://www.w3.org/1999/XSL/Transform">
-    <xsl:call-template name="bp-optapp">
-      <xsl:with-param name="cclsec">
-	<xsl:value-of select="//cc:*[@title='Conformance Claims']/@id"/>
-      </xsl:with-param>
-      <xsl:with-param name="optappid">
-	<xsl:value-of select="//cc:*[@title='Optional Requirements']/@id"/>
-      </xsl:with-param>
-      <xsl:with-param name="selappid">
-	<xsl:value-of select="//cc:*[@title='Selection-Based Requirements']/@id"/>
-      </xsl:with-param>
-      <xsl:with-param name="objappid">
-	<xsl:value-of select="//cc:*[@title='Objective Requirements']/@id"/>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
-
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']" 
-		mode="hook">
-    <xsl:call-template name="bp-selapp"/>
-  </xsl:template>
-
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Objective Requirements']" 
-		mode="hook">
-    <xsl:call-template name="bp-objapp"/>
-  </xsl:template>
 
 </xsl:stylesheet>
 
