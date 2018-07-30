@@ -20,7 +20,7 @@ XSL for Protection Profile Modules
   <!-- They can be redefined/overridden  -->
   <x:include href="../ppcommons.xsl"/>
 
-  <x:template match="/cc:PP">
+  <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
 
     <html xmlns="http://www.w3.org/1999/xhtml">
