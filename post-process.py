@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ 
-Module that converts PP xml documents to an HTML worksheet
+Module that fixes internal references and counters (which are hard to do
+with XSLT).
 """
 
 from io import StringIO 
@@ -112,10 +113,17 @@ class State:
 
 
     def fix_indices(self):
+        # Find the table of contents
         toc=self.root.find(".//*[@id='toc']")
-        eles=self.root.findall(".//*[@data-level]")
+        # Initialize the index number generator
         inums=[0,0,0,0,0,0]
+        # Initialize the is_alpha switch
         is_alpha=False
+        # Gather all elements with a data-level
+        eles=self.root.findall(".//*[@data-level]")
+        #
+        base=-1
+        # Go through the elemeents
         for aa in range( len(eles)):
             level=eles[aa].attrib["data-level"]
 
@@ -129,7 +137,12 @@ class State:
                 level = 0
             else:
                 level=int(level)
-            # If we have to padd out
+                if base==-1:
+                    base=level
+                level=level-base
+
+
+            # If we have to pad out
             while level > len(inums):
                 inums.append(0)
             # If we go up one set 
@@ -153,8 +166,10 @@ class State:
             spany = ET.Element("span")
             spany.text = eles[aa].text
 
-            eles[aa].text = prefix + " " + eles[aa].text
-            # 
+            if eles[aa].text:
+                eles[aa].text = prefix + " " + eles[aa].text
+            else:
+                eles[aa].text = prefix
             entry = ET.Element("a")
             entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
             entry.attrib['style']= 'text-indent:'+str(level*10)+ 'px'
@@ -166,6 +181,14 @@ class State:
 
     def handle_element(self, elem):
         pass
+
+def getalltext(elem):
+    ret=""
+    if elem.text:
+        ret=elem.text
+    for child in elem:
+        ret=ret+getalltext(child)+child.tail
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
