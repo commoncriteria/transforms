@@ -50,7 +50,6 @@ XSL for Protection Profile Modules
 	<x:call-template name="foreward"/>
 	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>
-	<x:apply-templates select="/cc:PP/cc:chapter/cc:section[@id='glossary']"/>
 	<x:call-template name="sfrs"/>
 	<x:call-template name="sars"/>
 	<x:call-template name="sup-info"/>
@@ -109,14 +108,12 @@ guidance, and testing.</p>
     are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     
     <!-- Run through all the base modules -->
-    <x:for-each select="/cc:PP/cc:chapter[@id='req']/cc:*">
+    <x:for-each select="/cc:Module/cc:chapter[@id='req']/cc:*">
       <h3 class="indexable" data-level="1" id="{@id}"><x:value-of select="@title"/></h3>
-
       <x:apply-templates select="cc:subsection[@title='Modified SFRs']"/>
       <x:if test="not(cc:subsection[@title='Modified SFRs']/cc:*)">
 	<h:p>This PP Module does not modify any requirements for this Base-PP.</h:p>
       </x:if>
-      
       <x:choose>
 	<x:when test="cc:subsection[@title='Additional SFRs']/cc:*">
 	  <x:apply-templates select="cc:subsection[@title='Additional SFRs']"/>
@@ -196,6 +193,13 @@ guidance, and testing.</p>
     Activities have been successfully completed would require a specific justification 
     from the evaluator as to why the Evaluation Activities were not sufficient for that TOE. 
     </p>
+    <h2 id="glossary" class="indexable" data-level="1">Terms</h2>
+    <h3 id="ccterms">Common Criteria Terms</h3>
+    The following definitions are for Common Criteria terms used in this document:
+    <x:apply-templates select="//cc:*[@title='Common Criteria Terms']/cc:glossary"/>
+    <h3 id="techterms">Technical Terms</h3>
+    The following definitions define Technical terms used in this document:
+    <x:apply-templates select="//cc:*[@title='Technical Terms']/cc:glossary"/>
   </x:template>
 
   <x:template name="foreward">

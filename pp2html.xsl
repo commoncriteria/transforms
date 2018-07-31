@@ -56,146 +56,9 @@
         <script type="text/javascript">
 
 <xsl:call-template name="common_js"/>
+<xsl:call-template name="init_js"/>
+
 <xsl:text disable-output-escaping="yes">// &lt;![CDATA[
-const AMPERSAND=String.fromCharCode(38);
-const NBSP=String.fromCharCode(160,160,160);
-
-function buildIndex(){
-    var eles = document.getElementsByClassName("indexable");
-    var toc = document.getElementById("toc");
-    var aa=0, bb=0;
-
-    // prefix_array tracks the current numbering as we iterate through the document
-    var prefix_array=[];
-    var isAlpha=false;
-    // Run through all the indexable
-    while(eles.length > aa){
-        var spacer="";
-        if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
-           prefix_array=[];
-           isAlpha=true;
-        }
-
-        // Current numbering level depth
-        level = eles[aa].getAttribute("data-level");
-
-        // Add numbering levels to array if level of depth increases
-        while (level>prefix_array.length) {
-          prefix_array.push(0);
-	      }
-
-        // Truncate levels of array if numbering level decreases
-        if(prefix_array.length>level){
-          prefix_array.length=level;
-        }
-
-        // Increment the level we're currently on
-        prefix_array[level-1]++;
-
-        // Make appendices use an alphabetical identifier.
-        // This will not work for documents with greater than 26 appendices
-        var prefix=""+(isAlpha?String.fromCharCode(64 +prefix_array[0]):prefix_array[0]);
-
-        // Add numbering levels for each level higher than 1
-        for (bb=1; level>bb; bb++) {
-          prefix+="."+prefix_array[bb];
-          spacer+=NBSP;
-        }
-
-        // Insert the prefix/identifier into the document
-        eles[aa].firstElementChild.innerHTML=prefix;
-
-        // Build the toc entry
-        var div= document.createElement('div');
-        toc.appendChild(div);
-        var line = document.createTextNode(spacer);
-        div.appendChild(line);
-        line = document.createElement('a');
-        line.href="#"+eles[aa].id;
-        line.class="toc-link"
-        line.innerHTML=eles[aa].textContent;
-        div.appendChild(line);
-
-        // Go to the next element
-        aa++;
-    }
-}
-
-
-function changeMyCounter(subroot, val){
-    var bb;
-    for(bb=0; bb!=subroot.childNodes.length; bb++){
-    	if( subroot.childNodes[bb] instanceof Element &amp;&amp;
-    	    "counter"==subroot.childNodes[bb].getAttribute("class")){
-    	    subroot.childNodes[bb].innerHTML = val;
-    	    return;
-    	}
-    }
-}
-
-
-function fixCounters(){
-    var figs = document.getElementsByClassName("ctr");
-    var occurs = {};                                         // Map that stores how many times we've seen each thing
-    var aa;
-    for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
-    	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
-    	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
-    	occurs[ ct ] = curr + 1;                              // Save off increment for next time
-    	changeMyCounter( figs[aa], curr);
-
-    	var figId = figs[aa].getAttribute("data-myid");
-    	var figRefs = document.getElementsByClassName(figId+"-ref");
-    	var bb;
-        for(bb=0; bb!=figRefs.length; bb++){
-    	    changeMyCounter(figRefs[bb], curr);
-    	}
-    }
-}
-
-// Function to expand and contract a given div
-function toggle(descendent) {
-    var cl = descendent.parentNode.parentNode.classList;
-    if (cl.contains('hide')){
-      cl.remove('hide');
-    }
-    else{
-      cl.add('hide');
-    }
-}
-
-// Expands targets if they are hidden
-function showTarget(id){
-    var element = document.getElementById(id);
-    while (element != document.body.rootNode ){
-	element.classList.remove("hide");
-	element = element.parentElement;
-    }
-}
-function fixIndexRefs(){
-    var brokeRefs = document.getElementsByClassName("dynref");
-    var aa=0;
-    for(aa=0; brokeRefs.length>aa; aa++){
-       var linkend=(""+brokeRefs[aa].getAttribute("href")).substring(1);
-       var target = document.getElementById(linkend);
-       if (target == null ){
-          console.log("Could not find element w/ id: " + linkend);
-          continue;
-       }
-       brokeRefs[aa].innerHTML+=target.firstElementChild.textContent;
-    }
-}
-
-// Called on page load to parse URL parameters and perform actions on them.
-function init(){
-    fixCounters();
-    buildIndex();
-    fixIndexRefs();
-    fixToolTips();
-    if(getQueryVariable("expand") == "on"){
-      expand();
-    }
-}
 
 // Pass a URL variable to this function and it will return its value
 function getQueryVariable(variable)
@@ -1263,6 +1126,151 @@ function expand(){
     
     <a class="{$class}" href="#{$capped-req}"><xsl:value-of select="$capped-req"/></a>
   </xsl:template>
+
+
+<xsl:template name="init_js">
+<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
+const AMPERSAND=String.fromCharCode(38);
+const NBSP=String.fromCharCode(160,160,160);
+
+function buildIndex(){
+    var eles = document.getElementsByClassName("indexable");
+    var toc = document.getElementById("toc");
+    var aa=0, bb=0;
+
+    // prefix_array tracks the current numbering as we iterate through the document
+    var prefix_array=[];
+    var isAlpha=false;
+    // Run through all the indexable
+    while(eles.length > aa){
+        var spacer="";
+        if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
+           prefix_array=[];
+           isAlpha=true;
+        }
+
+        // Current numbering level depth
+        level = eles[aa].getAttribute("data-level");
+
+        // Add numbering levels to array if level of depth increases
+        while (level>prefix_array.length) {
+          prefix_array.push(0);
+	      }
+
+        // Truncate levels of array if numbering level decreases
+        if(prefix_array.length>level){
+          prefix_array.length=level;
+        }
+
+        // Increment the level we're currently on
+        prefix_array[level-1]++;
+
+        // Make appendices use an alphabetical identifier.
+        // This will not work for documents with greater than 26 appendices
+        var prefix=""+(isAlpha?String.fromCharCode(64 +prefix_array[0]):prefix_array[0]);
+
+        // Add numbering levels for each level higher than 1
+        for (bb=1; level>bb; bb++) {
+          prefix+="."+prefix_array[bb];
+          spacer+=NBSP;
+        }
+
+        // Insert the prefix/identifier into the document
+        eles[aa].firstElementChild.innerHTML=prefix;
+
+        // Build the toc entry
+        var div= document.createElement('div');
+        toc.appendChild(div);
+        var line = document.createTextNode(spacer);
+        div.appendChild(line);
+        line = document.createElement('a');
+        line.href="#"+eles[aa].id;
+        line.class="toc-link"
+        line.innerHTML=eles[aa].textContent;
+        div.appendChild(line);
+
+        // Go to the next element
+        aa++;
+    }
+}
+
+
+function changeMyCounter(subroot, val){
+    var bb;
+    for(bb=0; bb!=subroot.childNodes.length; bb++){
+    	if( subroot.childNodes[bb] instanceof Element &amp;&amp;
+    	    "counter"==subroot.childNodes[bb].getAttribute("class")){
+    	    subroot.childNodes[bb].innerHTML = val;
+    	    return;
+    	}
+    }
+}
+
+
+function fixCounters(){
+    var figs = document.getElementsByClassName("ctr");
+    var occurs = {};                                         // Map that stores how many times we've seen each thing
+    var aa;
+    for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
+    	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
+    	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
+    	occurs[ ct ] = curr + 1;                              // Save off increment for next time
+    	changeMyCounter( figs[aa], curr);
+
+    	var figId = figs[aa].getAttribute("data-myid");
+    	var figRefs = document.getElementsByClassName(figId+"-ref");
+    	var bb;
+        for(bb=0; bb!=figRefs.length; bb++){
+    	    changeMyCounter(figRefs[bb], curr);
+    	}
+    }
+}
+
+// Function to expand and contract a given div
+function toggle(descendent) {
+    var cl = descendent.parentNode.parentNode.classList;
+    if (cl.contains('hide')){
+      cl.remove('hide');
+    }
+    else{
+      cl.add('hide');
+    }
+}
+
+// Expands targets if they are hidden
+function showTarget(id){
+    var element = document.getElementById(id);
+    while (element != document.body.rootNode ){
+	element.classList.remove("hide");
+	element = element.parentElement;
+    }
+}
+function fixIndexRefs(){
+    var brokeRefs = document.getElementsByClassName("dynref");
+    var aa=0;
+    for(aa=0; brokeRefs.length>aa; aa++){
+       var linkend=(""+brokeRefs[aa].getAttribute("href")).substring(1);
+       var target = document.getElementById(linkend);
+       if (target == null ){
+          console.log("Could not find element w/ id: " + linkend);
+          continue;
+       }
+       brokeRefs[aa].innerHTML+=target.firstElementChild.textContent;
+    }
+}
+
+// Called on page load to parse URL parameters and perform actions on them.
+function init(){
+    fixCounters();
+    buildIndex();
+    fixIndexRefs();
+    fixToolTips();
+    if(getQueryVariable("expand") == "on"){
+      expand();
+    }
+}
+// ]]&gt;</xsl:text>
+</xsl:template>
   
   <!-- identity transform - useful for debugging -->
 
@@ -1285,6 +1293,7 @@ function expand(){
   <xsl:template match="@*|node()" mode="appendicize">
       <xsl:apply-templates select="current()" />
   </xsl:template>
+
 
 
 </xsl:stylesheet>
