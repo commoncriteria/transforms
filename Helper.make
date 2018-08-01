@@ -141,8 +141,8 @@ pp:$(PP_HTML)
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 module-target:
-	$(XSL_EXE) $(TRANS)/module/module2html.xsl $(PP_XML) | tee /tmp/PP-release.xml | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
-	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | tee /tmp/PP.xml | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
+	$(XSL_EXE) $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
+	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
 	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
