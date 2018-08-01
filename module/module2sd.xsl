@@ -25,13 +25,9 @@ XSL for Protection Profile Modules
 
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head> 
-	<title>Supporting Document - PP-Module for <x:value-of select="/cc:PP/@name"/>s</title>
+	<title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
 	<style type="text/css">
 	  <x:call-template name="common_css"/>
-	  #toc a{
-	     display: block;
-	  }
-
 	</style>
       </head>
       <body>

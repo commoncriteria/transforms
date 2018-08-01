@@ -58,8 +58,7 @@
     <xsl:param name="impsatreqid"/>
     <dl>
       <dt>Conformance Statement</dt><dd> To be conformant to this PP, an <abbr title="Security Target">ST</abbr> must demonstrate Exact
-          Conformance, a subset of Strict Conformance as defined in <a href="#bibCC">[CC]</a> Part 1
-          (ASE_CCL).
+          Conformance, a subset of Strict Conformance as defined in <xsl:call-template name="citeCC"/> Part 1 (ASE_CCL).
 	  The <abbr title="Security Target">ST</abbr> must include all components in this PP that are:<ul>
             <li>unconditional (which are always required)</li>
             <li>selection-based (which are required when certain <i>selections</i> are chosen in the
@@ -170,6 +169,11 @@ particular security controls.  Evaluation against the Protection Profile
 provides evidence that these controls are present and have been evaluated.
     </p>
   </xsl:template>
+
+
+  <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
+
+
 
   <!-- ############## -->
   <xsl:template  name="bp-secreq">

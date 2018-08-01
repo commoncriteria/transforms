@@ -143,12 +143,12 @@ pp:$(PP_HTML)
 module-target:
 	$(XSL_EXE) $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
 	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
-	xsltproc -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE) $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(XSL_EXE)  -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
-	$(XSL_EXE) --stringparam appendicize on -o $(PP_OP_HTML) $(PP2HTML_XSL) $(PP_XML)
-	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(XSL_EXE)  $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML) 
+	$(XSL_EXE) --stringparam appendicize on $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_OP_HTML) 
+	$(XSL_EXE) --stringparam appendicize on $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
 
 
 

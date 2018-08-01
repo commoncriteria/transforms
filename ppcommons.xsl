@@ -14,16 +14,6 @@
        Template for javascript common to all transforms
   -->
   <xsl:template name="common_js">
-    <xsl:text disable-output-escaping='yes'>
-
-function fixToolTips(){
-  var tooltipelements = document.getElementsByClassName("tooltiptext");
-  var aa;
-  for(aa=tooltipelements.length-1; aa>=0; aa--){
-      tooltipelements[aa].parentNode.classList.add("tooltipped");
-  }
-}
-    </xsl:text>
     <!-- Include custom javascript defined in the pp -->
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
@@ -36,6 +26,9 @@ function fixToolTips(){
 
   <!-- Common CSS rules for all files-->
   <xsl:template name="common_css">
+    #toc a{
+        display: block;
+    }
 
     body{
        max-width: 900px;

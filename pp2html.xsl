@@ -19,7 +19,7 @@
   <xsl:param name="debug" select="'v'"/>
 
   <!-- very important, for special characters and umlauts iso8859-1-->
-  <xsl:output method="html" encoding="UTF-8"/>
+  <xsl:output method="xml" encoding="UTF-8"/>
 
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
@@ -55,10 +55,10 @@
         </script>
         <script type="text/javascript">
 
-<xsl:call-template name="common_js"/>
 <xsl:call-template name="init_js"/>
 
 <xsl:text disable-output-escaping="yes">// &lt;![CDATA[
+const AMPERSAND=String.fromCharCode(38);
 
 // Pass a URL variable to this function and it will return its value
 function getQueryVariable(variable)
@@ -76,16 +76,38 @@ function getQueryVariable(variable)
 //    Expands all evaluation activities
 function expand(){
     var ap = document.getElementsByClassName('activity_pane');
-    for (var ii = ap.length - 1; ii >= 0; --ii) {
+    for (var ii = 0; ii!=ap.length; ii++) {
         ap[ii].classList.remove('hide');
     }
 }
+
+// Function to expand and contract a given div
+function toggle(descendent) {
+    var cl = descendent.parentNode.parentNode.classList;
+    if (cl.contains('hide')){
+      cl.remove('hide');
+    }
+    else{
+      cl.add('hide');
+    }
+}
+
+// Expands targets if they are hidden
+function showTarget(id){
+    var element = document.getElementById(id);
+    while (element != document.body.rootNode ){
+	element.classList.remove("hide");
+	element = element.parentElement;
+    }
+}
+
 
 // ]]&gt;</xsl:text>
         </script>
 
         <style type="text/css">
         <xsl:call-template name="common_css"/>
+
 
           .figure{
               font-weight:bold;
@@ -832,10 +854,7 @@ function expand(){
 <!--            -->
   <xsl:template match="cc:appendix">
     <xsl:if test="$appendicize='on'">
-      <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
-         Appendix
-         <span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
-      </h1>
+      <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1>
       <!-- insert SFRs for "special" appendices, if @id is one of the "special" ones-->
       <xsl:if test="@id='optional' or @id='sel-based' or @id='objective'" >
 	<xsl:apply-templates mode='hook' select='.'/>
@@ -851,10 +870,8 @@ function expand(){
     </xsl:if>
 
     <xsl:if test="$appendicize!='on' and @id!='optional' and @id!='sel-based' and @id!='objective'">
-      <h1 id="{@id}" class="indexable" data-level="1" data-level-alpha="true">
-  	      Appendix
-  	      <span class="num"></span><xsl:value-of select="$space3"/><xsl:value-of select="@title"/>
-      </h1>
+      <h1 id="{@id}" class="indexable" data-level="A"
+	  ><xsl:value-of select="@title"/></h1>
       <xsl:apply-templates select="." mode="hook"/>
       <xsl:apply-templates/>
     </xsl:if>
@@ -863,10 +880,7 @@ function expand(){
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:chapter">
-    <h1 id="{@id}" class="indexable" data-level="1"><span class="num"></span><xsl:value-of select="$space3"/>
-
-      <xsl:value-of select="@title"/>
-    </h1>
+    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:if test="@title='Security Requirements' and /cc:*[@boilerplate='yes']">
       <xsl:call-template name="bp-secreq"/>
     </xsl:if>
@@ -883,11 +897,7 @@ function expand(){
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="2"><span class="num"></span><xsl:value-of select="$space3"/>
-
-      <xsl:value-of select="@title"/>
-    </h2>
-
+    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
     <xsl:apply-templates mode="hook" select="."/>
     <xsl:apply-templates/>
   </xsl:template>
@@ -899,10 +909,7 @@ function expand(){
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or ../@id!='SFRs' or count(.//cc:f-component[not(@status) or @status='threshold'])">
-      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}">
-	    <span class="num"></span><xsl:value-of select="$space3"/>
-      <xsl:value-of select="@title" />
-      </h3>
+      <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
       <xsl:if test="$appendicize = 'on'">
         <xsl:apply-templates mode="appendicize" />
       </xsl:if>
@@ -1130,141 +1137,9 @@ function expand(){
 
 <xsl:template name="init_js">
 <xsl:text disable-output-escaping="yes">// &lt;![CDATA[
-const AMPERSAND=String.fromCharCode(38);
-const NBSP=String.fromCharCode(160,160,160);
-
-function buildIndex(){
-    var eles = document.getElementsByClassName("indexable");
-    var toc = document.getElementById("toc");
-    var aa=0, bb=0;
-
-    // prefix_array tracks the current numbering as we iterate through the document
-    var prefix_array=[];
-    var isAlpha=false;
-    // Run through all the indexable
-    while(eles.length > aa){
-        var spacer="";
-        if( eles[aa].hasAttribute("data-level-alpha") &amp;&amp; !isAlpha){
-           prefix_array=[];
-           isAlpha=true;
-        }
-
-        // Current numbering level depth
-        level = eles[aa].getAttribute("data-level");
-
-        // Add numbering levels to array if level of depth increases
-        while (level>prefix_array.length) {
-          prefix_array.push(0);
-	      }
-
-        // Truncate levels of array if numbering level decreases
-        if(prefix_array.length>level){
-          prefix_array.length=level;
-        }
-
-        // Increment the level we're currently on
-        prefix_array[level-1]++;
-
-        // Make appendices use an alphabetical identifier.
-        // This will not work for documents with greater than 26 appendices
-        var prefix=""+(isAlpha?String.fromCharCode(64 +prefix_array[0]):prefix_array[0]);
-
-        // Add numbering levels for each level higher than 1
-        for (bb=1; level>bb; bb++) {
-          prefix+="."+prefix_array[bb];
-          spacer+=NBSP;
-        }
-
-        // Insert the prefix/identifier into the document
-        eles[aa].firstElementChild.innerHTML=prefix;
-
-        // Build the toc entry
-        var div= document.createElement('div');
-        toc.appendChild(div);
-        var line = document.createTextNode(spacer);
-        div.appendChild(line);
-        line = document.createElement('a');
-        line.href="#"+eles[aa].id;
-        line.class="toc-link"
-        line.innerHTML=eles[aa].textContent;
-        div.appendChild(line);
-
-        // Go to the next element
-        aa++;
-    }
-}
-
-
-function changeMyCounter(subroot, val){
-    var bb;
-    for(bb=0; bb!=subroot.childNodes.length; bb++){
-    	if( subroot.childNodes[bb] instanceof Element &amp;&amp;
-    	    "counter"==subroot.childNodes[bb].getAttribute("class")){
-    	    subroot.childNodes[bb].innerHTML = val;
-    	    return;
-    	}
-    }
-}
-
-
-function fixCounters(){
-    var figs = document.getElementsByClassName("ctr");
-    var occurs = {};                                         // Map that stores how many times we've seen each thing
-    var aa;
-    for(aa=0; aa!= figs.length; aa++){                       // Go through every counted object
-    	var ct = figs[aa].getAttribute("data-counter-type");  // Get which counter type it is
-    	var curr = occurs[ct]!=null?parseInt(occurs[ct]):1;   // Figure out how many times we've seen it
-    	occurs[ ct ] = curr + 1;                              // Save off increment for next time
-    	changeMyCounter( figs[aa], curr);
-
-    	var figId = figs[aa].getAttribute("data-myid");
-    	var figRefs = document.getElementsByClassName(figId+"-ref");
-    	var bb;
-        for(bb=0; bb!=figRefs.length; bb++){
-    	    changeMyCounter(figRefs[bb], curr);
-    	}
-    }
-}
-
-// Function to expand and contract a given div
-function toggle(descendent) {
-    var cl = descendent.parentNode.parentNode.classList;
-    if (cl.contains('hide')){
-      cl.remove('hide');
-    }
-    else{
-      cl.add('hide');
-    }
-}
-
-// Expands targets if they are hidden
-function showTarget(id){
-    var element = document.getElementById(id);
-    while (element != document.body.rootNode ){
-	element.classList.remove("hide");
-	element = element.parentElement;
-    }
-}
-function fixIndexRefs(){
-    var brokeRefs = document.getElementsByClassName("dynref");
-    var aa=0;
-    for(aa=0; brokeRefs.length>aa; aa++){
-       var linkend=(""+brokeRefs[aa].getAttribute("href")).substring(1);
-       var target = document.getElementById(linkend);
-       if (target == null ){
-          console.log("Could not find element w/ id: " + linkend);
-          continue;
-       }
-       brokeRefs[aa].innerHTML+=target.firstElementChild.textContent;
-    }
-}
 
 // Called on page load to parse URL parameters and perform actions on them.
 function init(){
-    fixCounters();
-    buildIndex();
-    fixIndexRefs();
-    fixToolTips();
     if(getQueryVariable("expand") == "on"){
       expand();
     }
@@ -1293,6 +1168,7 @@ function init(){
   <xsl:template match="@*|node()" mode="appendicize">
       <xsl:apply-templates select="current()" />
   </xsl:template>
+
 
 
 

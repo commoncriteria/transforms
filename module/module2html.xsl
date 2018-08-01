@@ -8,8 +8,20 @@
 
   <xsl:import href="../pp2html.xsl"/>
 
-  <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
+
+
+
+<!-- Redefine to remove all the things currently done by the Python post process script -->
+<xsl:template name="init_js">
+<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
+// Called on page load to parse URL parameters and perform actions on them.
+function init(){
+}
+// ]]&gt;</xsl:text>
+</xsl:template>
+
+
 
 
   <xsl:template match="cc:base-pp">
@@ -35,7 +47,6 @@
 
   <!--
       Eat all assurance activities
-      We might just move these totally off to the SDs.
   -->
   <xsl:template match="cc:aactivity"/>
   <xsl:template name="opt_text"/>
