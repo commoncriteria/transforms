@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	  ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <include href="Commons.rng">
     <!-- Not redefining anything -->
   </include>
@@ -9,18 +10,74 @@
       <attribute name="target-products"></attribute>
       <ref name="boilerplate-pat"/>
       <ref name="PPRefAndRevision"/>
-      
       <element name="chapter">
 	<attribute name="title"><value>Introduction</value></attribute>
-	<ref name="id-pat"/>
+	<ref name="id-attr"/>
 	<element name="section">
 	  <attribute name="title"><value>Overview</value></attribute>
-	  <ref name="id-pat"/>
+	  <ref name="id-attr"/>
 	  <ref name="basic-content"/>
 	</element>
+	<element name="section">
+	  <attribute name="title"><value>Terms</value></attribute>
+	  <ref name="id-attr"/>
+	  <ref name="basic-content"/>
+	  <element name="subsection">
+	    <attribute name="title"><value>Common Criteria Terms</value></attribute>
+	    <ref name="glossary-el"/>
+	  </element>
+	  <element name="subsection">
+	    <attribute name="title"><value>Technical Terms</value></attribute>
+	    <ref name="glossary-el"/>
+	  </element>
+	</element>
+	<element name="section">
+	  <attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
+	  <ref name="id-attr"/>
+	  <ref name="basic-content"/>
+	</element>
+	<element name="section">
+	  <attribute name="title"><value>Use Cases</value></attribute>
+	  <ref name="id-attr"/>
+	  <ref name="basic-content"/>
+          <element name="usecases">
+	    <a:documentation>
+	      Wrapper element for uses cases.
+	    </a:documentation>
+            <oneOrMore>
+              <element name="usecase">
+		<a:documentation>
+		  A referrable section on how the protection profiled item is used.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="title-attr"/>
+                <element name="description">
+		  <ref name="basic-content"/>
+		</element>
+              </element>
+            </oneOrMore>
+          </element>
+
+
+
+	</element>
+
+
+
       </element>
     </element>
   </start>
 
+
+  <define name="glossary-el">
+    <element name="glossary">
+      <oneOrMore>
+	<element name="entry">
+	  <element name="term"><ref name="basic-content"/></element>
+	  <element name="description"><ref name="basic-content"/></element>
+	</element>
+      </oneOrMore>
+    </element>
+  </define>
 
 </grammar>

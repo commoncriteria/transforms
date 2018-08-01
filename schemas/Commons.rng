@@ -47,7 +47,7 @@
       </oneOrMore>
   </define>
 
-  <define name="id-pat">
+  <define name="id-attr">
     <attribute name="id">
 	  <a:documentation>
 	    A document-wide unique ID that is also displayed to the user.
@@ -71,6 +71,46 @@
 	<ref name="secref"/>
 	<ref name="cite"/>
 	<ref name="xref"/>
+	<ref name="abbr-el"/>
+	<element name="citeCC">
+	  <empty/>
+	</element>
+        <element name="figure">
+	  <a:documentation>
+	    Tag allow that inserts a picture.
+	  </a:documentation>
+	  <optional>
+	    <attribute name="pre">
+	      <a:documentation>
+		Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
+	      </a:documentation>
+	    </attribute>
+	  </optional>
+          <attribute name="entity">
+	    <a:documentation>
+	      Path to the image file.
+	    </a:documentation>
+	  </attribute>
+	  <ref name="id-attr"/>
+	  <ref name="title-attr"/>
+          <optional>
+            <attribute name="max-width"/>
+          </optional>
+        </element>
+	<element name="figref">
+	  <a:documentation>
+	    References a figure
+	  </a:documentation>
+	  <attribute name="refid">
+	    <a:documentation>
+	      Contains the ID of the figure being referenced.
+	    </a:documentation>
+	  </attribute>
+	</element>
+
+
+
+
       </choice>
     </oneOrMore>
   </define>
@@ -135,8 +175,7 @@
 	  <anyName/>
 	</attribute>
       </zeroOrMore>
-
-
+      <ref name="basic-content"/>
     </element>
   </define>
 
@@ -147,5 +186,44 @@
       <!--      <data type="NCName"/> -->
     </attribute>
   </define>
+
+
+  <define name="title-attr">
+    <a:documentation>
+      Pattern for title attribute.
+    </a:documentation>
+    <attribute name="title">
+      <a:documentation>Header that is visible to the user.</a:documentation>
+    </attribute>
+  </define>
+
+
+  <define name="abbr-el">
+    <element name="abbr">
+      <optional>
+	<attribute name="linkend">
+	  <a:documentation>
+	    Identifies the abbreviation definition (should match the text value of the entry).
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <optional>
+	<attribute name="title">
+	  <a:documentation>
+	    Full readable definition of the abbreviation.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <optional>
+	<attribute name="class">
+	  <a:documentation>
+	    Display class associated with this abbreviation.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <text/>
+    </element>
+  </define>
+
 
 </grammar>
