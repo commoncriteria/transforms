@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns:h="http://www.w3.org/1999/xhtml" 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    ns="https://niap-ccevs.org/cc/v1" 
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="boilerplate-pat">
+    <optional>
+      <attribute name="boilerplate">
+	<value>yes</value>
+      </attribute>
+    </optional>
+  </define>
+
+  <define name="PPRefAndRevision">
+    <element name="PPReference">
+        <element name="ReferenceTable">
+          <element name="PPVersion">
+            <data type="decimal"/>
+          </element>
+          <element name="PPAuthor">
+            <text/>
+          </element>
+          <element name="PPPubDate">
+	    <a:documentation>
+	      Date of publication for this PP.
+	    </a:documentation>
+            <data type="date"/>
+          </element>
+          <element name="Keywords">
+            <text/>
+          </element>
+        </element>
+      </element>
+
+      <oneOrMore>
+        <element name="RevisionHistory">
+          <oneOrMore>
+	    <element name="entry">
+	      <element name="version"><text/></element>
+	      <element name="date"><data type="date"/></element>
+	      <element name="subject"><text/></element>
+	    </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+  </define>
+
+  <define name="id-pat">
+    <attribute name="id">
+	  <a:documentation>
+	    A document-wide unique ID that is also displayed to the user.
+	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	  </a:documentation>
+	</attribute>
+  </define>
+
+
+
+  <define name="basic-content">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
+    <oneOrMore>
+      <choice>
+	<text/>
+	<ref name="html-element"/>
+	<ref name="linkref"/>
+	<ref name="appref"/>
+	<ref name="secref"/>
+	<ref name="cite"/>
+	<ref name="xref"/>
+      </choice>
+    </oneOrMore>
+  </define>
+
+
+  <define name="linkref">
+    <element name="linkref">
+      <a:documentation>Cross references components </a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+  <define name="appref">
+    <element name="appref">
+      <a:documentation>Cross references an item in the appendex</a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+
+  <define name="cite">
+    <element name="cite">
+      <a:documentation>Cites something in the bibliography.</a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+  <define name="secref">
+    <element name="secref">
+      <a:documentation>References a section (Adds word 'section').</a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+  <define name="xref">
+    <element name="xref">
+      <a:documentation>
+	Cross references something 
+	<h:ul>
+	  <h:li>with a title attribute,</h:li> 
+	  <h:li>with a name attribute, </h:li>
+	  <h:li>with a term element, or </h:li>
+	  <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
+	</h:ul>
+      </a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+
+  <define name="html-element">
+    <a:documentation>
+      Pattern defines the html-element, which is any element in the xhtml namespace.
+      They have no knowledge of the CC element, and so cannot have any CC descendants.
+    </a:documentation>
+    <element ns="http://www.w3.org/1999/xhtml">
+      <anyName>
+	<except>
+	  <nsName ns="https://niap-ccevs.org/cc/v1"/>
+	</except>
+      </anyName>
+      <a:documentation>
+	Defines all html-elements with an optional number of html attributes and descendants.
+      </a:documentation>
+      <zeroOrMore>
+	<attribute>
+	  <anyName/>
+	</attribute>
+      </zeroOrMore>
+
+
+    </element>
+  </define>
+
+
+  <define name="linkend-attr">
+    <attribute name="linkend">
+      <a:documentation>References an ID of the referenced item.</a:documentation>
+      <!--      <data type="NCName"/> -->
+    </attribute>
+  </define>
+
+</grammar>

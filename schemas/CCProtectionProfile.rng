@@ -16,13 +16,6 @@
 	  A wrapper element for document meta-data.
 	</a:documentation>
 
-	<optional><attribute name="id">
-	  <a:documentation>NOT USED</a:documentation>
-	</attribute></optional>
-
-        <attribute name="title">
-	  <a:documentation>Unknown usage. Only seen "PP Reference".</a:documentation>
-	</attribute>
         <element name="ReferenceTable">
 	  <a:documentation>
 	    A second wrapper element for document meta-data.
@@ -35,7 +28,6 @@
 	    <a:documentation>
 	      Version of Common Criteria this document follows.
 	      It should be the version listed in the CCPart1/2/3 files consulted.
-	      Last known value is "3.1R4".
 	    </a:documentation>
             <data type="NMTOKEN"/>
           </element>
@@ -50,12 +42,6 @@
 	      Date of publication for this PP.
 	    </a:documentation>
             <data type="date"/>
-          </element>
-          <element name="PPCertificationID">
-	    <a:documentation>
-	      NOT USED. Currently I've only seen 'unassigned' as a value.
-	    </a:documentation>
-            <data type="NCName"/>
           </element>
           <element name="CCVersion">
 	    <a:documentation>
