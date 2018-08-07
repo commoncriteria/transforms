@@ -9,6 +9,9 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
+def warn(msg):
+    log(2, msg)
+
 def err(msg):
     sys.stderr.write(msg)
     sys.exit(1)
@@ -109,8 +112,10 @@ class State:
         for brokeRef in brokeRefs:
             linkend=brokeRef.attrib["href"][1:]
             target=root.find(".//*[@id='"+linkend+"']")
-            brokeRef.text = target.text
-
+            try:
+                brokeRef.text = target.text
+            except AttributeError:
+                warn("Failed to find an element with the id of '"+linkend+"'")
 
     def fix_indices(self):
         # Find the table of contents
