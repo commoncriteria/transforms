@@ -568,6 +568,14 @@ function showTarget(id){
       </xsl:for-each>
     </dl>
   </xsl:template>
+  
+<!-- ############### -->
+<!-- Appears           -->
+  <xsl:template match="cc:if-opt-app">
+    <xsl:if test="$appendicize='on'">
+      <xsl:apply-templates/>
+    </xsl:if>
+  </xsl:template>
 
 <!-- ############### -->
 <!--            -->

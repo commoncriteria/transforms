@@ -640,6 +640,12 @@
     <oneOrMore>
       <choice>
 	<text/>
+	<element name="if-opt-app">
+	  <a:documentation>
+	    Content that only appears if the optional appendices exist.
+	  </a:documentation>
+	  <ref name="basic-content"/>
+	</element>
 	<ref name="html-element"/>
 	<ref name="linkref"/>
 	<ref name="citeCC"/>
