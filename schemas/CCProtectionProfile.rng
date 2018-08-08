@@ -9,7 +9,19 @@
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <attribute name="name"></attribute>
+      <attribute name="name">
+	<a:documentation>
+The title of this document.
+	</a:documentation>
+      </attribute>
+      <optional>
+	<attribute name="boilerplate">
+	<a:documentation>
+Indicates that this document shall use boilerplate sections.
+	</a:documentation>
+	<value>yes</value></attribute>
+      </optional>
+
       
       <element name="PPReference">
 	<a:documentation>
@@ -57,7 +69,6 @@
 	    </a:documentation>
             <text/>
           </element>
-	  <ref name="entry-el"/>
         </element>
       </element>
       <oneOrMore>
