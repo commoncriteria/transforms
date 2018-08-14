@@ -889,16 +889,7 @@ function showTarget(id){
 <!--            -->
   <xsl:template match="cc:chapter">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
-    <xsl:if test="@title='Security Requirements' and /cc:*[@boilerplate='yes']">
-      <xsl:call-template name="bp-secreq"/>
-    </xsl:if>
-    <xsl:if test="@title='Conformance Claims' and  /cc:*[@boilerplate='yes']">
-      <xsl:call-template name="bp-con-state">
-	<xsl:with-param name="has_appendix"><xsl:value-of select="$appendicize"/></xsl:with-param>
-	<xsl:with-param name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
+    <xsl:apply-templates mode='hook' select='.'/>
     <xsl:apply-templates/>
   </xsl:template>
 

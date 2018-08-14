@@ -4,8 +4,7 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-
-
+  <!-- Eat all hook-based cc -->
   <xsl:template match="cc:*" mode="hook"/>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']" 
@@ -14,7 +13,6 @@
     <xsl:variable name="optappid"><xsl:value-of select="//cc:*[@title='Optional Requirements']/@id"/></xsl:variable>
     <xsl:variable name="selappid"><xsl:value-of select="//cc:*[@title='Selection-Based Requirements']/@id"/></xsl:variable>
     <xsl:variable name="objappid"><xsl:value-of select="//cc:*[@title='Objective Requirements']/@id"/></xsl:variable>
-
 
     As indicated in <a href="#{$cclsec}" class="dynref">Section </a>
     the baseline requirements (those that must be performed by the TOE) are
@@ -40,22 +38,47 @@
     but are not listed (e.g., FMT-type requirements) are also included in the ST.
   </xsl:template>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook"><xsl:call-template name="bp-impsatreqs"/></xsl:template>
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook">    <p>
+This appendix lists requirements that should be considered satisfied by products
+successfully evaluated against this Protection Profile.  
+However, these requirements are not featured explicitly as SFRs and should not be
+included in the <abbr title="Security Target">ST</abbr>.
+They are not included as standalone SFRs because it would
+increase the time, cost, and complexity of evaluation.
+This approach is permitted
+by <a href="#bibCC">[CC]</a> Part 1, <b>8.2 Dependencies between components</b>.
+    </p>
+    <p>
+This information benefits systems engineering activities which call for inclusion of 
+particular security controls.  Evaluation against the Protection Profile
+provides evidence that these controls are present and have been evaluated.
+    </p>
+</xsl:template>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']" 
 		mode="hook">
-    <xsl:call-template name="bp-selapp"/>
+As indicated in the introduction to this PP, 
+the baseline requirements 
+(those that must be performed by the TOE or its underlying platform)
+are contained in the body of this PP.
+There are additional requirements based on selections in the body of the PP:
+if certain selections are made, then additional requirements below must be included.
   </xsl:template>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Objective Requirements']" 
 		mode="hook">
-    <xsl:call-template name="bp-objapp"/>
+This appendix includes requirements that specify security functionality which 
+also addresses threats.
+The requirements are not currently mandated in the body of this PP as they 
+describe security functionality not yet widely-available in commercial technology.
+However, these requirements may be included in the ST such that the TOE is still 
+conformant to this PP, and it is expected that they be included as soon as possible.
   </xsl:template>
 
   <!-- ############## -->
-  <xsl:template  name="bp-con-state">
-    <xsl:param name="has_appendix"/>
-    <xsl:param name="impsatreqid"/>
+  <xsl:template  match="/cc:*[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']" 
+		mode="hook">
+    <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>
       <dt>Conformance Statement</dt><dd> To be conformant to this PP, an <abbr title="Security Target">ST</abbr> must demonstrate Exact
           Conformance, a subset of Strict Conformance as defined in <xsl:call-template name="citeCC"/> Part 1 (ASE_CCL).
@@ -70,9 +93,9 @@
            The type of each requirement is identified in line with the
       text.  
 	  <p>
-    <xsl:if test="$has_appendix='on'"> Unconditional requirements are found in the main body of the
+    <xsl:if test="$appendicize='on'"> Unconditional requirements are found in the main body of the
       document, while the selection-based, optional, and objective requirements are contained in respective sections in the appendix. </xsl:if>
-    <xsl:if test="$has_appendix!='on'"> The type of each requirement is identified in line with the
+    <xsl:if test="$appendicize!='on'"> The type of each requirement is identified in line with the
       text. </xsl:if>
 The <abbr title="Security Target">ST</abbr> may iterate any of these components,
 but it must not include any additional component (e.g. from <a href="#bibCC">[CC]</a> 
@@ -101,7 +124,7 @@ contain the component upon which there is a dependency.
           Profile.</dd><dt>Package Claim</dt><dd>This PP does not claim conformance to any packages.</dd></dl>
   </xsl:template>
 
-<!-- ############## -->
+  <!-- ############## -->
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
    <!-- ############## -->
@@ -134,49 +157,12 @@ contain the component upon which there is a dependency.
 </tr>
   </xsl:template>
 
-  <xsl:template name="bp-selapp">
-As indicated in the introduction to this PP, 
-the baseline requirements 
-(those that must be performed by the TOE or its underlying platform)
-are contained in the body of this PP.
-There are additional requirements based on selections in the body of the PP:
-if certain selections are made, then additional requirements below must be included.
-  </xsl:template>
   
-  <xsl:template name="bp-objapp">
-This appendix includes requirements that specify security functionality which 
-also addresses threats.
-The requirements are not currently mandated in the body of this PP as they 
-describe security functionality not yet widely-available in commercial technology.
-However, these requirements may be included in the ST such that the TOE is still 
-conformant to this PP, and it is expected that they be included as soon as possible.
-  </xsl:template>
-
-  <xsl:template name="bp-impsatreqs">
-    <p>
-This appendix lists requirements that should be considered satisfied by products
-successfully evaluated against this Protection Profile.  
-However, these requirements are not featured explicitly as SFRs and should not be
-included in the <abbr title="Security Target">ST</abbr>.
-They are not included as standalone SFRs because it would
-increase the time, cost, and complexity of evaluation.
-This approach is permitted
-by <a href="#bibCC">[CC]</a> Part 1, <b>8.2 Dependencies between components</b>.
-    </p>
-    <p>
-This information benefits systems engineering activities which call for inclusion of 
-particular security controls.  Evaluation against the Protection Profile
-provides evidence that these controls are present and have been evaluated.
-    </p>
-  </xsl:template>
-
-
   <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
 
 
-
   <!-- ############## -->
-  <xsl:template  name="bp-secreq">
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook">
 This chapter describes the security requirements which have to be fulfilled by the TOE.
 Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>.
 The following notations are used: <ul>
