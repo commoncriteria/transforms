@@ -6,3 +6,4 @@ schemas/*.rnc
 Makefile
 /**/__pycache__
 tmp
+temp
