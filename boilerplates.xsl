@@ -189,4 +189,29 @@ This module does not define any mandatory SFRs that apply regardless of the PP-C
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template match="/cc:Module//cc:*[@title='Consistency Rationale']" mode="hook">
+    <xsl:for-each select="//cc:base-pp">
+      <h2 id="conrat-{@short}" class="indexable" data-level="2">
+	<xsl:value-of select="@name"/> Protection Profile
+      </h2>
+      <h3 id="contoe-{@short}" class="indexable" data-level="3">
+	Consistency of TOE Type
+      </h3>
+      <xsl:apply-templates select="./cc:con-toe"/>
+      <h3 id="consecprob-{@short}" class="indexable" data-level="3">
+	Consistency of Security Problem Definition
+      </h3>
+      <xsl:apply-templates select="./cc:con-sec-prob"/>
+      <h3 id="conobj-{@short}" class="indexable" data-level="3">
+	Consistency of Objectives
+      </h3>
+      <xsl:apply-templates select="./cc:con-obj"/>
+      <h3 id="conreq-{@short}" class="indexable" data-level="3">
+	Consistency of Requirements
+      </h3>
+      <xsl:apply-templates select="./cc:con-req"/>
+    </xsl:for-each>
+  </xsl:template>
+
 </xsl:stylesheet>

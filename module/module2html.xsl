@@ -21,9 +21,6 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-
-
-
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
       <xsl:value-of select="@short"/> 

@@ -2,6 +2,8 @@
 <grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 	  ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <include href="Commons.rng">
+    
+
     <!-- Not redefining anything -->
   </include>
   <start>
@@ -19,9 +21,79 @@
   </start>
 
   <define name="SecReqChapter">
-    <attribute name="title"><value>Security Requirements</value></attribute>
-    <ref name="id-attr"/>
-    <ref name="basic-content"/>
+    <element name="chapter">
+      <attribute name="title"><value>Security Requirements</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content"/>
+      <element name="base-pp">
+	<attribute name="product"/>
+	<attribute name="name"/>
+	<attribute name="short"/>
+	<attribute name="url"/>
+	<attribute name="xmlurl"/>
+	<optional>
+	  <element name="additional-sfrs">
+	    <oneOrMore>
+	      <element name="subsection">
+		<ref name="title-attr"/>
+		<ref name="id-attr"/>
+		<oneOrMore>
+		  <element name="f-component">
+		    <a:document>
+		      Specifies a component under Security Functional Requirements section..
+		    </a:document>
+		    <attribute name="id">
+		      <a:documentation>
+			A document-wide unique id. Not really read by a person, but it
+			should be the base for its child requirements' ids.
+		      </a:documentation>
+		    </attribute>
+		    <attribute name="name">
+		      <a:documentation>
+			Readable title for this requirement.
+		      </a:documentation>
+		    </attribute>
+		    <zeroOrMore>
+		      <element name="f-element">
+			<a:documentation>
+			  Defines a functional requirement.
+			</a:documentation>
+			<attribute name="id">
+			  <a:documentation>
+			    A document-wide unique ID that is also displayed to the user.
+			    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+			  </a:documentation>
+			</attribute>
+			<element name="title">
+			  <ref name="basic-content"/>
+			</element>
+			<oneOrMore>
+			  <choice>
+			    <text/>
+			    <ref name="aactivity"/>
+			    <ref name="assignable"/>
+			    <ref name="note"/>
+			    <ref name="selectables"/>
+			  </choice>
+			</oneOrMore>
+		      </element>
+		    </zeroOrMore>
+		  </element>
+		</oneOrMore>
+	      </element>
+	    </oneOrMore>
+	  </element>
+	</optional>
+      </element>
+    </element>
+  </define>
+
+
+  <define name="aactivity">
+    <element name="aactivity">
+      <a:documentation>Element containing an Assurance Activity.</a:documentation>
+      <ref name="basic-content"/>
+    </element>
   </define>
 
   <define name="SecObjChapter">
@@ -51,6 +123,11 @@
 	    <element name="threat">
 	      <ref name="id-attr"/>
 	      <ref name="description"/>
+	      <optional>
+		<element name="consistency-rationale">
+		  <ref name="basic-content"/>
+		</element>
+	      </optional>
 	      <ref name="objective-refer"/>
 	    </element>
 	  </oneOrMore>
@@ -224,6 +301,95 @@
 	  <element name="description"><ref name="basic-content"/></element>
 	</element>
       </oneOrMore>
+    </element>
+  </define>
+
+
+  <define name="selectables">
+    <element name="selectables">
+      <a:documentation>
+	A grouping of selectable elements.
+      </a:documentation>
+      <optional>
+        <attribute name="onlyone">
+	  <a:documentation>
+	    Designates that at only one item may be selected.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="linebreak">
+	  <a:documentation>
+	    Indicates that new lines should be appended to every selectable.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <ref name="selectable-group"/>
+    </element>
+  </define>
+
+
+  <define name="assignable">
+    <element name="assignable">
+      <a:documentation>
+	Assignment section
+      </a:documentation>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+  <define name="selectable-single">
+    <element name="selectable">
+      <a:documentation>
+	Denotes the start of a selectable in a selectables section.
+      </a:documentation>
+      <optional>
+	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
+      </optional>
+      <optional>
+	<ref name="id-attr"/>
+      </optional>
+      <zeroOrMore>
+	<element name="requires">
+	  <a:documentation>
+	    Denotes a selection-based element that is required should this selection chosen.
+	  </a:documentation>
+	  <attribute name="req">
+	    <a:documentation>
+	      The ID of the required element.
+	    </a:documentation>
+	  </attribute>
+	</element>
+      </zeroOrMore>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+
+  <define name="selectable-group">
+    <ref name="selectable-single"/>
+    <oneOrMore>
+      <ref name="selectable-single"/>
+    </oneOrMore>
+  </define>
+
+  <define name="note">
+    <element name="note">
+      <a:documentation>
+	Any further instructions associated with the requirement.
+      </a:documentation>
+      <optional>
+        <attribute name="role">
+	  <a:documentation>Indicates who is associated with this role</a:documentation>
+	  <choice>
+	    <value>application</value><value>Application</value>
+	    <value>developer</value><value>Developer</value>
+	  </choice>
+        </attribute>
+      </optional>
+      <ref name="basic-content"/>
     </element>
   </define>
 
