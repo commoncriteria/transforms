@@ -10,6 +10,159 @@
       <attribute name="target-products"></attribute>
       <ref name="boilerplate-pat"/>
       <ref name="PPRefAndRevision"/>
+      <ref name="IntroductionChapter"/>
+      <ref name="CClaimsChapter"/>
+      <ref name="SecProbDesChapter"/>
+      <ref name="SecObjChapter"/>
+      <ref name="SecReqChapter"/>
+    </element>
+  </start>
+
+  <define name="SecReqChapter">
+    <attribute name="title"><value>Security Requirements</value></attribute>
+    <ref name="id-attr"/>
+    <ref name="basic-content"/>
+  </define>
+
+  <define name="SecObjChapter">
+    <element name="chapter">
+      <attribute name="title"><value>Security Objectives</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content"/>
+      <element name="section">
+	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="SOs"/>
+      </element>
+    </element>
+  </define>
+
+  <define name="SecProbDesChapter">
+    <element name="chapter">
+      <attribute name="title"><value>Security Problem Description</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content"/>
+      <element name="section">
+	<attribute name="title"><value>Threats</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content"/>
+	<element name="threats">
+	  <oneOrMore>
+	    <element name="threat">
+	      <ref name="id-attr"/>
+	      <ref name="description"/>
+	      <ref name="objective-refer"/>
+	    </element>
+	  </oneOrMore>
+	</element>
+      </element>
+    </element>
+  </define>
+
+
+  <define name="CClaimsChapter">
+      <element name="chapter">
+	<attribute name="title"><value>Conformance Claims</value></attribute>
+	<ref name="id-attr"/>
+	<element name="cclaims">
+	  <oneOrMore>
+	    <element name="cclaim">
+	      <ref name="id-attr"/>
+	      <ref name="description"/>
+	    </element>
+	  </oneOrMore>
+	</element>
+      </element>
+  </define>
+
+  <define name="description">
+    <element name="description">
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+  <!-- <define name="html-element"> -->
+  <!--   <a:documentation> -->
+  <!--     Pattern defines the html-element, which is any element in the xhtml namespace. -->
+  <!--     They have no knowledge of the CC element, and so cannot have any CC descendants. -->
+  <!--   </a:documentation> -->
+  <!--   <element ns="http://www.w3.org/1999/xhtml"> -->
+  <!--     <anyName> -->
+  <!-- 	<except> -->
+  <!-- 	  <nsName ns="https://niap-ccevs.org/cc/v1"/> -->
+  <!-- 	</except> -->
+  <!--     </anyName> -->
+  <!--     <a:documentation> -->
+  <!-- 	Defines all html-elements with an optional number of html attributes and descendants. -->
+  <!--     </a:documentation> -->
+  <!--     <zeroOrMore> -->
+  <!-- 	<attribute> -->
+  <!-- 	  <anyName/> -->
+  <!-- 	</attribute> -->
+  <!--     </zeroOrMore> -->
+  <!--     <ref name="basic-content"/> -->
+  <!--   </element> -->
+  <!-- </define> -->
+
+  
+  <!-- <define name="basic-content"> -->
+  <!--   <a:documentation> -->
+  <!--     Content that can go anywhere (Although some items are only suitable for title elements). -->
+  <!--   </a:documentation> -->
+  <!--   <oneOrMore> -->
+  <!--     <choice> -->
+  <!-- 	<text/> -->
+  <!-- 	<ref name="html-element"/> -->
+  <!-- 	<ref name="linkref"/> -->
+  <!-- 	<ref name="citeCC"/> -->
+  <!--       <ref name="cite"/> -->
+  <!--       <ref name="secref"/> -->
+  <!--       <ref name="appref"/> -->
+  <!-- 	<ref name="abbr-el"/> -->
+  <!-- 	<ref name="xref"/> -->
+  <!-- 	<ref name="ctr-ref"/> -->
+  <!-- 	<ref name="ctr"/> -->
+  <!--       <element name="figure"> -->
+  <!-- 	  <a:documentation> -->
+  <!-- 	    Tag allow that inserts a picture. -->
+  <!-- 	  </a:documentation> -->
+  <!-- 	  <optional> -->
+  <!-- 	    <attribute name="pre"> -->
+  <!-- 	      <a:documentation> -->
+  <!-- 		Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '. -->
+  <!-- 	      </a:documentation> -->
+  <!-- 	    </attribute> -->
+  <!-- 	  </optional> -->
+  <!--         <attribute name="entity"> -->
+  <!-- 	    <a:documentation> -->
+  <!-- 	      Path to the image file. -->
+  <!-- 	    </a:documentation> -->
+  <!-- 	  </attribute> -->
+  <!-- 	  <ref name="id-attr"/> -->
+  <!-- 	  <ref name="title-attr"/> -->
+  <!--         <optional> -->
+  <!--           <attribute name="max-width"/> -->
+  <!--         </optional> -->
+  <!--       </element> -->
+  <!-- 	<element name="figref"> -->
+  <!-- 	  <a:documentation> -->
+  <!-- 	    References a figure -->
+  <!-- 	  </a:documentation> -->
+  <!-- 	  <attribute name="refid"> -->
+  <!-- 	    <a:documentation> -->
+  <!-- 	      Contains the ID of the figure being referenced. -->
+  <!-- 	    </a:documentation> -->
+  <!-- 	  </attribute> -->
+  <!-- 	</element> -->
+  <!--     </choice> -->
+  <!--   </oneOrMore> -->
+  <!-- </define> -->
+
+
+
+
+
+  <define name="IntroductionChapter">
       <element name="chapter">
 	<attribute name="title"><value>Introduction</value></attribute>
 	<ref name="id-attr"/>
@@ -57,16 +210,10 @@
               </element>
             </oneOrMore>
           </element>
-
-
-
 	</element>
-
-
-
       </element>
-    </element>
-  </start>
+    </define>
+
 
 
   <define name="glossary-el">

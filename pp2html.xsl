@@ -893,6 +893,8 @@ function showTarget(id){
     <xsl:apply-templates/>
   </xsl:template>
 
+
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:section">
@@ -909,6 +911,7 @@ function showTarget(id){
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or ../@id!='SFRs' or count(.//cc:f-component[not(@status) or @status='threshold'])">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
+      <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
         <xsl:apply-templates mode="appendicize" />
       </xsl:if>

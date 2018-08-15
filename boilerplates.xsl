@@ -90,13 +90,15 @@ conformant to this PP, and it is expected that they be included as soon as possi
             <li>optional or</li>
             <li>objective.</li>
           </ul>
-           The type of each requirement is identified in line with the
-      text.  
 	  <p>
-    <xsl:if test="$appendicize='on'"> Unconditional requirements are found in the main body of the
-      document, while the selection-based, optional, and objective requirements are contained in respective sections in the appendix. </xsl:if>
-    <xsl:if test="$appendicize!='on'"> The type of each requirement is identified in line with the
-      text. </xsl:if>
+	    <xsl:if test="$appendicize='on'">
+Unconditional requirements are found in the main body of the
+document, while the selection-based, optional, and objective requirements are contained in respective sections in the appendix. 
+	    </xsl:if>
+	    <xsl:if test="$appendicize!='on'">
+The type of each requirement is identified in line with the text.
+	    </xsl:if>
+
 The <abbr title="Security Target">ST</abbr> may iterate any of these components,
 but it must not include any additional component (e.g. from <a href="#bibCC">[CC]</a> 
 Part 2 or 3 or a PP not  conformant with this one, or extended by the 
@@ -175,4 +177,16 @@ The following notations are used: <ul>
     </ul>
   </xsl:template>
 
+
+  <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
+    <xsl:choose>
+      <xsl:when test="cc:subsection[@title='TOE Security Functional Requirements']">
+The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
+These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
+      </xsl:when>
+      <xsl:otherwise>
+This module does not define any mandatory SFRs that apply regardless of the PP-Configuration.
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>

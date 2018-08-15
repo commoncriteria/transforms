@@ -141,7 +141,8 @@ pp:$(PP_HTML)
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 module-target:
-	$(XSL_EXE) $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
+	python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
+	$(XSL_EXE) --stringparam tmpdir /tmp/ $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
 	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
 	$(XSL_EXE) $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML)
 

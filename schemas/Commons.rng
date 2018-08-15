@@ -226,4 +226,50 @@
   </define>
 
 
+  <define name="SOs">
+    <element name="SOs">
+      <a:documentation>
+	Grouping for Security Objective entries.
+      </a:documentation>
+      <oneOrMore>
+        <element name="SO">
+	  <a:documentation>
+	    Entry for a security objective
+	  </a:documentation>
+	  <ref name="id-attr"/>
+	  <ref name="description"/>
+          <oneOrMore>
+            <element name="component-refer">
+	      <a:documentation>
+		Cross-references a component.
+	      </a:documentation>
+              <attribute name="ref">
+		<a:documentation>
+		  Id of the referenced component.
+		</a:documentation>
+	      </attribute>
+	      <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="objective-refer">
+    <element name="objective-refer">
+      <a:documentation>Element that denotes an objective</a:documentation>
+      <attribute name="ref">
+	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
+        <data type="NCName">
+	  <param name="pattern">O(E?)\.[_A-Z]+</param>
+	</data>
+      </attribute>
+      <element name="rationale">
+	<a:documentation>Argument as to why the objective applies</a:documentation>
+	<ref name="basic-content"/>
+      </element>
+    </element>
+  </define>
+
 </grammar>
