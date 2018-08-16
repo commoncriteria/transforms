@@ -15,7 +15,7 @@
 	<xsl:param name="release" select="'draft'"/>
 
 	<!-- very important, for special characters and umlauts iso8859-1-->
-	<xsl:output method="html" encoding="UTF-8" indent="yes"/>
+	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<xsl:template match="/cc:PP">
 	    <!-- Start with !doctype preamble for valid (X)HTML document. -->

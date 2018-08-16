@@ -105,6 +105,10 @@ DIFF_DIR ?= diff-archive
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 
+# TRANSFORM 1 using 2 into 3 [with 4 options]
+DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -::$(3) 
+
+
 # A temporary directory 
 TMP?=/tmp
 
@@ -141,16 +145,15 @@ pp:$(PP_HTML)
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
 module-target:
+#       Download all remote base-pps
 	python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
-	$(XSL_EXE) --stringparam tmpdir /tmp/ $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
+#	$(call EX_REG, --stringparam tmpdir /tmp/ $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
 	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
 	$(XSL_EXE) $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML)
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(XSL_EXE)  $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML) 
-	$(XSL_EXE) --stringparam appendicize on $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_OP_HTML) 
-	$(XSL_EXE) --stringparam appendicize on $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
-
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML) )
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML), --stringparam appendicize )
 
 
 #- Build the Diff file
@@ -185,7 +188,7 @@ diff: $(PP_RELEASE_HTML)
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(XSL_EXE) --stringparam appendicize on -o $(PP_RELEASE_HTML) $(PP2HTML_XSL) $(PP_XML)
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),"--stringparam appendicize on"
 
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
@@ -195,7 +198,7 @@ $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	$(XSL_EXE)  --stringparam release final -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
+	$(call DOIT,$(PP_XML),$(PP2TABLE_XSL),$(TABLE), --stringparam release final) 
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
