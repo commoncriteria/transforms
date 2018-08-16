@@ -40,14 +40,19 @@ class State:
         self.classmap={}
         for el in self.root.findall(".//*[@class]"):
             classes = el.attrib["class"].split(",")
+            # Go through all the classes the elment is a part of
             for clazz in classes:
                 # If we already have this class in the classmap
                 if clazz in self.classmap:
                     # Grab the old
                     clazzset = self.classmap[clazz]
-                    clazzset.add(el)
+                    # We're working with a list here, not a set
+                    # Should really only not meet this if the 
+                    # input document has an element where a class is listed twice
+                    if not el in clazzset:
+                        clazzset.append(el)
                 else:
-                    self.classmap[clazz]={el}
+                    self.classmap[clazz]=[el]
 
 
     def to_html(self):
@@ -80,10 +85,15 @@ class State:
             return
         countables = self.classmap['ctr']
         occurs={}
+        # Go through all the counters
         for countable in countables:
+            # Get the type of counter
             typee = countable.attrib['data-counter-type']
+            # If we haven't seen it yet
             if not typee in occurs:
+                # Make a list
                 occurs[typee]=0
+            # Increment by one
             occurs[typee]+=1
             countable.find("*[@class='counter']").text = str(occurs[typee])
 
