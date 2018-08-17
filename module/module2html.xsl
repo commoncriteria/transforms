@@ -29,11 +29,14 @@
       <h2 id="conrat-{@short}" class="indexable" data-level="2">
 	<xsl:value-of select="@name"/> Protection Profile
       </h2>
+
+      <!-- #################### -->
       <h3 id="contoe-{@short}" class="indexable" data-level="3">
 	Consistency of TOE Type
       </h3>
-
       <xsl:apply-templates select="./cc:con-toe"/>
+
+      <!-- #################### -->
       <h3 id="consecprob-{@short}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
@@ -42,36 +45,121 @@
       <xsl:apply-templates select="./cc:con-sec-prob"/>
       <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:threat">
-	<xsl:variable name="tid" select="@id"/>
-	<tr>
-	  <td><xsl:value-of select="@id"/></td>
-	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:threat-mod[@id=$tid]">
-	      <xsl:apply-templates select="$base/cc:threat-mod[@id=$tid]"/>
-	    </xsl:when>
-	    <xsl:otherwise>
-	      <!-- Can only go one element deep here -->
-	      <xsl:apply-templates select="cc:consistency-rationale/node()">
-		<xsl:with-param name="base" select="$base/@short"/>
-	      </xsl:apply-templates>
-	    </xsl:otherwise>
-	  </xsl:choose></td>
-	</tr>
+	<xsl:call-template name="consistency-row">
+	  <xsl:with-param name="base" select="$base"/>
+	  <xsl:with-param name="orig" select="."/>
+	</xsl:call-template>
       </xsl:for-each>
       </table>
 
-
+      <!-- #################### -->
       <h3 id="conobj-{@short}" class="indexable" data-level="3">
 	Consistency of Objectives
       </h3>
+      <p>
       <xsl:apply-templates select="./cc:con-obj"/>
+      <xsl:if test="//cc:SO">
+	  The objectives for the TOEs are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
+      <xsl:for-each select="//cc:SO">
+	<xsl:call-template name="consistency-row">
+	  <xsl:with-param name="base" select="$base"/>
+	  <xsl:with-param name="orig" select="."/>
+	</xsl:call-template>
+      </xsl:for-each>
+      </table>
+      </xsl:if>
+      </p>
+
+      <p>
+      <xsl:apply-templates select="./cc:con-op-en"/>
+      <xsl:if test="//cc:SOE">
+	  The objectives for the TOE's operational environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
+      <xsl:for-each select="//cc:SOE">
+	<xsl:call-template name="consistency-row">
+	  <xsl:with-param name="base" select="$base"/>
+	  <xsl:with-param name="orig" select="."/>
+	</xsl:call-template>
+      </xsl:for-each>
+      </table>
+      </xsl:if>
+      </p>
+
       <h3 id="conreq-{@short}" class="indexable" data-level="3">
 	Consistency of Requirements
       </h3>
       <xsl:apply-templates select="./cc:con-req"/>
-    </xsl:for-each>
+      This PP-Module identifies several SFRs from the 
+      <xsl:value-of select="$base/@short"/> PP that are needed to support 
+      <xsl:value-of select="/cc:Module/@target-products"/> functionality.
+      This is considered to be consistent because the functionality provided by the 
+      <xsl:value-of select="$base/@short"/>  is being used for its intended purpose.
+      The PP-Module also identifies a number of modified SFRs from the 
+      <xsl:value-of select="$base/@short"/> PP
+      as well as new SFRs that are used entirely to provide 
+      <xsl:value-of select="/cc:Module/@target-products"/> 
+      The rationale for why this does not conflict with the claims 
+      defined by the 
+      <xsl:value-of select="$base/@short"/> PP are as follows:
+      <table>
+	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
+	<tr> <th colspan="2"> Modified SFRs</th></tr>
+	<xsl:call-template name="req-con-rat-sec">
+	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component"/>
+	  <xsl:with-param name="short" select="$base/@short"/>
+	  <xsl:with-param name="none-msg">
+	    This PP-Module does not any additional requirements when the 
+	    <xsl:value-of select="$short"/> PP is the base.
+	  </xsl:with-param>
+	</xsl:call-template>
+	<tr>
+	  <th colspan="2"> Additional SFRs</th>
+	</tr>
+	<xsl:call-template name="req-con-rat-sec">
+	  <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component"/>
+	  <xsl:with-param name="short" select="$base/@short"/>
+	  <xsl:with-param name="verb">add</xsl:with-param>
+	</xsl:call-template>
+	<tr>
+	  <th colspan="2"> Mandatory SFRs</th>
+	</tr>
+	<tr>
+	  <th colspan="2"> Selection-Based SFRs</th>
+	</tr>
+	<tr>
+	  <th colspan="2"> Objective SFRs</th>
+	</tr>
+	<tr>
+	  <th colspan="2"> Modified SFRs</th>
+	</tr>
+      </table>
+    </xsl:for-each> <!-- End base iteration -->
   </xsl:template>
 
+
+  <xsl:template name="req-con-rat-sec">
+    <xsl:param name="f-comps"/>
+    <xsl:param name="short"/>
+    <xsl:param name="verb"/>
+	<xsl:choose>
+	  <xsl:when test="$f-comps">
+	    <xsl:for-each select="$f-comps">
+	      <tr>
+		<td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
+		<td><xsl:apply-templates select="cc:consistency-rationale/node()">
+		  <xsl:with-param name="base" select="$short"/>
+		</xsl:apply-templates></td>
+	      </tr>
+	    </xsl:for-each>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <tr><th colspan="2">
+	      <xsl:value-of select="$none-msg"/>
+	    </th></tr>
+	  </xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
 
   <!-- ################################################## -->
   <xsl:template match="cc:base-pp">
@@ -146,10 +234,34 @@ This module does not define any additional SFRs for any PP-Configuration where t
     <xsl:apply-templates/>
   </xsl:template>
 
+
+
+  <xsl:template name="consistency-row">
+    <xsl:param name="base"/>
+    <xsl:param name="orig"/>
+	<tr>
+	  <td><xsl:value-of select="$orig/@id"/></td>
+	  <!-- if the base has a con-mod equal to the id -->
+	  <td><xsl:choose>
+	    <xsl:when test="$base/cc:con-mod[@id=$orig/@id]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@id=$orig/@id]"/>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <!-- Can only go one element deep here -->
+	      <xsl:apply-templates select="cc:consistency-rationale/node()">
+		<xsl:with-param name="base" select="$base/@short"/>
+	      </xsl:apply-templates>
+	    </xsl:otherwise>
+	  </xsl:choose></td>
+	</tr>
+  </xsl:template>
+
   <xsl:template match="cc:base-name">
     <xsl:param name="base"/>
     <xsl:value-of select="$base"/>
   </xsl:template>
+
+
 
 
   <!--
