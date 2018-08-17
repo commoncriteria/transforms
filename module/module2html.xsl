@@ -7,20 +7,73 @@
   version="1.0">
 
   <xsl:import href="../pp2html.xsl"/>
-  <xsl:import href="../boilerplates.xsl"/>
 
   <xsl:output method="xml" encoding="UTF-8"/>
 
   <xsl:param name="tmpdir"/>
-
-
-  <!-- ############### -->
-  <!--            -->
-  <xsl:template match="cc:section[cc:base-pp]">
-    <xsl:apply-templates mode="hook" select="."/>
+  
+<!-- ################################################## -->
+<!--                   MODULE Section                   -->
+<!-- ################################################## -->
+  <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
+    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
+    <xsl:call-template name="secrectext"/>
     <xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="/cc:Module//cc:*[@title='Consistency Rationale']">
+    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
+    <xsl:for-each select="//cc:base-pp">
+      <xsl:variable name="base" select="."/>
+
+      <h2 id="conrat-{@short}" class="indexable" data-level="2">
+	<xsl:value-of select="@name"/> Protection Profile
+      </h2>
+      <h3 id="contoe-{@short}" class="indexable" data-level="3">
+	Consistency of TOE Type
+      </h3>
+
+      <xsl:apply-templates select="./cc:con-toe"/>
+      <h3 id="consecprob-{@short}" class="indexable" data-level="3">
+	Consistency of Security Problem Definition
+      </h3>
+      The threats defined by this PP-Module (see section 3.1) supplement those defined in the
+      <xsl:value-of select="@short"/> PP as follows:
+      <xsl:apply-templates select="./cc:con-sec-prob"/>
+      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
+      <xsl:for-each select="//cc:threat">
+	<xsl:variable name="tid" select="@id"/>
+	<tr>
+	  <td><xsl:value-of select="@id"/></td>
+	  <td><xsl:choose>
+	    <xsl:when test="$base/cc:threat-mod[@id=$tid]">
+	      <xsl:apply-templates select="$base/cc:threat-mod[@id=$tid]"/>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <!-- Can only go one element deep here -->
+	      <xsl:apply-templates select="cc:consistency-rationale/node()">
+		<xsl:with-param name="base" select="$base/@short"/>
+	      </xsl:apply-templates>
+	    </xsl:otherwise>
+	  </xsl:choose></td>
+	</tr>
+      </xsl:for-each>
+      </table>
+
+
+      <h3 id="conobj-{@short}" class="indexable" data-level="3">
+	Consistency of Objectives
+      </h3>
+      <xsl:apply-templates select="./cc:con-obj"/>
+      <h3 id="conreq-{@short}" class="indexable" data-level="3">
+	Consistency of Requirements
+      </h3>
+      <xsl:apply-templates select="./cc:con-req"/>
+    </xsl:for-each>
+  </xsl:template>
+
+
+  <!-- ################################################## -->
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
       <xsl:value-of select="@short"/> 
@@ -53,11 +106,10 @@ additional restrictions.
     <xsl:for-each select="document(concat($tmpdir,count(preceding-sibling::*),'.xml'))//cc:f-component">
       <xsl:variable name="baseid" select="@id"/>
       <xsl:if test="not($redefsec//cc:f-component[@id=$baseid])">
-	<li><xsl:value-of select="@id"/></li>
+	<li><xsl:value-of select="translate(@id,$lower,$upper)"/></li>
       </xsl:if>
     </xsl:for-each>
 </ul>
-
     <xsl:element name="h2">
       <xsl:attribute name="id">modsfr-<xsl:value-of select="../cc:base/@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
@@ -87,9 +139,16 @@ additional restrictions.
 This module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
 
 
+  <xsl:template match="cc:con-sec-problem">
+    <xsl:apply-templates/>
+  </xsl:template>
 
+  <xsl:template match="cc:base-name">
+    <xsl:param name="base"/>
+    <xsl:value-of select="$base"/>
   </xsl:template>
 
 

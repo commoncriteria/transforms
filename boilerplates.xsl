@@ -164,7 +164,7 @@ contain the component upon which there is a dependency.
 
 
   <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook">
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
 This chapter describes the security requirements which have to be fulfilled by the TOE.
 Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>.
 The following notations are used: <ul>
@@ -176,6 +176,7 @@ The following notations are used: <ul>
       <li><b>Iteration</b> operation: are identified with a number inside parentheses (e.g."(1)")</li>
     </ul>
   </xsl:template>
+
 
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
@@ -190,28 +191,5 @@ This module does not define any mandatory SFRs that apply regardless of the PP-C
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="/cc:Module//cc:*[@title='Consistency Rationale']" mode="hook">
-    <xsl:for-each select="//cc:base-pp">
-      <h2 id="conrat-{@short}" class="indexable" data-level="2">
-	<xsl:value-of select="@name"/> Protection Profile
-      </h2>
-      <h3 id="contoe-{@short}" class="indexable" data-level="3">
-	Consistency of TOE Type
-      </h3>
-      <xsl:apply-templates select="./cc:con-toe"/>
-      <h3 id="consecprob-{@short}" class="indexable" data-level="3">
-	Consistency of Security Problem Definition
-      </h3>
-      <xsl:apply-templates select="./cc:con-sec-prob"/>
-      <h3 id="conobj-{@short}" class="indexable" data-level="3">
-	Consistency of Objectives
-      </h3>
-      <xsl:apply-templates select="./cc:con-obj"/>
-      <h3 id="conreq-{@short}" class="indexable" data-level="3">
-	Consistency of Requirements
-      </h3>
-      <xsl:apply-templates select="./cc:con-req"/>
-    </xsl:for-each>
-  </xsl:template>
 
 </xsl:stylesheet>

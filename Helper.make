@@ -105,12 +105,15 @@ DIFF_DIR ?= diff-archive
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 
-# TRANSFORM 1 using 2 into 3 [with 4 options]
+#- TRANSFORM 1 using 2 into 3 [with 4 options]
 DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -::$(3) 
 
+FNL_PARM ?=--stringparam release final
+#- Appendicize parameter
+APP_PARM ?=--stringparam appendicize on
 
-# A temporary directory 
-TMP?=/tmp
+#- A temporary directory argument
+TMP?=--stringparam tmpdir /tmp/
 
 #---
 #- Builds everything but worksheet
@@ -146,14 +149,14 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-	python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
-#	$(call EX_REG, --stringparam tmpdir /tmp/ $(TRANS)/module/module2html.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_RELEASE_HTML)
-	$(XSL_EXE) $(TRANS)/module/module2sd.xsl $(PP_XML) | python3 $(TRANS)/post-process.py -::output/$(BASE)-sd.html 
-	$(XSL_EXE) $(PP2HTML_XSL) $(PP_XML) | python3 $(TRANS)/post-process.py -::$(PP_HTML)
+	[ $(SKIP) == 1 ] || python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(TMP))
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML))
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML) )
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML), --stringparam appendicize )
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$APP_PARM)
 
 
 #- Build the Diff file
@@ -180,7 +183,7 @@ diff: $(PP_RELEASE_HTML)
 		java -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
 #		rm -rf $(TMP)/$$aa;\
 	done
-	[ -d "$(OUT)/js" ]  || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/js"  ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
 
 
@@ -188,7 +191,7 @@ diff: $(PP_RELEASE_HTML)
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),"--stringparam appendicize on"
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
@@ -198,12 +201,12 @@ $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2TABLE_XSL),$(TABLE), --stringparam release final) 
+	$(call DOIT,$(PP_XML),$(PP2TABLE_XSL),$(TABLE),$(FNL_PARM)) 
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
-	$(XSL_EXE) --stringparam release final -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
+	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 #- Builds the PP worksheet
 worksheet: $(WORKSHEET_HTML)
