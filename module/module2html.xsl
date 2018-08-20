@@ -110,7 +110,7 @@
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
 	    This PP-Module does not any additional requirements when the 
-	    <xsl:value-of select="$short"/> PP is the base.
+	    <xsl:value-of select="$base/@short"/> PP is the base.
 	  </xsl:with-param>
 	</xsl:call-template>
 	<tr>
@@ -142,23 +142,24 @@
     <xsl:param name="f-comps"/>
     <xsl:param name="short"/>
     <xsl:param name="verb"/>
-	<xsl:choose>
-	  <xsl:when test="$f-comps">
-	    <xsl:for-each select="$f-comps">
-	      <tr>
-		<td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
+    <xsl:param name="none-msg"/>
+    <xsl:choose>
+      <xsl:when test="$f-comps">
+	<xsl:for-each select="$f-comps">
+	  <tr>
+	    <td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
 		<td><xsl:apply-templates select="cc:consistency-rationale/node()">
 		  <xsl:with-param name="base" select="$short"/>
 		</xsl:apply-templates></td>
-	      </tr>
-	    </xsl:for-each>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <tr><th colspan="2">
-	      <xsl:value-of select="$none-msg"/>
-	    </th></tr>
-	  </xsl:otherwise>
-	</xsl:choose>
+	  </tr>
+	</xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+	<tr><th colspan="2">
+	  <xsl:value-of select="$none-msg"/>
+	</th></tr>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- ################################################## -->
@@ -191,7 +192,7 @@ additional restrictions.
 	 Solution: Pre-processes the document and wget the bases and save them to a temporary directory with the filename being the index of the base.
     -->
     <xsl:variable name="redefsec" select="."/>
-    <xsl:for-each select="document(concat($tmpdir,count(preceding-sibling::*),'.xml'))//cc:f-component">
+    <xsl:for-each select="document(concat($tmpdir,'/',count(preceding-sibling::*),'.xml'))//cc:f-component">
       <xsl:variable name="baseid" select="@id"/>
       <xsl:if test="not($redefsec//cc:f-component[@id=$baseid])">
 	<li><xsl:value-of select="translate(@id,$lower,$upper)"/></li>
