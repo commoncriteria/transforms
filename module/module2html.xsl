@@ -109,7 +109,7 @@
 	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component"/>
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
-	    This PP-Module does not any additional requirements when the 
+	    This PP-Module does not modify any requirements when the 
 	    <xsl:value-of select="$base/@short"/> PP is the base.
 	  </xsl:with-param>
 	</xsl:call-template>

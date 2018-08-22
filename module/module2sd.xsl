@@ -104,20 +104,53 @@ guidance, and testing.</p>
     are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     
     <!-- Run through all the base modules -->
-    <x:for-each select="/cc:Module/cc:chapter[@id='req']/cc:*">
-      <h3 class="indexable" data-level="1" id="{@id}"><x:value-of select="@title"/></h3>
-      <x:apply-templates select="cc:subsection[@title='Modified SFRs']"/>
-      <x:if test="not(cc:subsection[@title='Modified SFRs']/cc:*)">
-	<h:p>This PP Module does not modify any requirements for this Base-PP.</h:p>
-      </x:if>
-      <x:choose>
-	<x:when test="cc:subsection[@title='Additional SFRs']/cc:*">
-	  <x:apply-templates select="cc:subsection[@title='Additional SFRs']"/>
-	    </x:when>
-	    <x:otherwise><h:p>This PP Module does define any additional requirements for this Base-PP.</h:p></x:otherwise>
-      </x:choose>
+    <x:for-each select="//cc:base-pp">
+      <h2 class="indexable" data-level="1" id="aa-${@short}">
+	<x:value-of select="@name"/> Protection Profile
+      </h2>
+      The EAs defined in this section are only applicable in cases where the TOE claims conformance
+      to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
+      <x:call-template name="sub-sfrs">
+	<x:with-param name="title">Modified</x:with-param>
+	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
+	<x:with-param name="short" select="@short"/>
+	<x:with-param name="none-msg">
+	  This PP-Module does not modify any requirements when the 
+	  <x:value-of select="@short"/> PP is the base.
+	</x:with-param>
+      </x:call-template>
+
+      <x:call-template name="sub-sfrs">
+	<x:with-param name="title">Additional</x:with-param>
+	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
+	<x:with-param name="short" select="@short"/>
+	<x:with-param name="none-msg">
+	  This PP-Module does not add any requirements when the 
+	  <x:value-of select="@short"/> PP is the base.
+	</x:with-param>
+      </x:call-template>
     </x:for-each>
   </x:template>
+
+  <x:template name="sub-sfrs">
+    <x:param name="f-comps"/>
+    <x:param name="short"/>
+    <x:param name="none-msg"/>
+    <x:param name="title"/>
+    <x:element name="h3">
+      <x:attribute name="class">indexable</x:attribute>
+      <x:attribute name="data-level">2</x:attribute>
+      <x:attribute name="id">aa-<x:value-of select="$short"/>-addsfrs"></x:attribute>
+      <x:value-of select="$title"/> SFRs
+    </x:element>
+
+    <x:choose>
+      <x:when test="$f-comps"><x:apply-templates select="$f-comps"/></x:when>
+      <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
+    </x:choose>
+  </x:template>      
+
+
 
   <x:template name="sars">
     <h2 id="sar_aas" class="indexable" data-level="0">Assurance Activities for SARs</h2>
