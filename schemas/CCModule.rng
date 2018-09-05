@@ -199,6 +199,8 @@
     </element>
   </define>
 
+
+
   <!-- <define name="html-element"> -->
   <!--   <a:documentation> -->
   <!--     Pattern defines the html-element, which is any element in the xhtml namespace. -->
@@ -346,6 +348,39 @@
   </define>
 
 
+
+
+  <define name="base-name">
+    <element name="base-name">
+      <a:documentation>	Variable that references the base name of the PP </a:documentation>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="consistency-rationale">
+    <element name="consistency-rationale">
+      <a:documentation> 
+	Common rationale that will go into the consisteny-rationale in each base-pp
+	section (unless the base redefines it).
+      </a:documentation>
+      <oneOrMore>
+	<choice>
+	  <ref name="basic-content"/>
+	  <ref name="base-name"/>
+	</choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="boilerplate-pat">
+    <optional>
+      <attribute name="boilerplate">
+	<value>yes</value>
+      </attribute>
+    </optional>
+  </define>
+
+
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
@@ -371,89 +406,109 @@
     </element>
   </define>
 
-
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
 	Assignment section
       </a:documentation>
-      <ref name="basic-content"/>
+      <ref name="textplus"/>
     </element>
   </define>
 
-  <define name="selectable-single">
-    <element name="selectable">
-      <a:documentation>
-	Denotes the start of a selectable in a selectables section.
-      </a:documentation>
-      <optional>
-	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
-      </optional>
-      <optional>
-	<ref name="id-attr"/>
-      </optional>
-      <zeroOrMore>
-	<element name="requires">
-	  <a:documentation>
-	    Denotes a selection-based element that is required should this selection chosen.
-	  </a:documentation>
-	  <attribute name="req">
+
+
+  <define name="PPRefAndRevision">
+    <element name="PPReference">
+        <element name="ReferenceTable">
+          <element name="PPVersion">
+            <data type="decimal"/>
+          </element>
+          <element name="PPAuthor">
+            <text/>
+          </element>
+          <element name="PPPubDate">
 	    <a:documentation>
-	      The ID of the required element.
+	      Date of publication for this PP.
 	    </a:documentation>
-	  </attribute>
-	</element>
-      </zeroOrMore>
-      <ref name="basic-content"/>
-    </element>
+            <data type="date"/>
+          </element>
+          <element name="Keywords">
+            <text/>
+          </element>
+        </element>
+      </element>
+
+      <oneOrMore>
+        <element name="RevisionHistory">
+          <oneOrMore>
+	    <element name="entry">
+	      <element name="version"><text/></element>
+	      <element name="date"><data type="date"/></element>
+	      <element name="subject"><text/></element>
+	    </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+  </define>
+
+  <define name="id-attr">
+    <attribute name="id">
+	  <a:documentation>
+	    A document-wide unique ID that is also displayed to the user.
+	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	  </a:documentation>
+	</attribute>
   </define>
 
 
-  <define name="selectable-group">
-    <ref name="selectable-single"/>
+
+  <define name="basic-content">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
     <oneOrMore>
-      <ref name="selectable-single"/>
+      <choice>
+	<text/>
+	<ref name="html-element"/>
+	<ref name="linkref"/>
+	<ref name="appref"/>
+	<ref name="secref"/>
+	<ref name="cite"/>
+	<ref name="xref"/>
+	<ref name="abbr-el"/>
+	<ref name="figure"/>
+	<ref name="figref"/>
+	<ref name="citeCC"/>
+	<ref name="redefinable-pat"/>
+      </choice>
     </oneOrMore>
   </define>
 
-  <define name="note">
-    <element name="note">
-      <a:documentation>
-	Any further instructions associated with the requirement.
-      </a:documentation>
-      <optional>
-        <attribute name="role">
-	  <a:documentation>Indicates who is associated with this role</a:documentation>
-	  <choice>
-	    <value>application</value><value>Application</value>
-	    <value>developer</value><value>Developer</value>
-	  </choice>
-        </attribute>
-      </optional>
-      <ref name="basic-content"/>
-    </element>
+
+  <!-- ###################################################
+       This is here so that other schemas that import this 
+       can redefine this to add their own items to basic
+       content and not redefine all of basic-content.
+       ################################################### -->
+  <define name="redefinable-pat">
+    <empty/>
   </define>
 
-  <define name="base-name">
-    <element name="base-name">
-      <a:documentation>	Variable that references the base name of the PP </a:documentation>
+
+  <define name="citeCC">
+    <element name="citeCC">
+      <a:documentation>
+	Points to the Standard Common Criteria section of the Bibliography.
+      </a:documentation>
       <empty/>
     </element>
   </define>
 
-  <define name="consistency-rationale">
-    <element name="consistency-rationale">
-      <a:documentation> 
-	Common rationale that will go into the consisteny-rationale in each base-pp
-	section (unless the base redefines it).
-      </a:documentation>
-      <oneOrMore>
-	<choice>
-	  <ref name="basic-content"/>
-	  <ref name="base-name"/>
-	</choice>
-      </oneOrMore>
-    </element>
-  </define>
+
+
+
+
+
+
 
 </grammar>

@@ -6,188 +6,19 @@
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
-
-  <define name="boilerplate-pat">
-    <optional>
-      <attribute name="boilerplate">
-	<value>yes</value>
-      </attribute>
-    </optional>
-  </define>
-
-
-  <define name="selectables">
-    <element name="selectables">
-      <a:documentation>
-	A grouping of selectable elements.
-      </a:documentation>
-      <optional>
-        <attribute name="onlyone">
-	  <a:documentation>
-	    Designates that at only one item may be selected.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="linebreak">
-	  <a:documentation>
-	    Indicates that new lines should be appended to every selectable.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <ref name="selectable-group"/>
-    </element>
-  </define>
-
-  <define name="assignable">
-    <element name="assignable">
-      <a:documentation>
-	Assignment section
-      </a:documentation>
-      <ref name="textplus"/>
-    </element>
-  </define>
-
-
-
-  <define name="PPRefAndRevision">
-    <element name="PPReference">
-        <element name="ReferenceTable">
-          <element name="PPVersion">
-            <data type="decimal"/>
-          </element>
-          <element name="PPAuthor">
-            <text/>
-          </element>
-          <element name="PPPubDate">
-	    <a:documentation>
-	      Date of publication for this PP.
-	    </a:documentation>
-            <data type="date"/>
-          </element>
-          <element name="Keywords">
-            <text/>
-          </element>
-        </element>
-      </element>
-
-      <oneOrMore>
-        <element name="RevisionHistory">
-          <oneOrMore>
-	    <element name="entry">
-	      <element name="version"><text/></element>
-	      <element name="date"><data type="date"/></element>
-	      <element name="subject"><text/></element>
-	    </element>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
-  </define>
-
-  <define name="id-attr">
-    <attribute name="id">
-	  <a:documentation>
-	    A document-wide unique ID that is also displayed to the user.
-	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-	  </a:documentation>
-	</attribute>
-  </define>
-
-
-
-  <define name="basic-content">
+  <define name="title-attr">
     <a:documentation>
-      Content that can go anywhere (Although some items are only suitable for title elements).
+      Pattern for title attribute.
     </a:documentation>
-    <oneOrMore>
-      <choice>
-	<text/>
-	<ref name="html-element"/>
-	<ref name="linkref"/>
-	<ref name="appref"/>
-	<ref name="secref"/>
-	<ref name="cite"/>
-	<ref name="xref"/>
-	<ref name="abbr-el"/>
-	<ref name="figure"/>
-	<ref name="figref"/>
-	<ref name="citeCC"/>
-	<ref name="redefinable-pat"/>
-      </choice>
-    </oneOrMore>
+    <attribute name="title">
+      <a:documentation>Header that is visible to the user.</a:documentation>
+    </attribute>
   </define>
-
-
-  <!-- ###################################################
-       This is here so that other schemas that import this 
-       can redefine this to add their own items to basic
-       content and not redefine all of basic-content.
-       ################################################### -->
-  <define name="redefinable-pat">
-    <empty/>
-  </define>
-
 
   <define name="citeCC">
     <element name="citeCC">
-      <a:documentation>
-	Points to the Standard Common Criteria section of the Bibliography.
-      </a:documentation>
+      <a:documentation>Cites the CC documents.</a:documentation>
       <empty/>
-    </element>
-  </define>
-
-  <define name="figref">
-    <element name="figref">
-      <a:documentation>
-	References a figure
-      </a:documentation>
-      <attribute name="refid">
-	<a:documentation>
-	  Contains the ID of the figure being referenced.
-	</a:documentation>
-      </attribute>
-    </element>
-  </define>
-
-
-  <define name="figure">
-    <element name="figure">
-      <a:documentation>
-	Tag allow that inserts a picture.
-      </a:documentation>
-      <optional>
-	<attribute name="pre">
-	  <a:documentation>
-	    Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
-	  </a:documentation>
-	</attribute>
-      </optional>
-      <attribute name="entity">
-	<a:documentation>
-	  Path to the image file.
-	</a:documentation>
-      </attribute>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <optional>
-	<attribute name="max-width"/>
-      </optional>
-    </element>
-  </define>
-
-  <define name="linkref">
-    <element name="linkref">
-      <a:documentation>Cross references components </a:documentation>
-      <ref name="linkend-attr"/>
-    </element>
-  </define>
-  <define name="appref">
-    <element name="appref">
-      <a:documentation>Cross references an item in the appendex</a:documentation>
-      <ref name="linkend-attr"/>
     </element>
   </define>
 
@@ -197,12 +28,21 @@
       <ref name="linkend-attr"/>
     </element>
   </define>
+
+  <define name="linkref">
+    <element name="linkref">
+      <a:documentation>Cross references components </a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+
   <define name="secref">
     <element name="secref">
       <a:documentation>References a section (Adds word 'section').</a:documentation>
       <ref name="linkend-attr"/>
     </element>
   </define>
+
   <define name="xref">
     <element name="xref">
       <a:documentation>
@@ -217,6 +57,14 @@
       <ref name="linkend-attr"/>
     </element>
   </define>
+
+  <define name="appref">
+    <element name="appref">
+      <a:documentation>Cross references an item in the appendex</a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+
 
   <define name="html-element">
     <a:documentation>
@@ -241,24 +89,12 @@
     </element>
   </define>
 
-
-  <define name="linkend-attr ">
+  <define name="linkend-attr">
     <attribute name="linkend">
       <a:documentation>References an ID of the referenced item.</a:documentation>
       <!--      <data type="NCName"/> -->
     </attribute>
   </define>
-
-
-  <define name="title-attr">
-    <a:documentation>
-      Pattern for title attribute.
-    </a:documentation>
-    <attribute name="title">
-      <a:documentation>Header that is visible to the user.</a:documentation>
-    </attribute>
-  </define>
-
 
   <define name="abbr-el">
     <element name="abbr">
@@ -287,6 +123,188 @@
     </element>
   </define>
 
+  <define name="assignable">
+    <element name="assignable">
+      <a:documentation>
+	Assignment section
+      </a:documentation>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+
+  <define name="ctr-ref">
+    <element name="ctr-ref">
+      <a:documentation>
+	References a counted object.
+      </a:documentation>
+      <attribute name="refid">
+	<a:documentation>
+	  The unique ID of the object being referenced.
+	</a:documentation>
+      </attribute>
+    </element>
+  </define>
+
+  <define name="ctr">
+    <element name="ctr">
+      <attribute name="id">
+	<a:documentation>
+	  Unique ID for this object.
+	</a:documentation>
+      </attribute>
+
+      <attribute name="ctr-type">
+	<a:documentation>
+	  References the counter family. If no prefix is given, this value
+	  plus a space is used as the prefix.
+	</a:documentation>
+      </attribute>
+      <optional>
+	<attribute name="pre">
+	  <a:documentation>
+	    Text that goes before the counter (e.g. 'Table ').
+	    If it's not present, this value is "@ctr-type" + " " 
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+  <define name="figure">
+    <element name="figure">
+      <a:documentation>
+	Tag allow that inserts a picture.
+      </a:documentation>
+      <optional>
+	<attribute name="pre">
+	  <a:documentation>
+	    Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <attribute name="entity">
+	<a:documentation>
+	  Path to the image file.
+	</a:documentation>
+      </attribute>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <optional>
+	<attribute name="max-width"/>
+      </optional>
+    </element>
+  </define>
+
+  <define name="figref">
+    <element name="figref">
+      <a:documentation>
+	References a figure
+      </a:documentation>
+      <attribute name="refid">
+	<a:documentation>
+	  Contains the ID of the figure being referenced.
+	</a:documentation>
+      </attribute>
+    </element>
+  </define>
+
+  <define name="selectables">
+    <element name="selectables">
+      <a:documentation>
+	A grouping of selectable elements.
+      </a:documentation>
+      <optional>
+        <attribute name="onlyone">
+	  <a:documentation>
+	    Designates that at only one item may be selected.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="linebreak">
+	  <a:documentation>
+	    Indicates that new lines should be appended to every selectable.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <ref name="selectable-group"/>
+    </element>
+  </define>
+
+
+
+  <define name="selectable-single">
+    <element name="selectable">
+      <a:documentation>
+	Denotes the start of a selectable in a selectables section.
+      </a:documentation>
+      <optional>
+	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
+      </optional>
+      <optional>
+	<ref name="id-attr"/>
+      </optional>
+      <zeroOrMore>
+	<element name="requires">
+	  <a:documentation>
+	    Denotes a selection-based element that is required should this selection chosen.
+	  </a:documentation>
+	  <attribute name="req">
+	    <a:documentation>
+	      The ID of the required element.
+	    </a:documentation>
+	  </attribute>
+	</element>
+      </zeroOrMore>
+      <ref name="basic-content"/>
+    </element>
+  </define>
+
+
+  <define name="selectable-group">
+    <ref name="selectable-single"/>
+    <oneOrMore>
+      <ref name="selectable-single"/>
+    </oneOrMore>
+  </define>
+
+  <define name="objective-refer">
+    <element name="objective-refer">
+      <a:documentation>Element that denotes an objective</a:documentation>
+      <attribute name="ref">
+	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
+        <data type="NCName">
+	  <param name="pattern">O(E?)\.[_A-Z]+</param>
+	</data>
+      </attribute>
+      <element name="rationale">
+	<a:documentation>Argument as to why the objective applies</a:documentation>
+	<ref name="basic-content"/>
+      </element>
+    </element>
+  </define>
+
+  <define name="note">
+    <element name="note">
+      <a:documentation>
+	Any further instructions associated with the requirement.
+      </a:documentation>
+      <optional>
+        <attribute name="role">
+	  <a:documentation>Indicates who is associated with this role</a:documentation>
+	  <choice>
+	    <value>application</value><value>Application</value>
+	    <value>developer</value><value>Developer</value>
+	  </choice>
+        </attribute>
+      </optional>
+      <ref name="basic-content"/>
+    </element>
+  </define>
 
   <define name="SOs">
     <element name="SOs">
@@ -298,7 +316,6 @@
       </oneOrMore>
     </element>
   </define>
-
 
   <define name="SO">
     <element name="SO">
@@ -323,20 +340,5 @@
     </element>
   </define>
 
-  <define name="objective-refer">
-    <element name="objective-refer">
-      <a:documentation>Element that denotes an objective</a:documentation>
-      <attribute name="ref">
-	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
-        <data type="NCName">
-	  <param name="pattern">O(E?)\.[_A-Z]+</param>
-	</data>
-      </attribute>
-      <element name="rationale">
-	<a:documentation>Argument as to why the objective applies</a:documentation>
-	<ref name="basic-content"/>
-      </element>
-    </element>
-  </define>
 
 </grammar>
