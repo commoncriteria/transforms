@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 	  ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-  <include href="Commons.rng">
-    
 
-    <!-- Not redefining anything -->
+
+  <include href="Commons.rng">
+    <!-- <define name="redefinable-pat"> -->
+    <!--   <\!-\- <choice> -\-> -->
+    <!--   <\!-\- </choice> -\-> -->
+    <!-- </define> -->
+
+
+    <define name="SO">
+      <element name="SO">
+	<a:documentation>
+	  Entry for a security objective
+	</a:documentation>
+	<ref name="id-attr"/>
+	<ref name="description"/>
+	<oneOrMore>
+          <element name="component-refer">
+	    <a:documentation>
+	      Cross-references a component.
+	    </a:documentation>
+            <attribute name="ref">
+	      <a:documentation>
+		Id of the referenced component.
+	      </a:documentation>
+	    </attribute>
+	    <empty/>
+          </element>
+	</oneOrMore>
+	<ref name="consistency-rationale"/>
+      </element>
+    </define>
   </include>
+
+
+
+
   <start>
     <element name="Module">
-      <attribute name="name"></attribute>
-      <attribute name="target-products"></attribute>
-      <ref name="boilerplate-pat"/>
+      <ref name="module-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
@@ -20,6 +50,16 @@
     </element>
   </start>
 
+
+
+
+
+  <define name="module-attributes-pat">
+      <attribute name="name"></attribute>
+      <attribute name="target-products"></attribute>
+      <ref name="boilerplate-pat"/>
+  </define>
+  
   <define name="SecReqChapter">
     <element name="chapter">
       <attribute name="title"><value>Security Requirements</value></attribute>
@@ -53,6 +93,7 @@
 			Readable title for this requirement.
 		      </a:documentation>
 		    </attribute>
+		    <ref name="consistency-rationale"/>
 		    <zeroOrMore>
 		      <element name="f-element">
 			<a:documentation>
@@ -390,6 +431,28 @@
         </attribute>
       </optional>
       <ref name="basic-content"/>
+    </element>
+  </define>
+
+  <define name="base-name">
+    <element name="base-name">
+      <a:documentation>	Variable that references the base name of the PP </a:documentation>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="consistency-rationale">
+    <element name="consistency-rationale">
+      <a:documentation> 
+	Common rationale that will go into the consisteny-rationale in each base-pp
+	section (unless the base redefines it).
+      </a:documentation>
+      <oneOrMore>
+	<choice>
+	  <ref name="basic-content"/>
+	  <ref name="base-name"/>
+	</choice>
+      </oneOrMore>
     </element>
   </define>
 

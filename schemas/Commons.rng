@@ -5,6 +5,8 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+
   <define name="boilerplate-pat">
     <optional>
       <attribute name="boilerplate">
@@ -12,6 +14,43 @@
       </attribute>
     </optional>
   </define>
+
+
+  <define name="selectables">
+    <element name="selectables">
+      <a:documentation>
+	A grouping of selectable elements.
+      </a:documentation>
+      <optional>
+        <attribute name="onlyone">
+	  <a:documentation>
+	    Designates that at only one item may be selected.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="linebreak">
+	  <a:documentation>
+	    Indicates that new lines should be appended to every selectable.
+	  </a:documentation>
+	  <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <ref name="selectable-group"/>
+    </element>
+  </define>
+
+  <define name="assignable">
+    <element name="assignable">
+      <a:documentation>
+	Assignment section
+      </a:documentation>
+      <ref name="textplus"/>
+    </element>
+  </define>
+
+
 
   <define name="PPRefAndRevision">
     <element name="PPReference">
@@ -72,49 +111,72 @@
 	<ref name="cite"/>
 	<ref name="xref"/>
 	<ref name="abbr-el"/>
-	<element name="citeCC">
-	  <empty/>
-	</element>
-        <element name="figure">
-	  <a:documentation>
-	    Tag allow that inserts a picture.
-	  </a:documentation>
-	  <optional>
-	    <attribute name="pre">
-	      <a:documentation>
-		Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
-	      </a:documentation>
-	    </attribute>
-	  </optional>
-          <attribute name="entity">
-	    <a:documentation>
-	      Path to the image file.
-	    </a:documentation>
-	  </attribute>
-	  <ref name="id-attr"/>
-	  <ref name="title-attr"/>
-          <optional>
-            <attribute name="max-width"/>
-          </optional>
-        </element>
-	<element name="figref">
-	  <a:documentation>
-	    References a figure
-	  </a:documentation>
-	  <attribute name="refid">
-	    <a:documentation>
-	      Contains the ID of the figure being referenced.
-	    </a:documentation>
-	  </attribute>
-	</element>
-
-
-
-
+	<ref name="figure"/>
+	<ref name="figref"/>
+	<ref name="citeCC"/>
+	<ref name="redefinable-pat"/>
       </choice>
     </oneOrMore>
   </define>
 
+
+  <!-- ###################################################
+       This is here so that other schemas that import this 
+       can redefine this to add their own items to basic
+       content and not redefine all of basic-content.
+       ################################################### -->
+  <define name="redefinable-pat">
+    <empty/>
+  </define>
+
+
+  <define name="citeCC">
+    <element name="citeCC">
+      <a:documentation>
+	Points to the Standard Common Criteria section of the Bibliography.
+      </a:documentation>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="figref">
+    <element name="figref">
+      <a:documentation>
+	References a figure
+      </a:documentation>
+      <attribute name="refid">
+	<a:documentation>
+	  Contains the ID of the figure being referenced.
+	</a:documentation>
+      </attribute>
+    </element>
+  </define>
+
+
+  <define name="figure">
+    <element name="figure">
+      <a:documentation>
+	Tag allow that inserts a picture.
+      </a:documentation>
+      <optional>
+	<attribute name="pre">
+	  <a:documentation>
+	    Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <attribute name="entity">
+	<a:documentation>
+	  Path to the image file.
+	</a:documentation>
+      </attribute>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <optional>
+	<attribute name="max-width"/>
+      </optional>
+    </element>
+  </define>
 
   <define name="linkref">
     <element name="linkref">
@@ -180,7 +242,7 @@
   </define>
 
 
-  <define name="linkend-attr">
+  <define name="linkend-attr ">
     <attribute name="linkend">
       <a:documentation>References an ID of the referenced item.</a:documentation>
       <!--      <data type="NCName"/> -->
@@ -232,25 +294,30 @@
 	Grouping for Security Objective entries.
       </a:documentation>
       <oneOrMore>
-        <element name="SO">
+	<ref name="SO"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+  <define name="SO">
+    <element name="SO">
+      <a:documentation>
+	Entry for a security objective
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="description"/>
+      <oneOrMore>
+        <element name="component-refer">
 	  <a:documentation>
-	    Entry for a security objective
+	    Cross-references a component.
 	  </a:documentation>
-	  <ref name="id-attr"/>
-	  <ref name="description"/>
-          <oneOrMore>
-            <element name="component-refer">
-	      <a:documentation>
-		Cross-references a component.
-	      </a:documentation>
-              <attribute name="ref">
-		<a:documentation>
-		  Id of the referenced component.
-		</a:documentation>
-	      </attribute>
-	      <empty/>
-            </element>
-          </oneOrMore>
+          <attribute name="ref">
+	    <a:documentation>
+	      Id of the referenced component.
+	    </a:documentation>
+	  </attribute>
+	  <empty/>
         </element>
       </oneOrMore>
     </element>
