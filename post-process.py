@@ -211,7 +211,7 @@ if __name__ == "__main__":
         print("Usage: <protection-profile>[::<output-file>]")
         sys.exit(0)
 
-    # Split on colon
+    # Split on double colon
     out=sys.argv[1].split("::")
     infile=out[0]
     outfile=""
