@@ -154,7 +154,35 @@ guidance, and testing.</p>
 
   <x:template name="sars">
     <h2 id="sar_aas" class="indexable" data-level="0">Assurance Activities for SARs</h2>
-    <p>The PP-Module does not define any SARs beyond those defined within the <x:call-template name="bases"/> to which it can claim conformance.</p>
+    <p>The PP-Module does not define any SARs beyond those defined within the
+    <x:choose>
+      <x:when test="count(//cc:base-pp)=1">
+	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
+	It is important to note that a TOE that is evaluated against the PP-Module is
+	inherently evaluated against this base PP as well. 
+	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Assurance Activities associated with both SFRs and SARs.
+	Additionally, the PP-Module includes a number of SFR-based Assurance Activities 
+	that similarly refine the SARs of the Base-PPs.
+	The evaluation laboratory will evaluate the TOE against the Base-PP
+      </x:when>
+      <x:otherwise>
+	bases to which it can claim conformance.
+	It is important to note that a TOE that is evaluated against the PP-Module is
+	inherently evaluated against the 
+	GPOS PP, MDF PP, or App PP
+	as well. 
+	These PPs include a number of Assurance Activities associated with both SFRs and SARs.
+	Additionally, the PP-Module includes a number of SFR-based Assurance Activities 
+	that similarly refine the SARs of the Base-PPs.
+	The evaluation laboratory will evaluate the TOE against the chosen Base-PP
+      </x:otherwise>
+    </x:choose>
+    and supplement that evaluation with the necessary SFRs that are taken from the PP-Module.
+
+
+
+
+</p>
   </x:template>
 
   <x:template name="aaforsfrs">
