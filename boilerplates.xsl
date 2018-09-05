@@ -7,6 +7,9 @@
   <!-- Eat all hook-based cc -->
   <xsl:template match="cc:*" mode="hook"/>
 
+  <!-- Eat all individual ones that turn off boilerplating -->
+  <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
+
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']" 
 		mode="hook">
     <xsl:variable name="cclsec"><xsl:value-of select="//cc:*[@title='Conformance Claims']/@id"/></xsl:variable>
@@ -54,6 +57,13 @@ particular security controls.  Evaluation against the Protection Profile
 provides evidence that these controls are present and have been evaluated.
     </p>
 </xsl:template>
+
+
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" 
+		mode="hook">
+    The following sections list Common Criteria and technology terms used in this document.
+  </xsl:template>
+
 
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']" 
 		mode="hook">
