@@ -173,7 +173,7 @@ The following sections describe any modifications that the ST author must make t
 defined in the Base-PP in addition to what is mandated by section 5.4.
 
     <xsl:element name="h2">
-      <xsl:attribute name="id">unmodsfr-<xsl:value-of select="../cc:base/@short"></xsl:value-of></xsl:attribute>
+      <xsl:attribute name="id">unmodsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
       <xsl:attribute name="data-level">3</xsl:attribute>
       Unmodified SFRs
@@ -200,7 +200,7 @@ additional restrictions.
     </xsl:for-each>
 </ul>
     <xsl:element name="h2">
-      <xsl:attribute name="id">modsfr-<xsl:value-of select="../cc:base/@short"></xsl:value-of></xsl:attribute>
+      <xsl:attribute name="id">modsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
       <xsl:attribute name="data-level">3</xsl:attribute>
       Modified SFRs
@@ -215,7 +215,7 @@ additional restrictions.
     </xsl:choose>
 
     <xsl:element name="h2">
-      <xsl:attribute name="id">addsfr-<xsl:value-of select="../cc:base/@short"></xsl:value-of></xsl:attribute>
+      <xsl:attribute name="id">addsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
       <xsl:attribute name="data-level">3</xsl:attribute>
       Additional SFRs
@@ -229,7 +229,6 @@ This module does not define any additional SFRs for any PP-Configuration where t
     </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
 
   <xsl:template match="cc:con-sec-problem">
     <xsl:apply-templates/>
