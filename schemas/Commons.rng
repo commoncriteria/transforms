@@ -15,6 +15,41 @@
     </attribute>
   </define>
 
+  <define name="bibliography">
+    <element name="bibliography">
+      <a:documentation>
+	Section to define the items references.
+      </a:documentation>
+      <oneOrMore>
+	<choice>
+	  <element name="cc-entry">
+	    <a:documentation>
+	      Inserts the Common Criteria documents.
+	    </a:documentation>
+	    <empty/>
+	  </element>
+	  
+	  <element name="entry">
+	    <a:documentation>
+	      Groups bibliograph entries.
+	    </a:documentation>
+	    <ref name="id-attr"/>
+	    <element name="tag">
+	      <a:documentation>
+		A visible bibliography-wide unique identifier.
+	      </a:documentation>
+	      <ref name="basic-content-pat"/>
+	    </element>
+	    <ref name="description"/>
+	  </element>
+	  
+	</choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+
   <define name="citeCC">
     <element name="citeCC">
       <a:documentation>Cites the CC documents.</a:documentation>
@@ -85,7 +120,7 @@
 	  <anyName/>
 	</attribute>
       </zeroOrMore>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -128,7 +163,7 @@
       <a:documentation>
 	Assignment section
       </a:documentation>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -168,7 +203,7 @@
 	  </a:documentation>
 	</attribute>
       </optional>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -260,7 +295,7 @@
 	  </attribute>
 	</element>
       </zeroOrMore>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -283,7 +318,7 @@
       </attribute>
       <element name="rationale">
 	<a:documentation>Argument as to why the objective applies</a:documentation>
-	<ref name="basic-content"/>
+	<ref name="basic-content-pat"/>
       </element>
     </element>
   </define>
@@ -302,7 +337,7 @@
 	  </choice>
         </attribute>
       </optional>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -337,6 +372,304 @@
 	  <empty/>
         </element>
       </oneOrMore>
+    </element>
+  </define>
+
+
+
+  <define name="basic-content-pat">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
+    <oneOrMore>
+      <choice>
+	<text/>
+	<ref name="html-element"/>
+	<ref name="linkref"/>
+	<ref name="citeCC"/>
+        <ref name="cite"/>
+        <ref name="secref"/>
+        <ref name="testlist"/>
+	<ref name="selectables"/>
+	<ref name="assignable"/>
+        <ref name="appref"/>
+	<ref name="abbr-el"/>
+	<ref name="xref"/>
+	<ref name="refinement-type"/>
+	<ref name="ctr-ref"/>
+	<ref name="ctr"/>
+	<ref name="figure"/>
+	<ref name="figref"/>
+	<ref name="TSS"/>
+	<ref name="Guidance"/>
+	<ref name="Tests"/>
+	<ref name="custom-basic-content-pat"/>
+      </choice>
+    </oneOrMore>
+  </define>
+
+  <!-- ###################################################
+       This is here so that other schemas that import this 
+       can redefine this to add their own items to basic
+       content and not redefine all of basic-content.
+       ################################################### -->
+  <define name="custom-basic-content-pat">
+    <empty/>
+  </define>
+
+  <define name="f-elements-pat">
+    <zeroOrMore>
+      <element name="f-element">
+	<a:documentation>
+	  Defines a functional requirement.
+	</a:documentation>
+        <attribute name="id">
+	  <a:documentation>
+	    A document-wide unique ID that is also displayed to the user.
+	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	  </a:documentation>
+	</attribute>
+        <ref name="f-element-title"/>
+	<optional><ref name="note"/></optional>
+	<optional><ref name="aactivity"/></optional>
+      </element>
+    </zeroOrMore>
+  </define>
+
+
+  <define name="testlist">
+    <element name="testlist">
+      <a:documentation>
+	Defines a lists of tests to evaluate a requirement.
+      </a:documentation>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content-pat"/>
+          <element name="test">
+	    <a:documentation>
+	      Denotes a single test.
+	    </a:documentation>
+	    <oneOrMore>
+	      <choice>
+		<ref name="basic-content-pat"/>
+		<ref name="testlist"/>
+		<ref name="steplist"/>
+	      </choice>
+	    </oneOrMore>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="steplist">
+    <element name="steplist">
+      <a:documentation>
+	Defines a list of steps to perform a test.
+      </a:documentation>
+      <oneOrMore>
+	<choice>
+	  <ref name="basic-content-pat"/>
+	  <element name="step">
+	    <a:documentation>
+	      Denotes a single step.
+	    </a:documentation>
+	    <oneOrMore>
+	      <choice>
+		<ref name="basic-content-pat"/>
+		<ref name="steplist"/>
+	      </choice>
+	    </oneOrMore>
+	  </element>
+	</choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="refinement-type">
+    <a:documentation>
+      Denotes a refinement.
+    </a:documentation>
+    <element name="refinement">
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+
+  <define name="TSS">
+    <element name="TSS">
+      <a:documentation>
+	Denotes a TSS section.
+      </a:documentation>
+      <empty/>
+    </element>
+  </define>
+  <define name="Guidance">
+    <element name="Guidance">
+      <a:documentation>
+	Denotes a Guidance section.
+      </a:documentation>
+      <empty/>
+    </element>
+  </define>
+  <define name="Tests">
+    <element name="Tests">
+      <a:documentation>
+	Denotes a tests section.
+      </a:documentation>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="selection-depends">
+      <element name="selection-depends">
+	<a:documentation>
+	  Defines the other requirements whose selection affects whether this component must be also applied.
+	</a:documentation>
+	<attribute name="req">
+	  <a:documentation>
+	    The value of the id attribute of the requirement is component depends on.
+	  </a:documentation>
+	  <data type="string">
+	    <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
+	  </data>
+	</attribute>
+	<attribute name="ids">
+	  <a:documentation>
+	    A comma delimited list of IDs corresponding to specific 'selectable's which if chosen
+	    activate this component.
+	  </a:documentation>
+	</attribute>
+      </element>
+  </define>
+
+  <define name="f-element-title">
+    <element name="title">
+      <a:documentation>
+	Contains the formal wording for the requirement (either for a-elements or f-elements).
+	Must match requirements in CC Part 2 (unless it is an _ext requirement).
+      </a:documentation>
+      <oneOrMore><choice>
+	<ref name="basic-content-pat"/>
+	<ref name="management-function-set"/>
+      </choice></oneOrMore>
+    </element>
+  </define>
+
+
+  <define name="management-function-set">
+    <element name="management-function-set">
+      <a:documentation>
+	Table defining functions that are to be done and what role is required to do them.
+      </a:documentation>
+      <attribute name="default">
+	<a:documentation>Is the default value(index).</a:documentation>
+	<choice>
+	  <value>M</value>
+	  <value>O</value>
+	  <value>_</value>
+	</choice>
+      </attribute>
+      <oneOrMore>
+        <element name="manager">
+	  <a:documentation>
+	    Readable role name
+	  </a:documentation>
+	  <attribute name="id">
+	    <a:documentation>
+	      ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+	      in the management-function.
+	    </a:documentation>
+	  </attribute>
+	  <text/>
+        </element>
+      </oneOrMore>
+      <oneOrMore>
+        <element name="management-function">
+	  <element name="text">
+	    <a:documentation>Describes the management function.</a:documentation>
+	    <ref name="basic-content-pat"/>
+	  </element>
+	  <zeroOrMore>
+	    <choice>
+	      <element name="M">
+		<a:documentation>References for which managers this function is mandatory</a:documentation>
+		<attribute name="ref">
+		  <a:documentation>ID respective manager</a:documentation>
+		</attribute>
+		<empty/>
+	      </element>
+	      <element name="O">
+		<a:documentation>References for which managers this function is optional</a:documentation>
+		<attribute name="ref">
+		  <a:documentation>ID respective manager</a:documentation>
+		</attribute>
+		<empty/>
+	      </element>
+	      <element name="_">
+		<a:documentation>References for which managers this function is not applicable</a:documentation>
+		<attribute name="ref">
+		  <a:documentation>ID respective manager</a:documentation>
+		</attribute>
+		<empty/>
+	      </element>
+	    </choice>
+	  </zeroOrMore>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+  <define name="id-attr">
+    <a:documentation>
+      Pattern for the id attribute
+    </a:documentation>
+    <attribute name="id">
+      <a:documentation>A document-wide unique string.</a:documentation>
+      <data type="NCName"/>
+    </attribute>
+  </define>
+
+  <define name="acronyms">
+    <element name="acronyms">
+      <a:documentation>
+	Section to define the acronyms used in the document.
+      </a:documentation>
+      <oneOrMore>
+	<ref name="entry-el"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="entry-el">
+    <element name="entry">
+      <a:documentation>
+	Wrapper for terms and descriptions.
+      </a:documentation>
+      <optional>
+	<attribute name="id">
+	  <a:documentation>
+	    Unique ID for this entry so it can be linked. 
+	    If omitted, it can still be linked with the name or term.
+	  </a:documentation>
+	</attribute>
+      </optional>
+      <choice>
+	<element name="name">
+	  <a:documentation></a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
+	<element name="term">
+	  <a:documentation>
+	    Thing being defined.
+	  </a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
+      </choice>
+      <element name="description">
+	<a:documentation>Description of the term/name.</a:documentation>
+	<ref name="basic-content-pat"/>
+      </element>
     </element>
   </define>
 

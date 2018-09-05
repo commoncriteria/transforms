@@ -47,93 +47,161 @@
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecReqChapter"/>
+      <ref name="bibliography"/>
+      <ref name="acronyms"/>
     </element>
   </start>
 
 
-
-
-
   <define name="module-attributes-pat">
-      <attribute name="name"></attribute>
-      <attribute name="target-products"></attribute>
-      <ref name="boilerplate-pat"/>
+    <attribute name="name"></attribute>
+    <attribute name="target-products"></attribute>
+    <ref name="boilerplate-pat"/>
   </define>
   
   <define name="SecReqChapter">
     <element name="chapter">
       <attribute name="title"><value>Security Requirements</value></attribute>
       <ref name="id-attr"/>
-      <ref name="basic-content"/>
-      <element name="base-pp">
-	<attribute name="product"/>
-	<attribute name="name"/>
-	<attribute name="short"/>
-	<attribute name="url"/>
-	<attribute name="xmlurl"/>
-	<optional>
-	  <element name="additional-sfrs">
-	    <oneOrMore>
-	      <element name="subsection">
-		<ref name="title-attr"/>
-		<ref name="id-attr"/>
-		<oneOrMore>
-		  <element name="f-component">
-		    <a:document>
-		      Specifies a component under Security Functional Requirements section..
-		    </a:document>
-		    <attribute name="id">
-		      <a:documentation>
-			A document-wide unique id. Not really read by a person, but it
-			should be the base for its child requirements' ids.
-		      </a:documentation>
-		    </attribute>
-		    <attribute name="name">
-		      <a:documentation>
-			Readable title for this requirement.
-		      </a:documentation>
-		    </attribute>
-		    <ref name="consistency-rationale"/>
-		    <zeroOrMore>
-		      <element name="f-element">
-			<a:documentation>
-			  Defines a functional requirement.
-			</a:documentation>
-			<attribute name="id">
-			  <a:documentation>
-			    A document-wide unique ID that is also displayed to the user.
-			    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-			  </a:documentation>
-			</attribute>
-			<element name="title">
-			  <ref name="basic-content"/>
-			</element>
-			<oneOrMore>
-			  <choice>
-			    <text/>
-			    <ref name="aactivity"/>
-			    <ref name="assignable"/>
-			    <ref name="note"/>
-			    <ref name="selectables"/>
-			  </choice>
-			</oneOrMore>
-		      </element>
-		    </zeroOrMore>
-		  </element>
-		</oneOrMore>
-	      </element>
-	    </oneOrMore>
-	  </element>
-	</optional>
+      <ref name="basic-content-pat"/>
+      <ref name="base-pp"/>
+      <ref name="add-sfrs"/>
+      <ref name="opt-sfrs"/>
+      <ref name="sel-sfrs"/>
+      <ref name="obj-sfrs"/>
+    </element>
+  </define>
+  
+  <define name="add-sfrs">
+    <element name="man-sfrs">
+      <ref name="f-components-pat"/>
+    </element>
+  </define>
+
+  <define name="obj-sfrs">
+    <element name="obj-sfrs">
+      <ref name="f-components-pat"/>
+    </element>
+  </define>
+
+  <define name="opt-sfrs">
+    <element name="opt-sfrs">
+      <ref name="f-components-pat"/>
+    </element>
+  </define>
+
+  <define name="sel-sfrs">
+    <element name="sel-sfrs">
+      <ref name="f-components-pat"/>
+    <!-- 
+	 This is probably the right way to do it, but 
+	 it's too drastic of a change currently (and
+	 removing the selection-depends elements from
+	 inside the f-components).
+    -->
+    <!--   <zeroOrMore> -->
+    <!-- 	<element name="dependency"> -->
+    <!-- 	  <attribute name="ids"> -->
+    <!-- 	  </attribute> -->
+    <!-- 	  <ref name="f-component"/> -->
+    <!-- 	</element> -->
+    <!--   </zeroOrMore> -->
+    </element>
+
+  </define>
+
+  <define name="f-components-pat">
+    <zeroOrMore>
+      <ref name="f-component"/>
+    </zeroOrMore>
+  </define>
+
+  <define name="f-component">
+    <element name="f-component">
+      <a:document>
+	Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <attribute name="id">
+	<a:documentation>
+	  A document-wide unique id. Not really read by a person, but it
+	  should be the base for its child requirements' ids.
+	</a:documentation>
+      </attribute>
+      <attribute name="name">
+	<a:documentation>
+	  Readable title for this requirement.
+	</a:documentation>
+      </attribute>
+      <!-- Would like to remove this -->
+      <zeroOrMore>
+	<ref name="selection-depends"/>
+      </zeroOrMore>
+      <ref name="f-elements-pat"/>
+    </element>
+  </define>
+
+  <define name="base-pp">
+    <element name="base-pp">
+      <attribute name="product"/>
+      <attribute name="name"/>
+      <attribute name="short"/>
+      <attribute name="url"/>
+      <attribute name="xmlurl"/>
+      <element name="modified-sfrs">
+	<ref name="base-specific-sfrs"/>
+      </element>
+      <element name="additional-sfrs">
+	<ref name="base-specific-sfrs"/>
+      </element>
+      <element name="con-toe">
+	<ref name="basic-content-pat"/>
+      </element>
+      <element name="con-sec-prob">
+	<ref name="basic-content-pat"/>
+      </element>
+      <element name="con-obj">
+	<ref name="basic-content-pat"/>
+      </element>
+      <element name="con-op-en">
+	<ref name="basic-content-pat"/>
       </element>
     </element>
+  </define>
+
+  <define name="base-specific-sfrs">
+    <zeroOrMore>
+      <element name="subsection">
+	<ref name="title-attr"/>
+	<ref name="id-attr"/>
+	<oneOrMore>
+	  <element name="f-component">
+	    <a:document>
+	      Specifies a component under Security Functional Requirements section..
+	    </a:document>
+	    <attribute name="id">
+	      <a:documentation>
+		A document-wide unique id. Not really read by a person, but it
+		should be the base for its child requirements' ids.
+	      </a:documentation>
+	    </attribute>
+	    <attribute name="name">
+	      <a:documentation>
+		Readable title for this requirement.
+	      </a:documentation>
+	    </attribute>
+	    <ref name="consistency-rationale"/>
+	    <ref name="f-elements-pat"/>
+	  </element>
+	</oneOrMore>
+      </element>
+    </zeroOrMore>
   </define>
 
 
   <define name="aactivity">
     <element name="aactivity">
       <a:documentation>Element containing an Assurance Activity.</a:documentation>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -141,7 +209,7 @@
     <element name="chapter">
       <attribute name="title"><value>Security Objectives</value></attribute>
       <ref name="id-attr"/>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
       <element name="section">
 	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
 	<ref name="id-attr"/>
@@ -154,11 +222,11 @@
     <element name="chapter">
       <attribute name="title"><value>Security Problem Description</value></attribute>
       <ref name="id-attr"/>
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
       <element name="section">
 	<attribute name="title"><value>Threats</value></attribute>
 	<ref name="id-attr"/>
-	<ref name="basic-content"/>
+	<ref name="basic-content-pat"/>
 	<element name="threats">
 	  <oneOrMore>
 	    <element name="threat">
@@ -166,7 +234,7 @@
 	      <ref name="description"/>
 	      <optional>
 		<element name="consistency-rationale">
-		  <ref name="basic-content"/>
+		  <ref name="basic-content-pat"/>
 		</element>
 	      </optional>
 	      <ref name="objective-refer"/>
@@ -179,23 +247,23 @@
 
 
   <define name="CClaimsChapter">
-      <element name="chapter">
-	<attribute name="title"><value>Conformance Claims</value></attribute>
-	<ref name="id-attr"/>
-	<element name="cclaims">
-	  <oneOrMore>
-	    <element name="cclaim">
-	      <ref name="id-attr"/>
-	      <ref name="description"/>
-	    </element>
-	  </oneOrMore>
-	</element>
+    <element name="chapter">
+      <attribute name="title"><value>Conformance Claims</value></attribute>
+      <ref name="id-attr"/>
+      <element name="cclaims">
+	<oneOrMore>
+	  <element name="cclaim">
+	    <ref name="id-attr"/>
+	    <ref name="description"/>
+	  </element>
+	</oneOrMore>
       </element>
+    </element>
   </define>
 
   <define name="description">
     <element name="description">
-      <ref name="basic-content"/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -220,12 +288,12 @@
   <!-- 	  <anyName/> -->
   <!-- 	</attribute> -->
   <!--     </zeroOrMore> -->
-  <!--     <ref name="basic-content"/> -->
+  <!--     <ref name="basic-content-pat"/> -->
   <!--   </element> -->
   <!-- </define> -->
 
   
-  <!-- <define name="basic-content"> -->
+  <!-- <define name="basic-content-pat"> -->
   <!--   <a:documentation> -->
   <!--     Content that can go anywhere (Although some items are only suitable for title elements). -->
   <!--   </a:documentation> -->
@@ -283,56 +351,56 @@
 
 
   <define name="IntroductionChapter">
-      <element name="chapter">
-	<attribute name="title"><value>Introduction</value></attribute>
+    <element name="chapter">
+      <attribute name="title"><value>Introduction</value></attribute>
+      <ref name="id-attr"/>
+      <element name="section">
+	<attribute name="title"><value>Overview</value></attribute>
 	<ref name="id-attr"/>
-	<element name="section">
-	  <attribute name="title"><value>Overview</value></attribute>
-	  <ref name="id-attr"/>
-	  <ref name="basic-content"/>
+	<ref name="basic-content-pat"/>
+      </element>
+      <element name="section">
+	<attribute name="title"><value>Terms</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+	<element name="subsection">
+	  <attribute name="title"><value>Common Criteria Terms</value></attribute>
+	  <ref name="glossary-el"/>
 	</element>
-	<element name="section">
-	  <attribute name="title"><value>Terms</value></attribute>
-	  <ref name="id-attr"/>
-	  <ref name="basic-content"/>
-	  <element name="subsection">
-	    <attribute name="title"><value>Common Criteria Terms</value></attribute>
-	    <ref name="glossary-el"/>
-	  </element>
-	  <element name="subsection">
-	    <attribute name="title"><value>Technical Terms</value></attribute>
-	    <ref name="glossary-el"/>
-	  </element>
-	</element>
-	<element name="section">
-	  <attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
-	  <ref name="id-attr"/>
-	  <ref name="basic-content"/>
-	</element>
-	<element name="section">
-	  <attribute name="title"><value>Use Cases</value></attribute>
-	  <ref name="id-attr"/>
-	  <ref name="basic-content"/>
-          <element name="usecases">
-	    <a:documentation>
-	      Wrapper element for uses cases.
-	    </a:documentation>
-            <oneOrMore>
-              <element name="usecase">
-		<a:documentation>
-		  A referrable section on how the protection profiled item is used.
-		</a:documentation>
-		<ref name="id-attr"/>
-		<ref name="title-attr"/>
-                <element name="description">
-		  <ref name="basic-content"/>
-		</element>
-              </element>
-            </oneOrMore>
-          </element>
+	<element name="subsection">
+	  <attribute name="title"><value>Technical Terms</value></attribute>
+	  <ref name="glossary-el"/>
 	</element>
       </element>
-    </define>
+      <element name="section">
+	<attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+      </element>
+      <element name="section">
+	<attribute name="title"><value>Use Cases</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+        <element name="usecases">
+	  <a:documentation>
+	    Wrapper element for uses cases.
+	  </a:documentation>
+          <oneOrMore>
+            <element name="usecase">
+	      <a:documentation>
+		A referrable section on how the protection profiled item is used.
+	      </a:documentation>
+	      <ref name="id-attr"/>
+	      <ref name="title-attr"/>
+              <element name="description">
+		<ref name="basic-content-pat"/>
+	      </element>
+            </element>
+          </oneOrMore>
+        </element>
+      </element>
+    </element>
+  </define>
 
 
 
@@ -340,8 +408,8 @@
     <element name="glossary">
       <oneOrMore>
 	<element name="entry">
-	  <element name="term"><ref name="basic-content"/></element>
-	  <element name="description"><ref name="basic-content"/></element>
+	  <element name="term"><ref name="basic-content-pat"/></element>
+	  <element name="description"><ref name="basic-content-pat"/></element>
 	</element>
       </oneOrMore>
     </element>
@@ -365,7 +433,7 @@
       </a:documentation>
       <oneOrMore>
 	<choice>
-	  <ref name="basic-content"/>
+	  <ref name="basic-content-pat"/>
 	  <ref name="base-name"/>
 	</choice>
       </oneOrMore>
@@ -381,134 +449,40 @@
   </define>
 
 
-  <define name="selectables">
-    <element name="selectables">
-      <a:documentation>
-	A grouping of selectable elements.
-      </a:documentation>
-      <optional>
-        <attribute name="onlyone">
-	  <a:documentation>
-	    Designates that at only one item may be selected.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="linebreak">
-	  <a:documentation>
-	    Indicates that new lines should be appended to every selectable.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <ref name="selectable-group"/>
-    </element>
-  </define>
-
-  <define name="assignable">
-    <element name="assignable">
-      <a:documentation>
-	Assignment section
-      </a:documentation>
-      <ref name="textplus"/>
-    </element>
-  </define>
-
-
 
   <define name="PPRefAndRevision">
     <element name="PPReference">
-        <element name="ReferenceTable">
-          <element name="PPVersion">
-            <data type="decimal"/>
-          </element>
-          <element name="PPAuthor">
-            <text/>
-          </element>
-          <element name="PPPubDate">
-	    <a:documentation>
-	      Date of publication for this PP.
-	    </a:documentation>
-            <data type="date"/>
-          </element>
-          <element name="Keywords">
-            <text/>
-          </element>
+      <element name="ReferenceTable">
+        <element name="PPVersion">
+          <data type="decimal"/>
+        </element>
+        <element name="PPAuthor">
+          <text/>
+        </element>
+        <element name="PPPubDate">
+	  <a:documentation>
+	    Date of publication for this PP.
+	  </a:documentation>
+          <data type="date"/>
+        </element>
+        <element name="Keywords">
+          <text/>
         </element>
       </element>
+    </element>
 
-      <oneOrMore>
-        <element name="RevisionHistory">
-          <oneOrMore>
-	    <element name="entry">
-	      <element name="version"><text/></element>
-	      <element name="date"><data type="date"/></element>
-	      <element name="subject"><text/></element>
-	    </element>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
-  </define>
-
-  <define name="id-attr">
-    <attribute name="id">
-	  <a:documentation>
-	    A document-wide unique ID that is also displayed to the user.
-	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-	  </a:documentation>
-	</attribute>
-  </define>
-
-
-
-  <define name="basic-content">
-    <a:documentation>
-      Content that can go anywhere (Although some items are only suitable for title elements).
-    </a:documentation>
     <oneOrMore>
-      <choice>
-	<text/>
-	<ref name="html-element"/>
-	<ref name="linkref"/>
-	<ref name="appref"/>
-	<ref name="secref"/>
-	<ref name="cite"/>
-	<ref name="xref"/>
-	<ref name="abbr-el"/>
-	<ref name="figure"/>
-	<ref name="figref"/>
-	<ref name="citeCC"/>
-	<ref name="redefinable-pat"/>
-      </choice>
+      <element name="RevisionHistory">
+        <oneOrMore>
+	  <element name="entry">
+	    <element name="version"><text/></element>
+	    <element name="date"><data type="date"/></element>
+	    <element name="subject"><text/></element>
+	  </element>
+        </oneOrMore>
+      </element>
     </oneOrMore>
   </define>
-
-
-  <!-- ###################################################
-       This is here so that other schemas that import this 
-       can redefine this to add their own items to basic
-       content and not redefine all of basic-content.
-       ################################################### -->
-  <define name="redefinable-pat">
-    <empty/>
-  </define>
-
-
-  <define name="citeCC">
-    <element name="citeCC">
-      <a:documentation>
-	Points to the Standard Common Criteria section of the Bibliography.
-      </a:documentation>
-      <empty/>
-    </element>
-  </define>
-
-
-
-
-
-
 
 
 </grammar>
