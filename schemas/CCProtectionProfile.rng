@@ -174,7 +174,6 @@ Indicates that this document shall use boilerplate sections.
       <oneOrMore>
         <choice>
 	  <ref name="basic-content-pat"/>
-          <ref name="appref"/>
           <ref name="section"/>
 	  <ref name="acronyms"/>
 	  <ref name="bibliography"/>

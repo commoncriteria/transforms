@@ -43,8 +43,67 @@
       <ref name="SecReqChapter"/>
       <ref name="bibliography"/>
       <ref name="acronyms"/>
+      <ref name="additional-appendices"/>
     </element>
   </start>
+
+  <define name="additional-appendices">
+    <zeroOrMore>
+      <ref name="appendix"/>
+    </zeroOrMore>
+  </define>
+
+  <define name="appendix">
+    <a:documentation>
+      Pattern for title attribute.
+    </a:documentation>
+    <element name="appendix">
+      <a:documentation>
+	Element that defines an appendix.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content-pat"/>
+          <ref name="section"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="section">
+    <element name="section">
+      <a:documentation>
+	A block smaller than a chapter.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <choice>
+	<ref name="basic-content-pat"/>
+	<ref name="subsection-pattern"/>
+      </choice>
+    </element>
+  </define>
+
+  <define name="subsection-pattern">
+    <element name="subsection">
+      <a:documentation>
+	Lower level of grouping
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="subsection-pattern"/>
+	  <ref name="basic-content-pat"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+
 
 
   <define name="module-attributes-pat">
@@ -244,6 +303,9 @@
   <define name="CClaimsChapter">
     <element name="chapter">
       <attribute name="title"><value>Conformance Claims</value></attribute>
+      <attribute name="boilerplate">
+	<value>no</value>
+      </attribute>
       <ref name="id-attr"/>
       <element name="cclaims">
 	<oneOrMore>

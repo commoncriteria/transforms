@@ -86,7 +86,7 @@ conformant to this PP, and it is expected that they be included as soon as possi
   </xsl:template>
 
   <!-- ############## -->
-  <xsl:template  match="/cc:*[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']" 
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']" 
 		mode="hook">
     <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>

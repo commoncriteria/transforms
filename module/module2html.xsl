@@ -27,6 +27,7 @@
     <xsl:call-template name="obj-sfrs"/>
     <xsl:apply-templates select="//cc:bibliography"/>
     <xsl:apply-templates select="//cc:acronyms"/>
+    <xsl:apply-templates select="//cc:appendix"/>
   </xsl:template>
 
 
@@ -387,7 +388,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
   </xsl:template>
 
   <xsl:template name="sel-sfrs">
-    <h1 id="sel-sfrs" class="indexable" data-level="A">Selecion-based SFRs</h1>
+    <h1 id="sel-sfrs" class="indexable" data-level="A">Selection-based SFRs</h1>
     As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
     performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
     There are additional requirements based on selections in the body of the PP-Module:
