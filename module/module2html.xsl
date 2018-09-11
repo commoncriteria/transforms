@@ -150,7 +150,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any mandatory requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -160,7 +160,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any optional requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -170,7 +170,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any selection-based requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -180,13 +180,10 @@
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any objective requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
-
-
-
 
 
       </table>

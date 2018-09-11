@@ -24,25 +24,9 @@ XSL for Protection Profile Modules
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
 
     <html xmlns="http://www.w3.org/1999/xhtml">
-      <head> 
-	<title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
-	<style type="text/css">
-	  <x:call-template name="common_css"/>
-	</style>
-      </head>
+      <x:call-template name="module-head"/>
       <body>
-	<div style="text-align: center; margin-left: auto; margin-right: auto;">
-	  <img src="images/niaplogo.png" alt="NIAP"/>
-	  <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
-	  Mandatory Technical Document</h1>
-	  <hr width="50%"/>
-	  <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
-
-	  <br/>PP-Module for <x:value-of select="/cc:PP/@name"/>s
-          <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-	  <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-          <br/><b><x:value-of select="//cc:PPAuthor"/></b>
-	</div>
+	<x:call-template name="meta-data"/>
 	<x:call-template name="foreward"/>
 	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>
@@ -54,9 +38,35 @@ XSL for Protection Profile Modules
     </html>
   </x:template>
 
+
+  <x:template name="meta-data">
+    <div style="text-align: center; margin-left: auto; margin-right: auto;">
+      <img src="images/niaplogo.png" alt="NIAP"/>
+      <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
+      Mandatory Technical Document</h1>
+      <hr width="50%"/>
+      <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
+      
+      <br/>PP-Module for <x:value-of select="/cc:PP/@name"/>s
+      <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
+      <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+      <br/><b><x:value-of select="//cc:PPAuthor"/></b>
+    </div>
+  </x:template>
+  
+
   <x:template name="toc">
     <h1>Table of Contents</h1>
     <div id="toc"/>
+  </x:template>
+
+  <x:template name="module-head">
+    <head> 
+      <title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
+      <style type="text/css">
+	<x:call-template name="common_css"/>
+      </style>
+    </head>
   </x:template>
 
   <!-- <x:template name="acronyms"> -->
@@ -102,7 +112,41 @@ guidance, and testing.</p>
     in the manner declared by the developer and as mandated by the EA. 
     The CEM work units that are associated with the EAs specified in this section 
     are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
-    
+    <x:call-template name="handle-bases"/>
+    <x:call-template name="handle-apply-to-all"/>
+  </x:template>
+
+  <x:template name="handle-apply-to-all">
+    <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
+    <x:choose>
+      <x:when test="//cc:man-sfrs/cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any mandatory requirements (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+    </x:choose>
+
+    <h2 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h2>
+    <x:choose>
+      <x:when test="//cc:opt-sfrs/cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any optional requirements.</x:otherwise>
+    </x:choose>
+
+
+    <h2 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Selection-Based SFRs</h2>
+    <x:choose>
+      <x:when test="//cc:sel-sfrs/cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any selection-based requirements.</x:otherwise>
+    </x:choose>
+
+    <h2 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Objective SFRs</h2>  
+    <x:choose>
+      <x:when test="//cc:obj-sfrs/cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any objective requirements.</x:otherwise>
+    </x:choose>
+
+
+
+  </x:template>
+
+  <x:template name="handle-bases">
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
@@ -119,7 +163,7 @@ guidance, and testing.</p>
 	  <x:value-of select="@short"/> PP is the base.
 	</x:with-param>
       </x:call-template>
-
+      
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Additional</x:with-param>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
@@ -131,7 +175,7 @@ guidance, and testing.</p>
       </x:call-template>
     </x:for-each>
   </x:template>
-
+  
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
