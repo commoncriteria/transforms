@@ -310,16 +310,6 @@ Indicates that this document shall use boilerplate sections.
     </element>
   </define>
 
-  <define name="aactivity">
-    <element name="aactivity">
-      <a:documentation>Element containing an Assurance Activity.</a:documentation>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-
-
-
-
   <define name="a-elements">
     <oneOrMore>
       <element name="a-element">
