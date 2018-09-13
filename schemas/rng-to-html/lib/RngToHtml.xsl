@@ -10,6 +10,7 @@
 
   <xsl:output encoding="utf-8" indent="yes"/>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:grammar">
   <html>
     <head>
@@ -148,6 +149,7 @@
   </html>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:element">
     <xsl:variable name="name" select="@name|rng:name"/>
     <xsl:variable name="nsuri">
@@ -239,6 +241,7 @@
       </div>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:attribute" mode="attributes">
     <xsl:param name="matched"/>
     <xsl:param name="optional"/>
@@ -282,6 +285,7 @@
     </tr>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:ref" mode="attributes">
     <xsl:param name="matched"/>
     <xsl:param name="optional"/>
@@ -293,6 +297,7 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="attributes">
     <xsl:param name="matched"/>
     <xsl:param name="optional"/>
@@ -304,6 +309,7 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:element" mode="has-attributes">
     <xsl:choose>
       <xsl:when test=".//rng:attribute[count(ancestor::rng:element)=count(current()/ancestor::rng:element) + 1]">true</xsl:when>
@@ -313,11 +319,13 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:ref" mode="has-attributes">
      <xsl:variable name="name" select="@name"/>
      <xsl:apply-templates select="//rng:define[@name=$name]" mode="has-attributes"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="has-attributes">
     <xsl:choose>
       <xsl:when test=".//rng:attribute[not(ancestor::rng:element)]">true</xsl:when>
@@ -327,14 +335,17 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:*" mode="has-attributes">
     <xsl:apply-templates mode="has-attributes"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="*|node()" mode="has-attributes">
     <!-- suppress -->
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define">
     <xsl:variable name="name" select="@name"/>
     <xsl:choose>
@@ -347,6 +358,7 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="define-base">
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="haselements">
@@ -438,6 +450,7 @@
     </div>
   </xsl:template>
   
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="define-combine">
     <xsl:choose>
       <xsl:when test="@combine='choice'">
@@ -449,18 +462,22 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:element" mode="makeid">
     <xsl:apply-templates select="ancestor::rng:element[1]" mode="makeid"/>.<xsl:value-of select="@name"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="makeid">
     <xsl:value-of select="@name"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="*" mode="makeid">
     <xsl:apply-templates select="ancestor::rng:element[1] | ancestor::rng:define[1]"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template name="makeid">
     <xsl:param name="node"/>
     <xsl:variable name="id"><xsl:apply-templates select="$node" mode="makeid"/></xsl:variable>
@@ -475,6 +492,7 @@
   <!-- The following patterns construct a text           -->
   <!-- description of an element content model           -->
   <!-- ================================================= -->
+  <!-- ################################################## -->
   <xsl:template match="rng:element" mode="content-model">
     <a>
       <xsl:attribute name="href">&#35;<xsl:call-template name="makeid"><xsl:with-param name="node" select="."/></xsl:call-template></xsl:attribute>
@@ -483,10 +501,12 @@
     <xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">,</xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:group" mode="content-model">
     (<xsl:apply-templates mode="content-model"/>)
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:optional" mode="content-model">
     <xsl:if test=".//rng:element | .//rng:ref[not(ancestor::rng:attribute)]">
       <xsl:apply-templates mode="content-model"/>?
@@ -494,16 +514,19 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:oneOrMore" mode="content-model">
     (<xsl:apply-templates mode="content-model"/>)+
     <xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">,</xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:zeroOrMore" mode="content-model">
     (<xsl:apply-templates mode="content-model"/>)*
     <xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">,</xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:choice" mode="content-model">
     ( 
     <xsl:for-each select="*">
@@ -513,14 +536,17 @@
     )
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:value" mode="content-model">
     "<xsl:value-of select="."/>"
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:empty" mode="content-model">
     EMPTY
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:ref" mode="content-model">
     <xsl:variable name="haselement"><xsl:apply-templates select="." mode="find-element"/></xsl:variable>
     <xsl:if test="starts-with($haselement, 'true')">
@@ -535,19 +561,23 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:text" mode="content-model">
     TEXT
     <xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">, </xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:data" mode="content-model">
     xsd:<xsl:value-of select="@type"/>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="*" mode="content-model">
     <!-- suppress -->
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:define" mode="find-element">
     <xsl:param name="matched"/>
     <xsl:if test="not(count($matched | .)=count($matched))">
@@ -564,6 +594,7 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="rng:ref" mode="find-element">
     <xsl:param name="matched" select="."/>
     <xsl:variable name="ref" select="@name"/>
@@ -572,6 +603,7 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <!-- ################################################## -->
   <xsl:template match="*" mode='print-direct'>
     <table>
       <xsl:choose>
