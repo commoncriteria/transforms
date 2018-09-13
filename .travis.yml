@@ -16,7 +16,7 @@ script:
   - git clone https://github.com/commoncriteria/commoncriteria.github.io.git
   - git clone https://github.com/commoncriteria/ci-scripts.git
   - mkdir -p commoncriteria.github.io/pp/$(basename $TRAVIS_REPO_SLUG)
-  - cp schemas/CCProtectionProfile.html commoncriteria.github.io/pp/$(basename $TRAVIS_REPO_SLUG)
+  - cp schemas/*.html commoncriteria.github.io/pp/$(basename $TRAVIS_REPO_SLUG)
   - cd commoncriteria.github.io
   - git add --all 
   - git diff-index --quiet HEAD || git commit -m "Deploying changes"
