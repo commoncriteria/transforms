@@ -10,9 +10,8 @@ RNG_NS="http://relaxng.org/ns/structure/1.0"
 NS={"rng":RNG_NS}
 
 
-
+from pathlib import Path
 from io import BytesIO
-from io import StringIO
 import sys
 import xml.etree.ElementTree as ET
 
@@ -215,10 +214,17 @@ def log(level, msg):
 def resolve(root, path):
     "Resolves"
     for includes in root.findall(".//rng:include", NS):    
-        uri=includes.attrib["href"]
-        included=ET.parse(uri).getroot()
-        print("Found something")
-        included=resolve(included)
+        subpath=Path(includes.attrib["href"])
+        if not subpath.is_absolute():
+            subpath=path / subpath
+        included=ET.parse(subpath.open()).getroot()
+        included=resolve(included, subpath)
+
+        for subdefined in included.findall(".//rng:define", NS):
+            redef = includes.find(".//rng:define[@name='"+subdefined.attrib['name']+"']", NS)
+            if not redef:
+                redef=subdefined
+            root.insert(0, redef)
     return root
 
 if __name__ == "__main__":
@@ -238,9 +244,10 @@ if __name__ == "__main__":
         
     if infile=="-":
         root=ET.fromstring(sys.stdin.read())
-        path="."
+        path=Path(".")
     else:
         root=ET.parse(infile).getroot()
+        path=Path(infile).parent
         
 
     root = resolve(root, path)
