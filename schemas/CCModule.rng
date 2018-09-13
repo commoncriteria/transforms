@@ -310,9 +310,7 @@
 	      </a:documentation>
 	      <ref name="id-attr"/>
 	      <ref name="title-attr"/>
-              <element name="description">
-		<ref name="basic-content-pat"/>
-	      </element>
+	      <ref name="description"/>
             </element>
           </oneOrMore>
         </element>
@@ -327,7 +325,7 @@
       <oneOrMore>
 	<element name="entry">
 	  <element name="term"><ref name="basic-content-pat"/></element>
-	  <element name="description"><ref name="basic-content-pat"/></element>
+	  <ref name="description"/>
 	</element>
       </oneOrMore>
     </element>
