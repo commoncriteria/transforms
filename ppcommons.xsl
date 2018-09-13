@@ -35,6 +35,11 @@
         display: block;
     }
 
+    <!-- h1{ -->
+    <!--    width: 100%; -->
+    <!--    border-bottom-style: solid; -->
+    <!--    border-bottom-color: black; -->
+    <!-- } -->
     body{
        max-width: 900px;
        margin: auto;

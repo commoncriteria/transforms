@@ -27,6 +27,7 @@
     <xsl:call-template name="obj-sfrs"/>
     <xsl:apply-templates select="//cc:bibliography"/>
     <xsl:apply-templates select="//cc:acronyms"/>
+    <xsl:apply-templates select="//cc:appendix"/>
   </xsl:template>
 
 
@@ -149,7 +150,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any mandatory requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -159,7 +160,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any optional requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -169,7 +170,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any selection-based requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -179,13 +180,10 @@
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      FILL THIS
+	      This PP-Module does not define any objective requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
-
-
-
 
 
       </table>
@@ -387,7 +385,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
   </xsl:template>
 
   <xsl:template name="sel-sfrs">
-    <h1 id="sel-sfrs" class="indexable" data-level="A">Selecion-based SFRs</h1>
+    <h1 id="sel-sfrs" class="indexable" data-level="A">Selection-based SFRs</h1>
     As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
     performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
     There are additional requirements based on selections in the body of the PP-Module:

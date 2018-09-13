@@ -24,25 +24,9 @@ XSL for Protection Profile Modules
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
 
     <html xmlns="http://www.w3.org/1999/xhtml">
-      <head> 
-	<title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
-	<style type="text/css">
-	  <x:call-template name="common_css"/>
-	</style>
-      </head>
+      <x:call-template name="module-head"/>
       <body>
-	<div style="text-align: center; margin-left: auto; margin-right: auto;">
-	  <img src="images/niaplogo.png" alt="NIAP"/>
-	  <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
-	  Mandatory Technical Document</h1>
-	  <hr width="50%"/>
-	  <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
-
-	  <br/>PP-Module for <x:value-of select="/cc:PP/@name"/>s
-          <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-	  <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-          <br/><b><x:value-of select="//cc:PPAuthor"/></b>
-	</div>
+	<x:call-template name="meta-data"/>
 	<x:call-template name="foreward"/>
 	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>
@@ -54,9 +38,35 @@ XSL for Protection Profile Modules
     </html>
   </x:template>
 
+
+  <x:template name="meta-data">
+    <div style="text-align: center; margin-left: auto; margin-right: auto;">
+      <img src="images/niaplogo.png" alt="NIAP"/>
+      <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
+      Mandatory Technical Document</h1>
+      <hr width="50%"/>
+      <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
+      
+      <br/>PP-Module for <x:value-of select="/cc:Module/@target-products"/>
+      <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
+      <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+      <br/><b><x:value-of select="//cc:PPAuthor"/></b>
+    </div>
+  </x:template>
+  
+
   <x:template name="toc">
     <h1>Table of Contents</h1>
     <div id="toc"/>
+  </x:template>
+
+  <x:template name="module-head">
+    <head> 
+      <title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
+      <style type="text/css">
+	<x:call-template name="common_css"/>
+      </style>
+    </head>
   </x:template>
 
   <!-- <x:template name="acronyms"> -->
@@ -65,14 +75,14 @@ XSL for Protection Profile Modules
   <!-- </x:template> -->
 
   <x:template name="sup-info">
-    <h2 id="sup-info" class="indexable" data-level="0">Required Supplementary Information</h2>
+    <h1 id="sup-info" class="indexable" data-level="0">Required Supplementary Information</h1>
     <p>This Supporting Document has no required supplementary information beyond the ST, operational
 guidance, and testing.</p>
   </x:template>
 
 
   <x:template name="sfrs">
-    <h2 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h2>
+    <h1 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
     <p>The EAs presented in this section capture the actions the evaluator performs 
     to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
     ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units 
@@ -102,7 +112,41 @@ guidance, and testing.</p>
     in the manner declared by the developer and as mandated by the EA. 
     The CEM work units that are associated with the EAs specified in this section 
     are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
-    
+    <x:call-template name="handle-bases"/>
+    <x:call-template name="handle-apply-to-all"/>
+  </x:template>
+
+  <x:template name="handle-apply-to-all">
+    <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
+    <x:choose>
+      <x:when test="//cc:man-sfrs/cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any mandatory requirements (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+    </x:choose>
+
+    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
+    <x:choose>
+      <x:when test="//cc:opt-sfrs/cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any optional requirements.</x:otherwise>
+    </x:choose>
+
+
+    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
+    <x:choose>
+      <x:when test="//cc:sel-sfrs/cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any selection-based requirements.</x:otherwise>
+    </x:choose>
+
+    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Objective SFRs</h1>  
+    <x:choose>
+      <x:when test="//cc:obj-sfrs/cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
+      <x:otherwise>This PP-Module does not define any objective requirements.</x:otherwise>
+    </x:choose>
+
+
+
+  </x:template>
+
+  <x:template name="handle-bases">
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
@@ -119,7 +163,7 @@ guidance, and testing.</p>
 	  <x:value-of select="@short"/> PP is the base.
 	</x:with-param>
       </x:call-template>
-
+      
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Additional</x:with-param>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
@@ -131,7 +175,7 @@ guidance, and testing.</p>
       </x:call-template>
     </x:for-each>
   </x:template>
-
+  
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
@@ -140,12 +184,12 @@ guidance, and testing.</p>
     <x:element name="h3">
       <x:attribute name="class">indexable</x:attribute>
       <x:attribute name="data-level">2</x:attribute>
-      <x:attribute name="id">aa-<x:value-of select="$short"/>-addsfrs"></x:attribute>
+      <x:attribute name="id">qq-sfrs-<x:value-of select="$short"/>-<x:value-of select="$title"/></x:attribute>
       <x:value-of select="$title"/> SFRs
     </x:element>
 
     <x:choose>
-      <x:when test="$f-comps"><x:apply-templates select="$f-comps"/></x:when>
+      <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps"/></x:when>
       <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
     </x:choose>
   </x:template>      
@@ -153,15 +197,15 @@ guidance, and testing.</p>
 
 
   <x:template name="sars">
-    <h2 id="sar_aas" class="indexable" data-level="0">Assurance Activities for SARs</h2>
+    <h1 id="sar_aas" class="indexable" data-level="0">Evaluation Activities for SARs</h1>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
 	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this base PP as well. 
-	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Assurance Activities associated with both SFRs and SARs.
-	Additionally, the PP-Module includes a number of SFR-based Assurance Activities 
+	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
+	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
       </x:when>
@@ -171,22 +215,18 @@ guidance, and testing.</p>
 	inherently evaluated against the 
 	GPOS PP, MDF PP, or App PP
 	as well. 
-	These PPs include a number of Assurance Activities associated with both SFRs and SARs.
-	Additionally, the PP-Module includes a number of SFR-based Assurance Activities 
+	These PPs include a number of Evaluation Activities associated with both SFRs and SARs.
+	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the chosen Base-PP
       </x:otherwise>
     </x:choose>
     and supplement that evaluation with the necessary SFRs that are taken from the PP-Module.
-
-
-
-
-</p>
+    </p>
   </x:template>
 
   <x:template name="aaforsfrs">
-    <h1 id="mandatory_aas" class="indexable" data-level="0">Assurance Activities for SFRs</h1>
+    <h1 id="mandatory_aas" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
     <p>The EAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
 
     <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary material that may be treated as proprietary), the evaluator must ensure there is specific information that satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the CEM work unit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the cPP. </p>
