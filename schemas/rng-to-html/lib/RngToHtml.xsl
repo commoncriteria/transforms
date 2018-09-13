@@ -549,16 +549,20 @@
   <!-- ################################################## -->
   <xsl:template match="rng:ref" mode="content-model">
     <xsl:variable name="haselement"><xsl:apply-templates select="." mode="find-element"/></xsl:variable>
-    <xsl:if test="starts-with($haselement, 'true')">
-      <!-- QQQ: FIX THIS -->
-      <xsl:element name="a">
-	<xsl:attribute name="href">&#35;<xsl:value-of select="@name"/></xsl:attribute>
-	&#37;<xsl:value-of select="@name"/>
-      </xsl:element>
-
-      <!-- <link linkend="{@name}">%<xsl:value-of select="@name"/>;</link> -->
-      <xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">, </xsl:if>
-    </xsl:if>
+    <xsl:choose>
+    <xsl:when
+	test="starts-with($haselement, 'true')">
+	<!-- QQQ: FIX THIS -->
+	<xsl:element name="a">
+	  <xsl:attribute name="href">&#35;<xsl:value-of select="@name"/></xsl:attribute>
+	  &#37;<xsl:value-of select="@name"/>
+	</xsl:element>
+	
+	<!-- <link linkend="{@name}">%<xsl:value-of select="@name"/>;</link> -->
+	<xsl:if test="not(parent::rng:choice) and (following-sibling::rng:element | following-sibling::rng:optional | following-sibling::rng:oneOrMore | following-sibling::rng:zeroOrMore)">, </xsl:if>
+    </xsl:when>
+    <xsl:otherwise>  %<xsl:value-of select="@name"/>  </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- ################################################## -->
