@@ -10,11 +10,15 @@
 
   <xsl:output method="xml" encoding="UTF-8"/>
 
-  <xsl:param name="tmpdir"/>
+  <!-- Directory where the base PPs currently reside (with the names 0.xml, 1.xml,...)-->
+  <xsl:param name="basesdir"/>
   
-<!-- ################################################## -->
-<!--                   Templates Section                   -->
-<!-- ################################################## -->
+  <!-- Value on whether this is the formal release build -->
+  <xsl:param name="release" select="final"/>
+
+  <!-- ################################################## -->
+  <!--                   Templates Section                -->
+  <!-- ################################################## -->
   <xsl:template match="cc:Module">
     <xsl:apply-templates select="//cc:chapter[@title='Introduction']"/>
     <xsl:apply-templates select="//cc:chapter[@title='Conformance Claims']"/>
@@ -244,7 +248,7 @@ additional restrictions.
 	 Solution: Pre-processes the document and wget the bases and save them to a temporary directory with the filename being the index of the base.
     -->
     <xsl:variable name="redefsec" select="."/>
-    <xsl:for-each select="document(concat($tmpdir,'/',count(preceding-sibling::*),'.xml'))//cc:f-component">
+    <xsl:for-each select="document(concat($basesdir,'/',count(preceding-sibling::*),'.xml'))//cc:f-component">
       <xsl:variable name="baseid" select="@id"/>
       <xsl:if test="not($redefsec//cc:f-component[@id=$baseid])">
 	<li><xsl:value-of select="translate(@id,$lower,$upper)"/></li>
@@ -435,6 +439,24 @@ performed by the TOE or its underlying platform) are contained in the body of th
   <!--
       Eat all assurance activities
   -->
-  <xsl:template match="cc:aactivity"/>
+  <xsl:template match="cc:aactivity">
+    <xsl:if test="not($release='final')">
+      <div class="activity_pane hide">
+	<div class="activity_pane_header">
+	  <a onclick="toggle(this);return false;" href="#">
+            <span class="activity_pane_label"> Evaluation Activity </span>
+            <span class="toggler"/>
+	  </a>
+	</div>
+	<div class="activity_pane_body">
+	  <i>
+            <xsl:apply-templates/>
+	  </i>
+	</div>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
+
   <xsl:template name="opt_text"/>
 </xsl:stylesheet>
