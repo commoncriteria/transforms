@@ -325,13 +325,13 @@ class State:
 if __name__ == "__main__":
     if len(sys.argv) < 5:
         #        0       1          2          3                 4
-        print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[:<output-file>]")
+        print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[::<output-file>]")
         sys.exit(0)
 
     jsfile=sys.argv[1]
     cssfile=sys.argv[2]
     xslfile=sys.argv[3]
-    # Split on colon
+    # Split on double colon
     out=sys.argv[4].split('::')
     infile=out[0]
     outfile=""
@@ -345,8 +345,6 @@ if __name__ == "__main__":
     state=State(ET.parse(infile).getroot())
 
     state.makeSelectionMap()
-
-
 
     with open(jsfile, "r") as in_handle:
         js = in_handle.read()
