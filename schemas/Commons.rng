@@ -556,6 +556,29 @@
     </element>
   </define>
 
+  <define name="assumptions">
+    <element name="assumptions">
+      <a:documentation>
+	Grouping of assumptions.
+      </a:documentation>
+      <oneOrMore>
+        <element name="assumption">
+	  <a:documentation>
+	    Describes assumptions made.
+	  </a:documentation>
+	  <attribute name="id">
+	    <a:documentation>
+	      An assumption-wide unique ID that is also displayed to the user.
+	    </a:documentation>
+	  </attribute>
+          <ref name="description"/>
+          <ref name="objective-refer"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+
   <define name="selection-depends">
       <element name="selection-depends">
 	<a:documentation>

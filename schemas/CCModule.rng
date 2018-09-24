@@ -371,6 +371,7 @@
       <ref name="basic-content-pat"/>
       <element name="section">
 	<a:documentation>
+	  Section describing threats.
 	</a:documentation>
 	<attribute name="title"><value>Threats</value></attribute>
 	<ref name="id-attr"/>
@@ -396,9 +397,19 @@
 	  </oneOrMore>
 	</element>
       </element>
+
+      <element name="section">
+	<a:documentation>
+	  Section describing Assumptions.
+	</a:documentation>
+	<attribute name="title"><value>Assumptions</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+
     </element>
   </define>
-
 
   <define name="CClaimsChapter">
     <element name="chapter">

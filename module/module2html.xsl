@@ -425,8 +425,6 @@ performed by the TOE or its underlying platform) are contained in the body of th
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="cc:consistency-rationale"/>
-
 
   <xsl:template match="cc:base-name">
     <xsl:param name="base"/>
@@ -434,6 +432,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
   </xsl:template>
 
 
+  <xsl:template match="cc:consistency-rationale"/>
 
 
   <!--
@@ -456,6 +455,8 @@ performed by the TOE or its underlying platform) are contained in the body of th
       </div>
     </xsl:if>
   </xsl:template>
+
+
 
 
   <xsl:template name="opt_text"/>

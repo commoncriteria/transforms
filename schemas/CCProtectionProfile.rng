@@ -230,25 +230,7 @@ Indicates that this document shall use boilerplate sections.
             </oneOrMore>
           </element>
 	  <ref name="SOs"/>
-          <element name="assumptions">
-	    <a:documentation>
-	      Grouping of assumptions.
-	    </a:documentation>
-            <oneOrMore>
-              <element name="assumption">
-		<a:documentation>
-		  Describes assumptions made.
-		</a:documentation>
-		<attribute name="id">
-		  <a:documentation>
-		    An assumption-wide unique ID that is also displayed to the user.
-		  </a:documentation>
-		</attribute>
-                <ref name="description"/>
-                <ref name="objective-refer"/>
-              </element>
-            </oneOrMore>
-          </element>
+	  <ref name="assumptions"/>
 	  <ref name="subsection-pattern"/>
           <element name="threats">
 	    <a:documentation>
