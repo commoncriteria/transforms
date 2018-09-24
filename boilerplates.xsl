@@ -216,6 +216,16 @@ This module does not define any assumptions.
     </xsl:choose>
   </xsl:template>
 
-
-
+  <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
+    <xsl:choose>
+      <xsl:when test=".//cc:SOs">
+	The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+	The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
+	This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+      </xsl:when>
+      <xsl:otherwise>
+This module does not define any assumptions.
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>

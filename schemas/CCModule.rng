@@ -331,7 +331,7 @@
 	<ref name="id-attr"/>
 	<ref name="SOs"/>
       </element>
-      <element name="section">
+      <element name="section"> 
 	<a:documentation>
 	  Section describing the Security Objectives for the TOE's Operational Environment.
 	</a:documentation>
@@ -339,16 +339,7 @@
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
 	<zeroOrMore>
-	  <element name="obj">
-	    <attribute name="name">	  <a:documentation>
-	    The value of the id attribute of the requirement is component depends on.
-	  </a:documentation>
-	  <data type="string">
-	    <param name="pattern">[A-Z_]+</param>
-	  </data>
-	    </attribute>
-	    <ref name="basic-content-pat"/>
-	  </element>
+	  <ref name="SOs"/>
 	</zeroOrMore>
       </element>
       <element name="section">
