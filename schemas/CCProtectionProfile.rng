@@ -309,7 +309,10 @@ Indicates that this document shall use boilerplate sections.
           <ref name="note"/>
 	</optional>
 	<optional>
-          <ref name="aactivity"/>
+	  <element name="aactivity">
+	    <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
+	    <ref name="basic-content-pat"/>
+	  </element>
 	</optional>
       </element>
     </oneOrMore>
