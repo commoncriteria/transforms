@@ -5,6 +5,7 @@ Module that converts PP xml documents to an HTML worksheet
 
 import base64
 from io import StringIO 
+import warnings
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -13,17 +14,15 @@ PPNS='https://niap-ccevs.org/cc/v1'
 HTMNS="http://www.w3.org/1999/xhtml"
 ns={"cc":PPNS, "htm":HTMNS}
 
+
+
 def cc(tag):
+    """ Creates a CC tag """
     return "{"+PPNS+"}"+tag
 
 def htm(tag):
     return "{"+HTMNS + "}"+tag
 
-def warn(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-
-def debug(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
 
 def attr(el,at):
     if at in el.attrib: 
@@ -289,7 +288,7 @@ class State:
             ret += "</"+tag+">"
             return ret
         else:
-            warn("Just dropped something")
+            warnings.warn("Just dropped something")
 
     def handle_contents(self, node, show_text):
         ret=""
@@ -325,7 +324,7 @@ class State:
 if __name__ == "__main__":
     if len(sys.argv) < 5:
         #        0       1          2          3                 4
-        print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[::<output-file>]")
+        print("Usage: <js-file> <css-file> <xsl-file> <protection-profile>[::<output-file>] [<module-1> [<module-2> ... ]]")
         sys.exit(0)
 
     jsfile=sys.argv[1]
@@ -336,7 +335,7 @@ if __name__ == "__main__":
     infile=out[0]
     outfile=""
     if len(out) < 2:
-        outfile=infile.split('.')[0]+"-worksheet.html"
+        outfile=infile.rsplit('.',1)[0]+"-worksheet.html"
     else:
         outfile=out[1]
 
@@ -359,6 +358,8 @@ if __name__ == "__main__":
         xslb64 = base64.b64encode(in_handle.read()).decode('ascii')
 
 
+    for modctr in range(5, len(sys.argv)):
+        print("Module: " + sys.argv[modctr])
 
     form =  "<html xmlns='http://www.w3.org/1999/xhtml'>\n"
     form += "   <head>\n"
