@@ -236,7 +236,7 @@ defined in the Base-PP in addition to what is mandated by section 5.4.
     </xsl:element>
 The SFRs listed in this section are defined in the <xsl:value-of select="../cc:base/@short"/> PP and are relevant to the secure operation of the
 TOE. 
-When testing the TOE, it is necessary to ensure these SFRs are tested specifically in
+When testing the TOE, it is necessary to ensure that these SFRs are tested specifically in
 conjunction with the <xsl:value-of select="//cc:Module/@name"/> portion of the TOE.
 The ST author may complete all selections and assignments in these SFRs without any
 additional restrictions.
@@ -261,7 +261,7 @@ additional restrictions.
       <xsl:attribute name="data-level">3</xsl:attribute>
       Modified SFRs
     </xsl:element>
-    <xsl:choose><xsl:when test="cc:modified-sfrs">
+    <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
       The SFRs listed in this section are defined in the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
