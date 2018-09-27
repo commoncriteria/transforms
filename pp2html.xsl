@@ -324,8 +324,8 @@
           </b></i>
         </div>
       </xsl:if>
-
-      <xsl:if test="@status='sel-based'">
+mplate as described in the PP Getting Started Page. The major differences are the Makefile that is
+      <xsl:if test=".//cc:selection-depends">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:selection-depends">
