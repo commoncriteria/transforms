@@ -53,6 +53,7 @@ class State:
         self.root=theroot
         # Maps IDs to elements
         self.parent_map = {c:p for p in self.root.iter() for c in p}
+        # Used to run 'getElementByClassname'
         self.create_classmapping()
 
     def up(self, node):
@@ -332,6 +333,8 @@ if __name__ == "__main__":
     xslfile=sys.argv[3]
     # Split on double colon
     out=sys.argv[4].split('::')
+
+
     infile=out[0]
     outfile=""
     if len(out) < 2:

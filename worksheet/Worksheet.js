@@ -364,6 +364,7 @@ function getRequirement(node){
         if(isCheckbox(node)){
             if(node.checked){
                 ret+=LT+"selectable index='"+node.getAttribute('data-rindex')+"'>"; 
+		// Checkbox precedes the 
                 // Like a fake recurrence call here
                 ret+=getRequirement(node.nextSibling);
                 ret+=LT+"/selectable>";
@@ -434,12 +435,18 @@ function initiateDownload(filename, blob) {
         document.body.removeChild(elem);
     }
 }
-
+/**
+ * Handler for unchecking every other checkbox in a group besides this one.
+ */
 function chooseMe(sel){
+    // Find the common parent
     var common = sel.parentNode;
+
+    // Keep going up until yu hit SPAN
     while( common.tagName != "SPAN" ){
         common = common.parentNode;
     }
+    // Toggle all the checkboxes (except the one that was selected)
     toggleFirstCheckboxExcept(common, sel);
 }
 
@@ -523,6 +530,7 @@ function validateSelectables(sel){
     if(numChecked==1) return true;
     return !sel.classList.contains("onlyone");
 }
+
 function setFocusOnComponent(comp){
     comp.getElementsByClassName('f-comp-title')[0].focus();
     return true;
@@ -628,7 +636,9 @@ function delayedUpdate(){
     validateRequirements();
     sched = undefined;
 }
-
+/**
+ * @param exc Is the except element
+ */
 function toggleFirstCheckboxExcept(root, exc){
     if (root == exc) return;
     if ( isCheckbox(root)){
