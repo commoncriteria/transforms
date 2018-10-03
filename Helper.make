@@ -201,7 +201,7 @@ $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2TABLE_XSL),$(TABLE),$(FNL_PARM)) 
+	$(XSL_EXE) $(FNL_PARM) -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
