@@ -177,9 +177,19 @@
 
   <define name="f-components-pat">
     <zeroOrMore>
-      <ref name="f-component"/>
+      <element name="subsection">
+	<a:documentation>
+	  Defines SFRs that pertain to specific base.
+	</a:documentation>
+	<ref name="title-attr"/>
+	<ref name="id-attr"/>
+	<zeroOrMore>
+	  <ref name="f-component"/>
+	</zeroOrMore>
+      </element>
     </zeroOrMore>
   </define>
+
 
   <define name="f-component">
     <element name="f-component">
