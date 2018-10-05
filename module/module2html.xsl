@@ -275,7 +275,7 @@ additional restrictions.
       <xsl:attribute name="data-level">3</xsl:attribute>
       Additional SFRs
     </xsl:element>
-    <xsl:choose><xsl:when test="cc:additional-sfrs">
+    <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
       This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile is claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
@@ -353,10 +353,10 @@ This module does not define any additional SFRs for any PP-Configuration where t
   <xsl:template name="man-sfrs">
     <h2 id="man-sfrs" class="indexable" data-level="2">TOE Security Functional Requirements</h2>
     <xsl:choose>
-      <xsl:when test="cc:f-component">
+      <xsl:when test="//cc:man-sfrs//cc:f-component">
 	The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
 	These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="//cc:man-sfrs/cc:*"/>
       </xsl:when>
       <xsl:otherwise>
 	This module does not define any mandatory SFRs.
