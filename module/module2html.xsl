@@ -39,7 +39,7 @@
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:call-template name="secrectext"/>
-    <xsl:apply-templates/>
+    <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
   </xsl:template>
 
@@ -218,6 +218,9 @@
     </xsl:choose>
   </xsl:template>
 
+<!-- ############################################ -->
+<!-- #            Base-pp Template              # -->
+<!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
       <xsl:value-of select="@short"/> 
@@ -349,6 +352,7 @@ This module does not define any additional SFRs for any PP-Configuration where t
       </xsl:for-each>
     </table>
   </xsl:template>
+
 
   <xsl:template name="man-sfrs">
     <h2 id="man-sfrs" class="indexable" data-level="2">TOE Security Functional Requirements</h2>
