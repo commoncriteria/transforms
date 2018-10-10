@@ -146,7 +146,7 @@
   <define name="opt-sfrs">
     <element name="opt-sfrs">
       <a:documentation>
-	Optional SFRs. These apply to all configurations regardless of base PPs.
+	Optional SFRs. These could apply to all configurations regardless of base PPs.
       </a:documentation>
       <ref name="f-components-pat"/>
     </element>
