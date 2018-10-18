@@ -85,9 +85,6 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
-#- Path to worksheet
-WORKSHEET_HTML ?= $(OUT)/$(BASE)-worksheet.html
-
 #- Points to the daisydiff jar file
 DAISY_DIR ?= ../ExecuteDaisy
 
@@ -121,7 +118,7 @@ TMP_PARM?=--stringparam basesdir $(TMP)
 default: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Builds all outputs
-all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) $(WORKSHEET_HTML)
+all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
@@ -209,10 +206,8 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
 	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 #- Builds the PP worksheet
-worksheet: $(WORKSHEET_HTML)
-$(WORKSHEET_HTML): $(PP_XML)
-	python3 $(TRANS)/worksheet/pp-to-worksheet.py $(TRANS)/worksheet/Worksheet.js $(TRANS)/worksheet/Worksheet.css $(TRANS)/worksheet/ResultsToSt.xsl $(PP_XML)::$(WORKSHEET_HTML)
-
+worksheet:
+	echo "Worksheet generation is now under the pp-st-wizard project"
 
 
 
