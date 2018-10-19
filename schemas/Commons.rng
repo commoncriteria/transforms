@@ -419,21 +419,26 @@
 
   <define name="f-elements-pat">
     <zeroOrMore>
-      <element name="f-element">
-	<a:documentation>
-	  Defines a functional requirement.
-	</a:documentation>
-        <attribute name="id">
-	  <a:documentation>
-	    A document-wide unique ID that is also displayed to the user.
-	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-	  </a:documentation>
-	</attribute>
-        <ref name="f-element-title"/>
-	<optional><ref name="note"/></optional>
-	<optional><ref name="aactivity"/></optional>
-      </element>
+      <ref name="f-element"/>
     </zeroOrMore>
+  </define>
+
+
+  <define name="f-element">
+    <element name="f-element">
+      <a:documentation>
+	Defines a functional requirement.
+      </a:documentation>
+      <attribute name="id">
+	<a:documentation>
+	  A document-wide unique ID that is also displayed to the user.
+	  It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	</a:documentation>
+      </attribute>
+      <ref name="f-element-title"/>
+      <optional><ref name="note"/></optional>
+      <optional><ref name="aactivity"/></optional>
+    </element>
   </define>
 
 
