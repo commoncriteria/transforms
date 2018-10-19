@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns:h="http://www.w3.org/1999/xhtml" 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    ns="https://niap-ccevs.org/cc/v1" 
+    >
+  <include href="Commons.rng"/>
+
+  <start>
+    <element name="technical-decisions">
+      <oneOrMore>
+	<element name="bunch">
+	  <oneOrMore>
+	    <element name="applies-to">
+	      <a:documentation>Specifies a document this bunch applies to.</a:documentation>
+	      <attribute name="name">
+		<a:documentation>Name of the Protection Profile or Module</a:documentation>
+              </attribute>
+              <attribute name="max-inclusive">
+		<a:documentation>The maximum version this bunch applies to</a:documentation>
+		<data type="decimal"/>
+              </attribute>
+	    </element>
+	  </oneOrMore>
+          <element name="decision">
+	    <attribute name="id">
+	      <data type="decimal"/>
+	    </attribute>
+            <attribute name="date">
+	      <a:documentation>Date it was made.</a:documentation>
+	    </attribute>
+            <element name="notes">
+	      <a:documentation>Any notes about it.</a:documentation>
+	      <text/>
+            </element>
+	    <ref name="f-element"/>
+	  </element>
+	</element>
+      </oneOrMore>
+    </element>
+  </start>
+</grammar>
