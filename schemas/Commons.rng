@@ -583,6 +583,14 @@
     </element>
   </define>
 
+  <define name="description">
+    <element name="description">
+      <a:documentation>
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+
 
   <define name="selection-depends">
       <element name="selection-depends">

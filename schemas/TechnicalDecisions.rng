@@ -31,6 +31,10 @@
             <attribute name="date">
 	      <a:documentation>Date it was made.</a:documentation>
 	    </attribute>
+            <attribute name="url">
+	      <a:documentation>Location where more information about this can be found.</a:documentation>
+	      <data type="anyURI"/>
+            </attribute>
             <element name="notes">
 	      <a:documentation>Any notes about it.</a:documentation>
 	      <text/>

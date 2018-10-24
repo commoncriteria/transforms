@@ -24,6 +24,25 @@
 	</element>
       </choice>
     </define>
+    <define name="description">
+      <element name="description">
+	<a:documentation>
+	  A description section. Basically just has basic content and
+	</a:documentation>
+	<oneOrMore>
+          <choice>
+	    <ref name="basic-content-pat"/>
+            <element name="InsertAppendixExplainer">
+	      <a:documentation>
+		Tag that denotes where an explanation of where the different types (objective, threshold, optional)
+		of requirements are located.
+	      </a:documentation>
+	      <empty/>
+            </element>
+          </choice>
+	</oneOrMore>
+      </element>
+    </define>
   </include>
 
   <start>
@@ -272,25 +291,7 @@ Indicates that this document shall use boilerplate sections.
       </oneOrMore>
     </element>
   </define>
-  <define name="description">
-    <element name="description">
-      <a:documentation>
-	A description section. Basically just has basic content and
-      </a:documentation>
-      <oneOrMore>
-        <choice>
-	  <ref name="basic-content-pat"/>
-          <element name="InsertAppendixExplainer">
-	    <a:documentation>
-	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
-	      of requirements are located.
-	    </a:documentation>
-	    <empty/>
-          </element>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
+
 
   <define name="a-elements">
     <oneOrMore>
