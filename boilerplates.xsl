@@ -218,7 +218,7 @@ This module does not define any assumptions.
 
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
-    This section describes how the assumptions, threast, and organization security policies map to the security objectives.
+    This section describes how the assumptions, threats, and organization security policies map to the security objectives.
 
     <table>
       <tr class="header">
