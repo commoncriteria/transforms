@@ -376,7 +376,7 @@ This module does not define any additional SFRs for any PP-Configuration where t
 performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
     Additionally, there are three other types of requirements specified in Appendices A, B, and C.
     The first type (in this Appendix) are requirements that can be included in the ST, but do not have to be in order for a TOE to claim conformance to this PP-Module.
-    The second type (in Appendix B) are requirements based on selections in the body of the PP-Module: if certain selections are made, then additional requirements in that appendix will need to be included. The third type (in Appendix C) are components that are not required in order to conform to this PP-Module, but will be included in the baseline requirements in future versions of this PP-Module, so adoption by VPN Client vendors is encouraged.
+    The second type (in Appendix B) are requirements based on selections in the body of the PP-Module: if certain selections are made, then additional requirements in that appendix will need to be included. The third type (in Appendix C) are components that are not required in order to conform to this PP-Module, but will be included in the baseline requirements in future versions of this PP-Module.
     Note that the ST author is responsible for ensuring that requirements that may be
     associated with those in Appendix A, Appendix B, and/or Appendix C but are not listed (e.g., FMT-type
     requirements) are also included in the ST.
