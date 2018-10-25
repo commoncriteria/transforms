@@ -272,6 +272,7 @@ additional restrictions.
     </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
     <xsl:element name="h2">
       <xsl:attribute name="id">addsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
@@ -286,6 +287,7 @@ additional restrictions.
 This module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="cc:con-sec-problem">
