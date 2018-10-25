@@ -39,7 +39,9 @@
 	      <a:documentation>Any notes about it.</a:documentation>
 	      <text/>
             </element>
-	    <ref name="f-element"/>
+	    <oneOrMore>
+	      <ref name="f-element"/>
+	    </oneOrMore>
 	  </element>
 	</element>
       </oneOrMore>
