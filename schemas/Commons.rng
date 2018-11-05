@@ -583,6 +583,28 @@
     </element>
   </define>
 
+
+  <define name="osp-section">
+    <element name="section">
+      <a:documentation>
+	Section describing Organizational Security Policies
+      </a:documentation>
+      <attribute name="title"><value>Organizational Security Policies</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content-pat"/>
+      <element name="OSPs">
+	<oneOrMore>
+	  <element name="OSP">
+	    <ref name="id-attr"/>
+            <ref name="description"/>
+            <ref name="objective-refer"/>
+	  </element>
+	</oneOrMore>
+      </element>
+    </element>
+  </define>
+
+
   <define name="description">
     <element name="description">
       <a:documentation>

@@ -411,8 +411,15 @@
 	<ref name="assumptions"/>
       </element>
 
+      <optional>
+	<ref name="osp-section"/>
+      </optional>
     </element>
   </define>
+
+
+
+
 
   <define name="CClaimsChapter">
     <element name="chapter">
