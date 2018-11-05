@@ -117,7 +117,9 @@
       <attribute name="title"><value>Security Requirements</value></attribute>
       <ref name="id-attr"/>
       <ref name="basic-content-pat"/>
-      <ref name="base-pp"/>
+      <oneOrMore>
+	<ref name="base-pp"/>
+      </oneOrMore>
       <ref name="man-sfrs"/>
       <ref name="opt-sfrs"/>
       <ref name="sel-sfrs"/>
