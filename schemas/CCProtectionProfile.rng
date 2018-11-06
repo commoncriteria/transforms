@@ -1,34 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-	  ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar ns="https://niap-ccevs.org/cc/v1"
+	 xmlns="http://relaxng.org/ns/structure/1.0"
+	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+	 xmlns:htm="http://www.w3.org/1999/xhtml"
+	 xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	 >
 
 
-  <include href="Commons.rng"/>
-
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+      <choice>
+	<element name="if-opt-app">
+	  <a:documentation>
+	    Content that only appears if the optional appendices exist.
+	  </a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
+        <element name="indent">
+	  <a:documentation>
+	    Tags that this section should be indented(left) 2em.
+	  </a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
+      </choice>
+    </define>
+  </include>
 
   <start>
     <element name="PP">
-      <a:documentation>
-	Root element for a Protection Profile Module.
-      </a:documentation>
-      <ref name="attributes-pat"/>
-      <ref name="PPRefAndRevision"/>
-      <ref name="IntroductionChapter"/>
-      <ref name="CClaimsChapter"/>
-      <ref name="SecProbDesChapter"/>
-      <ref name="SecObjChapter"/>
-      <ref name="SecReqChapter"/>
-      <ref name="bibliography"/>
-      <ref name="acronyms"/>
-      <ref name="additional-appendices"/>
+      <a:documentation>Root element for Protection Profile XML document</a:documentation>
+      <attribute name="name">
+	<a:documentation>
+The title of this document.
+	</a:documentation>
+      </attribute>
+      <optional>
+	<attribute name="boilerplate">
+	<a:documentation>
+Indicates that this document shall use boilerplate sections.
+	</a:documentation>
+	<value>yes</value></attribute>
+      </optional>
+
+      
+      <element name="PPReference">
+	<a:documentation>
+	  A wrapper element for document meta-data.
+	</a:documentation>
+
+        <element name="ReferenceTable">
+	  <a:documentation>
+	    A second wrapper element for document meta-data.
+	  </a:documentation>
+          <element name="PPTitle">
+	    <a:documentation>Title of this document</a:documentation>
+            <text/>
+          </element>
+          <element name="PPVersion">
+	    <a:documentation>
+	      Version of Common Criteria this document follows.
+	      It should be the version listed in the CCPart1/2/3 files consulted.
+	    </a:documentation>
+            <data type="NMTOKEN"/>
+          </element>
+          <element name="PPAuthor">
+	    <a:documentation>
+	      Organization that developed this PP (e.g. National Information Assurance Partnership)
+	    </a:documentation>
+            <text/>
+          </element>
+          <element name="PPPubDate">
+	    <a:documentation>
+	      Date of publication for this PP.
+	    </a:documentation>
+            <data type="date"/>
+          </element>
+          <element name="Keywords">
+	    <a:documentation>
+	      NOT USED. A list of keywords associated with this document.
+	    </a:documentation>
+            <text/>
+          </element>
+        </element>
+      </element>
+      <oneOrMore>
+        <element name="RevisionHistory">
+	  <a:documentation>Documents the major changes to releases.</a:documentation>
+	  <zeroOrMore>
+	    <element name="entry">
+	      <a:documentation>Container for individual revisions.</a:documentation>
+	      <element name="version">
+		<a:documentation>Text describing the revision.</a:documentation>
+		<text/>
+	      </element>
+	      <element name="date">
+		<a:documentation>Date of the revision.</a:documentation>
+		<data type="date"/>
+	      </element>
+	      <element name="subject">
+		<a:documentation>Description of the revision.</a:documentation>
+		<ref name="basic-content-pat"/>
+	      </element>
+	    </element>
+	  </zeroOrMore>
+        </element>
+      </oneOrMore>
+      <optional>
+	<element name="foreword">
+	  <a:documentation>Flexible section for a foreword.</a:documentation>
+	  <zeroOrMore><ref name="html-element"/></zeroOrMore>
+	</element>
+      </optional>
+      <oneOrMore>
+        <element name="chapter">
+	  <a:documentation>Major grouping for the document.</a:documentation>
+	  <ref name="id-attr"/>
+	  <ref name="title-attr"/>
+          <oneOrMore>
+            <choice>
+	      <ref name="basic-content-pat"/>
+              <ref name="section"/>
+	      
+              <element name="cclaims">
+		<a:documentation>
+		  Container element for the individual Conformance Claims.
+		</a:documentation>
+                <oneOrMore>
+                  <element name="cclaim">
+		    <a:documentation>
+		      Element containing a description of Conformance claims. See CCPART1 section A.5.
+		    </a:documentation>
+                    <attribute name="id">
+		      <a:documentation>
+			This is really the title of the section.
+		      </a:documentation>
+		    </attribute>
+                    <ref name="description"/>
+                  </element>
+                </oneOrMore>
+              </element>
+            </choice>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+      <oneOrMore>
+	<ref name="appendix"/>
+      </oneOrMore>
+
+      <!-- This is where we can store extra css -->
+      <optional>
+	<element name="extra-css">
+	  <text/>
+	</element>
+      </optional>
     </element>
   </start>
 
-  <define name="additional-appendices">
-    <zeroOrMore>
-      <ref name="appendix"/>
-    </zeroOrMore>
-  </define>
+
 
   <define name="appendix">
     <a:documentation>
@@ -38,12 +166,17 @@
       <a:documentation>
 	Element that defines an appendix.
       </a:documentation>
-      <ref name="id-attr"/>
+      <attribute name="id">
+	<a:documentation>A document-wide unique string.</a:documentation>
+        <data type="NCName"/>
+      </attribute>
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
 	  <ref name="basic-content-pat"/>
           <ref name="section"/>
+	  <ref name="acronyms"/>
+	  <ref name="bibliography"/>
         </choice>
       </oneOrMore>
     </element>
@@ -56,118 +189,136 @@
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
-      <choice>
-	<ref name="basic-content-pat"/>
-	<ref name="subsection-pattern"/>
-      </choice>
-    </element>
-  </define>
-
-  <define name="subsection-pattern">
-    <element name="subsection">
-      <a:documentation>
-	Lower level of grouping
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="subsection-pattern"/>
+	  <ref name="glossary-section"/>
 	  <ref name="basic-content-pat"/>
+          <element name="InsertSPDCorrespondence">
+	    <a:documentation>
+	      Tags the spot where the table mapping threats
+	      to objectives to requirements should go.
+	    </a:documentation>
+            <empty/>
+          </element>
+          <element name="OSPs">
+	    <a:documentation>
+	      Grouping for Organizational Security Policies
+	    </a:documentation>
+	    <oneOrMore>
+              <element name="OSP">
+		<a:documentation>
+		  Entry for each security policy.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="description"/>
+		<ref name="objective-refer"/>
+              </element>
+	    </oneOrMore>
+          </element>
+          <element name="SOEs">
+	    <a:documentation>
+	      Grouping for Security Objectives for the Operational environment.
+	    </a:documentation>
+            <oneOrMore>
+              <element name="SOE">
+		<a:documentation>
+		  Security Objective for the Operational environment.
+		</a:documentation>
+		<ref name="id-attr"/>
+                <ref name="description"/>
+              </element>
+            </oneOrMore>
+          </element>
+	  <ref name="SOs"/>
+	  <ref name="assumptions"/>
+	  <ref name="subsection-pattern"/>
+          <element name="threats">
+	    <a:documentation>
+	      Wrapper element for various threats.
+	    </a:documentation>
+            <oneOrMore>
+              <element name="threat">
+		<a:documentation>
+		  Defines a threat.
+		</a:documentation>
+                <attribute name="id">
+                  <data type="NCName">
+		    <param name="pattern">T\.[_A-Z0-9]+</param>
+		  </data>
+                </attribute>
+                <ref name="description"/>
+                <oneOrMore>
+                  <ref name="objective-refer"/>
+                </oneOrMore>
+              </element>
+            </oneOrMore>
+          </element>
+          <element name="usecases">
+	    <a:documentation>
+	      Wrapper element for uses cases.
+	    </a:documentation>
+            <oneOrMore>
+              <element name="usecase">
+		<a:documentation>
+		  A referrable section on how the protection profiled item is used.
+		</a:documentation>
+		<ref name="id-attr"/>
+		<ref name="title-attr"/>
+                <ref name="description"/>
+              </element>
+            </oneOrMore>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="description">
+    <element name="description">
+      <a:documentation>
+	A description section. Basically just has basic content and
+      </a:documentation>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content-pat"/>
+          <element name="InsertAppendixExplainer">
+	    <a:documentation>
+	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
+	      of requirements are located.
+	    </a:documentation>
+	    <empty/>
+          </element>
         </choice>
       </oneOrMore>
     </element>
   </define>
 
-  <define name="attributes-pat">
-    <attribute name="type"></attribute>
-    <attribute name="name"></attribute>
-    <ref name="boilerplate-pat"/>
-  </define>
-  
-  <define name="SecReqChapter">
-    <element name="chapter">
-      <a:documentation>
-	The chapter for security requirements.
-      </a:documentation>
-      <attribute name="title"><value>Security Requirements</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <ref name="base-pp"/>
-      <ref name="man-sfrs"/>
-      <ref name="opt-sfrs"/>
-      <ref name="sel-sfrs"/>
-      <ref name="obj-sfrs"/>
-    </element>
-  </define>
-  
-  <define name="man-sfrs">
-    <element name="man-sfrs">
-      <a:documentation>
-	Mandatory SFRs. These apply to all configurations regardless of base PPs.
-      </a:documentation>
-      <ref name="f-components-pat"/>
-    </element>
-  </define>
-
-  <define name="obj-sfrs">
-    <element name="obj-sfrs">
-      <a:documentation>
-	Objective SFRs. These apply to all configurations regardless of base PPs.
-      </a:documentation>
-      <ref name="f-components-pat"/>
-    </element>
-  </define>
-
-  <define name="opt-sfrs">
-    <element name="opt-sfrs">
-      <a:documentation>
-	Optional SFRs. These could apply to all configurations regardless of base PPs.
-      </a:documentation>
-      <ref name="f-components-pat"/>
-    </element>
-  </define>
-
-  <define name="sel-sfrs">
-    <element name="sel-sfrs">
-      <a:documentation>
-	Selection-based SFRs. These can apply to any configuration regardless of base PPs.
-      </a:documentation>
-      <ref name="f-components-pat"/>
-      <!-- 
-	   This is probably the right way to do it, but 
-	   it's too drastic of a change currently (and
-	   removing the selection-depends elements from
-	   inside the f-components).
-      -->
-      <!--   <zeroOrMore> -->
-      <!-- 	<element name="dependency"> -->
-      <!-- 	  <attribute name="ids"> -->
-      <!-- 	  </attribute> -->
-      <!-- 	  <ref name="f-component"/> -->
-      <!-- 	</element> -->
-      <!--   </zeroOrMore> -->
-    </element>
-
-  </define>
-
-  <define name="f-components-pat">
-    <zeroOrMore>
-      <element name="subsection">
+  <define name="a-elements">
+    <oneOrMore>
+      <element name="a-element">
 	<a:documentation>
-	  Defines SFRs that pertain to specific base.
+	  Defines a functional requirement.
 	</a:documentation>
-	<ref name="title-attr"/>
-	<ref name="id-attr"/>
-	<zeroOrMore>
-	  <ref name="f-component"/>
-	</zeroOrMore>
+	<attribute name="id">
+	  <a:documentation>
+	    A document-wide unique ID that is also displayed to the user.
+	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+	  </a:documentation>
+	</attribute>
+	<ref name="f-element-title"/>
+	<optional>
+          <ref name="note"/>
+	</optional>
+	<optional>
+	  <element name="aactivity">
+	    <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
+	    <ref name="basic-content-pat"/>
+	  </element>
+	</optional>
       </element>
-    </zeroOrMore>
+    </oneOrMore>
   </define>
 
-
-  <define name="f-component">
+  <define name="f-component-pattern">
     <element name="f-component">
       <a:document>
 	Specifies a component under Security Functional Requirements section..
@@ -183,318 +334,118 @@
 	  Readable title for this requirement.
 	</a:documentation>
       </attribute>
-      <!-- Would like to remove this -->
-      <zeroOrMore>
-	<ref name="selection-depends"/>
-      </zeroOrMore>
-      <ref name="consistency-rationale"/>
+      <choice>
+	<!-- Choice of  status -->
+	<!-- If the status is objective, it must have a targetdate(?) -->
+	<group>
+	  <optional>
+	    <attribute name="targetdate">
+	      <a:documentation>
+		Target date that the requirements under this component become
+		manandory. It only makes sense for _objective_ components.
+	      </a:documentation>
+	      <data type="date"/>
+	    </attribute>
+	  </optional>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <value>objective</value>
+	  </attribute>
+	</group>
+
+	<!-- If the status is selection-based, it must have dependencies -->
+	<group>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <value>sel-based</value>
+	  </attribute>
+	  <oneOrMore>
+	    <ref name="selection-depends"/>
+	  </oneOrMore>
+	</group>
+	
+	<!-- The status could also be optional or nothing (which is indicated here) -->
+	<optional>
+	  <attribute name="status">
+	    <a:documentation>
+	      Denotes the status of a requirement.
+	    </a:documentation>
+	    <choice>
+	      <value>optional</value>
+	    </choice>
+	  </attribute>
+	</optional>
+
+
+      </choice>
+      <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
     </element>
-  </define>
-
-  <define name="base-pp">
-    <element name="base-pp">
+  </define>    
+  <define name="subsection-pattern">
+    <element name="subsection">
       <a:documentation>
-	Holds information specifict to a base PP.
+	Lower level of grouping
       </a:documentation>
-      <attribute name="product">
-	<a:documentation>
-	  Name of the product the base PP applies to.
-	</a:documentation>
-      </attribute>
-      
-      <attribute name="name">
-	<a:documentation>
-	  Name of the base PP.
-	</a:documentation>
-      </attribute>
-
-      <attribute name="short">
-	<a:documentation>
-	  Short name of the base PP.
-	</a:documentation>
-      </attribute>
-      
-      <attribute name="url">
-	<a:documentation>
-	  URL of the NIAP page for the base PP.
-	</a:documentation>
-      </attribute>
-      
-      <attribute name="xmlurl">
-	<a:documentation>
-	  URL of the XML defining the base PP. Ideally it should be NIAP or CC, but for right now it's probably on github.
-	</a:documentation>
-      </attribute>
-      
-      
-      <element name="modified-sfrs">
-	<a:documentation>
-	  SFRs that modify SFRs from the base PP.
-	</a:documentation>
-	<ref name="base-specific-sfrs"/>
-      </element>
-      <element name="additional-sfrs">
-	<a:documentation>
-	  SFRs that are added specifically for configurations that use this base PP.
-	</a:documentation>
-	<ref name="base-specific-sfrs"/>
-      </element>
-      <element name="con-toe">
-	<a:documentation>
-	  Consistency argument for why this module does not violate the TOE of the base PP.
-	</a:documentation>
-	<ref name="basic-content-pat"/>
-      </element>
-      <element name="con-sec-prob">
-	<a:documentation>
-	  Consistency argument for why this module does not violate the security problem described by the base PP.
-	</a:documentation>
-	<ref name="basic-content-pat"/>
-      </element>
-      <element name="con-obj">
-	<a:documentation>
-	  Consistency argument for why this module does not violate the objectives described by the base PP.
-	</a:documentation>
-	<ref name="basic-content-pat"/>
-      </element>
-      <element name="con-op-en">
-	<a:documentation>
-	  Consistency argument for why this module does not violate the objectives for the optional environmnet described by the base PP.
-	</a:documentation>
-	<ref name="basic-content-pat"/>
-      </element>
-    </element>
-  </define>
-
-  <define name="base-specific-sfrs">
-    <zeroOrMore>
-      <element name="subsection">
-	<a:documentation>
-	  Defines SFRs that pertain to specific base.
-	</a:documentation>
-	<ref name="title-attr"/>
-	<ref name="id-attr"/>
-	<oneOrMore>
-	  <element name="f-component">
-	    <a:document>
-	      Specifies a component under Security Functional Requirements section..
-	    </a:document>
-	    <attribute name="id">
-	      <a:documentation>
-		A document-wide unique id. Not really read by a person, but it
-		should be the base for its child requirements' ids.
-	      </a:documentation>
-	    </attribute>
-	    <attribute name="name">
-	      <a:documentation>
-		Readable title for this requirement.
-	      </a:documentation>
-	    </attribute>
-	    <ref name="consistency-rationale"/>
-	    <ref name="f-elements-pat"/>
-	  </element>
-	</oneOrMore>
-      </element>
-    </zeroOrMore>
-  </define>
-
-
-
-  <define name="SecObjChapter">
-    <element name="chapter">
-      <a:documentation>
-	Chapter describing the Security Objectives for this module.
-      </a:documentation>
-      <attribute name="title"><value>Security Objectives</value></attribute>
       <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="SOs"/>
-      </element>
-      <element name="section"> 
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE's Operational Environment.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<zeroOrMore>
-	  <ref name="SOs"/>
-	</zeroOrMore>
-      </element>
-      <element name="section">
-	<a:documentation>
-	  Section describing the rationale for why this module's security objectives do not
-	  conflict with the base PPs.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="id-attr"/>
-      </element>
-    </element>
-  </define>
-
-  <define name="SecProbDesChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Security Problem Description</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing threats.
-	</a:documentation>
-	<attribute name="title"><value>Threats</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<element name="threats">
-	  <a:documentation>
-	  </a:documentation>
-	  <oneOrMore>
-	    <element name="threat">
-	      <a:documentation>
-	      </a:documentation>
-	      <ref name="id-attr"/>
-	      <ref name="description"/>
-	      <optional>
-		<element name="consistency-rationale">
-		  <a:documentation>
-		  </a:documentation>
-		  <ref name="basic-content-pat"/>
-		</element>
-	      </optional>
-	      <ref name="objective-refer"/>
-	    </element>
-	  </oneOrMore>
-	</element>
-      </element>
-
-      <element name="section">
-	<a:documentation>
-	  Section describing Assumptions.
-	</a:documentation>
-	<attribute name="title"><value>Assumptions</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<ref name="assumptions"/>
-      </element>
-
-    </element>
-  </define>
-
-  <define name="CClaimsChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Conformance Claims</value></attribute>
-      <ref name="id-attr"/>
-      <element name="cclaims">
-	<a:documentation>
-	</a:documentation>
-	<oneOrMore>
-	  <element name="cclaim">
-	    <a:documentation>
-	    </a:documentation>
-	    <ref name="title-attr"/>
-	    <ref name="description"/>
-	  </element>
-	</oneOrMore>
-      </element>
-    </element>
-  </define>
-
-
-
-
-
-
-
-
-  <define name="IntroductionChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Introduction</value></attribute>
-      <ref name="id-attr"/>
-      <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Overview</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-      </element>
-      <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Terms</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<element name="subsection">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>Common Criteria Terms</value></attribute>
-	  <ref name="glossary-el"/>
-	</element>
-	<element name="subsection">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>Technology Terms</value></attribute>
-	  <ref name="glossary-el"/>
-	</element>
-      </element>
-      <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-      </element>
-      <optional>
-	<element name="section">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>Use Cases</value></attribute>
-	  <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="subsection-pattern"/>
 	  <ref name="basic-content-pat"/>
-          <element name="usecases">
-	    <a:documentation>
-	      Wrapper element for uses cases.
-	    </a:documentation>
-            <oneOrMore>
-              <element name="usecase">
-		<a:documentation>
-		  A referrable section on how the protection profiled item is used.
-		</a:documentation>
-		<ref name="id-attr"/>
-		<ref name="title-attr"/>
-		<ref name="description"/>
-              </element>
-            </oneOrMore>
-          </element>
-      </element>
-      </optional>
+	  <ref name="a-component-pattern"/>
+	  <ref name="f-component-pattern"/>
+        </choice>
+      </oneOrMore>
     </element>
   </define>
 
 
+  
+  <define name="a-component-pattern">
+    <element name="a-component">
+      <a:document>
+	Specifies a component under Security Assurance Requirements section.
+      </a:document>
+      <ref name="id-attr"/>
+      <attribute name="name">
+	<a:document>
+	  A readable title for this component
+	</a:document>
+      </attribute>
+      <ref name="basic-content-pat"/>
+      <optional>
+	<element name="summary">
+	  <a:documentation>
+	    Summary of this component.
+	  </a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
+      </optional>
 
-  <define name="glossary-el">
+      <oneOrMore>
+        <element name="evalactionlabel">
+	  <a:documentation>
+	    Actions levied on a role.
+	  </a:documentation>
+	  <attribute name="title"></attribute>
+	</element>
+	<ref name="a-elements"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="glossary-section">
     <element name="glossary">
       <a:documentation>
+	Section to define terms.
       </a:documentation>
       <oneOrMore>
-	<element name="entry">
-	  <a:documentation>
-	  </a:documentation>
-	  <element name="term"><ref name="basic-content-pat"/></element>
-	  <ref name="description"/>
-	</element>
+	<ref name="entry-el"/>
       </oneOrMore>
     </element>
   </define>
@@ -502,83 +453,4 @@
 
 
 
-  <define name="base-name">
-    <element name="base-name">
-      <a:documentation>	Variable that references the base name of the PP </a:documentation>
-      <empty/>
-    </element>
-  </define>
-
-  <define name="consistency-rationale">
-    <element name="consistency-rationale">
-      <a:documentation> 
-	Common rationale that will go into the consisteny-rationale in each base-pp
-	section (unless the base redefines it).
-      </a:documentation>
-      <oneOrMore>
-	<choice>
-	  <ref name="basic-content-pat"/>
-	  <ref name="base-name"/>
-	</choice>
-      </oneOrMore>
-    </element>
-  </define>
-
-  <define name="boilerplate-pat">
-    <optional>
-      <attribute name="boilerplate">
-	<value>yes</value>
-      </attribute>
-    </optional>
-  </define>
-
-
-
-  <define name="PPRefAndRevision">
-    <element name="PPReference">
-      <a:documentation>
-      </a:documentation>
-      <element name="ReferenceTable">
-	<a:documentation>
-	</a:documentation>
-        <element name="PPVersion">
-	  <a:documentation>
-	  </a:documentation>
-          <data type="decimal"/>
-        </element>
-        <element name="PPAuthor">
-	  <a:documentation>
-	  </a:documentation>
-          <text/>
-        </element>
-        <element name="PPPubDate">
-	  <a:documentation>
-	    Date of publication for this PP.
-	  </a:documentation>
-          <data type="date"/>
-        </element>
-        <element name="Keywords">
-	  <a:documentation>
-	  </a:documentation>
-          <text/>
-        </element>
-      </element>
-    </element>
-
-    <oneOrMore>
-      <element name="RevisionHistory">
-	<a:documentation>
-	</a:documentation>
-        <oneOrMore>
-	  <element name="entry">
-	    <a:documentation>
-	    </a:documentation>
-	    <element name="version"><text/></element>
-	    <element name="date"><data type="date"/></element>
-	    <element name="subject"><text/></element>
-	  </element>
-        </oneOrMore>
-      </element>
-    </oneOrMore>
-  </define>
 </grammar>
