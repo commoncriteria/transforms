@@ -35,6 +35,11 @@ The title of this document.
 	</a:documentation>
       </attribute>
       <optional>
+	<attribute name="type">
+	  <choice><value>package</value><value>pp</value></choice>
+	</attribute>
+      </optional>
+      <optional>
 	<attribute name="boilerplate">
 	<a:documentation>
 Indicates that this document shall use boilerplate sections.
