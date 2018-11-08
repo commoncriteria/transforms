@@ -352,6 +352,22 @@
     </element>
   </define>
 
+  <define name="SOEs">
+    <element name="SOEs">
+      <a:documentation>
+	Grouping for Security Objective for the Operation Environment entries.
+      </a:documentation>
+      <oneOrMore>
+	<element name="SOE">
+	  <ref name="id-attr"/>
+	  <ref name="description"/>
+	</element>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+
   <define name="SO">
     <element name="SO">
       <a:documentation>
