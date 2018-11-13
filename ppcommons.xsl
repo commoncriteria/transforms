@@ -35,6 +35,10 @@
         display: block;
     }
 
+    a[id^="ajq_"]{
+        color:black;
+    }
+
     <!-- h1{ -->
     <!--    width: 100%; -->
     <!--    border-bottom-style: solid; -->

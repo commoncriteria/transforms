@@ -34,7 +34,7 @@ class State:
         self.root = root
         self.parent_map = {c:p for p in self.root.iter() for c in p}
         self.create_classmapping()
-
+        self.period_ctr = 0
 
     def create_classmapping(self):
         self.classmap={}
@@ -61,7 +61,31 @@ class State:
 """ + self.to_html_helper(self.root)
         
 
+    def handle_text(self, parent, text):
+        # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
+
+        if parent.tag=="a"\
+           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
+           or parent.tag=="script"\
+           or parent.tag=="style":
+            return escape(text)
+            
+
+            
+
+        ret=""
+        # Split on ending sentence periods
+        chunks=re.split("""\.\s+|\.$""", text)
+        for aa in range(0, len(chunks)-1):
+            ret += escape(chunks[aa])
+            self.period_ctr+=1
+            id="ajq_"+str(self.period_ctr)
+            ret += "<a href='#"+id+"' id='"+id+"'>.</a> "
+        ret+=escape(chunks[-1])
+        return ret
+
     def to_html_helper(self, elem):
+        """Function that turns document in HTML"""
         tagr = elem.tag.split('}')
         noname=tagr[len(tagr)-1]
         if noname=="br":
@@ -71,11 +95,11 @@ class State:
             ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
         ret=ret+">"
         if elem.text:
-            ret += escape(elem.text)
+            ret += self.handle_text(elem, elem.text)
         for child in elem:
             ret += self.to_html_helper(child)
             if child.tail:
-                ret += child.tail
+                ret += self.handle_text(elem, child.tail)
         ret= ret + '</' + noname +'>'
         return ret
 
