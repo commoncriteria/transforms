@@ -173,7 +173,7 @@ diff: $(PP_RELEASE_HTML)
 		cd $$aa;\
 		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
 		cd $${orig##*/};\
-		make;\
+		TRANS=transforms make;\
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
 		cd $$orig;\
 		pwd;\
