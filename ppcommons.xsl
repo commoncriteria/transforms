@@ -203,7 +203,6 @@
     </li>
   </xsl:template>
 
-
   <xsl:template name="references">
     <h1 id="biblio" class="indexable" data-level="A">References</h1>
     <table>
@@ -212,6 +211,19 @@
     </table>
   </xsl:template>
 
+  <xsl:template match="cc:componentsneeded">
+    <table>
+      <tr class='header'><th>Component</th><th>Explanation</th></tr>
+      <xsl:apply-templates select="//cc:componentneeded"/>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="cc:componentneeded">
+    <tr>
+        <td><xsl:apply-templates select="cc:componentid"/></td>
+        <td><xsl:apply-templates select="cc:notes"/></td>
+    </tr>
+  </xsl:template>
 
   <xsl:template match="cc:cc-entry">
 <tr><td><span id='bibCC'> [CC] </span></td><td>Common Criteria for Information Technology Security Evaluation - <ul>
