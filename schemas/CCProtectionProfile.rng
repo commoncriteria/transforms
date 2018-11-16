@@ -10,6 +10,21 @@
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
       <choice>
+	<element name="componentsneeded">
+	  <oneOrMore>
+	    <element name="componentneeded">
+	      <element name="componentid">
+		<data type="string">
+		  
+		  <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{3,4}(_EXT)?\.[0-9]</param>
+		</data>
+	      </element>
+	      <element name="notes">
+		<ref name="basic-content-pat"/>
+	      </element>
+	    </element>
+	  </oneOrMore>
+	</element>
 	<element name="if-opt-app">
 	  <a:documentation>
 	    Content that only appears if the optional appendices exist.
@@ -24,6 +39,30 @@
 	</element>
       </choice>
     </define>
+
+
+  <define name="description">
+    <element name="description">
+      <a:documentation>
+	A description section. Basically just has basic content and
+      </a:documentation>
+      <oneOrMore>
+        <choice>
+	  <ref name="basic-content-pat"/>
+          <element name="InsertAppendixExplainer">
+	    <a:documentation>
+	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
+	      of requirements are located.
+	    </a:documentation>
+	    <empty/>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+
   </include>
 
   <start>
@@ -196,7 +235,6 @@ Indicates that this document shall use boilerplate sections.
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="glossary-section"/>
 	  <ref name="basic-content-pat"/>
           <element name="InsertSPDCorrespondence">
 	    <a:documentation>
@@ -272,25 +310,6 @@ Indicates that this document shall use boilerplate sections.
                 <ref name="description"/>
               </element>
             </oneOrMore>
-          </element>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="description">
-    <element name="description">
-      <a:documentation>
-	A description section. Basically just has basic content and
-      </a:documentation>
-      <oneOrMore>
-        <choice>
-	  <ref name="basic-content-pat"/>
-          <element name="InsertAppendixExplainer">
-	    <a:documentation>
-	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
-	      of requirements are located.
-	    </a:documentation>
-	    <empty/>
           </element>
         </choice>
       </oneOrMore>
@@ -400,6 +419,7 @@ Indicates that this document shall use boilerplate sections.
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
+	  <ref name="glossary-section"/>
 	  <ref name="subsection-pattern"/>
 	  <ref name="basic-content-pat"/>
 	  <ref name="a-component-pattern"/>
