@@ -21,23 +21,23 @@
     the baseline requirements (those that must be performed by the TOE) are
     contained in the body of this PP. Additionally, there are three other types of requirements
     specified in 
-    <a href="#{$optappid}" class="dynref">Appendix </a>,
-    <a href="#{$selappid}" class="dynref">Appendix </a>, and 
-    <a href="#{$objappid}" class="dynref">Appendix </a>.
+    <a href="#{$optappid}" class="dynref"></a>,
+    <a href="#{$selappid}" class="dynref"></a>, and 
+    <a href="#{$objappid}" class="dynref"></a>.
     The first type (in this Appendix) are requirements that can be included
     in the <abbr title="Security Target">ST</abbr>, 
     but are not required in order for a TOE to claim conformance to
     this PP. The second type 
-    (in <a href="#{$selappid}" class="dynref">Appendix </a>) are requirements based on selections
+    (in <a href="#{$selappid}" class="dynref"></a>) are requirements based on selections
     in the body of the PP: if certain selections are made, then additional requirements in that
     appendix must be included. The third type (in 
-    <a href="#{$objappid}" class="dynref">Appendix </a>) are components that
+    <a href="#{$objappid}" class="dynref"></a>) are components that
     are not required in order to conform to this PP, but will be included in the baseline
     requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the
     ST author is responsible for ensuring that requirements that may be associated with those in
-    <a href="#{$optappid}" class="dynref">Appendix </a>,
-    <a href="#{$selappid}" class="dynref">Appendix </a>, and 
-    <a href="#{$objappid}" class="dynref">Appendix </a>
+    <a href="#{$optappid}" class="dynref"></a>,
+    <a href="#{$selappid}" class="dynref"></a>, and 
+    <a href="#{$objappid}" class="dynref"></a>
     but are not listed (e.g., FMT-type requirements) are also included in the ST.
   </xsl:template>
 

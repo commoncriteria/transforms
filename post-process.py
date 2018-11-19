@@ -146,11 +146,15 @@ class State:
         for brokeRef in brokeRefs:
             linkend=brokeRef.attrib["href"][1:]
             target=root.find(".//*[@id='"+linkend+"']")
+
+            
+            if not hasattr(brokeRef, 'text')\
+               or brokeRef.text==None:
+                brokeRef.text=" "
             try:
                 # Append ref text.
                 brokeRef.text = brokeRef.text + target.text
-                debug("Making text: " + brokeRef.text);
-
+                debug("Made " + brokeRef.text)
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 

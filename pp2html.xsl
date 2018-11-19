@@ -647,7 +647,8 @@
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:appref">
-    <a href="#{@linkend}" class="dynref">Appendix </a>
+    <a href="#{@linkend}" class="dynref"></a>
+    <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
   </xsl:template>
 
 <!-- ############### -->
