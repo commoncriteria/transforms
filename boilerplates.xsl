@@ -184,6 +184,7 @@ The following notations are used: <ul>
         provided by the [CC] in stating a requirement.</li>
       <li><b>Assignment</b> operation (denoted by <span class="assignable-content">italicized text</span>): is used to assign a specific value to an unspecified parameter, such as the length of a password. Showing the  value in square brackets indicates assignment.</li>
       <li><b>Iteration</b> operation: are identified with a number inside parentheses (e.g."(1)")</li>
+      <li><b>Extended SFRs</b>: are identified by have an "EXT" label after the SFR name.</li>
     </ul>
   </xsl:template>
 
