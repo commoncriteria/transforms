@@ -154,7 +154,6 @@ class State:
             try:
                 # Append ref text.
                 brokeRef.text = brokeRef.text + target.text
-                debug("Made " + brokeRef.text)
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
