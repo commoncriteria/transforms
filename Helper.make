@@ -202,7 +202,7 @@ $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
-$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML) transforms/pp2simplified.xsl
+$(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 #- Builds the PP worksheet
