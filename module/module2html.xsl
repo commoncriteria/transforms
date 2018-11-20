@@ -264,14 +264,18 @@ additional restrictions.
       Modified SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
-      The SFRs listed in this section are defined in the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile and relevant to the secure operation of the TOE.
+      The SFRs listed in this section are defined in the <xsl:value-of select="@name"/> Protection Profile and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-      This module does not modify any SFRs defined by the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile.
+      This module does not modify any SFRs defined by the <xsl:value-of select="@name"/> Protection Profile.
     </xsl:otherwise>
     </xsl:choose>
-
+    <!-- 
+	 If we have only one base PP, we should hide this section (so says NIAP).
+	 In that case there shouldn't be any additional-sfrs (but for some
+	 reason we're allowing it).
+    -->
     <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
     <xsl:element name="h2">
       <xsl:attribute name="id">addsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
@@ -280,11 +284,11 @@ additional restrictions.
       Additional SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
-      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile is claimed as the Base-PP.
+      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="../cc:base-pp/@name"/> Protection Profile is claimed as the Base-PP.
+This module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>
