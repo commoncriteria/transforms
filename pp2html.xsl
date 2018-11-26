@@ -232,21 +232,36 @@
 	      <xsl:variable name="uncapped-req">
 		<xsl:value-of select="translate(@ref,$upper,$lower)"/>
 	      </xsl:variable>
+	      <xsl:choose>
 
-	      <xsl:element name="span">
-		<xsl:attribute name="class">
-		  <xsl:value-of select="//cc:f-component[@id=$uncapped-req]/@status"/>
-		</xsl:attribute>
-		<xsl:call-template name="req-refs">
-                  <xsl:with-param name="req" select="@ref"/>
-		</xsl:call-template>
-		<!--
-		     This is here so that if we wanted to added text
-		     but make it different font.
-		-->
-		<span class="after"/>
-	      </xsl:element>
-	      <xsl:call-template name="commaifnotlast"/>
+		<!-- if there's a reference and it matches a f-component id -->
+		<xsl:when test="//cc:f-component[@id=$uncapped-req]">
+		  <xsl:element name="span">
+		    <xsl:attribute name="class">
+		      <xsl:value-of select="//cc:f-component[@id=$uncapped-req]/@status"/>
+		    </xsl:attribute>
+		    <xsl:call-template name="req-refs">
+                      <xsl:with-param name="req" select="@ref"/>
+		    </xsl:call-template>
+		    <!--
+			This is here so that if we wanted to added text
+			but make it different font.
+		    -->
+		    <span class="after"/>
+		</xsl:element>
+		</xsl:when>
+
+		<!-- if there's a reference -->
+		<xsl:when test="@ref">
+		  <span class="external-ref"><xsl:value-of select="@ref"/></span>
+		</xsl:when>
+
+		<!-- if there's no reference, just shove in whatever -->
+		<xsl:otherwise>
+		  <xsl:apply-templates/>
+		</xsl:otherwise>
+	      </xsl:choose>
+		<xsl:call-template name="commaifnotlast"/>
             </xsl:for-each>
           </span>
           <xsl:apply-templates select="cc:appnote"/></dd>
