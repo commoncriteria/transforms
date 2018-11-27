@@ -177,8 +177,10 @@ diff: $(PP_RELEASE_HTML)
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
 		cd $$orig;\
 		pwd;\
+		(while sleep 60; do echo '#'; done) &\
 		java -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
-#		rm -rf $(TMP)/$$aa;\
+		kill %1\
+		rm -rf $(TMP)/$$aa;\
 	done
 	[ -d "$(OUT)/js"  ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
