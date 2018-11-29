@@ -351,7 +351,7 @@
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
 	<zeroOrMore>
-	  <ref name="SOs"/>
+	  <ref name="SOEs"/>
 	</zeroOrMore>
       </element>
       <element name="section">
@@ -395,7 +395,9 @@
 		  <ref name="basic-content-pat"/>
 		</element>
 	      </optional>
-	      <ref name="objective-refer"/>
+              <oneOrMore>
+                <ref name="objective-refer"/>
+              </oneOrMore>
 	    </element>
 	  </oneOrMore>
 	</element>
@@ -487,6 +489,22 @@
 	<attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
+	<element name="subsection">
+	  <a:documentation>
+	  </a:documentation>
+	  <attribute name="title"><value>TOE Boundary</value></attribute>
+	  <ref name="id-attr"/>
+	  <ref name="basic-content-pat"/>
+	</element>
+	<optional>
+	  <element name="subsection">
+	    <a:documentation>
+	    </a:documentation>
+	    <attribute name="title"><value>TOE Platform</value></attribute>
+	    <ref name="id-attr"/>
+	    <ref name="basic-content-pat"/>
+	  </element>
+	</optional>
       </element>
       <element name="section">
 	<a:documentation>
