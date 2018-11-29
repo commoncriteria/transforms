@@ -119,26 +119,26 @@ guidance, and testing.</p>
   <x:template name="handle-apply-to-all">
     <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
     <x:choose>
-      <x:when test="//cc:man-sfrs/cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any mandatory requirements (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
     <x:choose>
-      <x:when test="//cc:opt-sfrs/cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
     <x:choose>
-      <x:when test="//cc:sel-sfrs/cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Objective SFRs</h1>  
     <x:choose>
-      <x:when test="//cc:obj-sfrs/cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any objective requirements.</x:otherwise>
     </x:choose>
 
@@ -367,12 +367,26 @@ guidance, and testing.</p>
   </x:template>
 
   <x:template match="cc:subsection">
-    <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)-1}">
+    <x:call-template name="subsection"><x:with-param name="level"><x:value-of select="count(ancestor::*)-1"></x:value-of></x:with-param></x:call-template>
+  </x:template>
+
+  <!-- Not getting the right level numbers-->
+  <x:template match="cc:opt-sfrs/cc:subsection|cc:sel-sfrs/cc:subsection|cc:obj-sfrs/cc:subsection">
+    <x:call-template name="subsection"><x:with-param name="level"><x:value-of select="1"></x:value-of></x:with-param></x:call-template>
+
+  </x:template>
+
+  <x:template name="subsection">
+    <x:param name="level"/>
+    <x:element name="h3">
+      <x:attribute name="id"><x:value-of select="@id"/></x:attribute>
+      <x:attribute name="class">indexable</x:attribute>
+      <x:attribute name="data-level"><x:value-of select="$level"/></x:attribute>
       <x:value-of select="@title" />
-    </h3>
+    </x:element>
     <x:apply-templates select="cc:*"/>
   </x:template>
-  
+
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
       <h4>
