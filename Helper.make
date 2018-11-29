@@ -178,7 +178,7 @@ diff: $(PP_RELEASE_HTML)
 		cd $$orig;\
 		pwd;\
 		(while sleep 60; do echo '#'; done) &\
-		java -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
+		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
 		kill %1;\
 		rm -rf $(TMP)/$$aa;\
 	done
