@@ -151,6 +151,7 @@
 	<tr>
 	  <th colspan="2"> Mandatory SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
+	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any mandatory requirements.
