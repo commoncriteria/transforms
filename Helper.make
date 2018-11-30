@@ -96,6 +96,7 @@ DIFF_TAGS?=
 # developed 'release' version against
 DIFF_DIR ?= diff-archive
 
+DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
@@ -160,10 +161,11 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 diff: $(PP_RELEASE_HTML)
 	[ ! -d "$(DIFF_DIR)" ] ||\
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
-	     java -jar $(DAISY_DIR)/*.jar "$$old" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${old##*/}";\
+		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
 	   done;\
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
-	     base=$${old%.url}; java -jar $(DAISY_DIR)/*.jar <(wget -O-  `cat $$old`) $(PP_RELEASE_HTML)   --file="$(OUT)/diff-$${base##*/}.html";\
+	     base=$${old%.url};\
+	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
 	   done
 	for aa in $(DIFF_TAGS); do\
 		orig=$$(pwd);\
@@ -178,9 +180,9 @@ diff: $(PP_RELEASE_HTML)
 		cd $$orig;\
 		pwd;\
 		(while sleep 60; do echo '#'; done) &\
-		java -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
-		kill %1;\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
 		rm -rf $(TMP)/$$aa;\
+		kill %1;\
 	done
 	[ -d "$(OUT)/js"  ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
