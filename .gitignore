@@ -3,7 +3,6 @@ schemas/*.rnc
 /**/.#*
 /**/*~
 /**/*.html
-Makefile
 /**/__pycache__
 tmp
 temp
