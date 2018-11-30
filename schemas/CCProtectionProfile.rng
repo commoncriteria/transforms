@@ -160,6 +160,7 @@ Indicates that this document shall use boilerplate sections.
 	  <a:documentation>Major grouping for the document.</a:documentation>
 	  <ref name="id-attr"/>
 	  <ref name="title-attr"/>
+	  <ref name="boilerplate-no-attr"/>
           <oneOrMore>
             <choice>
 	      <ref name="basic-content-pat"/>

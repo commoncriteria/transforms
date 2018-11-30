@@ -15,6 +15,15 @@
     </attribute>
   </define>
 
+  <define name="boilerplate-no-attr">
+    <a:documentation>
+      Attribute to stifle boilerplate text from being included in this section.
+    </a:documentation>
+    <attribute name="boilerplate">
+      <value>no</value>
+    </attribute>
+  </define>
+
   <define name="bibliography">
     <element name="bibliography">
       <a:documentation>
