@@ -19,9 +19,11 @@
     <a:documentation>
       Attribute to stifle boilerplate text from being included in this section.
     </a:documentation>
-    <attribute name="boilerplate">
-      <value>no</value>
-    </attribute>
+    <optional>
+      <attribute name="boilerplate">
+	<value>no</value>
+      </attribute>
+    </optional>
   </define>
 
   <define name="bibliography">
@@ -428,9 +430,21 @@
 	<ref name="TSS"/>
 	<ref name="Guidance"/>
 	<ref name="Tests"/>
+	<ref name="wsn"/>
 	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
+  </define>
+
+  <define name="wsn">
+    <a:documentation>
+      Worksheet notes. Human readable Content that should be included in the worksheet.
+      These only make sense in the note elements in the f-elements.
+    </a:documentation>
+
+    <element name="wsn">
+      <ref name="basic-content-pat"/> 
+    </element>
   </define>
 
   <!-- ###################################################
@@ -791,6 +805,4 @@
       </element>
     </element>
   </define>
-
-
 </grammar>

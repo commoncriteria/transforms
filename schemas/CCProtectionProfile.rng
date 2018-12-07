@@ -202,7 +202,6 @@ Indicates that this document shall use boilerplate sections.
   </start>
 
 
-
   <define name="appendix">
     <a:documentation>
       Pattern for title attribute.
