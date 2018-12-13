@@ -483,6 +483,7 @@
 	<element name="entry">
 	  <a:documentation>
 	  </a:documentation>
+	  <optional><attribute name="id"/></optional>
 	  <element name="term"><ref name="basic-content-pat"/></element>
 	  <ref name="description"/>
 	</element>

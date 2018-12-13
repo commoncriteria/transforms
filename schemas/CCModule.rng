@@ -385,9 +385,14 @@
 	  <oneOrMore>
 	    <element name="threat">
 	      <a:documentation>
+		Omitting the description supresses the threat from being included in the
+		threat section (but it will still be included in the security objectives 
+		rationale table).
 	      </a:documentation>
 	      <ref name="id-attr"/>
-	      <ref name="description"/>
+	      <optional>
+		<ref name="description"/>
+	      </optional>
 	      <optional>
 		<element name="consistency-rationale">
 		  <a:documentation>

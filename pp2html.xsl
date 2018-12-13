@@ -190,7 +190,8 @@
 <!--            -->
   <xsl:template match="cc:threats">
     <dl>
-      <xsl:for-each select="cc:threat">
+      <!-- For -->
+      <xsl:for-each select="cc:threat[/cc:description]">
         <dt>
           <xsl:value-of select="@id"/>
         </dt>
