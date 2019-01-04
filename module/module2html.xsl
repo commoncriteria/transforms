@@ -29,9 +29,9 @@
     <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
     <xsl:call-template name="obj-sfrs"/>
+    <xsl:apply-templates select="//cc:appendix"/>
     <xsl:apply-templates select="//cc:bibliography"/>
     <xsl:apply-templates select="//cc:acronyms"/>
-    <xsl:apply-templates select="//cc:appendix"/>
   </xsl:template>
 
 
@@ -343,10 +343,12 @@ This module does not define any additional SFRs for any PP-Configuration where t
         </tr>
       </xsl:for-each>
     </table>
+
   </xsl:template>
 
   <xsl:template match="cc:acronyms">
-    <h1 id="bibliography" class="indexable" data-level="A">Acronyms</h1>
+    <xsl:text>&#10;</xsl:text> 
+    <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
     <table>
       <tr class="header">
         <th>Acronym</th>
