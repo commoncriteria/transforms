@@ -29,11 +29,13 @@
     <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
     <xsl:call-template name="obj-sfrs"/>
+    <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
     <xsl:apply-templates select="//cc:bibliography"/>
     <xsl:apply-templates select="//cc:acronyms"/>
   </xsl:template>
 
+ 
 
 
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
@@ -406,7 +408,6 @@ performed by the TOE or its underlying platform) are contained in the body of th
     </xsl:choose>
   </xsl:template>
 
-
   <xsl:template name="obj-sfrs">
     <h1 id="obj-sfrs" class="indexable" data-level="A">Objective SFRs</h1>
     This section is reserved for requirements that are not currently prescribed by this PP-Module 
@@ -424,6 +425,39 @@ performed by the TOE or its underlying platform) are contained in the body of th
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+  <xsl:template name="ext-comp-defs">
+    <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
+This appendix contains the definitions for the extended requirements that are used in the PP-Module
+including those used in Appendices A through C.
+ 
+ 
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
+This Appendix provides a definition for all of the extended components introduced
+in this PP-Module.
+These components are identified in the following table:
+
+<table>
+  <tr>
+    <th>Functional Class</th><th>Functional Components</th>
+    
+    <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
+      <tr> <td><xsl:value-of select="@title"/></td><td>
+         <xsl:for-each select="cc:ext-comp-def">      
+           <xsl:value-of select="@fam-id"/>&#x90;<xsl:value-of select="@title"/><br/>
+         </xsl:for-each>
+         </td>
+      </tr>
+    </xsl:for-each>
+  </tr>
+</table>  
+    
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
+    
+    
+  </xsl:template>
+
 
 
   <xsl:template match="cc:base-name">
@@ -488,4 +522,7 @@ additional restrictions.
 
 
   <xsl:template name="opt_text"/>
+
+  <!-- Hide this when we stumble on it -->
+  <xsl:template match="cc:ext-comp-def"/>
 </xsl:stylesheet>
