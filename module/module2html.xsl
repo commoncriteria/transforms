@@ -426,7 +426,8 @@ performed by the TOE or its underlying platform) are contained in the body of th
     </xsl:choose>
   </xsl:template>
 
-
+<!-- ####################### -->
+<!-- ####################### -->
   <xsl:template name="ext-comp-defs">
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
 This appendix contains the definitions for the extended requirements that are used in the PP-Module
@@ -445,7 +446,7 @@ These components are identified in the following table:
     <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def">      
-           <xsl:value-of select="@fam-id"/>&#x90;<xsl:value-of select="@title"/><br/>
+           <xsl:value-of select="translate(@fam-id,lower,upper)"/>&#x90;<xsl:value-of select="@title"/><br/>
          </xsl:for-each>
          </td>
       </tr>
@@ -455,9 +456,26 @@ These components are identified in the following table:
     
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
     
+    <xsl:for-each select="//cc:ext-comp-def">
+    
+       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
+      <h3><xsl:value-of select="$famId"/> <xsl:text> </xsl:text>
+          <xsl:value-of select="@title"/> </h3>
+      <xsl:apply-templates select="cc:mod-def"/> 
+      
+      
+      <xsl:message>Looking for prefixes <xsl:value-of select="$famId"/></xsl:message>
+      
+
+      <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)]">
+
+           <xsl:value-of select="@id"/>
+      </xsl:for-each>
+    </xsl:for-each>
+    
     
   </xsl:template>
-
+    
 
 
   <xsl:template match="cc:base-name">
