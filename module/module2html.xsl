@@ -85,7 +85,7 @@
       <xsl:apply-templates select="./cc:con-obj"/>
       <xsl:if test="//cc:SO">
 	  The objectives for the TOEs are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
-      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
+      <table><tr><th>PP-Module Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SO">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -100,7 +100,7 @@
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
 	  The objectives for the TOE's operational environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
-      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
+      <table><tr><th>PP-Module Operational Environment ObjectiveThreat</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
