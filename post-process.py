@@ -238,11 +238,11 @@ def getalltext(elem):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         #        0                        1           
-        print("Usage: <protection-profile>[::<output-file>]")
+        print("Usage: <protection-profile>[=<output-file>]")
         sys.exit(0)
 
-    # Split on double colon
-    out=sys.argv[1].split("::")
+    # Split on equals
+    out=sys.argv[1].split("=")
     infile=out[0]
     outfile=""
     if len(out) < 2:
@@ -262,6 +262,6 @@ if __name__ == "__main__":
     state.fix_index_refs()
     state.fix_counters()
     state.fix_tooltips()
-    with open(outfile, "w+") as outstream:
+    with open(outfile, "w+", encoding="utf-8") as outstream:
         outstream.write(state.to_html())
 
