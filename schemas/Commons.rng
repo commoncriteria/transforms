@@ -605,7 +605,7 @@
       <a:documentation>
 	Grouping of assumptions.
       </a:documentation>
-      <oneOrMore>
+      <zeroOrMore>
         <element name="assumption">
 	  <a:documentation>
 	    Describes assumptions made.
@@ -618,7 +618,7 @@
           <ref name="description"/>
           <ref name="objective-refer"/>
         </element>
-      </oneOrMore>
+      </zeroOrMore>
     </element>
   </define>
 
