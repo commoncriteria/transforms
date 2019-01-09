@@ -446,7 +446,7 @@ These components are identified in the following table:
     <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def">      
-           <xsl:value-of select="translate(@fam-id,lower,upper)"/>&#x90;<xsl:value-of select="@title"/><br/>
+           <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
          </td>
       </tr>
@@ -455,21 +455,42 @@ These components are identified in the following table:
 </table>  
     
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
-    
     <xsl:for-each select="//cc:ext-comp-def">
-    
-       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
-      <h3><xsl:value-of select="$famId"/> <xsl:text> </xsl:text>
+      <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
+      <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
       <xsl:apply-templates select="cc:mod-def"/> 
-      
-      
-      <xsl:message>Looking for prefixes <xsl:value-of select="$famId"/></xsl:message>
-      
 
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)]">
+         <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
+         <h3>Component Leveling</h3>
+         <p><xsl:value-of select="$upId"/>,
+             <xsl:value-of select="@name"/>,
+             <xsl:apply-templates select="cc:comp-lev"/>
+         </p>
+         <h3>Management <xsl:value-of select="$upId"/></h3>
+         <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
+            <xsl:value-of select="cc:management"/>
+         </p>
 
-           <xsl:value-of select="@id"/>
+         <h3>Audit <xsl:value-of select="$upId"/></h3>
+         <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
+            <xsl:value-of select="cc:audit"/>
+         </p>
+         <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
+         </h3>
+         <p>Heirarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
+            <xsl:apply-templates select="cc:heirarchical-to"/>
+         </p>
+         <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
+            <xsl:apply-templates select="cc:dependencies"/>
+         </p>
+
+         <xsl:for-each select="cc:f-element">
+            <h3> <xsl:value-of select="translate(@id, $lower,$upper)"/> </h3><br/>
+                 <xsl:apply-templates select="cc:title"/>
+         </xsl:for-each>
+          
       </xsl:for-each>
     </xsl:for-each>
     
