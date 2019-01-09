@@ -104,7 +104,7 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 
 #- TRANSFORM 1 using 2 into 3 [with 4 options]
-DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -::$(3) 
+DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -$(3) 
 
 FNL_PARM ?=--stringparam release final
 #- Appendicize parameter
