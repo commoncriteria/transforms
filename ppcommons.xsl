@@ -3,6 +3,7 @@
 
   <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
 
+  <xsl:param name="release" select=""/>
   <!-- #Adds 3 non-breaking spaces -->
   <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
 
