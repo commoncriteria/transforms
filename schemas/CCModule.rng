@@ -27,6 +27,26 @@
 	<ref name="consistency-rationale"/>
       </element>
     </define>
+
+
+
+  <define name="SOEs">
+    <element name="SOEs">
+      <a:documentation>
+Grouping for Security Objective for the Operation Environment entries.
+      </a:documentation>
+      <oneOrMore>
+    	<element name="SOE">
+	     <ref name="id-attr"/>
+	     <ref name="description"/>
+	     <ref name="consistency-rationale"/>
+	   </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+
+
   </include>
 
 
@@ -42,9 +62,9 @@
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecReqChapter"/>
+      <ref name="additional-appendices"/>
       <ref name="bibliography"/>
       <ref name="acronyms"/>
-      <ref name="additional-appendices"/>
     </element>
   </start>
 
@@ -180,18 +200,62 @@
   <define name="f-components-pat">
     <zeroOrMore>
       <element name="subsection">
-	<a:documentation>
-	  Defines SFRs that pertain to specific base.
-	</a:documentation>
-	<ref name="title-attr"/>
-	<ref name="id-attr"/>
-	<zeroOrMore>
-	  <ref name="f-component"/>
-	</zeroOrMore>
+	    <a:documentation>
+	      Defines SFRs that pertain to specific base.
+	    </a:documentation>
+	    <ref name="ext-comp-def-pat"/>
+	    <ref name="title-attr"/>
+	    <ref name="id-attr"/>
+	    <zeroOrMore>
+	      <ref name="f-component"/>
+	    </zeroOrMore>
       </element>
     </zeroOrMore>
   </define>
 
+  <define name="ext-comp-def-pat">
+    <optional>
+	    <element name="ext-comp-def">
+        <a:documentation>
+          Extended Component Definition
+        </a:documentation>
+        <attribute name="fam-id">
+           <data type="string">
+             <param name="pattern">F[A-Z][A-Z]_[A-Z]{3,4}_EXT</param>
+           </data>
+        </attribute>
+        <attribute name="title">
+        </attribute>
+        <choice>
+          <element name="mod-def">
+            <ref name="basic-content-pat"/>
+          </element>
+          <element name="def">
+            <ref name="basic-content-pat"/>
+          </element>
+        </choice>
+      </element>
+    </optional>
+  </define>
+
+  <define name="ext-comp-extra-pat">
+    <optional>
+      <element name="comp-lev">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="management">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="audit">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    
+  </define>
 
   <define name="f-component">
     <element name="f-component">
@@ -211,12 +275,15 @@
       </attribute>
       <!-- Would like to remove this -->
       <zeroOrMore>
-	<ref name="selection-depends"/>
+     	  <ref name="selection-depends"/>
       </zeroOrMore>
       <ref name="consistency-rationale"/>
+      <ref name="ext-comp-extra-pat"/>
       <ref name="f-elements-pat"/>
     </element>
   </define>
+
+
 
   <define name="base-pp">
     <element name="base-pp">
@@ -300,13 +367,14 @@
   <define name="base-specific-sfrs">
     <zeroOrMore>
       <element name="subsection">
-	<a:documentation>
-	  Defines SFRs that pertain to specific base.
-	</a:documentation>
-	<ref name="title-attr"/>
-	<ref name="id-attr"/>
-	<oneOrMore>
-	  <element name="f-component">
+      	<a:documentation>
+Defines SFRs that pertain to specific base.
+      	</a:documentation>
+      	<ref name="title-attr"/>
+	      <ref name="id-attr"/>
+        <ref name="ext-comp-def-pat"/>
+	      <oneOrMore>
+	        <element name="f-component">
 	    <a:document>
 	      Specifies a component under Security Functional Requirements section..
 	    </a:document>
@@ -322,6 +390,7 @@
 	      </a:documentation>
 	    </attribute>
 	    <ref name="consistency-rationale"/>
+      <ref name="ext-comp-extra-pat"/>
 	    <ref name="f-elements-pat"/>
 	  </element>
 	</oneOrMore>
@@ -521,7 +590,7 @@
 	<attribute name="title"><value>Use Cases</value></attribute>
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
-        <element name="usecases">
+      <element name="usecases">
 	  <a:documentation>
 	    Wrapper element for uses cases.
 	  </a:documentation>
