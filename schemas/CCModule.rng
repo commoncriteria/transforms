@@ -69,6 +69,18 @@ Grouping for Security Objective for the Operation Environment entries.
   </start>
 
   <define name="additional-appendices">
+    <optional>
+      <element name="appendix">
+        <attribute name="title">
+           <value>Use Case Templates</value>
+        </attribute>
+        <ref name="basic-content-pat"/>
+        <oneOrMore>
+          <ref name="usecases"/>
+        </oneOrMore>
+      </element>
+    </optional>
+
     <zeroOrMore>
       <ref name="appendix"/>
     </zeroOrMore>
@@ -361,6 +373,22 @@ Grouping for Security Objective for the Operation Environment entries.
 	</a:documentation>
 	<ref name="basic-content-pat"/>
       </element>
+      <zeroOrMore>
+        <element name="con-mod">
+        	<a:documentation>
+Consistency Rationale Modification. Allows a base to specify rationale that is specific to itself. Linked via the ID attribute.
+	        </a:documentation>
+        
+          <attribute name="id">
+        	<a:documentation>
+The ID of the aspect that is being overwritten by the content of this element.
+        	</a:documentation>
+          </attribute>
+          <ref name="basic-content-pat"/>
+        </element>
+      </zeroOrMore>
+
+
     </element>
   </define>
 
@@ -585,30 +613,33 @@ Defines SFRs that pertain to specific base.
 	</optional>
       </element>
       <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Use Cases</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-      <element name="usecases">
-	  <a:documentation>
-	    Wrapper element for uses cases.
-	  </a:documentation>
-          <oneOrMore>
-            <element name="usecase">
-	      <a:documentation>
-		A referrable section on how the protection profiled item is used.
+        <a:documentation>
 	      </a:documentation>
+        <attribute name="title"><value>Use Cases</value></attribute>
 	      <ref name="id-attr"/>
-	      <ref name="title-attr"/>
-	      <ref name="description"/>
-            </element>
-          </oneOrMore>
-        </element>
+	      <ref name="basic-content-pat"/>
+	      <ref name="usecases"/>
       </element>
     </element>
   </define>
 
+  <define name="usecases">
+    <element name="usecases">
+      <a:documentation>
+Wrapper element for uses cases.
+      </a:documentation>
+      <oneOrMore>
+        <element name="usecase">
+          <a:documentation>
+Referrable section on how the protection profiled item is used.
+  	      </a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="description"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
 
 
   <define name="glossary-el">

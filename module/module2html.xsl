@@ -196,27 +196,39 @@
     </xsl:for-each> <!-- End base iteration -->
   </xsl:template>
 
-
+<!-- Requirement Consistency Rational Section -->
   <xsl:template name="req-con-rat-sec">
     <xsl:param name="f-comps"/>
     <xsl:param name="short"/>
     <xsl:param name="verb"/>
     <xsl:param name="none-msg"/>
+
     <xsl:choose>
       <xsl:when test="$f-comps">
-	<xsl:for-each select="$f-comps">
-	  <tr>
-	    <td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
-		<td><xsl:apply-templates select="cc:consistency-rationale/node()">
-		  <xsl:with-param name="base" select="$short"/>
-		</xsl:apply-templates></td>
-	  </tr>
-	</xsl:for-each>
+      	<xsl:for-each select="$f-comps">
+      	  <xsl:variable name="compId" select="@id"/>
+	        <tr>
+	          <td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
+		        <td>
+		          <xsl:choose>
+		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
+		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
+		          </xsl:when>
+ 		          <xsl:otherwise>
+    		        <xsl:apply-templates select="cc:consistency-rationale/node()">
+		              <xsl:with-param name="base" select="$short"/>
+		            </xsl:apply-templates>
+		          </xsl:otherwise>
+		          </xsl:choose>
+		          </td>
+		            
+	        </tr>
+	      </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-	<tr><th colspan="2">
-	  <xsl:value-of select="$none-msg"/>
-	</th></tr>
+	      <tr><th colspan="2">
+	        <xsl:value-of select="$none-msg"/>
+	      </th></tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -463,7 +475,6 @@ These components are identified in the following table:
 
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)]">
          <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
-         <xsl:message>Defining <xsl:value-of select="$upId"/></xsl:message>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
