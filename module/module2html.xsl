@@ -461,8 +461,9 @@ These components are identified in the following table:
           <xsl:value-of select="@title"/> </h3>
       <xsl:apply-templates select="cc:mod-def"/> 
 
-      <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)]">
+      <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)]">
          <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
+         <xsl:message>Defining <xsl:value-of select="$upId"/></xsl:message>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
