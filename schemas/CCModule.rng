@@ -76,7 +76,8 @@ Grouping for Security Objective for the Operation Environment entries.
         </attribute>
         <ref name="basic-content-pat"/>
         <oneOrMore>
-          <ref name="usecases"/>
+          <ref name="usecase"/>
+          <ref name="basic-content-pat"/>
         </oneOrMore>
       </element>
     </optional>
@@ -215,10 +216,10 @@ Grouping for Security Objective for the Operation Environment entries.
 	    <a:documentation>
 	      Defines SFRs that pertain to specific base.
 	    </a:documentation>
-	    <ref name="ext-comp-def-pat"/>
 	    <ref name="title-attr"/>
 	    <ref name="id-attr"/>
 	    <zeroOrMore>
+  	    <ref name="ext-comp-def-pat"/>
 	      <ref name="f-component"/>
 	    </zeroOrMore>
       </element>
@@ -266,7 +267,11 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="basic-content-pat"/>
       </element>
     </optional>
-    
+    <optional>
+      <element name="dependencies">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
   </define>
 
   <define name="f-component">
@@ -629,19 +634,21 @@ Defines SFRs that pertain to specific base.
 Wrapper element for uses cases.
       </a:documentation>
       <oneOrMore>
-        <element name="usecase">
-          <a:documentation>
-Referrable section on how the protection profiled item is used.
-  	      </a:documentation>
-          <ref name="id-attr"/>
-          <ref name="title-attr"/>
-          <ref name="description"/>
-        </element>
+        <ref name="usecase"/>
       </oneOrMore>
     </element>
   </define>
 
-
+  <define name="usecase">
+    <element name="usecase">
+      <a:documentation>
+Referrable section on how the protection profiled item is used.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <ref name="description"/>
+    </element>
+  </define>
   <define name="glossary-el">
     <element name="glossary">
       <a:documentation>
