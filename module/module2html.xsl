@@ -573,10 +573,10 @@ additional restrictions.
 
   <!-- Hide this when we stumble on it -->
   <xsl:template match="cc:ext-comp-def"/>
-  <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|"/>
+  <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
+  <xsl:template match="cc:ext-comp-extra-pat"/>
+  <xsl:template match="cc:consistency-rationale"/>
   <xsl:template name="opt_text"/>
-
-
 
 
 </xsl:stylesheet>
