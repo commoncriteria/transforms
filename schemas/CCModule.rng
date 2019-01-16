@@ -71,6 +71,7 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="additional-appendices">
     <optional>
       <element name="appendix">
+        <ref name="id-attr"/>
         <attribute name="title">
            <value>Use Case Templates</value>
         </attribute>
