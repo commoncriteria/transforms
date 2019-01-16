@@ -478,21 +478,21 @@ These components are identified in the following table:
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
-             <xsl:apply-templates select="cc:comp-lev"/>
+             <xsl:apply-templates select="cc:comp-lev/node()"/>
          </p>
          <h3>Management <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
-            <xsl:value-of select="cc:management"/>
+            <xsl:value-of select="cc:management/node()"/>
          </p>
 
          <h3>Audit <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
-            <xsl:value-of select="cc:audit"/>
+            <xsl:value-of select="cc:audit/node()"/>
          </p>
          <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
          </h3>
          <p>Heirarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
-            <xsl:apply-templates select="cc:heirarchical-to"/>
+            <xsl:apply-templates select="cc:heirarchical-to/node()"/>
          </p>
          <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
             <xsl:apply-templates select="cc:dependencies"/>
@@ -517,7 +517,6 @@ These components are identified in the following table:
   </xsl:template>
 
 
-  <xsl:template match="cc:consistency-rationale"/>
 
 
   <!--
@@ -572,8 +571,12 @@ additional restrictions.
    </xsl:template>
 
 
-  <xsl:template name="opt_text"/>
-
   <!-- Hide this when we stumble on it -->
   <xsl:template match="cc:ext-comp-def"/>
+  <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|"/>
+  <xsl:template name="opt_text"/>
+
+
+
+
 </xsl:stylesheet>
