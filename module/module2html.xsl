@@ -478,24 +478,24 @@ These components are identified in the following table:
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
-             <xsl:apply-templates select="cc:comp-lev/node()"/>
+             <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
          </p>
          <h3>Management <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
-            <xsl:value-of select="cc:management/node()"/>
+            <xsl:apply-templates select="cc:management" mode="reveal"/>
          </p>
 
          <h3>Audit <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
-            <xsl:value-of select="cc:audit/node()"/>
+            <xsl:apply-templates select="cc:audit" mode="reveal"/>
          </p>
          <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
          </h3>
          <p>Heirarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
-            <xsl:apply-templates select="cc:heirarchical-to/node()"/>
+            <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
          </p>
          <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
-            <xsl:apply-templates select="cc:dependencies"/>
+            <xsl:apply-templates select="cc:dependencies" mode="reveal"/>
          </p>
 
          <xsl:for-each select="cc:f-element">
@@ -578,5 +578,8 @@ additional restrictions.
   <xsl:template match="cc:consistency-rationale"/>
   <xsl:template name="opt_text"/>
 
+  <xsl:template match="cc:*" mode="reveal">
+     <xsl:apply-templates mode=""/>
+  </xsl:template>
 
 </xsl:stylesheet>
