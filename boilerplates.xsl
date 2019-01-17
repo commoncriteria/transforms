@@ -90,50 +90,15 @@ conformant to this PP, and it is expected that they be included as soon as possi
 		mode="hook">
     <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>
-      <dt>Conformance Statement</dt><dd> To be conformant to this PP, an <abbr title="Security Target">ST</abbr> must demonstrate Exact
-          Conformance, a subset of Strict Conformance as defined in <xsl:call-template name="citeCC"/> Part 1 (ASE_CCL).
-	  The <abbr title="Security Target">ST</abbr> must include all components in this PP that are:<ul>
-            <li>unconditional (which are always required)</li>
-            <li>selection-based (which are required when certain <i>selections</i> are chosen in the
-              unconditional requirements)</li>
-          </ul>and may include components that are <ul>
-            <li>optional or</li>
-            <li>objective.</li>
-          </ul>
-	  <p>
-	    <xsl:if test="$appendicize='on'">
-Unconditional requirements are found in the main body of the
-document, while the selection-based, optional, and objective requirements are contained in respective sections in the appendix. 
-	    </xsl:if>
-	    <xsl:if test="$appendicize!='on'">
-The type of each requirement is identified in line with the text.
-	    </xsl:if>
-
-The <abbr title="Security Target">ST</abbr> may iterate any of these components,
-but it must not include any additional component (e.g. from <a href="#bibCC">[CC]</a> 
-Part 2 or 3 or a PP not  conformant with this one, or extended by the 
-<abbr title="Security Target">ST</abbr>) not defined in this PP
-or a PP conformant to this one. 
-	  </p>
-
-	  <xsl:if test="$impsatreqid!=''">
-	    <p>
-Some components in this Protection Profile have a dependency on other components.
-In accordance with <a href="#bibCC">[CC]</a> Part 1, 
-<xsl:element name="a">
-  <xsl:attribute name="href">#<xsl:value-of select="$impsatreqid"/></xsl:attribute>
-  <xsl:attribute name="class">dynref</xsl:attribute>
-  Appendix 
-</xsl:element>
-includes justifications for those cases where the PP does not explicitly 
-contain the component upon which there is a dependency.
-	    </p>
-	  </xsl:if>
-        </dd>
-	<dt>CC Conformance Claims</dt><dd>This PP is conformant to Parts 2 (extended) and 3 (extended) of Common Criteria
-          Version 3.1, Revision 5.<a href="#bibCC">[CC]</a>.</dd>
-	  <dt>PP Claim</dt><dd>This PP does not claim conformance to any other Protection
-          Profile.</dd><dt>Package Claim</dt><dd>This PP does not claim conformance to any packages.</dd></dl>
+        <dt>Conformance Statement</dt>
+        <dd>An <abbr title="Security Target">ST</abbr> must claim exact conformance to this PP, as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and Optional SFRs (dated May 2017).</dd>
+        <dt>CC Conformance Claims</dt>
+        <dd>This PP is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria <xsl:call-template name="verrev"/>.</dd>
+        <dt>PP Claim </dt>
+        <dd>This PP does not claim conformance to any Protection Profile. </dd>
+        <dt>Package Claim</dt>
+        <dd>This PP is TLS Package Conformant.</dd>
+     </dl>
   </xsl:template>
 
   <!-- ############## -->
