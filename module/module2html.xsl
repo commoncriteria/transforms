@@ -579,7 +579,7 @@ additional restrictions.
   <xsl:template name="opt_text"/>
 
   <xsl:template match="cc:*" mode="reveal">
-     <xsl:apply-templates mode=""/>
+     <xsl:apply-templates/>
   </xsl:template>
 
 </xsl:stylesheet>
