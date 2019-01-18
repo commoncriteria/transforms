@@ -244,7 +244,7 @@ Grouping for Security Objective for the Operation Environment entries.
           <element name="mod-def">
             <ref name="basic-content-pat"/>
           </element>
-          <element name="def">
+          <element name="fam-behavior">
             <ref name="basic-content-pat"/>
           </element>
         </choice>

@@ -471,35 +471,35 @@ These components are identified in the following table:
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
       <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
-      <xsl:apply-templates select="cc:mod-def"/> 
-      <xsl:variable name="dcount" select="count(//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)])"/>
-      <xsl:message> Spot <xsl:value-of select="20*floor($dcount div 2)"/> </xsl:message>
-  <svg xmlns="http://www.w3.org/2000/svg">
-      <xsl:call-template name="drawbox">
-         <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
-         <xsl:with-param name="boxtext" select="@fam-id"/>
-      </xsl:call-template>
-      
-      <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)]">
-        <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
-        <xsl:call-template name="drawbox">
-           <xsl:with-param name="ybase" select="position() * 20"/>
-           <xsl:with-param name="boxtext" select="translate(@id,$lower,$upper)"/>
-           <xsl:with-param name="xbase" select="200"/>
-           <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
-        </xsl:call-template>
-      </xsl:for-each>    
-      
-      
-      
-      
-      
-      
-  </svg>
 
 
-
-
+      <xsl:choose>
+        <xsl:when test="cc:fam-behavior">
+          <h3>Family Behavior</h3>
+          <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
+          <xsl:variable name="dcount"
+            select="count(//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)])"/>
+            <svg xmlns="http://www.w3.org/2000/svg">
+              <xsl:call-template name="drawbox">
+                <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
+                <xsl:with-param name="boxtext" select="@fam-id"/>
+              </xsl:call-template>
+              <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)]">
+                <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
+                <xsl:call-template name="drawbox">
+                  <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
+                  <xsl:with-param name="boxtext" select="translate(@id,$lower,$upper)"/>
+                  <xsl:with-param name="xbase" select="200"/>
+                  <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
+                </xsl:call-template>
+              </xsl:for-each>
+            </svg>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="cc:mod-def"/>     
+        </xsl:otherwise>
+      </xsl:choose>
+      
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)]">
          <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
          <h3>Component Leveling</h3>
@@ -616,10 +616,10 @@ additional restrictions.
     <xsl:param name="xbase">0</xsl:param>
     <xsl:param name="ymid"/>
     <xsl:element name="text">
-      <xsl:attribute name="x"><xsl:value-of select="$xbase + 1"/></xsl:attribute>
+      <xsl:attribute name="x"><xsl:value-of select="$xbase + 4"/></xsl:attribute>
       <xsl:attribute name="fill">black</xsl:attribute>
       <xsl:attribute name="font-size">11</xsl:attribute>
-      <xsl:attribute name="y"><xsl:value-of select="$ybase + 20"/></xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$ybase + 22"/></xsl:attribute>
       <xsl:value-of select="$boxtext"/>
     </xsl:element>
     <xsl:element name="rect">
@@ -632,10 +632,10 @@ additional restrictions.
     </xsl:element>
     <xsl:if test="$xbase>0">
       <xsl:element name="line">
-        <xsl:attribute name="x1">61</xsl:attribute>
-        <xsl:attribute name="y1"><xsl:value-of select="$ymid"/></xsl:attribute>
-        <xsl:attribute name="x2"><xsl:value-of select="$xbase"/></xsl:attribute>
-        <xsl:attribute name="y2"><xsl:value-of select="$ybase + 6"/></xsl:attribute>
+        <xsl:attribute name="x1">92</xsl:attribute>
+        <xsl:attribute name="y1"><xsl:value-of select="$ymid + 17"/></xsl:attribute>
+        <xsl:attribute name="x2"><xsl:value-of select="$xbase + 1"/></xsl:attribute>
+        <xsl:attribute name="y2"><xsl:value-of select="$ybase + 17"/></xsl:attribute>
         <xsl:attribute name="stroke">black</xsl:attribute>
       </xsl:element>
     </xsl:if>
