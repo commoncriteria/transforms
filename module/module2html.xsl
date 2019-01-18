@@ -69,7 +69,7 @@
       <xsl:value-of select="@short"/> PP as follows:
       <xsl:apply-templates select="./cc:con-sec-prob"/>
       <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
-      <xsl:for-each select="//cc:threat">
+      <xsl:for-each select="//cc:threat[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
 	  <xsl:with-param name="orig" select="."/>
