@@ -479,7 +479,10 @@ These components are identified in the following table:
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
           <xsl:variable name="dcount"
             select="count(//cc:f-component[starts-with(@id, $famId)][not(ancestor::cc:modified-sfrs)])"/>
-            <svg xmlns="http://www.w3.org/2000/svg">
+            <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
+              <xsl:attribute name="style">
+                <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
+              </xsl:attribute>
               <xsl:call-template name="drawbox">
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
@@ -493,7 +496,7 @@ These components are identified in the following table:
                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
                 </xsl:call-template>
               </xsl:for-each>
-            </svg>
+            </xsl:element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="cc:mod-def"/>     
