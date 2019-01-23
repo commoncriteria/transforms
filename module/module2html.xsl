@@ -122,8 +122,8 @@
       <xsl:value-of select="$base/@short"/>  is being used for its intended purpose.
       The PP-Module also identifies a number of modified SFRs from the 
       <xsl:value-of select="$base/@short"/> PP
-      as well as new SFRs that are used entirely to provide 
-      <xsl:value-of select="/cc:Module/@target-products"/> 
+      as well as new SFRs that are used entirely to provide functionality for 
+      <xsl:value-of select="/cc:Module/@target-products"/>.
       The rationale for why this does not conflict with the claims 
       defined by the 
       <xsl:value-of select="$base/@short"/> PP are as follows:
