@@ -469,7 +469,7 @@ These components are identified in the following table:
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
     <xsl:for-each select="//cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
-      <h3 id="ext-comp-defs-bg-fam" class="indexable" data-level="3"><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
+      <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
 
 
