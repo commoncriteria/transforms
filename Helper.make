@@ -147,7 +147,7 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-	( [ "$(SKIP)" == 1 ] && [ -r $(TMP)/0.xml ] ) || python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
+#	( [ "$(SKIP)" == 1 ] && [ -r $(TMP)/0.xml ] ) || python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(TMP_PARM) $(FNL_PARM))
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML),$(TMP_PARM))
