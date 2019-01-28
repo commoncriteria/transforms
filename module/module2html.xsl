@@ -85,7 +85,7 @@
       <xsl:apply-templates select="./cc:con-obj"/>
       <xsl:if test="//cc:SO">
 	  The objectives for the TOEs are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
-      <table><tr><th>PP-Module Objective</th><th>Consistency Rationale</th></tr>
+      <table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SO">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -100,7 +100,7 @@
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
 	  The objectives for the TOE's operational environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
-      <table><tr><th>PP-Module Operational Environment ObjectiveThreat</th><th>Consistency Rationale</th></tr>
+      <table><tr><th>PP-Module Operational Environment Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -226,9 +226,9 @@
 	      </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-	      <tr><th colspan="2">
+	      <tr><td colspan="2" style="text-align:center">
 	        <xsl:value-of select="$none-msg"/>
-	      </th></tr>
+	      </td></tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -246,7 +246,7 @@ The following sections describe any modifications that the ST author must make t
 defined in the Base-PP in addition to what is mandated by section 5.4.
 
 
-    <xsl:choose>
+    <!--  <xsl:choose>
        <xsl:when test="cc:app-unmod-sfrs">
          <xsl:element name="h2">
            <xsl:attribute name="id">modsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
@@ -259,7 +259,7 @@ defined in the Base-PP in addition to what is mandated by section 5.4.
        <xsl:otherwise>
           <xsl:call-template name="unmod-sfrs"/>
        </xsl:otherwise>
-    </xsl:choose>
+    </xsl:choose>-->
     <xsl:element name="h2">
       <xsl:attribute name="id">modsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
       <xsl:attribute name="class">indexable</xsl:attribute>
@@ -469,7 +469,7 @@ These components are identified in the following table:
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
     <xsl:for-each select="//cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
-      <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
+      <h3 id="ext-comp-defs-bg-fam" class="indexable" data-level="3"><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
 
 
@@ -510,12 +510,12 @@ These components are identified in the following table:
              <xsl:value-of select="@name"/>,
              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
          </p>
-         <h3>Management <xsl:value-of select="$upId"/></h3>
+         <h3>Management: <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
             <xsl:apply-templates select="cc:management" mode="reveal"/>
          </p>
 
-         <h3>Audit <xsl:value-of select="$upId"/></h3>
+         <h3>Audit: <xsl:value-of select="$upId"/></h3>
          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
             <xsl:apply-templates select="cc:audit" mode="reveal"/>
          </p>
