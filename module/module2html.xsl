@@ -271,7 +271,7 @@ defined in the Base-PP in addition to what is mandated by section 5.4.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-      This module does not modify any SFRs defined by the <xsl:value-of select="@name"/> Protection Profile.
+      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@name"/> Protection Profile.
     </xsl:otherwise>
     </xsl:choose>
     <!-- 
@@ -291,7 +291,7 @@ defined in the Base-PP in addition to what is mandated by section 5.4.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
+This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>
@@ -374,7 +374,7 @@ This module does not define any additional SFRs for any PP-Configuration where t
         <xsl:apply-templates select="//cc:man-sfrs/cc:*"/>
       </xsl:when>
       <xsl:otherwise>
-	This module does not define any mandatory SFRs.
+	This PP-Module does not define any mandatory SFRs.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -396,7 +396,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
       </xsl:when>
       <xsl:otherwise>
 	<p>
-	  This module does not define any optional SFRs.
+	  This PP-Module does not define any optional SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
@@ -414,7 +414,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
       </xsl:when>
       <xsl:otherwise>
 	<p>
-	  This module does not define any selection-based SFRs.
+	  This PP-Module does not define any selection-based SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
@@ -432,7 +432,7 @@ performed by the TOE or its underlying platform) are contained in the body of th
       </xsl:when>
       <xsl:otherwise>
 	<p>
-	  This module does not define any objective SFRs.
+	  This PP-Module does not define any objective SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
