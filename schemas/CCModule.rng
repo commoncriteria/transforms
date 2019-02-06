@@ -166,6 +166,9 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
 	Mandatory SFRs. These apply to all configurations regardless of base PPs.
       </a:documentation>
+      <optional>
+         <ref name="description"/>
+      </optional>
       <ref name="f-components-pat"/>
     </element>
   </define>
