@@ -338,7 +338,19 @@ Grouping for Security Objective for the Operation Environment entries.
 	</a:documentation>
       </attribute>
       <optional>
+         <element name="sec-func-req-dir">
+           <a:documentation>
+Content for the intro to Security Function Requirements Direction section. Replaces boilerplate content.
+           </a:documentation>
+           <ref name="basic-content-pat"/>
+        </element>
+         
+      </optional>
+      <optional>
         <element name="app-unmod-sfrs">
+           <a:documentation>
+Content for the Applicable Unmodified SFRs section. Replaces boilerplate content.
+           </a:documentation>
            <ref name="basic-content-pat"/>
         </element>
       </optional>

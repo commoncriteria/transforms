@@ -241,10 +241,12 @@
       <xsl:value-of select="@short"/> 
       PP Security Functional Requirements Direction
     </h2>
+    <xsl:if test="not(cc:sec-func-req-dir)">
 In a PP-Configuration that includes  <xsl:value-of select="@name"/> PP, the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/> as a whole and evaluated against the Base-PP.
 The following sections describe any modifications that the ST author must make to the SFRs
 defined in the Base-PP in addition to what is mandated by section 5.4.
-
+    </xsl:if>
+    <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
     <!--  <xsl:choose>
        <xsl:when test="cc:app-unmod-sfrs">
