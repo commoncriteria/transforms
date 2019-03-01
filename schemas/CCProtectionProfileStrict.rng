@@ -121,10 +121,16 @@
   </define>
 
   <define name="pp-attributes-pat">
-    <attribute name="type">
-      <a:documentation> Differentiates between a package and a Protection Profile.</a:documentation>
-      <choice><value>package</value><value>PP</value></choice>
-    </attribute>
+    <optional>
+      <attribute name="type">
+         <a:documentation>
+         </a:documentation>
+         <choice>
+           <value>
+         </choice>
+      </attribute>
+    </optional>
+
     <attribute name="name">
       <a:documentation>
 	Informal name that is not displayed, but instead is used to link modules
@@ -434,19 +440,16 @@
 	</a:documentation>
 	<attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
 	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
 	<element name="subsection">
 	  <attribute name="title"><value>TOE Boundary</value></attribute>
 	  <ref name="id-attr"/>
 	  <ref name="basic-content-pat"/>
 	</element>
-	<optional>
-	  <element name="subsection">
-	    <attribute name="title"><value>TOE Platform</value></attribute>
-	    <ref name="id-attr"/>
-	    <ref name="basic-content-pat"/>
-	  </element>
-	</optional>
+	<element name="subsection">
+	  <attribute name="title"><value>TOE Platform</value></attribute>
+	  <ref name="id-attr"/>
+	  <ref name="basic-content-pat"/>
+	</element>
       </element>
       <element name="section">
 	<a:documentation>
@@ -483,7 +486,6 @@
 	<element name="entry">
 	  <a:documentation>
 	  </a:documentation>
-	  <optional><attribute name="id"/></optional>
 	  <element name="term"><ref name="basic-content-pat"/></element>
 	  <ref name="description"/>
 	</element>
@@ -574,7 +576,7 @@
 	    </a:documentation>
 	    <element name="version"><text/></element>
 	    <element name="date"><data type="date"/></element>
-	    <element name="subject"><ref name="basic-content-pat"/></element>
+	    <element name="subject"><text/></element>
 	  </element>
         </oneOrMore>
       </element>
