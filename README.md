@@ -1,5 +1,5 @@
 # Transforms 
-[![Build Status](https://travis-ci.org/commoncriteria/transforms.svg?branch=master)](https://travis-ci.org/commoncriteria/transforms)
+[![Build Status](https://travis-ci.com/commoncriteria/transforms.svg?branch=master)](https://travis-ci.com/commoncriteria/transforms)
 [![GitHub issues Open](https://img.shields.io/github/issues/commoncriteria/transforms.svg?maxAge=2592000)](https://github.com/commoncriteria/transforms/issues) 
 ![license](https://img.shields.io/badge/license-Unlicensed-blue.svg)
 
