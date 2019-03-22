@@ -605,6 +605,14 @@
     </xsl:choose>
   </xsl:template>
 
+
+<!-- ############### -->
+  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
+    <div class="eacategory"><xsl:value-of select="name()"/></div>
+    <xsl:apply-templates/>
+  </xsl:template>
+
+
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
 <!-- ############### -->

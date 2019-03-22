@@ -36,6 +36,10 @@
   </xsl:template>
 
  
+  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
+    <div class="eacategory"><xsl:value-of select="name()"/></div>
+    <xsl:apply-templates/>
+  </xsl:template>
 
 
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
