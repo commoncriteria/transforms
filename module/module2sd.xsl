@@ -396,7 +396,15 @@ guidance, and testing.</p>
       
   <x:if test=".//cc:TSS">
       <div class="eacategory">TSS</div>
-      <x:for-each select=".//cc:TSS"><x:apply-templates select="following::sibling"/></x:for-each>
+      <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
+  </x:if>
+  <x:if test=".//cc:Guidance">
+      <div class="eacategory">Guidance</div>
+      <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
+  </x:if>
+  <x:if test=".//cc:Tests">
+      <div class="eacategory">Tests</div>
+      <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
   </x:if>
 
     </div>
