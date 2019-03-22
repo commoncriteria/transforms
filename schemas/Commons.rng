@@ -547,27 +547,21 @@ Grouping for Security Objective for the Operation Environment entries.
       <choice>
 	<group>
 	  <ref name="TSS"/>
-	  <ref name="basic-content-pat"/>
 	  <optional>
 	    <ref name="Guidance"/>
-	    <ref name="basic-content-pat"/>
 	  </optional>
 	  <optional>
 	    <ref name="Tests"/>
-	    <ref name="basic-content-pat"/>
 	  </optional>
 	</group>
 	<group>
 	  <ref name="Guidance"/>
-	  <ref name="basic-content-pat"/>
 	  <optional>
 	    <ref name="Tests"/>
-	    <ref name="basic-content-pat"/>
 	  </optional>
 	</group>
 	<group>
 	    <ref name="Tests"/>
-	    <ref name="basic-content-pat"/>
 	</group>
       </choice>
     </element>
@@ -580,7 +574,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
 	Denotes a TSS section.
       </a:documentation>
-      <empty/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
   <define name="Guidance">
@@ -588,7 +582,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
 	Denotes a Guidance section.
       </a:documentation>
-      <empty/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
   <define name="Tests">
@@ -596,7 +590,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
 	Denotes a tests section.
       </a:documentation>
-      <empty/>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 

@@ -393,9 +393,23 @@ guidance, and testing.</p>
 	<x:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
 	<x:value-of select="@name"/>
       </h4>
-      <x:apply-templates select=".//cc:aactivity"/> 
+      
+  <x:if test=".//cc:TSS">
+      <div class="eacategory">TSS</div>
+      <x:for-each select=".//cc:TSS"><x:apply-templates select="following::sibling"/></x:for-each>
+  </x:if>
+
     </div>
+
   </x:template>
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
+
+  
+  <x:template name="init_js">
+    <x:text disable-output-escaping="yes">// &lt;![CDATA[
+function init(){}
+// ]]&gt;</x:text>
+  </x:template>
+  
 </x:stylesheet>
