@@ -80,7 +80,9 @@ class State:
             ret += escape(chunks[aa])
             self.period_ctr+=1
             id="ajq_"+str(self.period_ctr)
-            ret += "<a href='#"+id+"' id='"+id+"'>.</a> "
+#            ret += "<a href='#"+id+"' id='"+id+"'>.</a> "
+            ret += "<span class='periods' id='"+id+"'>.</a> "
+
         ret+=escape(chunks[-1])
         return ret
 
