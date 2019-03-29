@@ -64,27 +64,27 @@ class State:
     def handle_text(self, parent, text):
         # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
 
-        if parent.tag=="a"\
-           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
-           or parent.tag=="script"\
-           or parent.tag=="style":
+#        if parent.tag=="a"\
+#           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
+#           or parent.tag=="script"\
+#           or parent.tag=="style":
             return escape(text)
             
 
             
 
-        ret=""
-        # Split on ending sentence periods
-        chunks=re.split("""\.\s+|\.$""", text)
-        for aa in range(0, len(chunks)-1):
-            ret += escape(chunks[aa])
-            self.period_ctr+=1
-            id="ajq_"+str(self.period_ctr)
+#        ret=""
+#        # Split on ending sentence periods
+#        chunks=re.split("""\.\s+|\.$""", text)
+#        for aa in range(0, len(chunks)-1):
+#            ret += escape(chunks[aa])
+#            self.period_ctr+=1
+#            id="ajq_"+str(self.period_ctr)
 #            ret += "<a href='#"+id+"' id='"+id+"'>.</a> "
-            ret += "<span class='periods' id='"+id+"'>.</span> "
-
-        ret+=escape(chunks[-1])
-        return ret
+#            ret += "<span class='periods' id='"+id+"'>.</span> "
+#
+#        ret+=escape(chunks[-1])
+#        return ret
 
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
