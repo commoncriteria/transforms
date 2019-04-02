@@ -322,14 +322,14 @@
     <element name="objective-refer">
       <a:documentation>Element that denotes an objective</a:documentation>
       <attribute name="ref">
-	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
+      	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
         <data type="NCName">
-	  <param name="pattern">O(E?)\.[_A-Z]+</param>
-	</data>
+      	  <param name="pattern">O(E?)\.[_A-Z]+</param>
+	      </data>
       </attribute>
       <element name="rationale">
-	<a:documentation>Argument as to why the objective applies</a:documentation>
-	<ref name="basic-content-pat"/>
+	      <a:documentation>Argument as to why the objective applies</a:documentation>
+	      <ref name="basic-content-pat"/>
       </element>
     </element>
   </define>
@@ -610,12 +610,31 @@ Grouping for Security Objective for the Operation Environment entries.
 	    </a:documentation>
 	  </attribute>
           <ref name="description"/>
+          <oneOrMore>
           <ref name="objective-refer"/>
+          </oneOrMore>
         </element>
       </zeroOrMore>
     </element>
   </define>
 
+  <define name="OSPs">
+    <element name="OSPs">
+ 	    <a:documentation>
+	      Grouping for Organizational Security Policies
+      </a:documentation>
+
+	    <oneOrMore>
+	      <element name="OSP">
+	        <ref name="id-attr"/>
+          <ref name="description"/>
+          <oneOrMore>
+            <ref name="objective-refer"/>
+          </oneOrMore>
+	      </element>
+	    </oneOrMore>
+    </element>
+  </define>
 
   <define name="osp-section">
     <element name="section">
@@ -625,15 +644,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <attribute name="title"><value>Organizational Security Policies</value></attribute>
       <ref name="id-attr"/>
       <ref name="basic-content-pat"/>
-      <element name="OSPs">
-	<oneOrMore>
-	  <element name="OSP">
-	    <ref name="id-attr"/>
-            <ref name="description"/>
-            <ref name="objective-refer"/>
-	  </element>
-	</oneOrMore>
-      </element>
+      <ref name="OSPs"/>
     </element>
   </define>
 

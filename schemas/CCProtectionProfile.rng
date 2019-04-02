@@ -235,29 +235,15 @@ Indicates that this document shall use boilerplate sections.
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="basic-content-pat"/>
+      	  <ref name="basic-content-pat"/>
           <element name="InsertSPDCorrespondence">
-	    <a:documentation>
-	      Tags the spot where the table mapping threats
-	      to objectives to requirements should go.
-	    </a:documentation>
+	          <a:documentation>
+	            Tags the spot where the table mapping threats
+	            to objectives to requirements should go.
+	          </a:documentation>
             <empty/>
           </element>
-          <element name="OSPs">
-	    <a:documentation>
-	      Grouping for Organizational Security Policies
-	    </a:documentation>
-	    <oneOrMore>
-              <element name="OSP">
-		<a:documentation>
-		  Entry for each security policy.
-		</a:documentation>
-		<ref name="id-attr"/>
-		<ref name="description"/>
-		<ref name="objective-refer"/>
-              </element>
-	    </oneOrMore>
-          </element>
+          <ref name="OSPs"/>
           <element name="SOEs">
 	    <a:documentation>
 	      Grouping for Security Objectives for the Operational environment.
