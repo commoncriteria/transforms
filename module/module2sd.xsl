@@ -421,4 +421,7 @@ function init(){}
 // ]]&gt;</x:text>
   </x:template>
   
+  <!-- Ground all extend component definitions-->
+  <x:template match="cc:ext-comp-def"/>
+  
 </x:stylesheet>
