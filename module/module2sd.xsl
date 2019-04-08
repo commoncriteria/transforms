@@ -120,7 +120,8 @@ guidance, and testing.</p>
     <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
-      <x:otherwise>This PP-Module does not define any mandatory requirements (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+      <x:otherwise>This PP-Module does not define any mandatory requirements 
+          (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
@@ -130,13 +131,13 @@ guidance, and testing.</p>
     </x:choose>
 
 
-    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
+    <h1 class="indexable" data-level="0" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
     <x:choose>
       <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Objective SFRs</h1>  
+    <h1 class="indexable" data-level="0" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
     <x:choose>
       <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
       <x:otherwise>This PP-Module does not define any objective requirements.</x:otherwise>
