@@ -542,7 +542,10 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="aactivity">
     <element name="aactivity">
-      <a:documentation>Element containing an Assurance Activity.</a:documentation>
+      <a:documentation>
+Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
+The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
+      </a:documentation>
       <ref name="basic-content-pat"/>
       <choice>
 	<group>

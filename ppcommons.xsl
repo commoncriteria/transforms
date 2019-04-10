@@ -24,7 +24,20 @@
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
-
+<!--
+    Template for universal sanity checks.
+-->
+  <xsl:template name="sanity-checks">
+    <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']"> -->
+      <xsl:message>
+      <xsl:value-of select="//cc:TSS[.='']"/>
+      
+      *****************************
+** TSS, Guidance, and Tests tags no longer precede their content, but rather encapsulate it.  **
+** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
+***************************** </xsl:message>
+    </xsl:if>
+  </xsl:template>  
 
 
   <!-- Common CSS rules for all files-->
