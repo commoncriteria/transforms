@@ -29,13 +29,13 @@
 <!-- ############### -->
 <!--            -->
   <xsl:template match="/">
-    <xsl:call-template name="sanity-checks"/>
-  
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
     <html xmlns="http://www.w3.org/1999/xhtml">
       <xsl:call-template name="head"/>
       <body onLoad="init()">
+          <xsl:call-template name="sanity-checks"/>
+
 	<xsl:call-template name="body-begin"/>
 	<xsl:apply-templates select="cc:*"/>
       </body>
