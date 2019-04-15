@@ -167,7 +167,7 @@
 							<th class="revisionhistory">Date</th>
 							<th class="revisionhistory">Comment</th>
 						</tr>
-						<xsl:for-each select="cc:RevisionHistory[@role=$release]/cc:entry">
+						<xsl:for-each select="cc:RevisionHistory/cc:entry">
 							<tr>
 								<td class="revisionhistory">
 									<xsl:value-of select="cc:version"/>
