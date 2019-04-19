@@ -105,7 +105,7 @@
       <p>
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
-	  The objectives for the TOE's operational environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+	  The objectives for the TOE's Operational Environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
       <table><tr><th>PP-Module Operational Environment Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
