@@ -41,9 +41,9 @@ XSL for Protection Profile Modules
 
   <x:template name="meta-data">
     <div style="text-align: center; margin-left: auto; margin-right: auto;">
-      <img src="images/niaplogo.png" alt="NIAP"/>
       <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
-      Mandatory Technical Document</h1>
+        Mandatory Technical Document</h1>
+      <img src="images/niaplogo.png" alt="NIAP"/>
       <hr width="50%"/>
       <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
       
