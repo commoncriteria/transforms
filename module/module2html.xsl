@@ -248,7 +248,7 @@
       PP Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
-      In a PP-Configuration that includes  <xsl:value-of select="@name"/> PP, the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/> as a whole and evaluated against the <xsl:value-of select="@short"/> PP.
+      In a PP-Configuration that includes  <xsl:value-of select="@short"/> PP, the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/> as a whole and evaluated against the <xsl:value-of select="@short"/> PP.
 The following sections describe any modifications that the ST author must make to the SFRs
 defined in the <xsl:value-of select="@short"/> PP in addition to what is mandated by section 5.3.
     </xsl:if>
@@ -275,11 +275,11 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       Modified SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
-      The SFRs listed in this section are defined in the <xsl:value-of select="@name"/> Protection Profile and relevant to the secure operation of the TOE.
+      The SFRs listed in this section are defined in the <xsl:value-of select="@short"/> Protection Profile and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@name"/> PP.
+      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@short"/> PP.
     </xsl:otherwise>
     </xsl:choose>
     <!-- 
@@ -295,11 +295,11 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       Additional SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
-      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@name"/> PP is claimed as the Base-PP.
+      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@short"/> PP is claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> PP is claimed as the Base-PP.
+This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@short"/> PP is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>
@@ -392,14 +392,16 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
   <xsl:template name="opt-sfrs">
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
-    As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
-performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
+<!-- This para is deleted since readers should know all of this from the base-PP: so says NIAP
+      As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
+    performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
     Additionally, there are three other types of requirements specified in Appendices A, B, and C.
     The first type (in this Appendix) are requirements that can be included in the ST, but do not have to be in order for a TOE to claim conformance to this PP-Module.
     The second type (in Appendix B) are requirements based on selections in the body of the PP-Module: if certain selections are made, then additional requirements in that appendix will need to be included. The third type (in Appendix C) are components that are not required in order to conform to this PP-Module, but will be included in the baseline requirements in future versions of this PP-Module, so adoption by TOE vendors is encouraged.
     Note that the ST author is responsible for ensuring that requirements that may be
     associated with those in Appendix A, Appendix B, and/or Appendix C but are not listed (e.g., FMT-type
     requirements) are also included in the ST.<br/><br/>
+ -->
 
     <xsl:choose>
       <xsl:when test="//cc:opt-sfrs//cc:f-component">
@@ -415,10 +417,12 @@ performed by the TOE or its underlying platform) are contained in the body of th
 
   <xsl:template name="sel-sfrs">
     <h1 id="sel-sfrs" class="indexable" data-level="A">Selection-based SFRs</h1>
-    As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
+<!-- This paragraph is not needed since the reader should know all of it from the base-PP: so says NIAP.
+      As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
     performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
     There are additional requirements based on selections in the body of the PP-Module:
     if certain selections are made, then additional requirements below will need to be included.<br/><br/>
+ -->
     <xsl:choose>
       <xsl:when test="//cc:sel-sfrs//cc:f-component">
         <xsl:apply-templates select="//cc:sel-sfrs//cc:f-component"/>
