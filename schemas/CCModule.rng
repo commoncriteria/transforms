@@ -316,7 +316,11 @@ Grouping for Security Objective for the Operation Environment entries.
 	  Name of the product the base PP applies to.
 	</a:documentation>
       </attribute>
-      
+      <attribute name="version">
+      <a:documentation>
+       Version number of base PP
+       </a:documentation>
+       </attribute>
       <attribute name="name">
 	<a:documentation>
 	  Name of the base PP.

@@ -253,11 +253,11 @@ guidance, and testing.</p>
 	following Base-PPs:
 	<ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><a href="{@url}"><x:value-of select="@name"/></a></li>
+	    <li><a href="{@url}"><x:value-of select="@name"/> Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
       </x:otherwise>
-    </x:choose>.</p>
+    </x:choose></p>
     <p>This SD is mandatory for evaluations of TOEs that claim conformance to the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', version ', //cc:ReferenceTable/cc:PPVersion)"/>.
     Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
