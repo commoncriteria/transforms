@@ -411,8 +411,8 @@ guidance, and testing.</p>
 
   </x:template>
 
-  <x:template match="cc:testlist">
-        <b>Test Set 
+<!--  <x:template match="cc:testlist">
+       <b>Test Set
     <x:variable name="ctrtype">testlist-<x:value-of select="ancestor::cc:f-component/@id"/></x:variable>
 
     <span class="ctr" data-myid="cc-" data-counter-type="ct-{$ctrtype}">
@@ -420,10 +420,10 @@ guidance, and testing.</p>
     </span>
         
         
-        </b>
+       </b>
       <x:apply-templates/> 
   </x:template>
-
+-->
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 
