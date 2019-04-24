@@ -46,12 +46,11 @@ XSL for Protection Profile Modules
       <img src="images/niaplogo.png" alt="NIAP"/>
       <hr width="50%"/>
       <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
-      
       <br/>PP-Module for <x:value-of select="/cc:Module/@target-products"/>
-      <br/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-      <br/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-      <br/><b><x:value-of select="//cc:PPAuthor"/></b>
-    </div>
+      <p/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
+      <p/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
+      <p/><b><x:value-of select="//cc:PPAuthor"/></b>
+      </div>
   </x:template>
   
 
