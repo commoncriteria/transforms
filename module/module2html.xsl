@@ -105,7 +105,7 @@
       <p>
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
-	  The objectives for the TOE's operational environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+	  The objectives for the TOE's Operational Environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
       <table><tr><th>PP-Module Operational Environment Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
@@ -279,7 +279,7 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@name"/> Protection Profile.
+      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@name"/> PP.
     </xsl:otherwise>
     </xsl:choose>
     <!-- 
@@ -295,11 +295,11 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       Additional SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
-      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
+      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@name"/> PP is claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> Protection Profile is claimed as the Base-PP.
+This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@name"/> PP is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>

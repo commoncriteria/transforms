@@ -30,6 +30,7 @@
   <xsl:template name="sanity-checks">
     <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']">
       <xsl:message>*****************************
+**
 ** TSS, Guidance, and Tests tags no longer precede their content, but rather encapsulate it.  **
 ** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
 ***************************** </xsl:message>

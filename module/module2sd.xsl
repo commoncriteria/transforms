@@ -41,9 +41,9 @@ XSL for Protection Profile Modules
 
   <x:template name="meta-data">
     <div style="text-align: center; margin-left: auto; margin-right: auto;">
-      <img src="images/niaplogo.png" alt="NIAP"/>
       <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
-      Mandatory Technical Document</h1>
+        Mandatory Technical Document</h1>
+      <img src="images/niaplogo.png" alt="NIAP"/>
       <hr width="50%"/>
       <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
       
@@ -120,27 +120,27 @@ guidance, and testing.</p>
     <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
-      <x:otherwise>This PP-Module does not define any mandatory requirements 
+      <x:otherwise>The PP-Module does not define any mandatory requirements 
           (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
     <x:choose>
       <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
-      <x:otherwise>This PP-Module does not define any optional requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
 
     <h1 class="indexable" data-level="0" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
     <x:choose>
       <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
-      <x:otherwise>This PP-Module does not define any selection-based requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
     <x:choose>
       <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
-      <x:otherwise>This PP-Module does not define any objective requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
     </x:choose>
 
 
@@ -160,7 +160,7 @@ guidance, and testing.</p>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
-	  This PP-Module does not modify any requirements when the 
+	  The PP-Module does not modify any requirements when the 
 	  <x:value-of select="@short"/> PP is the base.
 	</x:with-param>
       </x:call-template>
@@ -170,7 +170,7 @@ guidance, and testing.</p>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
-	  This PP-Module does not add any requirements when the 
+	  The PP-Module does not add any requirements when the 
 	  <x:value-of select="@short"/> PP is the base.
 	</x:with-param>
       </x:call-template>
@@ -241,11 +241,11 @@ guidance, and testing.</p>
   <x:template name="intro">
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
-    <p>The scope of the <x:value-of select="/cc:PP/@name"/> PP-Module is
+    <p>The scope of the PP-Module is
     to describe the security functionality of 
     <x:value-of select="/cc:PP/@target-products"/> products in terms of 
     [CC] and to define functional and assurance requirements for them.
-    This PP-Module is intended for use with the
+    The PP-Module is intended for use with the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
 	<a href="{//cc:base-pp/@url}"><x:value-of select="/cc:PP/cc:module/cc:base-pp/@name"/></a>
@@ -259,7 +259,7 @@ guidance, and testing.</p>
 	</ul>
       </x:otherwise>
     </x:choose>.</p>
-    <p>This SD is mandatory for evaluations of TOEs that claim conformance to the PP-Module for <x:value-of select="concat(/cc:PP/@name,', version ', /cc:PP/cc:PPReference/cc:ReferenceTable/cc:PPVersion)"/>.
+    <p>This SD is mandatory for evaluations of TOEs that claim conformance to the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', version ', //cc:ReferenceTable/cc:PPVersion)"/>.
     Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
     Functional Requirements (SFR), and may identify particular requirements for the content of Security
