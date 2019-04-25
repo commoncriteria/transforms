@@ -203,19 +203,18 @@ guidance, and testing.</p>
       <x:when test="count(//cc:base-pp)=1">
 	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
-	inherently evaluated against this base PP as well. 
+	inherently evaluated against this Base-PP as well. 
 	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
       </x:when>
       <x:otherwise>
-	bases to which it can claim conformance.
+	base-PP to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
-	inherently evaluated against the 
-	GPOS PP, MDF PP, or App PP
-	as well. 
-	These PPs include a number of Evaluation Activities associated with both SFRs and SARs.
+	inherently evaluated against the Base-PP as well.
+
+	The Base-PP includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the chosen Base-PP
