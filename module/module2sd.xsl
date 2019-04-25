@@ -240,9 +240,9 @@ guidance, and testing.</p>
   <x:template name="intro">
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
-    <p>The scope of the PP-Module for <x:value-of select="/cc:Module/@target-products"/> is
-    to describe the security functionality of 
-      <x:value-of select="/cc:Module/@target-products"/> in terms of 
+    <p>The scope of the <x:value-of select="/cc:Module/@target-products"/> PP-Module is
+    to describe the security functionality of a
+      <x:value-of select="/cc:Module/@name"/> in terms of 
     [CC] and to define functional and assurance requirements for them.
     The PP-Module is intended for use with the
     <x:choose>
@@ -253,12 +253,12 @@ guidance, and testing.</p>
 	following Base-PPs:
 	<ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><a href="{@url}"><x:value-of select="@name"/> Version <x:value-of select="@version"/></a></li>
+	    <li><a href="{@url}"><x:value-of select="@name"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
       </x:otherwise>
     </x:choose></p>
-    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', version ', //cc:ReferenceTable/cc:PPVersion)"/>.
+    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/>.
     Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
     Functional Requirements (SFR), and may identify particular requirements for the content of Security
