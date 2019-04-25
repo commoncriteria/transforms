@@ -536,7 +536,7 @@ These components are identified in the following table:
          </p>
          <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
          </h3>
-         <p>Heirarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
+         <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
             <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
          </p>
          <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
