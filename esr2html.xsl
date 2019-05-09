@@ -130,4 +130,43 @@
 		</xsl:copy>
 	</xsl:template>
 
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="esr:figref">
+    <a onclick="showTarget('figure-{@refid}')" href="#figure-{@refid}" class="figure-{@refid}-ref">
+      <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
+
+      <xsl:for-each select="//esr:figure[@id=$refid]">
+	<xsl:call-template name="getPre"/>
+      </xsl:for-each>
+<!--      <xsl:value-of select="//esr:ctr[@id=$refid]">"/>-->
+      <span class="counter"><xsl:value-of select="$refid"/></span>
+    </a>
+  </xsl:template>
+  
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="esr:figure">
+    <div class="figure" id="figure-{@id}">
+      <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}" />
+      <p/>
+      <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
+	<xsl:call-template name="getPre"/>
+	<span class="counter"><xsl:value-of select="@id"/></span>
+      </span>:
+      <xsl:value-of select="@title"/>
+    </div>
+  </xsl:template>
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template name="getPre">
+    <xsl:choose>
+      <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
+      <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:when>
+      <xsl:otherwise><xsl:text>Table </xsl:text></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
