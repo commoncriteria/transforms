@@ -10,7 +10,7 @@
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']" 
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']"
 		mode="hook">
     <xsl:variable name="cclsec"><xsl:value-of select="//cc:*[@title='Conformance Claims']/@id"/></xsl:variable>
     <xsl:variable name="optappid"><xsl:value-of select="//cc:*[@title='Optional Requirements']/@id"/></xsl:variable>
@@ -20,30 +20,30 @@
     As indicated in <a href="#{$cclsec}" class="dynref">Section </a>
     the baseline requirements (those that must be performed by the TOE) are
     contained in the body of this PP. Additionally, there are three other types of requirements
-    specified in 
+    specified in
     <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and 
+    <a href="#{$selappid}" class="dynref"></a>, and
     <a href="#{$objappid}" class="dynref"></a>.
     The first type (in this Appendix) are requirements that can be included
-    in the <abbr title="Security Target">ST</abbr>, 
+    in the <abbr title="Security Target">ST</abbr>,
     but are not required in order for a TOE to claim conformance to
-    this PP. The second type 
+    this PP. The second type
     (in <a href="#{$selappid}" class="dynref"></a>) are requirements based on selections
     in the body of the PP: if certain selections are made, then additional requirements in that
-    appendix must be included. The third type (in 
+    appendix must be included. The third type (in
     <a href="#{$objappid}" class="dynref"></a>) are components that
     are not required in order to conform to this PP, but will be included in the baseline
     requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the
     ST author is responsible for ensuring that requirements that may be associated with those in
     <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and 
+    <a href="#{$selappid}" class="dynref"></a>, and
     <a href="#{$objappid}" class="dynref"></a>
     but are not listed (e.g., FMT-type requirements) are also included in the ST.
   </xsl:template>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook">    <p>
 This appendix lists requirements that should be considered satisfied by products
-successfully evaluated against this Protection Profile.  
+successfully evaluated against this Protection Profile.
 However, these requirements are not featured explicitly as SFRs and should not be
 included in the <abbr title="Security Target">ST</abbr>.
 They are not included as standalone SFRs because it would
@@ -52,41 +52,41 @@ This approach is permitted
 by <a href="#bibCC">[CC]</a> Part 1, <b>8.2 Dependencies between components</b>.
     </p>
     <p>
-This information benefits systems engineering activities which call for inclusion of 
+This information benefits systems engineering activities which call for inclusion of
 particular security controls.  Evaluation against the Protection Profile
 provides evidence that these controls are present and have been evaluated.
     </p>
 </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" 
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']"
 		mode="hook">
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']" 
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']"
 		mode="hook">
-As indicated in the introduction to this PP, 
-the baseline requirements 
+As indicated in the introduction to this PP,
+the baseline requirements
 (those that must be performed by the TOE or its underlying platform)
 are contained in the body of this PP.
 There are additional requirements based on selections in the body of the PP:
 if certain selections are made, then additional requirements below must be included.
   </xsl:template>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Objective Requirements']" 
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Objective Requirements']"
 		mode="hook">
-This appendix includes requirements that specify security functionality which 
+This appendix includes requirements that specify security functionality which
 also addresses threats.
-The requirements are not currently mandated in the body of this PP as they 
+The requirements are not currently mandated in the body of this PP as they
 describe security functionality not yet widely-available in commercial technology.
-However, these requirements may be included in the ST such that the TOE is still 
+However, these requirements may be included in the ST such that the TOE is still
 conformant to this PP, and it is expected that they be included as soon as possible.
   </xsl:template>
 
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']" 
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']"
 		mode="hook">
     <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>
@@ -106,10 +106,10 @@ conformant to this PP, and it is expected that they be included as soon as possi
 
    <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']" mode="hook">
-    The Security Functional Requirements included in this section 
+    The Security Functional Requirements included in this section
     are derived from Part 2 of the Common Criteria for Information
     Technology Security Evaluation, <xsl:call-template name="verrev"/>,
-    with additional extended functional components. 
+    with additional extended functional components.
    </xsl:template>
 
    <!-- ############## -->
@@ -140,20 +140,29 @@ conformant to this PP, and it is expected that they be included as soon as possi
 
   <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
-This chapter describes the security requirements which have to be fulfilled by the TOE.
-Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>.
-The following notations are used: <ul>
-      <li><b>Refinement</b> operation (denoted by <b>bold text</b>): is used to add details to a
-        requirement, and thus further restricts a requirement.</li>
-      <li><b>Selection</b> (denoted by <i>italicized text</i>): is used to select one or more options
-        provided by the [CC] in stating a requirement.</li>
-      <li><b>Assignment</b> operation (denoted by <span class="assignable-content">italicized text</span>): is used to assign a specific value to an unspecified parameter, such as the length of a password. Showing the  value in square brackets indicates assignment.</li>
-      <li><b>Iteration</b> operation: are identified with a number inside parentheses (e.g."(1)")</li>
-      <li><b>Extended SFRs</b>: are identified by having an "EXT" label after the SFR name.</li>
-    </ul>
+     This chapter describes the security requirements
+     which have to be fulfilled by the product under evaluation. Those requirements comprise functional
+     components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>. The
+     following notations are used:
+     <ul>
+       <li>
+         <b>Refinement</b> operation (denoted by <b>bold text</b> or <strike>strikethrough
+         text</strike>): is used to add details to a requirement (including replacing an assignment
+         with a more restrictive selection) or to remove part of the requirement that is made irrelevant
+         through the completion of another operation, and thus further restricts a requirement.
+         </li>
+       <li>
+         <b>Selection</b> (denoted by <i>italicized text</i>): is used to select one or more options
+         provided by the [CC] in stating a requirement.</li>
+       <li>
+         <b>Assignment</b> operation (denoted by <span class="assignable-content">italicized text</span>): is used to assign a
+         specific value to an unspecified parameter, such as the length of a password. Showing the
+         value in square brackets indicates assignment.</li>
+       <li>
+         <b>Iteration</b> operation: are identified with a number inside parentheses (e.g.
+         "(1)")</li>
+     </ul>
   </xsl:template>
-
-
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
     <xsl:choose>
@@ -224,7 +233,7 @@ This module does not define any assumptions.
 	This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
       <xsl:otherwise>
-This module does not define any objectives for the Operational Environment. 
+This module does not define any objectives for the Operational Environment.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
