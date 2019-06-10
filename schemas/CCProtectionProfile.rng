@@ -15,8 +15,7 @@
 	    <element name="componentneeded">
 	      <element name="componentid">
 		<data type="string">
-		  
-		  <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{3,4}(_EXT)?\.[0-9]</param>
+		  <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
 		</data>
 	      </element>
 	      <element name="notes">

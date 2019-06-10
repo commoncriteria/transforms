@@ -238,7 +238,7 @@ Grouping for Security Objective for the Operation Environment entries.
         </a:documentation>
         <attribute name="fam-id">
            <data type="string">
-             <param name="pattern">F[A-Z][A-Z]_[A-Z]{3,4}_EXT</param>
+             <param name="pattern">F[A-Z][A-Z]_[A-Z]{2,5}_EXT</param>
            </data>
         </attribute>
         <attribute name="title">
