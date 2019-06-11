@@ -517,7 +517,6 @@ These components are identified in the following table:
           <xsl:apply-templates select="cc:mod-def"/>     
         </xsl:otherwise>
       </xsl:choose>
-      
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
          <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
          <h3>Component Leveling</h3>
