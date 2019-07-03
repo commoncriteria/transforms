@@ -246,7 +246,7 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<a href="{//cc:base-pp/@url}"><x:value-of select="/cc:PP/cc:module/cc:base-pp/@name"/></a>
+	<a href="{//cc:base-pp/@url}"><x:value-of select="//cc:base-pp/@name"/> Protection Profile</a>
       </x:when>
       <x:otherwise>
 	following Base-PPs:
@@ -256,7 +256,7 @@ guidance, and testing.</p>
 	  </x:for-each>
 	</ul>
       </x:otherwise>
-    </x:choose></p>
+    </x:choose>.</p>
     <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/>.
     Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
