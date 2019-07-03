@@ -829,6 +829,7 @@ function showTarget(id){
       </head>
     </xsl:template>
 
+
     <xsl:template name="body-begin">
       <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
       <noscript>
@@ -843,6 +844,8 @@ function showTarget(id){
         <p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
         <p/><b><xsl:value-of select="//cc:PPAuthor"/></b>
       </div>
+
+
 
 	<xsl:apply-templates select="//cc:foreword"/>
 

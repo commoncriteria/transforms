@@ -647,7 +647,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <attribute name="title"><value>Organizational Security Policies</value></attribute>
       <ref name="id-attr"/>
       <ref name="basic-content-pat"/>
-      <ref name="OSPs"/>
+      <zeroOrMore>
+        <ref name="OSPs"/>
+      </zeroOrMore>
     </element>
   </define>
 
