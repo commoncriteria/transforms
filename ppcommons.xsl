@@ -873,4 +873,13 @@ function showTarget(id){
 	<h2>Contents</h2>
 	<div class="toc" id="toc"/>
     </xsl:template>
+    
+ <!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:cite">
+    <xsl:variable name="linkend" select="@linkend"/>
+    <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
+  </xsl:template>
+
+ 
 </xsl:stylesheet>
