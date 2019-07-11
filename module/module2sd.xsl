@@ -334,11 +334,11 @@ guidance, and testing.</p>
       </p>
       <p><b>General Purpose:</b><br/>
       The purpose of this SD is to define evaluation methods for the functional behavior of 
-      <x:value-of select="/cc:PP/@name"/>  products.
+      <x:value-of select="/cc:Module/@name"/>  products.
       </p>
       <p><b>Acknowledgements:</b><br/>
       This SD was developed with support from NIAP <x:value-of select="/cc:PP/@name"/> 
-      Technical Community members, with representatives from industry, Government 
+      <x:value-of select="/cc:Module/@target-products"/> Technical Community members, with representatives from industry, Government 
       agencies, Common Criteria Test Laboratories, and members of academia.
       </p>
     </div>
