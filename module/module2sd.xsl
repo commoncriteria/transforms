@@ -168,10 +168,7 @@ guidance, and testing.</p>
 	<x:with-param name="title">Additional</x:with-param>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
 	<x:with-param name="short" select="@short"/>
-	<x:with-param name="none-msg">
-	  The PP-Module does not add any requirements when the 
-	  <x:value-of select="@short"/> PP is the base.
-	</x:with-param>
+	<x:with-param name="none-msg"/>
       </x:call-template>
     </x:for-each>
   </x:template>
@@ -181,16 +178,22 @@ guidance, and testing.</p>
     <x:param name="short"/>
     <x:param name="none-msg"/>
     <x:param name="title"/>
-    <x:element name="h3">
-      <x:attribute name="class">indexable</x:attribute>
-      <x:attribute name="data-level">2</x:attribute>
-      <x:attribute name="id">qq-sfrs-<x:value-of select="$short"/>-<x:value-of select="$title"/></x:attribute>
-      <x:value-of select="$title"/> SFRs
-    </x:element>
-
+    <x:message>Abc <x:if test="not($none-msg='')">Message</x:if></x:message>
+    <x:message>Def <x:value-of select="count($f-comps//cc:f-component)"/></x:message>
     <x:choose>
-      <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps"/></x:when>
-      <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
+      <x:when test="($none-msg='') and (count($f-comps//cc:f-component)=0)"/>
+      <x:otherwise>
+        <x:element name="h3">
+          <x:attribute name="class">indexable</x:attribute>
+          <x:attribute name="data-level">2</x:attribute>
+          <x:attribute name="id">qq-sfrs-<x:value-of select="$short"/>-<x:value-of select="$title"/></x:attribute>
+          <x:value-of select="$title"/> SFRs
+        </x:element>
+        <x:choose>
+          <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps"/></x:when>
+          <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
+        </x:choose>
+      </x:otherwise>
     </x:choose>
   </x:template>      
 
