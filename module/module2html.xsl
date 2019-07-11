@@ -144,17 +144,20 @@
 	    <xsl:value-of select="$base/@short"/> PP is the base.
 	  </xsl:with-param>
 	</xsl:call-template>
-	<tr>
-	  <th colspan="2"> Additional SFRs</th>
-	</tr>
-	<xsl:call-template name="req-con-rat-sec">
-	  <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component"/>
-	  <xsl:with-param name="short" select="$base/@short"/>
-	  <xsl:with-param name="none-msg">
-	    This PP-Module does not add any requirements when the 
-	    <xsl:value-of select="$base/@short"/> PP is the base.
-	  </xsl:with-param>
-	</xsl:call-template>
+
+  <xsl:if test="$base/cc:additional-sfrs//cc:f-component">
+  	<tr>
+	    <th colspan="2"> Additional SFRs</th>
+	  </tr>
+	  <xsl:call-template name="req-con-rat-sec">
+	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component"/>
+	    <xsl:with-param name="short" select="$base/@short"/>
+	    <xsl:with-param name="none-msg">
+	      This PP-Module does not add any requirements when the 
+	      <xsl:value-of select="$base/@short"/> PP is the base.
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:if>
 
 	<tr>
 	  <th colspan="2"> Mandatory SFRs</th>
