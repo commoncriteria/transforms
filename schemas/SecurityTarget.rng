@@ -6,6 +6,7 @@
 	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="cc:report">
+      <ref name="cc.MetaData"/>     
       <oneOrMore>
         <element name="cc:section">
           <ref name="cc.name"/>
@@ -29,6 +30,26 @@
       </oneOrMore>
     </element>
   </start>
+
+  <define name="cc.MetaData">
+      <element name="cc:Name"><text/></element>
+      <element name="cc:Version"><text/></element>
+      <element name="cc:ReportCompletionDate"><text/></element>
+      <element name="cc:Vendor">
+        <ref name="contacts-pat"/>
+      </element>  
+      <element name="cc:Evaluator">
+        <ref name="contacts-pat"/>
+      </element>  
+  </define>
+
+  <define name="contacts-pat">
+    <element name="cc:Name"><text/></element>
+    <element name="cc:Address"><text/></element>
+    <element name="cc:PhoneNumber"><text/></element>
+    <element name="cc:URL"><text/></element>
+  </define>
+
 
   <define name="cc.name">
     <element name="cc:name">
