@@ -85,6 +85,17 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
+#- Points to Jing jar file (for validation)
+JING_JAR ?= ../jing-*/bin/jing.jar
+
+#- Schema
+RNG_FILE ?= transforms/schemas/CCProtectionProfile.rng
+
+#- Validation line
+#- Arg 1 is the RNG file path
+#- ARg 2 is the XML file path
+VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
+
 #- Points to the daisydiff jar file
 DAISY_DIR ?= ../ExecuteDaisy
 
@@ -219,7 +230,11 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED), $(SIMPLIFIED), $(FNL_PARAM))
 #	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
+# Validation
 
+
+validate:
+	$(call VALIDATOR,$(RNG_FILE),$(PP_XML))
 
 #- Builds quick help
 help:
