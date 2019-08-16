@@ -103,6 +103,14 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 
+#- Does the XSL
+#- Arg 1 is input file
+#- Arg 2 is XSL file
+#- Arg 3 is output file
+#- Arg 4 is parameter value pairs
+DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
+
+#- Transforms with XML and calls post-process.py
 #- TRANSFORM 1 using 2 into 3 [with 4 options]
 DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -\=$(3) 
 
@@ -113,7 +121,7 @@ APP_PARM ?=--stringparam appendicize on
 #- A temporary directory argument
 TMP?=/tmp
 #---
-#- Builds everything but worksheet
+#- Builds normal PP outputs (not modules)
 #---
 default: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
@@ -151,7 +159,7 @@ module-target:
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML), )
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML) )
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 
 
@@ -197,21 +205,19 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
-	$(XSL_EXE) -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
+	$(call DOXSL,  $(ESR_XML),  $(TRANS)/esr2html.xsl, $(ESR_HTML),)
 
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	$(XSL_EXE) $(FNL_PARM) -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
+	$(call DOXSL, $(PP_XML), $(PP2TABLE_XSL), $(TABLE), $(FNL_PARAM))
+#	$(XSL_EXE) $(FNL_PARM) -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
-	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
-
-#- Builds the PP worksheet
-worksheet:
-	echo "Worksheet generation is now under the pp-st-wizard project"
+	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED), $(SIMPLIFIED), $(FNL_PARAM))
+#	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 
 
