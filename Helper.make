@@ -86,7 +86,7 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
 #- Points to Jing jar file (for validation)
-JING_JAR ?= ../jing-*/bin/jing.jar
+JING_JAR ?= jing-*/bin/jing.jar
 
 #- Schema
 RNG_FILE ?= transforms/schemas/CCProtectionProfile.rng
