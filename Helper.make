@@ -112,7 +112,6 @@ APP_PARM ?=--stringparam appendicize on
 
 #- A temporary directory argument
 TMP?=/tmp
-TMP_PARM?=--stringparam basesdir $(TMP)
 #---
 #- Builds everything but worksheet
 #---
@@ -147,10 +146,9 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-#	( [ "$(SKIP)" == 1 ] && [ -r $(TMP)/0.xml ] ) || python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(TMP_PARM) $(FNL_PARM))
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML),$(TMP_PARM))
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML), )
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML) )
