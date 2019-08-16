@@ -15,9 +15,7 @@
 
   <xsl:param name="custom-css-file" select="''"/>
 
-  <!-- Variable for selecting how much debugging we want -->
-  <xsl:param name="debug" select="'v'"/>
-
+ 
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
@@ -757,17 +755,6 @@
   </xsl:template>
 
 
-<xsl:template name="init_js">
-<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
-
-// Called on page load to parse URL parameters and perform actions on them.
-function init(){
-    if(getQueryVariable("expand") == "on"){
-      expand();
-    }
-}
-// ]]&gt;</xsl:text>
-</xsl:template>
   
   <!-- identity transform - useful for debugging -->
 

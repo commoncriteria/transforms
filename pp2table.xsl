@@ -11,9 +11,6 @@
 	<!-- They can be redefined/overridden  -->
 	<xsl:include href="ppcommons.xsl"/>
 
-	<!-- release variable, overridden to "final" for release versions -->
-	<xsl:param name="release" select="'draft'"/>
-
 	<!-- very important, for special characters and umlauts iso8859-1-->
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 

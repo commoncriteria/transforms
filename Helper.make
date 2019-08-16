@@ -122,7 +122,10 @@ XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 
 #- Transforms with XML and calls post-process.py
-#- TRANSFORM 1 using 2 into 3 [with 4 options]
+#- Arg 1 is input file
+#- Arg 2 is XSL file
+#- Arg 3 is output file
+#- Arg 4 is parameter value pairs
 DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -\=$(3) 
 
 FNL_PARM ?=--stringparam release final
@@ -227,7 +230,7 @@ $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
-	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED), $(SIMPLIFIED), $(FNL_PARAM))
+	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED_XSL), $(SIMPLIFIED), $(FNL_PARAM))
 #	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 # Validation

@@ -3,6 +3,11 @@
 
   <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
 
+  <!-- Variable for selecting how much debugging we want -->
+  <xsl:param name="debug" select="'v'"/>
+
+
+
   <xsl:param name="release" select="'draft'"/>
   <!-- #Adds 3 non-breaking spaces -->
   <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
@@ -493,6 +498,21 @@
     <xsl:value-of select="name()"/>
     <xsl:text>/</xsl:text>
   </xsl:template>
+  
+<!-- ############################ -->
+<!-- Contains JavaScript for initializing the page -->
+<xsl:template name="init_js">
+<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
+
+// Called on page load to parse URL parameters and perform actions on them.
+function init(){
+    if(getQueryVariable("expand") == "on"){
+      expand();
+    }
+}
+// ]]&gt;</xsl:text>
+</xsl:template>
+
 
   <xsl:template name="head">
     <xsl:param name="title"/>
