@@ -9,9 +9,6 @@ XSL for Protection Profile Modules
 	      xmlns:h="http://www.w3.org/1999/xhtml"
 	      version="1.0">
 
-  <!-- Variable for selecting how much debugging we want -->
-  <x:param name="debug" select="'v'"/>
-
   <!-- Forces output to make XML and thus needs to be 
        HTMLized by another transformer  -->
   <x:output method="xml" encoding="UTF-8"/>
@@ -429,14 +426,8 @@ guidance, and testing.</p>
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 
-  
-  <x:template name="init_js">
-    <x:text disable-output-escaping="yes">// &lt;![CDATA[
-function init(){}
-// ]]&gt;</x:text>
-  </x:template>
-  
+
   <!-- Ground all extend component definitions-->
   <x:template match="cc:ext-comp-def"/>
-  
+
 </x:stylesheet>
