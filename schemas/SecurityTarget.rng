@@ -6,12 +6,30 @@
 	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="cc:report">
-      <ref name="cc.MetaData"/>     
+      <ref name="cc.MetaData"/>
       <oneOrMore>
         <element name="cc:section">
           <ref name="cc.name"/>
           <oneOrMore>
             <element name="cc:component">
+              <optional>
+                <element name="cc:source">
+                  <a:documentation>
+What document this component came from (TD, Module). No source means it came from the base PP.
+                  </a:documentation>
+		  <choice>
+                    <element name="cc:technical-decision">
+		      <attribute name="td-id"/>
+                    </element>
+                    <element name="cc:module">
+		      <attribute name="name"/>
+                    </element>
+                    <element name="cc:package">
+		      <attribute name="name"/>
+                    </element>
+		  </choice>
+                </element>
+              </optional>
               <ref name="cc.name"/>
               <oneOrMore>
                 <element name="cc:requirement">
@@ -121,10 +139,6 @@
     </zeroOrMore>
   </define>
   
-  
-  
-
-
   <define name="html-element">
     <a:documentation>
       Pattern defines the html-element, which is any element in the xhtml namespace.
@@ -147,7 +161,5 @@
       <ref name="basic-content-pat"/>
     </element>
   </define>
-
-
 
 </grammar>
