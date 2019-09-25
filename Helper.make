@@ -85,17 +85,6 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
-#- Points to Jing jar file (for validation)
-JING_JAR ?= jing-*/bin/jing.jar
-
-#- Schema
-RNG_FILE ?= transforms/schemas/CCProtectionProfile.rng
-
-#- Validation line
-#- Arg 1 is the RNG file path
-#- ARg 2 is the XML file path
-VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
-
 #- Points to the daisydiff jar file
 DAISY_DIR ?= ../ExecuteDaisy
 
@@ -114,28 +103,24 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
 
-#- Does the XSL
-#- Arg 1 is input file
-#- Arg 2 is XSL file
-#- Arg 3 is output file
-#- Arg 4 is parameter value pairs
-DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
-
-#- Transforms with XML and calls post-process.py
-#- Arg 1 is input file
-#- Arg 2 is XSL file
-#- Arg 3 is output file
-#- Arg 4 is parameter value pairs
+#- TRANSFORM 1 using 2 into 3 [with 4 options]
 DOIT ?= $(XSL_EXE) $(4) $(2) $(1) | python3 $(TRANS)/post-process.py -\=$(3) 
 
 FNL_PARM ?=--stringparam release final
 #- Appendicize parameter
 APP_PARM ?=--stringparam appendicize on
 
+#- Path to jing.jar library for RNG validation
+JING_JAR ?= /projects/jing-20181222/bin/jing.jar
+
+#- PATH to the RNG that the input document conforms to
+RNG ?= $(TRANS)/schemas/CCProtectionProfile.rng
+
 #- A temporary directory argument
 TMP?=/tmp
+TMP_PARM?=--stringparam basesdir $(TMP)
 #---
-#- Builds normal PP outputs (not modules)
+#- Builds everything but worksheet
 #---
 default: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
@@ -162,18 +147,15 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 pp:$(PP_HTML)
 
 
-# Personalized CSS file
-#EXTRA_CSS ?=
-#	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
-
 module-target:
 #       Download all remote base-pps
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
+#	( [ "$(SKIP)" == 1 ] && [ -r $(TMP)/0.xml ] ) || python3 $(TRANS)/pre-process.py $(PP_XML) /tmp
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(TMP_PARM) $(FNL_PARM))
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML), )
+	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML),$(TMP_PARM))
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML) )
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 
 
@@ -219,25 +201,20 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
-	$(call DOXSL,  $(ESR_XML),  $(TRANS)/esr2html.xsl, $(ESR_HTML),)
+	$(XSL_EXE) -o $(ESR_HTML) $(TRANS)/esr2html.xsl $(ESR_XML)
 
 #- Builds the PP in html table form
 table: $(TABLE)
 $(TABLE): $(PP2TABLE_XSL) $(PP_XML)
-	$(call DOXSL, $(PP_XML), $(PP2TABLE_XSL), $(TABLE), $(FNL_PARAM))
-#	$(XSL_EXE) $(FNL_PARM) -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
+	$(XSL_EXE) $(FNL_PARM) -o $(TABLE) $(PP2TABLE_XSL) $(PP_XML)
 
 #- Builds the PP in simplified html table form
 simplified: $(SIMPLIFIED)
 $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
-	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED_XSL), $(SIMPLIFIED), $(FNL_PARAM))
-#	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
-
-# Validation
-
+	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 validate:
-	$(call VALIDATOR,$(RNG_FILE),$(PP_XML))
+	java -jar $(JING_JAR) -t $(RNG) $(PP_XML)
 
 #- Builds quick help
 help:
