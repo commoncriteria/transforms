@@ -358,7 +358,20 @@
           </i></b>
         </div>
       </xsl:if>
-
+      <xsl:if test="./cc:depends[@on='implements']">
+        <div class="statustag">
+          <i><b>This is an implementation-based component. 
+                Its inclusion depends whether the TOE implements the following set of features:
+                <ul>
+                  <xsl:for-each select="cc:depends[@on='implements']">
+                    <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
+                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@name"/></a></li>
+                  </xsl:for-each>
+                </ul>
+                as described in Appendix A: Implementation-based Requirements.
+        </b></i>
+        </div>
+      </xsl:if>
       <xsl:if test="@status='optional'">
         <div class="statustag">
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
@@ -371,7 +384,7 @@
 
 <xsl:template match="cc:f-component | cc:a-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
-  <xsl:if test="not(@status) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
+  <xsl:if test="not(@status) or (@status!='optional' and @status!='sel-based' and @status!='objective' and count(./cc:depends)>0)">
     <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
   </xsl:if>
 </xsl:template>
@@ -488,6 +501,27 @@
     <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
 
 
+
+<!-- ############### -->
+<!--                 -->
+    <xsl:template name="handle-features">
+        <xsl:for-each select="//cc:implements/cc:feature">
+          <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
+          <!-- h3 might look slightly off in no appendix case -->
+          <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
+          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@name"/></h3>
+          <xsl:value-of select="cc:text"/>
+<!--
+  This might work to put sub-headings in
+            <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+            </xsl:for-each>
+-->
+          <xsl:if test="$appendicize='on'">
+            <xsl:apply-templates select="//cc:*/cc:depends[@on='implements' and @ref-id=$fid]/.." mode="appendicize"/>
+          </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
+
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="first-appendix">
@@ -496,25 +530,24 @@
                 <h1 id="{@id}" class="indexable" data-level="A">Optional Requirements</h1>
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-                <xsl:apply-templates select="//cc:*[@status='optional']" mode="appendicize-nofilter"/>
+                <xsl:apply-templates select="//cc:*[@status='optional']"/>
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
+<!--                <xsl:apply-templates select="//cc:*[@status='objective']" mode="appendicize-nofilter"/> -->
                 <xsl:apply-templates select="//cc:*[@status='objective']" mode="appendicize-nofilter"/>
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
+                <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
 This appendix enumerates requirements <xsl:call-template name="imple_text"/>
+                <xsl:call-template name="handle-features"><xsl:with-param name="level">2</xsl:with-param></xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
+
         <xsl:if test="count(//cc:implements/cc:feature)=0">
 This PP does not define any Implementation-Dependent Requirements.
         </xsl:if>
-        <xsl:for-each select="//cc:implements/cc:feature">
-            <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-            <h3 id="{@id}"><xsl:value-of select="@name"/></h3>
-            <xsl:value-of select="cc:text"/>
-            <xsl:apply-templates select="//cc:*/cc:depends[@on=$fid]/.."/>
-        </xsl:for-each>
+
 
 
     </xsl:template>
@@ -525,7 +558,7 @@ This PP does not define any Implementation-Dependent Requirements.
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
-            <xsl:apply-templates select="//cc:*[@status='sel-based']" mode="appendicize-nofilter"/>
+            <xsl:apply-templates select="//cc:*[@status='sel-based']"/>
         </xsl:if>
     </xsl:template>
   
@@ -562,7 +595,7 @@ This PP does not define any Implementation-Dependent Requirements.
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status) or @status='threshold'])">
+    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)])">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
