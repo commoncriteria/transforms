@@ -101,6 +101,9 @@ conformant to this PP, and it is expected that they be included as soon as possi
      </dl>
   </xsl:template>
 
+
+  
+
   <!-- ############## -->
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
@@ -237,4 +240,22 @@ This module does not define any objectives for the Operational Environment.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <xsl:template name="opt_appendix">
+As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
+This Appendix contains three other types of optional requirements that may be included in the ST but are not required in order to conform to this PP.
+The first type (in A.1) are strictly optional requirements that are independent of the TOE implementing any function.
+If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged but not required to add the related SFRs.
+The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
+The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP.
+Adoption by vendors is encouraged and expected as soon as possible.
+The third type (in A.3) undefined<xsl:call-template name="imple_text"/>
+  </xsl:template>
+
+  <xsl:template name="imple_text">
+that are dependent on the TOE implementing a particular function.
+If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the evaluated configuration. 
+  </xsl:template>
+
+
 </xsl:stylesheet>
