@@ -65,8 +65,7 @@ provides evidence that these controls are present and have been evaluated.
   </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Selection-Based Requirements']"
-		mode="hook">
+  <xsl:template name="selection-based-text">
 As indicated in the introduction to this PP,
 the baseline requirements
 (those that must be performed by the TOE or its underlying platform)
@@ -75,15 +74,6 @@ There are additional requirements based on selections in the body of the PP:
 if certain selections are made, then additional requirements below must be included.
   </xsl:template>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Objective Requirements']"
-		mode="hook">
-This appendix includes requirements that specify security functionality which
-also addresses threats.
-The requirements are not currently mandated in the body of this PP as they
-describe security functionality not yet widely-available in commercial technology.
-However, these requirements may be included in the ST such that the TOE is still
-conformant to this PP, and it is expected that they be included as soon as possible.
-  </xsl:template>
 
   <!-- ############## -->
   <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']"

@@ -490,54 +490,52 @@
 
 <!-- ############### -->
 <!--                 -->
-
     <xsl:template name="first-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
                 <h1 id="{@id}" class="indexable" data-level="A">Optional Requirements</h1>
                 <xsl:call-template name="opt_appendix"/>
-                <h2 id="opt_reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-                <h2 id="opt_reqs" class="indexable" data-level="2">Objective Requirements</h2>
-                <h2 id="opt_reqs" class="indexable" data-level="2">Implemntation-Dependent Requirements</h2>
+                <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
+                <xsl:apply-templates select="//cc:*[@status='optional']" mode="appendicize-nofilter"/>
+                <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
+                <xsl:apply-templates select="//cc:*[@status='objective']" mode="appendicize-nofilter"/>
+                <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="{@id}" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-                This appendix enumerates requirements <xsl:call-template name="imple_text"/>
+                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
+This appendix enumerates requirements <xsl:call-template name="imple_text"/>
             </xsl:otherwise>
         </xsl:choose>
+        <xsl:if test="count(//cc:implements/cc:feature)=0">
+This PP does not define any Implementation-Dependent Requirements.
+        </xsl:if>
+        <xsl:for-each select="//cc:implements/cc:feature">
+            <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
+            <h3 id="{@id}"><xsl:value-of select="@name"/></h3>
+            <xsl:value-of select="cc:text"/>
+            <xsl:apply-templates select="//cc:*/cc:depends[@on=$fid]/.."/>
+        </xsl:for-each>
+
+
     </xsl:template>
 
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="selection-based-appendix">
-        <xsl:if test="$appendicize='on'"/>
+        <xsl:if test="$appendicize='on'">
+            <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
+            <xsl:call-template name="selection-based-text"/>
+            <xsl:apply-templates select="//cc:*[@status='sel-based']" mode="appendicize-nofilter"/>
+        </xsl:if>
     </xsl:template>
   
 <!-- ############### -->
 <!--                 -->
   <xsl:template match="cc:appendix">
-    <xsl:if test="$appendicize='on'">
-      <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1>
+    <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1>
       <!-- insert SFRs for "special" appendices, if @id is one of the "special" ones-->
-      <xsl:if test="@id='optional' or @id='sel-based' or @id='objective'" >
-        <xsl:apply-templates mode='hook' select='.'/>
-        <xsl:apply-templates />
-        <!-- when @id of the appendix is optional/sel-based/objective,
-        match with the @status of the component, which is the same value -->
-        <xsl:apply-templates select="//cc:f-component[@status=current()/@id]" mode="appendicize-nofilter"/>
-      </xsl:if>
-      <xsl:if test="@id!='optional' and @id!='sel-based' and @id!='objective'">
-        <xsl:apply-templates select="." mode="hook"/>
-        <xsl:apply-templates/>
-      </xsl:if>
-    </xsl:if>
-
-    <xsl:if test="$appendicize!='on' and @id!='optional' and @id!='sel-based' and @id!='objective'">
-      <h1 id="{@id}" class="indexable" data-level="A"
-	  ><xsl:value-of select="@title"/></h1>
-      <xsl:apply-templates select="." mode="hook"/>
-      <xsl:apply-templates/>
-    </xsl:if>
+    <xsl:apply-templates select="." mode="hook"/>
+    <xsl:apply-templates/>
   </xsl:template>
 
 <!-- ############### -->
