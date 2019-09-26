@@ -510,9 +510,10 @@
           <!-- h3 might look slightly off in no appendix case -->
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@name"/></h3>
-          <xsl:value-of select="cc:text"/>
-
-          <xsl:message>Handling features now</xsl:message>
+          <xsl:apply-templates select="cc:description"/>
+<xsl:message>
+   <xsl:value-of select="cc:description"/>
+</xsl:message>
 <!--
   This might work to put sub-headings in
             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
