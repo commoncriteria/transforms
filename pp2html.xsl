@@ -361,7 +361,7 @@
       <xsl:if test="./cc:depends[@on='implements']">
         <div class="statustag">
           <i><b>This is an implementation-based component. 
-                Its inclusion depends whether the TOE implements the following set of features:
+                Its inclusion depends on whether the TOE implements one (or more) of
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
@@ -384,8 +384,8 @@
 
 <xsl:template match="cc:f-component | cc:a-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
-  <xsl:if test="not(@status) or (@status!='optional' and @status!='sel-based' and @status!='objective' and count(./cc:depends)>0)">
-    <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
+  <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
+   <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
   </xsl:if>
 </xsl:template>
 
@@ -511,13 +511,15 @@
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@name"/></h3>
           <xsl:value-of select="cc:text"/>
+
+          <xsl:message>Handling features now</xsl:message>
 <!--
   This might work to put sub-headings in
             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
             </xsl:for-each>
 -->
           <xsl:if test="$appendicize='on'">
-            <xsl:apply-templates select="//cc:*/cc:depends[@on='implements' and @ref-id=$fid]/.." mode="appendicize"/>
+            <xsl:apply-templates select="//cc:*/cc:depends[@on='implements' and @ref-id=$fid]/.." mode="appendicize-nofilter"/>
           </xsl:if>
         </xsl:for-each>
     </xsl:template>
