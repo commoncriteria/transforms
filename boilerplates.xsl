@@ -92,8 +92,6 @@ if certain selections are made, then additional requirements below must be inclu
   </xsl:template>
 
 
-  
-
   <!-- ############## -->
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
@@ -127,7 +125,7 @@ if certain selections are made, then additional requirements below must be inclu
 </tr>
   </xsl:template>
 
-  
+
   <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
 
 
