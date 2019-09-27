@@ -21,7 +21,7 @@
     </a:documentation>
     <optional>
       <attribute name="boilerplate">
-	<value>no</value>
+        <value>no</value>
       </attribute>
     </optional>
   </define>
@@ -29,32 +29,32 @@
   <define name="bibliography">
     <element name="bibliography">
       <a:documentation>
-	Section to define the items references.
+        Section to define the items references.
       </a:documentation>
       <oneOrMore>
-	<choice>
-	  <element name="cc-entry">
-	    <a:documentation>
-	      Inserts the Common Criteria documents.
-	    </a:documentation>
-	    <empty/>
-	  </element>
-	  
-	  <element name="entry">
-	    <a:documentation>
-	      Groups bibliograph entries.
-	    </a:documentation>
-	    <ref name="id-attr"/>
-	    <element name="tag">
-	      <a:documentation>
-		A visible bibliography-wide unique identifier.
-	      </a:documentation>
-	      <ref name="basic-content-pat"/>
-	    </element>
-	    <ref name="description"/>
-	  </element>
-	  
-	</choice>
+        <choice>
+          <element name="cc-entry">
+            <a:documentation>
+              Inserts the Common Criteria documents.
+            </a:documentation>
+            <empty/>
+          </element>
+          
+          <element name="entry">
+            <a:documentation>
+              Groups bibliograph entries.
+            </a:documentation>
+            <ref name="id-attr"/>
+            <element name="tag">
+              <a:documentation>
+                A visible bibliography-wide unique identifier.
+              </a:documentation>
+              <ref name="basic-content-pat"/>
+            </element>
+            <ref name="description"/>
+          </element>
+          
+        </choice>
       </oneOrMore>
     </element>
   </define>
@@ -92,13 +92,13 @@
   <define name="xref">
     <element name="xref">
       <a:documentation>
-	Cross references something 
-	<h:ul>
-	  <h:li>with a title attribute,</h:li> 
-	  <h:li>with a name attribute, </h:li>
-	  <h:li>with a term element, or </h:li>
-	  <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
-	</h:ul>
+        Cross references something 
+        <h:ul>
+          <h:li>with a title attribute,</h:li> 
+          <h:li>with a name attribute, </h:li>
+          <h:li>with a term element, or </h:li>
+          <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
+        </h:ul>
       </a:documentation>
       <ref name="linkend-attr"/>
     </element>
@@ -119,17 +119,17 @@
     </a:documentation>
     <element ns="http://www.w3.org/1999/xhtml">
       <anyName>
-	<except>
-	  <nsName ns="https://niap-ccevs.org/cc/v1"/>
-	</except>
+        <except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+        </except>
       </anyName>
       <a:documentation>
-	Defines all html-elements with an optional number of html attributes and descendants.
+        Defines all html-elements with an optional number of html attributes and descendants.
       </a:documentation>
       <zeroOrMore>
-	<attribute>
-	  <anyName/>
-	</attribute>
+        <attribute>
+          <anyName/>
+        </attribute>
       </zeroOrMore>
       <ref name="basic-content-pat"/>
     </element>
@@ -145,25 +145,25 @@
   <define name="abbr-el">
     <element name="abbr">
       <optional>
-	<attribute name="linkend">
-	  <a:documentation>
-	    Identifies the abbreviation definition (should match the text value of the entry).
-	  </a:documentation>
-	</attribute>
+        <attribute name="linkend">
+          <a:documentation>
+            Identifies the abbreviation definition (should match the text value of the entry).
+          </a:documentation>
+        </attribute>
       </optional>
       <optional>
-	<attribute name="title">
-	  <a:documentation>
-	    Full readable definition of the abbreviation.
-	  </a:documentation>
-	</attribute>
+        <attribute name="title">
+          <a:documentation>
+            Full readable definition of the abbreviation.
+          </a:documentation>
+        </attribute>
       </optional>
       <optional>
-	<attribute name="class">
-	  <a:documentation>
-	    Display class associated with this abbreviation.
-	  </a:documentation>
-	</attribute>
+        <attribute name="class">
+          <a:documentation>
+            Display class associated with this abbreviation.
+          </a:documentation>
+        </attribute>
       </optional>
       <text/>
     </element>
@@ -172,7 +172,7 @@
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
-	Assignment section
+        Assignment section
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
@@ -182,12 +182,12 @@
   <define name="ctr-ref">
     <element name="ctr-ref">
       <a:documentation>
-	References a counted object.
+        References a counted object.
       </a:documentation>
       <attribute name="refid">
-	<a:documentation>
-	  The unique ID of the object being referenced.
-	</a:documentation>
+        <a:documentation>
+          The unique ID of the object being referenced.
+        </a:documentation>
       </attribute>
     </element>
   </define>
@@ -195,24 +195,24 @@
   <define name="ctr">
     <element name="ctr">
       <attribute name="id">
-	<a:documentation>
-	  Unique ID for this object.
-	</a:documentation>
+        <a:documentation>
+          Unique ID for this object.
+        </a:documentation>
       </attribute>
 
       <attribute name="ctr-type">
-	<a:documentation>
-	  References the counter family. If no prefix is given, this value
-	  plus a space is used as the prefix.
-	</a:documentation>
+        <a:documentation>
+          References the counter family. If no prefix is given, this value
+          plus a space is used as the prefix.
+        </a:documentation>
       </attribute>
       <optional>
-	<attribute name="pre">
-	  <a:documentation>
-	    Text that goes before the counter (e.g. 'Table ').
-	    If it's not present, this value is "@ctr-type" + " " 
-	  </a:documentation>
-	</attribute>
+        <attribute name="pre">
+          <a:documentation>
+            Text that goes before the counter (e.g. 'Table ').
+            If it's not present, this value is "@ctr-type" + " " 
+          </a:documentation>
+        </attribute>
       </optional>
       <ref name="basic-content-pat"/>
     </element>
@@ -221,24 +221,24 @@
   <define name="figure">
     <element name="figure">
       <a:documentation>
-	Tag allow that inserts a picture.
+        Tag allow that inserts a picture.
       </a:documentation>
       <optional>
-	<attribute name="pre">
-	  <a:documentation>
-	    Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
-	  </a:documentation>
-	</attribute>
+        <attribute name="pre">
+          <a:documentation>
+            Text that goes before the counter (e.g. 'Figure '). It will be included in every reference. By default it is 'Figure '.
+          </a:documentation>
+        </attribute>
       </optional>
       <attribute name="entity">
-	<a:documentation>
-	  Path to the image file.
-	</a:documentation>
+        <a:documentation>
+          Path to the image file.
+        </a:documentation>
       </attribute>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
       <optional>
-	<attribute name="max-width"/>
+        <attribute name="max-width"/>
       </optional>
     </element>
   </define>
@@ -246,12 +246,12 @@
   <define name="figref">
     <element name="figref">
       <a:documentation>
-	References a figure
+        References a figure
       </a:documentation>
       <attribute name="refid">
-	<a:documentation>
-	  Contains the ID of the figure being referenced.
-	</a:documentation>
+        <a:documentation>
+          Contains the ID of the figure being referenced.
+        </a:documentation>
       </attribute>
     </element>
   </define>
@@ -259,22 +259,22 @@
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
-	A grouping of selectable elements.
+        A grouping of selectable elements.
       </a:documentation>
       <optional>
         <attribute name="onlyone">
-	  <a:documentation>
-	    Designates that at only one item may be selected.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
+          <a:documentation>
+            Designates that at only one item may be selected.
+          </a:documentation>
+          <choice><value>yes</value></choice>
         </attribute>
       </optional>
       <optional>
         <attribute name="linebreak">
-	  <a:documentation>
-	    Indicates that new lines should be appended to every selectable.
-	  </a:documentation>
-	  <choice><value>yes</value></choice>
+          <a:documentation>
+            Indicates that new lines should be appended to every selectable.
+          </a:documentation>
+          <choice><value>yes</value></choice>
         </attribute>
       </optional>
       <ref name="selectable-group"/>
@@ -286,25 +286,25 @@
   <define name="selectable-single">
     <element name="selectable">
       <a:documentation>
-	Denotes the start of a selectable in a selectables section.
+        Denotes the start of a selectable in a selectables section.
       </a:documentation>
       <optional>
-	<attribute name="exclusive"><choice><value>yes</value></choice></attribute>
+        <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
       <optional>
-	<ref name="id-attr"/>
+        <ref name="id-attr"/>
       </optional>
       <zeroOrMore>
-	<element name="requires">
-	  <a:documentation>
-	    Denotes a selection-based element that is required should this selection chosen.
-	  </a:documentation>
-	  <attribute name="req">
-	    <a:documentation>
-	      The ID of the required element.
-	    </a:documentation>
-	  </attribute>
-	</element>
+        <element name="requires">
+          <a:documentation>
+            Denotes a selection-based element that is required should this selection chosen.
+          </a:documentation>
+          <attribute name="req">
+            <a:documentation>
+              The ID of the required element.
+            </a:documentation>
+          </attribute>
+        </element>
       </zeroOrMore>
       <ref name="basic-content-pat"/>
     </element>
@@ -322,14 +322,14 @@
     <element name="objective-refer">
       <a:documentation>Element that denotes an objective</a:documentation>
       <attribute name="ref">
-      	<a:documentation>Attribute the references the id of a specific objective.</a:documentation>
+        <a:documentation>Attribute the references the id of a specific objective.</a:documentation>
         <data type="NCName">
-      	  <param name="pattern">O(E?)\.[_A-Z]+</param>
-	      </data>
+          <param name="pattern">O(E?)\.[_A-Z]+</param>
+              </data>
       </attribute>
       <element name="rationale">
-	      <a:documentation>Argument as to why the objective applies</a:documentation>
-	      <ref name="basic-content-pat"/>
+              <a:documentation>Argument as to why the objective applies</a:documentation>
+              <ref name="basic-content-pat"/>
       </element>
     </element>
   </define>
@@ -337,15 +337,15 @@
   <define name="note">
     <element name="note">
       <a:documentation>
-	Any further instructions associated with the requirement.
+        Any further instructions associated with the requirement.
       </a:documentation>
       <optional>
         <attribute name="role">
-	  <a:documentation>Indicates who is associated with this role</a:documentation>
-	  <choice>
-	    <value>application</value><value>Application</value>
-	    <value>developer</value><value>Developer</value>
-	  </choice>
+          <a:documentation>Indicates who is associated with this role</a:documentation>
+          <choice>
+            <value>application</value><value>Application</value>
+            <value>developer</value><value>Developer</value>
+          </choice>
         </attribute>
       </optional>
       <ref name="basic-content-pat"/>
@@ -355,10 +355,10 @@
   <define name="SOs">
     <element name="SOs">
       <a:documentation>
-	Grouping for Security Objective entries.
+        Grouping for Security Objective entries.
       </a:documentation>
       <oneOrMore>
-	<ref name="SO"/>
+        <ref name="SO"/>
       </oneOrMore>
     </element>
   </define>
@@ -369,10 +369,10 @@
 Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <oneOrMore>
-    	<element name="SOE">
-	     <ref name="id-attr"/>
-	     <ref name="description"/>
-	   </element>
+        <element name="SOE">
+             <ref name="id-attr"/>
+             <ref name="description"/>
+           </element>
       </oneOrMore>
     </element>
   </define>
@@ -382,21 +382,21 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="SO">
     <element name="SO">
       <a:documentation>
-	Entry for a security objective
+        Entry for a security objective
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="description"/>
       <oneOrMore>
         <element name="component-refer">
-	  <a:documentation>
-	    Cross-references a component.
-	  </a:documentation>
+          <a:documentation>
+            Cross-references a component.
+          </a:documentation>
           <attribute name="ref">
-	    <a:documentation>
-	      Id of the referenced component.
-	    </a:documentation>
-	  </attribute>
-	  <empty/>
+            <a:documentation>
+              Id of the referenced component.
+            </a:documentation>
+          </attribute>
+          <empty/>
         </element>
       </oneOrMore>
     </element>
@@ -410,28 +410,28 @@ Grouping for Security Objective for the Operation Environment entries.
     </a:documentation>
     <oneOrMore>
       <choice>
-	<text/>
-	<ref name="html-element"/>
-	<ref name="linkref"/>
-	<ref name="citeCC"/>
+        <text/>
+        <ref name="html-element"/>
+        <ref name="linkref"/>
+        <ref name="citeCC"/>
         <ref name="cite"/>
         <ref name="secref"/>
         <ref name="testlist"/>
-	<ref name="selectables"/>
-	<ref name="assignable"/>
+        <ref name="selectables"/>
+        <ref name="assignable"/>
         <ref name="appref"/>
-	<ref name="abbr-el"/>
-	<ref name="xref"/>
-	<ref name="refinement-type"/>
-	<ref name="ctr-ref"/>
-	<ref name="ctr"/>
-	<ref name="figure"/>
-	<ref name="figref"/>
-	<ref name="TSS"/>
-	<ref name="Guidance"/>
-	<ref name="Tests"/>
-	<ref name="wsn"/>
-	<ref name="custom-basic-content-pat"/>
+        <ref name="abbr-el"/>
+        <ref name="xref"/>
+        <ref name="refinement-type"/>
+        <ref name="ctr-ref"/>
+        <ref name="ctr"/>
+        <ref name="figure"/>
+        <ref name="figref"/>
+        <ref name="TSS"/>
+        <ref name="Guidance"/>
+        <ref name="Tests"/>
+        <ref name="wsn"/>
+        <ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
   </define>
@@ -466,13 +466,13 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="f-element">
     <element name="f-element">
       <a:documentation>
-	Defines a functional requirement.
+        Defines a functional requirement.
       </a:documentation>
       <attribute name="id">
-	<a:documentation>
-	  A document-wide unique ID that is also displayed to the user.
-	  It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-	</a:documentation>
+        <a:documentation>
+          A document-wide unique ID that is also displayed to the user.
+          It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+        </a:documentation>
       </attribute>
       <ref name="f-element-title"/>
       <optional><ref name="note"/></optional>
@@ -484,22 +484,22 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="testlist">
     <element name="testlist">
       <a:documentation>
-	Defines a lists of tests to evaluate a requirement.
+        Defines a lists of tests to evaluate a requirement.
       </a:documentation>
       <oneOrMore>
         <choice>
-	  <ref name="basic-content-pat"/>
+          <ref name="basic-content-pat"/>
           <element name="test">
-	    <a:documentation>
-	      Denotes a single test.
-	    </a:documentation>
-	    <oneOrMore>
-	      <choice>
-		<ref name="basic-content-pat"/>
-		<ref name="testlist"/>
-		<ref name="steplist"/>
-	      </choice>
-	    </oneOrMore>
+            <a:documentation>
+              Denotes a single test.
+            </a:documentation>
+            <oneOrMore>
+              <choice>
+                <ref name="basic-content-pat"/>
+                <ref name="testlist"/>
+                <ref name="steplist"/>
+              </choice>
+            </oneOrMore>
           </element>
         </choice>
       </oneOrMore>
@@ -509,23 +509,23 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="steplist">
     <element name="steplist">
       <a:documentation>
-	Defines a list of steps to perform a test.
+        Defines a list of steps to perform a test.
       </a:documentation>
       <oneOrMore>
-	<choice>
-	  <ref name="basic-content-pat"/>
-	  <element name="step">
-	    <a:documentation>
-	      Denotes a single step.
-	    </a:documentation>
-	    <oneOrMore>
-	      <choice>
-		<ref name="basic-content-pat"/>
-		<ref name="steplist"/>
-	      </choice>
-	    </oneOrMore>
-	  </element>
-	</choice>
+        <choice>
+          <ref name="basic-content-pat"/>
+          <element name="step">
+            <a:documentation>
+              Denotes a single step.
+            </a:documentation>
+            <oneOrMore>
+              <choice>
+                <ref name="basic-content-pat"/>
+                <ref name="steplist"/>
+              </choice>
+            </oneOrMore>
+          </element>
+        </choice>
       </oneOrMore>
     </element>
   </define>
@@ -548,24 +548,24 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
       <ref name="basic-content-pat"/>
       <choice>
-	<group>
-	  <ref name="TSS"/>
-	  <optional>
-	    <ref name="Guidance"/>
-	  </optional>
-	  <optional>
-	    <ref name="Tests"/>
-	  </optional>
-	</group>
-	<group>
-	  <ref name="Guidance"/>
-	  <optional>
-	    <ref name="Tests"/>
-	  </optional>
-	</group>
-	<group>
-	    <ref name="Tests"/>
-	</group>
+        <group>
+          <ref name="TSS"/>
+          <optional>
+            <ref name="Guidance"/>
+          </optional>
+          <optional>
+            <ref name="Tests"/>
+          </optional>
+        </group>
+        <group>
+          <ref name="Guidance"/>
+          <optional>
+            <ref name="Tests"/>
+          </optional>
+        </group>
+        <group>
+            <ref name="Tests"/>
+        </group>
       </choice>
     </element>
   </define>
@@ -575,7 +575,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="TSS">
     <element name="TSS">
       <a:documentation>
-	Denotes a TSS section.
+        Denotes a TSS section.
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
@@ -583,7 +583,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="Guidance">
     <element name="Guidance">
       <a:documentation>
-	Denotes a Guidance section.
+        Denotes a Guidance section.
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
@@ -591,7 +591,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="Tests">
     <element name="Tests">
       <a:documentation>
-	Denotes a tests section.
+        Denotes a tests section.
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
@@ -600,18 +600,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="assumptions">
     <element name="assumptions">
       <a:documentation>
-	Grouping of assumptions.
+        Grouping of assumptions.
       </a:documentation>
       <zeroOrMore>
         <element name="assumption">
-	  <a:documentation>
-	    Describes assumptions made.
-	  </a:documentation>
-	  <attribute name="id">
-	    <a:documentation>
-	      An assumption-wide unique ID that is also displayed to the user.
-	    </a:documentation>
-	  </attribute>
+          <a:documentation>
+            Describes assumptions made.
+          </a:documentation>
+          <attribute name="id">
+            <a:documentation>
+              An assumption-wide unique ID that is also displayed to the user.
+            </a:documentation>
+          </attribute>
           <ref name="description"/>
           <oneOrMore>
           <ref name="objective-refer"/>
@@ -623,26 +623,26 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="OSPs">
     <element name="OSPs">
- 	    <a:documentation>
-	      Grouping for Organizational Security Policies
+            <a:documentation>
+              Grouping for Organizational Security Policies
       </a:documentation>
 
-	    <oneOrMore>
-	      <element name="OSP">
-	        <ref name="id-attr"/>
+            <oneOrMore>
+              <element name="OSP">
+                <ref name="id-attr"/>
           <ref name="description"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
-	      </element>
-	    </oneOrMore>
+              </element>
+            </oneOrMore>
     </element>
   </define>
 
   <define name="osp-section">
     <element name="section">
       <a:documentation>
-	Section describing Organizational Security Policies
+        Section describing Organizational Security Policies
       </a:documentation>
       <attribute name="title"><value>Organizational Security Policies</value></attribute>
       <ref name="id-attr"/>
@@ -665,35 +665,35 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="selection-depends">
       <element name="selection-depends">
-	<a:documentation>
-	  Defines the other requirements whose selection affects whether this component must be also applied.
-	</a:documentation>
-	<attribute name="req">
-	  <a:documentation>
-	    The value of the id attribute of the requirement is component depends on.
-	  </a:documentation>
-	  <data type="string">
-	    <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
-	  </data>
-	</attribute>
-	<attribute name="ids">
-	  <a:documentation>
-	    A comma delimited list of IDs corresponding to specific 'selectable's which if chosen
-	    activate this component.
-	  </a:documentation>
-	</attribute>
+        <a:documentation>
+          Defines the other requirements whose selection affects whether this component must be also applied.
+        </a:documentation>
+        <attribute name="req">
+          <a:documentation>
+            The value of the id attribute of the requirement is component depends on.
+          </a:documentation>
+          <data type="string">
+            <param name="pattern">.+\.[0-9]+\.[0-9]+(\([0-9]+\))?</param>
+          </data>
+        </attribute>
+        <attribute name="ids">
+          <a:documentation>
+            A comma delimited list of IDs corresponding to specific 'selectable's which if chosen
+            activate this component.
+          </a:documentation>
+        </attribute>
       </element>
   </define>
 
   <define name="f-element-title">
     <element name="title">
       <a:documentation>
-	Contains the formal wording for the requirement (either for a-elements or f-elements).
-	Must match requirements in CC Part 2 (unless it is an _ext requirement).
+        Contains the formal wording for the requirement (either for a-elements or f-elements).
+        Must match requirements in CC Part 2 (unless it is an _ext requirement).
       </a:documentation>
       <oneOrMore><choice>
-	<ref name="basic-content-pat"/>
-	<ref name="management-function-set"/>
+        <ref name="basic-content-pat"/>
+        <ref name="management-function-set"/>
       </choice></oneOrMore>
     </element>
   </define>
@@ -702,61 +702,61 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="management-function-set">
     <element name="management-function-set">
       <a:documentation>
-	Table defining functions that are to be done and what role is required to do them.
+        Table defining functions that are to be done and what role is required to do them.
       </a:documentation>
       <attribute name="default">
-	<a:documentation>Is the default value(index).</a:documentation>
-	<choice>
-	  <value>M</value>
-	  <value>O</value>
-	  <value>_</value>
-	</choice>
+        <a:documentation>Is the default value(index).</a:documentation>
+        <choice>
+          <value>M</value>
+          <value>O</value>
+          <value>_</value>
+        </choice>
       </attribute>
       <oneOrMore>
         <element name="manager">
-	  <a:documentation>
-	    Readable role name
-	  </a:documentation>
-	  <attribute name="id">
-	    <a:documentation>
-	      ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
-	      in the management-function.
-	    </a:documentation>
-	  </attribute>
-	  <text/>
+          <a:documentation>
+            Readable role name
+          </a:documentation>
+          <attribute name="id">
+            <a:documentation>
+              ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+              in the management-function.
+            </a:documentation>
+          </attribute>
+          <text/>
         </element>
       </oneOrMore>
       <oneOrMore>
         <element name="management-function">
-	  <element name="text">
-	    <a:documentation>Describes the management function.</a:documentation>
-	    <ref name="basic-content-pat"/>
-	  </element>
-	  <zeroOrMore>
-	    <choice>
-	      <element name="M">
-		<a:documentation>References for which managers this function is mandatory</a:documentation>
-		<attribute name="ref">
-		  <a:documentation>ID respective manager</a:documentation>
-		</attribute>
-		<empty/>
-	      </element>
-	      <element name="O">
-		<a:documentation>References for which managers this function is optional</a:documentation>
-		<attribute name="ref">
-		  <a:documentation>ID respective manager</a:documentation>
-		</attribute>
-		<empty/>
-	      </element>
-	      <element name="_">
-		<a:documentation>References for which managers this function is not applicable</a:documentation>
-		<attribute name="ref">
-		  <a:documentation>ID respective manager</a:documentation>
-		</attribute>
-		<empty/>
-	      </element>
-	    </choice>
-	  </zeroOrMore>
+          <element name="text">
+            <a:documentation>Describes the management function.</a:documentation>
+            <ref name="basic-content-pat"/>
+          </element>
+          <zeroOrMore>
+            <choice>
+              <element name="M">
+                <a:documentation>References for which managers this function is mandatory</a:documentation>
+                <attribute name="ref">
+                  <a:documentation>ID respective manager</a:documentation>
+                </attribute>
+                <empty/>
+              </element>
+              <element name="O">
+                <a:documentation>References for which managers this function is optional</a:documentation>
+                <attribute name="ref">
+                  <a:documentation>ID respective manager</a:documentation>
+                </attribute>
+                <empty/>
+              </element>
+              <element name="_">
+                <a:documentation>References for which managers this function is not applicable</a:documentation>
+                <attribute name="ref">
+                  <a:documentation>ID respective manager</a:documentation>
+                </attribute>
+                <empty/>
+              </element>
+            </choice>
+          </zeroOrMore>
         </element>
       </oneOrMore>
     </element>
@@ -776,10 +776,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="acronyms">
     <element name="acronyms">
       <a:documentation>
-	Section to define the acronyms used in the document.
+        Section to define the acronyms used in the document.
       </a:documentation>
       <oneOrMore>
-	<ref name="entry-el"/>
+        <ref name="entry-el"/>
       </oneOrMore>
     </element>
   </define>
@@ -787,31 +787,31 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="entry-el">
     <element name="entry">
       <a:documentation>
-	Wrapper for terms and descriptions.
+        Wrapper for terms and descriptions.
       </a:documentation>
       <optional>
-	<attribute name="id">
-	  <a:documentation>
-	    Unique ID for this entry so it can be linked. 
-	    If omitted, it can still be linked with the name or term.
-	  </a:documentation>
-	</attribute>
+        <attribute name="id">
+          <a:documentation>
+            Unique ID for this entry so it can be linked. 
+            If omitted, it can still be linked with the name or term.
+          </a:documentation>
+        </attribute>
       </optional>
       <choice>
-	<element name="name">
-	  <a:documentation></a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
-	<element name="term">
-	  <a:documentation>
-	    Thing being defined.
-	  </a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
+        <element name="name">
+          <a:documentation></a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
+        <element name="term">
+          <a:documentation>
+            Thing being defined.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
       </choice>
       <element name="description">
-	<a:documentation>Description of the term/name.</a:documentation>
-	<ref name="basic-content-pat"/>
+        <a:documentation>Description of the term/name.</a:documentation>
+        <ref name="basic-content-pat"/>
       </element>
     </element>
   </define>
