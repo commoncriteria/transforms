@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar ns="https://niap-ccevs.org/cc/v1"
-	 xmlns="http://relaxng.org/ns/structure/1.0"
-	 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-	 xmlns:htm="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-	 >
+         xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         xmlns:htm="http://www.w3.org/1999/xhtml"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         >
 
 
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
       <choice>
-	<element name="componentsneeded">
-	  <oneOrMore>
-	    <element name="componentneeded">
-	      <element name="componentid">
-		<data type="string">
-		  <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
-		</data>
-	      </element>
-	      <element name="notes">
-		<ref name="basic-content-pat"/>
-	      </element>
-	    </element>
-	  </oneOrMore>
-	</element>
-	<element name="if-opt-app">
-	  <a:documentation>
-	    Content that only appears if the optional appendices exist.
-	  </a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
+        <element name="componentsneeded">
+          <oneOrMore>
+            <element name="componentneeded">
+              <element name="componentid">
+                <data type="string">
+                  <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
+                </data>
+              </element>
+              <element name="notes">
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+        <element name="if-opt-app">
+          <a:documentation>
+            Content that only appears if the optional appendices exist.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
         <element name="indent">
-	  <a:documentation>
-	    Tags that this section should be indented(left) 2em.
-	  </a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
+          <a:documentation>
+            Tags that this section should be indented(left) 2em.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
       </choice>
     </define>
 
@@ -43,17 +43,17 @@
   <define name="description">
     <element name="description">
       <a:documentation>
-	A description section. Basically just has basic content and
+        A description section. Basically just has basic content and
       </a:documentation>
       <oneOrMore>
         <choice>
-	  <ref name="basic-content-pat"/>
+          <ref name="basic-content-pat"/>
           <element name="InsertAppendixExplainer">
-	    <a:documentation>
-	      Tag that denotes where an explanation of where the different types (objective, threshold, optional)
-	      of requirements are located.
-	    </a:documentation>
-	    <empty/>
+            <a:documentation>
+              Tag that denotes where an explanation of where the different types (objective, threshold, optional)
+              of requirements are located.
+            </a:documentation>
+            <empty/>
           </element>
         </choice>
       </oneOrMore>
@@ -67,118 +67,118 @@
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <attribute name="name">
-	<a:documentation>
+        <attribute name="name">
+      <a:documentation>
 The title of this document.
-	</a:documentation>
+      </a:documentation>
       </attribute>
       <optional>
-	<attribute name="type">
-	  <choice><value>package</value><value>pp</value></choice>
-	</attribute>
+        <attribute name="type">
+          <choice><value>package</value><value>pp</value></choice>
+        </attribute>
       </optional>
       <optional>
-	<attribute name="boilerplate">
-	<a:documentation>
+        <attribute name="boilerplate">
+        <a:documentation>
 Indicates that this document shall use boilerplate sections.
-	</a:documentation>
-	<value>yes</value></attribute>
+        </a:documentation>
+        <value>yes</value></attribute>
       </optional>
 
       
       <element name="PPReference">
-	<a:documentation>
-	  A wrapper element for document meta-data.
-	</a:documentation>
+        <a:documentation>
+          A wrapper element for document meta-data.
+        </a:documentation>
 
         <element name="ReferenceTable">
-	  <a:documentation>
-	    A second wrapper element for document meta-data.
-	  </a:documentation>
+          <a:documentation>
+            A second wrapper element for document meta-data.
+          </a:documentation>
           <element name="PPTitle">
-	    <a:documentation>Title of this document</a:documentation>
+            <a:documentation>Title of this document</a:documentation>
             <text/>
           </element>
           <element name="PPVersion">
-	    <a:documentation>
-	      Version of Common Criteria this document follows.
-	      It should be the version listed in the CCPart1/2/3 files consulted.
-	    </a:documentation>
+            <a:documentation>
+              Version of Common Criteria this document follows.
+              It should be the version listed in the CCPart1/2/3 files consulted.
+            </a:documentation>
             <data type="NMTOKEN"/>
           </element>
           <element name="PPAuthor">
-	    <a:documentation>
-	      Organization that developed this PP (e.g. National Information Assurance Partnership)
-	    </a:documentation>
+            <a:documentation>
+              Organization that developed this PP (e.g. National Information Assurance Partnership)
+            </a:documentation>
             <text/>
           </element>
           <element name="PPPubDate">
-	    <a:documentation>
-	      Date of publication for this PP.
-	    </a:documentation>
+            <a:documentation>
+              Date of publication for this PP.
+            </a:documentation>
             <data type="date"/>
           </element>
           <element name="Keywords">
-	    <a:documentation>
-	      NOT USED. A list of keywords associated with this document.
-	    </a:documentation>
+            <a:documentation>
+              NOT USED. A list of keywords associated with this document.
+            </a:documentation>
             <text/>
           </element>
         </element>
       </element>
       <oneOrMore>
         <element name="RevisionHistory">
-	  <a:documentation>Documents the major changes to releases.</a:documentation>
-	  <zeroOrMore>
-	    <element name="entry">
-	      <a:documentation>Container for individual revisions.</a:documentation>
-	      <element name="version">
-		<a:documentation>Text describing the revision.</a:documentation>
-		<text/>
-	      </element>
-	      <element name="date">
-		<a:documentation>Date of the revision.</a:documentation>
-		<data type="date"/>
-	      </element>
-	      <element name="subject">
-		<a:documentation>Description of the revision.</a:documentation>
-		<ref name="basic-content-pat"/>
-	      </element>
-	    </element>
-	  </zeroOrMore>
+          <a:documentation>Documents the major changes to releases.</a:documentation>
+          <zeroOrMore>
+            <element name="entry">
+              <a:documentation>Container for individual revisions.</a:documentation>
+              <element name="version">
+                <a:documentation>Text describing the revision.</a:documentation>
+                <text/>
+              </element>
+              <element name="date">
+                <a:documentation>Date of the revision.</a:documentation>
+                <data type="date"/>
+              </element>
+              <element name="subject">
+                <a:documentation>Description of the revision.</a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </zeroOrMore>
         </element>
       </oneOrMore>
       <optional>
-	<element name="foreword">
-	  <a:documentation>Flexible section for a foreword.</a:documentation>
-	  <zeroOrMore><ref name="html-element"/></zeroOrMore>
-	</element>
+        <element name="foreword">
+          <a:documentation>Flexible section for a foreword.</a:documentation>
+          <zeroOrMore><ref name="html-element"/></zeroOrMore>
+        </element>
       </optional>
       <oneOrMore>
         <element name="chapter">
-	  <a:documentation>Major grouping for the document.</a:documentation>
-	  <ref name="id-attr"/>
-	  <ref name="title-attr"/>
-	  <ref name="boilerplate-no-attr"/>
+          <a:documentation>Major grouping for the document.</a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="boilerplate-no-attr"/>
           <oneOrMore>
             <choice>
-	      <ref name="basic-content-pat"/>
+              <ref name="basic-content-pat"/>
               <ref name="section"/>
-	      
+              
               <element name="cclaims">
-		<a:documentation>
-		  Container element for the individual Conformance Claims.
-		</a:documentation>
+                <a:documentation>
+                  Container element for the individual Conformance Claims.
+                </a:documentation>
                 <oneOrMore>
                   <element name="cclaim">
-		    <a:documentation>
-		      Element containing a description of Conformance claims. See CCPART1 section A.5.
-		    </a:documentation>
+                    <a:documentation>
+                      Element containing a description of Conformance claims. See CCPART1 section A.5.
+                    </a:documentation>
                     <attribute name="id">
-		      <a:documentation>
-			This is really the title of the section.
-		      </a:documentation>
-		    </attribute>
+                      <a:documentation>
+                        This is really the title of the section.
+                      </a:documentation>
+                    </attribute>
                     <ref name="description"/>
                   </element>
                 </oneOrMore>
@@ -188,14 +188,14 @@ Indicates that this document shall use boilerplate sections.
         </element>
       </oneOrMore>
       <oneOrMore>
-	<ref name="appendix"/>
+        <ref name="appendix"/>
       </oneOrMore>
 
       <!-- This is where we can store extra css -->
       <optional>
-	<element name="extra-css">
-	  <text/>
-	</element>
+        <element name="extra-css">
+          <text/>
+        </element>
       </optional>
     </element>
   </start>
@@ -207,19 +207,19 @@ Indicates that this document shall use boilerplate sections.
     </a:documentation>
     <element name="appendix">
       <a:documentation>
-	Element that defines an appendix.
+        Element that defines an appendix.
       </a:documentation>
       <attribute name="id">
-	<a:documentation>A document-wide unique string.</a:documentation>
+        <a:documentation>A document-wide unique string.</a:documentation>
         <data type="NCName"/>
       </attribute>
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="basic-content-pat"/>
+          <ref name="basic-content-pat"/>
           <ref name="section"/>
-	  <ref name="acronyms"/>
-	  <ref name="bibliography"/>
+          <ref name="acronyms"/>
+          <ref name="bibliography"/>
         </choice>
       </oneOrMore>
     </element>
@@ -228,51 +228,51 @@ Indicates that this document shall use boilerplate sections.
   <define name="section">
     <element name="section">
       <a:documentation>
-	A block smaller than a chapter.
+        A block smaller than a chapter.
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-      	  <ref name="basic-content-pat"/>
+          <ref name="basic-content-pat"/>
           <element name="InsertSPDCorrespondence">
-	          <a:documentation>
-	            Tags the spot where the table mapping threats
-	            to objectives to requirements should go.
-	          </a:documentation>
+                  <a:documentation>
+                    Tags the spot where the table mapping threats
+                    to objectives to requirements should go.
+                  </a:documentation>
             <empty/>
           </element>
           <ref name="OSPs"/>
           <element name="SOEs">
-	    <a:documentation>
-	      Grouping for Security Objectives for the Operational environment.
-	    </a:documentation>
+            <a:documentation>
+              Grouping for Security Objectives for the Operational environment.
+            </a:documentation>
             <oneOrMore>
               <element name="SOE">
-		<a:documentation>
-		  Security Objective for the Operational environment.
-		</a:documentation>
-		<ref name="id-attr"/>
+                <a:documentation>
+                  Security Objective for the Operational environment.
+                </a:documentation>
+                <ref name="id-attr"/>
                 <ref name="description"/>
               </element>
             </oneOrMore>
           </element>
-	  <ref name="SOs"/>
-	  <ref name="assumptions"/>
-	  <ref name="subsection-pattern"/>
+          <ref name="SOs"/>
+          <ref name="assumptions"/>
+          <ref name="subsection-pattern"/>
           <element name="threats">
-	    <a:documentation>
-	      Wrapper element for various threats.
-	    </a:documentation>
+            <a:documentation>
+              Wrapper element for various threats.
+            </a:documentation>
             <oneOrMore>
               <element name="threat">
-		<a:documentation>
-		  Defines a threat.
-		</a:documentation>
+                <a:documentation>
+                  Defines a threat.
+                </a:documentation>
                 <attribute name="id">
                   <data type="NCName">
-		    <param name="pattern">T\.[_A-Z0-9]+</param>
-		  </data>
+                    <param name="pattern">T\.[_A-Z0-9]+</param>
+                  </data>
                 </attribute>
                 <ref name="description"/>
                 <oneOrMore>
@@ -282,16 +282,16 @@ Indicates that this document shall use boilerplate sections.
             </oneOrMore>
           </element>
           <element name="usecases">
-	    <a:documentation>
-	      Wrapper element for uses cases.
-	    </a:documentation>
+            <a:documentation>
+              Wrapper element for uses cases.
+            </a:documentation>
             <oneOrMore>
               <element name="usecase">
-		<a:documentation>
-		  A referrable section on how the protection profiled item is used.
-		</a:documentation>
-		<ref name="id-attr"/>
-		<ref name="title-attr"/>
+                <a:documentation>
+                  A referrable section on how the protection profiled item is used.
+                </a:documentation>
+                <ref name="id-attr"/>
+                <ref name="title-attr"/>
                 <ref name="description"/>
               </element>
             </oneOrMore>
@@ -304,25 +304,25 @@ Indicates that this document shall use boilerplate sections.
   <define name="a-elements">
     <oneOrMore>
       <element name="a-element">
-	<a:documentation>
-	  Defines a functional requirement.
-	</a:documentation>
-	<attribute name="id">
-	  <a:documentation>
-	    A document-wide unique ID that is also displayed to the user.
-	    It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-	  </a:documentation>
-	</attribute>
-	<ref name="f-element-title"/>
-	<optional>
+        <a:documentation>
+          Defines a functional requirement.
+        </a:documentation>
+        <attribute name="id">
+          <a:documentation>
+            A document-wide unique ID that is also displayed to the user.
+            It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
+          </a:documentation>
+        </attribute>
+        <ref name="f-element-title"/>
+        <optional>
           <ref name="note"/>
-	</optional>
-	<optional>
-	  <element name="aactivity">
-	    <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
-	    <ref name="basic-content-pat"/>
-	  </element>
-	</optional>
+        </optional>
+        <optional>
+          <element name="aactivity">
+            <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
+            <ref name="basic-content-pat"/>
+          </element>
+        </optional>
       </element>
     </oneOrMore>
   </define>
@@ -330,64 +330,64 @@ Indicates that this document shall use boilerplate sections.
   <define name="f-component-pattern">
     <element name="f-component">
       <a:document>
-	Specifies a component under Security Functional Requirements section..
+        Specifies a component under Security Functional Requirements section..
       </a:document>
       <attribute name="id">
-	<a:documentation>
-	  A document-wide unique id. Not really read by a person, but it
-	  should be the base for its child requirements' ids.
-	</a:documentation>
+        <a:documentation>
+          A document-wide unique id. Not really read by a person, but it
+          should be the base for its child requirements' ids.
+        </a:documentation>
       </attribute>
       <attribute name="name">
-	<a:documentation>
-	  Readable title for this requirement.
-	</a:documentation>
+        <a:documentation>
+          Readable title for this requirement.
+        </a:documentation>
       </attribute>
       <choice>
-	<!-- Choice of  status -->
-	<!-- If the status is objective, it must have a targetdate(?) -->
-	<group>
-	  <optional>
-	    <attribute name="targetdate">
-	      <a:documentation>
-		Target date that the requirements under this component become
-		manandory. It only makes sense for _objective_ components.
-	      </a:documentation>
-	      <data type="date"/>
-	    </attribute>
-	  </optional>
-	  <attribute name="status">
-	    <a:documentation>
-	      Denotes the status of a requirement.
-	    </a:documentation>
-	    <value>objective</value>
-	  </attribute>
-	</group>
+        <!-- Choice of  status -->
+        <!-- If the status is objective, it must have a targetdate(?) -->
+        <group>
+          <optional>
+            <attribute name="targetdate">
+              <a:documentation>
+                Target date that the requirements under this component become
+                manandory. It only makes sense for _objective_ components.
+              </a:documentation>
+              <data type="date"/>
+            </attribute>
+          </optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>objective</value>
+          </attribute>
+        </group>
 
-	<!-- If the status is selection-based, it must have dependencies -->
-	<group>
-	  <attribute name="status">
-	    <a:documentation>
-	      Denotes the status of a requirement.
-	    </a:documentation>
-	    <value>sel-based</value>
-	  </attribute>
-	  <oneOrMore>
-	    <ref name="selection-depends"/>
-	  </oneOrMore>
-	</group>
-	
-	<!-- The status could also be optional or nothing (which is indicated here) -->
-	<optional>
-	  <attribute name="status">
-	    <a:documentation>
-	      Denotes the status of a requirement.
-	    </a:documentation>
-	    <choice>
-	      <value>optional</value>
-	    </choice>
-	  </attribute>
-	</optional>
+        <!-- If the status is selection-based, it must have dependencies -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>sel-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="selection-depends"/>
+          </oneOrMore>
+        </group>
+        
+        <!-- The status could also be optional or nothing (which is indicated here) -->
+        <optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <choice>
+              <value>optional</value>
+            </choice>
+          </attribute>
+        </optional>
 
 
       </choice>
@@ -398,17 +398,17 @@ Indicates that this document shall use boilerplate sections.
   <define name="subsection-pattern">
     <element name="subsection">
       <a:documentation>
-	Lower level of grouping
+        Lower level of grouping
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="glossary-section"/>
-	  <ref name="subsection-pattern"/>
-	  <ref name="basic-content-pat"/>
-	  <ref name="a-component-pattern"/>
-	  <ref name="f-component-pattern"/>
+          <ref name="glossary-section"/>
+          <ref name="subsection-pattern"/>
+          <ref name="basic-content-pat"/>
+          <ref name="a-component-pattern"/>
+          <ref name="f-component-pattern"/>
         </choice>
       </oneOrMore>
     </element>
@@ -419,32 +419,32 @@ Indicates that this document shall use boilerplate sections.
   <define name="a-component-pattern">
     <element name="a-component">
       <a:document>
-	Specifies a component under Security Assurance Requirements section.
+        Specifies a component under Security Assurance Requirements section.
       </a:document>
       <ref name="id-attr"/>
       <attribute name="name">
-	<a:document>
-	  A readable title for this component
-	</a:document>
+        <a:document>
+          A readable title for this component
+        </a:document>
       </attribute>
       <ref name="basic-content-pat"/>
       <optional>
-	<element name="summary">
-	  <a:documentation>
-	    Summary of this component.
-	  </a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
+        <element name="summary">
+          <a:documentation>
+            Summary of this component.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
       </optional>
 
       <oneOrMore>
         <element name="evalactionlabel">
-	  <a:documentation>
-	    Actions levied on a role.
-	  </a:documentation>
-	  <attribute name="title"></attribute>
-	</element>
-	<ref name="a-elements"/>
+          <a:documentation>
+            Actions levied on a role.
+          </a:documentation>
+          <attribute name="title"></attribute>
+        </element>
+        <ref name="a-elements"/>
       </oneOrMore>
     </element>
   </define>
@@ -452,10 +452,10 @@ Indicates that this document shall use boilerplate sections.
   <define name="glossary-section">
     <element name="glossary">
       <a:documentation>
-	Section to define terms.
+        Section to define terms.
       </a:documentation>
       <oneOrMore>
-	<ref name="entry-el"/>
+        <ref name="entry-el"/>
       </oneOrMore>
     </element>
   </define>
