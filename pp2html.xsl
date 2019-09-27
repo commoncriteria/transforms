@@ -365,7 +365,7 @@
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@name"/></a></li>
+                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
@@ -509,7 +509,7 @@
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
           <!-- h3 might look slightly off in no appendix case -->
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@name"/></h3>
+          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
 <xsl:message>
    <xsl:value-of select="cc:description"/>

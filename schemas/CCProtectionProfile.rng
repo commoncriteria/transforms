@@ -26,50 +26,49 @@
         </element>
         <element name="if-opt-app">
           <a:documentation>
-            Content that only appears if the optional appendices exist.
+Content that only appears if the optional appendices exist.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
         <element name="indent">
           <a:documentation>
-            Tags that this section should be indented(left) 2em.
+Tags that this section should be indented(left) 2em.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
       </choice>
     </define>
 
-
-  <define name="description">
-    <element name="description">
-      <a:documentation>
-        A description section. Basically just has basic content and
-      </a:documentation>
-      <oneOrMore>
-        <choice>
+    <define name="description">
+      <element name="description">
+        <a:documentation>
+A description section. Basically just has basic content and
+        </a:documentation>
+        <oneOrMore><choice>
           <ref name="basic-content-pat"/>
           <element name="InsertAppendixExplainer">
             <a:documentation>
-              Tag that denotes where an explanation of where the different types (objective, threshold, optional)
-              of requirements are located.
+
+Tag that denotes where an explanation of where the different types (objective, threshold, optional)
+of requirements are located.
+
             </a:documentation>
             <empty/>
           </element>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-
-
+        </choice></oneOrMore>
+      </element>
+    </define>
 
   </include>
-
+<!-- ################################# -->
+<!--            START                  -->
+<!-- ################################# -->
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
         <attribute name="name">
       <a:documentation>
-The title of this document.
+        The title of this document.
       </a:documentation>
       </attribute>
       <optional>
@@ -80,12 +79,11 @@ The title of this document.
       <optional>
         <attribute name="boilerplate">
         <a:documentation>
-Indicates that this document shall use boilerplate sections.
+          Indicates that this document shall use boilerplate sections.
         </a:documentation>
         <value>yes</value></attribute>
       </optional>
 
-      
       <element name="PPReference">
         <a:documentation>
           A wrapper element for document meta-data.
@@ -101,8 +99,10 @@ Indicates that this document shall use boilerplate sections.
           </element>
           <element name="PPVersion">
             <a:documentation>
-              Version of Common Criteria this document follows.
-              It should be the version listed in the CCPart1/2/3 files consulted.
+
+Version of Common Criteria this document follows.
+It should be the version listed in the CCPart1/2/3 files consulted.
+
             </a:documentation>
             <data type="NMTOKEN"/>
           </element>
@@ -164,7 +164,6 @@ Indicates that this document shall use boilerplate sections.
             <choice>
               <ref name="basic-content-pat"/>
               <ref name="section"/>
-              
               <element name="cclaims">
                 <a:documentation>
                   Container element for the individual Conformance Claims.
@@ -187,9 +186,8 @@ Indicates that this document shall use boilerplate sections.
           </oneOrMore>
         </element>
       </oneOrMore>
-      <oneOrMore>
-        <ref name="appendix"/>
-      </oneOrMore>
+      <ref name="appendix-pat"/>
+      <ref name="implements-pat"/>
 
       <!-- This is where we can store extra css -->
       <optional>
@@ -201,28 +199,28 @@ Indicates that this document shall use boilerplate sections.
   </start>
 
 
-  <define name="appendix">
+  <define name="appendix-pat">
     <a:documentation>
       Pattern for title attribute.
     </a:documentation>
-    <element name="appendix">
-      <a:documentation>
-        Element that defines an appendix.
-      </a:documentation>
-      <attribute name="id">
-        <a:documentation>A document-wide unique string.</a:documentation>
-        <data type="NCName"/>
-      </attribute>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="section"/>
-          <ref name="acronyms"/>
-          <ref name="bibliography"/>
-        </choice>
-      </oneOrMore>
-    </element>
+    <oneOrMore>
+      <element name="appendix">
+        <a:documentation>
+          Element that defines an appendix.
+        </a:documentation>
+        <attribute name="id">
+          <a:documentation>A document-wide unique string.</a:documentation>
+          <data type="NCName"/>
+        </attribute>
+        <ref name="title-attr"/>
+        <oneOrMore><choice>
+            <ref name="basic-content-pat"/>
+            <ref name="section"/>
+            <ref name="acronyms"/>
+            <ref name="bibliography"/>
+        </choice></oneOrMore>
+      </element>
+    </oneOrMore>
   </define>
 
   <define name="section">
@@ -460,7 +458,20 @@ Indicates that this document shall use boilerplate sections.
     </element>
   </define>
 
-
-
-
+  <define name="implements-pat">
+    <optional>
+      <element name="implements">
+        <a:documentation>
+          Maps features to Implementation-dependent requiremetns
+        </a:documentation>
+        <oneOrMore>
+          <element name="feature">
+            <ref name="id-attr"/>
+            <ref name="title-attr"/>
+            <ref name="description"/>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
+  </define>
 </grammar>
