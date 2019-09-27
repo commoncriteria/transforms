@@ -213,6 +213,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <data type="NCName"/>
         </attribute>
         <ref name="title-attr"/>
+        <ref name="boilerplate-no-attr"/>
         <oneOrMore><choice>
             <ref name="basic-content-pat"/>
             <ref name="section"/>
@@ -374,7 +375,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             <ref name="selection-depends"/>
           </oneOrMore>
         </group>
-        
+
         <!-- The status could also be optional or nothing (which is indicated here) -->
         <optional>
           <attribute name="status">
@@ -389,10 +390,11 @@ It should be the version listed in the CCPart1/2/3 files consulted.
 
 
       </choice>
+      <ref name="depends-pat"/>
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
     </element>
-  </define>    
+  </define> 
   <define name="subsection-pattern">
     <element name="subsection">
       <a:documentation>
@@ -413,7 +415,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
   </define>
 
 
-  
   <define name="a-component-pattern">
     <element name="a-component">
       <a:document>
@@ -456,6 +457,18 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         <ref name="entry-el"/>
       </oneOrMore>
     </element>
+  </define>
+
+  <define name="depends-pat">
+    <zeroOrMore>
+      <element name="depends">
+        <attribute name="on">
+          <value>implements</value>
+        </attribute>
+        <attribute name="ref-id"/>
+        <empty/>
+      </element>
+    </zeroOrMore>
   </define>
 
   <define name="implements-pat">
