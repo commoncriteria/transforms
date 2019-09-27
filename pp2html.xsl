@@ -507,13 +507,9 @@
     <xsl:template name="handle-features">
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <!-- h3 might look slightly off in no appendix case -->
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
-<xsl:message>
-   <xsl:value-of select="cc:description"/>
-</xsl:message>
 <!--
   This might work to put sub-headings in
             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
@@ -548,11 +544,8 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
         </xsl:choose>
 
         <xsl:if test="count(//cc:implements/cc:feature)=0">
-This PP does not define any Implementation-Dependent Requirements.
+          <p>This PP does not define any implementation-dependent requirements.</p>
         </xsl:if>
-
-
-
     </xsl:template>
 
 <!-- ############### -->
@@ -561,7 +554,11 @@ This PP does not define any Implementation-Dependent Requirements.
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
-            <xsl:apply-templates select="//cc:*[@status='sel-based']"/>
+
+            <xsl:if test="count(//cc:f-element[cc:selection-depends])=0">
+              <p>This PP does not define any selection-based requirements.</p>
+            </xsl:if>
+            <xsl:apply-templates select="//cc:f-element[cc:selection-depends]"/>
         </xsl:if>
     </xsl:template>
   
