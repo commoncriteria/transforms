@@ -34,8 +34,8 @@
       <body onLoad="init()">
           <xsl:call-template name="sanity-checks"/>
 
-	<xsl:call-template name="body-begin"/>
-	<xsl:apply-templates select="cc:*"/>
+        <xsl:call-template name="body-begin"/>
+        <xsl:apply-templates select="cc:*"/>
       </body>
     </html>
   </xsl:template>
@@ -68,22 +68,22 @@
       <xsl:for-each select="cc:entry">
         <xsl:element name="tr">
 
-	  <!-- Adding this attribute was causing ID errors since it was often empty,
+          <!-- Adding this attribute was causing ID errors since it was often empty,
          and it's not clear that it is used for anything.  
     <xsl:attribute name="id">
-	    <xsl:choose>
-	      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-	      <xsl:when test="cc:term"><xsl:value-of select="translate(cc:term/text(), $lower, $upper)"/></xsl:when>
-	      <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
-	    </xsl:choose>
-	  </xsl:attribute> -->
+            <xsl:choose>
+              <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+              <xsl:when test="cc:term"><xsl:value-of select="translate(cc:term/text(), $lower, $upper)"/></xsl:when>
+              <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute> -->
           <td>
             <xsl:apply-templates select="cc:term"/>
           </td>
           <td>
             <xsl:apply-templates select="cc:description"/>
           </td>
-	</xsl:element>
+        </xsl:element>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -135,7 +135,7 @@
       </tr>
       <xsl:for-each select="cc:entry">
         <tr>
-	  <xsl:for-each select="cc:*"><td><xsl:apply-templates/></td></xsl:for-each>
+          <xsl:for-each select="cc:*"><td><xsl:apply-templates/></td></xsl:for-each>
         </tr>
       </xsl:for-each>
     </table>
@@ -233,40 +233,40 @@
           <xsl:apply-templates select="cc:description"/>
           <p/> Addressed by: <span class="SOlist">
             <xsl:for-each select="cc:component-refer">
-	      <!-- -->
-	      <xsl:variable name="uncapped-req">
-		<xsl:value-of select="translate(@ref,$upper,$lower)"/>
-	      </xsl:variable>
-	      <xsl:choose>
+              <!-- -->
+              <xsl:variable name="uncapped-req">
+                <xsl:value-of select="translate(@ref,$upper,$lower)"/>
+              </xsl:variable>
+              <xsl:choose>
 
-		<!-- if there's a reference and it matches a f-component id -->
-		<xsl:when test="//cc:f-component[@id=$uncapped-req]">
-		  <xsl:element name="span">
-		    <xsl:attribute name="class">
-		      <xsl:value-of select="//cc:f-component[@id=$uncapped-req]/@status"/>
-		    </xsl:attribute>
-		    <xsl:call-template name="req-refs">
+                <!-- if there's a reference and it matches a f-component id -->
+                <xsl:when test="//cc:f-component[@id=$uncapped-req]">
+                  <xsl:element name="span">
+                    <xsl:attribute name="class">
+                      <xsl:value-of select="//cc:f-component[@id=$uncapped-req]/@status"/>
+                    </xsl:attribute>
+                    <xsl:call-template name="req-refs">
                       <xsl:with-param name="req" select="@ref"/>
-		    </xsl:call-template>
-		    <!--
-			This is here so that if we wanted to added text
-			but make it different font.
-		    -->
-		    <span class="after"/>
-		</xsl:element>
-		</xsl:when>
+                    </xsl:call-template>
+                    <!--
+                        This is here so that if we wanted to added text
+                        but make it different font.
+                    -->
+                    <span class="after"/>
+                </xsl:element>
+                </xsl:when>
 
-		<!-- if there's a reference -->
-		<xsl:when test="@ref">
-		  <span class="external-ref"><xsl:value-of select="@ref"/></span>
-		</xsl:when>
+                <!-- if there's a reference -->
+                <xsl:when test="@ref">
+                  <span class="external-ref"><xsl:value-of select="@ref"/></span>
+                </xsl:when>
 
-		<!-- if there's no reference, just shove in whatever -->
-		<xsl:otherwise>
-		  <xsl:apply-templates/>
-		</xsl:otherwise>
-	      </xsl:choose>
-		<xsl:call-template name="commaifnotlast"/>
+                <!-- if there's no reference, just shove in whatever -->
+                <xsl:otherwise>
+                  <xsl:apply-templates/>
+                </xsl:otherwise>
+              </xsl:choose>
+                <xsl:call-template name="commaifnotlast"/>
             </xsl:for-each>
           </span>
           <xsl:apply-templates select="cc:appnote"/></dd>
@@ -616,7 +616,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
       <xsl:for-each select="//cc:ctr[@id=$refid]">
-	<xsl:call-template name="getPre"/>
+        <xsl:call-template name="getPre"/>
       </xsl:for-each>
  <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
       <span class="counter"><xsl:value-of select="$refid"/></span>
@@ -628,8 +628,8 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!--            -->
   <xsl:template match="cc:ctr">
     <xsl:variable name="ctrtype"><xsl:choose>
-	<xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
-	<xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
+        <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
     </xsl:variable>
 
     <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
@@ -646,7 +646,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
 
       <xsl:for-each select="//cc:figure[@id=$refid]">
-	<xsl:call-template name="getPre"/>
+        <xsl:call-template name="getPre"/>
       </xsl:for-each>
 <!--      <xsl:value-of select="//cc:ctr[@id=$refid]">"/>-->
       <span class="counter"><xsl:value-of select="$refid"/></span>
@@ -660,8 +660,8 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}" />
       <p/>
       <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
-	<xsl:call-template name="getPre"/>
-	<span class="counter"><xsl:value-of select="@id"/></span>
+        <xsl:call-template name="getPre"/>
+        <span class="counter"><xsl:value-of select="@id"/></span>
       </span>:
       <xsl:value-of select="@title"/>
     </div>
@@ -702,23 +702,23 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       </xsl:attribute>
       <xsl:choose>
         <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
-	<xsl:when test="//*[@id=$linkendlower]/@title">
-	  <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
-	</xsl:when>
-	<xsl:when test="//*[@id=$linkendlower]/@name">
-	  <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
-	</xsl:when>
-	<xsl:when test="//*[@id=$linkendlower]/cc:term">
-	  <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
-	</xsl:when>
-	<xsl:when test="//*/cc:term[text()=$linkendorig]">
-	  <xsl:value-of select="$linkendorig"/>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:message>Cant find
-	  <xsl:value-of select="$linkendlower"/>
-	  </xsl:message>
-	</xsl:otherwise>
+        <xsl:when test="//*[@id=$linkendlower]/@title">
+          <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
+        </xsl:when>
+        <xsl:when test="//*[@id=$linkendlower]/@name">
+          <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
+        </xsl:when>
+        <xsl:when test="//*[@id=$linkendlower]/cc:term">
+          <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
+        </xsl:when>
+        <xsl:when test="//*/cc:term[text()=$linkendorig]">
+          <xsl:value-of select="$linkendorig"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:message>Cant find
+          <xsl:value-of select="$linkendlower"/>
+          </xsl:message>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:element>
   </xsl:template>
