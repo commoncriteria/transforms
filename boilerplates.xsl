@@ -231,9 +231,9 @@ This module does not define any assumptions.
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:SOEs">
-	The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
-	The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
-	This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+    The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+    The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
+    This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
       <xsl:otherwise>
 This module does not define any objectives for the Operational Environment.
@@ -242,16 +242,18 @@ This module does not define any objectives for the Operational Environment.
   </xsl:template>
   
   <xsl:template name="opt_appendix">
-    As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP. This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP. However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
+    <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
+    As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
+    This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP.
+    However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
 
+   The first type (in A.1) are strictly optional requirements that are independent of the TOE implementing any function.
+   If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
 
-The first type (in A.1) are strictly optional requirements that are independent of the TOE implementing any function.
-If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
+  The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
+   The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.<br/><br/>
 
-The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
-The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.<br/><br/>
-
-The third type (in A.3) <xsl:call-template name="imple_text"/>
+  The third type (in A.3) <xsl:call-template name="imple_text"/>
   </xsl:template>
 
   <xsl:template name="imple_text">

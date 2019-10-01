@@ -526,7 +526,6 @@
     <xsl:template name="first-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
-                <h1 id="{@id}" class="indexable" data-level="A">Optional Requirements</h1>
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
                 <xsl:apply-templates select="//cc:*[@status='optional']"/>
