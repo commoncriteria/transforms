@@ -10,37 +10,6 @@
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']"
-		mode="hook">
-    <xsl:variable name="cclsec"><xsl:value-of select="//cc:*[@title='Conformance Claims']/@id"/></xsl:variable>
-    <xsl:variable name="optappid"><xsl:value-of select="//cc:*[@title='Optional Requirements']/@id"/></xsl:variable>
-    <xsl:variable name="selappid"><xsl:value-of select="//cc:*[@title='Selection-Based Requirements']/@id"/></xsl:variable>
-    <xsl:variable name="objappid"><xsl:value-of select="//cc:*[@title='Objective Requirements']/@id"/></xsl:variable>
-
-    As indicated in <a href="#{$cclsec}" class="dynref">Section </a>
-    the baseline requirements (those that must be performed by the TOE) are
-    contained in the body of this PP. Additionally, there are three other types of requirements
-    specified in
-    <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and
-    <a href="#{$objappid}" class="dynref"></a>.
-    The first type (in this Appendix) are requirements that can be included
-    in the <abbr title="Security Target">ST</abbr>,
-    but are not required in order for a TOE to claim conformance to
-    this PP. The second type
-    (in <a href="#{$selappid}" class="dynref"></a>) are requirements based on selections
-    in the body of the PP: if certain selections are made, then additional requirements in that
-    appendix must be included. The third type (in
-    <a href="#{$objappid}" class="dynref"></a>) are components that
-    are not required in order to conform to this PP, but will be included in the baseline
-    requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the
-    ST author is responsible for ensuring that requirements that may be associated with those in
-    <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and
-    <a href="#{$objappid}" class="dynref"></a>
-    but are not listed (e.g., FMT-type requirements) are also included in the ST.
-  </xsl:template>
-
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook">    <p>
 This appendix lists requirements that should be considered satisfied by products
 successfully evaluated against this Protection Profile.
@@ -240,14 +209,21 @@ This module does not define any objectives for the Operational Environment.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template name="ref-strict-optional">
+    <a href="#strict-opt-reqs">Section A.1: Strictly Optional Requirements</a>
+  </xsl:template>
+
+
   <xsl:template name="opt_appendix">
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
     As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
     This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP.
     However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
 
-   The first type (in A.1) are strictly optional requirements that are independent of the TOE implementing any function.
+   The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the TOE implementing any function.
    If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
 
   The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
