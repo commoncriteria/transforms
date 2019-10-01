@@ -213,7 +213,7 @@ This module does not define any objectives for the Operational Environment.
   <!-- ############### -->
   <!--                 -->
   <xsl:template name="ref-strict-optional">
-    <a href="#strict-opt-reqs">Section A.1: Strictly Optional Requirements</a>
+    <a href="#strict-opt-reqs" class='dynref'></a>
   </xsl:template>
 
 
@@ -226,10 +226,10 @@ This module does not define any objectives for the Operational Environment.
    The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the TOE implementing any function.
    If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
 
-  The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
+  The second type (<a href="#obj-reqs" class='dynref'/>) are objective requirements that describe security functionality not yet widely available in commercial technology.
    The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.<br/><br/>
 
-  The third type (in A.3) <xsl:call-template name="imple_text"/>
+  The third type (<a href="#impl-reqs" class='dynref'/>) <xsl:call-template name="imple_text"/>
   </xsl:template>
 
   <xsl:template name="imple_text">
