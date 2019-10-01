@@ -373,9 +373,9 @@
         </div>
       </xsl:if>
       <xsl:if test="@status='optional'">
-        <div class="statustag">
+        <!--  <div class="statustag">
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
-        </div>
+        </div>-->
       </xsl:if>
 
       <xsl:apply-templates/>
