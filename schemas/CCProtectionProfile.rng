@@ -40,7 +40,17 @@ Tags that this section should be indented(left) 2em.
     </define>
 
     <define name="xref-content">
-      <ref name="linkend-attr"/>
+      <choice>
+        <ref name="linkend-attr"/>
+        <attribute name="to">
+          <choice>
+            <value>ref-strict-optional</value>
+            <value>sel-based-reqs</value>
+            <value>obj-reqs</value>
+            <value>impl-reqs</value>
+          </choice>
+        </attribute>
+      </choice>
     </define>
   </include>
 <!-- ################################# -->

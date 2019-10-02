@@ -28,8 +28,7 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']"
-		mode="hook">
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" mode="hook">
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
@@ -108,7 +107,6 @@ if certain selections are made, then additional requirements below must be inclu
 
   <!-- ############## -->
   <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
-
 
   <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
@@ -210,7 +208,19 @@ This module does not define any objectives for the Operational Environment.
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="sel-based-reqs" match="//cc:ref[@to='sel-based-reqs']">
+    <a href="#sel-based-reqs" class='dynref'/>
+  </xsl:template>
 
+
+  <xsl:template name="obj-reqs" match="//cc:ref[@to='obj-reqs']">
+    <a href="#obj-reqs" class='dynref'/>
+  </xsl:template>
+
+
+  <xsl:template name="impl-reqs" match="//cc:ref[@to='impl-reqs']">
+    <a href="#impl-reqs" class='dynref'/>
+  </xsl:template>
 
   <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']">
     <a href="#strict-opt-reqs" class='dynref'/>
@@ -225,10 +235,10 @@ This module does not define any objectives for the Operational Environment.
    The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the TOE implementing any function.
    If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
 
-  The second type (<a href="#obj-reqs" class='dynref'/>) are objective requirements that describe security functionality not yet widely available in commercial technology.
+  The second type (<xsl:call-template name="obj-reqs"/>) are objective requirements that describe security functionality not yet widely available in commercial technology.
    The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.<br/><br/>
 
-  The third type (<a href="#impl-reqs" class='dynref'/>) <xsl:call-template name="imple_text"/>
+  The third type (<xsl:call-template name="impl-reqs"/>) <xsl:call-template name="imple_text"/>
   </xsl:template>
 
   <xsl:template name="imple_text">
