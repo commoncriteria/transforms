@@ -100,17 +100,16 @@
           <h:li>with a name attribute, </h:li>
           <h:li>with a term element, or </h:li>
           <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
+          <h:li>OR other. See xref-content-pattern for more information</h:li>
         </h:ul>
       </a:documentation>
-      <choice>
-        <ref name="linkend-attr"/>
-        <ref name="known-ids"/>
-      </choice>
+      <ref name="xref-content"/>
     </element>
   </define>
 
-  <define name="known-ids"/>
-
+  <define name="xref-content">
+    <ref name="linkend-attr"/>
+  </define>
 
   <define name="appref">
     <element name="appref">
