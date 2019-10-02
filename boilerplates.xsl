@@ -210,12 +210,11 @@ This module does not define any objectives for the Operational Environment.
     </xsl:choose>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template name="ref-strict-optional">
-    <a href="#strict-opt-reqs" class='dynref'></a>
-  </xsl:template>
 
+
+  <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']">
+    <a href="#strict-opt-reqs" class='dynref'/>
+  </xsl:template>
 
   <xsl:template name="opt_appendix">
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>

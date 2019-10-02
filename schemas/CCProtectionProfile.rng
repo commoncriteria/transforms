@@ -36,6 +36,8 @@ Tags that this section should be indented(left) 2em.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
+
+
       </choice>
     </define>
 
@@ -343,7 +345,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         </a:documentation>
       </attribute>
       <choice>
-        <!-- Choice of  status -->
+        <!-- Choice of status -->
         <!-- If the status is objective, it must have a targetdate(?) -->
         <group>
           <optional>
@@ -462,6 +464,10 @@ It should be the version listed in the CCPart1/2/3 files consulted.
   <define name="depends-pat">
     <zeroOrMore>
       <element name="depends">
+        <a:documentation>
+          Modifies the parent element such that it depends on something  else.
+          Currently, only supports implements.
+        </a:documentation>
         <attribute name="on">
           <value>implements</value>
         </attribute>

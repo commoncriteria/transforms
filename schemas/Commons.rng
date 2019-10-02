@@ -6,6 +6,8 @@
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
+
+
   <define name="title-attr">
     <a:documentation>
       Pattern for title attribute.
@@ -100,9 +102,15 @@
           <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
         </h:ul>
       </a:documentation>
-      <ref name="linkend-attr"/>
+      <choice>
+        <ref name="linkend-attr"/>
+        <ref name="known-ids"/>
+      </choice>
     </element>
   </define>
+
+  <define name="known-ids"/>
+
 
   <define name="appref">
     <element name="appref">
