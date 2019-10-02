@@ -162,26 +162,26 @@
        text-align: left;
    }
    table{
-              margin:auto;
-              margin-top:1em;
-              border-collapse:collapse; /*border: 1px solid black;*/
-          }
-          td{
-              text-align:left;
-              padding:8px 8px;
-          }
-          th{
-              padding:8px 8px;
-          }
-          tr.header{
-              border-bottom:3px solid gray;
-              padding:8px 8px;
-              text-align:left;
-              font-weight:bold; /*font-size: 90%; font-family: verdana, arial, helvetica, sans-serif; */
-          }
-          table tr:nth-child(2n+2){
-              background-color:#F4F4F4;
-          }
+       margin:auto;
+       margin-top:1em;
+       border-collapse:collapse; /*border: 1px solid black;*/
+   }
+   td{
+       text-align:left;
+       padding:8px 8px;
+   }
+   th{
+       padding:8px 8px;
+   }
+   tr.header{
+       border-bottom:3px solid gray;
+       padding:8px 8px;
+       text-align:left;
+       font-weight:bold; /*font-size: 90%; font-family: verdana, arial, helvetica, sans-serif; */
+   }
+   table tr:nth-child(2n+2){
+       background-color:#F4F4F4;
+   }
 
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
