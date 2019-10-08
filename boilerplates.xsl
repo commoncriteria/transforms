@@ -10,37 +10,6 @@
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:appendix[@title='Optional Requirements']"
-		mode="hook">
-    <xsl:variable name="cclsec"><xsl:value-of select="//cc:*[@title='Conformance Claims']/@id"/></xsl:variable>
-    <xsl:variable name="optappid"><xsl:value-of select="//cc:*[@title='Optional Requirements']/@id"/></xsl:variable>
-    <xsl:variable name="selappid"><xsl:value-of select="//cc:*[@title='Selection-Based Requirements']/@id"/></xsl:variable>
-    <xsl:variable name="objappid"><xsl:value-of select="//cc:*[@title='Objective Requirements']/@id"/></xsl:variable>
-
-    As indicated in <a href="#{$cclsec}" class="dynref">Section </a>
-    the baseline requirements (those that must be performed by the TOE) are
-    contained in the body of this PP. Additionally, there are three other types of requirements
-    specified in
-    <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and
-    <a href="#{$objappid}" class="dynref"></a>.
-    The first type (in this Appendix) are requirements that can be included
-    in the <abbr title="Security Target">ST</abbr>,
-    but are not required in order for a TOE to claim conformance to
-    this PP. The second type
-    (in <a href="#{$selappid}" class="dynref"></a>) are requirements based on selections
-    in the body of the PP: if certain selections are made, then additional requirements in that
-    appendix must be included. The third type (in
-    <a href="#{$objappid}" class="dynref"></a>) are components that
-    are not required in order to conform to this PP, but will be included in the baseline
-    requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the
-    ST author is responsible for ensuring that requirements that may be associated with those in
-    <a href="#{$optappid}" class="dynref"></a>,
-    <a href="#{$selappid}" class="dynref"></a>, and
-    <a href="#{$objappid}" class="dynref"></a>
-    but are not listed (e.g., FMT-type requirements) are also included in the ST.
-  </xsl:template>
-
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook">    <p>
 This appendix lists requirements that should be considered satisfied by products
 successfully evaluated against this Protection Profile.
@@ -59,8 +28,7 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']"
-		mode="hook">
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" mode="hook">
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
@@ -92,8 +60,6 @@ if certain selections are made, then additional requirements below must be inclu
   </xsl:template>
 
 
-  
-
   <!-- ############## -->
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
@@ -109,27 +75,38 @@ if certain selections are made, then additional requirements below must be inclu
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography" mode="hook">
 <tr>
   <td><span id="bibCC"> [CC] </span></td>
-  <td>Common Criteria for Information Technology Security Evaluation - <ul>
-  <li>
-<a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf">Part
-                1: Introduction and General Model</a>, CCMB-2017-04-001, <xsl:call-template name="verrev"/>,
-              April 2017.</li>
-<li>
-<a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART2V3.1R5.pdf">Part
-                2: Security Functional Components</a>, CCMB-2017-04-002, <xsl:call-template name="verrev"/>,
-              April 2017.</li>
-<li>
-<a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART3V3.1R5.pdf">Part
-                3: Security Assurance Components</a>, CCMB-2017-04-003, <xsl:call-template name="verrev"/>,
-              April 2017.</li>
-</ul>
-</td>
+  <td>Common Criteria for Information Technology Security Evaluation - 
+    <ul>
+      <xsl:call-template name="cc-ref">
+        <xsl:with-param name="num">1</xsl:with-param>
+        <xsl:with-param name="name">Introduction and General Model</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="cc-ref">
+        <xsl:with-param name="num">2</xsl:with-param>
+        <xsl:with-param name="name">Security Functional Components</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="cc-ref">
+        <xsl:with-param name="num">3</xsl:with-param>
+        <xsl:with-param name="name">Security Assurance Components</xsl:with-param>
+      </xsl:call-template>
+    </ul>
+  </td>
 </tr>
   </xsl:template>
 
-  
-  <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
+  <!-- ############## -->
+  <xsl:template name="cc-ref">
+   <xsl:param name="num"/>
+   <xsl:param name="name"/>
+   <li>
+     <a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART{$num}V3.1R5.pdf">Part
+                <xsl:value-of select="$num"/>: <xsl:value-of select="$name"/></a>,
+     CCMB-2017-04-00<xsl:value-of select="$num"/>, <xsl:call-template name="verrev"/>,  April 2017.
+   </li>
+  </xsl:template>
 
+  <!-- ############## -->
+  <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
 
   <!-- ############## -->
   <xsl:template name="format-of-document">
@@ -249,31 +226,58 @@ This module does not define any assumptions.
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:SOEs">
+<<<<<<< HEAD
 The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
 The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
 This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+=======
+    The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+    The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
+    This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+>>>>>>> b286176d08f3d52c0d9edff63d5e07fd3046b3bd
       </xsl:when>
       <xsl:otherwise>
 This module does not define any objectives for the Operational Environment.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <xsl:template name="sel-based-reqs" match="//cc:ref[@to='sel-based-reqs']">
+    <a href="#sel-based-reqs" class='dynref'/>
+  </xsl:template>
+
+
+  <xsl:template name="obj-reqs" match="//cc:ref[@to='obj-reqs']">
+    <a href="#obj-reqs" class='dynref'/>
+  </xsl:template>
+
+
+  <xsl:template name="impl-reqs" match="//cc:ref[@to='impl-reqs']">
+    <a href="#impl-reqs" class='dynref'/>
+  </xsl:template>
+
+  <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']">
+    <a href="#strict-opt-reqs" class='dynref'/>
+  </xsl:template>
+
   <xsl:template name="opt_appendix">
-As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
-This Appendix contains three other types of optional requirements that may be included in the ST but are not required in order to conform to this PP.
-The first type (in A.1) are strictly optional requirements that are independent of the TOE implementing any function.
-If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged but not required to add the related SFRs.
-The second type (in A.2) are objective requirements that describe security functionality not yet widely available in commercial technology.
-The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP.
-Adoption by vendors is encouraged and expected as soon as possible.
-The third type (in A.3) undefined<xsl:call-template name="imple_text"/>
+    <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
+    As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
+    This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP.
+    However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
+
+   The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the TOE implementing any function.
+   If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
+
+  The second type (<xsl:call-template name="obj-reqs"/>) are objective requirements that describe security functionality not yet widely available in commercial technology.
+   The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.<br/><br/>
+
+  The third type (<xsl:call-template name="impl-reqs"/>) <xsl:call-template name="imple_text"/>
   </xsl:template>
 
   <xsl:template name="imple_text">
-that are dependent on the TOE implementing a particular function.
+are dependent on the TOE implementing a particular function.
 If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the evaluated configuration. 
   </xsl:template>
-
 
 </xsl:stylesheet>

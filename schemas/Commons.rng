@@ -6,6 +6,8 @@
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
+
+
   <define name="title-attr">
     <a:documentation>
       Pattern for title attribute.
@@ -98,10 +100,15 @@
           <h:li>with a name attribute, </h:li>
           <h:li>with a term element, or </h:li>
           <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
+          <h:li>OR other. See xref-content-pattern for more information</h:li>
         </h:ul>
       </a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="xref-content"/>
     </element>
+  </define>
+
+  <define name="xref-content">
+    <ref name="linkend-attr"/>
   </define>
 
   <define name="appref">
