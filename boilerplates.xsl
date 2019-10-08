@@ -132,6 +132,34 @@ if certain selections are made, then additional requirements below must be inclu
 
 
   <!-- ############## -->
+  <xsl:template name="format-of-document">
+    <section title="Format of this Document" id="docformat">
+      <secref linkend="req"/> contains baseline requirements  which must be implemented in the product 
+        and included in any Security Target (ST)
+        that claims conformance to this Protection Profile (PP).
+        There are three other types of requirements that can be included in an ST
+        claiming conformance to this PP:
+        <htm:ul>
+          <htm:li>
+            <appref linkend="optional"/> contains requirements that may optionally be included in the ST, 
+            but inclusion is at the discretion of the ST author.
+          </htm:li>
+          <htm:li>
+        <appref linkend="sel-based"/> contains requirements based on selections
+        in the requirements in <secref linkend="req"/>: if certain selections are
+        made, then the corresponding requirements in that appendix must be included.
+        </htm:li>
+        <htm:li>
+        <appref linkend="objective"/> contains requirements that will
+        be included in the baseline requirements in future versions of this package. Earlier adoption by vendors is
+        encouraged and may influence acquisition decisions.
+        Otherwise, these are treated the same as Optional Requirements.
+        </htm:li>
+        </htm:ul>
+  </section>
+  </xsl:template>
+
+  <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
      This chapter describes the security requirements
      which have to be fulfilled by the product under evaluation. Those requirements comprise functional
@@ -221,9 +249,9 @@ This module does not define any assumptions.
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:SOEs">
-	The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
-	The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
-	This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
+This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
       <xsl:otherwise>
 This module does not define any objectives for the Operational Environment.
