@@ -126,7 +126,7 @@
          <a:documentation>
          </a:documentation>
          <choice>
-           <value>
+           <value>pp</value>
          </choice>
       </attribute>
     </optional>
@@ -410,9 +410,9 @@
       <attribute name="title"><value>Introduction</value></attribute>
       <ref name="id-attr"/>
       <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Overview</value></attribute>
+        <a:documentation>
+        </a:documentation>
+        <attribute name="title"><value>Overview</value></attribute>
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
       </element>
@@ -425,13 +425,15 @@
 	<element name="subsection">
 	  <a:documentation>
 	  </a:documentation>
-	  <attribute name="title"><value>Common Criteria Terms</value></attribute>
-	  <ref name="glossary-el"/>
-	</element>
+          <attribute name="title"><value>Common Criteria Terms</value></attribute>
+          <optional><ref name="id-attr"/></optional>
+          <ref name="glossary-el"/>
+        </element>
 	<element name="subsection">
 	  <a:documentation>
 	  </a:documentation>
 	  <attribute name="title"><value>Technical Terms</value></attribute>
+          <optional><ref name="id-attr"/></optional>
 	  <ref name="glossary-el"/>
 	</element>
       </element>
@@ -543,9 +545,8 @@
 	</element>
 
         <element name="PPVersion">
-	  <a:documentation>
-	  </a:documentation>
-          <data type="decimal"/>
+          <a:documentation>The Version of this PP.</a:documentation>
+          <text/>
         </element>
         <element name="PPAuthor">
 	  <a:documentation>
