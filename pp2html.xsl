@@ -648,7 +648,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!--            -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
-      <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}" />
+      <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
       <p/>
       <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
         <xsl:call-template name="getPre"/>

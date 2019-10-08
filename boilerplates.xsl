@@ -201,7 +201,7 @@ This module does not define any assumptions.
       </tr>
       <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
         <tr>
-	  <td> <xsl:value-of select="@id"/> </td>
+          <td> <xsl:value-of select="@id"/> </td>
           <td>
             <xsl:for-each select="cc:objective-refer">
               <xsl:value-of select="@ref"/>
@@ -226,15 +226,9 @@ This module does not define any assumptions.
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:SOEs">
-<<<<<<< HEAD
 The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
 The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
 This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
-=======
-    The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
-    The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
-    This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
->>>>>>> b286176d08f3d52c0d9edff63d5e07fd3046b3bd
       </xsl:when>
       <xsl:otherwise>
 This module does not define any objectives for the Operational Environment.
