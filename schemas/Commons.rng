@@ -41,7 +41,7 @@
             </a:documentation>
             <empty/>
           </element>
-          
+
           <element name="entry">
             <a:documentation>
               Groups bibliograph entries.
