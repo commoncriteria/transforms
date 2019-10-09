@@ -15,7 +15,6 @@
 
   <xsl:param name="custom-css-file" select="''"/>
 
- 
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
