@@ -18,7 +18,6 @@
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecReqChapter"/>
-      <ref name="appendix-placeholders-pat"/>
       <ref name="additional-appendices"/>
       <ref name="bibliography-appendix"/>
       <ref name="acronym-appendix"/>
@@ -42,27 +41,6 @@
   </define>
 
 
-
-  <define name="appendix-placeholders-pat">
-    <element name="appendix">
-      <ref name="id-attr"/>
-      <attribute name="title">
-	<value>Optional Requirements</value>
-      </attribute>
-    </element>
-    <element name="appendix">
-      <ref name="id-attr"/>
-      <attribute name="title">
-	<value>Selection-Based Requirements</value>
-      </attribute>
-    </element>
-    <element name="appendix">
-      <ref name="id-attr"/>
-      <attribute name="title">
-	<value>Objective Requirements</value>
-      </attribute>
-    </element>
-  </define>
 
 
   <define name="additional-appendices">
@@ -97,10 +75,10 @@
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
-      <choice>
-	<ref name="basic-content-pat"/>
-	<ref name="subsection-pattern"/>
-      </choice>
+      <ref name="basic-content-pat"/>
+      <zeroOrMore>
+          <ref name="subsection-pattern"/>
+      </zeroOrMore>
     </element>
   </define>
 
@@ -133,9 +111,9 @@
 
     <attribute name="name">
       <a:documentation>
-	Informal name that is not displayed, but instead is used to link modules
-	to base PPs. It should remain constant between releases even if the
-	PPTitle changes.
+        Informal name that is not displayed, but instead is used to link modules
+        to base PPs.
+        It should remain constant between releases even if the PPTitle changes.
       </a:documentation>
     </attribute>
     <ref name="boilerplate-pat"/>
@@ -144,21 +122,21 @@
   <define name="SecReqChapter">
     <element name="chapter">
       <a:documentation>
-	The chapter for security requirements.
+        The chapter for security requirements.
       </a:documentation>
       <attribute name="title"><value>Security Requirements</value></attribute>
       <ref name="id-attr"/>
       <ref name="basic-content-pat"/>
       <element name="section">
-	<attribute name="title"><value>Security Functional Requirements</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="f-subsections-pat"/>
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <ref name="id-attr"/>
+        <ref name="f-subsections-pat"/>
       </element>
-      <element name="section">
-	<attribute name="title"><value>Security Assurance Requirements</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<ref name="a-subsections-pat"/>
+      <element name="section">  
+        <attribute name="title"><value>Security Assurance Requirements</value></attribute>
+        <ref name="id-attr"/>
+        <ref name="basic-content-pat"/>
+        <ref name="a-subsections-pat"/>
       </element>
     </element>
   </define>
