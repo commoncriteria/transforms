@@ -335,6 +335,16 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           Readable title for this requirement.
         </a:documentation>
       </attribute>
+      <optional>
+          <attribute name="iteration">
+            <a:documentation>
+            </a:documentation>
+            <data type="string">
+              <param name="pattern">[A-Z0-9_]+</param>
+            </data>
+          </attribute>
+      </optional>
+
       <choice>
         <!-- Choice of status -->
         <!-- If the status is objective, it must have a targetdate(?) -->
