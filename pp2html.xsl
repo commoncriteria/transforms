@@ -420,7 +420,7 @@
 <!--            -->
   <xsl:template match="cc:f-element | cc:a-element" >
     <div class="element">
-      <xsl:variable name="reqid" select="translate(@id, $lower, $upper)"/>
+      <xsl:variable name="reqid"><xsl:value-of select="translate(../@id, $lower, $upper)"/>.<xsl:value-of select="count(preceding-siblings)+1"/></xsl:variable>
       <div class="reqid" id="{$reqid}">
         <a href="#{$reqid}" class="abbr">
           <xsl:value-of select="$reqid"/>
