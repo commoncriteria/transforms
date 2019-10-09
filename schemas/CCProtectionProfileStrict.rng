@@ -555,7 +555,7 @@
 	    </a:documentation>
 	    <element name="version"><text/></element>
 	    <element name="date"><data type="date"/></element>
-	    <element name="subject"><text/></element>
+	    <element name="subject"><ref name="basic-content-pat"/></element>
 	  </element>
         </oneOrMore>
       </element>
