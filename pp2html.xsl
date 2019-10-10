@@ -420,13 +420,10 @@
 <!--            -->
   <xsl:template match="cc:f-element | cc:a-element" >
     <div class="element">
-      <xsl:message>
-           Element: <xsl:value-of select="count(preceding-sibling::cc:*)+1"/>
-      </xsl:message>
-
       <xsl:variable name="reqid"><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
             -->.<xsl:value-of select="count(preceding-sibling::cc:*)+1"/><!--
+            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
             --></xsl:variable>
       <div class="reqid" id="{$reqid}">
         <a href="#{$reqid}" class="abbr">
