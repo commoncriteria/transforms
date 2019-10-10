@@ -299,12 +299,14 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         <a:documentation>
           Defines a functional requirement.
         </a:documentation>
+<!--
         <attribute name="id">
           <a:documentation>
             A document-wide unique ID that is also displayed to the user.
             It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
           </a:documentation>
         </attribute>
+-->
         <ref name="f-element-title"/>
         <optional>
           <ref name="note"/>
@@ -326,9 +328,13 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       </a:document>
       <attribute name="id">
         <a:documentation>
-          A document-wide unique id. Not really read by a person, but it
-          should be the base for its child requirements' ids.
+          ID without the iteration.
         </a:documentation>
+
+        <data type="string">
+          <param name="pattern">(F|A)[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
+        </data>
+
       </attribute>
       <attribute name="name">
         <a:documentation>
