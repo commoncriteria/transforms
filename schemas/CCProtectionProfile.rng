@@ -311,7 +311,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         </optional>
         <attribute name="type">
           <data type="string">
-            <param name="pattern">[cde]</param>
+            <param name="pattern">[DCE]</param>
           </data>
         </attribute>
         <ref name="f-element-title"/>

@@ -318,10 +318,13 @@
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component">
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
+    <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
+        --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
+
+    <xsl:message><xsl:value-of select="$full_id"/></xsl:message>
+    <div class="comp" id="{$full_id}">
       <h4>
-        <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-        <xsl:value-of select="@name"/>
+        <xsl:value-of select="concat($full_id, ' ', @name)"/>qqqq
       </h4>
 
       <xsl:if test="@status='objective'">
@@ -378,9 +381,9 @@
         <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
         <xsl:value-of select="@name"/>
       </h4>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">d</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">c</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">e</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">C</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">E</xsl:with-param></xsl:call-template>
     </div>
   </xsl:template>
 
@@ -388,9 +391,9 @@
     <xsl:param name="type"/>
     <xsl:if test="./cc:a-element[@type=$type]">
         <h4><xsl:choose>
-         <xsl:when test="$type='d'">Developer action</xsl:when>
-         <xsl:when test="$type='c'">Content and presentation</xsl:when>
-         <xsl:when test="$type='e'">Evaluator action</xsl:when>
+         <xsl:when test="$type='D'">Developer action</xsl:when>
+         <xsl:when test="$type='C'">Content and presentation</xsl:when>
+         <xsl:when test="$type='E'">Evaluator action</xsl:when>
      </xsl:choose> elements: </h4>
     <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
     </xsl:if>
