@@ -450,7 +450,7 @@
     <div class="element">
       <xsl:variable name="reqid"><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:*)+1"/><!--
+            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/><!--
             --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
             --></xsl:variable>
       <div class="reqid" id="{$reqid}">
@@ -471,7 +471,7 @@
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
       <xsl:variable name="reqid"><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:*[@type=$type])+1"/><!--
+            -->.<xsl:value-of select="count(preceding-sibling::cc:a-element[@type=$type])+1"/><!--
             --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
             --><xsl:value-of select="@type"/></xsl:variable>
       <div class="reqid" id="{$reqid}">
