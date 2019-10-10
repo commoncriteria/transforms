@@ -475,12 +475,18 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
         Defines a functional requirement.
       </a:documentation>
-      <attribute name="id">
-        <a:documentation>
-          A document-wide unique ID that is also displayed to the user.
-          It should be the base component id  (i.e. no number in parenthesis) plus the number of preceding siblings +1
-        </a:documentation>
-      </attribute>
+      <optional>
+        <attribute name="id">
+          <a:documentation>
+            A non-viewed unique ID. It has nothing to do with the ID that's assigned. It can be 
+            something like 'has-req-1' or "barry".
+          </a:documentation>
+          <data type="string">
+            <param name="pattern">[\-0-9a-zA-Z]+</param>
+          </data>
+    
+        </attribute>
+      </optional>
       <ref name="f-element-title"/>
       <optional><ref name="note"/></optional>
       <optional><ref name="aactivity"/></optional>
