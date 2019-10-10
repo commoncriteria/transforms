@@ -323,9 +323,7 @@
 
     <xsl:message><xsl:value-of select="$full_id"/></xsl:message>
     <div class="comp" id="{$full_id}">
-      <h4>
-        <xsl:value-of select="concat($full_id, ' ', @name)"/>qqqq
-      </h4>
+      <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
       <xsl:if test="@status='objective'">
         <div class="statustag">
@@ -402,19 +400,19 @@
 
 
 
-<xsl:template match="cc:f-component" mode="appendicize">
+  <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
-  <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
-   <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
+    <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
+    <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
   </xsl:if>
 </xsl:template>
 
-<xsl:template match="cc:f-component" mode="appendicize-nofilter">
-  <div class="comp" id="{translate(@id, $lower, $upper)}">
-    <h4>
-      <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-      <xsl:value-of select="@name"/>
-    </h4>
+  <xsl:template match="cc:f-component" mode="appendicize-nofilter">
+    <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
+        --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
+
+    <div class="comp" id="{translate(@id, $lower, $upper)}">
+      <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
     <xsl:if test="@status='objective' and @targetdate">
         <div class="statustag">
