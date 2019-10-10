@@ -317,7 +317,7 @@
   <!-- Used to match regular ?-components -->
   <!-- ############### -->
   <!--            -->
-  <xsl:template match="cc:f-component | cc:a-component">
+  <xsl:template match="cc:f-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
       <h4>
         <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
@@ -372,14 +372,41 @@
     </div>
   </xsl:template>
 
-<xsl:template match="cc:f-component | cc:a-component" mode="appendicize">
+  <xsl:template match="cc:a-component">
+    <div class="comp" id="{translate(@id, $lower, $upper)}">
+      <h4>
+        <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+        <xsl:value-of select="@name"/>
+      </h4>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">d</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">c</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">e</xsl:with-param></xsl:call-template>
+    </div>
+  </xsl:template>
+
+  <xsl:template name="agroup">
+    <xsl:param name="type"/>
+    <xsl:if test="./cc:a-element[@type=$type]">
+        <h4><xsl:choose>
+         <xsl:when test="$type='d'">Developer action</xsl:when>
+         <xsl:when test="$type='c'">Content and presentation</xsl:when>
+         <xsl:when test="$type='e'">Evaluator action</xsl:when>
+     </xsl:choose> elements: </h4>
+    <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
+    </xsl:if>
+
+  </xsl:template>
+
+
+
+<xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
   <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
    <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
   </xsl:if>
 </xsl:template>
 
-<xsl:template match="cc:f-component | cc:a-component" mode="appendicize-nofilter">
+<xsl:template match="cc:f-component" mode="appendicize-nofilter">
   <div class="comp" id="{translate(@id, $lower, $upper)}">
     <h4>
       <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
@@ -418,7 +445,7 @@
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:f-element | cc:a-element" >
+  <xsl:template match="cc:f-element" >
     <div class="element">
       <xsl:variable name="reqid"><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
@@ -438,9 +465,25 @@
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:evalactionlabel">
-    <h4><xsl:value-of select="@title"/></h4>
+  <xsl:template match="cc:a-element" >
+    <div class="element">
+      <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
+      <xsl:variable name="reqid"><!--
+            --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
+            -->.<xsl:value-of select="count(preceding-sibling::cc:*[@type=$type])+1"/><!--
+            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
+            --><xsl:value-of select="@type"/></xsl:variable>
+      <div class="reqid" id="{$reqid}">
+        <a href="#{$reqid}" class="abbr">
+          <xsl:value-of select="$reqid"/>
+        </a>
+      </div>
+      <div class="reqdesc">
+        <xsl:apply-templates/>
+      </div>
+    </div>
   </xsl:template>
+
   
 <!-- ############### -->
 <!--            -->
