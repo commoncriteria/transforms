@@ -23,3 +23,6 @@ It uses _xsltproc_ to transform a RelaxNG schema (hopefully with annotations), t
 ## License
 
 See [License](./LICENSE)
+
+## Team Discussions
+The team the governs the transforms project is the [transforms team](https://github.com/orgs/commoncriteria/teams/transforms)
