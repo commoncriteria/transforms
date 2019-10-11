@@ -314,14 +314,42 @@
   </xsl:template>
 
 
-  <!-- Used to match regular ?-components -->
+  <!-- ############### -->
+  <!--            -->
+  <xsl:template match="cc:a-component">
+    <div class="comp" id="{translate(@id, $lower, $upper)}">
+      <h4>
+        <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+        <xsl:value-of select="@name"/>
+      </h4>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">C</xsl:with-param></xsl:call-template>
+      <xsl:call-template name="agroup"><xsl:with-param name="type">E</xsl:with-param></xsl:call-template>
+    </div>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--            -->
+  <xsl:template name="agroup">
+    <xsl:param name="type"/>
+    <xsl:if test="./cc:a-element[@type=$type]">
+        <h4><xsl:choose>
+         <xsl:when test="$type='D'">Developer action</xsl:when>
+         <xsl:when test="$type='C'">Content and presentation</xsl:when>
+         <xsl:when test="$type='E'">Evaluator action</xsl:when>
+     </xsl:choose> elements: </h4>
+    <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
+    </xsl:if>
+  </xsl:template>
+
+
+  <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component">
     <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
         --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
 
-    <xsl:message><xsl:value-of select="$full_id"/></xsl:message>
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
@@ -368,38 +396,13 @@
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
         </div>-->
       </xsl:if>
-
       <xsl:apply-templates/>
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:a-component">
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-        <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-        <xsl:value-of select="@name"/>
-      </h4>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">C</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">E</xsl:with-param></xsl:call-template>
-    </div>
-  </xsl:template>
 
-  <xsl:template name="agroup">
-    <xsl:param name="type"/>
-    <xsl:if test="./cc:a-element[@type=$type]">
-        <h4><xsl:choose>
-         <xsl:when test="$type='D'">Developer action</xsl:when>
-         <xsl:when test="$type='C'">Content and presentation</xsl:when>
-         <xsl:when test="$type='E'">Evaluator action</xsl:when>
-     </xsl:choose> elements: </h4>
-    <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
-    </xsl:if>
-
-  </xsl:template>
-
-
-
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
     <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
@@ -423,7 +426,6 @@
           </b></i>
           </div>
       </xsl:if>
-
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This selection-based component depends upon selection in
@@ -448,13 +450,20 @@
 <!--            -->
   <xsl:template match="cc:f-element" >
     <div class="element">
+
       <xsl:variable name="reqid"><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
             -->.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/><!--
             --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
             --></xsl:variable>
-      <div class="reqid" id="{$reqid}">
-        <a href="#{$reqid}" class="abbr">
+
+      <xsl:variable name="html-id"><xsl:choose>
+        <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="$reqid"/></xsl:when>
+      </xsl:choose></xsl:variable>
+
+      <div class="reqid" id="{$html-id}">
+        <a href="#{$html-id}" class="abbr">
           <xsl:value-of select="$reqid"/>
         </a>
       </div>
