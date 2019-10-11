@@ -90,7 +90,7 @@
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
-    <span id="abbr_{text()}"><xsl:value-of select="@title"/> (<abbr><xsl:value-of select="text()"/></abbr>)</span>
+    <span id="abbr_{text()}"><span class="abbr_def" id="abbr_long_{text()}"><xsl:value-of select="@title"/></span>  (<abbr class="term"><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
 
   

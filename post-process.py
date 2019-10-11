@@ -54,12 +54,18 @@ class State:
                 else:
                     self.classmap[clazz]=[el]
 
+    def build_termtable(self):
+        terms = self.classmap['term']
+        regexstr="\\b("
+        for term in terms:
+            regexstr=regexstr + term.text +"|"
+        self.regex=regexstr[:-1]+")\\b"
 
     def to_html(self):
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
-        
+
 
     def handle_text(self, parent, text):
         # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
@@ -68,10 +74,13 @@ class State:
 #           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
 #           or parent.tag=="script"\
 #           or parent.tag=="style":
-            return escape(text)
-            
+         # No tags in tags.
+         if parent.tag=="a"  or parent.tag=="{http://www.w3.org/1999/xhtml}a":
+             return escape(text)
+         return re.sub(self.regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
 
-            
+
+
 
 #        ret=""
 #        # Split on ending sentence periods
@@ -257,13 +266,13 @@ if __name__ == "__main__":
     else:
         root=ET.parse(infile).getroot()
 
-    
 
     state = State(root)
     state.fix_indices()
     state.fix_index_refs()
     state.fix_counters()
     state.fix_tooltips()
+    state.build_termtable()
     with open(outfile, "w+", encoding="utf-8") as outstream:
         outstream.write(state.to_html())
 
