@@ -484,7 +484,6 @@ Grouping for Security Objective for the Operation Environment entries.
           <data type="string">
             <param name="pattern">[\-0-9a-zA-Z]+</param>
           </data>
-    
         </attribute>
       </optional>
       <ref name="f-element-title"/>
