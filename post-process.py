@@ -76,11 +76,13 @@ class State:
 #           or parent.tag=="script"\
 #           or parent.tag=="style":
          # No tags in tags.
-         if "a" in self.ancestors or "abbr" in self.ancestors:
+         if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors:
+#         if not self.can_contain_abbrs(text):
              return escape(text)
-         print("Parent is :",parent.tag)
          return re.sub(self.regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
 
+    def can_contain_abbrs(self):
+        return "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors
 
 
 
@@ -210,9 +212,9 @@ class State:
             # If we go up one set 
             if level+1 < len(inums):
                 inums[level+1]=0
-                
+
             inums[level]+=1
-            
+
             if is_alpha and level == 0:
                 prefix= "Appendix " + get_appendix_prefix(inums[0]) + " - "
             elif is_alpha:
@@ -223,7 +225,7 @@ class State:
             for bb in range(1, level+1):
                 prefix = prefix + "." + str(inums[bb])
                 spacer=spacer+"&nbps;"
-                
+
             # Fix inline index number
             spany = ET.Element("span")
             spany.text = eles[aa].text
