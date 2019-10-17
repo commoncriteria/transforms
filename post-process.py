@@ -36,6 +36,7 @@ class State:
         self.create_classmapping()
         self.period_ctr = 0
 
+
     def create_classmapping(self):
         self.classmap={}
         for el in self.root.findall(".//*[@class]"):
@@ -62,6 +63,7 @@ class State:
         self.regex=regexstr[:-1]+")\\b"
 
     def to_html(self):
+        self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
@@ -69,14 +71,14 @@ class State:
 
     def handle_text(self, parent, text):
         # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
-
 #        if parent.tag=="a"\
 #           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
 #           or parent.tag=="script"\
 #           or parent.tag=="style":
          # No tags in tags.
-         if parent.tag=="a"  or parent.tag=="{http://www.w3.org/1999/xhtml}a":
+         if "a" in self.ancestors or "abbr" in self.ancestors:
              return escape(text)
+         print("Parent is :",parent.tag)
          return re.sub(self.regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
 
 
@@ -99,8 +101,11 @@ class State:
         """Function that turns document in HTML"""
         tagr = elem.tag.split('}')
         noname=tagr[len(tagr)-1]
+        # Breaks elements are converted to empty tags
         if noname=="br":
             return "<br/>"
+        self.ancestors.append(noname)
+        # Everything else is beginning and end tags (even if they're empty)
         ret="<" + noname
         for attrname in elem.attrib:
             ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
@@ -112,6 +117,7 @@ class State:
             if child.tail:
                 ret += self.handle_text(elem, child.tail)
         ret= ret + '</' + noname +'>'
+        self.ancestors.pop()
         return ret
 
     def fix_counters(self):
