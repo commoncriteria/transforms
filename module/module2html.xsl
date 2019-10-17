@@ -253,7 +253,7 @@
     <xsl:if test="not(cc:sec-func-req-dir)">
       In a PP-Configuration that includes  <xsl:value-of select="@short"/> PP, the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/> as a whole and evaluated against the <xsl:value-of select="@short"/> PP.
 The following sections describe any modifications that the ST author must make to the SFRs
-defined in the <xsl:value-of select="@short"/> PP in addition to what is mandated by section 5.3.
+defined in the <xsl:value-of select="@short"/> PP in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.
     </xsl:if>
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
