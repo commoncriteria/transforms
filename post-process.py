@@ -35,6 +35,7 @@ class State:
         self.parent_map = {c:p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.period_ctr = 0
+        self.regex="a^"
 
 
     def create_classmapping(self):
@@ -56,6 +57,8 @@ class State:
                     self.classmap[clazz]=[el]
 
     def build_termtable(self):
+        if not 'term' in self.classmap:
+            return
         terms = self.classmap['term']
         regexstr="\\b("
         for term in terms:
