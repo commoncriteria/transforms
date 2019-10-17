@@ -60,7 +60,7 @@ class State:
         regexstr="\\b("
         for term in terms:
             regexstr=regexstr + term.text +"|"
-        self.regex=regexstr[:-1]+")\\b"
+        self.abbr_regex=regexstr[:-1]+")\\b"
 
     def to_html(self):
         self.ancestors=[]
@@ -79,10 +79,7 @@ class State:
          if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors:
 #         if not self.can_contain_abbrs(text):
              return escape(text)
-         return re.sub(self.regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
-
-    def can_contain_abbrs(self):
-        return "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors
+         return re.sub(self.abbr_regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
 
 
 
@@ -165,8 +162,6 @@ class State:
         for brokeRef in brokeRefs:
             linkend=brokeRef.attrib["href"][1:]
             target=root.find(".//*[@id='"+linkend+"']")
-
-            
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text==None:
                 brokeRef.text=" "
