@@ -93,12 +93,6 @@
     <span id="abbr_{text()}"><span class="abbr_def" id="abbr_{text()}_long"><xsl:value-of select="@title"/></span>  (<abbr id="abbr_{text()}_short" class="term"><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
 
-  
-  <!-- <xsl:template match="cc:abbr[contains(concat('|', translate(@class, ' ', '|'), '|'), '|expanded|')]"> -->
-  <!--   <xsl:message>QQQ matching <xsl:value-of select="@title"/></xsl:message> -->
-  <!--   <xsl:value-of select="@title"/> (<xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>) -->
-  <!-- </xsl:template> -->
-
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:bibliography">
@@ -263,6 +257,7 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:SOEs">
@@ -278,6 +273,7 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:InsertSPDCorrespondence">
