@@ -616,13 +616,13 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
-
-            <xsl:message
->Selection depends: <xsl:value-of select="count(//cc:f-component[cc:selection-depends])"/></xsl:message>
             <xsl:if test="count(//cc:f-component[cc:selection-depends])=0">
               <p>This PP does not define any selection-based requirements.</p>
             </xsl:if>
-            <xsl:apply-templates select="//cc:f-component[cc:selection-depends]"/>
+            <xsl:for-each select="//cc:subsection[cc:f-component/cc:selection-depends]">
+               <h3 id="{@id}-sel" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
+               <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
+            </xsl:for-each>
         </xsl:if>
     </xsl:template>
   
