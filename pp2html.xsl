@@ -468,7 +468,7 @@
 
       <xsl:variable name="html-id"><xsl:choose>
         <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="$reqid"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="$reqid"/></xsl:otherwise>
       </xsl:choose></xsl:variable>
 
       <div class="reqid" id="{$html-id}">
