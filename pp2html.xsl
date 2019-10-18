@@ -566,13 +566,12 @@
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
-<!--
-  This might work to put sub-headings in
-            <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
-            </xsl:for-each>
--->
           <xsl:if test="$appendicize='on'">
-            <xsl:apply-templates select="//cc:*/cc:depends[@on='implements' and @ref-id=$fid]/.." mode="appendicize-nofilter"/>
+             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+                <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
+                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
+                    mode="appendicize-nofilter"/>
+             </xsl:for-each>
           </xsl:if>
         </xsl:for-each>
     </xsl:template>
@@ -586,13 +585,13 @@
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
                 <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
-                  <h3 id="{@id}" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                  <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                   <xsl:apply-templates select="cc:f-component[@status='optional']"/>
                 </xsl:for-each>
 
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
                 <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
-                  <h3 id="{@id}" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                  <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                   <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
                 </xsl:for-each>
 
