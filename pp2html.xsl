@@ -65,8 +65,19 @@
   <xsl:template match="cc:glossary">
     <table>
       <xsl:for-each select="cc:entry">
-        <xsl:element name="tr">
+        <xsl:call-template name="glossary-entry">
+                <xsl:with-param name="term"  select="cc:term"/>
+                <xsl:with-param name="def"   select="cc:description"/>
+        </xsl:call-template>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
 
+  <xsl:template name="glossary-entry">
+      <xsl:param name="term"/>
+      <xsl:param name="def"/>
+
+      <tr>
           <!-- Adding this attribute was causing ID errors since it was often empty,
          and it's not clear that it is used for anything.  
     <xsl:attribute name="id">
@@ -77,20 +88,18 @@
             </xsl:choose>
           </xsl:attribute> -->
           <td>
-            <xsl:apply-templates select="cc:term"/>
+            <xsl:apply-templates select="$term"/>
           </td>
           <td>
-            <xsl:apply-templates select="cc:description"/>
+            <xsl:apply-templates select="$def"/>
           </td>
-        </xsl:element>
-      </xsl:for-each>
-    </table>
+      </tr>
   </xsl:template>
 
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
-    <span id="abbr_{text()}"><span class="abbr_def" id="abbr_{text()}_long"><xsl:value-of select="@title"/></span>  (<abbr id="abbr_{text()}_short" class="term"><xsl:value-of select="text()"/></abbr>)</span>
+    <span id="abbr_{text()}"><span class="abbr_def" id="long_abbr_{text()}"><xsl:value-of select="@title"/></span>  (<abbr id="short_abbr_{text()}" class="term"><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
 
   
