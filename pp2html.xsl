@@ -585,10 +585,17 @@
             <xsl:when test="$appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-                <xsl:apply-templates select="//cc:*[@status='optional']"/>
+                <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
+                  <h3 id="{@id}" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                  <xsl:apply-templates select="cc:f-component[@status='optional']"/>
+                </xsl:for-each>
+
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
-<!--                <xsl:apply-templates select="//cc:*[@status='objective']" mode="appendicize-nofilter"/> -->
-                <xsl:apply-templates select="//cc:*[@status='objective']" mode="appendicize-nofilter"/>
+                <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
+                  <h3 id="{@id}" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                  <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
+                </xsl:for-each>
+
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
             </xsl:when>
