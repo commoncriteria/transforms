@@ -35,6 +35,8 @@ class State:
         self.parent_map = {c:p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.period_ctr = 0
+        self.regex="a^"
+
 
     def create_classmapping(self):
         self.classmap={}
@@ -54,24 +56,39 @@ class State:
                 else:
                     self.classmap[clazz]=[el]
 
+    def build_termtable(self):
+        if not 'term' in self.classmap:
+            return
+        terms = self.classmap['term']
+        regexstr="\\b("
+        for term in terms:
+            regexstr=regexstr + term.text +"|"
+        self.regex=regexstr[:-1]+")\\b"
 
     def to_html(self):
+        self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
-        
+
 
     def handle_text(self, parent, text):
         # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
-
 #        if parent.tag=="a"\
 #           or parent.tag=="{http://www.w3.org/1999/xhtml}a"\
 #           or parent.tag=="script"\
 #           or parent.tag=="style":
-            return escape(text)
-            
+         # No tags in tags.
+         if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
+            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or"h4" in self.ancestors:
+#         if not self.can_contain_abbrs(text):
+             return escape(text)
+         return re.sub(self.regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
 
-            
+    def can_contain_abbrs(self):
+        return "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors
+
+
 
 #        ret=""
 #        # Split on ending sentence periods
@@ -90,8 +107,11 @@ class State:
         """Function that turns document in HTML"""
         tagr = elem.tag.split('}')
         noname=tagr[len(tagr)-1]
+        # Breaks elements are converted to empty tags
         if noname=="br":
             return "<br/>"
+        self.ancestors.append(noname)
+        # Everything else is beginning and end tags (even if they're empty)
         ret="<" + noname
         for attrname in elem.attrib:
             ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
@@ -103,6 +123,7 @@ class State:
             if child.tail:
                 ret += self.handle_text(elem, child.tail)
         ret= ret + '</' + noname +'>'
+        self.ancestors.pop()
         return ret
 
     def fix_counters(self):
@@ -195,9 +216,9 @@ class State:
             # If we go up one set 
             if level+1 < len(inums):
                 inums[level+1]=0
-                
+
             inums[level]+=1
-            
+
             if is_alpha and level == 0:
                 prefix= "Appendix " + get_appendix_prefix(inums[0]) + " - "
             elif is_alpha:
@@ -208,7 +229,7 @@ class State:
             for bb in range(1, level+1):
                 prefix = prefix + "." + str(inums[bb])
                 spacer=spacer+"&nbps;"
-                
+
             # Fix inline index number
             spany = ET.Element("span")
             spany.text = eles[aa].text
@@ -257,13 +278,13 @@ if __name__ == "__main__":
     else:
         root=ET.parse(infile).getroot()
 
-    
 
     state = State(root)
     state.fix_indices()
     state.fix_index_refs()
     state.fix_counters()
     state.fix_tooltips()
+    state.build_termtable()
     with open(outfile, "w+", encoding="utf-8") as outstream:
         outstream.write(state.to_html())
 
