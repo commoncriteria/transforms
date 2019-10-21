@@ -540,7 +540,7 @@ function fixAbbrs(){
     var brk_els = document.getElementsByClassName("broken");
     for(aa=0; aa!=brk_els.length; aa++){
         var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
-        var abbr_def = document.getElementById("abbr_"+abbr+"_long").textContent;
+        var abbr_def = document.getElementById("long_abbr_"+abbr).textContent;
         brk_els[aa].setAttribute("title", abbr_def);
     }
 }
