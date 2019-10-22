@@ -62,12 +62,24 @@
   </xsl:template>
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:glossary">
+  <xsl:template match="cc:tech-terms">
+    <h2 id="glossary" class="indexable" data-level="2">Terms</h2>
+The following sections list Common Criteria and technology terms used in this document.
+The following sections provide both Common Criteria and technology terms used in this Protection Profile.
+    <h3 id="cc-terms" class="indexable" data-level="3">Common Criteria Terms</h3>
     <table>
-      <xsl:for-each select="cc:entry">
+<!--        <xsl:call-template name="cc-terms"/> -->
+    </table>
+
+
+    <h3 id="tech-terms" class="indexable" data-level="3">Technical Terms</h3>
+
+    <table>
+      <xsl:for-each select="cc:term[text()]">
+        <xsl:message><xsl:value-of select="@full"/> HEre</xsl:message>
         <xsl:call-template name="glossary-entry">
-                <xsl:with-param name="term"  select="cc:term"/>
-                <xsl:with-param name="def"   select="cc:description"/>
+                <xsl:with-param name="term"  select="@full"/>
+                <xsl:with-param name="def"   select="."/>
         </xsl:call-template>
       </xsl:for-each>
     </table>
@@ -76,7 +88,6 @@
   <xsl:template name="glossary-entry">
       <xsl:param name="term"/>
       <xsl:param name="def"/>
-
       <tr>
           <!-- Adding this attribute was causing ID errors since it was often empty,
          and it's not clear that it is used for anything.  
@@ -87,8 +98,10 @@
               <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
             </xsl:choose>
           </xsl:attribute> -->
+          <xsl:variable name="term_id"><xsl:value-of select="translate($term,' ','_')"/></xsl:variable>
+          <xsl:message><xsl:value-of select="$term_id"/></xsl:message>
           <td>
-            <xsl:apply-templates select="$term"/>
+            <div id="{$term_id}"><xsl:value-of select="$term"/></div>
           </td>
           <td>
             <xsl:apply-templates select="$def"/>
@@ -101,6 +114,8 @@
   <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
     <span id="abbr_{text()}"><span class="abbr_def" id="long_abbr_{text()}"><xsl:value-of select="@title"/></span>  (<abbr id="short_abbr_{text()}" class="term"><xsl:value-of select="text()"/></abbr>)</span>
   </xsl:template>
+
+
 
 <!-- ############### -->
 <!--            -->
@@ -638,7 +653,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
     <xsl:apply-templates mode='hook' select='.'/>
     <xsl:apply-templates/>
   </xsl:template>
-
 
 
 <!-- ############### -->

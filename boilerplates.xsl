@@ -32,6 +32,48 @@ provides evidence that these controls are present and have been evaluated.
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
+  <xsl:template name="cc-terms">
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Common Criteria (CC)'"/>
+      <xsl:with-param name="def" select="'Common Criteria for Information Technology Security Evaluation.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Common Evaluation Methodology (CEM)'"/>
+      <xsl:with-param name="def" select="'Common Evaluation Methodology for Information Technology Security Evaluation.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Extended Package (EP)'"/>
+      <xsl:with-param name="def" select="'An implementation-independent set of security requirements for a specific subset of products described.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Protection Profile (PP)'"/>
+      <xsl:with-param name="def" select="'An implementation-independent set of security requirements for a category of products.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Security Target (ST)'"/>
+      <xsl:with-param name="def" select="'A set of implementation-dependent security requirements for a specific product.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Target of Evaluation (TOE)'"/>
+      <xsl:with-param name="def" select="'The product under evaluation. In this case, the Operating System as described in section Section 1.3.1 TOE Boundary and its supporting documentation.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'TOE Security Functionality (TSF)'"/>
+      <xsl:with-param name="def" select="'The security functionality of the product under evaluation.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'TOE Summary Specification (TSS)'"/>
+      <xsl:with-param name="def" select="'A description of how a TOE satisfies the SFRs in a ST.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Security Functional Requirement (SFR)'"/>
+      <xsl:with-param name="def" select="'A requirement for security enforcement by the TOE.'"/>
+    </xsl:call-template>
+    <xsl:call-template name="glossary-entry">
+      <xsl:with-param name="term" select="'Security Assurance Requirement (SAR)'"/>
+      <xsl:with-param name="def" select="'A requirement to assure the security of the TOE.'"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <xsl:template name="selection-based-text">
 As indicated in the introduction to this PP,
