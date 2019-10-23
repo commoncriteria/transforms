@@ -69,30 +69,28 @@ The following sections provide both Common Criteria and technology terms used in
     <h3 id="cc-terms" class="indexable" data-level="3">Common Criteria Terms</h3>
     <table>
       <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
-        <xsl:call-template name="glossary-entry">
-          <xsl:with-param name="term"  select="@full"/>
-          <xsl:with-param name="def"   select="."/>
-        </xsl:call-template>
+        <xsl:call-template name="glossary-entry"/>
       </xsl:for-each>
     </table>
     <h3 id="tech-terms" class="indexable" data-level="3">Technical Terms</h3>
     <table>
       <xsl:for-each select="cc:term[text()]">
-        <xsl:call-template name="glossary-entry">
-                <xsl:with-param name="term"  select="@full"/>
-                <xsl:with-param name="def"   select="."/>
-        </xsl:call-template>
+        <xsl:call-template name="glossary-entry"/>
       </xsl:for-each>
     </table>
   </xsl:template>
 
   <xsl:template name="glossary-entry">
-      <xsl:param name="term"/>
-      <xsl:param name="def"/>
       <tr>
-        <xsl:variable name="term_id"><xsl:value-of select="translate($term,' ','_')"/></xsl:variable>
-        <td><div id="{$term_id}"><xsl:value-of select="$term"/></div></td>
-        <td><xsl:apply-templates select="$def"/></td>
+        <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
+        <xsl:message>Term is <xsl:value-of select="name()"/></xsl:message>
+        <td><div id="{$term_id}">
+            <xsl:choose>
+                <xsl:when test="@abbr"><xsl:value-of select="@abbr"/>(<xsl:value-of select="@full"/>)</xsl:when>
+                <xsl:otherwise><xsl:value-of select="@full"/></xsl:otherwise>
+            </xsl:choose>
+        </div></td>
+        <td><xsl:apply-templates/></td>
       </tr>
   </xsl:template>
 
