@@ -137,9 +137,10 @@ The following sections provide both Common Criteria and technology terms used in
         <th>Acronym</th>
         <th>Meaning</th>
       </tr>
-      <xsl:for-each select="cc:entry">
+      <xsl:for-each select="//cc:term[@abbr]">
         <tr>
-          <xsl:for-each select="cc:*"><td><xsl:apply-templates/></td></xsl:for-each>
+          <xsl:message> here</xsl:message>
+          <td><xsl:value-of select="@abbr"/></td><td><xsl:apply-templates/></td>
         </tr>
       </xsl:for-each>
     </table>
