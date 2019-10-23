@@ -68,15 +68,16 @@ The following sections list Common Criteria and technology terms used in this do
 The following sections provide both Common Criteria and technology terms used in this Protection Profile.
     <h3 id="cc-terms" class="indexable" data-level="3">Common Criteria Terms</h3>
     <table>
-<!--        <xsl:call-template name="cc-terms"/> -->
+      <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
+        <xsl:call-template name="glossary-entry">
+          <xsl:with-param name="term"  select="@full"/>
+          <xsl:with-param name="def"   select="."/>
+        </xsl:call-template>
+      </xsl:for-each>
     </table>
-
-
     <h3 id="tech-terms" class="indexable" data-level="3">Technical Terms</h3>
-
     <table>
       <xsl:for-each select="cc:term[text()]">
-        <xsl:message><xsl:value-of select="@full"/> HEre</xsl:message>
         <xsl:call-template name="glossary-entry">
                 <xsl:with-param name="term"  select="@full"/>
                 <xsl:with-param name="def"   select="."/>
@@ -89,23 +90,9 @@ The following sections provide both Common Criteria and technology terms used in
       <xsl:param name="term"/>
       <xsl:param name="def"/>
       <tr>
-          <!-- Adding this attribute was causing ID errors since it was often empty,
-         and it's not clear that it is used for anything.  
-    <xsl:attribute name="id">
-            <xsl:choose>
-              <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-              <xsl:when test="cc:term"><xsl:value-of select="translate(cc:term/text(), $lower, $upper)"/></xsl:when>
-              <xsl:otherwise><xsl:value-of select="name/text()"/></xsl:otherwise>
-            </xsl:choose>
-          </xsl:attribute> -->
-          <xsl:variable name="term_id"><xsl:value-of select="translate($term,' ','_')"/></xsl:variable>
-          <xsl:message><xsl:value-of select="$term_id"/></xsl:message>
-          <td>
-            <div id="{$term_id}"><xsl:value-of select="$term"/></div>
-          </td>
-          <td>
-            <xsl:apply-templates select="$def"/>
-          </td>
+        <xsl:variable name="term_id"><xsl:value-of select="translate($term,' ','_')"/></xsl:variable>
+        <td><div id="{$term_id}"><xsl:value-of select="$term"/></div></td>
+        <td><xsl:apply-templates select="$def"/></td>
       </tr>
   </xsl:template>
 
