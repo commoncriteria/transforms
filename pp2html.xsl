@@ -96,12 +96,6 @@ The following sections provide both Common Criteria and technology terms used in
       </tr>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
-    <span id="abbr_{text()}"><span class="abbr_def" id="long_abbr_{text()}"><xsl:value-of select="@title"/></span>  (<abbr id="short_abbr_{text()}" class="term"><xsl:value-of select="text()"/></abbr>)</span>
-  </xsl:template>
-
 
 
 <!-- ############### -->
@@ -139,8 +133,7 @@ The following sections provide both Common Criteria and technology terms used in
       </tr>
       <xsl:for-each select="//cc:term[@abbr]">
         <tr>
-          <xsl:message> here</xsl:message>
-          <td><xsl:value-of select="@abbr"/></td><td><xsl:apply-templates/></td>
+          <td><xsl:value-of select="@abbr"/></td><td><xsl:value-of select="@full"/></td>
         </tr>
       </xsl:for-each>
     </table>
