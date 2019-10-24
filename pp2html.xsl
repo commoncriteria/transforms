@@ -60,6 +60,8 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
+
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:tech-terms">
@@ -86,7 +88,7 @@ The following sections provide both Common Criteria and technology terms used in
         <xsl:message>Term is <xsl:value-of select="name()"/></xsl:message>
         <td><div id="{$term_id}">
             <xsl:choose>
-                <xsl:when test="@abbr"><xsl:value-of select="@abbr"/>(<xsl:value-of select="@full"/>)</xsl:when>
+                <xsl:when test="@abbr"><xsl:value-of select="@abbr"/> (<xsl:value-of select="@full"/>)</xsl:when>
                 <xsl:otherwise><xsl:value-of select="@full"/></xsl:otherwise>
             </xsl:choose>
         </div></td>
@@ -123,16 +125,23 @@ The following sections provide both Common Criteria and technology terms used in
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:acronyms">
+  <xsl:template name="acronyms">
+    <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
+    <xsl:call-template name="acronym-table"/>
+  </xsl:template>
+
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:acronyms" name="acronym-table">
     <table>
       <tr class="header">
         <th>Acronym</th>
         <th>Meaning</th>
       </tr>
       <xsl:for-each select="//cc:term[@abbr]">
-        <tr>
-          <td><xsl:value-of select="@abbr"/></td><td><xsl:value-of select="@full"/></td>
-        </tr>
+        <xsl:message>Found acronym</xsl:message>
+        <tr><td><xsl:value-of select="@abbr"/></td><td><xsl:value-of select="@full"/></td></tr>
       </xsl:for-each>
     </table>
   </xsl:template>

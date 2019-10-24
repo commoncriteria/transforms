@@ -33,7 +33,7 @@
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
     <xsl:apply-templates select="//cc:bibliography"/>
-    <xsl:apply-templates select="//cc:acronyms"/>
+    <xsl:call-template name="acronyms"/>
   </xsl:template>
 
 
