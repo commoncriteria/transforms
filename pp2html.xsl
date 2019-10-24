@@ -138,7 +138,11 @@ The following sections provide both Common Criteria and technology terms used in
         <th>Meaning</th>
       </tr>
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]">
-        <tr><td><xsl:value-of select="@abbr"/></td><td><xsl:value-of select="@full"/></td></tr>
+        <tr>
+            <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
+            <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
+       </tr>&#10;
+
       </xsl:for-each>
     </table>
   </xsl:template>

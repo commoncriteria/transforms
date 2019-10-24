@@ -537,10 +537,16 @@ function init(){
 
 function fixAbbrs(){
     var aa;
-    var brk_els = document.getElementsByClassName("broken");
+    var brk_els = document.getElementsByClassName("dyn-abbr");
+    // 
     for(aa=0; aa!=brk_els.length; aa++){
         var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
-        var abbr_def = document.getElementById("long_abbr_"+abbr).textContent;
+        var el = document.getElementById("long_"+abbr)
+        if (el==null) {
+             console.log("Could not find 'long_abbr_'"+abbr); 
+             continue;
+        }
+        var abbr_def = el.textContent;
         brk_els[aa].setAttribute("title", abbr_def);
     }
 }
@@ -815,6 +821,11 @@ function showTarget(id){
               text-decoration:none;
               font-size:100%;
               font-weight:bold; /*font-family: verdana, arial, helvetica, sans-serif; */
+          }
+          .dyn-abbr a, .dyn-abbr a:active, .dyn-abbr a:visited{
+              background-color: inherit;
+              color: inherit;
+              text-decoration: inherit;;
           }
 
           @media screen{

@@ -83,7 +83,7 @@ class State:
             "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or"h4" in self.ancestors:
 #         if not self.can_contain_abbrs(text):
              return escape(text)
-         return re.sub(self.abbr_regex, r'<abbr class="broken"><a href="#\1">\1</a></abbr>', escape(text))
+         return re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', escape(text))
 
 
 
