@@ -86,7 +86,6 @@ class State:
          return re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', escape(text))
 
 
-
 #        ret=""
 #        # Split on ending sentence periods
 #        chunks=re.split("""\.\s+|\.$""", text)
