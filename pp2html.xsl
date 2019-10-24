@@ -31,8 +31,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
       <xsl:call-template name="head"/>
       <body onLoad="init()">
-          <xsl:call-template name="sanity-checks"/>
-
+        <xsl:call-template name="sanity-checks"/>
         <xsl:call-template name="body-begin"/>
         <xsl:apply-templates select="cc:*"/>
       </body>
@@ -85,7 +84,6 @@ The following sections provide both Common Criteria and technology terms used in
   <xsl:template name="glossary-entry">
       <tr>
         <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
-        <xsl:message>Term is <xsl:value-of select="name()"/></xsl:message>
         <td><div id="{$term_id}">
             <xsl:choose>
                 <xsl:when test="@abbr"><xsl:value-of select="@abbr"/> (<xsl:value-of select="@full"/>)</xsl:when>
@@ -139,8 +137,7 @@ The following sections provide both Common Criteria and technology terms used in
         <th>Acronym</th>
         <th>Meaning</th>
       </tr>
-      <xsl:for-each select="//cc:term[@abbr]">
-        <xsl:message>Found acronym</xsl:message>
+      <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]">
         <tr><td><xsl:value-of select="@abbr"/></td><td><xsl:value-of select="@full"/></td></tr>
       </xsl:for-each>
     </table>
