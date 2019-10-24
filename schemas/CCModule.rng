@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-	  ns="https://niap-ccevs.org/cc/v1" xmlns:h="http://www.w3.org/1999/xhtml" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-
+          ns="https://niap-ccevs.org/cc/v1" 
+          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+          xmlns:h="http://www.w3.org/1999/xhtml"
+          xmlns="http://relaxng.org/ns/structure/1.0"
+>
 
   <include href="Commons.rng">
     <define name="SO">
@@ -597,24 +600,16 @@ Defines SFRs that pertain to specific base.
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
       </element>
-      <element name="section">
+      <element name="tech-terms">
 	<a:documentation>
 	</a:documentation>
-	<attribute name="title"><value>Terms</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<element name="subsection">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>Common Criteria Terms</value></attribute>
-	  <ref name="glossary-el"/>
-	</element>
-	<element name="subsection">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>Technical Terms</value></attribute>
-	  <ref name="glossary-el"/>
-	</element>
+        <zeroOrMore>
+          <element name="term">
+            <attribute name="full"/>
+            <optional><attribute name="abbr"/></optional>
+            <ref name="basic-content-pat"/>
+          </element>
+        </zeroOrMore>
       </element>
       <element name="section">
 	<a:documentation>

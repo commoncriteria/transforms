@@ -789,11 +789,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="acronyms">
     <element name="acronyms">
       <a:documentation>
-        Section to define the acronyms used in the document.
+        Declares where acronyms are visually defined.
       </a:documentation>
-      <oneOrMore>
-        <ref name="entry-el"/>
-      </oneOrMore>
+      <empty/>
     </element>
   </define>
 
