@@ -16,6 +16,7 @@
   <!-- Value on whether this is the formal release build -->
   <xsl:param name="release" select="final"/>
 
+  <xsl:variable name="doctype" select="mod"/>
   <!-- ################################################## -->
   <!--                   Templates Section                -->
   <!-- ################################################## -->

@@ -9,6 +9,8 @@ XSL for Protection Profile Modules
 	      xmlns:h="http://www.w3.org/1999/xhtml"
 	      version="1.0">
 
+  <x:variable name="doctype" select="sd"/>
+
   <!-- Forces output to make XML and thus needs to be 
        HTMLized by another transformer  -->
   <x:output method="xml" encoding="UTF-8"/>
@@ -289,13 +291,9 @@ guidance, and testing.</p>
     Activities have been successfully completed would require a specific justification 
     from the evaluator as to why the Evaluation Activities were not sufficient for that TOE. 
     </p>
-    <h2 id="glossary" class="indexable" data-level="1">Terms</h2>
-    <h3 id="ccterms">Common Criteria Terms</h3>
-    The following definitions are for Common Criteria terms used in this document:
-    <x:apply-templates select="//cc:*[@title='Common Criteria Terms']/cc:glossary"/>
-    <h3 id="techterms">Technical Terms</h3>
-    The following definitions define Technical terms used in this document:
-    <x:apply-templates select="//cc:*[@title='Technical Terms']/cc:glossary"/>
+    <x:apply-templates select="//cc:tech-terms">
+      <x:with-param name="num" select="1"/>
+    </x:apply-templates>
   </x:template>
 
   <x:template name="foreward">

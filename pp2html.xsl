@@ -11,6 +11,8 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
+  <xsl:variable name="doctype" select="pp"/>
+
   <xsl:param name="appendicize" select="''"/>
 
   <xsl:param name="custom-css-file" select="''"/>
@@ -60,39 +62,6 @@
     </dl>
   </xsl:template>
 
-
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:tech-terms">
-    <h2 id="glossary" class="indexable" data-level="2">Terms</h2>
-The following sections list Common Criteria and technology terms used in this document.
-The following sections provide both Common Criteria and technology terms used in this Protection Profile.
-    <h3 id="cc-terms" class="indexable" data-level="3">Common Criteria Terms</h3>
-    <table>
-      <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
-        <xsl:call-template name="glossary-entry"/>
-      </xsl:for-each>
-    </table>
-    <h3 id="tech-terms" class="indexable" data-level="3">Technical Terms</h3>
-    <table>
-      <xsl:for-each select="cc:term[text()]">
-        <xsl:call-template name="glossary-entry"/>
-      </xsl:for-each>
-    </table>
-  </xsl:template>
-
-  <xsl:template name="glossary-entry">
-      <tr>
-        <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
-        <td><div id="{$term_id}">
-            <xsl:choose>
-                <xsl:when test="@abbr"><xsl:value-of select="@abbr"/> (<xsl:value-of select="@full"/>)</xsl:when>
-                <xsl:otherwise><xsl:value-of select="@full"/></xsl:otherwise>
-            </xsl:choose>
-        </div></td>
-        <td><xsl:apply-templates/></td>
-      </tr>
-  </xsl:template>
 
 
 

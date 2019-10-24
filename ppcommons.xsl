@@ -185,8 +185,46 @@
 
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
-    
   </xsl:template>
+
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:tech-terms">
+    <xsl:param name="num" select="2"/>
+
+    <xsl:message>Base num is <xsl:value-of select="$num"/></xsl:message>
+    <h2 id='glossary' class='indexable' data-level='{$num}'>Terms</h2>
+The following sections list Common Criteria and technology terms used in this document.
+The following sections provide both Common Criteria and technology terms used in this Protection Profile.
+    <h3 id="cc-terms" class="indexable" data-level="{$num+1}">Common Criteria Terms</h3>
+    <table>
+      <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
+        <xsl:call-template name="glossary-entry"/>
+      </xsl:for-each>
+    </table>
+    <h3 id="tech-terms" class="indexable" data-level="{$num+1}">Technical Terms</h3>
+    <table>
+      <xsl:for-each select="cc:term[text()]">
+        <xsl:call-template name="glossary-entry"/>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+
+  <xsl:template name="glossary-entry">
+      <tr>
+        <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
+        <td><div id="{$term_id}">
+            <xsl:choose>
+                <xsl:when test="@abbr"><xsl:value-of select="@abbr"/> (<xsl:value-of select="@full"/>)</xsl:when>
+                <xsl:otherwise><xsl:value-of select="@full"/></xsl:otherwise>
+            </xsl:choose>
+        </div></td>
+        <td><xsl:apply-templates/></td>
+      </tr>
+  </xsl:template>
+
+
 
   <xsl:template match="cc:linkref">
     <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
