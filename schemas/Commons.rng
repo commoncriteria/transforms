@@ -560,6 +560,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
       <ref name="basic-content-pat"/>
       <choice>
+        <element name="no-tests"><empty/></element>
         <group>
           <ref name="TSS"/>
           <optional>
