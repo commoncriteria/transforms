@@ -384,10 +384,12 @@
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
     <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
-    <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
-  </xsl:if>
-</xsl:template>
+      <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
+    </xsl:if>
+  </xsl:template>
 
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize-nofilter">
     <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
         --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
@@ -424,16 +426,14 @@
       </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:f-element" >
     <div class="element">
 
-      <xsl:variable name="reqid"><!--
-            --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/><!--
-            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
-            --></xsl:variable>
+      <xsl:variable name="reqid"><xsl:call-template name="el-id">
+         <xsl:with-param name="el" select="."/>
+      </xsl:call-template></xsl:variable>
 
       <xsl:variable name="html-id"><xsl:choose>
         <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
@@ -441,9 +441,7 @@
       </xsl:choose></xsl:variable>
 
       <div class="reqid" id="{$html-id}">
-        <a href="#{$html-id}" class="abbr">
-          <xsl:value-of select="$reqid"/>
-        </a>
+        <a href="#{$html-id}" class="abbr"><xsl:value-of select="$reqid"/></a>
       </div>
       <div class="reqdesc">
         <xsl:apply-templates/>
@@ -456,11 +454,8 @@
   <xsl:template match="cc:a-element" >
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
-      <xsl:variable name="reqid"><!--
-            --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:a-element[@type=$type])+1"/><!--
-            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
-            --><xsl:value-of select="@type"/></xsl:variable>
+      <xsl:variable name="reqid"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
+         </xsl:call-template></xsl:variable>
       <div class="reqid" id="{$reqid}">
         <a href="#{$reqid}" class="abbr">
           <xsl:value-of select="$reqid"/>

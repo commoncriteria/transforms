@@ -21,17 +21,17 @@
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
   <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
-  <!-- 
-       Template for javascript common to all transforms
-  -->
+  <!--##############################################
+        Template for javascript common to all transforms
+      ##############################################-->
   <xsl:template name="common_js">
     <!-- Include custom javascript defined in the pp -->
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
-<!--
-    Template for universal sanity checks.
--->
+  <!--##############################################
+        Template for universal sanity checks.
+      ##############################################-->
   <xsl:template name="sanity-checks">
     <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']">
       <xsl:message>*****************************
@@ -43,7 +43,9 @@
   </xsl:template>  
 
 
-  <!-- Common CSS rules for all files-->
+   <!--##############################################
+      ##############################################-->
+ <!-- Common CSS rules for all files-->
   <xsl:template name="common_css">
     #toc a{
         display: block;
@@ -987,5 +989,11 @@ function showTarget(id){
     <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
   </xsl:template>
 
+  <xsl:template name="el-id">
+         <xsl:param name="el"/><!--
+            --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
+            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/><!--
+            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
+            --></xsl:template>
  
 </xsl:stylesheet>
