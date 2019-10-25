@@ -509,8 +509,8 @@ These components are identified in the following table:
         </xsl:otherwise>
       </xsl:choose>
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
-         <xsl:message>COMPLEV <xsl:value-of select="@id"/></xsl:message>
-         <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
+         <xsl:variable name="upId"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
+                </xsl:call-template></xsl:variable>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
