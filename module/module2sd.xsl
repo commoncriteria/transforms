@@ -390,7 +390,9 @@ guidance, and testing.</p>
 	<x:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
 	<x:value-of select="@name"/>
       </h4>
-      
+  <x:if test=".//cc:aactivity/cc:no-tests">
+      <x:apply-templates select=".//cc:aactivity"/>
+  </x:if>
   <x:if test=".//cc:TSS">
       <div class="eacategory">TSS</div>
       <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
