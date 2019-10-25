@@ -177,8 +177,6 @@ guidance, and testing.</p>
     <x:param name="short"/>
     <x:param name="none-msg"/>
     <x:param name="title"/>
-    <x:message>Abc <x:if test="not($none-msg='')">Message</x:if></x:message>
-    <x:message>Def <x:value-of select="count($f-comps//cc:f-component)"/></x:message>
     <x:choose>
       <x:when test="($none-msg='') and (count($f-comps//cc:f-component)=0)"/>
       <x:otherwise>
