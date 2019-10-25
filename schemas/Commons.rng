@@ -393,23 +393,25 @@ Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="description"/>
-      <oneOrMore>
-        <element name="component-refer">
-          <a:documentation>
-            Cross-references a component.
-          </a:documentation>
+      <ref name="component-refers-pat"/>
+    </element>
+  </define>
+
+  <define name="component-refers-pat">
+    <oneOrMore>
+      <element name="component-refer">
+        <a:documentation>Cross-references a component.</a:documentation>
           <attribute name="ref">
             <a:documentation>
               Id of the referenced component.
             </a:documentation>
+            <ref name="comp-id-upper-respat"/>
           </attribute>
+          <ref name="iteration-pat"/>
           <empty/>
         </element>
       </oneOrMore>
-    </element>
   </define>
-
-
 
   <define name="basic-content-pat">
     <a:documentation>
@@ -698,20 +700,34 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </element>
   </define>
 
+  <define name="comp-id-respat">
+    <data type="string">
+      <param name="pattern">f[a-z]{2}_[a-z0-9^]{2,5}(_ext)?\.[0-9]</param>
+    </data>
+  </define>
+
+  <define name="comp-id-upper-respat">
+    <data type="string">
+      <param name="pattern">F[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
+    </data>
+  </define>
+
   <define name="f-comp-content-pat">
     <attribute name="id">
       <a:documentation>
         The ID without the iteration.
       </a:documentation>
-      <data type="string">
-        <param name="pattern">f[a-z]{2}_[a-z0-9^]{2,5}(_ext)?\.[0-9]</param>
-      </data>
+      <ref name="comp-id-respat"/>
     </attribute>
     <attribute name="name">
       <a:documentation>
         Readable title for this requirement.
       </a:documentation>
     </attribute>
+    <ref name="iteration-pat"/>
+  </define>
+
+  <define name="iteration-pat">
     <optional>
       <attribute name="iteration">
         <a:documentation>

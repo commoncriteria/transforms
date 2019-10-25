@@ -14,19 +14,7 @@
 	</a:documentation>
 	<ref name="id-attr"/>
 	<ref name="description"/>
-	<oneOrMore>
-          <element name="component-refer">
-	    <a:documentation>
-	      Cross-references a component.
-	    </a:documentation>
-            <attribute name="ref">
-	      <a:documentation>
-		Id of the referenced component.
-	      </a:documentation>
-	    </attribute>
-	    <empty/>
-          </element>
-	</oneOrMore>
+        <ref name="component-refers-pat"/>
 	<ref name="consistency-rationale"/>
       </element>
     </define>
