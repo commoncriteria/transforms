@@ -286,19 +286,8 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:document>
 	Specifies a component under Security Functional Requirements section..
       </a:document>
-      <attribute name="id">
-        <data type="string">
-           <param name="pattern">f[a-z][a-z]_[a-z]{2,5}(_ext)?\.[0-9]+(\(.*\))?</param>
-        </data>
-      	<a:documentation>
-	       Identifier for this group of requirements. All requirements must have the same status 'threshold', 'optional', 'objective', 'selection-based'
-	      </a:documentation>
-      </attribute>
-      <attribute name="name">
-	<a:documentation>
-	  Readable title for this requirement.
-	</a:documentation>
-      </attribute>
+
+      <ref name="f-comp-content-pat"/>
       <!-- Would like to remove this -->
       <zeroOrMore>
      	  <ref name="selection-depends"/>
