@@ -203,7 +203,27 @@
               <xsl:variable name="uncapped-req">
                 <xsl:value-of select="translate(@ref,$upper,$lower)"/>
               </xsl:variable>
+
               <xsl:choose>
+                <!-- If iteration is there -->
+                <xsl:when test="@iteration">
+                  <xsl:message>gggg</xsl:message>
+                  <xsl:variable name="iter"><xsl:value-of select="@iteration"/></xsl:variable>
+                  <xsl:element name="span">
+                    <xsl:attribute name="class">
+                      <xsl:value-of select="//cc:f-component[@id=$uncapped-req and @iteration=$iter]/@status"/>
+                    </xsl:attribute>
+                    <xsl:call-template name="req-refs">
+                      <xsl:with-param name="req" select="@ref"/>
+                      <xsl:with-param name="iter" select="concat('/',$iter)"/>
+                    </xsl:call-template>
+                    <!--
+                        This is here so that if we wanted to added text
+                        but make it different font.
+                    -->
+                    <span class="after"/>
+                  </xsl:element>
+                </xsl:when>
 
                 <!-- if there's a reference and it matches a f-component id -->
                 <xsl:when test="//cc:f-component[@id=$uncapped-req]">
@@ -219,7 +239,7 @@
                         but make it different font.
                     -->
                     <span class="after"/>
-                </xsl:element>
+                  </xsl:element>
                 </xsl:when>
 
                 <!-- if there's a reference -->

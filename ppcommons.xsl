@@ -521,6 +521,7 @@ The following sections provide both Common Criteria and technology terms used in
     <!-- Requirement id -->
     <xsl:param name="req"/>
 
+    <xsl:param name="iter"/>
     <!--lower req-->
     <xsl:variable name="lreq">
       <xsl:value-of select="translate($req,$upper,$lower)"/>
@@ -531,7 +532,7 @@ The following sections provide both Common Criteria and technology terms used in
       <xsl:value-of select="translate($lreq,$lower,$upper)"/>
     </xsl:variable>
     
-    <a class="{$class}" href="#{$capped-req}"><xsl:value-of select="$capped-req"/></a>
+    <a class="{$class}" href="#{$capped-req}{$iter}"><xsl:value-of select="concat($capped-req,$iter)"/></a>
   </xsl:template>
 
   <!--#####################-->
