@@ -207,7 +207,6 @@
               <xsl:choose>
                 <!-- If iteration is there -->
                 <xsl:when test="@iteration">
-                  <xsl:message>gggg</xsl:message>
                   <xsl:variable name="iter"><xsl:value-of select="@iteration"/></xsl:variable>
                   <xsl:element name="span">
                     <xsl:attribute name="class">
