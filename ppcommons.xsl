@@ -50,7 +50,11 @@
     #toc a{
         display: block;
     }
-
+    
+    svg{
+      width: 100%;
+    }
+    
     a[id^="ajq_"]{
         color:black;
     }

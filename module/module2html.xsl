@@ -499,7 +499,7 @@ These components are identified in the following table:
                 <xsl:call-template name="drawbox">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
                   <xsl:with-param name="boxtext" select="$box_text"/>
-                  <xsl:with-param name="xbase" select="200"/>
+                  <xsl:with-param name="xbase" select="230"/>
                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
                 </xsl:call-template>
               </xsl:for-each>
@@ -617,7 +617,7 @@ These components are identified in the following table:
     </xsl:element>
     <xsl:if test="$xbase>0">
       <xsl:element name="line">
-        <xsl:attribute name="x1">92</xsl:attribute>
+        <xsl:attribute name="x1">122</xsl:attribute> <!-- 2 more than the width above -->
         <xsl:attribute name="y1"><xsl:value-of select="$ymid + 17"/></xsl:attribute>
         <xsl:attribute name="x2"><xsl:value-of select="$xbase + 1"/></xsl:attribute>
         <xsl:attribute name="y2"><xsl:value-of select="$ybase + 17"/></xsl:attribute>
