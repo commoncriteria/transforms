@@ -21,7 +21,6 @@
   <!--                   Templates Section                -->
   <!-- ################################################## -->
   <xsl:template match="cc:Module">
-  
     <xsl:apply-templates select="//cc:chapter[@title='Introduction']"/>
     <xsl:apply-templates select="//cc:chapter[@title='Conformance Claims']"/>
     <xsl:apply-templates select="//cc:chapter[@title='Security Problem Description']"/>
@@ -494,10 +493,12 @@ These components are identified in the following table:
                 <xsl:with-param name="boxtext" select="@fam-id"/>
               </xsl:call-template>
               <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
-                <xsl:variable name="upId"><xsl:value-of select="translate(@id,$lower,$upper)"/></xsl:variable>
+                <xsl:variable name="box_text"><!--
+                  --><xsl:value-of select="translate(@id,$lower,$upper)"/><!--
+                  --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
                 <xsl:call-template name="drawbox">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
-                  <xsl:with-param name="boxtext" select="translate(@id,$lower,$upper)"/>
+                  <xsl:with-param name="boxtext" select="$box_text"/>
                   <xsl:with-param name="xbase" select="200"/>
                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
                 </xsl:call-template>
@@ -505,7 +506,7 @@ These components are identified in the following table:
             </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates select="cc:mod-def"/>     
+          <xsl:apply-templates select="cc:mod-def"/>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
@@ -609,7 +610,7 @@ These components are identified in the following table:
     <xsl:element name="rect">
       <xsl:attribute name="x"><xsl:value-of select="$xbase + 2"/></xsl:attribute>
       <xsl:attribute name="y"><xsl:value-of select="$ybase + 11"/></xsl:attribute>
-      <xsl:attribute name="width">90</xsl:attribute>
+      <xsl:attribute name="width">120</xsl:attribute>
       <xsl:attribute name="height">16</xsl:attribute>
       <xsl:attribute name="fill">none</xsl:attribute>
       <xsl:attribute name="stroke">black</xsl:attribute> 
