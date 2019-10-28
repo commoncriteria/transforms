@@ -147,6 +147,8 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <zeroOrMore><ref name="html-element"/></zeroOrMore>
         </element>
       </optional>
+      <ref name="IntroductionChapter"/>
+
       <oneOrMore>
         <element name="chapter">
           <a:documentation>Major grouping for the document.</a:documentation>
@@ -157,24 +159,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             <choice>
               <ref name="basic-content-pat"/>
               <ref name="section"/>
-              <element name="cclaims">
-                <a:documentation>
-                  Container element for the individual Conformance Claims.
-                </a:documentation>
-                <oneOrMore>
-                  <element name="cclaim">
-                    <a:documentation>
-                      Element containing a description of Conformance claims. See CCPART1 section A.5.
-                    </a:documentation>
-                    <attribute name="id">
-                      <a:documentation>
-                        This is really the title of the section.
-                      </a:documentation>
-                    </attribute>
-                    <ref name="description"/>
-                  </element>
-                </oneOrMore>
-              </element>
             </choice>
           </oneOrMore>
         </element>
@@ -190,6 +174,20 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       </optional>
     </element>
   </start>
+  
+  <define name="IntroductionChapter">
+      <element name="chapter">
+        <attribute name="title"/>
+        <attribute name="id"/>
+        <ref name="boilerplate-no-attr"/>
+        <ref name="section"/>
+        <ref name="tech-terms"/>
+        <oneOrMore>
+          <ref name="section"/>
+        </oneOrMore>
+        </element>
+  </define>
+
 
 
   <define name="appendix-pat">

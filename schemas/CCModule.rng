@@ -557,13 +557,6 @@ Defines SFRs that pertain to specific base.
     </element>
   </define>
 
-
-
-
-
-
-
-
   <define name="IntroductionChapter">
     <element name="chapter">
       <a:documentation>
@@ -577,17 +570,7 @@ Defines SFRs that pertain to specific base.
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
       </element>
-      <element name="tech-terms">
-	<a:documentation>
-	</a:documentation>
-        <zeroOrMore>
-          <element name="term">
-            <attribute name="full"/>
-            <optional><attribute name="abbr"/></optional>
-            <ref name="basic-content-pat"/>
-          </element>
-        </zeroOrMore>
-      </element>
+      <ref name="tech-terms"/>
       <element name="section">
 	<a:documentation>
 	</a:documentation>
