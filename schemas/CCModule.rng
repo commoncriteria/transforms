@@ -536,27 +536,6 @@ Defines SFRs that pertain to specific base.
 
 
 
-  <define name="CClaimsChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Conformance Claims</value></attribute>
-      <ref name="id-attr"/>
-      <element name="cclaims">
-	<a:documentation>
-	</a:documentation>
-	<oneOrMore>
-	  <element name="cclaim">
-	    <a:documentation>
-	    </a:documentation>
-	    <ref name="title-attr"/>
-	    <ref name="description"/>
-	  </element>
-	</oneOrMore>
-      </element>
-    </element>
-  </define>
-
   <define name="IntroductionChapter">
     <element name="chapter">
       <a:documentation>

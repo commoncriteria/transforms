@@ -766,6 +766,28 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
+  <define name="CClaimsChapter">
+    <element name="chapter">
+      <a:documentation>
+      </a:documentation>
+      <attribute name="title"><value>Conformance Claims</value></attribute>
+      <ref name="id-attr"/>
+      <element name="cclaims">
+	<a:documentation>
+	</a:documentation>
+	<oneOrMore>
+	  <element name="cclaim">
+	    <a:documentation>
+	    </a:documentation>
+	    <ref name="title-attr"/>
+	    <ref name="description"/>
+	  </element>
+	</oneOrMore>
+      </element>
+    </element>
+  </define>
+
+
 
   <define name="management-function-set">
     <element name="management-function-set">

@@ -148,7 +148,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         </element>
       </optional>
       <ref name="IntroductionChapter"/>
-
+      <ref name="CClaimsChapter"/>
       <oneOrMore>
         <element name="chapter">
           <a:documentation>Major grouping for the document.</a:documentation>

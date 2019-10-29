@@ -998,7 +998,7 @@ function showTarget(id){
   <xsl:template name="el-id">
          <xsl:param name="el"/><!--
             --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/><!--
+            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element|preceding-sibling::cc:a-element)+1"/><!--
             --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
             --></xsl:template>
  
