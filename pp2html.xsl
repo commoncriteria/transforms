@@ -475,7 +475,7 @@
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
       <xsl:variable name="reqid"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
-         </xsl:call-template></xsl:variable>
+         </xsl:call-template><xsl:value-of select="$type"/></xsl:variable>
       <div class="reqid" id="{$reqid}">
         <a href="#{$reqid}" class="abbr">
           <xsl:value-of select="$reqid"/>
