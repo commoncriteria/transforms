@@ -106,7 +106,7 @@
         <th>Acronym</th>
         <th>Meaning</th>
       </tr>
-      <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]">
+      <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
         <tr>
             <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
