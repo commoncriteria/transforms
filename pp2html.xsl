@@ -107,6 +107,7 @@
         <th>Meaning</th>
       </tr>
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]">
+        <xsl:sort select="@abbr"/>
         <tr>
             <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>

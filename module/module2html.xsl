@@ -346,23 +346,6 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
   </xsl:template>
 
-  <xsl:template match="cc:acronyms">
-    <xsl:text>&#10;</xsl:text>
-    <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
-    <table>
-      <tr class="header">
-        <th>Acronym</th>
-        <th>Meaning</th>
-      </tr>
-      <xsl:for-each select="cc:entry">
-        <tr>
-	  <xsl:for-each select="cc:*"><td><xsl:apply-templates/></td></xsl:for-each>
-        </tr>
-      </xsl:for-each>
-    </table>
-  </xsl:template>
-
-
   <xsl:template name="man-sfrs">
     <h2 id="man-sfrs" class="indexable" data-level="2">TOE Security Functional Requirements</h2>
     <xsl:choose>
