@@ -61,13 +61,16 @@ class State:
                     self.classmap[clazz]=[el]
 
     def build_comp_regex(self):
-        if not 'comp' in self.classmap:
-            return
-        comps = self.classmap['comp']
+        comps = []
+        if 'reqid' in self.classmap:
+            comps = comps + self.classmap['reqid']
+        if 'comp' in self.classmap:
+            comps = comps + self.classmap['comp']
         regexstr="\\b("
         for comp in comps:
             regexstr=regexstr + backslashify(comp.attrib["id"]) + "|"
-        self.comp_regex=re.compile(regexstr[:-1]+")\\b")
+        print("Looing for " + regexstr)
+        self.comp_regex=re.compile(regexstr[:-1]+")\\b", re.IGNORECASE)
 
     def build_termtable(self):
         if not 'term' in self.classmap:
@@ -96,15 +99,10 @@ class State:
          # No tags in tags.
          if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
             "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or"h4" in self.ancestors:
-#         if not self.can_contain_abbrs(text):
              return escape(text)
          ret = escape(text)
          ret = re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', ret)
-         # Do we have to uppercase this?
-         # print("Looking for "+self.comp_regex)
-
-
-         ret = self.comp_regex.sub( r'QQQQ<a href="#\1">\1</a>', ret)
+         ret = self.comp_regex.sub( r'<a href="#\1">\1</a>', ret)
          return ret
 
 
