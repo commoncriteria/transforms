@@ -29,6 +29,10 @@ def get_appendix_prefix(num):
     ABC=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
     return ABC[num] 
 
+def backslashify(phrase):
+    return re.sub("([_.^])", r"\\\1", phrase)
+
+
 class State:
     def __init__(self, root):
         self.root = root
@@ -36,7 +40,7 @@ class State:
         self.create_classmapping()
         self.period_ctr = 0
         self.abbr_regex="a^"
-
+        self.comp_regex="a^"
 
     def create_classmapping(self):
         self.classmap={}
@@ -56,6 +60,14 @@ class State:
                 else:
                     self.classmap[clazz]=[el]
 
+    def build_comp_regex(self):
+        if not 'comp' in self.classmap:
+            return
+        comps = self.classmap['comp']
+        regexstr="\\b("
+        for comp in comps:
+            regexstr=regexstr + backslashify(comp.attrib["id"]) + "|"
+        self.comp_regex=re.compile(regexstr[:-1]+")\\b")
 
     def build_termtable(self):
         if not 'term' in self.classmap:
@@ -86,7 +98,14 @@ class State:
             "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or"h4" in self.ancestors:
 #         if not self.can_contain_abbrs(text):
              return escape(text)
-         return re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', escape(text))
+         ret = escape(text)
+         ret = re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', ret)
+         # Do we have to uppercase this?
+         # print("Looking for "+self.comp_regex)
+
+
+         ret = self.comp_regex.sub( r'QQQQ<a href="#\1">\1</a>', ret)
+         return ret
 
 
 #        ret=""
@@ -282,6 +301,7 @@ if __name__ == "__main__":
     state.fix_counters()
     state.fix_tooltips()
     state.build_termtable()
+    state.build_comp_regex()
     with open(outfile, "w+", encoding="utf-8") as outstream:
         outstream.write(state.to_html())
 

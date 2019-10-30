@@ -341,10 +341,16 @@
   </xsl:template>
 
 
+  <xsl:template match="cc:f-component" mode="id">
+    <xsl:value-of select="translate(@id, $lower, $upper)"/>
+    <xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if>
+  </xsl:template>
+  
   <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component">
+    <xsl:message><xsl:apply-templates select="." mode="id"/></xsl:message>
     <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
         --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
 
@@ -411,10 +417,9 @@
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize-nofilter">
-    <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
-        --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
+    <xsl:variable name="full_id"><xsl:apply-templates select="." mode="id"/></xsl:variable>
 
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
+    <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
     <xsl:if test="@status='objective' and @targetdate">
