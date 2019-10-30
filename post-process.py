@@ -56,6 +56,7 @@ class State:
                 else:
                     self.classmap[clazz]=[el]
 
+
     def build_termtable(self):
         if not 'term' in self.classmap:
             return
