@@ -60,9 +60,11 @@ class State:
         if not 'term' in self.classmap:
             return
         terms = self.classmap['term']
-        regexstr="\\b("
+#        regexstr="\\b("
+        regexstr="(?<!-)\\b("
         for term in terms:
             regexstr=regexstr + term.text +"|"
+#        self.abbr_regex=regexstr[:-1]+")\\b"
         self.abbr_regex=regexstr[:-1]+")\\b"
 
     def to_html(self):
