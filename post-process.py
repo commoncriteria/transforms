@@ -101,7 +101,8 @@ class State:
 #           or parent.tag=="style":
          # No tags in tags.
          if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
-            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or"h4" in self.ancestors:
+            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
+            "h4" in self.ancestors or "noabbr" in self.ancestors:
              return escape(text)
          ret = escape(text)
          ret = re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', ret)
@@ -129,7 +130,12 @@ class State:
         # Breaks elements are converted to empty tags
         if noname=="br":
             return "<br/>"
-        self.ancestors.append(noname)
+        if "class" in elem.attrib and elem.attrib["class"]=='noabbr':
+            self.ancestors.append("noabbr")
+#        if noname=="span" and len(elem)==0 and elem.text is None:
+#            return "JJJ"
+        else:
+            self.ancestors.append(noname)
         # Everything else is beginning and end tags (even if they're empty)
         ret="<" + noname
         for attrname in elem.attrib:
