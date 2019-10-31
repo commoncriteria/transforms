@@ -987,7 +987,15 @@ function showTarget(id){
 	<h2>Contents</h2>
 	<div class="toc" id="toc"/>
     </xsl:template>
-    
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:no-abbr">
+    <span class="no-abbr">
+        <xsl:apply-templates/>
+    </span>
+  </xsl:template>
+
  <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:cite">
