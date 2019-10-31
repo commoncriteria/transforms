@@ -407,24 +407,10 @@ Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <ref name="id-attr"/>
       <ref name="description"/>
-      <ref name="component-refers-pat"/>
+      <element name="addressed-by">
+        <ref name="basic-content-pat"/>
+      </element>
     </element>
-  </define>
-
-  <define name="component-refers-pat">
-    <oneOrMore>
-      <element name="component-refer">
-        <a:documentation>Cross-references a component.</a:documentation>
-          <attribute name="ref">
-            <a:documentation>
-              Id of the referenced component.
-            </a:documentation>
-            <ref name="comp-id-upper-respat"/>
-          </attribute>
-          <ref name="iteration-pat"/>
-          <empty/>
-        </element>
-      </oneOrMore>
   </define>
 
   <define name="basic-content-pat">

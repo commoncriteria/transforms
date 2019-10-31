@@ -68,8 +68,11 @@ class State:
             comps = comps + self.classmap['comp']
         regexstr="\\b("
         for comp in comps:
-            regexstr=regexstr + backslashify(comp.attrib["id"]) + "|"
-        print("Looing for " + regexstr)
+            if 'id' in comp.attrib:
+                regexstr=regexstr + backslashify(comp.attrib["id"]) + "|"
+            else:
+                # The MDF has some unorthodox items
+                print("Cannot find: something: "+comp.text )
         self.comp_regex=re.compile(regexstr[:-1]+")\\b", re.IGNORECASE)
 
     def build_termtable(self):
