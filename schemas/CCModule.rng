@@ -14,7 +14,9 @@
 	</a:documentation>
 	<ref name="id-attr"/>
 	<ref name="description"/>
-        <ref name="component-refers-pat"/>
+        <element name="addressed-by">
+          <ref name="basic-content-pat"/>
+        </element>
 	<ref name="consistency-rationale"/>
       </element>
     </define>

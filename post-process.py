@@ -73,6 +73,7 @@ class State:
             else:
                 # The MDF has some unorthodox items
                 print("Cannot find: something: "+comp.text )
+        print("Compiling regular expressions: " + regexstr[:-1]+")\\b")
         self.comp_regex=re.compile(regexstr[:-1]+")\\b", re.IGNORECASE)
 
     def build_termtable(self):
