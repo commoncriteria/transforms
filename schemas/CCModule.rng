@@ -284,8 +284,8 @@ Grouping for Security Objective for the Operation Environment entries.
       </zeroOrMore>
       <ref name="consistency-rationale"/>
       <ref name="ext-comp-extra-pat"/>
-      <ref name="audit-events-pat"/>
       <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
     </element>
   </define>
 
