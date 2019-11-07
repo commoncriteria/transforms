@@ -222,6 +222,23 @@
     </dl>
   </xsl:template>
 
+  <xsl:template match="audit-events">
+    <table border="1">
+    <tr><th>Requirement</th>
+        <th>Auditable Events</th>
+        <th>Additional Audit Record Contents</th></tr>
+    <xsl:for-each select="//cc:f-component">
+      <tr>
+         <td><xsl:value-of select="@id"/></td>
+         <td><xsl:if test="not(./cc:audit-event)">None</xsl:if>
+             <xsl:apply-templates select="cc:audit-event"/>
+         </td>
+         <td> Something</td>
+      </tr>
+    </xsl:for-each>
+    </table>
+  </xsl:template>
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:InsertSPDCorrespondence">
@@ -616,6 +633,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       </xsl:for-each>
  <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
       <span class="counter"><xsl:value-of select="$refid"/></span>
+      <xsl:apply-templates/>
     </a>
   </xsl:template>
 
@@ -665,7 +683,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template name="getPre">
+  <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre">
     <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
