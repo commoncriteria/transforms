@@ -377,14 +377,13 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             </choice>
           </attribute>
         </optional>
-
-
       </choice>
       <ref name="depends-pat"/>
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
     </element>
   </define> 
+
   <define name="subsection-pattern">
     <element name="subsection">
       <a:documentation>

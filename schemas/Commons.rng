@@ -5,9 +5,18 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-
-
-
+<!--
+  <define name="audit-event">
+    <a:documentation></a:documentation>
+    <element name="audit-event">
+      <element name="sfr>
+         <attribute name="ref"/>
+         <empty/>
+      </element>
+      <element name="
+    </element>
+  </define>
+-->
   <define name="title-attr">
     <a:documentation>
       Pattern for title attribute.
