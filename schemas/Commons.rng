@@ -144,7 +144,7 @@ If it's only an acronym make sure the text content is empty.
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
-        <ref name="basic-content-pat"/>
+        <ref name="description"/>
         <zeroOrMore>
           <element name="add-info">
             <ref name="basic-content-pat"/>
@@ -231,6 +231,7 @@ If it's only an acronym make sure the text content is empty.
           The unique ID of the object being referenced.
         </a:documentation>
       </attribute>
+      <text/>
     </element>
   </define>
 

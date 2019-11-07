@@ -222,14 +222,14 @@
     </dl>
   </xsl:template>
 
-  <xsl:template match="audit-events">
+  <xsl:template match="cc:audit-events">
     <table border="1">
     <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
       <tr>
-         <td><xsl:value-of select="@id"/></td>
+         <td><xsl:apply-templates select="." mode="getId"/></td>
          <td><xsl:if test="not(./cc:audit-event)">None</xsl:if>
              <xsl:apply-templates select="cc:audit-event"/>
          </td>
@@ -238,6 +238,8 @@
     </xsl:for-each>
     </table>
   </xsl:template>
+
+  
 
 <!-- ############### -->
 <!--            -->
