@@ -71,7 +71,7 @@ class State:
                 self.regex_str = self.regex_str + backslashify(comp.attrib["id"]) + "|"
             else:
                 # The MDF has some unorthodox items
-                print("Cannot find: something: "+comp.text )
+                print("Cannot find: "+comp.text )
 
     def build_termtable(self):
         if not 'term' in self.classmap:
@@ -82,6 +82,7 @@ class State:
             self.abbrs.append(term.text)
 
     def to_html(self):
+        self.regex=re.compile(self.regex_str[:-1]+")\\b")
         self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -100,10 +101,9 @@ class State:
             "h4" in self.ancestors or "no-abbr" in self.ancestors:
              return escape(text)
          etext = escape(text)
-         regex=re.compile(self.regex_str[:-1]+")\\b")
          last=0
          ret=""
-         for mat in regex.finditer(etext):
+         for mat in self.regex.finditer(etext):
              ret += etext[last:mat.start()]
              last = mat.end();
              if mat.group() in self.abbrs:
