@@ -238,6 +238,10 @@ Grouping for Security Objective for the Operation Environment entries.
         </attribute>
         <choice>
           <element name="mod-def">
+            <a:documentation>
+Modification definition. This text goes in the 
+'Extended Components Definitions'.
+            </a:documentation>
             <ref name="basic-content-pat"/>
           </element>
           <element name="fam-behavior">
