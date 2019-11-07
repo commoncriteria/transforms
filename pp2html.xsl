@@ -231,9 +231,11 @@
       <tr>
          <td><xsl:apply-templates select="." mode="getId"/></td>
          <td><xsl:if test="not(./cc:audit-event)">None</xsl:if>
-             <xsl:apply-templates select="cc:audit-event"/>
+             <xsl:apply-templates select="cc:audit-event/cc:description"/>
          </td>
-         <td> Something</td>
+         <td><xsl:if test="not(./cc:audit-event/cc:add-info)">-</xsl:if>
+             <xsl:apply-templates select="cc:audit-event/cc:add-info"/>
+         </td>
       </tr>
     </xsl:for-each>
     </table>
