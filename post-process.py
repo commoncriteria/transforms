@@ -39,8 +39,8 @@ class State:
         self.parent_map = {c:p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.period_ctr = 0
-        self.abbr_regex="a^"
-        self.comp_regex="a^"
+        self.abbrs = []
+        self.regex_str = "(?<!-)\\b("
 
     def create_classmapping(self):
         self.classmap={}
@@ -66,28 +66,23 @@ class State:
             comps = comps + self.classmap['reqid']
         if 'comp' in self.classmap:
             comps = comps + self.classmap['comp']
-        regexstr="\\b("
         for comp in comps:
             if 'id' in comp.attrib:
-                regexstr=regexstr + backslashify(comp.attrib["id"]) + "|"
+                self.regex_str = self.regex_str + backslashify(comp.attrib["id"]) + "|"
             else:
                 # The MDF has some unorthodox items
-                print("Cannot find: something: "+comp.text )
-        print("Compiling regular expressions: " + regexstr[:-1]+")\\b")
-        self.comp_regex=re.compile(regexstr[:-1]+")\\b", re.IGNORECASE)
+                print("Cannot find: "+comp.text )
 
     def build_termtable(self):
         if not 'term' in self.classmap:
             return
         terms = self.classmap['term']
-#        regexstr="\\b("
-        regexstr="(?<!-)\\b("
         for term in terms:
-            regexstr=regexstr + term.text +"|"
-#        self.abbr_regex=regexstr[:-1]+")\\b"
-        self.abbr_regex=regexstr[:-1]+")\\b"
+            self.regex_str=self.regex_str + term.text +"|"
+            self.abbrs.append(term.text)
 
     def to_html(self):
+        self.regex=re.compile(self.regex_str[:-1]+")\\b")
         self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -105,9 +100,17 @@ class State:
             "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
             "h4" in self.ancestors or "no-abbr" in self.ancestors:
              return escape(text)
-         ret = escape(text)
-         ret = re.sub(self.abbr_regex, r'<abbr class="dyn-abbr"><a href="#abbr_\1">\1</a></abbr>', ret)
-         ret = self.comp_regex.sub( r'<a href="#\1">\1</a>', ret)
+         etext = escape(text)
+         last=0
+         ret=""
+         for mat in self.regex.finditer(etext):
+             ret += etext[last:mat.start()]
+             last = mat.end();
+             if mat.group() in self.abbrs:
+                ret+='<abbr class="dyn-abbr"><a href="#abbr_'+mat.group()+'">'+mat.group()+'</a></abbr>'
+             else:
+                ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a></abbr>'
+         ret+=etext[last:]
          return ret
 
 

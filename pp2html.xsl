@@ -303,19 +303,24 @@
     </xsl:if>
   </xsl:template>
 
-
-  <xsl:template match="cc:f-component" mode="id">
-    <xsl:value-of select="translate(@id, $lower, $upper)"/>
+  <!-- ############################################################
+           Gets the ID for the f-component or f-element
+       ############################################################-->
+  <xsl:template match="cc:f-component|cc:f-element" mode="getId">
+    <xsl:variable name="baseID"><xsl:choose>
+      <xsl:when test="name()='f-component'"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
     <xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if>
+    <xsl:if test="name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
   </xsl:template>
   
   <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component">
-    <xsl:message><xsl:apply-templates select="." mode="id"/></xsl:message>
-    <xsl:variable name="full_id"><xsl:value-of select="translate(@id, $lower, $upper)"/><!--
-        --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
+    <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
@@ -335,9 +340,8 @@
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:selection-depends">
             <b><i>
-              <xsl:call-template name="req-refs">
-                <xsl:with-param name="req" select="@req"/>
-              </xsl:call-template>
+              <xsl:variable name="refid" select="@req"/>
+              <xsl:apply-templates select="//cc:f-element[@id=$refid]" mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
             </i></b>
             </xsl:for-each>.
@@ -380,7 +384,7 @@
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize-nofilter">
-    <xsl:variable name="full_id"><xsl:apply-templates select="." mode="id"/></xsl:variable>
+    <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
@@ -419,17 +423,9 @@
   <xsl:template match="cc:f-element" >
     <div class="element">
 
-      <xsl:variable name="reqid"><xsl:call-template name="el-id">
-         <xsl:with-param name="el" select="."/>
-      </xsl:call-template></xsl:variable>
-
-      <xsl:variable name="html-id"><xsl:choose>
-        <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="$reqid"/></xsl:otherwise>
-      </xsl:choose></xsl:variable>
-
-      <div class="reqid" id="{$html-id}">
-        <a href="#{$html-id}" class="abbr"><xsl:value-of select="$reqid"/></a>
+      <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+      <div class="reqid" id="{$reqid}">
+        <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a>
       </div>
       <div class="reqdesc">
         <xsl:apply-templates/>
