@@ -406,17 +406,9 @@
   <xsl:template match="cc:f-element" >
     <div class="element">
 
-      <xsl:variable name="reqid"><xsl:call-template name="el-id">
-         <xsl:with-param name="el" select="."/>
-      </xsl:call-template></xsl:variable>
-
-      <xsl:variable name="html-id"><xsl:choose>
-        <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="$reqid"/></xsl:otherwise>
-      </xsl:choose></xsl:variable>
-
-      <div class="reqid" id="{$html-id}">
-        <a href="#{$html-id}" class="abbr"><xsl:value-of select="$reqid"/></a>
+      <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+      <div class="reqid" id="{$reqid}">
+        <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a>
       </div>
       <div class="reqdesc">
         <xsl:apply-templates/>
