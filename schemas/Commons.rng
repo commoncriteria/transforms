@@ -141,6 +141,18 @@ If it's only an acronym make sure the text content is empty.
     </element>
   </define>
 
+  <define name="audit-events-pat">
+    <zeroOrMore>
+      <element name="audit-event">
+        <ref name="basic-content-pat"/>
+        <optional>
+          <element name="add-info">
+            <ref name="basic-content-pat"/>
+          </element>
+        </optional>
+      </element>
+    </zeroOrMore>
+  </define>
 
   <define name="html-element">
     <a:documentation>

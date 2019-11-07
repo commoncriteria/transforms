@@ -381,6 +381,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <ref name="depends-pat"/>
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
     </element>
   </define> 
 
