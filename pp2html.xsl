@@ -223,6 +223,8 @@
   </xsl:template>
 
   <xsl:template match="cc:audit-events">
+    <xsl:variable name="table" select="@table"/>
+
     <table border="1">
     <tr><th>Requirement</th>
         <th>Auditable Events</th>
@@ -230,18 +232,30 @@
     <xsl:for-each select="//cc:f-component">
       <tr>
          <td><xsl:apply-templates select="." mode="getId"/></td>
-         <td><xsl:if test="not(./cc:audit-event)">None</xsl:if>
-             <xsl:apply-templates select="cc:audit-event/cc:description"/>
-         </td>
-         <td><xsl:if test="not(./cc:audit-event/cc:add-info)">-</xsl:if>
-             <xsl:apply-templates select="cc:audit-event/cc:add-info"/>
-         </td>
+         <xsl:choose>
+            <xsl:when test="not(./cc:audit-event[cc:table/@known=$table])">
+              <td>No events specified</td><td></td>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]" mode="intable"/>
+            </xsl:otherwise>
+         </xsl:choose>
       </tr>
     </xsl:for-each>
     </table>
   </xsl:template>
 
-  
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:audit-event" mode="intable">
+    <td>
+       <xsl:if test="@type='optional'">[OPTIONAL]</xsl:if>
+       <xsl:apply-templates select="cc:description"/>
+    </td>
+    <td><xsl:if test="not(cc:add-info)">-</xsl:if>
+             <xsl:apply-templates select="cc:add-info"/>
+    </td>
+  </xsl:template>
 
 <!-- ############### -->
 <!--            -->
