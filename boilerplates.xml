@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <boilerplate xmlns="https://niap-ccevs.org/cc/v1">
   <cc-terms>
+    <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <citeCC/>.</term>
     <term full="Common Criteria" abbr="CC">Common Criteria for Information Technology Security Evaluation.</term>
     <term full="Common Evaluation Methodology" abbr="CEM">Common Evaluation Methodology for Information Technology Security Evaluation.</term>
-    <term full="Extended Package" abbr="EP">An implementation-independent set of security requirements for a specific subset of products described.</term>
+    <term full="Distributed TOE">A TOE composed of multiple components operating as a logical whole.</term>
+    <term full="Operational Environment">Hardware and software that are outside the TOE boundary that support the TOE functionality and security policy.</term>
     <term full="Protection Profile" abbr="PP">An implementation-independent set of security requirements for a category of products.</term>
+    <term full="Protection Profile Configuration">A comprehensive set of security requirements for a product type that consists of at least one Base-PP and at least one PP-Module.</term>
+    <term full="Protection Profile Module" abbr="PP-Module">An implementation-independent statement of security needs for a TOE type complementary to one or more Base Protection Profiles.</term>
     <term full="Security Target" abbr="ST">A set of implementation-dependent security requirements for a specific product.</term>
-    <term full="Target of Evaluation" abbr="TOE">The product under evaluation. In this case, the Operating System as described in section Section 1.3.1 TOE Boundary and its supporting documentation.</term>
+    <term full="Target of Evaluation" abbr="TOE">The product under evaluation. </term>
     <term full="TOE Security Functionality" abbr="TSF">The security functionality of the product under evaluation.</term>
     <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in a ST.</term>
     <term full="Security Functional Requirement" abbr="SFR">A requirement for security enforcement by the TOE.</term>
