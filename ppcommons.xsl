@@ -990,8 +990,8 @@ function showTarget(id){
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:no-abbr">
-    <span class="no-abbr">
+  <xsl:template match="cc:no-link">
+    <span class="no-link">
         <xsl:apply-templates/>
     </span>
   </xsl:template>

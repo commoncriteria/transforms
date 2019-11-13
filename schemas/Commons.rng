@@ -480,7 +480,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="Guidance"/>
         <ref name="Tests"/>
         <ref name="wsn"/>
-        <element name="no-abbr">
+        <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
         </element>

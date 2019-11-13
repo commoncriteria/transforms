@@ -98,7 +98,7 @@ class State:
          # No tags in tags.
          if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
             "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
-            "h4" in self.ancestors or "no-abbr" in self.ancestors:
+            "h4" in self.ancestors or "no-link" in self.ancestors:
              return escape(text)
          etext = escape(text)
          last=0
@@ -134,8 +134,8 @@ class State:
         # Breaks elements are converted to empty tags
         if noname=="br":
             return "<br/>"
-        if "class" in elem.attrib and elem.attrib["class"]=='no-abbr':
-            self.ancestors.append("no-abbr")
+        if "class" in elem.attrib and elem.attrib["class"]=='no-link':
+            self.ancestors.append("no-link")
 #        if noname=="span" and len(elem)==0 and elem.text is None:
 #            return "JJJ"
         else:
