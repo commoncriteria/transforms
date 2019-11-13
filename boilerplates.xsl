@@ -136,31 +136,10 @@ if certain selections are made, then additional requirements below must be inclu
   </section>
   </xsl:template>
 
-  <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
-     This chapter describes the security requirements
-     which have to be fulfilled by the product under evaluation. Those requirements comprise functional
-     components from Part 2 and assurance components from Part 3 of <a href="#bibCC">[CC]</a>. The
-     following notations are used:
-     <ul>
-       <li>
-         <b>Refinement</b> operation (denoted by <b>bold text</b> or <strike>strikethrough
-         text</strike>): is used to add details to a requirement (including replacing an assignment
-         with a more restrictive selection) or to remove part of the requirement that is made irrelevant
-         through the completion of another operation, and thus further restricts a requirement.
-         </li>
-       <li>
-         <b>Selection</b> (denoted by <i>italicized text</i>): is used to select one or more options
-         provided by the [CC] in stating a requirement.</li>
-       <li>
-         <b>Assignment</b> operation (denoted by <span class="assignable-content">italicized text</span>): is used to assign a
-         specific value to an unspecified parameter, such as the length of a password. Showing the
-         value in square brackets indicates assignment.</li>
-       <li>
-         <b>Iteration</b> operation: are identified with a number inside parentheses (e.g.
-         "(1)")</li>
-     </ul>
-  </xsl:template>
+      <xsl:apply-templates  select="document('boilerplates.xml')//cc:subsection[@title='Security Requirements']"/>
+   </xsl:template>
+
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
     <xsl:choose>
