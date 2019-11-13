@@ -231,9 +231,7 @@ Grouping for Security Objective for the Operation Environment entries.
           Extended Component Definition
         </a:documentation>
         <attribute name="fam-id">
-           <data type="string">
-             <param name="pattern">F[A-Z][A-Z]_[A-Z]{2,5}_EXT</param>
-           </data>
+          <ref name="fam-id-spat"/>
         </attribute>
         <attribute name="title">
         </attribute>

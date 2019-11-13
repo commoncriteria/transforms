@@ -755,16 +755,21 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </data>
   </define>
 
+  <define name="fam-id-spat">
+     <data type="string">
+       <param name="pattern">F[A-Z][A-Z]_[A-Z0-9^]{2,10}_EXT</param>
+     </data>
+  </define>
 
   <define name="comp-id-respat">
     <data type="string">
-      <param name="pattern">f[a-z]{2}_[a-z0-9^]{2,5}(_ext)?\.[0-9]</param>
+      <param name="pattern">f[a-z]{2}_[a-z0-9^]{2,10}(_ext)?\.[0-9]</param>
     </data>
   </define>
 
   <define name="comp-id-upper-respat">
     <data type="string">
-      <param name="pattern">F[A-Z]{2}_[A-Z0-9^]{2,5}(_EXT)?\.[0-9]</param>
+      <param name="pattern">F[A-Z]{2}_[A-Z0-9^]{2,10}(_EXT)?\.[0-9]</param>
     </data>
   </define>
 
