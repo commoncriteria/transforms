@@ -435,7 +435,7 @@ including those used in Appendices A through C.
  
  
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
-This Appendix provides a definition for all of the extended components introduced
+This appendix provides a definition for all of the extended components introduced
 in this PP-Module.
 These components are identified in the following table:
 
