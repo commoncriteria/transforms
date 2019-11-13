@@ -313,11 +313,11 @@
     <xsl:param name="type"/>
     <xsl:if test="./cc:a-element[@type=$type]">
         <h4><xsl:choose>
-         <xsl:when test="$type='D'">Developer action</xsl:when>
-         <xsl:when test="$type='C'">Content and presentation</xsl:when>
-         <xsl:when test="$type='E'">Evaluator action</xsl:when>
-     </xsl:choose> elements: </h4>
-    <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
+           <xsl:when test="$type='D'">Developer action</xsl:when>
+           <xsl:when test="$type='C'">Content and presentation</xsl:when>
+           <xsl:when test="$type='E'">Evaluator action</xsl:when>
+        </xsl:choose> elements: </h4>
+        <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
     </xsl:if>
   </xsl:template>
 
@@ -333,7 +333,19 @@
     <xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if>
     <xsl:if test="name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
   </xsl:template>
-  
+
+  <!-- ############################################################
+           Gets the ID for the a-component or a-element
+       ############################################################-->
+  <xsl:template match="cc:a-component|cc:a-element" mode="getId">
+    <xsl:variable name="baseID"><xsl:choose>
+      <xsl:when test="name()='a-component'"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
+    <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/></xsl:if>
+  </xsl:template>
+
   <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->
@@ -456,8 +468,7 @@
   <xsl:template match="cc:a-element" >
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
-      <xsl:variable name="reqid"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
-         </xsl:call-template><xsl:value-of select="$type"/></xsl:variable>
+      <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
       <div class="reqid" id="{$reqid}">
         <a href="#{$reqid}" class="abbr">
           <xsl:value-of select="$reqid"/>

@@ -493,8 +493,7 @@ These components are identified in the following table:
         </xsl:otherwise>
       </xsl:choose>
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
-         <xsl:variable name="upId"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
-                </xsl:call-template></xsl:variable>
+         <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
@@ -519,11 +518,7 @@ These components are identified in the following table:
          </p>
 
          <xsl:for-each select="cc:f-element">
-            <xsl:variable name="reqid">
-               <xsl:call-template name="el-id">
-                  <xsl:with-param name="el" select="."/>
-               </xsl:call-template>
-            </xsl:variable>
+            <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
             <h3> <xsl:value-of select="translate($reqid, $lower,$upper)"/> </h3><br/>
                  <xsl:apply-templates select="cc:title"/>
          </xsl:for-each>

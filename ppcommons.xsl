@@ -1002,12 +1002,5 @@ function showTarget(id){
     <xsl:variable name="linkend" select="@linkend"/>
     <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
   </xsl:template>
-
-  <xsl:template name="el-id">
-         <xsl:param name="el"/><!--
-            --><xsl:value-of select="translate(../@id, $lower, $upper)"/><!--
-            -->.<xsl:value-of select="count(preceding-sibling::cc:f-element|preceding-sibling::cc:a-element)+1"/><!--
-            --><xsl:if test="../@iteration">/<xsl:value-of select="../@iteration"/></xsl:if><!--
-            --></xsl:template>
  
 </xsl:stylesheet>
