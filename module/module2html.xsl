@@ -217,10 +217,11 @@
       	<xsl:for-each select="$f-comps">
       	  <xsl:variable name="compId" select="@id"/>
 	        <tr>
-	          <td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
+<!-- TODO: Theres probably more to do here. -->
+	          <td><xsl:apply-templates mode="getId" select="."/></td>
 		        <td>
 		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
+		          <xsl:when test="//cc:base-pp[@sh-ort=$short]//cc:con-mod[@id=$compId]">
 		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
 		          </xsl:when>
  		          <xsl:otherwise>
