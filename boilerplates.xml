@@ -18,7 +18,7 @@
   </cc-terms>
 
   <!-- ############## -->
-   <subsection title='Security Requirements'>
+   <empty title='Security Requirements'>
      This chapter describes the security requirements  which have to be fulfilled by the product under evaluation.
      Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <citeCC/>.
      The following notations are used:
@@ -41,5 +41,5 @@
             suggesting the purpose of the operation, e.g. "/EXAMPLE1".
        </li>
      </ul>
-   </subsection>
+   </empty>
 </boilerplate>
