@@ -234,17 +234,18 @@ The following sections provide both Common Criteria and technology terms used in
 
 
   <xsl:template match="cc:linkref">
-    <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
+    <xsl:variable name="linkend" select="@linkend"/>
     <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
-
     <xsl:if test="not(//*[@id=$linkendlower])">
-      <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/>
-      </xsl:message>
+      <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/></xsl:message>
     </xsl:if>
-    <xsl:value-of select="text()"/>
-    <a class="linkref" href="#{$linkend}">
-      <xsl:value-of select="$linkend"/>
-    </a>
+    <xsl:choose>
+      <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
+          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
+          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
+      </xsl:when>
+      <xsl:otherwise><a class="linkref" href="#{$linkend}"><xsl:value-of select="text()"/><xsl:value-of select="$linkend"/></a></xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="cc:testlist">

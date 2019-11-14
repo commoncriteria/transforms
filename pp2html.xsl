@@ -765,16 +765,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
     </xsl:element>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:linkref">
-    <xsl:call-template name="req-refs">
-      <xsl:with-param name="class">linkref</xsl:with-param>
-      <xsl:with-param name="req">
-        <xsl:value-of select="translate(@linkend, $upper, $lower)"/>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
 
 <!-- ############### -->
 <!--            -->
