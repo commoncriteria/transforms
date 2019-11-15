@@ -473,6 +473,8 @@ The following sections provide both Common Criteria and technology terms used in
   <!-- Consume all processing-instructions -->
   <xsl:template match="processing-instruction()"/>
 
+  <!-- Consume all of the following -->
+  <xsl:template match="cc:audit-event"/>
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->

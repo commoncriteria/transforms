@@ -233,11 +233,11 @@
       <tr>
          <td><xsl:apply-templates select="." mode="getId"/></td>
          <xsl:choose>
-            <xsl:when test="not(./cc:audit-event[cc:table/@known=$table])">
+            <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">
               <td>No events specified</td><td></td>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table] or cc:audit-event[cc:table/@other=$table]" mode="intable"/>
+              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table]" mode="intable"/>
             </xsl:otherwise>
          </xsl:choose>
       </tr>
