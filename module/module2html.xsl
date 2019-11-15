@@ -217,10 +217,11 @@
       	<xsl:for-each select="$f-comps">
       	  <xsl:variable name="compId" select="@id"/>
 	        <tr>
-	          <td><xsl:value-of select="translate(@id,$lower,$upper)"/></td>
+<!-- TODO: Theres probably more to do here. -->
+	          <td><xsl:apply-templates mode="getId" select="."/></td>
 		        <td>
 		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
+		          <xsl:when test="//cc:base-pp[@sh-ort=$short]//cc:con-mod[@id=$compId]">
 		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
 		          </xsl:when>
  		          <xsl:otherwise>
@@ -435,7 +436,7 @@ including those used in Appendices A through C.
  
  
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
-This Appendix provides a definition for all of the extended components introduced
+This appendix provides a definition for all of the extended components introduced
 in this PP-Module.
 These components are identified in the following table:
 
@@ -493,8 +494,7 @@ These components are identified in the following table:
         </xsl:otherwise>
       </xsl:choose>
       <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
-         <xsl:variable name="upId"><xsl:call-template name="el-id"><xsl:with-param name="el" select="."/>
-                </xsl:call-template></xsl:variable>
+         <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
@@ -519,11 +519,7 @@ These components are identified in the following table:
          </p>
 
          <xsl:for-each select="cc:f-element">
-            <xsl:variable name="reqid">
-               <xsl:call-template name="el-id">
-                  <xsl:with-param name="el" select="."/>
-               </xsl:call-template>
-            </xsl:variable>
+            <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
             <h3> <xsl:value-of select="translate($reqid, $lower,$upper)"/> </h3><br/>
                  <xsl:apply-templates select="cc:title"/>
          </xsl:for-each>

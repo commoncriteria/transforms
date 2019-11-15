@@ -240,8 +240,8 @@ guidance, and testing.</p>
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
     <p>The scope of the <x:value-of select="/cc:Module/@target-products"/> PP-Module is
-    to describe the security functionality of a
-      <x:value-of select="/cc:Module/@name"/> in terms of 
+    to describe the security functionality of 
+      <x:value-of select="/cc:Module/@name"/> products in terms of 
     [CC] and to define functional and assurance requirements for them.
     The PP-Module is intended for use with the
     <x:choose>

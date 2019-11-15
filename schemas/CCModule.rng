@@ -231,9 +231,7 @@ Grouping for Security Objective for the Operation Environment entries.
           Extended Component Definition
         </a:documentation>
         <attribute name="fam-id">
-           <data type="string">
-             <param name="pattern">F[A-Z][A-Z]_[A-Z]{2,5}_EXT</param>
-           </data>
+          <ref name="fam-id-spat"/>
         </attribute>
         <attribute name="title">
         </attribute>
@@ -414,24 +412,14 @@ The ID of the aspect that is being overwritten by the content of this element.
 Defines SFRs that pertain to specific base.
       	</a:documentation>
       	<ref name="title-attr"/>
-	      <ref name="id-attr"/>
+	<ref name="id-attr"/>
         <ref name="ext-comp-def-pat"/>
-	      <oneOrMore>
-	        <element name="f-component">
+        <oneOrMore>
+          <element name="f-component">
 	    <a:document>
 	      Specifies a component under Security Functional Requirements section..
 	    </a:document>
-	    <attribute name="id">
-	      <a:documentation>
-		A document-wide unique id. Not really read by a person, but it
-		should be the base for its child requirements' ids.
-	      </a:documentation>
-	    </attribute>
-	    <attribute name="name">
-	      <a:documentation>
-		Readable title for this requirement.
-	      </a:documentation>
-	    </attribute>
+            <ref name="f-comp-content-pat"/>
 	    <ref name="consistency-rationale"/>
       <ref name="ext-comp-extra-pat"/>
 	    <ref name="f-elements-pat"/>
