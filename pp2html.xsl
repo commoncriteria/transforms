@@ -237,7 +237,7 @@
               <td>No events specified</td><td></td>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]" mode="intable"/>
+              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table] or cc:audit-event[cc:table/@other=$table]" mode="intable"/>
             </xsl:otherwise>
          </xsl:choose>
       </tr>

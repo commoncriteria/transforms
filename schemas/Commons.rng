@@ -158,7 +158,7 @@ If it will go some other table, set the text content to the table name.
                         <value>objective</value>
                         <value>sel-based</value>
                 </choice></attribute>
-                <text/>
+                <attribute name="other"/>
             </choice>
           </element>
         <ref name="description"/>
