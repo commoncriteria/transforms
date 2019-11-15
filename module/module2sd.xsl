@@ -51,7 +51,7 @@ XSL for Protection Profile Modules
       <p/><b><x:value-of select="//cc:PPAuthor"/></b>
       </div>
   </x:template>
-  
+
 
   <x:template name="toc">
     <h1>Table of Contents</h1>
@@ -385,28 +385,31 @@ guidance, and testing.</p>
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
       <h4>
-	<x:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
-	<x:value-of select="@name"/>
+	<x:value-of select="concat(translate(@id, $lower, $upper), ' ', @name)"/>
       </h4>
-  <x:if test=".//cc:aactivity/cc:no-tests">
-      <x:apply-templates select=".//cc:aactivity"/>
-  </x:if>
-  <x:if test=".//cc:TSS">
-      <div class="eacategory">TSS</div>
-      <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
-  </x:if>
-  <x:if test=".//cc:Guidance">
-      <div class="eacategory">Guidance</div>
-      <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
-  </x:if>
-  <x:if test=".//cc:Tests">
-      <div class="eacategory">Tests</div>
-      <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
-  </x:if>
-
+      <x:choose>
+         <x:when test=".//cc:aactivity/cc:no-tests">
+           <x:apply-templates select=".//cc:aactivity"/>
+         </x:when>
+         <x:otherwise>
+           <x:if test=".//cc:TSS">
+             <div class="eacategory">TSS</div>
+             <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
+           </x:if>
+           <x:if test=".//cc:Guidance">
+             <x:message>Thig <x:value-of select="concat(@name, '::', count(.//cc:Guidance))"/></x:message>
+             <div class="eacategory">Guidance</div>
+             <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
+           </x:if>
+           <x:if test=".//cc:Tests">
+             <div class="eacategory">Tests</div>
+             <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
+           </x:if>
+        </x:otherwise>
+      </x:choose>
     </div>
-
   </x:template>
+
 
 <!--  <x:template match="cc:testlist">
        <b>Test Set
@@ -424,6 +427,11 @@ guidance, and testing.</p>
 
   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 
+  <!-- We're explicity grabbing these all, so ground anytime we run into them -->
+  <x:template match="cc:aactivity"/>
+  <x:template match="cc:Guidance">
+    <x:message>TTTT</x:message>
+  </x:template>
 
   <!-- Ground all extend component definitions-->
   <x:template match="cc:ext-comp-def"/>

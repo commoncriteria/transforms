@@ -484,6 +484,7 @@ The following sections provide both Common Criteria and technology terms used in
        By default, quietly unwrap all cc elements that are otherwise unmatched
   -->
   <xsl:template match="cc:*">
+    <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
     <xsl:if test="contains($debug,'vv')">
       <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
     </xsl:if>
