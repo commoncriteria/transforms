@@ -397,7 +397,6 @@ guidance, and testing.</p>
              <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
            </x:if>
            <x:if test=".//cc:Guidance">
-             <x:message>Thig <x:value-of select="concat(@name, '::', count(.//cc:Guidance))"/></x:message>
              <div class="eacategory">Guidance</div>
              <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
            </x:if>
