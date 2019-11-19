@@ -136,8 +136,13 @@ if certain selections are made, then additional requirements below must be inclu
   </section>
   </xsl:template>
 
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
-      <xsl:apply-templates  select="document('boilerplates.xml')//cc:subsection[@title='Security Requirements']"/>
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']|/cc:module//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
+      <xsl:choose>
+         <xsl:when test="@boilerplate='no'"/>
+         <xsl:otherwise>
+           <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
 
 
