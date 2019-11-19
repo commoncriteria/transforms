@@ -221,7 +221,7 @@
 	          <td><xsl:apply-templates mode="getId" select="."/></td>
 		        <td>
 		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@sh-ort=$short]//cc:con-mod[@id=$compId]">
+		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
 		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
 		          </xsl:when>
  		          <xsl:otherwise>
