@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-""" 
+"""
 Module that fixes internal references and counters (which are hard to do
 with XSLT).
 """
 
-from io import StringIO 
+from io import StringIO
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -27,7 +27,7 @@ def get_appendix_prefix(num):
     if num > 26:
         err("Cannot handle more than 26 appendices")
     ABC=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-    return ABC[num] 
+    return ABC[num]
 
 def backslashify(phrase):
     return re.sub("([_.^])", r"\\\1", phrase)
@@ -53,7 +53,7 @@ class State:
                     # Grab the old
                     clazzset = self.classmap[clazz]
                     # We're working with a list here, not a set
-                    # Should really only not meet this if the 
+                    # Should really only not meet this if the
                     # input document has an element where a class is listed twice
                     if not el in clazzset:
                         clazzset.append(el)
@@ -240,7 +240,7 @@ class State:
             # If we have to pad out
             while level > len(inums):
                 inums.append(0)
-            # If we go up one set 
+            # If we go up one set
             if level+1 < len(inums):
                 inums[level+1]=0
 
@@ -287,7 +287,7 @@ def getalltext(elem):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        #        0                        1           
+        #        0                        1
         print("Usage: <protection-profile>[=<output-file>]")
         sys.exit(0)
 
@@ -313,6 +313,10 @@ if __name__ == "__main__":
     state.fix_tooltips()
     state.build_termtable()
     state.build_comp_regex()
+if sys.version_info >= (3, 0):
     with open(outfile, "w+", encoding="utf-8") as outstream:
         outstream.write(state.to_html())
+else:
+    with open(outfile, "w+") as outstream:
+        outstream.write(state.to_html().encode('utf-8'))
 
