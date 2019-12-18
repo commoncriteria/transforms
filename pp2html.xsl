@@ -148,7 +148,7 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
-  
+
 <!-- ############### -->
 <!-- Appears           -->
   <xsl:template match="cc:if-opt-app">
@@ -191,19 +191,24 @@
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:SOs">
-    <dl>
-      <xsl:for-each select="cc:SO">
-        <dt>
-          <xsl:value-of select="@id"/>
-        </dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-          <p/> Addressed by: <span class="SOlist">
-            <xsl:apply-templates select="cc:addressed-by"/>
-          </span>
-          <xsl:apply-templates select="cc:appnote"/></dd>
-      </xsl:for-each>
-    </dl>
+    <xsl:choose>
+      <xsl:when test="cc:SO[cc:description]">
+        <dl>
+          <xsl:for-each select="cc:SO[cc:description]">
+            <dt><xsl:value-of select="@id"/></dt>
+            <dd>
+              <p><xsl:apply-templates select="cc:description"/></p>
+              Addressed by: <span class="SOlist">
+                <xsl:apply-templates select="cc:addressed-by"/>
+              </span>
+            <xsl:apply-templates select="cc:appnote"/></dd>
+          </xsl:for-each>
+        </dl>
+      </xsl:when>
+      <xsl:otherwise>
+        This CC-Module does not define any new security objectives.
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 <!-- ############### -->
@@ -384,7 +389,7 @@
       </xsl:if>
       <xsl:if test="./cc:depends[@on='implements']">
         <div class="statustag">
-          <i><b>This is an implementation-based component. 
+          <i><b>This is an implementation-based component.
                 Its inclusion depends on whether the TOE implements one (or more) of
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
@@ -483,7 +488,7 @@
     </div>
   </xsl:template>
 
-  
+
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:foreword">
@@ -605,7 +610,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
-  
+
 <!-- ############### -->
 <!--                 -->
   <xsl:template match="cc:appendix">
@@ -839,7 +844,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 
 
-  
+
   <!-- identity transform - useful for debugging -->
 
 <!-- ############### -->
