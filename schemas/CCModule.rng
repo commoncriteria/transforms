@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-          ns="https://niap-ccevs.org/cc/v1" 
+          ns="https://niap-ccevs.org/cc/v1"
           datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
           xmlns:h="http://www.w3.org/1999/xhtml"
           xmlns="http://relaxng.org/ns/structure/1.0"
 >
 
   <include href="Commons.rng">
+
     <define name="SO">
       <element name="SO">
-	<a:documentation>
+    <a:documentation>
 	  Entry for a security objective
 	</a:documentation>
 	<ref name="id-attr"/>
-	<ref name="description"/>
+    <choice>
+        <ref name="description"/>
+        <oneOrMore>
+          <element name="from-base">
+            <optional><attribute name="ref"/></optional>
+          </element>
+        </oneOrMore>
+    </choice>
         <element name="addressed-by">
           <ref name="basic-content-pat"/>
         </element>
@@ -135,7 +143,7 @@ Grouping for Security Objective for the Operation Environment entries.
     <attribute name="target-products"></attribute>
     <ref name="boilerplate-pat"/>
   </define>
-  
+
   <define name="SecReqChapter">
     <element name="chapter">
       <a:documentation>
@@ -153,7 +161,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <ref name="obj-sfrs"/>
     </element>
   </define>
-  
+
   <define name="man-sfrs">
     <element name="man-sfrs">
       <a:documentation>
@@ -190,8 +198,8 @@ Grouping for Security Objective for the Operation Environment entries.
 	Selection-based SFRs. These can apply to any configuration regardless of base PPs.
       </a:documentation>
       <ref name="f-components-pat"/>
-      <!-- 
-	   This is probably the right way to do it, but 
+      <!--
+	   This is probably the right way to do it, but
 	   it's too drastic of a change currently (and
 	   removing the selection-depends elements from
 	   inside the f-components).
@@ -238,7 +246,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <choice>
           <element name="mod-def">
             <a:documentation>
-Modification definition. This text goes in the 
+Modification definition. This text goes in the
 'Extended Components Definitions'.
             </a:documentation>
             <ref name="basic-content-pat"/>
@@ -320,13 +328,13 @@ Modification definition. This text goes in the
 	  Short name of the base PP.
 	</a:documentation>
       </attribute>
-      
+
       <attribute name="url">
 	<a:documentation>
 	  URL of the NIAP page for the base PP.
 	</a:documentation>
       </attribute>
-      
+
       <attribute name="xmlurl">
 	<a:documentation>
 	  URL of the XML defining the base PP. Ideally it should be NIAP or CC, but for right now it's probably on github.
@@ -339,7 +347,7 @@ Content for the intro to Security Function Requirements Direction section. Repla
            </a:documentation>
            <ref name="basic-content-pat"/>
         </element>
-         
+
       </optional>
       <optional>
         <element name="app-unmod-sfrs">
@@ -349,7 +357,7 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
            <ref name="basic-content-pat"/>
         </element>
       </optional>
-      
+
       <element name="modified-sfrs">
 	<a:documentation>
 	  SFRs that modify SFRs from the base PP.
@@ -391,7 +399,7 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
         	<a:documentation>
 Consistency Rationale Modification. Allows a base to specify rationale that is specific to itself. Linked via the ID attribute.
 	        </a:documentation>
-        
+
           <attribute name="id">
         	<a:documentation>
 The ID of the aspect that is being overwritten by the content of this element.
@@ -447,7 +455,7 @@ Defines SFRs that pertain to specific base.
 	<ref name="id-attr"/>
 	<ref name="SOs"/>
       </element>
-      <element name="section"> 
+      <element name="section">
 	<a:documentation>
 	  Section describing the Security Objectives for the TOE's Operational Environment.
 	</a:documentation>
@@ -490,7 +498,7 @@ Defines SFRs that pertain to specific base.
 	    <element name="threat">
 	      <a:documentation>
 		Omitting the description supresses the threat from being included in the
-		threat section (but it will still be included in the security objectives 
+		threat section (but it will still be included in the security objectives
 		rationale table).
 	      </a:documentation>
 	      <ref name="id-attr"/>
@@ -628,7 +636,7 @@ Referrable section on how the protection profiled item is used.
 
   <define name="consistency-rationale">
     <element name="consistency-rationale">
-      <a:documentation> 
+      <a:documentation>
 	Common rationale that will go into the consisteny-rationale in each base-pp
 	section (unless the base redefines it).
       </a:documentation>
