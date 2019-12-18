@@ -12,7 +12,7 @@
 
   <!-- Directory where the base PPs currently reside (with the names 0.xml, 1.xml,...)-->
   <xsl:param name="basesdir"/>
-  
+
   <!-- Value on whether this is the formal release build -->
   <xsl:param name="release" select="final"/>
 
@@ -37,7 +37,7 @@
   </xsl:template>
 
 
- 
+
   <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
     <div class="eacategory"><xsl:value-of select="name()"/></div>
     <xsl:apply-templates/>
@@ -89,10 +89,10 @@
       </h3>
       <p>
       <xsl:apply-templates select="./cc:con-obj"/>
-      <xsl:if test="//cc:SO">
+      <xsl:if test="//cc:SO[cc:description]">
 	  The objectives for the TOEs are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
       <table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
-      <xsl:for-each select="//cc:SO">
+      <xsl:for-each select="//cc:SO[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
 	  <xsl:with-param name="orig" select="."/>
@@ -121,17 +121,17 @@
 	Consistency of Requirements
       </h3>
       <xsl:apply-templates select="./cc:con-req"/>
-      This PP-Module identifies several SFRs from the 
-      <xsl:value-of select="$base/@short"/> PP that are needed to support 
+      This PP-Module identifies several SFRs from the
+      <xsl:value-of select="$base/@short"/> PP that are needed to support
       <xsl:value-of select="/cc:Module/@target-products"/> functionality.
-      This is considered to be consistent because the functionality provided by the 
+      This is considered to be consistent because the functionality provided by the
       <xsl:value-of select="$base/@short"/>  is being used for its intended purpose.
-      The PP-Module also identifies a number of modified SFRs from the 
+      The PP-Module also identifies a number of modified SFRs from the
       <xsl:value-of select="$base/@short"/> PP
-      as well as new SFRs that are used entirely to provide functionality for 
+      as well as new SFRs that are used entirely to provide functionality for
       <xsl:value-of select="/cc:Module/@target-products"/>.
-      The rationale for why this does not conflict with the claims 
-      defined by the 
+      The rationale for why this does not conflict with the claims
+      defined by the
       <xsl:value-of select="$base/@short"/> PP are as follows:
       <table>
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
@@ -140,7 +140,7 @@
 	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component"/>
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
-	    This PP-Module does not modify any requirements when the 
+	    This PP-Module does not modify any requirements when the
 	    <xsl:value-of select="$base/@short"/> PP is the base.
 	  </xsl:with-param>
 	</xsl:call-template>
@@ -153,7 +153,7 @@
 	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not add any requirements when the 
+	      This PP-Module does not add any requirements when the
 	      <xsl:value-of select="$base/@short"/> PP is the base.
 	    </xsl:with-param>
 	  </xsl:call-template>
@@ -231,7 +231,7 @@
 		          </xsl:otherwise>
 		          </xsl:choose>
 		          </td>
-		            
+
 	        </tr>
 	      </xsl:for-each>
       </xsl:when>
@@ -248,7 +248,7 @@
 <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
-      <xsl:value-of select="@short"/> 
+      <xsl:value-of select="@short"/>
       PP Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
@@ -273,7 +273,7 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@short"/> PP.
     </xsl:otherwise>
     </xsl:choose>
-    <!-- 
+    <!--
 	 If we have only one base PP, we should hide this section (so says NIAP).
 	 In that case there shouldn't be any additional-sfrs (but for some
 	 reason we're allowing it).
@@ -411,7 +411,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
   <xsl:template name="obj-sfrs">
     <h1 id="obj-sfrs" class="indexable" data-level="A">Objective SFRs</h1>
-    This section is reserved for requirements that are not currently prescribed by this PP-Module 
+    This section is reserved for requirements that are not currently prescribed by this PP-Module
     but are expected to be included in future versions of the PP-Module.
     Vendors planning on having evaluations performed against future products are encouraged
     to plan for these objective requirements to be met. <br/><br/>
@@ -433,8 +433,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
 This appendix contains the definitions for the extended requirements that are used in the PP-Module
 including those used in Appendices A through C.
- 
- 
+
+
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
 This appendix provides a definition for all of the extended components introduced
 in this PP-Module.
@@ -443,18 +443,18 @@ These components are identified in the following table:
 <table>
   <tr>
     <th>Functional Class</th><th>Functional Components</th>
-    
+
     <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
-         <xsl:for-each select="cc:ext-comp-def">      
+         <xsl:for-each select="cc:ext-comp-def">
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
          </td>
       </tr>
     </xsl:for-each>
   </tr>
-</table>  
-    
+</table>
+
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
     <xsl:for-each select="//cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
@@ -525,10 +525,10 @@ These components are identified in the following table:
          </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
-    
-    
+
+
   </xsl:template>
-    
+
 
 
   <xsl:template match="cc:base-name">
@@ -592,7 +592,7 @@ These components are identified in the following table:
       <xsl:attribute name="width">120</xsl:attribute>
       <xsl:attribute name="height">16</xsl:attribute>
       <xsl:attribute name="fill">none</xsl:attribute>
-      <xsl:attribute name="stroke">black</xsl:attribute> 
+      <xsl:attribute name="stroke">black</xsl:attribute>
     </xsl:element>
     <xsl:if test="$xbase>0">
       <xsl:element name="line">
