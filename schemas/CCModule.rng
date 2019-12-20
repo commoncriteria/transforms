@@ -233,7 +233,7 @@ Grouping for Security Objective for the Operation Environment entries.
   </define>
 
   <define name="ext-comp-def-pat">
-    <optional>
+    <zeroOrMore>
 	    <element name="ext-comp-def">
         <a:documentation>
           Extended Component Definition
@@ -256,7 +256,7 @@ Modification definition. This text goes in the
           </element>
         </choice>
       </element>
-    </optional>
+    </zeroOrMore>
   </define>
 
   <define name="ext-comp-extra-pat">
@@ -420,7 +420,7 @@ The ID of the aspect that is being overwritten by the content of this element.
 Defines SFRs that pertain to specific base.
       	</a:documentation>
       	<ref name="title-attr"/>
-	<ref name="id-attr"/>
+        <ref name="id-attr"/>
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
           <element name="f-component">
