@@ -40,7 +40,7 @@
 ** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
 ***************************** </xsl:message>
     </xsl:if>
-  </xsl:template>  
+  </xsl:template>
 
 
    <!--##############################################
@@ -50,11 +50,11 @@
     #toc a{
         display: block;
     }
-    
+
     svg{
       width: 100%;
     }
-    
+
     a[id^="ajq_"]{
         color:black;
     }
@@ -81,7 +81,7 @@
       font-style: italic;
       font-weight: bold;
     }
-    .activity_pane .toggler::after, .activity_pane .toggler{ 
+    .activity_pane .toggler::after, .activity_pane .toggler{
        display: inline-block;
        height: auto;
        content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
@@ -150,7 +150,7 @@
        text-align: center;
        padding: 5px 0;
        border-radius: 6px;
-    
+
        /* Position the tooltip text - see examples below! */
        position: absolute;
        z-index: 1;
@@ -201,7 +201,6 @@
 
     <h2 id='glossary' class='indexable' data-level='{$num}'>Terms</h2>
 The following sections list Common Criteria and technology terms used in this document.
-The following sections provide both Common Criteria and technology terms used in this Protection Profile.
     <h3 id="cc-terms" class="indexable" data-level="{$num+1}">Common Criteria Terms</h3>
     <table>
       <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
@@ -335,7 +334,7 @@ The following sections provide both Common Criteria and technology terms used in
     <xsl:if test="@exclusive">, choose one of</xsl:if><xsl:text>: </xsl:text>
     <!-- Selections are always 'atleastone -->
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
-    <xsl:choose>      
+    <xsl:choose>
     <xsl:when test="@linebreak='yes'">
     <ul>
     <xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each>
@@ -363,7 +362,7 @@ The following sections provide both Common Criteria and technology terms used in
         <xsl:when test="@role='application'">Application</xsl:when>
         <xsl:when test="@role='developer'">Developer</xsl:when>
         <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note: </span> 
+      </xsl:choose> Note: </span>
       <span class="note">
         <xsl:apply-templates/>
       </span>
@@ -380,8 +379,8 @@ The following sections provide both Common Criteria and technology terms used in
       <xsl:apply-templates select="./cc:management-function"/>
     </table>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="cc:manager">
     <td> <xsl:apply-templates/> </td>
   </xsl:template>
@@ -440,7 +439,7 @@ The following sections provide both Common Criteria and technology terms used in
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
-  <xsl:template match="cc:bibliography/cc:entry"> 
+  <xsl:template match="cc:bibliography/cc:entry">
     <tr>
       <xsl:variable name='id'><xsl:value-of select="@id"/></xsl:variable>
       <xsl:for-each select="cc:*">
@@ -480,7 +479,7 @@ The following sections provide both Common Criteria and technology terms used in
   -->
   <xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 
-  <!-- 
+  <!--
        By default, quietly unwrap all cc elements that are otherwise unmatched
   -->
   <xsl:template match="cc:*">
@@ -539,7 +538,7 @@ The following sections provide both Common Criteria and technology terms used in
     <xsl:variable name="capped-req">
       <xsl:value-of select="translate($lreq,$lower,$upper)"/>
     </xsl:variable>
-    
+
     <a class="{$class}" href="#{$capped-req}{$iter}"><xsl:value-of select="concat($capped-req,$iter)"/></a>
   </xsl:template>
 
@@ -569,7 +568,7 @@ The following sections provide both Common Criteria and technology terms used in
     <xsl:value-of select="name()"/>
     <xsl:text>/</xsl:text>
   </xsl:template>
-  
+
 <!-- ############################ -->
 <!-- Contains JavaScript for initializing the page -->
   <xsl:template name="init_js">
@@ -587,12 +586,12 @@ function init(){
 function fixAbbrs(){
     var aa;
     var brk_els = document.getElementsByClassName("dyn-abbr");
-    // 
+    //
     for(aa=0; aa!=brk_els.length; aa++){
         var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
         var el = document.getElementById("long_"+abbr)
         if (el==null) {
-             console.log("Could not find 'long_abbr_'"+abbr); 
+             console.log("Could not find 'long_abbr_'"+abbr);
              continue;
         }
         var abbr_def = el.textContent;
@@ -1005,5 +1004,5 @@ function showTarget(id){
     <xsl:variable name="linkend" select="@linkend"/>
     <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
   </xsl:template>
- 
+
 </xsl:stylesheet>
