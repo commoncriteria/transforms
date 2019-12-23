@@ -287,7 +287,6 @@ Modification definition. This text goes in the
       <a:document>
 	Specifies a component under Security Functional Requirements section..
       </a:document>
-
       <ref name="f-comp-content-pat"/>
       <!-- Would like to remove this -->
       <zeroOrMore>
@@ -427,13 +426,17 @@ Defines SFRs that pertain to specific base.
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
           <element name="f-component">
-	    <a:document>
-	      Specifies a component under Security Functional Requirements section..
-	    </a:document>
+	        <a:document>
+Specifies a component under Security Functional Requirements section..
+            </a:document>
+            <optional><attribute name="notnew">
+               <a:document>Inclusion of this attribute signifies that this item should be omitted from the extended component definitions.</a:document>
+               <value>true</value>
+            </attribute></optional>
             <ref name="f-comp-content-pat"/>
-	    <ref name="consistency-rationale"/>
-      <ref name="ext-comp-extra-pat"/>
-	    <ref name="f-elements-pat"/>
+	        <ref name="consistency-rationale"/>
+            <ref name="ext-comp-extra-pat"/>
+	        <ref name="f-elements-pat"/>
 	  </element>
 	</oneOrMore>
       </element>
