@@ -443,36 +443,4 @@ It should be the version listed in the CCPart1/2/3 files consulted.
     </element>
   </define>
 
-  <define name="depends-pat">
-    <zeroOrMore>
-      <element name="depends">
-        <a:documentation>
-          Modifies the parent element such that it depends on something  else.
-          Currently, only supports implements.
-        </a:documentation>
-        <attribute name="on">
-          <value>implements</value>
-        </attribute>
-        <attribute name="ref-id"/>
-        <empty/>
-      </element>
-    </zeroOrMore>
-  </define>
-
-  <define name="implements-pat">
-    <optional>
-      <element name="implements">
-        <a:documentation>
-          Maps features to Implementation-dependent requiremetns
-        </a:documentation>
-        <oneOrMore>
-          <element name="feature">
-            <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <ref name="description"/>
-          </element>
-        </oneOrMore>
-      </element>
-    </optional>
-  </define>
 </grammar>
