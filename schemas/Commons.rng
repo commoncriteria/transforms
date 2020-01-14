@@ -459,6 +459,7 @@ Grouping for Security Objective for the Operation Environment entries.
     <oneOrMore>
       <choice>
         <text/>
+        <ref name="depends-pat"/>
         <ref name="html-element"/>
         <ref name="linkref"/>
         <ref name="citeCC"/>

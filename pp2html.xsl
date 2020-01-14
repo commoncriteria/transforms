@@ -851,6 +851,13 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
+
+    <xsl:choose>
+      <xsl:when test="./cc:depends">
+         <xsl:message> Found a depends </xsl:message>
+      </xsl:when>
+    </xsl:choose>
+
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
