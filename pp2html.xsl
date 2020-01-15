@@ -716,8 +716,19 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--            -->
+  <xsl:template match="cc:equation">
+    <table><tr>
+      <td>$$<xsl:apply-templates select="cc:value"/>$$</td>
+      <td style="vertical-align: middle; padding-left: 100px">(<xsl:apply-templates select="cc:label"/>)</td>
+    </tr></table>
+  </xsl:template>
+
+
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre">
     <xsl:choose>
+      <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
       <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:when>
