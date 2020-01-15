@@ -234,8 +234,7 @@ The following sections list Common Criteria and technology terms used in this do
 
   <xsl:template match="cc:linkref">
     <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
-    <xsl:if test="not(//*[@id=$linkendlower])">
+    <xsl:if test="not(//*[@id=$linkend])">
       <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/></xsl:message>
     </xsl:if>
     <xsl:choose>
