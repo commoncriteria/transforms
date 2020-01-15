@@ -489,7 +489,10 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="equation">
     <element name="equation">
-      <element name="value"><text/></element>
+      <a:documentation>Element for mathematical equation.</a:documentation>
+      <element name="value">
+        <a:documentation>MathML text representing the equation. Do not wrap with dollar signs. These will be added.</a:documentation>
+        <text/></element>
       <element name="label"><ref name="basic-content-pat"/></element>
     </element>
   </define>
