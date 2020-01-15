@@ -731,7 +731,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
-      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
       <xsl:otherwise><xsl:text>Table </xsl:text></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
