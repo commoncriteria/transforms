@@ -477,6 +477,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="ctr"/>
         <ref name="figure"/>
         <ref name="figref"/>
+        <ref name="equation"/>
         <ref name="wsn"/>
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
@@ -485,6 +486,16 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
+  </define>
+
+  <define name="equation">
+    <element name="equation">
+      <a:documentation>Element for mathematical equation.</a:documentation>
+      <element name="value">
+        <a:documentation>MathML text representing the equation. Do not wrap with dollar signs. These will be added.</a:documentation>
+        <text/></element>
+      <element name="label"><ref name="basic-content-pat"/></element>
+    </element>
   </define>
 
   <define name="audit-events">
