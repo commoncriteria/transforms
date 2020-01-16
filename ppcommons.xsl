@@ -456,7 +456,33 @@ The following sections list Common Criteria and technology terms used in this do
        this is what we have.
   -->
   <xsl:template match="htm:*">
-    <xsl:element name="{local-name()}">
+    <xsl:choose>
+      <xsl:when test="cc:depends">
+        <div class="dependent"> The following text should be included if:
+           <ul> <xsl:for-each select="cc:depends">
+              <li>
+              <xsl:if test="@on='selection'">
+                <xsl:for-each select="cc:uid">  
+                  <xsl:variable name="uid" select="text()"/>
+                  "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+                </xsl:for-each>
+                 is selected from 
+                <xsl:variable name="uid" select="cc:uid[1]/text()"/>
+                <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+              </xsl:if> 
+              </li>
+           </xsl:for-each> </ul>
+         </div>        
+        <xsl:call-template name="handle-html"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="handle-html"/>
+      </xsl:otherwise>
+    </xsl:choose>
+ </xsl:template>1
+
+  <xsl:template name="handle-html">
+     <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
 	<xsl:copy/>
