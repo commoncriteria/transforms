@@ -479,7 +479,7 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:call-template name="handle-html"/>
       </xsl:otherwise>
     </xsl:choose>
- </xsl:template>1
+ </xsl:template>
 
   <xsl:template name="handle-html">
      <xsl:element name="{local-name()}">
@@ -498,7 +498,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event"/>
+  <xsl:template match="cc:audit-event|cc:depends"/>
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
