@@ -189,6 +189,14 @@
        background-color:#F4F4F4;
    }
 
+   .dependent{
+       border: 1px solid gray;
+       border-radius: 1px
+   }
+   .dependent-content{
+       margin-left: 25px;
+       font-style: italic;
+   }
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
   </xsl:template>
@@ -471,9 +479,11 @@ The following sections list Common Criteria and technology terms used in this do
                 <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
               </xsl:if> 
               </li>
-           </xsl:for-each> </ul>
-         </div>        
-        <xsl:call-template name="handle-html"/>
+          </xsl:for-each> </ul>
+          <div class="dependent-content">
+            <xsl:call-template name="handle-html"/>
+          </div>        
+        </div>        
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="handle-html"/>
