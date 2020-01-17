@@ -478,6 +478,11 @@ The following sections list Common Criteria and technology terms used in this do
                 <xsl:variable name="uid" select="cc:uid[1]/text()"/>
                 <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
               </xsl:if> 
+              <xsl:if test="@on='implements'">
+                the TOE implements 
+                <xsl:variable name="ref-id" select="@ref-id"/>
+                "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              </xsl:if>
               </li>
           </xsl:for-each> </ul>
           <div class="dependent-content">
