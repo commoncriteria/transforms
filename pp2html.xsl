@@ -659,10 +659,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!--            -->
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
-      <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
+      <xsl:variable name="refid"><xsl:value-of select="@refid"/></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:apply-templates select="//cc:ctr[@id=$refid]" mode="getPre"/>
  <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
+      <xsl:apply-templates select="//cc:ctr[@id=$refid]" mode="getPre"/>
       <span class="counter"><xsl:value-of select="$refid"/></span>
       <xsl:apply-templates/>
     </a>
@@ -723,13 +723,16 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!--            -->
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
-    <xsl:choose>
+    <xsl:variable name="label"><xsl:choose>
      <!-- <xsl:when test="text()"><xsl:value-of select="text()"/><xsl:message>Matched on text <xsl:value-of select="text()"/></xsl:message></xsl:when> -->
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
       <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
-      <xsl:otherwise><xsl:text>Table </xsl:text></xsl:otherwise>
-    </xsl:choose>
+      <xsl:otherwise>Table </xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
+    <xsl:value-of select="$label"/>
+
   </xsl:template>
 
 
@@ -769,8 +772,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
           <xsl:value-of select="$linkendorig"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:message>Cant find
-          <xsl:value-of select="$linkendlower"/>
+          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/>
           </xsl:message>
         </xsl:otherwise>
       </xsl:choose>

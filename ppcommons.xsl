@@ -40,6 +40,13 @@
 ** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
 ***************************** </xsl:message>
     </xsl:if>
+    <xsl:for-each select="//@id">
+       <xsl:variable name="id" select="."/>
+       <xsl:if test="count(//*[@id=$id])>1">
+         <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
+       </xsl:if>
+    </xsl:for-each>
+
   </xsl:template>
 
 
