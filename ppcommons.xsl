@@ -179,6 +179,11 @@
    th{
        padding:8px 8px;
    }
+   thead tr td{
+       text-align: center;
+       font-style: oblique;
+       font-weight: bold;
+   }
    tr.header{
        border-bottom:3px solid gray;
        padding:8px 8px;

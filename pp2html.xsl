@@ -661,9 +661,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
     <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:for-each select="//cc:ctr[@id=$refid]">
-        <xsl:call-template name="getPre"/>
-      </xsl:for-each>
+      <xsl:apply-templates select="//cc:ctr[@id=$refid]" mode="getPre"/>
  <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
       <span class="counter"><xsl:value-of select="$refid"/></span>
       <xsl:apply-templates/>
@@ -680,7 +678,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
     </xsl:variable>
 
     <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
-      <xsl:call-template name="getPre"/>
+      <xsl:apply-templates select="." mode="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
       <xsl:apply-templates/>
     </span>
@@ -691,10 +689,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
   <xsl:template match="cc:figref">
     <a onclick="showTarget('figure-{@refid}')" href="#figure-{@refid}" class="figure-{@refid}-ref">
       <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
-
-      <xsl:for-each select="//cc:figure[@id=$refid]">
-        <xsl:call-template name="getPre"/>
-      </xsl:for-each>
+      <xsl:apply-templates select="//cc:figure[@id=$refid]" mode="getPre"/>
 <!--      <xsl:value-of select="//cc:ctr[@id=$refid]">"/>-->
       <span class="counter"><xsl:value-of select="$refid"/></span>
     </a>
@@ -707,7 +702,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
       <p/>
       <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
-        <xsl:call-template name="getPre"/>
+        <xsl:apply-templates select="." mode="getPre"/>
         <span class="counter"><xsl:value-of select="@id"/></span>
       </span>:
       <xsl:value-of select="@title"/>
@@ -726,9 +721,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre">
+  <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
+  <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
     <xsl:choose>
-      <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
+     <!-- <xsl:when test="text()"><xsl:value-of select="text()"/><xsl:message>Matched on text <xsl:value-of select="text()"/></xsl:message></xsl:when> -->
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
       <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
