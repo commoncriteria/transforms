@@ -478,7 +478,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="htm:*">
     <xsl:choose>
       <xsl:when test="cc:depends">
-        <div class="dependent"> The following text should be included if:
+        <div class="dependent"> The following content should be included if:
            <ul> <xsl:for-each select="cc:depends">
               <li>
               <xsl:if test="@on='selection'">

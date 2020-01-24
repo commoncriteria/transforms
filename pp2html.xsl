@@ -227,10 +227,34 @@
     </dl>
   </xsl:template>
 
-  <xsl:template match="cc:audit-events">
-    <xsl:variable name="table" select="@table"/>
+  <xsl:template match="cc:audit-events[cc:depends]">
+      <div class="dependent"> The following audit events are included if:
+         <ul> <xsl:for-each select="cc:depends">
+            <li>
+            <xsl:if test="@on='selection'">
+              <xsl:for-each select="cc:uid">  
+                <xsl:variable name="uid" select="text()"/>
+                "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+              </xsl:for-each>
+               is selected from 
+              <xsl:variable name="uid" select="cc:uid[1]/text()"/>
+              <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+            </xsl:if> 
+            <xsl:if test="@on='implements'">
+              the TOE implements 
+              <xsl:variable name="ref-id" select="@ref-id"/>
+              "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+            </xsl:if>
+            </li>
+        </xsl:for-each> </ul><br/>
+        <xsl:call-template name="audit-events"/>
+      </div>        
+  </xsl:template>
 
-    <table border="1">
+  <xsl:template match="cc:audit-events" name="audit-events">
+    <xsl:variable name="table" select="@table"/>
+    <xsl:apply-templates/>
+    <table class="" border="1">
     <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>

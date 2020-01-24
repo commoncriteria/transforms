@@ -501,6 +501,7 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="audit-events">
     <element name="audit-events">
       <attribute name="table"/>
+      <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
     </element>
   </define>
 
