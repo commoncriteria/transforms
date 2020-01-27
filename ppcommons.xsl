@@ -29,24 +29,33 @@
     <xsl:value-of select="//cc:extra-js"/>
   </xsl:template>
 
-  <!--##############################################
-        Template for universal sanity checks.
-      ##############################################-->
-  <xsl:template name="sanity-checks">
-    <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']">
-      <xsl:message>*****************************
-**
-** TSS, Guidance, and Tests tags no longer precede their content, but rather encapsulate it.  **
-** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
-***************************** </xsl:message>
-    </xsl:if>
-    <xsl:for-each select="//@id">
-       <xsl:variable name="id" select="."/>
-       <xsl:if test="count(//*[@id=$id])>1">
-         <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
-       </xsl:if>
-    </xsl:for-each>
+  <!-- ############################################################
+           Gets the ID for the f-component or f-element
+       ############################################################-->
+  <xsl:template match="cc:f-component|cc:f-element" mode="getId">
+    <xsl:variable name="iter"><xsl:choose>
+      <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="baseID"><xsl:choose>
+      <xsl:when test="name()='f-component'"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
+    <xsl:if test="name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
+    <xsl:if test="not($iter='')">/<xsl:value-of select="$iter"/></xsl:if>
+  </xsl:template>
 
+  <!-- ############################################################
+           Gets the ID for the a-component or a-element
+       ############################################################-->
+  <xsl:template match="cc:a-component|cc:a-element" mode="getId">
+    <xsl:variable name="baseID"><xsl:choose>
+      <xsl:when test="name()='a-component'"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
+    <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/></xsl:if>
   </xsl:template>
 
 
@@ -540,6 +549,28 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
+
+
+  <!--##############################################
+        Template for universal sanity checks.
+      ##############################################-->
+  <xsl:template name="sanity-checks">
+    <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']">
+      <xsl:message>*****************************
+**
+** TSS, Guidance, and Tests tags no longer precede their content, but rather encapsulate it.  **
+** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
+***************************** </xsl:message>
+    </xsl:if>
+    <xsl:for-each select="//@id">
+       <xsl:variable name="id" select="."/>
+       <xsl:if test="count(//*[@id=$id])>1">
+         <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
+       </xsl:if>
+    </xsl:for-each>
+
+  </xsl:template>
+
 
   <!--
       Templates associated with debugging follow.

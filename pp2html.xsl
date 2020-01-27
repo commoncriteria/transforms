@@ -350,35 +350,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- ############################################################
-           Gets the ID for the f-component or f-element
-       ############################################################-->
-  <xsl:template match="cc:f-component|cc:f-element" mode="getId">
-    <xsl:variable name="iter"><xsl:choose>
-      <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    <xsl:variable name="baseID"><xsl:choose>
-      <xsl:when test="name()='f-component'"><xsl:value-of select="@id"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
-    <xsl:if test="name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
-    <xsl:if test="not($iter='')">/<xsl:value-of select="$iter"/></xsl:if>
-  </xsl:template>
-
-  <!-- ############################################################
-           Gets the ID for the a-component or a-element
-       ############################################################-->
-  <xsl:template match="cc:a-component|cc:a-element" mode="getId">
-    <xsl:variable name="baseID"><xsl:choose>
-      <xsl:when test="name()='a-component'"><xsl:value-of select="@id"/></xsl:when>
-      <xsl:otherwise><xsl:value-of select="../@id"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    <xsl:value-of select="translate($baseID, $lower, $upper)"/>
-    <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/></xsl:if>
-  </xsl:template>
-
   <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->

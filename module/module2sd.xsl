@@ -385,7 +385,8 @@ guidance, and testing.</p>
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
       <h4>
-	<x:value-of select="concat(translate(@id, $lower, $upper), ' ', @name)"/>
+        <x:apply-templates select="." mode="getId"/><x:text> </x:text>
+	<x:value-of select="@name"/>
       </h4>
       <x:choose>
          <x:when test=".//cc:aactivity/cc:no-tests">
