@@ -170,6 +170,26 @@ If it will go some other table, set the text content to the table name.
       </element>
     </zeroOrMore>
   </define>
+    
+  <define name="audit-event-descr-pat">
+      <a:documentation>
+          Defines the Description field for an audit event. This is the text that appears in 
+          column 2 of an audit table. By default the text appears as shown and is intended to 
+          represent a single audit event (one event per audit table row). If the optional attribute
+          is set to "true" then the text appears in the PP as "[selection: blah, None]."
+      </a:documentation>
+      <element name="audit-event-descr">
+          <optional>
+              <attribute name="optional">
+                  <choice>
+                      <value>true</value>
+                      <value>false</value>
+                  </choice>
+              </attribute>
+          </optional>
+          <text/>
+      </element>
+    </define>
 
   <define name="html-element">
     <a:documentation>
