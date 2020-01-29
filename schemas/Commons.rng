@@ -144,29 +144,33 @@ If it's only an acronym make sure the text content is empty.
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
-        <optional><attribute name="type"><value>optional</value></attribute></optional>
-        <element name="table">
-           <a:documentation>
-The table where this event will go. The default table name is whatever the parent
-SFR status is. If it will go in a commonly known table, use the 'known' attribute.
-If it will go some other table, set the text content to the table name.
-            </a:documentation>
-            <choice>
-                <attribute name="known"><choice>
-                        <value>mandatory</value>
-                        <value>optional</value>
-                        <value>objective</value>
-                        <value>sel-based</value>
-                </choice></attribute>
-                <attribute name="other"/>
-            </choice>
-          </element>
-        <ref name="description"/>
-        <zeroOrMore>
-          <element name="add-info">
-            <ref name="basic-content-pat"/>
-          </element>
-        </zeroOrMore>
+          <a:documentation>
+              The "type" attribute has legal values of "normal" or "optional." Default is "normal."
+              Normal means that the content of the audit-event-descr tag literally represents an audit event.
+              Optional means that the content of the audit-event-descr tag should be treated as a selection with one other 
+              option as "None." 
+          </a:documentation>
+          <optional>
+              <attribute name="type">
+                  <choice>
+                      <value>normal</value>
+                      <value>optional</value>
+                  </choice>
+              </attribute>
+          </optional>
+          <a:documentation>
+              The "table" attribute identifies the audit table to which the current audit event belongs.
+              The default value is the value of the status attribute of the enclosing f-component (mandatory,
+              optional, sel-based, or objective). If specified, the value must match the name of a table defined in a
+              audit-table tag.
+          </a:documentation>
+          <optional>
+              <attribute name="table" />
+          </optional>
+          <ref name="audit-event-descr-pat"/>
+          <zeroOrMore>
+            <ref name="audit-event-info">
+          </zeroOrMore>
       </element>
     </zeroOrMore>
   </define>
@@ -175,22 +179,37 @@ If it will go some other table, set the text content to the table name.
       <a:documentation>
           Defines the Description field for an audit event. This is the text that appears in 
           column 2 of an audit table. By default the text appears as shown and is intended to 
-          represent a single audit event (one event per audit table row). If the optional attribute
-          is set to "true" then the text appears in the PP as "[selection: blah, None]."
+          represent a single audit event (one event per audit table row). If the enclosing audit-event
+          tag has "type" optional, then the content should be dispalyed as a selection of one choice and "None."
       </a:documentation>
       <element name="audit-event-descr">
+          <text/>
+      </element>
+    </define>
+
+  <define name="audit-event-info-pat">
+      <a:documentation>
+          Defines the Additional Information field for an audit event. This is the text that appears in 
+          column 3 of an audit table. By default the text appears as shown and is intended to 
+          represent a single unit of additional information for a single audit event. If the "type" attribute is 
+          set to "optional" then the info should be displayed as a selection with the tag content as a choice and "None"
+          as the only other choice. The default value for the "type" attribute is "normal." All info content for a single
+          audit event should be displayed in the same row of the audit table. 
+      </a:documentation>
+      <element name="audit-event-info">
           <optional>
-              <attribute name="optional">
+              <attribute name="type">
                   <choice>
-                      <value>true</value>
-                      <value>false</value>
+                      <value>normal</value>
+                      <value>optional</value>
                   </choice>
               </attribute>
           </optional>
           <text/>
       </element>
     </define>
-
+      
+      
   <define name="html-element">
     <a:documentation>
       Pattern defines the html-element, which is any element in the xhtml namespace.
