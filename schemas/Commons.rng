@@ -501,6 +501,7 @@ Grouping for Security Objective for the Operation Environment entries.
   <define name="audit-events">
     <element name="audit-events">
       <attribute name="table"/>
+      <ref name="basic-content-pat"/>
       <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
     </element>
   </define>
@@ -866,9 +867,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <a:documentation>
             Readable role name
           </a:documentation>
-          <attribute name="id">
+          <attribute name="cid">
             <a:documentation>
-              ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+              Chart ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
               in the management-function.
             </a:documentation>
           </attribute>
