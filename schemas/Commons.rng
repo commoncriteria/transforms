@@ -537,9 +537,17 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="audit-events">
-    <element name="audit-events">
-      <attribute name="table"/>
+  <define name="audit-table-pat">
+    <element name="audit-table">
+      <attribute name="table" />
+      <optional>
+        <attribute name="sel-by-sfr">
+           <choice>
+              <value>false</value>
+              <value>true></value>
+           </choice>
+        </attribute>
+      </optional>
       <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
     </element>
   </define>
