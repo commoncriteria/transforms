@@ -430,9 +430,14 @@ Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <oneOrMore>
         <element name="SOE">
-             <ref name="id-attr"/>
-             <ref name="description"/>
-           </element>
+          <attribute name="name">
+            <data type="string">
+              <param name="pattern">SOE\.[A-Z_]+</param>
+            </data>
+          </attribute>
+            <ref name="id-attr"/>
+            <ref name="description"/>
+        </element>
       </oneOrMore>
     </element>
   </define>
