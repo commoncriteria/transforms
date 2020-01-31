@@ -178,7 +178,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
   <define name="IntroductionChapter">
       <element name="chapter">
         <attribute name="title"/>
-        <attribute name="id"/>
+        <ref name="id-attr"/>
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
         <ref name="tech-terms"/>
@@ -242,7 +242,12 @@ It should be the version listed in the CCPart1/2/3 files consulted.
                 <a:documentation>
                   Security Objective for the Operational environment.
                 </a:documentation>
-                <ref name="id-attr"/>
+                <optional><ref name="id-attr"/></optional>
+                <attribute name="name">
+                  <data type="string">
+                    <param name="pattern">OE.[A-Z_]+</param>
+                  </data>
+                </attribute>
                 <ref name="description"/>
               </element>
             </oneOrMore>
@@ -259,8 +264,8 @@ It should be the version listed in the CCPart1/2/3 files consulted.
                 <a:documentation>
                   Defines a threat.
                 </a:documentation>
-                <attribute name="id">
-                  <data type="NCName">
+                <attribute name="name">
+                  <data type="string">
                     <param name="pattern">T\.[_A-Z0-9]+</param>
                   </data>
                 </attribute>
