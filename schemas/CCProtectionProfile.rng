@@ -385,6 +385,19 @@ It should be the version listed in the CCPart1/2/3 files consulted.
     </element>
   </define> 
 
+   <define name="f-component-decl-pattern">
+    <element name="f-component-decl">
+      <a:document>
+        Specifies a component declaration. This is intended for use when a PP defines audit events for
+        an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
+        There is status.
+      </a:document>
+      </choice>
+      <ref name="depends-pat"/>
+      <ref name="audit-events-pat"/>
+    </element>
+  </define> 
+         
   <define name="subsection-pattern">
     <element name="subsection">
       <a:documentation>
@@ -399,6 +412,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <ref name="basic-content-pat"/>
           <ref name="a-component-pattern"/>
           <ref name="f-component-pattern"/>
+          <ref name="f-component-decl-pattern"/>
         </choice>
       </oneOrMore>
     </element>
