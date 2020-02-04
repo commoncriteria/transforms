@@ -169,7 +169,7 @@ If it's only an acronym make sure the text content is empty.
           </optional>
           <ref name="audit-event-descr-pat"/>
           <zeroOrMore>
-            <ref name="audit-event-info">
+            <ref name="audit-event-info"/>
           </zeroOrMore>
       </element>
     </zeroOrMore>
