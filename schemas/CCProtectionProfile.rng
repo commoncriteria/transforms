@@ -147,6 +147,17 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <zeroOrMore><ref name="html-element"/></zeroOrMore>
         </element>
       </optional>
+             
+      <a:documentation>
+        This section is for things that are useful to declare up front. 
+        So far this is only for audit tables. 
+        Might need to do something for management functions as well.
+        This is for the information of the programs that parse the PP, and should not be displayed.
+      </a:documentation>
+      <optional>
+         <ref name="pp-declarations-pat"/>
+      </optional>
+
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <oneOrMore>
@@ -454,6 +465,40 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <oneOrMore>
         <ref name="entry-el"/>
       </oneOrMore>
+    </element>
+  </define>
+
+  <define name="pp-declarations-pat">
+    <element name="pp-declarations">
+      <a:documentation>
+         A place to declare things that are useful for later. Like audit tables.
+      </a:documentation>
+      <optional>
+         <ref name="audit-table-decl-pat" />
+      </optional>
+    </element>
+  </define> 
+
+  <define name="audit-table-decl-pat">
+    <element name="audit-table-decl">
+      <attribute name="event-name">
+         <a:documentation>Identifier used in events to indicate this table.</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9]+</param>
+         </data>
+      </attribute>
+      <attribute name="display-name">
+         <a:documentation>Identifier used to indicate this table in FAU_GEN and elsewhere.</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9]+</param>
+         </data>
+      </attribute>
+      <attribute name="fau-gen-sel">
+         <a:documentation>Identifier used to indicate this table in FAU_GEN selection.</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9]+</param>
+         </data>
+      </attribute>
     </element>
   </define>
 
