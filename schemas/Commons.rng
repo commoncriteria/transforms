@@ -169,7 +169,7 @@ If it's only an acronym make sure the text content is empty.
           </optional>
           <ref name="audit-event-descr-pat"/>
           <zeroOrMore>
-            <ref name="audit-event-info"/>
+            <ref name="audit-event-info-pat"/>
           </zeroOrMore>
       </element>
     </zeroOrMore>
@@ -509,7 +509,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="assignable"/>
         <ref name="appref"/>
         <ref name="abbr-el"/>
-        <ref name="audit-events"/>
+        <ref name="audit-table"/>
         <ref name="xref"/>
         <ref name="refinement-type"/>
         <ref name="ctr-ref"/>
