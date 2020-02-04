@@ -473,9 +473,9 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <a:documentation>
          A place to declare things that are useful for later. Like audit tables.
       </a:documentation>
-      <optional>
+      <zeroOrMore>
          <ref name="audit-table-decl-pat" />
-      </optional>
+      </zeroOrMore>
     </element>
   </define> 
 
