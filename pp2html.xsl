@@ -123,7 +123,7 @@
     <dl>
       <xsl:for-each select="cc:assumption">
         <dt>
-          <xsl:value-of select="@id"/>
+          <xsl:value-of select="@name"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
@@ -164,7 +164,7 @@
       <!-- For -->
       <xsl:for-each select="cc:threat[cc:description]">
         <dt>
-          <xsl:value-of select="@id"/>
+          <xsl:value-of select="@name"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
@@ -179,7 +179,7 @@
     <dl>
       <xsl:for-each select="cc:OSP">
         <dt>
-          <xsl:value-of select="@id"/>
+          <xsl:value-of select="@name"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
@@ -195,7 +195,7 @@
       <xsl:when test="cc:SO[cc:description]">
         <dl>
           <xsl:for-each select="cc:SO[cc:description]">
-            <dt><xsl:value-of select="@id"/></dt>
+            <dt><xsl:value-of select="@name"/></dt>
             <dd>
               <p><xsl:apply-templates select="cc:description"/></p>
               Addressed by: <span class="SOlist">
@@ -217,7 +217,7 @@
     <dl>
       <xsl:for-each select="cc:SOE">
         <dt>
-          <xsl:value-of select="@id"/>
+          <xsl:value-of select="@name"/>
         </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
@@ -295,10 +295,14 @@
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
+
+        <xsl:message> <xsl:value-of select="name()"/><xsl:value-of select="@name"/></xsl:message>
       <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
+        <xsl:message> <xsl:value-of select="name()"/><xsl:value-of select="@name"/></xsl:message>
         <tr>
           <td>
-            <xsl:value-of select="@id"/>
+ 
+            <xsl:value-of select="@name"/>
           </td>
           <td>
             <xsl:for-each select="cc:objective-refer">
