@@ -391,6 +391,24 @@ If it's only an acronym make sure the text content is empty.
         <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
       <optional>
+         <attribute name="sel-if"> 
+            <a:documentation>
+                A comma-delimited list of id attributes from some other selectable.
+                This selection is auto-selected if one of these other selections is made.
+                User can still de-select manually, but selection is automatic.
+            </a:documentation>
+         </attribute>
+      </optional>
+      <optional>
+         <attribute name="sel-iff"> 
+            <a:documentation>
+                A comma-delimited list of id attributes from some other selectable.
+                This selection is auto-selected if some other selection is made.
+                And this is the only way this selection can be made. It cannot be de-selected manually.
+            </a:documentation>
+         </attribute>
+      </optional>
+      <optional>
         <ref name="id-attr"/>
       </optional>
       <zeroOrMore>
