@@ -403,7 +403,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
         There is status.
       </a:document>
-      </choice>
       <ref name="depends-pat"/>
       <ref name="audit-events-pat"/>
     </element>
