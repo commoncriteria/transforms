@@ -167,7 +167,9 @@ If it's only an acronym make sure the text content is empty.
           <optional>
               <attribute name="table" />
           </optional>
-          <ref name="audit-event-descr-pat"/>
+          <optional>
+            <ref name="audit-event-descr-pat"/>
+          </optional>
           <zeroOrMore>
             <ref name="audit-event-info-pat"/>
           </zeroOrMore>
