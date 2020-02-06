@@ -492,12 +492,14 @@ It should be the version listed in the CCPart1/2/3 files consulted.
            <param name="pattern">[\-a-zA-Z0-9]+</param>
          </data>
       </attribute>
-      <attribute name="fau-gen-sel">
-         <a:documentation>Identifier used to indicate this table in FAU_GEN selection.</a:documentation>
-         <data type="string">
-           <param name="pattern">[\-a-zA-Z0-9]+</param>
-         </data>
-      </attribute>
+      <optional>
+        <attribute name="fau-gen-sel">
+           <a:documentation>Identifier used to indicate this table in FAU_GEN selection.</a:documentation>
+           <data type="string">
+             <param name="pattern">[\-a-zA-Z0-9]+</param>
+           </data>
+        </attribute>
+      </optional>
     </element>
   </define>
 
