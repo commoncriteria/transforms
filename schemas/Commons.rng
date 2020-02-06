@@ -569,6 +569,7 @@ Grouping for Security Objective for the Operation Environment entries.
         </attribute>
       </optional>
       <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
+      <ref name="basic-content-pat"/>
     </element>
   </define>
 
