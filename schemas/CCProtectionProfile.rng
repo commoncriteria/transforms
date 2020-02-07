@@ -328,11 +328,12 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <ref name="note"/>
         </optional>
         <optional>
-          <element name="aactivity">
+<!--          <element name="aactivity">
             <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
             <ref name="basic-content-pat"/>
-          </element>
-        </optional>
+          </element>  -->
+             <ref name="aactivity"/>
+         </optional>
       </element>
     </oneOrMore>
   </define>
