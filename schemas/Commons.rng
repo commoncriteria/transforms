@@ -690,7 +690,7 @@ Grouping for Security Objective for the Operation Environment entries.
 Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
 The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
-      <ref name="basic-content-pat"/>
+        <optional><ref name="basic-content-pat"/></optional>
       <choice>
         <element name="no-tests"><empty/></element>
         <group>
