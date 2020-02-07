@@ -594,15 +594,10 @@ Grouping for Security Objective for the Operation Environment entries.
   </define>
 
   <define name="f-elements-pat">
-    <zeroOrMore>
+    <a:documentation>Must be at least one element per component.</a:documentation>
+    <oneOrMore>
       <ref name="f-element"/>
-    </zeroOrMore>
-    
-    <a:documentation>
-      Zero or more audit tables, each of which can be surrounded by App Notes.
-      As a practical matter, this should only happen in FAU_GEN.
-      AAs are allowed after each element, but often you want them at the end of the component.
-    </a:documentation>
+    </oneOrMore>
 
     <optional><ref name="note"/></optional>
     <optional><ref name="aactivity"/></optional>    
