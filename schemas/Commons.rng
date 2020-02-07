@@ -274,7 +274,7 @@ If it's only an acronym make sure the text content is empty.
       <a:documentation>
         Assignment section
       </a:documentation>
-      <ref name="basic-content-pat"/>
+      <text/>
     </element>
   </define>
 
