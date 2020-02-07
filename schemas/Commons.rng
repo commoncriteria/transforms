@@ -601,17 +601,15 @@ Grouping for Security Objective for the Operation Environment entries.
     <a:documentation>
       Zero or more audit tables, each of which can be surrounded by App Notes.
       As a practical matter, this should only happen in FAU_GEN.
+      AAs are allowed after each element, but often you want them at the end of the component.
     </a:documentation>
+
+    <optional><ref name="note"/></optional>
     <zeroOrMore>
       <optional><ref name="note"/></optional>
       <ref name="audit-table-pat" />
       <optional><ref name="note"/></optional>
     </zeroOrMore>
-        
-    <a:documentation>
-      AAs are allowed after each element, but often you want them at the end of the component.
-    </a:documentation>
-    <optional><ref name="note"/></optional>
     <optional><ref name="aactivity"/></optional>    
   </define>
 
