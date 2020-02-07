@@ -605,11 +605,6 @@ Grouping for Security Objective for the Operation Environment entries.
     </a:documentation>
 
     <optional><ref name="note"/></optional>
-    <zeroOrMore>
-      <optional><ref name="note"/></optional>
-      <ref name="audit-table-pat" />
-      <optional><ref name="note"/></optional>
-    </zeroOrMore>
     <optional><ref name="aactivity"/></optional>    
   </define>
 
