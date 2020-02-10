@@ -185,7 +185,7 @@ This module does not define any assumptions.
       </tr>
       <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
         <tr>
-          <td> <xsl:value-of select="@id"/> </td>
+          <td> <xsl:value-of select="@name"/> </td>
           <td>
             <xsl:for-each select="cc:objective-refer">
               <xsl:value-of select="@ref"/>

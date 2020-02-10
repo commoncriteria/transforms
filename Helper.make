@@ -137,7 +137,7 @@ TMP?=/tmp
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)

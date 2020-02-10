@@ -442,9 +442,9 @@ If it's only an acronym make sure the text content is empty.
       <a:documentation>Element that denotes an objective</a:documentation>
       <attribute name="ref">
         <a:documentation>Attribute the references the id of a specific objective.</a:documentation>
-        <data type="NCName">
+        <data type="string">
           <param name="pattern">O(E?)\.[_A-Z]+</param>
-              </data>
+        </data>
       </attribute>
       <element name="rationale">
               <a:documentation>Argument as to why the objective applies</a:documentation>
@@ -489,9 +489,14 @@ Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <oneOrMore>
         <element name="SOE">
-             <ref name="id-attr"/>
-             <ref name="description"/>
-           </element>
+          <attribute name="name">
+            <data type="string">
+              <param name="pattern">OE\.[A-Z_]+</param>
+            </data>
+          </attribute>
+          <optional><ref name="id-attr"/></optional>
+          <ref name="description"/>
+        </element>
       </oneOrMore>
     </element>
   </define>
@@ -503,7 +508,12 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
         Entry for a security objective
       </a:documentation>
-      <ref name="id-attr"/>
+      <attribute name="name">
+        <data type="string">
+          <param name="pattern">O\.[A-Z_]+</param>
+        </data>
+      </attribute>
+      <optional><ref name="id-attr"/></optional>
       <ref name="description"/>
       <element name="addressed-by">
         <ref name="basic-content-pat"/>
@@ -752,10 +762,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <a:documentation>
             Describes assumptions made.
           </a:documentation>
-          <attribute name="id">
+          <optional><ref name="id-attr"/></optional>
+          <attribute name="name">
             <a:documentation>
-              An assumption-wide unique ID that is also displayed to the user.
+              Identifying name of the assumption.
             </a:documentation>
+            <data type="string">
+              <param name="pattern">A\.[A-Z_]+</param>
+            </data>
           </attribute>
           <ref name="description"/>
           <oneOrMore>
@@ -775,6 +789,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <oneOrMore>
               <element name="OSP">
                 <ref name="id-attr"/>
+                <attribute name="name">
+                <data type="string">
+                  <param name="pattern">P\.[A-Z_]+</param>
+                </data>
+               </attribute>
           <ref name="description"/>
           <oneOrMore>
             <ref name="objective-refer"/>
@@ -938,9 +957,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <a:documentation>
             Readable role name
           </a:documentation>
-          <attribute name="id">
+          <attribute name="cid">
             <a:documentation>
-              ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
+              Chart ID unique to this management-function-set. Cross-referenced by the O,M,_ elements
               in the management-function.
             </a:documentation>
           </attribute>

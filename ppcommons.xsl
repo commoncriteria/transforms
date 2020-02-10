@@ -420,7 +420,7 @@ The following sections list Common Criteria and technology terms used in this do
       </td>
 	<xsl:variable name="manfunc" select="."/>
 	<xsl:for-each select="../cc:manager">
-	  <xsl:variable name="id" select="@id"/>
+	  <xsl:variable name="id" select="@cid"/>
 	  <td>
 	    <xsl:choose>
 	      <!-- If we have something for that role -->
