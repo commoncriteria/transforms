@@ -524,6 +524,25 @@
 
 <!-- ############### -->
 <!--            -->
+  <xsl:template match="cc:aactivity-sar"> <!-- should change this to cc:evalactivity-->
+    <div class="activity_pane hide">
+    <div class="activity_pane_header">
+      <a onclick="toggle(this);return false;" href="#">
+        <span class="activity_pane_label"> Evaluation Activity </span>
+        <span class="toggler"/>
+      </a>
+    </div>
+    <div class="activity_pane_body">
+      <i>
+        <xsl:apply-templates/>
+      </i>
+    </div>
+    </div>
+  </xsl:template>
+
+    
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:indent">
     <div class="indent" style="margin-left:2em">
       <xsl:apply-templates/>
