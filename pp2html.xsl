@@ -192,18 +192,24 @@
 <!--            -->
   <xsl:template match="cc:SOs">
     <xsl:choose>
-      <xsl:when test="cc:SO[cc:description]">
-        <dl>
-          <xsl:for-each select="cc:SO[cc:description]">
-            <dt><xsl:value-of select="@name"/></dt>
-            <dd>
-              <p><xsl:apply-templates select="cc:description"/></p>
-              Addressed by: <span class="SOlist">
-                <xsl:apply-templates select="cc:addressed-by"/>
-              </span>
-            <xsl:apply-templates select="cc:appnote"/></dd>
-          </xsl:for-each>
-        </dl>
+     <xsl:when test="cc:SO[cc:description]">
+       <table>
+        <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
+        <xsl:for-each select="cc:SO/cc:addressed-by">
+          <tr>
+           <xsl:message><xsl:value-of select="count(preceding-sibling::cc:*)=1"/></xsl:message>
+           <xsl:if test="count(preceding-sibling::cc:*)=1">
+             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
+             <td rowspan="{$rowspan}">
+               <xsl:value-of select="../@name"/><br/>
+               <xsl:apply-templates select="../cc:description"/>
+             </td>
+           </xsl:if>
+           <td><xsl:apply-templates/></td>
+           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
+          </tr> 
+        </xsl:for-each>
+      </table>
       </xsl:when>
       <xsl:otherwise>
         This CC-Module does not define any new security objectives.

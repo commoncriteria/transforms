@@ -145,7 +145,12 @@ If it's only an acronym make sure the text content is empty.
     <zeroOrMore>
       <element name="audit-event">
         <optional><attribute name="type"><value>optional</value></attribute></optional>
-        <element name="table"> 
+        <element name="table">
+           <a:documentation>
+The table where this event will go. The default table name is whatever the parent
+SFR status is. If it will go in a commonly known table, use the 'known' attribute.
+If it will go some other table, set the text content to the table name.
+            </a:documentation>
             <choice>
                 <attribute name="known"><choice>
                         <value>mandatory</value>
@@ -155,7 +160,7 @@ If it's only an acronym make sure the text content is empty.
                 </choice></attribute>
                 <attribute name="other"/>
             </choice>
-        </element>
+          </element>
         <ref name="description"/>
         <zeroOrMore>
           <element name="add-info">
@@ -451,9 +456,14 @@ Grouping for Security Objective for the Operation Environment entries.
       </attribute>
       <optional><ref name="id-attr"/></optional>
       <ref name="description"/>
-      <element name="addressed-by">
-        <ref name="basic-content-pat"/>
-      </element>
+      <oneOrMore>
+        <element name="addressed-by">
+          <ref name="basic-content-pat"/>
+        </element>
+        <element name="rationale">
+           <ref name="basic-content-pat"/>
+        </element>
+      </oneOrMore>
     </element>
   </define>
 
