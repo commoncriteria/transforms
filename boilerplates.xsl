@@ -183,29 +183,22 @@ This module does not define any assumptions.
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
-      <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
+
+      <xsl:for-each select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
-          <td> <xsl:value-of select="@name"/> </td>
-          <td>
-            <xsl:for-each select="cc:objective-refer">
-              <xsl:value-of select="@ref"/>
-              <xsl:if test="position() != last()">
-                <xsl:text>, </xsl:text>
-              </xsl:if>
-            </xsl:for-each>
-          </td>
-          <td>
-            <xsl:for-each select="cc:objective-refer">
-              <xsl:apply-templates select="cc:rationale"/>
-              <xsl:if test="position() != last()">
-                <br/>
-              </xsl:if>
-            </xsl:for-each>
-          </td>
+          <xsl:if test="count(preceding-sibling::cc:*)=1">
+            <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
+            <td rowspan="{$rowspan}">
+              <xsl:value-of select="../@name"/><br/>
+            </td>
+          </xsl:if>
+          <td><xsl:value-of select="@ref"/></td>
+          <td><xsl:apply-templates select="cc:rationale"/></td>
         </tr>
       </xsl:for-each>
     </table>
   </xsl:template>
+
 
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>

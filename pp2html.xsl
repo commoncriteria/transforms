@@ -197,7 +197,6 @@
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="cc:SO/cc:addressed-by">
           <tr>
-           <xsl:message><xsl:value-of select="count(preceding-sibling::cc:*)=1"/></xsl:message>
            <xsl:if test="count(preceding-sibling::cc:*)=1">
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
@@ -290,45 +289,6 @@
     <td><xsl:if test="not(cc:add-info)">-</xsl:if>
              <xsl:apply-templates select="cc:add-info"/>
     </td>
-  </xsl:template>
-
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:InsertSPDCorrespondence">
-    <table>
-      <tr class="header">
-        <td>Threat, Assumption, or OSP</td>
-        <td>Security Objectives</td>
-        <td>Rationale</td>
-      </tr>
-
-        <xsl:message> <xsl:value-of select="name()"/><xsl:value-of select="@name"/></xsl:message>
-      <xsl:for-each select="(//cc:threat | //cc:OSP | //cc:assumption)">
-        <xsl:message> <xsl:value-of select="name()"/><xsl:value-of select="@name"/></xsl:message>
-        <tr>
-          <td>
- 
-            <xsl:value-of select="@name"/>
-          </td>
-          <td>
-            <xsl:for-each select="cc:objective-refer">
-              <xsl:value-of select="@ref"/>
-              <xsl:if test="position() != last()">
-                <xsl:text>, </xsl:text>
-              </xsl:if>
-            </xsl:for-each>
-          </td>
-          <td>
-            <xsl:for-each select="cc:objective-refer">
-              <xsl:apply-templates select="cc:rationale"/>
-              <xsl:if test="position() != last()">
-                <br/>
-              </xsl:if>
-            </xsl:for-each>
-          </td>
-        </tr>
-      </xsl:for-each>
-    </table>
   </xsl:template>
 
 
