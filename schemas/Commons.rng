@@ -145,12 +145,7 @@ If it's only an acronym make sure the text content is empty.
     <zeroOrMore>
       <element name="audit-event">
         <optional><attribute name="type"><value>optional</value></attribute></optional>
-        <element name="table">
-           <a:documentation>
-The table where this event will go. The default table name is whatever the parent
-SFR status is. If it will go in a commonly known table, use the 'known' attribute.
-If it will go some other table, set the text content to the table name.
-            </a:documentation>
+        <element name="table"> 
             <choice>
                 <attribute name="known"><choice>
                         <value>mandatory</value>
@@ -160,7 +155,7 @@ If it will go some other table, set the text content to the table name.
                 </choice></attribute>
                 <attribute name="other"/>
             </choice>
-          </element>
+        </element>
         <ref name="description"/>
         <zeroOrMore>
           <element name="add-info">
