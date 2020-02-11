@@ -201,7 +201,6 @@
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
                <xsl:value-of select="../@name"/><br/>
-               <xsl:apply-templates select="../cc:description"/>
              </td>
            </xsl:if>
            <td><xsl:apply-templates/></td>
