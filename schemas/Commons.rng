@@ -25,6 +25,7 @@
       <a:documentation>Header that is visible to the user.</a:documentation>
     </attribute>
   </define>
+
   <define name="threat-name-attr">
     <attribute name="name">
       <data type="string">
@@ -32,7 +33,78 @@
       </data>
     </attribute>
   </define>
-  
+
+  <define name="SecProbDesChapter">
+    <element name="chapter">
+      <a:documentation>
+      </a:documentation>
+      <attribute name="title"><value>Security Problem Description</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content-pat"/>
+      <element name="section">
+	<a:documentation>
+	  Section describing threats.
+	</a:documentation>
+	<attribute name="title"><value>Threats</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+        <ref name="threats"/>
+      </element>
+
+      <element name="section">
+	<a:documentation>
+	  Section describing Assumptions.
+	</a:documentation>
+	<attribute name="title"><value>Assumptions</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+       <optional> <ref name="osp-section"/> </optional>
+    </element>
+  </define>
+
+  <define name="SecObjChapter">
+    <element name="chapter">
+      <a:documentation>
+	Chapter describing the Security Objectives for this module.
+      </a:documentation>
+      <attribute name="title"><value>Security Objectives</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content-pat"/>
+      <element name="section">
+	<a:documentation>
+	  Section describing the Security Objectives for the TOE.
+	</a:documentation>
+	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="SOs"/>
+      </element>
+      <element name="section">
+	<a:documentation>
+	  Section describing the Security Objectives for the TOE's Operational Environment.
+	</a:documentation>
+	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
+	<ref name="id-attr"/>
+	<ref name="basic-content-pat"/>
+	<zeroOrMore>
+	  <ref name="SOEs"/>
+	</zeroOrMore>
+      </element>
+      <element name="section">
+	<a:documentation>
+	  Section describing the rationale for why this module's security objectives do not
+	  conflict with the base PPs.
+	</a:documentation>
+	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
+	<ref name="id-attr"/>
+      </element>
+    </element>
+  </define>
+
+
+
+
   <define name="boilerplate-no-attr">
     <a:documentation>
       Attribute to stifle boilerplate text from being included in this section.
@@ -443,13 +515,15 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="description"/>
+          <ref name="description-and"/>
         </element>
       </oneOrMore>
     </element>
   </define>
 
-
+  <define name="description-and">
+    <ref name="description"/>
+  </define>
 
   <define name="SO">
     <element name="SO">
@@ -695,26 +769,24 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
   <define name="threats">
     <element name="threats">
-	  <a:documentation>
-	  </a:documentation>
-	  <oneOrMore>
-            <ref name="threat"/>
-  </oneOrMore>
-	</element>
+      <a:documentation>
+      </a:documentation>
+      <oneOrMore>
+        <element name="threat">
+          <a:documentation>
+            Defines a threat.
+          </a:documentation>
+          <ref name="threat-name-attr"/>
+          <ref name="description-and"/>
+          <oneOrMore>
+            <ref name="objective-refer"/>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+    </element>
   </define>
-
-  <define name="threat">
-             <element name="threat">
-                <a:documentation>
-                  Defines a threat.
-                </a:documentation>
-                <ref name="threat-name-attr"/>
-               <ref name="description"/>
-                <oneOrMore>
-                  <ref name="objective-refer"/>
-                </oneOrMore>
-              </element>
-  </define> 
+ 
+  
   <define name="assumptions">
     <element name="assumptions">
       <a:documentation>

@@ -7,7 +7,7 @@
 >
 
   <include href="Commons.rng">
-
+<!--
     <define name="SO">
       <element name="SO">
     <a:documentation>
@@ -41,7 +41,8 @@
 		threat section (but it will still be included in the security objectives
 		rationale table).
 	      </a:documentation>
-	      <ref name="id-attr"/>
+	      <optional><ref name="id-attr"/></optional>
+              <ref name="threat-name-attr"/>
 	      <optional>
 		<ref name="description"/>
 	      </optional>
@@ -57,32 +58,17 @@
               </oneOrMore>
 	    </element>
     </define>	
-
-  <define name="SOEs">
-    <element name="SOEs">
-      <a:documentation>
-Grouping for Security Objective for the Operation Environment entries.
-      </a:documentation>
-      <oneOrMore>
-    	<element name="SOE">
-           <attribute name="name">
-             <data type="string">
-                <param name="pattern">OE\.[A-Z_]+ </param>
-             </data>
-           </attribute>
-	     <ref name="id-attr"/>
-	     <ref name="description"/>
-	     <ref name="consistency-rationale"/>
-	   </element>
-      </oneOrMore>
-    </element>
-  </define>
-
-
+-->
+    <define name="description-and">
+      <ref name="description"/>
+      <ref name="consistency-rationale"/>
+    </define>
 
   </include>
 
-
+<!--############################## -->
+<!--      START                    -->
+<!--############################## -->
   <start>
     <element name="Module">
       <a:documentation>
@@ -474,83 +460,6 @@ Specifies a component under Security Functional Requirements section..
       </element>
     </zeroOrMore>
   </define>
-
-
-
-  <define name="SecObjChapter">
-    <element name="chapter">
-      <a:documentation>
-	Chapter describing the Security Objectives for this module.
-      </a:documentation>
-      <attribute name="title"><value>Security Objectives</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="SOs"/>
-      </element>
-      <element name="section">
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE's Operational Environment.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<zeroOrMore>
-	  <ref name="SOEs"/>
-	</zeroOrMore>
-      </element>
-      <element name="section">
-	<a:documentation>
-	  Section describing the rationale for why this module's security objectives do not
-	  conflict with the base PPs.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="id-attr"/>
-      </element>
-    </element>
-  </define>
-
-  <define name="SecProbDesChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Security Problem Description</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing threats.
-	</a:documentation>
-	<attribute name="title"><value>Threats</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-        <ref name="threats"/>
-      </element>
-
-      <element name="section">
-	<a:documentation>
-	  Section describing Assumptions.
-	</a:documentation>
-	<attribute name="title"><value>Assumptions</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<ref name="assumptions"/>
-      </element>
-
-      <optional>
-	<ref name="osp-section"/>
-      </optional>
-    </element>
-  </define>
-
-
-
-
 
   <define name="IntroductionChapter">
     <element name="chapter">

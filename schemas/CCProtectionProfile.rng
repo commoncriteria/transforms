@@ -107,6 +107,7 @@ Tags that this section should be indented(left) 2em.
       </optional>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
+      <ref name="SecProbDesChapter"/>
       <oneOrMore>
         <element name="chapter">
           <a:documentation>Major grouping for the document.</a:documentation>
