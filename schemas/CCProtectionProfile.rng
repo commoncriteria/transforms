@@ -77,7 +77,7 @@ Tags that this section should be indented(left) 2em.
         <value>yes</value></attribute>
       </optional>
       <ref name="PPReference"/>
-     <oneOrMore>
+      <oneOrMore>
         <element name="RevisionHistory">
           <a:documentation>Documents the major changes to releases.</a:documentation>
           <zeroOrMore>
