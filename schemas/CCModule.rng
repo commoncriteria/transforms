@@ -34,7 +34,29 @@
       </element>
     </define>
 
-
+    <define name="threat">
+	    <element name="threat">
+	      <a:documentation>
+		Omitting the description supresses the threat from being included in the
+		threat section (but it will still be included in the security objectives
+		rationale table).
+	      </a:documentation>
+	      <ref name="id-attr"/>
+	      <optional>
+		<ref name="description"/>
+	      </optional>
+	      <optional>
+		<element name="consistency-rationale">
+		  <a:documentation>
+		  </a:documentation>
+		  <ref name="basic-content-pat"/>
+		</element>
+	      </optional>
+              <oneOrMore>
+                <ref name="objective-refer"/>
+              </oneOrMore>
+	    </element>
+    </define>	
 
   <define name="SOEs">
     <element name="SOEs">
@@ -507,33 +529,7 @@ Specifies a component under Security Functional Requirements section..
 	<attribute name="title"><value>Threats</value></attribute>
 	<ref name="id-attr"/>
 	<ref name="basic-content-pat"/>
-	<element name="threats">
-	  <a:documentation>
-	  </a:documentation>
-	  <oneOrMore>
-	    <element name="threat">
-	      <a:documentation>
-		Omitting the description supresses the threat from being included in the
-		threat section (but it will still be included in the security objectives
-		rationale table).
-	      </a:documentation>
-	      <ref name="id-attr"/>
-	      <optional>
-		<ref name="description"/>
-	      </optional>
-	      <optional>
-		<element name="consistency-rationale">
-		  <a:documentation>
-		  </a:documentation>
-		  <ref name="basic-content-pat"/>
-		</element>
-	      </optional>
-              <oneOrMore>
-                <ref name="objective-refer"/>
-              </oneOrMore>
-	    </element>
-	  </oneOrMore>
-	</element>
+        <ref name="threats"/>
       </element>
 
       <element name="section">

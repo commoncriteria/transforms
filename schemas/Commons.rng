@@ -25,7 +25,14 @@
       <a:documentation>Header that is visible to the user.</a:documentation>
     </attribute>
   </define>
-
+  <define name="threat-name-attr">
+    <attribute name="name">
+      <data type="string">
+        <param name="pattern">T\.[_A-Z0-9]+</param>
+      </data>
+    </attribute>
+  </define>
+  
   <define name="boilerplate-no-attr">
     <a:documentation>
       Attribute to stifle boilerplate text from being included in this section.
@@ -684,8 +691,30 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
+
+  </define>
+  <define name="threats">
+    <element name="threats">
+	  <a:documentation>
+	  </a:documentation>
+	  <oneOrMore>
+            <ref name="threat"/>
+  </oneOrMore>
+	</element>
   </define>
 
+  <define name="threat">
+             <element name="threat">
+                <a:documentation>
+                  Defines a threat.
+                </a:documentation>
+                <ref name="threat-name-attr"/>
+               <ref name="description"/>
+                <oneOrMore>
+                  <ref name="objective-refer"/>
+                </oneOrMore>
+              </element>
+  </define> 
   <define name="assumptions">
     <element name="assumptions">
       <a:documentation>

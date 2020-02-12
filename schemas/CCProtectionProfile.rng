@@ -206,28 +206,8 @@ Tags that this section should be indented(left) 2em.
           <ref name="SOs"/>
           <ref name="assumptions"/>
           <ref name="subsection-pattern"/>
-          <element name="threats">
-            <a:documentation>
-              Wrapper element for various threats.
-            </a:documentation>
-            <oneOrMore>
-              <element name="threat">
-                <a:documentation>
-                  Defines a threat.
-                </a:documentation>
-                <attribute name="name">
-                  <data type="string">
-                    <param name="pattern">T\.[_A-Z0-9]+</param>
-                  </data>
-                </attribute>
-                <ref name="description"/>
-                <oneOrMore>
-                  <ref name="objective-refer"/>
-                </oneOrMore>
-              </element>
-            </oneOrMore>
-          </element>
-          <element name="usecases">
+          <ref name="threats"/>
+         <element name="usecases">
             <a:documentation>
               Wrapper element for uses cases.
             </a:documentation>
