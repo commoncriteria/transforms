@@ -198,6 +198,7 @@
         <xsl:for-each select="cc:SO/cc:addressed-by">
           <tr>
            <xsl:if test="count(preceding-sibling::cc:*)=1">
+             <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
                <xsl:value-of select="../@name"/><br/>
@@ -214,6 +215,36 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+<!-- ############### -->
+<!--            -->
+   <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
+    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
+    This section describes how the assumptions, threats, and organization security policies map to the security objectives.
+
+    <table>
+      <tr class="header">
+        <td>Threat, Assumption, or OSP</td>
+        <td>Security Objectives</td>
+        <td>Rationale</td>
+      </tr>
+
+      <xsl:for-each select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
+        <tr>
+          <xsl:if test="count(preceding-sibling::cc:*)=1">
+            <xsl:attribute name="class">major-row</xsl:attribute>
+            <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
+            <td rowspan="{$rowspan}">
+              <xsl:value-of select="../@name"/><br/>
+            </td>
+          </xsl:if>
+          <td><xsl:value-of select="@ref"/></td>
+          <td><xsl:apply-templates select="cc:rationale"/></td>
+        </tr>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+
 
 <!-- ############### -->
 <!--            -->

@@ -176,7 +176,13 @@
    .tooltipped:hover .tooltiptext {
        visibility: visible;
    }
-
+   tr.major-row{
+       border-top-style: double;
+   }
+   tr.major-row td:first-child{
+       border-right-style: ridge;
+       background-color: white;
+   } 
    table.mfs td{
        text-align: center;
    }
