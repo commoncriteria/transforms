@@ -76,50 +76,8 @@ Tags that this section should be indented(left) 2em.
         </a:documentation>
         <value>yes</value></attribute>
       </optional>
-
-      <element name="PPReference">
-        <a:documentation>
-          A wrapper element for document meta-data.
-        </a:documentation>
-
-        <element name="ReferenceTable">
-          <a:documentation>
-            A second wrapper element for document meta-data.
-          </a:documentation>
-          <element name="PPTitle">
-            <a:documentation>Title of this document</a:documentation>
-            <text/>
-          </element>
-          <element name="PPVersion">
-            <a:documentation>
-
-Version of Common Criteria this document follows.
-It should be the version listed in the CCPart1/2/3 files consulted.
-
-            </a:documentation>
-            <data type="NMTOKEN"/>
-          </element>
-          <element name="PPAuthor">
-            <a:documentation>
-              Organization that developed this PP (e.g. National Information Assurance Partnership)
-            </a:documentation>
-            <text/>
-          </element>
-          <element name="PPPubDate">
-            <a:documentation>
-              Date of publication for this PP.
-            </a:documentation>
-            <data type="date"/>
-          </element>
-          <element name="Keywords">
-            <a:documentation>
-              NOT USED. A list of keywords associated with this document.
-            </a:documentation>
-            <text/>
-          </element>
-        </element>
-      </element>
-      <oneOrMore>
+      <ref name="PPReference"/>
+     <oneOrMore>
         <element name="RevisionHistory">
           <a:documentation>Documents the major changes to releases.</a:documentation>
           <zeroOrMore>
@@ -225,13 +183,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <oneOrMore>
         <choice>
           <ref name="basic-content-pat"/>
-          <element name="InsertSPDCorrespondence">
-                  <a:documentation>
-                    Tags the spot where the table mapping threats
-                    to objectives to requirements should go.
-                  </a:documentation>
-            <empty/>
-          </element>
           <ref name="OSPs"/>
           <element name="SOEs">
             <a:documentation>
@@ -448,4 +399,48 @@ It should be the version listed in the CCPart1/2/3 files consulted.
     </element>
   </define>
 
+  <define name="PPReference">
+      <element name="PPReference">
+        <a:documentation>
+          A wrapper element for document meta-data.
+        </a:documentation>
+
+        <element name="ReferenceTable">
+          <a:documentation>
+            A second wrapper element for document meta-data.
+          </a:documentation>
+          <element name="PPTitle">
+            <a:documentation>Title of this document</a:documentation>
+            <text/>
+          </element>
+          <element name="PPVersion">
+            <a:documentation>
+
+Version of Common Criteria this document follows.
+It should be the version listed in the CCPart1/2/3 files consulted.
+
+            </a:documentation>
+            <data type="NMTOKEN"/>
+          </element>
+          <element name="PPAuthor">
+            <a:documentation>
+              Organization that developed this PP (e.g. National Information Assurance Partnership)
+            </a:documentation>
+            <text/>
+          </element>
+          <element name="PPPubDate">
+            <a:documentation>
+              Date of publication for this PP.
+            </a:documentation>
+            <data type="date"/>
+          </element>
+          <element name="Keywords">
+            <a:documentation>
+              NOT USED. A list of keywords associated with this document.
+            </a:documentation>
+            <text/>
+          </element>
+        </element>
+      </element>
+  </define> 
 </grammar>
