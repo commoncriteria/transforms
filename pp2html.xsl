@@ -227,7 +227,7 @@
     </dl>
   </xsl:template>
 
-  <xsl:template match="cc:audit-events[cc:depends]">
+  <xsl:template match="cc:audit-table[cc:depends]">
       <div class="dependent"> The following audit events are included if:
          <ul> <xsl:for-each select="cc:depends">
             <li>
@@ -247,11 +247,11 @@
             </xsl:if>
             </li>
         </xsl:for-each> </ul><br/>
-        <xsl:call-template name="audit-events"/>
+        <xsl:call-template name="audit-table"/>
       </div>        
   </xsl:template>
 
-  <xsl:template match="cc:audit-events" name="audit-events">
+  <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="table" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
@@ -262,6 +262,10 @@
       <tr>
          <td><xsl:apply-templates select="." mode="getId"/></td>
          <xsl:choose>
+<!--            <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">  
+                I think what we have to deal with here is:
+                table is now an attribute rather than an element
+                default value is "mandatory" -->
             <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">
               <td>No events specified</td><td></td>
             </xsl:when>
