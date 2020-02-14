@@ -515,10 +515,15 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="description-and"/>
+          <ref name="description"/>
+          <ref name="consistency-rationale-placeholder"/>
         </element>
       </oneOrMore>
     </element>
+  </define>
+
+  <define name="consistency-rationale-placeholder">
+    <empty/>
   </define>
 
   <define name="description-and">
@@ -545,6 +550,7 @@ Grouping for Security Objective for the Operation Environment entries.
            <ref name="basic-content-pat"/>
         </element>
       </oneOrMore>
+      <ref name="consistency-rationale-placeholder"/>
     </element>
   </define>
 
@@ -777,7 +783,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             Defines a threat.
           </a:documentation>
           <ref name="threat-name-attr"/>
-          <ref name="description-and"/>
+          <ref name="description"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -823,7 +829,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
             <oneOrMore>
               <element name="OSP">
-                <ref name="id-attr"/>
+                <optional><ref name="id-attr"/></optional>
                 <attribute name="name">
                 <data type="string">
                   <param name="pattern">P\.[A-Z_]+</param>

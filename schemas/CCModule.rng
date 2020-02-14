@@ -59,11 +59,9 @@
 	    </element>
     </define>	
 -->
-    <define name="description-and">
-      <ref name="description"/>
+    <define name="consistency-rationale-placeholder">
       <ref name="consistency-rationale"/>
     </define>
-
   </include>
 
 <!--############################## -->
