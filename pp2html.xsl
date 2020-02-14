@@ -192,23 +192,15 @@
 <!--            -->
   <xsl:template match="cc:SOs">
     <xsl:choose>
-     <xsl:when test="cc:SO[cc:description]">
-       <table>
-        <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
-        <xsl:for-each select="cc:SO/cc:addressed-by">
-          <tr>
-           <xsl:if test="count(preceding-sibling::cc:*)=1">
-             <xsl:attribute name="class">major-row</xsl:attribute>
-             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
-             <td rowspan="{$rowspan}">
-               <xsl:value-of select="../@name"/><br/>
-             </td>
-           </xsl:if>
-           <td><xsl:apply-templates/></td>
-           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
-          </tr> 
-        </xsl:for-each>
-      </table>
+      <xsl:when test="cc:SO[cc:description]">
+        <dl>
+          <xsl:for-each select="cc:SO[cc:description]">
+            <dt><xsl:value-of select="@name"/></dt>
+            <dd>
+              <p><xsl:apply-templates select="cc:description"/></p>
+           <xsl:apply-templates select="cc:appnote"/></dd>
+          </xsl:for-each>
+        </dl>
       </xsl:when>
       <xsl:otherwise>
         This CC-Module does not define any new security objectives.
@@ -220,8 +212,10 @@
 <!--            -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
+    
+    <h3 id="threats_mapping" class="indexable" data-level="3">Assumptions, Threats, and OSPs Mapping</h3>
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
-
+    
     <table>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
@@ -243,6 +237,29 @@
         </tr>
       </xsl:for-each>
     </table>
+
+    <h3 id="objectives_mapping" class="indexable" data-level="3">Objectives Mapping</h3>
+    This section describes how security objectives map to SFRs.
+      
+      <table>
+        <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
+        <xsl:for-each select="//cc:SO/cc:addressed-by">
+          <tr>
+           <xsl:if test="count(preceding-sibling::cc:*)=1">
+             <xsl:attribute name="class">major-row</xsl:attribute>
+             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
+             <td rowspan="{$rowspan}">
+               <xsl:value-of select="../@name"/><br/>
+             </td>
+           </xsl:if>
+           <td><xsl:apply-templates/></td>
+           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
+          </tr> 
+        </xsl:for-each>
+      </table>
+
+
+
   </xsl:template>
 
 
