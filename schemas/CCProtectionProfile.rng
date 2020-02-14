@@ -158,10 +158,7 @@ Tags that this section should be indented(left) 2em.
         <a:documentation>
           Element that defines an appendix.
         </a:documentation>
-        <attribute name="id">
-          <a:documentation>A document-wide unique string.</a:documentation>
-          <data type="NCName"/>
-        </attribute>
+        <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="boilerplate-no-attr"/>
         <oneOrMore><choice>
