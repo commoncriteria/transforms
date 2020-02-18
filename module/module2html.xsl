@@ -47,6 +47,8 @@
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:call-template name="secrectext"/>
+    <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
+    <xsl:call-template name="obj-req-map"/>
     <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
   </xsl:template>
