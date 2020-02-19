@@ -645,7 +645,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ######################### -->
   <xsl:template match="cc:subsection[@id='obj_map']" mode="hook" name="obj-req-map">
-<!--    <h3 id="obj_map" class="indexable" data-level="3">TOE Security Requirements Rationale</h3> -->
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
