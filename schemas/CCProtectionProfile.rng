@@ -351,25 +351,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <ref name="f-comp-content-pat"/>
       <choice>
         <!-- Choice of status -->
-        <!-- If the status is objective, it must have a targetdate(?) -->
-        <group>
-          <optional>
-            <attribute name="targetdate">
-              <a:documentation>
-                Target date that the requirements under this component become
-                manandory. It only makes sense for _objective_ components.
-              </a:documentation>
-              <data type="date"/>
-            </attribute>
-          </optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>objective</value>
-          </attribute>
-        </group>
-
         <!-- If the status is selection-based, it must have dependencies -->
         <group>
           <attribute name="status">
@@ -384,16 +365,16 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         </group>
 
         <!-- The status could also be optional or nothing (which is indicated here) -->
-        <optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <choice>
+        <attribute name="status">
+          <a:documentation>
+            Denotes the status of a requirement.
+          </a:documentation>
+          <choice>
               <value>optional</value>
-            </choice>
-          </attribute>
-        </optional>
+              <value>objective</value>
+              <value>mandatory</value?
+          </choice>
+        </attribute>
       </choice>
       <ref name="depends-pat"/>
       <optional><ref name="note"/></optional>
