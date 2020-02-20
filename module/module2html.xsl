@@ -26,6 +26,7 @@
     <xsl:apply-templates select="//cc:chapter[@title='Security Problem Description']"/>
     <xsl:apply-templates select="//cc:chapter[@title='Security Objectives']"/>
     <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
+    <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
     <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
@@ -36,7 +37,10 @@
     <xsl:call-template name="acronyms"/>
   </xsl:template>
 
-
+  <xsl:template name="mod-obj-req-map">
+    <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
+    <xsl:call-template name="obj-req-map"/>
+  </xsl:template> 
 
   <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
     <div class="eacategory"><xsl:value-of select="name()"/></div>
@@ -47,9 +51,7 @@
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:call-template name="secrectext"/>
-    <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
-    <xsl:call-template name="obj-req-map"/>
-    <xsl:apply-templates select="cc:base-pp"/>
+   <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
   </xsl:template>
 

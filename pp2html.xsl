@@ -644,7 +644,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
   </xsl:template>
 
 <!-- ######################### -->
-  <xsl:template match="cc:subsection[@id='obj_map']" mode="hook" name="obj-req-map">
+  <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
@@ -664,7 +664,8 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
         </xsl:for-each>
       </table>
     </p>
-    <xsl:apply-templates/>
+    
+    <!-- <xsl:if test="@id='obj_map'"><xsl:apply-templates/></xsl:if> -->
   </xsl:template>
 
 
