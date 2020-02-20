@@ -227,6 +227,8 @@
     </dl>
   </xsl:template>
 
+<!-- ############### -->
+<!--            -->
   <xsl:template match="cc:audit-table[cc:depends]">
       <div class="dependent"> The following audit events are included if:
          <ul> <xsl:for-each select="cc:depends">
@@ -259,28 +261,32 @@
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
-        <xsl:for-each select=cc:audit-event> 
+        <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
             <xsl:if test="not(((cc:audit-event/@table)&(cc:f-component/@status=$table))|(cc:audit-event/@table=$table))
                 <tr>
-                    <td><xsl:apply-templates select="." mode="getId"/></td>      <!-- SFR name -->
+                    <td><xsl:apply-templates select="cc:f-component" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
-                        <xsl:when test=(not (cc:audit-event[cc:audit-event-descr]))
+                        <xsl:when test="(not (cc:audit-event/cc:audit-event-descr))">
                             <td>No events specified</td><td></td>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test=cc:audit-event/@type='optional'>
+                                <xsl:when test="cc:audit-event/@type='optional'">
                                    <td> [selection: <xsl:apply-templates select="cc:audit-event-descr"/>, None] </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
                                 </xsl:otherwise>
                             </xsl:choose>
-                            <td> <!-- Here do add-info --> </td>
+                            <td>
+								<xsl:for-each select="cc:audit-event-info">
+									<xsl:apply-templates select="." mode="intable" />
+								</xsl:for-each>
+							</td>
                         </xsl:otherwise>
                     </xsl:choose>
                </tr>
@@ -292,16 +298,18 @@
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:audit-event" mode="intable">
-    <td>
-       <xsl:if test="@type='optional'">[OPTIONAL]</xsl:if>
-       <xsl:apply-templates select="cc:description"/>
-    </td>
-    <td><xsl:if test="not(cc:add-info)">-</xsl:if>
-             <xsl:apply-templates select="cc:add-info"/>
-    </td>
+  <xsl:template match="cc:audit-event-info" mode="intable">
+	<xsl:choose>
+		<xsl:when test="@type='optional'">
+			[selection:
+			<xsl:apply-templates select="cc:audit-event-info"/>
+			, None]	   
+	    </xsl:when>
+	    <xsl:otherwise>
+			<xsl:apply-templates select="cc:audit-event-info"/>
+		</xsl:otherwise>
   </xsl:template>
-
+                                                             
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:InsertSPDCorrespondence">
