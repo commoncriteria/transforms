@@ -372,7 +372,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           <choice>
               <value>optional</value>
               <value>objective</value>
-              <value>mandatory</value?
+              <value>mandatory</value>
           </choice>
         </attribute>
       </choice>
