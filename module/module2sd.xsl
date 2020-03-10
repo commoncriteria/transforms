@@ -334,7 +334,7 @@ guidance, and testing.</p>
       </p>
       <p><b>Acknowledgements:</b><br/>
       This SD was developed with support from NIAP <x:value-of select="/cc:PP/@name"/> 
-      <x:value-of select="/cc:Module/@target-products"/> Technical Community members, with representatives from industry, Government 
+      <x:value-of select="/cc:Module/@target-products"/> Technical Community members, with representatives from industry, government 
       agencies, Common Criteria Test Laboratories, and members of academia.
       </p>
     </div>
