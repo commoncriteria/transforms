@@ -261,14 +261,15 @@
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
+	<xsl:variable name="fcomp" select="."/>
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="not(((cc:audit-event/@table)&(cc:f-component/@status=$table))|(cc:audit-event/@table=$table))"
+            <xsl:if test="(@table=$table) or ((not(@table)) and ($fcomp/@status=$table))"
                 <tr>
-                    <td><xsl:apply-templates select="cc:f-component" mode="getId"/></td>      <!-- SFR name -->
+                    <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
                         <xsl:when test="(not (cc:audit-event/cc:audit-event-descr))">
                             <td>No events specified</td><td></td>
@@ -283,10 +284,10 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                             <td>
-								<xsl:for-each select="cc:audit-event-info">
-									<xsl:apply-templates select="." mode="intable" />
-								</xsl:for-each>
-							</td>
+				<xsl:for-each select="cc:audit-event-info">
+		 			<xsl:apply-templates select="." mode="intable" />
+				</xsl:for-each>
+			    </td>
                         </xsl:otherwise>
                     </xsl:choose>
                </tr>
