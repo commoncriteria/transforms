@@ -281,11 +281,11 @@ guidance, and testing.</p>
     completed would require a specific justification from the evaluator as to why the 
     Evaluation Activities were not sufficient for that TOE.
     </p>
-    <p>Similarly, at the more granular level of Assurance Components, if the Evaluation 
-    Activities for an Assurance Component and all of its related SFR Evaluation 
+    <p>Similarly, at the more granular level of assurance components, if the Evaluation 
+    Activities for an assurance component and all of its related SFR Evaluation 
     Activities are successfully completed in an evaluation then it would be expected 
-    that the verdict for the Assurance Component is a ‘pass’.
-    To reach a ‘fail’ verdict for the Assurance Component when these Evaluation 
+    that the verdict for the assurance component is a ‘pass’.
+    To reach a ‘fail’ verdict for the assurance component when these Evaluation 
     Activities have been successfully completed would require a specific justification 
     from the evaluator as to why the Evaluation Activities were not sufficient for that TOE. 
     </p>
