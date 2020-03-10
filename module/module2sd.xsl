@@ -258,7 +258,7 @@ guidance, and testing.</p>
       </x:otherwise>
     </x:choose>.</p>
     <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/>.
-    Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE.
+    Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
     Functional Requirements (SFR), and may identify particular requirements for the content of Security
     Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly
