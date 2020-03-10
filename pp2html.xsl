@@ -266,7 +266,7 @@
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="not(((cc:audit-event/@table)&(cc:f-component/@status=$table))|(cc:audit-event/@table=$table))
+            <xsl:if test="not(((cc:audit-event/@table)&(cc:f-component/@status=$table))|(cc:audit-event/@table=$table))"
                 <tr>
                     <td><xsl:apply-templates select="cc:f-component" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
