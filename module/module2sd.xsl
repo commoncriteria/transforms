@@ -84,7 +84,7 @@ guidance, and testing.</p>
     <p>The EAs presented in this section capture the actions the evaluator performs 
     to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
     ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units 
-    that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
+    that are performed in Section <a href="#sar_aas" class="dynref"></a>.</p>
     
     <p>Regarding design descriptions (designated by the subsections labelled TSS, as 
     well as any required supplementary material that may be treated as proprietary), 
