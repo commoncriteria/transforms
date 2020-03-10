@@ -268,7 +268,7 @@ guidance, and testing.</p>
     <p>Evaluation Activities can be defined for both SFRs and Security Assurance Requirements (SAR),
     which are themselves defined in separate sections of the SD.</p>
 
-    <p>If any Evaluation Activity cannot be successfully completed in an evaluation then
+    <p>If any Evaluation Activity cannot be successfully completed in an evaluation, then
     the overall verdict for the evaluation is a 'fail'.
     In rare cases there may be acceptable reasons why an Evaluation Activity
     may be modified or deemed not applicable for a particular TOE, 
