@@ -376,6 +376,16 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           </choice>
         </attribute>
       </choice>
+
+      <attribute name="ifbase">
+         <a:documentation>
+         Identifies the base PP that this component is included for. 
+         </a:documentation>
+         <data type="string">
+              <param name="pattern">[\-a-zA-Z0-9.]+</param>
+         </data>
+      </attribute>
+
       <ref name="depends-pat"/>
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat" />
