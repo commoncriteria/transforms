@@ -254,7 +254,7 @@
   </xsl:template>
 
   <xsl:template match="cc:audit-table" name="audit-table">
-    <xsl:variable name="table" select="@table"/>
+    <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
     <tr><th>Requirement</th>
@@ -267,16 +267,16 @@
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="(@table=$table) or ((not(@table)) and ($fcomp/@status=$table))"
+            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcomp/@status=$thistable))"
                 <tr>
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
-                        <xsl:when test="(not (cc:audit-event/cc:audit-event-descr))">
+                        <xsl:when test="(not (cc:audit-event-descr))">
                             <td>No events specified</td><td></td>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="cc:audit-event/@type='optional'">
+                                <xsl:when test="@type='optional'">
                                    <td> [selection: <xsl:apply-templates select="cc:audit-event-descr"/>, None] </td>
                                 </xsl:when>
                                 <xsl:otherwise>
