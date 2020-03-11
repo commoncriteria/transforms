@@ -301,14 +301,15 @@
 <!--            -->
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
-		<xsl:when test="@type='optional'">
+	    <xsl:when test="@type='optional'">
 			[selection:
 			<xsl:apply-templates select="cc:audit-event-info"/>
 			, None]	   
 	    </xsl:when>
 	    <xsl:otherwise>
 			<xsl:apply-templates select="cc:audit-event-info"/>
-		</xsl:otherwise>
+	    </xsl:otherwise>
+	  </xsl:choose>
   </xsl:template>
                                                              
 <!-- ############### -->
