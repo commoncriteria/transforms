@@ -687,7 +687,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0">   <!-- or count(.//cc:f-component[not(@status)])"> -->
+<!--    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)])">  -->
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
