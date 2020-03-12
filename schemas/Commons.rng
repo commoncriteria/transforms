@@ -882,7 +882,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="f-comp-content-pat">
-    <attribute name="id">
+    <attribute name="ccid">
       <a:documentation>
         The ID without the iteration.
       </a:documentation>
