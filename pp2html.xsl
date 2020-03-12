@@ -696,7 +696,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:if test="$appendicize != 'on'">
         <xsl:apply-templates />
       </xsl:if>
-    </xsl:if>
+<!--    </xsl:if>  -->
   </xsl:template>
 
 <!-- ############### -->
