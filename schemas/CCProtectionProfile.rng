@@ -422,7 +422,12 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <a:document>
         Specifies a component under Security Assurance Requirements section.
       </a:document>
-      <ref name="id-attr"/>
+      <attribute name="cc-id">
+        <data type="string">
+           <param name="pattern">a[a-z]{2}_[a-z0-9]{2,10}(_ext)?\.[0-9]</param>
+        </data>
+      </attribute>
+      <optional><ref name="id-attr"/></optional>
       <attribute name="name">
         <a:document>
           A readable title for this component
