@@ -658,7 +658,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 		</xsl:if>
             </xsl:for-each>
 	    <xsl:if test="$found='false'">
-		    Nothing found
+              <p>This PP does not define any optional requirements.</p>
 	    </xsl:if>
 	</xsl:if>
     </xsl:template>
@@ -666,14 +666,19 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="selection-based-appendix">
+	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
             <xsl:for-each select="//cc:subsection[cc:f-component]">
 	       <xsl:if test="@status='sel-based'">
+	           <xsl:variable name="found" select="true"/>
 	           <xsl:apply-templates select="."/>
 	       </xsl:if>
             </xsl:for-each>
+	    <xsl:if test="$found='false'">
+              <p>This PP does not define any selection-based requirements.</p>
+	    </xsl:if>
         </xsl:if>
     </xsl:template>
 
@@ -681,14 +686,19 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="objective-appendix">
+	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Objective Requirements</h1>
             <xsl:call-template name="objective-text"/>
             <xsl:for-each select="//cc:subsection[cc:f-component]">
 		<xsl:if test="@status='objective'">
+    	            <xsl:variable name="found" select="true"/>
 	            <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
 		</xsl:if>
             </xsl:for-each>
+	    <xsl:if test="$found='false'">
+              <p>This PP does not define any objective requirements.</p>
+	    </xsl:if>
         </xsl:if>
     </xsl:template>
 
