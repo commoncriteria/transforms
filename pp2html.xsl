@@ -227,7 +227,7 @@
             <xsl:attribute name="class">major-row</xsl:attribute>
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
-              <xsl:value-of select="../@name"/><br/>
+              <xsl:value-of select="../@cc-id"/><br/>
             </td>
           </xsl:if>
           <td><xsl:value-of select="@ref"/></td>

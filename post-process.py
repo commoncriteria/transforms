@@ -68,6 +68,7 @@ class State:
             comps = comps + self.classmap['comp']
         for comp in comps:
             if 'id' in comp.attrib:
+#                 print("Adding " + comp.attrib["id"])
                 self.regex_str = self.regex_str + backslashify(comp.attrib["id"]) + "|"
             else:
                 # The MDF has some unorthodox items
