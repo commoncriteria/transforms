@@ -318,9 +318,9 @@
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:a-component">
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
+    <div class="comp" id="{translate(@cc-id, $lower, $upper)}">
       <h4>
-        <xsl:value-of select="concat(translate(@id, $lower, $upper), ' ')"/>
+        <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
         <xsl:value-of select="@name"/>
       </h4>
       <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
