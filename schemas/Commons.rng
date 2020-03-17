@@ -26,82 +26,7 @@
     </attribute>
   </define>
 
-  <define name="threat-name-attr">
-    <attribute name="cc-id">
-      <data type="string">
-        <param name="pattern">T\.[_A-Z0-9]+</param>
-      </data>
-    </attribute>
-  </define>
-
-  <define name="SecProbDesChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Security Problem Description</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing threats.
-	</a:documentation>
-	<attribute name="title"><value>Threats</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-        <ref name="threats"/>
-      </element>
-    <element name="section">
-	<a:documentation>
-	  Section describing Assumptions.
-	</a:documentation>
-	<attribute name="title"><value>Assumptions</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<ref name="assumptions"/>
-      </element>
-       <optional> <ref name="osp-section"/> </optional>
-    </element>
-  </define>
-
-    
-  <define name="SecObjChapter">
-    <element name="chapter">
-      <a:documentation>
-	Chapter describing the Security Objectives for this module.
-      </a:documentation>
-      <attribute name="title"><value>Security Objectives</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <element name="section">
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="SOs"/>
-      </element>
-      <element name="section">
-	<a:documentation>
-	  Section describing the Security Objectives for the TOE's Operational Environment.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<zeroOrMore>
-	  <ref name="SOEs"/>
-	</zeroOrMore>
-      </element>
-      <element name="section">
-	<a:documentation>
-	  Section describing the rationale for why this module's security objectives do not
-	  conflict with the base PPs.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="id-attr"/>
-      </element>
-    </element>
-  </define>
-    
+  
   <define name="boilerplate-no-attr">
     <a:documentation>
       Attribute to stifle boilerplate text from being included in this section.
@@ -565,25 +490,16 @@ Grouping for Security Objective for the Operation Environment entries.
       </a:documentation>
       <oneOrMore>
         <element name="SOE">
-          <attribute name="cc-id">
+          <attribute name="name">
             <data type="string">
               <param name="pattern">OE\.[A-Z_]+</param>
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
           <ref name="description"/>
-          <ref name=consistency-rationale-placeholder"/>
         </element>
       </oneOrMore>
     </element>
-  </define>
-
-  <define name="consistency-rationale-placeholder">
-    <empty/>
-  </define>
-
-  <define name="description-and">
-    <ref name="description"/>
   </define>
 
 
@@ -592,21 +508,16 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
         Entry for a security objective
       </a:documentation>
-      <attribute name="cc-id">
+      <attribute name="name">
         <data type="string">
           <param name="pattern">O\.[A-Z_]+</param>
         </data>
       </attribute>
       <optional><ref name="id-attr"/></optional>
       <ref name="description"/>
-      <oneOrMore>
-        <element name="addressed-by">
-          <ref name="basic-content-pat"/>
-        </element>
-        <element name="rationale">
-           <ref name="basic-content-pat"/>
-        </element>
-      </oneOrMore>
+      <element name="addressed-by">
+        <ref name="basic-content-pat"/>
+      </element>
     </element>
   </define>
 
@@ -859,7 +770,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             Describes assumptions made.
           </a:documentation>
           <optional><ref name="id-attr"/></optional>
-          <attribute name="cc-id">
+          <attribute name="name">
             <a:documentation>
               Identifying name of the assumption.
             </a:documentation>
@@ -971,7 +882,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="f-comp-content-pat">
-    <attribute name="cc-id">
+    <attribute name="id">
       <a:documentation>
         The ID without the iteration.
       </a:documentation>
