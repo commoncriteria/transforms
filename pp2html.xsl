@@ -44,8 +44,10 @@
 <!--            -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
-    <xsl:call-template name="first-appendix"/>
+<!--    <xsl:call-template name="first-appendix"/>   -->
+    <xsl:call-template name="optional-appendix"/>
     <xsl:call-template name="selection-based-appendix"/>
+    <xsl:call-template name="objective-appendix"/>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -643,6 +645,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="optional-appendix">
+	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
             <xsl:call-template name="optional-text"/>
@@ -650,9 +653,13 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 		 Might want to set a flag increment a counter -->
 	    <xsl:for-each select="//cc:subsection[cc:f-component]">
 		<xsl:if test="@status='optional'"> 
+		  <xsl:variable name="found" select="true"/>
                   <xsl:apply-templates select="." />
 		</xsl:if>
             </xsl:for-each>
+	    <xsl:if test="$found='false'">
+		    Nothing found
+	    </xsl:if>
 	</xsl:if>
     </xsl:template>
 
