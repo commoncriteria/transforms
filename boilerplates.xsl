@@ -32,6 +32,26 @@ provides evidence that these controls are present and have been evaluated.
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
+  <xsl:template name="optional-based-text">
+As indicated in Section 2, the baseline requirements (those that must be performed by the TOE) are
+contained in the body of this PP. Additionally, there are three other types of requirements specified in
+Appendix A, Appendix B, and Appendix C. The first type (in this Appendix) are requirements that can be
+included in the ST, but are not required in order for a TOE to claim conformance to this PP. The second
+type (in Appendix B) are requirements based on selections in the body of the PP: if certain selections are
+made, then additional requirements in that appendix must be included. The third type (in Appendix C)
+are components that are not required in order to conform to this PP, but will be included in the baseline
+requirements in future versions of this PP, so adoption by vendors is encouraged. Note that the ST
+author is responsible for ensuring that requirements that may be associated with those in Appendix A,
+Appendix B, and Appendix C but are not listed (e.g., FMT-type requirements) are also included in the ST.
+  </xsl:template>
+
+  <xsl:template name="objective-based-text">
+This Annex includes requirements that specify security functionality which also addresses threats. The
+requirements are not currently mandated in the body of this PP as they describe security functionality
+not yet widely available in commercial technology. However, these requirements may be included in the
+ST such that the TOE is still conformant to this PP, and it is expected that they be included as soon as
+possible.
+  </xsl:template>
 
   <xsl:template name="selection-based-text">
 As indicated in the introduction to this PP,
