@@ -645,7 +645,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="optional-appendix">
-	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
             <xsl:call-template name="optional-text"/>
@@ -653,11 +652,11 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 		 Might want to set a flag increment a counter -->
 	    <xsl:for-each select="//cc:f-component">
 		<xsl:if test="@status='optional'"> 
-		  <xsl:variable name="found" select="true"/>
+		  <xsl:variable name="op-found" select="true"/>
                   <xsl:apply-templates select="." />
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="$found='false'">
+	    <xsl:if test="not($op-found='true')">
               <p>This PP does not define any optional requirements.</p>
 	    </xsl:if>
 	</xsl:if>
@@ -666,17 +665,16 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="selection-based-appendix">
-	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
             <xsl:for-each select="//cc:f-component">
 	       <xsl:if test="@status='sel-based'">
-	           <xsl:variable name="found" select="true"/>
+	           <xsl:variable name="sb-found" select="true"/>
 	           <xsl:apply-templates select="."/>
 	       </xsl:if>
             </xsl:for-each>
-	    <xsl:if test="$found='false'">
+	    <xsl:if test="not($sb-found='true')">
               <p>This PP does not define any selection-based requirements.</p>
 	    </xsl:if>
         </xsl:if>
@@ -686,17 +684,16 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="objective-appendix">
-	<xsl:variable name="found" select="false"/> 
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Objective Requirements</h1>
             <xsl:call-template name="objective-text"/>
             <xsl:for-each select="//cc:f-component">
 		<xsl:if test="@status='objective'">
-    	            <xsl:variable name="found" select="true"/>
+    	            <xsl:variable name="ob-found" select="true"/>
 	            <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="$found='false'">
+	    <xsl:if test="not($obfound='true')">
               <p>This PP does not define any objective requirements.</p>
 	    </xsl:if>
         </xsl:if>
