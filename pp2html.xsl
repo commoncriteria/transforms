@@ -648,15 +648,14 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
             <xsl:call-template name="optional-text"/>
-	    <!-- Loop through all components picking out the optional. 
+		<!-- Loop through all components picking out the optional. 
 		 Might want to set a flag increment a counter -->
 	    <xsl:for-each select="//cc:f-component">
 		<xsl:if test="@status='optional'"> 
-		  <xsl:variable name="op-found" select="true"/>
                   <xsl:apply-templates select="." />
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="not($op-found='true')">
+	    <xsl:if test="count(//cc:f-component/@status='optional')=0)">
               <p>This PP does not define any optional requirements.</p>
 	    </xsl:if>
 	</xsl:if>
@@ -670,11 +669,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
             <xsl:call-template name="selection-based-text"/>
             <xsl:for-each select="//cc:f-component">
 	       <xsl:if test="@status='sel-based'">
-	           <xsl:variable name="sb-found" select="true"/>
 	           <xsl:apply-templates select="."/>
 	       </xsl:if>
             </xsl:for-each>
-	    <xsl:if test="not($sb-found='true')">
+	    <xsl:if test="count(//cc:f-component/@status='sel-based')=0)">
               <p>This PP does not define any selection-based requirements.</p>
 	    </xsl:if>
         </xsl:if>
@@ -689,11 +687,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
             <xsl:call-template name="objective-text"/>
             <xsl:for-each select="//cc:f-component">
 		<xsl:if test="@status='objective'">
-    	            <xsl:variable name="ob-found" select="true"/>
-	            <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
+ 	            <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="not($obfound='true')">
+	    <xsl:if test="count(//cc:f-component/@status='objective')=0)">
               <p>This PP does not define any objective requirements.</p>
 	    </xsl:if>
         </xsl:if>
