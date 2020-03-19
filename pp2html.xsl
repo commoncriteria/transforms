@@ -655,7 +655,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   <xsl:apply-templates select="." />
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="count(//cc:f-component/@status='optional')=0)">
+	    <xsl:if test="count(//cc:f-component[@status='optional'])=0)">
               <p>This PP does not define any optional requirements.</p>
 	    </xsl:if>
 	</xsl:if>
@@ -672,7 +672,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	           <xsl:apply-templates select="."/>
 	       </xsl:if>
             </xsl:for-each>
-	    <xsl:if test="count(//cc:f-component/@status='sel-based')=0)">
+	    <xsl:if test="count(//cc:f-component[@status='sel-based'])=0)">
               <p>This PP does not define any selection-based requirements.</p>
 	    </xsl:if>
         </xsl:if>
@@ -690,7 +690,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
  	            <xsl:apply-templates select="cc:f-component[cc:selection-depends]"/>
 		</xsl:if>
             </xsl:for-each>
-	    <xsl:if test="count(//cc:f-component/@status='objective')=0)">
+	    <xsl:if test="count(//cc:f-component[@status='objective'])=0)">
               <p>This PP does not define any objective requirements.</p>
 	    </xsl:if>
         </xsl:if>
