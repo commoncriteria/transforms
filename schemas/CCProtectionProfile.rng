@@ -373,6 +373,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
               <value>optional</value>
               <value>objective</value>
               <value>mandatory</value>
+              <value>impl-dep</value>
           </choice>
         </attribute>
       </choice>
