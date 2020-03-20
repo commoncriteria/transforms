@@ -307,6 +307,7 @@
 <!-- This template for audit tables is invoked from XSL. --> 
 	
   <xsl:template match="audit-table-xsl" name="audit-table-xsl">
+    <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
@@ -714,7 +715,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   </xsl:for-each>
 		  <!-- Audit table for optional requirements -->
 		  <call-template name="audit-table-xsl">
-		     <with-parameter name="table">optional</with-parameter>
+		     <with-parameter name="table" value="optional"/>
 		  </call-template>
 	       </xsl:otherwise>
 	    </xsl:choose>
@@ -740,7 +741,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   </xsl:for-each>
        		  <!-- Audit table for optional requirements -->
 		  <call-template name="audit-table-xsl">
-		     <with-parameter name="table">sel-based</with-parameter>
+		     <with-parameter name="table" value="sel-based"/>
 		  </call-template>
 	       </xsl:otherwise>
 	    </xsl:choose>
@@ -767,7 +768,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   </xsl:for-each>
        		  <!-- Audit table for optional requirements -->
 		  <call-template name="audit-table-xsl">
-		     <with-parameter name="table">objective</with-parameter>
+		     <with-parameter name="table" value="objective"/>
 		  </call-template>
 	       </xsl:otherwise>
 	    </xsl:choose>
