@@ -309,7 +309,8 @@
   <xsl:template match="audit-table-xsl" name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-    <xsl:apply-templates/>
+	  <p>Inside audit-table-xsl</p>
+	  <xsl:apply-templates/>
     <table class="" border="1">
     <tr><th>Requirement</th>
         <th>Auditable Events</th>
@@ -707,11 +708,13 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   <p>This PP does not define any optional requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-		  <!-- Audit table for optional requirements -->
+		       <p>There should be an audit table next.</p>
+		       <!-- Audit table for optional requirements -->
 		  <call-template name="audit-table-xsl">
 		     <with-parameter name="table" value="optional"/>
 		  </call-template>
-		  <!-- Loop through all components picking out the optional. -->
+		       <p>The audit table should have been above here</p>
+		       <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
 		     <xsl:if test="@status='optional'"> 
                         <xsl:apply-templates select="." />
