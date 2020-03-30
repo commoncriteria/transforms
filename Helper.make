@@ -268,4 +268,4 @@ git-update-transforms:
 	git submodule update --remote transforms
 
 TVF:
-	echo "`git branch|cut -c 3-`-`git rev-parse HEAD|cut -c -8`" > $(TVF)
+	(cd transforms && echo "`git branch|cut -c 3-`-`git rev-parse HEAD|cut -c -8`") > $(TVF)
