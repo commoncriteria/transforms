@@ -134,10 +134,22 @@ APP_PARM ?=--stringparam appendicize on
 
 #- A temporary directory argument
 TMP?=/tmp
+
+# Transforms Version File
+TVF ?= $(OUT)/transforms-version.txt
+#========================================
+# TARGETS
+#========================================
+
+# .PHONY ensures that this target is built no matter what
+# even if there exists a file named TVF
+.PHONY: default TVF all spellcheck spellcheck-esr  module-target linkcheck pp help release clean
+
+
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) TVF
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -148,9 +160,6 @@ spellcheck: $(ESR_HTML) $(PP_HTML)
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
-
-spellcheck-os:  $(PP_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(PP_HTML) | sort -u"
 
 #- Checks the internal links to make sure they point to an existing anchor
 linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELEASE_HTML)
@@ -257,3 +266,6 @@ git-safe-push:
 #- Pulls in the latest transforms module into the project
 git-update-transforms:
 	git submodule update --remote transforms
+
+TVF:
+	echo "`git branch|cut -c 3-`-`git rev-parse HEAD|cut -c -8`" > $(TVF)
