@@ -272,5 +272,5 @@ TVF:
 	  cd transforms &&\
 	  (git branch|egrep -v '^\*'|cut -c 3-) &&\
 	  echo - &&\
-	  ( git rev-parse HEAD|cut -c -8)\
+	  ( git log -1 --date=iso --format=%cd)\
 	) |  tr -d " \t\n\r" > $(TVF)
