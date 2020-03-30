@@ -880,6 +880,16 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <param name="pattern">F[A-Z]{2}_[A-Z0-9^]{2,10}(_EXT)?\.[0-9]</param>
     </data>
   </define>
+    
+  <define name="audit-descr-content-pat">
+  <!-- Audit event descriptions cannot contain selections or assignments. 
+       Selections are done through an attribute in the audit-event tag. The description will be displayed as a selection with
+       an alternative one "None."
+       Assignment in audit event descriptions are just wrong.  -->
+      <data type="string">
+          <param name="pattern">[a-z ]+</param>    <!-- This is wrong -->
+      </data>
+  </define>
 
   <define name="f-comp-content-pat">
     <attribute name="id">
