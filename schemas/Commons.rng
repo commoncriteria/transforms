@@ -186,7 +186,7 @@ If it's only an acronym make sure the text content is empty.
           tag has "type" optional, then the content should be dispalyed as a selection of one choice and "None."
       </a:documentation>
       <element name="audit-event-descr">
-          <text/>
+          <ref name="audit-descr-content-pat"/>
       </element>
     </define>
 
@@ -887,7 +887,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
        an alternative one "None."
        Assignment in audit event descriptions are just wrong.  -->
       <data type="string">
-          <param name="pattern">[a-z ]+</param>    <!-- This is wrong -->
+          <param name="pattern">[^\[]+</param>
       </data>
   </define>
 
