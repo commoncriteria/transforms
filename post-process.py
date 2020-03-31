@@ -4,30 +4,37 @@ Module that fixes internal references and counters (which are hard to do
 with XSLT).
 """
 
-from io import StringIO
+# from io import StringIO
 import re
 import sys
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
+
+
 def warn(msg):
     log(2, msg)
 
+    
 def err(msg):
     sys.stderr.write(msg)
     sys.exit(1)
 
+    
 def debug(msg):
     log(5, msg)
 
+    
 def log(level, msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
+    
 def get_appendix_prefix(num):
     if num > 26:
         err("Cannot handle more than 26 appendices")
     ABC=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
     return ABC[num]
+
 
 def backslashify(phrase):
     return re.sub("([_.^])", r"\\\1", phrase)
@@ -36,7 +43,7 @@ def backslashify(phrase):
 class State:
     def __init__(self, root):
         self.root = root
-        self.parent_map = {c:p for p in self.root.iter() for c in p}
+        self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.period_ctr = 0
         self.abbrs = []
@@ -59,7 +66,7 @@ class State:
                         clazzset.append(el)
                 else:
                     self.classmap[clazz]=[el]
-
+gre
     def build_comp_regex(self):
         comps = []
         if 'reqid' in self.classmap:
@@ -72,7 +79,7 @@ class State:
                 self.regex_str = self.regex_str + backslashify(comp.attrib["id"]) + "|"
             else:
                 # The MDF has some unorthodox items
-                print("Cannot find: "+comp.text )
+                print("Cannot find: "+comp.text)
 
     def build_termtable(self):
         if not 'term' in self.classmap:

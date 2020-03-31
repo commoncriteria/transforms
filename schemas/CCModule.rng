@@ -14,7 +14,7 @@
 	  Entry for a security objective
 	</a:documentation>
 	<optional><ref name="id-attr"/></optional>
-        <attribute name="name">
+        <attribute name="cc-id">
           <data type="string">
             <param name="pattern">O\.[A-Z_]+</param>
           </data>
