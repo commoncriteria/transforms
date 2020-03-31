@@ -961,6 +961,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
       <attribute name="title"><value>Conformance Claims</value></attribute>
       <ref name="id-attr"/>
+      <ref name="boilerplate-no-attr"/>
       <optional>
         <element name="cclaims">
           <a:documentation>
