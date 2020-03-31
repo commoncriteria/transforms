@@ -270,7 +270,7 @@ git-update-transforms:
 TVF:
 	(\
 	  cd transforms &&\
-	  (git branch|egrep -v '^\*'|cut -c 3-) &&\
+	  (git branch|tail -n 1|cut -c 3-) &&\
 	  echo - &&\
-	  ( git log -1 --date=iso --format=%cd)\
+	  ( git log -1 --date=iso --format=%cd | tr ' ' '_')\
 	) |  tr -d " \t\n\r" > $(TVF)
