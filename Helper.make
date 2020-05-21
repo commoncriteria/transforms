@@ -136,20 +136,20 @@ APP_PARM ?=--stringparam appendicize on
 TMP?=/tmp
 
 # Transforms Version File
-TVF ?= $(OUT)/transforms-version.txt
+META_TXT ?= $(OUT)/meta-info.txt
 #========================================
 # TARGETS
 #========================================
 
 # .PHONY ensures that this target is built no matter what
-# even if there exists a file named TVF
-.PHONY: default TVF all spellcheck spellcheck-esr  module-target linkcheck pp help release clean
+# even if there exists a file named default
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean
 
 
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) TVF
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -267,10 +267,11 @@ git-safe-push:
 git-update-transforms:
 	git submodule update --remote transforms
 
-TVF:
+meta-info:
+	echo -n 'T_VER=' > $(META_TXT)
 	(\
 	  cd transforms &&\
 	  (git branch|tail -n 1|cut -c 3-) &&\
 	  echo - &&\
 	  ( git log -1 --date=iso --format=%cd | tr ' ' '_')\
-	) |  tr -d " \t\n\r" > $(TVF)
+	) |  tr -d " \t\n\r" >> $(META_TXT)
