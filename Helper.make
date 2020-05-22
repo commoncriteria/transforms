@@ -274,4 +274,7 @@ meta-info:
 	  (git branch|tail -n 1|cut -c 3-) &&\
 	  echo - &&\
 	  ( git log -1 --date=iso --format=%cd | tr ' ' '_')\
-	) |  tr -d " \t\n\r" >> $(META_TXT)
+	) |  tr -d " \t\n\r"     >> $(META_TXT)
+	echo -en '\nBUILD_TIME=' >> $(META_TXT)
+	date +"%Y-%m-%d %H:%M"   >> $(META_TXT)
+
