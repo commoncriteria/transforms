@@ -838,7 +838,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <element name="selection-depends">
         <a:documentation>
           Defines the other requirements whose selection affects whether this component must be also applied.
+          Extended to also allow specification of a base PP. 
+          Semantics: 
+            If a basePP is specified
+                If basePP matches 
+                    If there are other dependencies, apply them.
+                    else the SFR is included
+                else to not include the SFR
+            else Apply the other dependencies
         </a:documentation>
+        <attribute name="basePP">
+            <a:documentation>
+                The required base PP for inclustion of this SFR.
+            </a:documentation>
+        </attribute>
         <attribute name="req">
           <a:documentation>
             The value of the id attribute of the requirement is component depends on.
