@@ -833,26 +833,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
+<!--#####################################################-->
+<!-- Specifying SFR inclusion criteria                   -->
+<!--#####################################################-->
 
   <define name="selection-depends">
       <element name="selection-depends">
         <a:documentation>
-          Defines conditions for including this SFR in an ST. There are three kinds of conditions:
-          1. basePP. If the base PP for this evaluation matches the value of the basePP attribute.
-          2. feature-id. If this TOE implements the feature specified by the feature-id attribute.
-          3. req. Inclusion of this SFR depends on a selection in another SFR, and the selection is made.
-          Semantics are complicated unless there is just one condition. 
+          Defines conditions for including this selection-based SFR in an ST.
         </a:documentation>
-        <attribute name="basePP">
-            <a:documentation>
-                The required base PP for inclustion of this SFR.
-            </a:documentation>
-        </attribute>
-        <attribute name="feature-id">
-            <a:documentation>
-                The required feature for inclustion of this SFR.
-            </a:documentation>
-        </attribute>
         <attribute name="req">
           <a:documentation>
             The value of the id attribute of the requirement is component depends on.
@@ -868,6 +857,34 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </element>
   </define>
 
+  <define name="feature-depends">
+      <element name="feature-depends">
+        <a:documentation>
+          Defines conditions for including this feature-based SFR in an ST.
+        </a:documentation>
+        <attribute name="feature-id">
+            <a:documentation>
+                The required feature for inclusion of this SFR.
+            </a:documentation>
+        </attribute>
+    </element>
+  </define>
+
+  <define name="basepp-depends">
+      <element name="basepp-depends">
+        <a:documentation>
+          Defines conditions for including this SFR in an ST based on the base PP.
+          This SFR status makes sense only for modules. But here it is.
+        </a:documentation>
+        <attribute name="base-id">
+            <a:documentation>
+                The required base PP inclusion of this SFR.
+            </a:documentation>
+        </attribute>
+      </element>
+  </define>
+    
+    
 <!--#####################################################-->
 <!-- Setion for simple patterns (spat)                   -->
 <!--#####################################################-->
