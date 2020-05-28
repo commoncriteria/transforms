@@ -355,7 +355,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         <group>
           <attribute name="status">
             <a:documentation>
-              Denotes the status of a requirement.
+              Sel-based requirements.
             </a:documentation>
             <value>sel-based</value>
           </attribute>
@@ -364,20 +364,47 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           </oneOrMore>
         </group>
 
+        <!-- Feature-based -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Feature-based requirements are included in the ST if the TOE implements a particular feature.
+              This is implemented as a global variable set to TRUE to indicate the existance of the feature.
+            </a:documentation>
+            <value>feature-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="feature-depends"/>
+          </oneOrMore>
+        </group>
+
+        <!-- pp-based -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              pp-based requirements are included depending on the base PP to which a module is applied.
+              This SFR status makes sense only in modules.
+            </a:documentation>
+            <value>pp-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="basepp-depends"/>
+          </oneOrMore>
+        </group>
+               
         <!-- The status could also be optional or nothing (which is indicated here) -->
         <attribute name="status">
           <a:documentation>
-            Denotes the status of a requirement.
+            And the rest of the possible statuses.
           </a:documentation>
           <choice>
               <value>optional</value>
               <value>objective</value>
               <value>mandatory</value>
-              <value>impl-dep</value>
           </choice>
         </attribute>
       </choice>
-      <ref name="depends-pat"/>
+<!--      <ref name="depends-pat"/>   -->
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat" />
       <ref name="audit-events-pat" />
