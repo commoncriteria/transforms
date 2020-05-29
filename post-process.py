@@ -66,7 +66,7 @@ class State:
                         clazzset.append(el)
                 else:
                     self.classmap[clazz]=[el]
-gre
+
     def build_comp_regex(self):
         comps = []
         if 'reqid' in self.classmap:
