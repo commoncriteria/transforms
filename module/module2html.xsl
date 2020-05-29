@@ -130,11 +130,23 @@
       <xsl:value-of select="/cc:Module/@target-products"/> functionality.
       This is considered to be consistent because the functionality provided by the
       <xsl:value-of select="$base/@short"/>  is being used for its intended purpose.
-      The PP-Module also identifies a number of modified SFRs from the
-      <xsl:value-of select="$base/@short"/> PP
-      as well as new SFRs that are used entirely to provide functionality for
-      <xsl:value-of select="/cc:Module/@target-products"/>.
-      The rationale for why this does not conflict with the claims
+      <xsl:choose>
+        <xsl:when test='$base//cc:modified-sfrs//cc:f-element'>
+          The PP-Module also identifies a number of modified SFRs from the
+          <xsl:value-of select="$base/@short"/> PP
+          <xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
+            as well as new SFRs 
+          </xsl:if>
+          that are used entirely to provide functionality for
+          <xsl:value-of select="/cc:Module/@target-products"/>.
+        </xsl:when>
+        <xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
+            The PP-Module identifies new SFRs that are used entirely to provide
+            functionality for <xsl:value-of select="/cc:Module/@target-products"/>.
+        </xsl:when>
+        <xsl:otherwise/>
+      </xsl:choose>
+          The rationale for why this does not conflict with the claims
       defined by the
       <xsl:value-of select="$base/@short"/> PP are as follows:
       <table>
