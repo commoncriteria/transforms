@@ -927,6 +927,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Readable title for this requirement.
       </a:documentation>
     </attribute>
+    <optional>
+      <ref name="id-attr"/>
+    </optional>
     <ref name="iteration-pat"/>
   </define>
 
