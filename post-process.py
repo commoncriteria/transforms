@@ -90,7 +90,7 @@ class State:
             self.abbrs.append(term.text)
 
     def add_to_regex(self, word):
-        if len(word) > 1:
+        if len(word) > 1 and not(word.startswith(".")):
             self.regex_str=self.regex_str + backslashify(word) +"|"        
             
     def to_html(self):
