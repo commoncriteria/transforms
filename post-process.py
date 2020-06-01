@@ -76,7 +76,7 @@ class State:
         for comp in comps:
             if 'id' in comp.attrib:
 #                 print("Adding " + comp.attrib["id"])
-                self.regex_str = self.regex_str + backslashify(comp.attrib["id"]) + "|"
+                self.add_to_regex(comp.attrib["id"])
             else:
                 # The MDF has some unorthodox items
                 print("Cannot find: "+comp.text)
@@ -86,9 +86,13 @@ class State:
             return
         terms = self.classmap['term']
         for term in terms:
-            self.regex_str=self.regex_str + term.text +"|"
+            self.add_to_regex(term.text)
             self.abbrs.append(term.text)
 
+    def add_to_regex(self, word):
+        if len(word) > 1:
+            self.regex_str=self.regex_str + backslashify(word) +"|"        
+            
     def to_html(self):
         self.regex=re.compile(self.regex_str[:-1]+")\\b")
         self.ancestors=[]
