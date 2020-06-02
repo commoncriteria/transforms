@@ -78,6 +78,8 @@
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
 	<ref name="id-attr"/>
+	<!-- Don't know if we need this -->
+	<ref name="basic-content-pat"/>
 	<ref name="SOs"/>
       </element>
       <element name="section">
@@ -714,7 +716,22 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-
+  <define name="subsection-pattern">
+    <element name="subsection">
+      <a:documentation>
+	Lower level of grouping
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+	  <ref name="subsection-pattern"/>
+	  <ref name="basic-content-pat"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  
   <define name="aactivity">
     <element name="aactivity">
       <a:documentation>
