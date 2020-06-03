@@ -60,12 +60,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="pp-attributes"/>
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
-      <optional>
-        <element name="foreword">
-          <a:documentation>Flexible section for a foreword.</a:documentation>
-          <zeroOrMore><ref name="html-element"/></zeroOrMore>
-        </element>
-      </optional>
+      <ref name="Foreword"/>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
@@ -367,6 +362,14 @@ Tags that this section should be indented(left) 2em.
           </zeroOrMore>
         </element>
       </oneOrMore>
+  </define>
+  <define name="Foreword">
+    <optional>
+      <element name="foreword">
+        <a:documentation>Flexible section for a foreword.</a:documentation>
+        <zeroOrMore><ref name="html-element"/></zeroOrMore>
+      </element>
+    </optional>
   </define>
   
   <define name="pp-attributes">
