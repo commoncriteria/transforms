@@ -41,13 +41,14 @@
   </xsl:template>
 
 <!-- ############### -->
+<!-- We may need a way of expressing whether we want the traditional PP style or the newfangled way. -->
 <!--            -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
     <xsl:call-template name="first-appendix"/> 
-    <xsl:call-template name="optional-appendix"/> 
+<!--    <xsl:call-template name="optional-appendix"/> -->
     <xsl:call-template name="selection-based-appendix"/>
-    <xsl:call-template name="objective-appendix"/> 
+<!--    <xsl:call-template name="objective-appendix"/> -->
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -674,15 +675,30 @@
                   <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                   <xsl:apply-templates select="cc:f-component[@status='optional']"/>
                 </xsl:for-each>
+    
+  		<!-- Audit table for optional requirements -->
+		<!-- Not sure this handles the case of zero optional requirements.  -->
+		<call-template name="audit-table-xsl">
+		   <with-parameter name="table" value="optional"/>
+		</call-template>
 
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
                 <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                   <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                   <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
                 </xsl:for-each>
+		    
+		<!-- Audit table for optional requirements -->
+		<!-- Not sure this handles the case of zero optional requirements.  -->
+		<call-template name="audit-table-xsl">
+		   <with-parameter name="table" value="objective"/>
+		</call-template>
 
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+		 
+		<!-- Need to handle the audit events for this kind of SFR also. -->
+		    
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
