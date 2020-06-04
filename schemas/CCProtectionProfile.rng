@@ -65,20 +65,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
-      <oneOrMore>
-        <element name="chapter">
-          <a:documentation>Major grouping for the document.</a:documentation>
-          <ref name="id-attr"/>
-          <ref name="title-attr"/>
-          <ref name="boilerplate-no-attr"/>
-          <oneOrMore>
-            <choice>
-              <ref name="basic-content-pat"/>
-              <ref name="section"/>
-            </choice>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
+      <ref name="Chapters"/>
       <ref name="appendix-pat"/>
       <ref name="implements-pat"/>
 
@@ -182,6 +169,23 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define>
 
+  <define name="Chapters">
+    <oneOrMore>
+      <element name="chapter">
+        <a:documentation>Major grouping for the document.</a:documentation>
+        <ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <ref name="boilerplate-no-attr"/>
+        <oneOrMore>
+          <choice>
+            <ref name="basic-content-pat"/>
+            <ref name="section"/>
+          </choice>
+        </oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
+  
   <define name="a-elements">
     <oneOrMore>
       <element name="a-element">
