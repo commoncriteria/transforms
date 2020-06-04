@@ -37,6 +37,24 @@ Tags that this section should be indented(left) 2em.
       </choice>
     </define>
 
+    <define name="subsection-pattern">
+      <element name="subsection">
+	<a:documentation>
+          Lower level of grouping
+	</a:documentation>
+	<ref name="id-attr"/>
+	<ref name="title-attr"/>
+	<oneOrMore>
+          <choice>
+            <ref name="glossary-section"/>
+            <ref name="subsection-pattern"/>
+            <ref name="basic-content-pat"/>
+          </choice>
+	</oneOrMore>
+      </element>
+    </define>
+
+    
     <define name="xref-content">
       <choice>
         <ref name="linkend-attr"/>
@@ -65,6 +83,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
+      <ref name="SecurityRequirementsChapter"/>
       <ref name="Chapters"/>
       <ref name="appendix-pat"/>
       <ref name="implements-pat"/>
@@ -77,6 +96,8 @@ Tags that this section should be indented(left) 2em.
       </optional>
     </element>
   </start>
+
+  
   
   <define name="IntroductionChapter">
       <element name="chapter">
@@ -86,12 +107,53 @@ Tags that this section should be indented(left) 2em.
         <ref name="section"/>
         <ref name="tech-terms"/>
         <oneOrMore>
-          <ref name="section"/>
+	  <choice>
+            <ref name="section"/>
+	    <ref name="usecases-section"/>
+	  </choice>
         </oneOrMore>
         </element>
   </define>
 
-
+  <define name="SecurityRequirementsChapter">
+    <element name="chapter">
+      <attribute name="title"><value>Security Requirements</value></attribute>
+      <attribute name="id"/>
+      <optional><attribute name="boilerplate"><value>no</value></attribute></optional>
+      <ref name="basic-content-pat"/>
+      <element name="section">
+	<attribute name="title"><value>Security Functional Requirements</value></attribute>
+	<attribute name="id"/>
+	
+	<oneOrMore>
+	  <element name="subsection">
+	    <attribute name="title"/>
+	    <attribute name="id"/>
+	    <ref name="basic-content-pat"/>
+	    <oneOrMore>
+              <ref name="f-component-pattern"/>
+	    </oneOrMore>
+	  </element>
+	</oneOrMore>
+      </element>
+      <element name="section">
+	<attribute name="title"><value>Security Assurance Requirements</value></attribute>
+	<optional><attribute name="id"/></optional>
+	<ref name="basic-content-pat"/>
+	<oneOrMore>
+	  <element name="subsection">
+	    <attribute name="title"/>
+	    <attribute name="id"/>
+	    <ref name="basic-content-pat"/>
+	    <zeroOrMore>
+              <ref name="a-component-pattern"/>
+	    </zeroOrMore>
+	  </element>
+	</oneOrMore>
+      </element>
+    </element>
+  </define>
+  
 
   <define name="appendix-pat">
     <a:documentation>
@@ -125,52 +187,66 @@ Tags that this section should be indented(left) 2em.
       <oneOrMore>
         <choice>
           <ref name="basic-content-pat"/>
-          <ref name="OSPs"/>
-          <element name="SOEs">
-            <a:documentation>
-              Grouping for Security Objectives for the Operational environment.
-            </a:documentation>
-            <oneOrMore>
-              <element name="SOE">
-                <a:documentation>
-                  Security Objective for the Operational environment.
-                </a:documentation>
-                <optional><ref name="id-attr"/></optional>
-                <attribute name="name">
-                  <data type="string">
-                    <param name="pattern">OE.[A-Z_]+</param>
-                  </data>
-                </attribute>
-                <ref name="description"/>
-              </element>
-            </oneOrMore>
-          </element>
-          <ref name="SOs"/>
-          <ref name="assumptions"/>
           <ref name="subsection-pattern"/>
-          <ref name="threats"/>
-         <element name="usecases">
-            <a:documentation>
-              Wrapper element for uses cases.
-            </a:documentation>
-            <oneOrMore>
-              <element name="usecase">
-                <a:documentation>
-                  A referrable section on how the protection profiled item is used.
-                </a:documentation>
-                <ref name="id-attr"/>
-                <ref name="title-attr"/>
-                <ref name="description"/>
-              </element>
-            </oneOrMore>
-          </element>
+
+         <!--  <ref name="OSPs"/> -->
+         <!--  <element name="SOEs"> -->
+         <!--    <a:documentation> -->
+         <!--      Grouping for Security Objectives for the Operational environment. -->
+         <!--    </a:documentation> -->
+         <!--    <oneOrMore> -->
+         <!--      <element name="SOE"> -->
+         <!--        <a:documentation> -->
+         <!--          Security Objective for the Operational environment. -->
+         <!--        </a:documentation> -->
+         <!--        <optional><ref name="id-attr"/></optional> -->
+         <!--        <attribute name="name"> -->
+         <!--          <data type="string"> -->
+         <!--            <param name="pattern">OE.[A-Z_]+</param> -->
+         <!--          </data> -->
+         <!--        </attribute> -->
+         <!--        <ref name="description"/> -->
+         <!--      </element> -->
+         <!--    </oneOrMore> -->
+         <!--  </element> -->
+         <!--  <ref name="SOs"/> -->
+         <!--  <ref name="assumptions"/> -->
+         <!--  <ref name="threats"/> -->
         </choice>
       </oneOrMore>
     </element>
   </define>
 
+  
+  <define name="usecases-section">
+    <element name="section">
+      <a:documentation>
+        Section specific for use cases.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      
+      <ref name="basic-content-pat"/>
+      <element name="usecases">
+        <a:documentation>
+          Wrapper element for uses cases.
+        </a:documentation>
+        <oneOrMore>
+          <element name="usecase">
+            <a:documentation>
+              A referrable section on how the protection profiled item is used.
+            </a:documentation>
+            <ref name="id-attr"/>
+            <ref name="title-attr"/>
+            <ref name="description"/>
+          </element>
+        </oneOrMore>
+      </element>
+    </element>
+  </define>
+  
   <define name="Chapters">
-    <oneOrMore>
+    <zeroOrMore>
       <element name="chapter">
         <a:documentation>Major grouping for the document.</a:documentation>
         <ref name="id-attr"/>
@@ -183,7 +259,7 @@ Tags that this section should be indented(left) 2em.
           </choice>
         </oneOrMore>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   
   <define name="a-elements">
@@ -279,25 +355,6 @@ Tags that this section should be indented(left) 2em.
       <ref name="audit-events-pat"/>
     </element>
   </define> 
-
-  <define name="subsection-pattern">
-    <element name="subsection">
-      <a:documentation>
-        Lower level of grouping
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="glossary-section"/>
-          <ref name="subsection-pattern"/>
-          <ref name="basic-content-pat"/>
-          <ref name="a-component-pattern"/>
-          <ref name="f-component-pattern"/>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
 
 
   <define name="a-component-pattern">
