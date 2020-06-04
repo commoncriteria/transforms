@@ -12,7 +12,7 @@
     <term full="Security Target" abbr="ST">A set of implementation-dependent security requirements for a specific product.</term>
     <term full="Target of Evaluation" abbr="TOE">The product under evaluation. </term>
     <term full="TOE Security Functionality" abbr="TSF">The security functionality of the product under evaluation.</term>
-    <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in a ST.</term>
+    <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in an ST.</term>
     <term full="Security Functional Requirement" abbr="SFR">A requirement for security enforcement by the TOE.</term>
     <term full="Security Assurance Requirement" abbr="SAR">A requirement to assure the security of the TOE.</term>
   </cc-terms>
