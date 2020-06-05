@@ -2,5 +2,5 @@
 
 RNG_FILE ?= transforms/schemas/CCModule.rng
 
-thedefaulttarget: module-target TVF
+thedefaulttarget: module-target meta-info
 include $(TRANS)/Helper.make
