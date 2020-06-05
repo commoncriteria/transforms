@@ -38,7 +38,7 @@
          value in square brackets indicates assignment.</li>
        <li>
          <b>Iteration</b> operation: is indicated by appending the SFR name with a slash and unique identifier
-            suggesting the purpose of the operation, e.g. "/EXAMPLE1".
+            suggesting the purpose of the operation, e.g. "/EXAMPLE1."
        </li>
      </ul>
    </empty>

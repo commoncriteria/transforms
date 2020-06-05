@@ -787,8 +787,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
           <xsl:value-of select="$linkendorig"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/>
-          </xsl:message>
+          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>
@@ -802,6 +801,22 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
   </xsl:template>
 
 
+   <!-- ############## -->
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">
+     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
+     <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
+       The Security Functional Requirements included in this section
+       are derived from Part 2 of the Common Criteria for Information
+       Technology Security Evaluation, <xsl:call-template name="verrev"/>,
+       with additional extended functional components.
+     </xsl:if>
+     <xsl:apply-templates/>
+     <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+     <xsl:call-template name="obj-req-map"/>
+     
+   </xsl:template>
+
+  
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:appref">
@@ -865,8 +880,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:apply-templates/>
     </span>
   </xsl:template>
-
-
 
 
   <!-- identity transform - useful for debugging -->

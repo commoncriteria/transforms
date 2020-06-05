@@ -64,14 +64,6 @@ if certain selections are made, then additional requirements below must be inclu
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
    <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']" mode="hook">
-    The Security Functional Requirements included in this section
-    are derived from Part 2 of the Common Criteria for Information
-    Technology Security Evaluation, <xsl:call-template name="verrev"/>,
-    with additional extended functional components.
-   </xsl:template>
-
-   <!-- ############## -->
    <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography" mode="hook">
 <tr>
   <td><span id="bibCC"> [CC] </span></td>

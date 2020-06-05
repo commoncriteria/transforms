@@ -59,6 +59,24 @@
 	    </element>
     </define>	
 -->
+     <define name="SecReqChapter">
+       <element name="chapter">
+	 <a:documentation>
+	   The chapter for security requirements.
+	 </a:documentation>
+	 <attribute name="title"><value>Security Requirements</value></attribute>
+	 <ref name="id-attr"/>
+	 <ref name="basic-content-pat"/>
+	 <oneOrMore>
+	   <ref name="base-pp"/>
+	 </oneOrMore>
+	 <ref name="man-sfrs"/>
+	 <ref name="opt-sfrs"/>
+	 <ref name="sel-sfrs"/>
+	 <ref name="obj-sfrs"/>
+       </element>
+     </define>
+
     <define name="consistency-rationale-placeholder">
       <ref name="consistency-rationale"/>
     </define>
@@ -138,45 +156,12 @@
     </element>
   </define>
 
-  <define name="subsection-pattern">
-    <element name="subsection">
-      <a:documentation>
-	Lower level of grouping
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-	  <ref name="subsection-pattern"/>
-	  <ref name="basic-content-pat"/>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-
   <define name="module-attributes-pat">
     <attribute name="name"></attribute>
     <attribute name="target-products"></attribute>
     <ref name="boilerplate-pat"/>
   </define>
 
-  <define name="SecReqChapter">
-    <element name="chapter">
-      <a:documentation>
-	The chapter for security requirements.
-      </a:documentation>
-      <attribute name="title"><value>Security Requirements</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <oneOrMore>
-	<ref name="base-pp"/>
-      </oneOrMore>
-      <ref name="man-sfrs"/>
-      <ref name="opt-sfrs"/>
-      <ref name="sel-sfrs"/>
-      <ref name="obj-sfrs"/>
-    </element>
-  </define>
 
   <define name="man-sfrs">
     <element name="man-sfrs">
