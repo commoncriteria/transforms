@@ -787,8 +787,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
           <xsl:value-of select="$linkendorig"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/>
-          </xsl:message>
+          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>
@@ -811,8 +810,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
        Technology Security Evaluation, <xsl:call-template name="verrev"/>,
        with additional extended functional components.
      </xsl:if>
+     <xsl:apply-templates/>
+     <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+     <xsl:call-template name="obj-req-map"/>
      
-    <xsl:apply-templates/>
    </xsl:template>
 
   
@@ -879,8 +880,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
       <xsl:apply-templates/>
     </span>
   </xsl:template>
-
-
 
 
   <!-- identity transform - useful for debugging -->
