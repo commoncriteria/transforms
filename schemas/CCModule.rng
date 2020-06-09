@@ -59,23 +59,6 @@
 	    </element>
     </define>	
 -->
-     <define name="SecReqChapter">
-       <element name="chapter">
-	 <a:documentation>
-	   The chapter for security requirements.
-	 </a:documentation>
-	 <attribute name="title"><value>Security Requirements</value></attribute>
-	 <ref name="id-attr"/>
-	 <ref name="basic-content-pat"/>
-	 <oneOrMore>
-	   <ref name="base-pp"/>
-	 </oneOrMore>
-	 <ref name="man-sfrs"/>
-	 <ref name="opt-sfrs"/>
-	 <ref name="sel-sfrs"/>
-	 <ref name="obj-sfrs"/>
-       </element>
-     </define>
 
     <define name="consistency-rationale-placeholder">
       <ref name="consistency-rationale"/>
@@ -609,6 +592,24 @@ Referrable section on how the protection profiled item is used.
         </oneOrMore>
       </element>
     </oneOrMore>
+  </define>
+
+  <define name="SecReqChapter">
+    <element name="chapter">
+      <a:documentation>
+	The chapter for security requirements.
+      </a:documentation>
+      <attribute name="title"><value>Security Requirements</value></attribute>
+      <ref name="id-attr"/>
+      <ref name="basic-content-pat"/>
+      <oneOrMore>
+	<ref name="base-pp"/>
+      </oneOrMore>
+      <ref name="man-sfrs"/>
+      <ref name="opt-sfrs"/>
+      <ref name="sel-sfrs"/>
+      <ref name="obj-sfrs"/>
+    </element>
   </define>
 
 
