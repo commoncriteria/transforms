@@ -94,6 +94,7 @@ class State:
             self.regex_str=self.regex_str + backslashify(word) +"|"        
             
     def to_html(self):
+        warn("Regex is " + self.regex_str[:-1]+")\\b")
         self.regex=re.compile(self.regex_str[:-1]+")\\b")
         self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
@@ -108,36 +109,26 @@ class State:
 #           or parent.tag=="script"\
 #           or parent.tag=="style":
          # No tags in tags.
-         if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
-            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
-            "h4" in self.ancestors or "no-link" in self.ancestors:
-             return escape(text)
-         etext = escape(text)
-         last=0
-         ret=""
-         for mat in self.regex.finditer(etext):
-             ret += etext[last:mat.start()]
-             last = mat.end();
-             if mat.group() in self.abbrs:
+        etext = escape(text)
+        if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
+           "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
+           "h4" in self.ancestors or "no-link" in self.ancestors:
+            return etext
+        return self.discover_xref(etext)
+
+    def discover_xref(self, etext):
+        last=0
+        ret=""
+        for mat in self.regex.finditer(etext):
+            ret += etext[last:mat.start()]
+            last = mat.end();
+            if mat.group() in self.abbrs:
                 ret+='<abbr class="dyn-abbr"><a href="#abbr_'+mat.group()+'">'+mat.group()+'</a></abbr>'
-             else:
+            else:
                 ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a></abbr>'
-         ret+=etext[last:]
-         return ret
+        ret+=etext[last:]
+        return ret
 
-
-#        ret=""
-#        # Split on ending sentence periods
-#        chunks=re.split("""\.\s+|\.$""", text)
-#        for aa in range(0, len(chunks)-1):
-#            ret += escape(chunks[aa])
-#            self.period_ctr+=1
-#            id="ajq_"+str(self.period_ctr)
-#            ret += "<a href='#"+id+"' id='"+id+"'>.</a> "
-#            ret += "<span class='periods' id='"+id+"'>.</span> "
-#
-#        ret+=escape(chunks[-1])
-#        return ret
 
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""

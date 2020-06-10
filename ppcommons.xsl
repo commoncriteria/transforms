@@ -1087,6 +1087,35 @@ function showTarget(id){
     </span>
   </xsl:template>
 
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template name="acronyms">
+    <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
+    <xsl:call-template name="acronym-table"/>
+  </xsl:template>
+
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:acronyms" name="acronym-table">
+    <table>
+      <tr class="header">
+        <th>Acronym</th>
+        <th>Meaning</th>
+      </tr>
+      <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
+        <xsl:sort select="@abbr"/>
+        <tr>
+            <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
+            <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
+       </tr>&#10;
+
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+
+  
  <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:cite">
