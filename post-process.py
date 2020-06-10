@@ -48,6 +48,7 @@ class State:
         self.period_ctr = 0
         self.abbrs = []
         self.regex_str = "(?<!-)\\b("
+        self.regex=None
 
     def create_classmapping(self):
         self.classmap={}
@@ -94,8 +95,10 @@ class State:
             self.regex_str=self.regex_str + backslashify(word) +"|"        
             
     def to_html(self):
-        warn("Regex is " + self.regex_str[:-1]+")\\b")
-        self.regex=re.compile(self.regex_str[:-1]+")\\b")
+        try:
+            self.regex=re.compile(self.regex_str[:-1]+")\\b")
+        except re.error:
+            warn("Failed to compile regular expression: " + self.regex_str[:-1]+")\\b")            
         self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -117,6 +120,8 @@ class State:
         return self.discover_xref(etext)
 
     def discover_xref(self, etext):
+        if self.regex is None:
+            return etext
         last=0
         ret=""
         for mat in self.regex.finditer(etext):
