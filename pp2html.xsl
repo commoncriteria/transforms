@@ -341,8 +341,8 @@
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:selection-depends">
             <b><i>
-              <xsl:variable name="refid" select="@req"/>
-              <xsl:apply-templates select="//cc:f-element[@id=$refid]" mode="getId"/>
+              <xsl:variable name="ref-id" select="@req"/>
+              <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
             </i></b>
             </xsl:for-each>.
@@ -647,12 +647,12 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:ctr-ref">
-    <a onclick="showTarget('cc-{@refid}')" href="#cc-{@refid}" class="cc-{@refid}-ref" >
-      <xsl:variable name="refid"><xsl:value-of select="@refid"/></xsl:variable>
+    <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
+      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
- <!--      <xsl:value-of select="//cc:ctr[@id=$refid]/@pre"/> -->
-      <xsl:apply-templates select="//cc:ctr[@id=$refid]" mode="getPre"/>
-      <span class="counter"><xsl:value-of select="$refid"/></span>
+ <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
+      <xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/>
+      <span class="counter"><xsl:value-of select="$ref-id"/></span>
       <xsl:apply-templates/>
     </a>
   </xsl:template>
@@ -676,11 +676,11 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:figref">
-    <a onclick="showTarget('figure-{@refid}')" href="#figure-{@refid}" class="figure-{@refid}-ref">
-      <xsl:variable name="refid"><xsl:value-of select="@refid"></xsl:value-of></xsl:variable>
-      <xsl:apply-templates select="//cc:figure[@id=$refid]" mode="getPre"/>
-<!--      <xsl:value-of select="//cc:ctr[@id=$refid]">"/>-->
-      <span class="counter"><xsl:value-of select="$refid"/></span>
+    <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
+      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
+      <xsl:apply-templates select="//cc:figure[@id=$ref-id]" mode="getPre"/>
+<!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]">"/>-->
+      <span class="counter"><xsl:value-of select="$ref-id"/></span>
     </a>
   </xsl:template>
 
