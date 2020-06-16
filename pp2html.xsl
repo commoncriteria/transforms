@@ -749,6 +749,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
                   <p>This PP does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
+		     <p>There should be an audit table here.</p>
        		  <!-- Audit table for optional requirements -->
 		  <call-template name="audit-table-xsl">
 		     <with-parameter name="table" value="sel-based"/>
