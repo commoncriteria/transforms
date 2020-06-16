@@ -130,7 +130,7 @@ class State:
             if mat.group() in self.abbrs:
                 ret+='<abbr class="dyn-abbr"><a href="#abbr_'+mat.group()+'">'+mat.group()+'</a></abbr>'
             else:
-                ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a></abbr>'
+                ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a>'
         ret+=etext[last:]
         return ret
 

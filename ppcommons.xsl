@@ -1,7 +1,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
 
-  <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/>
+  <!-- <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/> -->
 
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
@@ -351,14 +351,18 @@ The following sections list Common Criteria and technology terms used in this do
 
   <!-- Overloaded abbr here-->
   <xsl:template match="cc:abbr[@linkend]">
-    <xsl:variable name="target" select="key('abbr', @linkend)"/>
-    <xsl:variable name="abbr" select="$target/text()"/>
-
-    <a class="abbr" href="#abbr_{$abbr}">
-      <abbr title="{$target/@title}">
-        <xsl:value-of select="$abbr"/>
-      </abbr>
-    </a>
+    <xsl:variable name="target" select="@linkend"/>
+    <xsl:variable name="full" select="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full"/>    
+    <xsl:choose>
+      <xsl:when test="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full">
+	<a class="abbr" href="#abbr_{@abbr}">
+	  <abbr title="{$full}"><xsl:value-of select="@abbr"/></abbr>
+	</a>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:message>Failed to find the abbreviation: <xsl:value-of select="@linkend"/> </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- -->
