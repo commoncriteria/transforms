@@ -46,9 +46,9 @@
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
 <!--    <xsl:call-template name="first-appendix"/>  --> 
-    <xsl:call-template name="optional-appendix"/>
+<!--    <xsl:call-template name="optional-appendix"/>
     <xsl:call-template name="selection-based-appendix"/>
-    <xsl:call-template name="objective-appendix"/>
+    <xsl:call-template name="objective-appendix"/>   -->
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -310,10 +310,9 @@
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-	<p> In audit-table-xsl</p>
     <xsl:apply-templates/>
     <table class="" border="1">
-		<tr><th>Requirement</th>
+	<tr><th>Requirement</th>
 			<th>Auditable Events</th>
 			<th>Additional Audit Record Contents</th></tr>
 		<xsl:for-each select="//cc:f-component">
