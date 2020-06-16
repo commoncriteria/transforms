@@ -81,6 +81,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="Foreword"/>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
+      <ref name="Chapters"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecurityRequirementsChapter"/>
@@ -119,8 +120,9 @@ Tags that this section should be indented(left) 2em.
     <element name="chapter">
       <attribute name="title"><value>Security Requirements</value></attribute>
       <attribute name="id"/>
-      <optional><attribute name="boilerplate"><value>no</value></attribute></optional>
+      <ref name="boilerplate-no-attr"/>
       <ref name="basic-content-pat"/>
+      <ref name="section"/>
       <element name="section">
 	<attribute name="title"><value>Security Functional Requirements</value></attribute>
 	<attribute name="id"/>
@@ -245,22 +247,7 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define>
   
-  <define name="Chapters">
-    <zeroOrMore>
-      <element name="chapter">
-        <a:documentation>Major grouping for the document.</a:documentation>
-        <ref name="id-attr"/>
-        <ref name="title-attr"/>
-        <ref name="boilerplate-no-attr"/>
-        <oneOrMore>
-          <choice>
-            <ref name="basic-content-pat"/>
-            <ref name="section"/>
-          </choice>
-        </oneOrMore>
-      </element>
-    </zeroOrMore>
-  </define>
+
   
   <define name="a-elements">
     <oneOrMore>
