@@ -45,10 +45,10 @@
 <!--            -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
-    <xsl:call-template name="first-appendix"/> 
-<!--    <xsl:call-template name="optional-appendix"/> -->
+<!-=    <xsl:call-template name="first-appendix"/>  --> 
+    <xsl:call-template name="optional-appendix"/>
     <xsl:call-template name="selection-based-appendix"/>
-<!--    <xsl:call-template name="objective-appendix"/> -->
+    <xsl:call-template name="objective-appendix"/>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
