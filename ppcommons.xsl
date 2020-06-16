@@ -355,8 +355,8 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:variable name="full" select="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full"/>    
     <xsl:choose>
       <xsl:when test="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full">
-	<a class="abbr" href="#abbr_{@abbr}">
-	  <abbr title="{$full}"><xsl:value-of select="@abbr"/></abbr>
+	<a class="abbr" href="#abbr_{@linkend}">
+	  <abbr title="{$full}"><xsl:value-of select="@linkend"/></abbr>
 	</a>
       </xsl:when>
       <xsl:otherwise>
