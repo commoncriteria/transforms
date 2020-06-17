@@ -266,7 +266,6 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
-
   <xsl:template match="cc:linkref">
     <xsl:variable name="linkend" select="@linkend"/>
     <xsl:if test="not(//*[@id=$linkend])">
