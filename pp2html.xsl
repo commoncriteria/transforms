@@ -714,7 +714,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix" name="optional-appendix">
+    <xsl:template match="cc:appendix[@title='Optional Requirements']" name="optional-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
 	    <xsl:call-template name="optional-text"/>
@@ -740,7 +740,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template name="selection-based-appendix">
+    <xsl:template match="cc:appendix[@title='Selection-Based Requirements']" name="selection-based-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
@@ -768,7 +768,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	
 <!-- ############### -->
 <!--                 -->
-    <xsl:template name="objective-appendix">
+    <xsl:template match="cc:appendix[@title='Objective Requirements']" name="objective-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="objective-reqs" class="indexable" data-level="A">Objective Requirements</h1>
             <xsl:call-template name="objective-text"/>
@@ -792,6 +792,32 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
         </xsl:if>
     </xsl:template>
 
+<!-- ############### -->
+<!--                 -->
+    <xsl:template match="cc:appendix[@title='Implementation-Dependent Requirements']" name="impl-dep-appendix">
+        <xsl:if test="$appendicize='on'">
+            <h1 id="objective-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
+            This appendix enumerates requirements <xsl:call-template name="imple_text"/>
+	    <xsl:choose>
+	       <xsl:when test="count(//cc:f-component[@status='impl-dep'])=0">
+                  <p>This PP does not define any implementation-dependent requirements.</p>
+	       </xsl:when>
+	       <xsl:otherwise>
+       		  <!-- Audit table for optional requirements -->
+		  <call-template name="audit-table-xsl">
+		     <with-parameter name="table" value="impl-dep"/>
+		  </call-template>
+		  <!-- Loop through all components picking out the optional. -->
+	          <xsl:for-each select="//cc:f-component">
+		     <xsl:if test="@status='impl-dep'"> 
+                        <xsl:apply-templates select="." />
+		     </xsl:if>
+                  </xsl:for-each>
+	       </xsl:otherwise>
+	    </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+	
 <!-- ############### -->
 <!--                 -->
   <xsl:template match="cc:appendix">
