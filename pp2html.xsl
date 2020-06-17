@@ -753,7 +753,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
        		  <!-- Audit table for optional requirements -->
 		  <xsl:call-template name="audit-table-xsl">
 		     <with-parameter name="table" value="sel-based"/>
-		  </call-template>
+		  </xsl:call-template>
 		  <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:f-component">
 		     <xsl:if test="@status='sel-based'"> 
