@@ -37,7 +37,7 @@ def get_appendix_prefix(num):
 
 
 def backslashify(phrase):
-    return re.sub("([_.^])", r"\\\1", phrase)
+    return re.sub("([_.^-])", r"\\\1", phrase)
 
 
 class State:
