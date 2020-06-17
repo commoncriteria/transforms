@@ -46,9 +46,9 @@
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
 <!--    <xsl:call-template name="first-appendix"/>  --> 
-    <xsl:call-template name="optional-appendix"/>
+<!--    <xsl:call-template name="optional-appendix"/>
     <xsl:call-template name="selection-based-appendix"/>
-    <xsl:call-template name="objective-appendix"/> 
+    <xsl:call-template name="objective-appendix"/> -->
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -639,9 +639,9 @@
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
+<!--    <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
     <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
-    <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
+    <xsl:template match="cc:appendix[@title='Objective Requirements']"/>   -->
 
 
 
@@ -714,7 +714,7 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template name="optional-appendix">
+    <xsl:template match="cc:appendix" name="optional-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
 	    <xsl:call-template name="optional-text"/>
