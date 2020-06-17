@@ -667,7 +667,9 @@
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template name="optional-plus-appendix">
+<!--    <xsl:template name="optional-plus-appendix">   -->
+	
+    <xsl:template match="cc:appendix[@id='appendix-optional-plus']" name="optional-plus-appendix"> 
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
@@ -703,8 +705,11 @@
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-This appendix enumerates requirements <xsl:call-template name="imple_text"/>
-                <xsl:call-template name="handle-features"><xsl:with-param name="level">2</xsl:with-param></xsl:call-template>
+		This appendix enumerates requirements 
+		<xsl:call-template name="imple_text"/>
+                <xsl:call-template name="handle-features">
+			<xsl:with-param name="level">2</xsl:with-param>
+		</xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
 
@@ -715,7 +720,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix[@title='Optional Requirements']" name="optional-appendix">
+<!-- This makes an appendix with traditional optional requirements only. -->
+<!-- Old: <xsl:template match="cc:appendix[@id='Optional Requirements']" name="optional-appendix">  --> 
+	
+    <xsl:template match="cc:appendix[@id='appendix-optional']" name="optional-appendix"> 
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
 	    <xsl:call-template name="optional-text"/>
@@ -741,7 +749,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix[@title='Selection-Based Requirements']" name="selection-based-appendix">
+<!-- This makes an appendix with traditional selection-based requirements only. -->
+<!-- <xsl:template match="cc:appendix[@title='Selection-Based Requirements']" name="selection-based-appendix">  -->
+
+<xsl:template match="cc:appendix[@id='appendix-sel-based']" name="selection-based-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
@@ -768,7 +779,10 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix[@title='Objective Requirements']" name="objective-appendix">
+<!-- This makes an appendix with traditional objective requirements only. -->
+<!-- The new way involves including these in Appendix A with the optionals. -->
+<!-- <xsl:template match="cc:appendix[@title='Objective Requirements']" name="objective-appendix">   -->
+    <xsl:template match="cc:appendix[@id='appendix-objective']" name="objective-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="objective-reqs" class="indexable" data-level="A">Objective Requirements</h1>
             <xsl:call-template name="objective-text"/>
@@ -794,7 +808,9 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ############### -->
 <!--                 -->
-    <xsl:template match="cc:appendix[@title='Implementation-Dependent Requirements']" name="impl-dep-appendix">
+<!-- This makes an appendix with implementation-dependent requirements only. -->
+<!-- The new way involves including these in Appendix A with the optionals. -->
+    <xsl:template match="cc:appendix[@id='appendix-impl-dep']" name="impl-dep-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="objective-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
             This appendix enumerates requirements <xsl:call-template name="imple_text"/>
