@@ -122,7 +122,7 @@ Tags that this section should be indented(left) 2em.
       <attribute name="id"/>
       <ref name="boilerplate-no-attr"/>
       <ref name="basic-content-pat"/>
-      <ref name="section"/>
+      <zeroOrMore><ref name="section"/></zeroOrMore>
       <element name="section">
 	<attribute name="title"><value>Security Functional Requirements</value></attribute>
 	<attribute name="id"/>
