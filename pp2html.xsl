@@ -676,12 +676,12 @@
 
     		  <!-- Strictly optional requirements, a.k.a. "optional"  -->
 		  <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-
+<!--
 		  <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                     <p>This PP does not define any optional requirements.</p>
 	          </xsl:when>
 		  <xsl:otherwise> 
-
+-->
      		    <!-- Audit table for optional requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3>Audit Table for Strictly Optional Requirements</h3>
@@ -693,16 +693,17 @@
                       <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                       <xsl:apply-templates select="cc:f-component[@status='optional']"/>
                     </xsl:for-each>   
-                  </xsl:otherwise>
+<!--                  </xsl:otherwise>    -->
 
 		  <!-- Objective requirements -->
                   <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
-
+<!--
 		  <xsl:when test="count(//cc:f-component[@status='objective'])=0">
                     <p>This PP does not define any objective requirements.</p>
 	          </xsl:when>
 		  <xsl:otherwise> 
-    
+-->
+		    
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3>Audit Table for Objective Requirements</h3>
@@ -714,22 +715,22 @@
                       <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                       <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
                     </xsl:for-each>		    
-		  </xsl:otherwise>   
+<!--		  </xsl:otherwise>   -->
 		   
 		<!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
-
+<!--
         	<xsl:when test="count(//cc:implements/cc:feature)=0">
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
-		<xsl:otherwise>
+		<xsl:otherwise>   -->
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table" value="feature-based"/>
 		    </xsl:call-template>
 
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
 		 
-		</xsl:otherwise> 
+<!--		</xsl:otherwise>   -->
             </xsl:when>
             <xsl:otherwise>
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
