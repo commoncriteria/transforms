@@ -712,8 +712,7 @@
 		    
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-		This appendix enumerates requirements 
+                <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
 		<xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features">
 			<xsl:with-param name="level">2</xsl:with-param>
