@@ -158,6 +158,14 @@ It should be the version listed in the CCPart1/2/3 files consulted.
          <ref name="pp-declarations-pat"/>
       </optional>
 
+      <a:documentation>
+        This section is for global definitions used by the pp2html to produce different output formats.
+      </a:documentation>
+      <optional>
+         <ref name="pp-preferences-pat"/>
+      </optional>
+
+             
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <oneOrMore>
@@ -491,22 +499,35 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <zeroOrMore>
          <ref name="audit-table-decl-pat" />
       </zeroOrMore>
+    </element>
+  </define> 
+
+  <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
       <zeroOrMore>
-         <ref name="global-variable-decl-pat" />
+         <ref name="pp-pref-pat" />
       </zeroOrMore>
     </element>
   </define> 
 
-  <define name="global-variable-decl-pat">
-    <element name="global-variable-set">
+         
+  <define name="pp-pref-pat">
+    <element name="pp-pref">
       <a:documentation>
          Declarations and definition of global variables.
       </a:documentation>
       <attribute name="name">
-         <a:documentation>Name of the global variable.</a:documentation>
-         <data type="string">
-           <param name="pattern">[\-a-zA-Z0-9]+</param>
-         </data>
+         <a:documentation>Name of the preference.</a:documentation>
+         <choice>
+               <value>appendicize</value>
+               <value>pp-style</value>
+               <value>use-audit-tables</value>
+               <value>audit-events-with-sfrs</value>
+               <value>support-impl-depends</value>
+          </choice>
       </attribute>
       <ref name="basic-content-pat"/>
     </element>
