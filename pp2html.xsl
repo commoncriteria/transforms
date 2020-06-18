@@ -679,7 +679,7 @@
 
      		<!-- Audit table for optional requirements -->
 		<!-- Not sure this handles the case of zero optional requirements.  -->
-                <h3 id="{@id}-opt" class="indexable" data-level="3">Auditable events for Stritly Optional Requirements</h3>
+	        <h3>Audit Table for Strictly Optional Requirements</h3>
 	        <xsl:call-template name="audit-table-xsl">
 		   <xsl:with-parameter name="table" value="optional"/>
 		</xsl:call-template>
@@ -694,6 +694,7 @@
 		    
     		<!-- Audit table for objective requirements -->
 		<!-- Not sure this handles the case of zero optional requirements.  -->
+	        <h3>Audit Table for Objective Requirements</h3>
 		<xsl:call-template name="audit-table-xsl">
 		   <xsl:with-parameter name="table" value="objective"/>
 		</xsl:call-template>
@@ -740,6 +741,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
 		  <!-- Audit table for optional requirements -->
+ 	          <h2>Audit Table for Optional Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-parameter name="table" value="optional"/>
 		  </xsl:call-template>
@@ -768,7 +770,8 @@
                   <p>This PP does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-       		  <!-- Audit table for optional requirements -->
+       		  <!-- Audit table for selection-based requirements -->
+ 	          <h2>Audit Table for Selection-Based Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-parameter name="table" value="sel-based"/>
 		  </xsl:call-template>
@@ -798,7 +801,8 @@
                   <p>This PP does not define any objective requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-       		  <!-- Audit table for optional requirements -->
+ 	          <h2>Audit Table for Objective Requirements</h2>
+       		  <!-- Audit table for objective requirements -->
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-parameter name="table" value="objective"/>
 		  </xsl:call-template>
@@ -826,7 +830,8 @@
                   <p>This PP does not define any implementation-dependent requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-       		  <!-- Audit table for optional requirements -->
+       		  <!-- Audit table for Implementation-Dependent requirements -->
+ 	          <h2>Audit Table for Implementaion-Dependent Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-parameter name="table" value="impl-dep"/>
 		  </xsl:call-template>
