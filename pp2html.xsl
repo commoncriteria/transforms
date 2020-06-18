@@ -677,44 +677,44 @@
     		  <!-- Strictly optional requirements, a.k.a. "optional"  -->
 		  <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
 
-<!--		  <xsl:when test="count(//cc:f-component[@status='optional'])=0">
+		  <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                     <p>This PP does not define any optional requirements.</p>
 	          </xsl:when>
-		  <xsl:otherwise>    -->
+		  <xsl:otherwise> 
 
      		    <!-- Audit table for optional requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3>Audit Table for Strictly Optional Requirements</h3>
 	            <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-parameter name="table" value="optional"/>
+		       <xsl:with-param name="table" value="optional"/>
 		    </xsl:call-template>
 	    
 	            <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
                       <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                       <xsl:apply-templates select="cc:f-component[@status='optional']"/>
                     </xsl:for-each>   
-<!--                  </xsl:otherwise>  -->
+                  </xsl:otherwise>
 
 		  <!-- Objective requirements -->
                   <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
 
-<!--		  <xsl:when test="count(//cc:f-component[@status='objective'])=0">
+		  <xsl:when test="count(//cc:f-component[@status='objective'])=0">
                     <p>This PP does not define any objective requirements.</p>
 	          </xsl:when>
-		  <xsl:otherwise>    -->
+		  <xsl:otherwise> 
     
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3>Audit Table for Objective Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-parameter name="table" value="objective"/>
+		       <xsl:with-param name="table" value="objective"/>
 		    </xsl:call-template>
 		    
                     <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                       <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                       <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
                     </xsl:for-each>		    
-<!--		  </xsl:otherwise>   -->
+		  </xsl:otherwise>   
 		   
 		<!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
@@ -724,7 +724,7 @@
                 </xsl:when>
 		<xsl:otherwise>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-parameter name="table" value="feature-based"/>
+		       <xsl:with-param name="table" value="feature-based"/>
 		    </xsl:call-template>
 
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
@@ -758,7 +758,7 @@
 		  <!-- Audit table for optional requirements -->
  	          <h2>Audit Table for Optional Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-parameter name="table" value="optional"/>
+		     <xsl:with-param name="table" value="optional"/>
 		  </xsl:call-template>
 	          <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -788,7 +788,7 @@
        		  <!-- Audit table for selection-based requirements -->
  	          <h2>Audit Table for Selection-Based Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-parameter name="table" value="sel-based"/>
+		     <xsl:with-param name="table" value="sel-based"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -820,7 +820,7 @@
  	          <h2>Audit Table for Objective Requirements</h2>
        		  <!-- Audit table for objective requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-parameter name="table" value="objective"/>
+		     <xsl:with-param name="table" value="objective"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -849,7 +849,7 @@
        		  <!-- Audit table for Implementation-Dependent requirements -->
  	          <h2>Audit Table for Implementaion-Dependent Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-parameter name="table" value="impl-dep"/>
+		     <xsl:with-param name="table" value="impl-dep"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
