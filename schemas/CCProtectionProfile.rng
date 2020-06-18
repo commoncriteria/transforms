@@ -491,6 +491,24 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <zeroOrMore>
          <ref name="audit-table-decl-pat" />
       </zeroOrMore>
+      <zeroOrMore>
+         <ref name="global-variable-decl-pat" />
+      </zeroOrMore>
+    </element>
+  </define> 
+
+  <define name="global-variable-decl-pat">
+    <element name="global-variable-set">
+      <a:documentation>
+         Declarations and definition of global variables.
+      </a:documentation>
+      <attribute name="name">
+         <a:documentation>Name of the global variable.</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9]+</param>
+         </data>
+      </attribute>
+      <ref name="basic-content-pat"/>
     </element>
   </define> 
 
