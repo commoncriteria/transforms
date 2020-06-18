@@ -724,7 +724,7 @@
                 </xsl:when>
 		<xsl:otherwise>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-parameter name="table" value="impl-dep"/>
+		       <xsl:with-parameter name="table" value="feature-based"/>
 		    </xsl:call-template>
 
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
