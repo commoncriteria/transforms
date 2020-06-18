@@ -719,17 +719,17 @@
 		<!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
 
-<!--        	<xsl:when test="count(//cc:implements/cc:feature)=0">
+        	<xsl:when test="count(//cc:implements/cc:feature)=0">
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
-		<xsl:otherwise>  -->
+		<xsl:otherwise>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-parameter name="table" value="feature-based"/>
 		    </xsl:call-template>
 
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
 		 
-<!--		</xsl:otherwise>    -->
+		</xsl:otherwise> 
             </xsl:when>
             <xsl:otherwise>
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
