@@ -677,7 +677,7 @@
     		  <!-- Strictly optional requirements, a.k.a. "optional"  -->
 		  <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
 
-		  <xsl:when test="count(//cc:subsection[cc:f-component/@status='optional'])=0">
+		  <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                     <p>This PP does not define any optional requirements.</p>
 	          </xsl:when>
 		  <xsl:otherwise>    
