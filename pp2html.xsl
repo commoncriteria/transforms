@@ -672,31 +672,37 @@
     <xsl:template match="cc:appendix[@id='appendix-optional-plus']" name="optional-plus-appendix"> 
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
+		    
+		<!-- Strictly optional requirements, a.k.a. "optional"  -->
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-                <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
-                  <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                  <xsl:apply-templates select="cc:f-component[@status='optional']"/>
-                </xsl:for-each>
-    
-  		<!-- Audit table for optional requirements -->
+
+     		<!-- Audit table for optional requirements -->
 		<!-- Not sure this handles the case of zero optional requirements.  -->
 		<xsl:call-template name="audit-table-xsl">
-		   <with-parameter name="table" value="optional"/>
+		   <xsl:with-parameter name="table" value="optional"/>
 		</xsl:call-template>
+	    
+	        <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
+                  <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                  <xsl:apply-templates select="cc:f-component[@status='optional']"/>
+                </xsl:for-each>   
 
+		<!-- Objective requirements -->
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
+		    
+    		<!-- Audit table for objective requirements -->
+		<!-- Not sure this handles the case of zero optional requirements.  -->
+		<xsl:call-template name="audit-table-xsl">
+		   <xsl:with-parameter name="table" value="objective"/>
+		</xsl:call-template>
+		    
                 <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                   <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                   <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
-                </xsl:for-each>
-		    
-		<!-- Audit table for optional requirements -->
-		<!-- Not sure this handles the case of zero optional requirements.  -->
-		<xsl:call-template name="audit-table-xsl">
-		   <with-parameter name="table" value="objective"/>
-		</xsl:call-template>
+                </xsl:for-each>		    
 
+		<!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
 		 
@@ -734,7 +740,7 @@
 	       <xsl:otherwise>
 		  <!-- Audit table for optional requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <with-parameter name="table" value="optional"/>
+		     <xsl:with-parameter name="table" value="optional"/>
 		  </xsl:call-template>
 	          <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -763,7 +769,7 @@
 	       <xsl:otherwise>
        		  <!-- Audit table for optional requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <with-parameter name="table" value="sel-based"/>
+		     <xsl:with-parameter name="table" value="sel-based"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -793,7 +799,7 @@
 	       <xsl:otherwise>
        		  <!-- Audit table for optional requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <with-parameter name="table" value="objective"/>
+		     <xsl:with-parameter name="table" value="objective"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
@@ -821,7 +827,7 @@
 	       <xsl:otherwise>
        		  <!-- Audit table for optional requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <with-parameter name="table" value="impl-dep"/>
+		     <xsl:with-parameter name="table" value="impl-dep"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:f-component">
