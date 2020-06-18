@@ -668,7 +668,7 @@
 <!--                 -->
 <!--    <xsl:template name="optional-plus-appendix">   -->
 	
-    <xsl:template match="cc:appendix[@id='appendix-optional-plus']">  <!-- name="optional-plus-appendix" -->
+    <xsl:template match="cc:appendix[@id='appendix-optional-plus']" name="optional-plus-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
 		    
@@ -746,7 +746,7 @@
 <!-- This makes an appendix with traditional optional requirements only. -->
 <!-- Old: <xsl:template match="cc:appendix[@id='Optional Requirements']" name="optional-appendix">  --> 
 	
-    <xsl:template match="cc:appendix[@id='appendix-optional']">   <!-- name="optional-appendix" --> 
+    <xsl:template match="cc:appendix[@id='appendix-optional']" name="optional-appendix"> 
         <xsl:if test="$appendicize='on'">
             <h1 id="optional-reqs" class="indexable" data-level="A">Optional Requirements</h1>
 	    <xsl:call-template name="optional-text"/>
@@ -776,7 +776,7 @@
 <!-- This makes an appendix with traditional selection-based requirements only. -->
 <!-- <xsl:template match="cc:appendix[@title='Selection-Based Requirements']" name="selection-based-appendix">  -->
 
-<xsl:template match="cc:appendix[@id='appendix-sel-based']">   <!-- name="selection-based-appendix" -->
+<xsl:template match="cc:appendix[@id='appendix-sel-based']" name="selection-based-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
             <xsl:call-template name="selection-based-text"/>
@@ -808,7 +808,7 @@
 <!-- The new way involves including these in Appendix A with the optionals. -->
 <!-- <xsl:template match="cc:appendix[@title='Objective Requirements']" name="objective-appendix">   -->
 
-   <xsl:template match="cc:appendix[@id='appendix-objective']">   <!-- name="objective-appendix"  -->
+   <xsl:template match="cc:appendix[@id='appendix-objective']" name="objective-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="objective-reqs" class="indexable" data-level="A">Objective Requirements</h1>
             <xsl:call-template name="objective-text"/>
@@ -837,7 +837,7 @@
 <!--                 -->
 <!-- This makes an appendix with implementation-dependent requirements only. -->
 <!-- The new way involves including these in Appendix A with the optionals. -->
-    <xsl:template match="cc:appendix[@id='appendix-impl-dep']">   <!--  name="impl-dep-appendix"  -->
+    <xsl:template match="cc:appendix[@id='appendix-impl-dep']" name="impl-dep-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="objective-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
             This appendix enumerates requirements <xsl:call-template name="imple_text"/>
