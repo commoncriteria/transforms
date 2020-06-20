@@ -684,7 +684,7 @@
 -->
      		    <!-- Audit table for optional requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="{@id}-opt" class="indexable" data-level="3">Audit Table for <xsl:value-of select="@title" /></h3>
+	            <h3 id="strict-opt-reqs" class="indexable" data-level="3"> Audit Table</h3>
 	            <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table" value="optional"/>
 		    </xsl:call-template>
