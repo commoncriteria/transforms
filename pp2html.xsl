@@ -264,7 +264,7 @@
     <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
-    <tr><th>Requirement</th>
+    <tr><th>Requirementz</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
