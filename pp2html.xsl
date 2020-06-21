@@ -767,10 +767,9 @@
 		     <xsl:with-param name="table" value="optional"/>
 		  </xsl:call-template>
 	          <!-- Loop through all components picking out the optional. -->
-	          <xsl:for-each select="//cc:f-component">
-		     <xsl:if test="@status='optional'"> 
-                        <xsl:apply-templates select="." />
-		     </xsl:if>
+	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
+                     <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                     <xsl:apply-templates select="cc:f-component[@status='optional']"/>
                   </xsl:for-each>
 	       </xsl:otherwise>
 	    </xsl:choose>
@@ -797,10 +796,9 @@
 		     <xsl:with-param name="table" value="sel-based"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the selection-based. -->
-	          <xsl:for-each select="//cc:f-component">
-		     <xsl:if test="@status='sel-based'"> 
-                        <xsl:apply-templates select="." />
-		     </xsl:if>
+	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='sel-based']">
+                     <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                     <xsl:apply-templates select="cc:f-component[@status='sel-based']"/>
                   </xsl:for-each>
 	       </xsl:otherwise>
 	    </xsl:choose>
@@ -829,10 +827,9 @@
 		     <xsl:with-param name="table" value="objective"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
-	          <xsl:for-each select="//cc:f-component">
-		     <xsl:if test="@status='objective'"> 
-                        <xsl:apply-templates select="." />
-		     </xsl:if>
+	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
+                     <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                     <xsl:apply-templates select="cc:f-component[@status='objective']"/>
                   </xsl:for-each>
 	       </xsl:otherwise>
 	    </xsl:choose>
@@ -858,10 +855,9 @@
 		     <xsl:with-param name="table" value="impl-dep"/>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
-	          <xsl:for-each select="//cc:f-component">
-		     <xsl:if test="@status='impl-dep'"> 
-                        <xsl:apply-templates select="." />
-		     </xsl:if>
+	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='impl-dep']">
+                     <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                     <xsl:apply-templates select="cc:f-component[@status='impl-dep']"/>
                   </xsl:for-each>
 	       </xsl:otherwise>
 	    </xsl:choose>
