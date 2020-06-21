@@ -311,10 +311,9 @@
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-	  <h3>In audit-table-xsl </h3>
-<!--    <xsl:apply-templates/>   -->
+    <xsl:apply-templates/>  
     <table class="" border="1">
-	<tr><th>Requirement</th>
+	<tr><th>Requirementzzzz</th>
 	<th>Auditable Events</th>
 	<th>Additional Audit Record Contents</th></tr>
 	<xsl:for-each select="//cc:f-component">
