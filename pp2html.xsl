@@ -685,7 +685,7 @@
 
      		    <!-- Audit table for optional requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table</h3>
+	            <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
 	            <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table" value="optional"/>
 		    </xsl:call-template>
@@ -708,7 +708,7 @@
 		    
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table</h3>
+	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table" value="objective"/>
 		    </xsl:call-template>
@@ -728,6 +728,7 @@
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
 		<xsl:otherwise> 
+	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table" value="feature-based"/>
 		    </xsl:call-template>
