@@ -72,7 +72,14 @@ class State:
         if clazz in self.classmap:
             return self.classmap[clazz]
         else:
-            return [] 
+            return []
+ 
+    def cross_reference_cc_items(self):
+        for clazz in {"assumption","threat","OSP","SOE", "SO"}:
+            for el in self.getElementsByClass(clazz): 
+               if "id" in el.attrib:
+                  self.add_to_regex(el.attrib["id"])
+
 
     def build_comp_regex(self):
         comps = self.getElementsByClass('reqid') +  self.getElementsByClass('comp')
@@ -309,6 +316,7 @@ if __name__ == "__main__":
     state.fix_counters()
     state.fix_tooltips()
     state.build_termtable()
+    state.cross_reference_cc_items()
     state.build_comp_regex()
 if sys.version_info >= (3, 0):
     with open(outfile, "w+", encoding="utf-8") as outstream:
