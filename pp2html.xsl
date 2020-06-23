@@ -259,12 +259,13 @@
 
 <!-- ############### -->
 <!-- This template for audit tables is invoked from XML. --> 
+<!-- This one gets called for the main audit table in FAU_GEN.1 -->
 	
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
-    <tr><th>Requirementz</th>
+    <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
@@ -307,13 +308,14 @@
 
 <!-- ############### -->
 <!-- This template for audit tables is invoked from XSL. --> 
+<!-- This one gets called for audit tables in Appendixes. -->
 	
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
     <xsl:apply-templates/>  
     <table class="" border="1">
-	<tr><th>Requirementzzzz</th>
+	<tr><th>Requirement</th>
 	<th>Auditable Events</th>
 	<th>Additional Audit Record Contents</th></tr>
 	<xsl:for-each select="//cc:f-component">
@@ -687,7 +689,7 @@
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
 	            <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-param name="table" value="optional"/>
+		       <xsl:with-param name="table">optional</xsl:with-param>
 		    </xsl:call-template>
 	    
 	            <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
@@ -710,7 +712,7 @@
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-param name="table" value="objective"/>
+		       <xsl:with-param name="table">objective</xsl:with-param>
 		    </xsl:call-template>
 		    
                     <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
@@ -730,7 +732,7 @@
 		<xsl:otherwise> 
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-param name="table" value="feature-based"/>
+		       <xsl:with-param name="table">feature-based</xsl:with-param>
 		    </xsl:call-template>
 
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
