@@ -69,33 +69,18 @@ if certain selections are made, then additional requirements below must be inclu
   <td><span id="bibCC"> [CC] </span></td>
   <td>Common Criteria for Information Technology Security Evaluation - 
     <ul>
-      <xsl:call-template name="cc-ref">
-        <xsl:with-param name="num">1</xsl:with-param>
-        <xsl:with-param name="name">Introduction and General Model</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="cc-ref">
-        <xsl:with-param name="num">2</xsl:with-param>
-        <xsl:with-param name="name">Security Functional Components</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="cc-ref">
-        <xsl:with-param name="num">3</xsl:with-param>
-        <xsl:with-param name="name">Security Assurance Components</xsl:with-param>
-      </xsl:call-template>
+      <xsl:for-each select="document('boilerplates.xml')//*[@id='cc-ref-docs']/cc:doc">
+        <li>
+          <a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART{@num}V3.1R5.pdf">Part
+             <xsl:value-of select="@num"/>: <xsl:value-of select="@name"/></a>,
+             CCMB-2017-04-00<xsl:value-of select="@num"/>, <xsl:call-template name="verrev"/>,  April 2017.
+         </li>
+      </xsl:for-each>
     </ul>
   </td>
 </tr>
   </xsl:template>
 
-  <!-- ############## -->
-  <xsl:template name="cc-ref">
-   <xsl:param name="num"/>
-   <xsl:param name="name"/>
-   <li>
-     <a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART{$num}V3.1R5.pdf">Part
-                <xsl:value-of select="$num"/>: <xsl:value-of select="$name"/></a>,
-     CCMB-2017-04-00<xsl:value-of select="$num"/>, <xsl:call-template name="verrev"/>,  April 2017.
-   </li>
-  </xsl:template>
 
   <!-- ############## -->
   <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>

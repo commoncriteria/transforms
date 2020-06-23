@@ -50,6 +50,11 @@
    <empty id="DCE">
      <D/><C/><E/>
    </empty>
-     
+   
+   <empty id="cc-ref-docs">
+	  <doc num="1" name="Introduction and General Model"/>
+   	  <doc num="2" name="Security Functional Components"/>
+   	  <doc num="3" name="Security Assurance Components"/>
+   </empty>
    
 </boilerplate>
