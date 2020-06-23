@@ -68,12 +68,14 @@ class State:
                 else:
                     self.classmap[clazz]=[el]
 
+    def getElementsByClass(self, clazz):
+        if clazz in self.classmap:
+            return self.classmap[clazz]
+        else:
+            return [] 
+
     def build_comp_regex(self):
-        comps = []
-        if 'reqid' in self.classmap:
-            comps = comps + self.classmap['reqid']
-        if 'comp' in self.classmap:
-            comps = comps + self.classmap['comp']
+        comps = self.getElementsByClass('reqid') +  self.getElementsByClass('comp')
         for comp in comps:
             if 'id' in comp.attrib:
 #                 print("Adding " + comp.attrib["id"])
@@ -83,10 +85,7 @@ class State:
                 print("Cannot find: "+comp.text)
 
     def build_termtable(self):
-        if not 'term' in self.classmap:
-            return
-        terms = self.classmap['term']
-        for term in terms:
+        for term in self.getElementsByClass('term'):
             self.add_to_regex(term.text)
             self.abbrs.append(term.text)
 
@@ -165,12 +164,9 @@ class State:
 
     def fix_counters(self):
         # Bail if there are no ctrs
-        if not "ctr" in self.classmap:
-            return
-        countables = self.classmap['ctr']
         occurs={}
         # Go through all the counters
-        for countable in countables:
+        for countable in self.getElementsByClass('ctr'):
             # Get the type of counter
             typee = countable.attrib['data-counter-type']
             # If we haven't seen it yet
@@ -188,9 +184,7 @@ class State:
                     ref.find("*[@class='counter']").text= str(occurs[typee])
 
     def fix_tooltips(self):
-        if not "tooltiptext" in self.classmap:
-            return
-        for elem in self.classmap["tooltiptext"]:
+        for elem in self.getElementsByClass("tooltiptext"):
             attribs=self.parent_map[elem].attrib
             if "class" in attribs:
                 attribs["class"]=attribs["class"]+",tooltipped"
@@ -198,12 +192,7 @@ class State:
                 attribs["class"]="tooltipped"
 
     def fix_index_refs(self):
-        # Bail if there are no dynamic references
-        if not "dynref" in self.classmap:
-            return
-        # Gather them
-        brokeRefs = self.classmap["dynref"]
-        for brokeRef in brokeRefs:
+        for brokeRef in self.getElementsByClass("dynref"):
             linkend=brokeRef.attrib["href"][1:]
             target=root.find(".//*[@id='"+linkend+"']")
             if not hasattr(brokeRef, 'text')\
