@@ -96,7 +96,7 @@
   <xsl:template match="cc:assumptions">
     <dl>
       <xsl:for-each select="cc:assumption">
-        <dt>
+        <dt id="{@name}">
           <xsl:value-of select="@name"/>
         </dt>
         <dd>
@@ -137,7 +137,7 @@
     <dl>
       <!-- For -->
       <xsl:for-each select="cc:threat[cc:description]">
-        <dt>
+        <dt id="{@name}">
           <xsl:value-of select="@name"/>
         </dt>
         <dd>
@@ -152,7 +152,7 @@
   <xsl:template match="cc:OSPs">
     <dl>
       <xsl:for-each select="cc:OSP">
-        <dt>
+        <dt id="{@name}">
           <xsl:value-of select="@name"/>
         </dt>
         <dd>
@@ -169,7 +169,7 @@
       <xsl:when test="cc:SO[cc:description]">
         <dl>
           <xsl:for-each select="cc:SO[cc:description]">
-            <dt><xsl:value-of select="@name"/></dt>
+            <dt id="{@name}"><xsl:value-of select="@name"/></dt>
             <dd>
               <p><xsl:apply-templates select="cc:description"/></p>
            <xsl:apply-templates select="cc:appnote"/></dd>
