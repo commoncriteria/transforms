@@ -125,9 +125,9 @@ class State:
         last=0
         ret=""
         for mat in self.regex.finditer(etext):
-            ret += etext[last:mat.start()]
-            last = mat.end();
-            if mat.group() in self.abbrs:
+            ret += etext[last:mat.start()]                   # Append the characters between the last find and this
+            last = mat.end();                                # Move the last indexer up
+            if mat.group() in self.abbrs:                    # If it's an abbreviation
                 ret+='<abbr class="dyn-abbr"><a href="#abbr_'+mat.group()+'">'+mat.group()+'</a></abbr>'
             else:
                 ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a>'
