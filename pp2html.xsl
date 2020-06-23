@@ -90,37 +90,32 @@
     </table>
   </xsl:template>
 
-
+  <xsl:template name="defs-with-notes">
+    <xsl:variable name="class" select="name()"/>
+    <dt class="{$class}" id="{@name}">
+      <xsl:value-of select="@name"/>
+    </dt>
+    <dd>
+      <xsl:apply-templates select="cc:description"/>
+      <xsl:apply-templates select="cc:appnote"/>
+    </dd>
+ </xsl:template>
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:assumptions">
-    <dl>
-      <xsl:for-each select="cc:assumption">
-        <dt id="{@name}">
-          <xsl:value-of select="@name"/>
-        </dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
-  </xsl:template>
-
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:cclaims">
-    <dl>
-      <xsl:for-each select="cc:cclaim">
-        <dt>
-          <xsl:value-of select="@title"/>
-        </dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
+  <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs">
+ 
+    <xsl:choose>
+      <xsl:when test="cc:*[cc:description]">
+        <dl>
+          <xsl:for-each select="cc:*[cc:description]">
+            <xsl:call-template name="defs-with-notes"/>
+          </xsl:for-each>
+        </dl>
+      </xsl:when>
+      <xsl:when test="name()='SOs'">
+        This CC-Module does not define any new security objectives.
+      </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
 <!-- ############### -->
@@ -131,56 +126,6 @@
     </xsl:if>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:threats">
-    <dl>
-      <!-- For -->
-      <xsl:for-each select="cc:threat[cc:description]">
-        <dt id="{@name}">
-          <xsl:value-of select="@name"/>
-        </dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
-  </xsl:template>
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:OSPs">
-    <dl>
-      <xsl:for-each select="cc:OSP">
-        <dt id="{@name}">
-          <xsl:value-of select="@name"/>
-        </dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-          <xsl:apply-templates select="cc:appnote"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
-  </xsl:template>
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:SOs">
-    <xsl:choose>
-      <xsl:when test="cc:SO[cc:description]">
-        <dl>
-          <xsl:for-each select="cc:SO[cc:description]">
-            <dt id="{@name}"><xsl:value-of select="@name"/></dt>
-            <dd>
-              <p><xsl:apply-templates select="cc:description"/></p>
-           <xsl:apply-templates select="cc:appnote"/></dd>
-          </xsl:for-each>
-        </dl>
-      </xsl:when>
-      <xsl:otherwise>
-        This CC-Module does not define any new security objectives.
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
 <!-- ############### -->
 <!--            -->
