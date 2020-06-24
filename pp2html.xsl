@@ -764,7 +764,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>0
 		  <!-- Audit table for optional requirements -->
-	          <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Optional Requirements</h3>
+	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
@@ -793,7 +793,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="3">Audit Table for Selection-Based Requirements</h3>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
@@ -824,7 +824,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for objective requirements -->
-	          <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
+	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
@@ -852,7 +852,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for Implementation-Dependent requirements -->
-	          <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
+	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">impl-dep</xsl:with-param>
 		  </xsl:call-template>
