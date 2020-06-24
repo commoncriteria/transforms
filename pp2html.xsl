@@ -762,9 +762,9 @@
 	       <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                   <p>This PP does not define any optional requirements.</p>
 	       </xsl:when>
-	       <xsl:otherwise>
+	       <xsl:otherwise>0
 		  <!-- Audit table for optional requirements -->
- 	          <h2>Audit Table for Optional Requirements</h2>
+	          <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Optional Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
@@ -824,7 +824,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for objective requirements -->
-		  <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
+	          <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
@@ -852,7 +852,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for Implementation-Dependent requirements -->
-		  <h3 id="impl-dep-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
+	          <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">impl-dep</xsl:with-param>
 		  </xsl:call-template>
