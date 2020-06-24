@@ -321,7 +321,7 @@
 	<xsl:for-each select="//cc:f-component">
 	  <xsl:variable name="fcomp" select="."/>
 	  <xsl:for-each select="cc:audit-event"> 
-            <!-- The audit event is included in this table only if
+            <!-- The audit event is included in this table only if 
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
