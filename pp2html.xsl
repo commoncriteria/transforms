@@ -766,7 +766,7 @@
 		  <!-- Audit table for optional requirements -->
  	          <h2>Audit Table for Optional Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table" value="optional"/>
+		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
 	          <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
@@ -795,7 +795,7 @@
        		  <!-- Audit table for selection-based requirements -->
  	          <h2>Audit Table for Selection-Based Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table" value="sel-based"/>
+		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='sel-based']">
@@ -826,7 +826,7 @@
  	          <h2>Audit Table for Objective Requirements</h2>
        		  <!-- Audit table for objective requirements -->
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table" value="objective"/>
+		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
@@ -854,7 +854,7 @@
        		  <!-- Audit table for Implementation-Dependent requirements -->
  	          <h2>Audit Table for Implementaion-Dependent Requirements</h2>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table" value="impl-dep"/>
+		     <xsl:with-param name="table">impl-dep</xsl:with-param>
 		  </xsl:call-template>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='impl-dep']">
