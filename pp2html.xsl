@@ -793,7 +793,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for selection-based requirements -->
- 	          <h2>Audit Table for Selection-Based Requirements</h2>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="3">Audit Table for Selection-Based Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
@@ -823,8 +823,8 @@
                   <p>This PP does not define any objective requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
- 	          <h2>Audit Table for Objective Requirements</h2>
        		  <!-- Audit table for objective requirements -->
+		  <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
@@ -844,7 +844,7 @@
 <!-- The new way involves including these in Appendix A with the optionals. -->
     <xsl:template match="cc:appendix[@id='appendix-impl-dep']" name="impl-dep-appendix">
         <xsl:if test="$appendicize='on'">
-            <h1 id="objective-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
+            <h1 id="impl-dep-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
             This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	    <xsl:choose>
 	       <xsl:when test="count(//cc:f-component[@status='impl-dep'])=0">
@@ -852,7 +852,7 @@
 	       </xsl:when>
 	       <xsl:otherwise>
        		  <!-- Audit table for Implementation-Dependent requirements -->
- 	          <h2>Audit Table for Implementaion-Dependent Requirements</h2>
+		  <h3 id="impl-dep-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">impl-dep</xsl:with-param>
 		  </xsl:call-template>
