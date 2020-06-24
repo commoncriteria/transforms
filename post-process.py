@@ -47,7 +47,7 @@ class State:
         self.create_classmapping()
         self.period_ctr = 0
         self.abbrs = []
-        self.regex_str = "(?<!-)\\b("
+        self.key_terms = []
         self.regex=None
 
     def create_classmapping(self):
@@ -73,12 +73,12 @@ class State:
             return self.classmap[clazz]
         else:
             return []
- 
+        
     def cross_reference_cc_items(self):
         for clazz in {"assumption","threat","OSP","SOE", "SO"}:
             for el in self.getElementsByClass(clazz): 
-               if "id" in el.attrib:
-                  self.add_to_regex(el.attrib["id"])
+                if "id" in el.attrib:
+                    self.add_to_regex(el.attrib["id"])
 
 
     def build_comp_regex(self):
@@ -98,13 +98,20 @@ class State:
 
     def add_to_regex(self, word):
         if len(word) > 1 and not(word.startswith(".")):
-            self.regex_str=self.regex_str + backslashify(word) +"|"        
+            self.key_terms.append(backslashify(word))
             
     def to_html(self):
         try:
-            self.regex=re.compile(self.regex_str[:-1]+")\\b")
+            # Sort them so longer terms are searched first so 
+            # that shorter terms embedded in larger terms don't
+            # interfere with longer terms being found.
+            self.key_terms.sort(key=len, reverse=True)
+            regex_str = "(?<!-)\\b("
+            for key_term in self.key_terms:
+                regex_str = regex_str + "|"
+            self.regex=re.compile(regex_str[:-1]+")\\b")
         except re.error:
-            warn("Failed to compile regular expression: " + self.regex_str[:-1]+")\\b")            
+            warn("Failed to compile regular expression: " + regex_str[:-1]+")\\b")            
         self.ancestors=[]
         return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -120,8 +127,8 @@ class State:
          # No tags in tags.
         etext = escape(text)
         if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
-           "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
-           "h4" in self.ancestors or "no-link" in self.ancestors:
+            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
+            "h4" in self.ancestors or "no-link" in self.ancestors:
             return etext
         return self.discover_xref(etext)
 
@@ -315,13 +322,14 @@ if __name__ == "__main__":
     state.fix_index_refs()
     state.fix_counters()
     state.fix_tooltips()
-    state.build_termtable()
     state.cross_reference_cc_items()
     state.build_comp_regex()
-if sys.version_info >= (3, 0):
-    with open(outfile, "w+", encoding="utf-8") as outstream:
-        outstream.write(state.to_html())
-else:
-    with open(outfile, "w+") as outstream:
-        outstream.write(state.to_html().encode('utf-8'))
+    state.build_termtable()
+
+    if sys.version_info >= (3, 0):
+        with open(outfile, "w+", encoding="utf-8") as outstream:
+            outstream.write(state.to_html())
+    else:
+        with open(outfile, "w+") as outstream:
+            outstream.write(state.to_html().encode('utf-8'))
 
