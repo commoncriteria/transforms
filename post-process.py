@@ -106,10 +106,7 @@ class State:
             # that shorter terms embedded in larger terms don't
             # interfere with longer terms being found.
             self.key_terms.sort(key=len, reverse=True)
-            regex_str = "(?<!-)\\b("
-            for key_term in self.key_terms:
-                regex_str = regex_str + "|"
-            self.regex=re.compile(regex_str[:-1]+")\\b")
+            self.regex=re.compile("(?<!-)\\b(" + "|".join(self.key_terms) +")\\b")
         except re.error:
             warn("Failed to compile regular expression: " + regex_str[:-1]+")\\b")            
         self.ancestors=[]
