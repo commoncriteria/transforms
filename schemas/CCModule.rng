@@ -59,7 +59,7 @@
 	    </element>
     </define>	
 -->
-    <define name="assumption-origin-pat">
+    <define name="origin-pat">
        <choice>
           <ref name="description"/>
           <ref name="from"/>

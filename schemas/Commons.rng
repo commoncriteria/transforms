@@ -800,7 +800,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             Defines a threat.
           </a:documentation>
           <ref name="threat-name-attr"/>
-          <ref name="description"/>
+          <ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -829,7 +829,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               <param name="pattern">A\.[A-Z_]+</param>
             </data>
           </attribute>
-          <ref name="assumption-origin-pat"/>
+          <ref name="origin-pat"/>
           <oneOrMore>
           <ref name="objective-refer"/>
           </oneOrMore>
@@ -838,9 +838,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
-  <define name="assumption-origin-pat">
+  <define name="origin-pat">
+     <a:documentation>Defined so that Module can overwrite it with a choice </a:documentation>
      <ref name="description"/>
   </define>
+  
   <define name="OSPs">
     <element name="OSPs">
             <a:documentation>
