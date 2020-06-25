@@ -165,6 +165,13 @@ It should be the version listed in the CCPart1/2/3 files consulted.
          <ref name="pp-preferences-pat"/>
       </optional>
 
+      <a:documentation>
+        This section is for global definitions.
+      </a:documentation>
+      <optional>
+         <ref name="pp-global-config-pat"/>
+      </optional>
+
              
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
@@ -510,6 +517,17 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <zeroOrMore>
          <ref name="pp-pref-pat" />
       </zeroOrMore>
+    </element>
+  </define> 
+
+  <define name="pp-global-config-pat">
+    <element name="pp-global-config">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <oneOrMore>
+         <ref name="basic-content-pat" />
+      </oneOrMore>
     </element>
   </define> 
 
