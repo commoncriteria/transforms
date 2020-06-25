@@ -582,7 +582,8 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="figure"/>
         <ref name="figref"/>
         <ref name="equation"/>
-        <ref name="wsn"/>
+        <element name="choice"><ref name="basic-content-pat"/></element>
+        <!-- <ref name="wsn"/> -->
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -831,7 +832,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           </attribute>
           <ref name="origin-pat"/>
           <oneOrMore>
-          <ref name="objective-refer"/>
+            <ref name="objective-refer"/>
           </oneOrMore>
         </element>
       </zeroOrMore>

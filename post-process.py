@@ -109,6 +109,7 @@ class State:
             regex_str = "(?<!-)\\b("
             for key_term in self.key_terms:
                 regex_str = regex_str + "|"
+            warn("Regex: " + regex_str[:-1]+")\\b")
             self.regex=re.compile(regex_str[:-1]+")\\b")
         except re.error:
             warn("Failed to compile regular expression: " + regex_str[:-1]+")\\b")            
