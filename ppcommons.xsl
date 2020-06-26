@@ -365,13 +365,11 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <xsl:template match="cc:choice//cc:selectables">
-    <xsl:for-each select="cc:selectable">
-      <xsl:choose>
-         <xsl:when test="position() = 0 "><xsl:apply-templates/></xsl:when>
+    <xsl:for-each select="cc:selectable"><xsl:choose>
+	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
          <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
          <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
+    </xsl:choose></xsl:for-each>
   </xsl:template>
 
   <!-- -->
@@ -510,13 +508,16 @@ The following sections list Common Criteria and technology terms used in this do
            <ul> <xsl:for-each select="cc:depends">
               <li>
               <xsl:if test="@on='selection'">
-                <xsl:for-each select="cc:uid">  
+                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
+                <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
+                <xsl:for-each select="cc:ref-id">  
                   <xsl:variable name="uid" select="text()"/>
                   "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
                 </xsl:for-each>
-                 is selected from 
-                <xsl:variable name="uid" select="cc:uid[1]/text()"/>
-                <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                   is selected from 
+                   <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                </xsl:when>
+                <xsl:otherwise>For <xsl:value-of select="//cc:selectable[./@id=$uid]"/> TOEs</xsl:otherwise></xsl:choose>
               </xsl:if> 
               <xsl:if test="@on='implements'">
                 the TOE implements 
