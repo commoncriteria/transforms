@@ -501,9 +501,7 @@ The following sections list Common Criteria and technology terms used in this do
        namespace to output all in htm namespace. For right now
        this is what we have.
   -->
-  <xsl:template match="htm:*">
-    <xsl:choose>
-      <xsl:when test="cc:depends">
+  <xsl:template match="htm:*[./cc:depends]">
         <div class="dependent"> The following content should be included if:
            <ul> <xsl:for-each select="cc:depends">
               <li>
@@ -532,20 +530,16 @@ The following sections list Common Criteria and technology terms used in this do
                   "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
                 </xsl:for-each>
               </xsl:if>
+              <!-- This is a module piece... -->
               </li>
           </xsl:for-each> </ul>
           <div class="dependent-content">
             <xsl:call-template name="handle-html"/>
           </div>        
         </div>        
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="handle-html"/>
-      </xsl:otherwise>
-    </xsl:choose>
- </xsl:template>
+  </xsl:template>
 
-  <xsl:template name="handle-html">
+  <xsl:template match="htm:*" name="handle-html">
      <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">

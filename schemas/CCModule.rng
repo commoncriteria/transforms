@@ -68,6 +68,20 @@
     <define name="consistency-rationale-placeholder">
       <ref name="consistency-rationale"/>
     </define>
+    <define name="depends-pat">
+      <zeroOrMore>
+        <element name="depends">
+          <a:documentation>
+            Modifies the parent element such that it depends on something  else.
+          </a:documentation>
+          <choice>
+            <group><ref name="implements-or-selection-pat"/></group>
+            <group><oneOrMore><element name="base-ref"><text/></element></oneOrMore></group>
+          </choice>
+        </element>
+      </zeroOrMore>
+    </define>
+
   </include>
 
 <!--############################## -->
