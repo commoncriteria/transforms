@@ -1134,6 +1134,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </element>
     </zeroOrMore>
   </define>
+ 
 
   <define name="ref-id">
     <element name="ref-id"><text/></element>

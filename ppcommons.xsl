@@ -526,8 +526,11 @@ The following sections list Common Criteria and technology terms used in this do
               </xsl:if> 
               <xsl:if test="@on='implements'">
                 the TOE implements 
-                <xsl:variable name="ref-id" select="@ref-id"/>
-                "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                <xsl:for-each select="cc:ref-id">
+                  <xsl:variable name="ref-id" select="text()"/>
+                  <xsl:if test="position()!=1">, </xsl:if>
+                  "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                </xsl:for-each>
               </xsl:if>
               </li>
           </xsl:for-each> </ul>

@@ -166,18 +166,22 @@
          <ul> <xsl:for-each select="cc:depends">
             <li>
             <xsl:if test="@on='selection'">
-              <xsl:for-each select="cc:uid">  
+              <xsl:for-each select="cc:ref-id">  
                 <xsl:variable name="uid" select="text()"/>
                 "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
               </xsl:for-each>
                is selected from 
-              <xsl:variable name="uid" select="cc:uid[1]/text()"/>
+              <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
               <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
             </xsl:if> 
             <xsl:if test="@on='implements'">
               the TOE implements 
-              <xsl:variable name="ref-id" select="@ref-id"/>
-              "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              <xsl:for-each select="cc:ref-id">
+                 <xsl:variable name="ref-id" select="text()"/>
+                 <xsl:message>Looking for <xsl:value-of select="$ref-id"/></xsl:message>
+                 <xsl:if test="position()!=1">, </xsl:if>
+                 "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              </xsl:for-each>
             </xsl:if>
             </li>
         </xsl:for-each> </ul><br/>
@@ -287,8 +291,10 @@
                 Its inclusion depends on whether the TOE implements one (or more) of
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
-                    <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                    <xsl:for-each select="cc:ref-id">
+                      <xsl:variable name="ref-id" select="text()"/>
+                      <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                    </xsl:for-each>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
@@ -439,6 +445,7 @@
 
 <!-- ############### -->
 <!--                 -->
+<!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
     <xsl:template name="handle-features">
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
@@ -446,9 +453,9 @@
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
-                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
+                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/.."
                     mode="appendicize-nofilter"/>
              </xsl:for-each>
           </xsl:if>
