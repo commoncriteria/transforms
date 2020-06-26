@@ -519,9 +519,9 @@ The following sections list Common Criteria and technology terms used in this do
                 </xsl:when>
                 <xsl:otherwise>For 
                    <xsl:for-each select="cc:ref-id">
-                     <xsl:variable name="uid" select="text()"/>
+                     <xsl:variable name="tid" select="text()"/>
                      <xsl:if test="position()!=1">/</xsl:if>
-                     <xsl:apply-templates select="//cc:selectable[./@id=$uid]"/>
+                     <xsl:apply-templates select="//cc:selectable[./@id=$tid]"/>
                    </xsl:for-each> TOEs </xsl:otherwise></xsl:choose>
               </xsl:if> 
               <xsl:if test="@on='implements'">
