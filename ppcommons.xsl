@@ -511,8 +511,8 @@ The following sections list Common Criteria and technology terms used in this do
                 <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
                 <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
                 <xsl:for-each select="cc:ref-id">  
-                  <xsl:variable name="uid" select="text()"/>
-                  "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+                  <xsl:variable name="qtid" select="text()"/>
+                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]"/>"
                 </xsl:for-each>
                    is selected from 
                    <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
