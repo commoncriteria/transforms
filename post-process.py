@@ -8,7 +8,7 @@ with XSLT).
 import re
 import sys
 import xml.etree.ElementTree as ET
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import quoteattr, escape
 
 
 def warn(msg):
@@ -161,7 +161,7 @@ class State:
         # Everything else is beginning and end tags (even if they're empty)
         ret="<" + noname
         for attrname in elem.attrib:
-            ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
+            ret = ret + " " + attrname + "="+ quoteattr(elem.attrib[attrname])
         ret=ret+">"
         if elem.text:
             ret += self.handle_text(elem, elem.text)
@@ -274,7 +274,9 @@ class State:
             else:
                 eles[aa].text = prefix
             entry = ET.Element("a")
-            entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+            # Why would an ID have to be escaped?
+            # entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+            entry.attrib['href'] = '#'+eles[aa].attrib['id']
             entry.attrib['style']= 'text-indent:'+str(level*10)+ 'px'
 
             entry.text=prefix
