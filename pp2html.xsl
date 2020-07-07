@@ -413,7 +413,9 @@
                        
   <!-- ############### -->
   <!-- To display an audit event. -->
-  <!-- Might be able to integrate this into 
+  <!-- Might be able to integrate this into -->
+  <!-- Problem: Displaying the table headers only once when there are more than one audit event for an SFR. -->
+  <!--          Since this gets called for each audit-event tag. -->
   <!--            -->
   <xsl:template match="cc:audit-event" >
     <div class="element">
