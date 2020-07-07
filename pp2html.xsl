@@ -413,7 +413,7 @@
                        
   <!-- ############### -->
   <!-- To display an audit event. -->
-  <!-- Might be able to integrate this into -->
+  <!-- Might be able to integrate this into above -->
   <!-- Problem: Displaying the table headers only once when there are more than one audit event for an SFR. -->
   <!--          Since this gets called for each audit-event tag. -->
   <!--            -->
@@ -427,6 +427,8 @@
         <xsl:apply-templates/>
       </div>   -->
     </div> 
+	  
+    <!-- I want to call this only once per f-component. But it will be called for each audit-event. -->
     <xsl:call-template name="sfr-audit-table-xsl">
 	 <xsl:with-param name="fcomp" select="../cc:f-component"/>
     </xsl:call-template>	  
