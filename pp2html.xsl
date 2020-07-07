@@ -355,6 +355,45 @@
     </table>
   </xsl:template>
 
+<!-- ############### -->
+<!-- This template for audit tables is invoked from XSL. --> 
+<!-- This one gets called for mini audit tables attached to individual SFRs. -->	
+<!-- Parameter is this f-component -->
+  <xsl:template name="sfr-audit-event-xsl">
+    <xsl:param name="fcomp"/>
+    <xsl:apply-templates/>  
+    <table class="" border="1">
+	<tr><th>Requirement</th>
+	<th>Auditable Events</th>
+	<th>Additional Audit Record Contents</th></tr>
+	<xsl:for-each select="cc:audit-event"> 
+	  <tr><td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
+	    <xsl:choose>
+		<xsl:when test="(not (cc:audit-event-descr))">
+		<td>No events specified</td><td></td>
+	    </xsl:when>
+	    <xsl:otherwise>
+	    <xsl:choose>
+		<!-- When audit events are individually selectable -->
+		<xsl:when test="@type='optional'">
+		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+				</xsl:when>
+			<xsl:otherwise>
+			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
+		</xsl:otherwise>
+			</xsl:choose>
+			<td>
+			<xsl:for-each select="cc:audit-event-info">
+				<xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
+			</xsl:for-each>
+			</td>
+		</xsl:otherwise>
+	    </xsl:choose>
+	</tr>
+	</xsl:for-each>
+    </table>
+  </xsl:template>
+
 	
 	
 <!-- ############### -->
@@ -371,7 +410,28 @@
 	    </xsl:otherwise>
 	  </xsl:choose>
   </xsl:template>
-                                                             
+                       
+  <!-- ############### -->
+  <!-- To display an audit event. -->
+  <!-- Might be able to integrate this into 
+  <!--            -->
+  <xsl:template match="cc:audit-event" >
+    <div class="element">
+      <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+      <div class="reqid" id="{$reqid}">
+        <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a>
+      </div>
+<!--      <div class="reqdesc">
+        <xsl:apply-templates/>
+      </div>   -->
+    </div> 
+    <xsl:call-template name="sfr-audit-table-xsl">
+	 <xsl:with-param name="fcomp" select="../cc:f-component"/>
+    </xsl:call-template>	  
+  </xsl:template>
+
+
+	
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:InsertSPDCorrespondence">
@@ -573,7 +633,7 @@
     </div>
   </xsl:template>
 
-
+	
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:foreword">
