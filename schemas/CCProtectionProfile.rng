@@ -161,9 +161,9 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <a:documentation>
         This section is for global definitions used by the pp2html to produce different output formats.
       </a:documentation>
-      <optional>
-         <ref name="pp-preferences-pat"/>
-      </optional>
+      <zeroOrMore>
+         <ref name="pp-pref-pat"/>
+      </zeroOrMore>
 
       <a:documentation>
         This section is for global definitions.
@@ -509,17 +509,6 @@ It should be the version listed in the CCPart1/2/3 files consulted.
     </element>
   </define> 
 
-  <define name="pp-preferences-pat">
-    <element name="pp-preferences">
-      <a:documentation>
-         A place to define preferences for PP output.
-      </a:documentation>
-      <zeroOrMore>
-         <ref name="pp-pref-pat" />
-      </zeroOrMore>
-    </element>
-  </define> 
-
   <define name="pp-global-config-pat">
     <element name="pp-global-config">
       <a:documentation>
@@ -540,11 +529,8 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <attribute name="name">
          <a:documentation>Name of the preference.</a:documentation>
          <choice>
-               <value>appendicize</value>
-               <value>pp-style</value>
-               <value>use-audit-tables</value>
-               <value>audit-events-with-sfrs</value>
-               <value>support-impl-depends</value>
+               <value>display-audit-with-sfrs</value>
+               <value>bogus-variable</value>
           </choice>
       </attribute>
       <ref name="basic-content-pat"/>
