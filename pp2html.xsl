@@ -230,6 +230,16 @@
     </dl>
   </xsl:template>
 
+<!-- Set global variables -->
+<xsl:variable name="display-audit-with-sfrs">
+	<xsl:for-each select="//cc:pp-pref">
+	   <xsl:if test="@name='display-audit-with-sfrs'">
+		<xsl:value-of select="."/>
+	   </xsl:if>
+	</xsl:for-each>
+</xsl:variable>
+	  
+
 <!-- ############### -->
 <!--            -->
 
