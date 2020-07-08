@@ -383,8 +383,7 @@
   <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
   <xsl:template match="cc:audit-event">
-	  <b>In audit event 1 </b>
-     <xsl:if test="$display-audit-with-sfrs = '1'">
+<!--     <xsl:if test="$display-audit-with-sfrs = '1'">  -->
 	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
@@ -421,7 +420,7 @@
       </xsl:for-each>
     </tr>
   </table>
-  </xsl:if>
+<!--  </xsl:if>   -->
 </xsl:template>
 
 
