@@ -378,37 +378,47 @@
 
 	
   <!-- ############### -->
-  <!-- To display an audit event as a row in a table at the end of an f-component. -->
-  <!-- Problem: Displaying the table headers only once when there are more than one audit event for an SFR. -->
-  <!--          Since this gets called for each audit-event tag. -->
+  <!-- To display the audit events for an f-component as a little table. -->
+  <!-- The intent is for this to be called only for the first audit-event tag under each f-component  -->
+  <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
-  <xsl:template match="cc:audit-event[$display-audit-with-sfrs='1']">
-    <tr>
-      <!-- SFR Name -->
-      <td><xsl:apply-templates select="../f-component" mode="getId"/></td>
-      <!-- Audit event description and additional info -->
-      <xsl:choose>
-	<xsl:when test="(not (cc:audit-event-descr))">
-	  <td>No events specified</td><td></td>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:choose>
-	    <!-- When audit events are individually selectable -->
-	    <xsl:when test="@type='optional'">
-	      <td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
-	    </xsl:when>
-	    <xsl:otherwise>
-		<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	  <td>
-	    <xsl:for-each select="cc:audit-event-info">
-	      <xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
-	    </xsl:for-each>
-	  </td>
-	</xsl:otherwise>
-      </xsl:choose>    
+  <xsl:template match="cc:audit-event[$display-audit-with-sfrs='1'][1]">
+     <table class="" border="1">
+	<tr>
+		<th>Requirement</th>
+		<th>Auditable Events</th>
+		<th>Additional Audit Record Contents</th>
+	</tr>
+      <tr>
+	
+      <xsl:for-each select="../f-component/audit-event">
+        <!-- SFR Name -->
+        <td><xsl:apply-templates select="../f-component" mode="getId"/></td>
+        <!-- Audit event description and additional info -->
+        <xsl:choose>
+	  <xsl:when test="(not (cc:audit-event-descr))">
+	    <td>No events specified</td><td></td>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:choose>
+	      <!-- When audit events are individually selectable -->
+	      <xsl:when test="@type='optional'">
+	        <td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+	      </xsl:when>
+	      <xsl:otherwise>
+		  <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	    <td>
+	      <xsl:for-each select="cc:audit-event-info">
+	        <xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
+	      </xsl:for-each>
+	    </td>
+	  </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
     </tr>
+  </table>
 </xsl:template>
 
 
