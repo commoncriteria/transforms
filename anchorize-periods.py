@@ -26,16 +26,26 @@ def recursive_descent(elem):
         if child.tail:
             (child.tail, subnodes) = handle_text(elem, child.tail)
             child_stack.append((index, subnodes))
+    insert_child_placeholders(child_stack, elem)
+
+
+def insert_child_placeholders(child_stack, parent):
     while len(child_stack) > 0:
         (index, subnodes) = child_stack.pop()
         for subnode in subnodes:
-            elem.insert(index, subnode)
+            parent.insert(index, subnode)
+            index += 1
 
 
 period_ctr = 0
 
 
 def make_linkable_period(text):
+    """
+    Makes a link with tail of the given text.
+    In the ElementTree model this means the text is a sibling of the linkable
+    period.
+    """
     global period_ctr
     newelem = ET.Element("a")
     newelem.text = ". "
@@ -70,7 +80,6 @@ if __name__ == "__main__":
         print("Usage: <protection-profile> [<output-file>]")
         sys.exit(0)
 
-    # Split on equals
     infile = sys.argv[1]
     if infile == "-":
         tree = ET.fromstring(sys.stdin.read())
