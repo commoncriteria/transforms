@@ -394,7 +394,7 @@
 	
       <xsl:for-each select="../f-component/audit-event">
         <!-- SFR Name -->
-        <td><xsl:apply-templates select="../f-component" mode="getId"/></td>
+        <td><xsl:apply-templates select=".." mode="getId"/></td>
         <!-- Audit event description and additional info -->
         <xsl:choose>
 	  <xsl:when test="(not (cc:audit-event-descr))">
