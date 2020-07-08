@@ -161,9 +161,9 @@ It should be the version listed in the CCPart1/2/3 files consulted.
       <a:documentation>
         This section is for global definitions used by the pp2html to produce different output formats.
       </a:documentation>
-      <zeroOrMore>
-         <ref name="pp-pref-pat"/>
-      </zeroOrMore>
+      <optional>
+         <ref name="pp-preferences-pat"/>
+      </optional>
 
       <a:documentation>
         This section is for global definitions.
@@ -520,6 +520,16 @@ It should be the version listed in the CCPart1/2/3 files consulted.
     </element>
   </define> 
 
+   <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <oneOrMore>
+         <ref name="pp-pref-pat" />
+      </oneOrMore>
+    </element>
+  </define> 
          
   <define name="pp-pref-pat">
     <element name="pp-pref">
