@@ -369,7 +369,7 @@
 <!-- This template for audit tables is invoked from XSL. --> 
 <!-- This one gets called for mini audit tables attached to individual SFRs. -->	
 <!-- Parameter is this f-component -->
-  <xsl:template name="sfr-audit-event-xsl">
+  <xsl:template name="sfr-audit-table-xsl">
     <xsl:param name="fcomp"/>
     <xsl:apply-templates/>  
     <table class="" border="1">
