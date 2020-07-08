@@ -382,8 +382,9 @@
   <!-- The intent is for this to be called only for the first audit-event tag under each f-component  -->
   <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
-  <xsl:template match="cc:audit-event[$display-audit-with-sfrs='1'][1]">
-     <table class="" border="1">
+  <xsl:template match="cc:audit-event[1]">
+     <xsl:if test="$display-audit-with-sfrs = '1'">
+	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
 		<th>Auditable Events</th>
@@ -419,6 +420,7 @@
       </xsl:for-each>
     </tr>
   </table>
+  </xsl:if>
 </xsl:template>
 
 
