@@ -85,6 +85,9 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
+#- Path where the linkable version is written
+PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
+
 #- Points to Jing jar file (for validation)
 JING_JAR ?= jing-*/bin/jing.jar
 
@@ -149,7 +152,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) meta-info
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -219,6 +222,10 @@ diff: $(PP_RELEASE_HTML)
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
+
+#- Target to build the linkable-version of the report 
+$(PP_LINKABLE_HTML): $(PP_RELEASE_HTML)
+	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML)
 
 #- Target to build the release report
 release: $(PP_RELEASE_HTML)
