@@ -275,15 +275,15 @@
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
 	<xsl:variable name="fcomp" select="."/>
-	<xsl:variable name="fcompstatus">
+<!--	<xsl:variable name="fcompstatus">
 		<xsl:value-of select="if ($fcomp/@status) then ($fcomp/@status) else 'mandatory'"/>
-	</xsl:variable>
+	</xsl:variable>   -->
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcomp/@status=$thistable))">
                 <tr>
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
@@ -328,16 +328,16 @@
 	<th>Additional Audit Record Contents</th></tr>
 	<xsl:for-each select="//cc:f-component">
 	  <xsl:variable name="fcomp" select="."/>
-	  <xsl:variable name="fcompstatus">
+<!--	  <xsl:variable name="fcompstatus">
 	    <xsl:value-of select="if ($fcomp/@status) then ($fcomp/@status) else 'mandatory'"/>
-	  </xsl:variable>
+	  </xsl:variable>   -->
 
 	  <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if 
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcomp/@status=$thistable))">
 		<tr><td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
 		<xsl:choose>
 			<xsl:when test="(not (cc:audit-event-descr))">
