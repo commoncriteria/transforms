@@ -12,6 +12,11 @@
   version="1.0">
 
   <xsl:variable name="doctype" select="pp"/>
+	
+  <!-- Set global variables with preferences -->
+   <xsl:variable name="display-audit-with-sfrs">
+	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
+   </xsl:variable>
 
   <xsl:param name="appendicize" select="''"/>
 
@@ -229,11 +234,6 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
-
-<!-- Set global variables with preferences -->
-<xsl:variable name="display-audit-with-sfrs">
-	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
-</xsl:variable>
 
 <!-- ############### -->
 <!--            -->
