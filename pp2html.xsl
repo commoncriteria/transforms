@@ -279,7 +279,7 @@
 		<xsl:choose>
 			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
 			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		<xsl:choose>
+		</xsl:choose>
 	</xsl:variable>   
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
@@ -335,7 +335,7 @@
 		<xsl:choose>
 			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
 			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		<xsl:choose>
+		</xsl:choose>
 	</xsl:variable>   
 	  <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if 
