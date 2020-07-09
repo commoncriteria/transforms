@@ -384,7 +384,8 @@
   <!--            -->
   <xsl:template match="cc:audit-event">
 <!--     <xsl:if test="$display-audit-with-sfrs = '1'">  -->
-	<table class="" border="1">
+	  <b>display-audit-with-sfrs = <xsl:value-of select="$display-audit-with-sfrs"/></b>
+	  <table class="" border="1">
 	<tr>
 		<th>Requirement</th>
 		<th>Auditable Events</th>
@@ -394,7 +395,7 @@
 	
       <xsl:for-each select="../f-component/audit-event">
         <!-- SFR Name -->
-        <td><xsl:apply-templates select=".." mode="getId"/></td>
+        <td><xsl:apply-templates select="../f-component" mode="getId"/></td>
         <!-- Audit event description and additional info -->
         <xsl:choose>
 	  <xsl:when test="(not (cc:audit-event-descr))">
