@@ -325,6 +325,7 @@ Tags that this section should be indented(left) 2em.
         </group>
 
         <!-- The status could also be optional or nothing (which is indicated here) -->
+	<!-- No status means 'mandatory'   -->
         <optional>
           <attribute name="status">
             <a:documentation>
@@ -336,14 +337,28 @@ Tags that this section should be indented(left) 2em.
           </attribute>
         </optional>
       </choice>
-      <ref name="depends-pat"/>
+<!--      <ref name="depends-pat"/>    XXX Will this be a problem? -->
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
+      <optional><ref name="audit-table-pat" /></optional>   <!-- For the FAU_GEN audit table -->
     </element>
   </define> 
 
-
+ <!-- f-component empty declaration -->
+ <!--   -->
+ <define name="f-component-decl-pattern">
+    <element name="f-component-decl">
+      <a:document>
+        Specifies a component declaration. This is intended for use when a PP defines audit events for
+        an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
+        There is status.
+      </a:document>
+      <ref name="depends-pat"/>
+      <ref name="audit-events-pat"/>
+    </element>
+  </define> 
+	
   <define name="a-component-pattern">
     <element name="a-component">
       <a:document>
