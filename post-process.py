@@ -30,7 +30,8 @@ def log(level, msg):
 
 
 def get_appendix_prefix(num):
-    if num > 26:
+    warn("Num is " + str(num))
+    if num >= 26:
         err("Cannot handle more than 26 appendices")
     ABC=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
     return ABC[num]
