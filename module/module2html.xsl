@@ -482,9 +482,10 @@ These components are identified in the following table:
         <xsl:when test="cc:fam-behavior">
           <h3>Family Behavior</h3>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
+          <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
-            select="count(//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/>
-            <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
+            select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/>
+          <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
               <xsl:attribute name="style">
                 <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
               </xsl:attribute>
@@ -492,9 +493,9 @@ These components are identified in the following table:
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
               </xsl:call-template>
-              <xsl:for-each select="//cc:f-component[starts-with(@id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
                 <xsl:variable name="box_text"><!--
-                  --><xsl:value-of select="translate(@id,$lower,$upper)"/><!--
+                  --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
                 <xsl:call-template name="drawbox">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
@@ -503,13 +504,13 @@ These components are identified in the following table:
                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
                 </xsl:call-template>
               </xsl:for-each>
-            </xsl:element>
+          </xsl:element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="cc:mod-def"/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:for-each select="//cc:f-component[starts-with(@id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,

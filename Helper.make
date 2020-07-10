@@ -85,6 +85,9 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
+#- Path where the linkable version is written
+PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
+
 #- Points to Jing jar file (for validation)
 JING_JAR ?= jing-*/bin/jing.jar
 
@@ -180,10 +183,11 @@ module-target:
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
 	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML), )
+	python3 $(TRANS)/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
+
 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 
 
 #- Build the Diff file
@@ -220,10 +224,17 @@ diff: $(PP_RELEASE_HTML)
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
 
+#- Target to build the anchorized report
+$(PP_LINKABLE_HTML): $(PP_RELEASE_HTML) 
+	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
+
+
 #- Target to build the release report
+#- It also builds the anchorized version (but doesn't care if it succeeds)
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
+	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 
 #- Builds the essential security requirements
 esr:$(ESR_HTML)

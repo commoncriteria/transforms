@@ -8,27 +8,27 @@ with XSLT).
 import re
 import sys
 import xml.etree.ElementTree as ET
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import quoteattr, escape
 
 
 def warn(msg):
     log(2, msg)
 
-    
+
 def err(msg):
     sys.stderr.write(msg)
     sys.exit(1)
 
-    
+
 def debug(msg):
     log(5, msg)
 
-    
+
 def log(level, msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
-    
+
 def get_appendix_prefix(num):
     if num > 26:
         err("Cannot handle more than 26 appendices")
@@ -73,16 +73,15 @@ class State:
             return self.classmap[clazz]
         else:
             return []
-        
+
     def cross_reference_cc_items(self):
         for clazz in {"assumption","threat","OSP","SOE", "SO"}:
             for el in self.getElementsByClass(clazz): 
                 if "id" in el.attrib:
                     self.add_to_regex(el.attrib["id"])
 
-
     def build_comp_regex(self):
-        comps = self.getElementsByClass('reqid') +  self.getElementsByClass('comp')
+        comps = self.getElementsByClass('reqid') + self.getElementsByClass('comp')
         for comp in comps:
             if 'id' in comp.attrib:
 #                 print("Adding " + comp.attrib["id"])
@@ -161,7 +160,7 @@ class State:
         # Everything else is beginning and end tags (even if they're empty)
         ret="<" + noname
         for attrname in elem.attrib:
-            ret = ret + " " + attrname + "='"+ escape(elem.attrib[attrname])+"'"
+            ret = ret + " " + attrname + "="+ quoteattr(elem.attrib[attrname])
         ret=ret+">"
         if elem.text:
             ret += self.handle_text(elem, elem.text)
@@ -274,7 +273,9 @@ class State:
             else:
                 eles[aa].text = prefix
             entry = ET.Element("a")
-            entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+            # Why would an ID have to be escaped?
+            # entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+            entry.attrib['href'] = '#'+eles[aa].attrib['id']
             entry.attrib['style']= 'text-indent:'+str(level*10)+ 'px'
 
             entry.text=prefix
