@@ -395,11 +395,16 @@
   <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
   <xsl:template match="cc:audit-event">
+    <!-- Get the value of the display-audit-with-sfrs preference -->
     <xsl:variable name="display-audit-here">
 	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
     </xsl:variable>
- 
-    <xsl:if test="$display-audit-here = '1'">  
+	  
+    <!-- We display the audit events for this f-component here only if:
+       1. The display-audit-with-sfrs preference is set to 1 in the xml PP, and
+       2. This is the first audit-event for this f-component.    -->
+	  
+    <xsl:if test="not(preceding-sibling::audit-event) and ($display-audit-here = '1')">
 	<b>display-audit-here = <xsl:value-of select="$display-audit-here"/></b>
 	<table class="" border="1">
 	<tr>
@@ -409,9 +414,9 @@
 	</tr>
       <tr>
 	
-      <xsl:for-each select="../f-component/audit-event">
+      <xsl:for-each select="../cc:f-component/cc:audit-event">
         <!-- SFR Name -->
-        <td><xsl:apply-templates select="../f-component" mode="getId"/></td>
+        <td><xsl:apply-templates select="../cc:f-component" mode="getId"/></td>
         <!-- Audit event description and additional info -->
         <xsl:choose>
 	  <xsl:when test="(not (cc:audit-event-descr))">
