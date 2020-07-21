@@ -414,7 +414,7 @@
 	</tr>
       <tr>
 	
-      <xsl:for-each select="../cc:f-component/cc:audit-event">
+      <xsl:for-each select="../cc:audit-event">
         <!-- SFR Name -->
         <td><xsl:apply-templates select="../cc:f-component" mode="getId"/></td>
         <!-- Audit event description and additional info -->
