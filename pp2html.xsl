@@ -14,10 +14,10 @@
   <xsl:variable name="doctype" select="pp"/>
 	
   <!-- Set global variables with preferences -->
-   <xsl:variable name="display-audit-with-sfrs">
+<!--   <xsl:variable name="display-audit-with-sfrs">
 	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
    </xsl:variable>
-
+-->
   <xsl:param name="appendicize" select="''"/>
 
   <xsl:param name="custom-css-file" select="''"/>
@@ -395,9 +395,13 @@
   <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
   <xsl:template match="cc:audit-event">
-<!--     <xsl:if test="$display-audit-with-sfrs = '1'">  -->
-	  <b>display-audit-with-sfrs = <xsl:value-of select="$display-audit-with-sfrs"/></b>
-	  <table class="" border="1">
+    <xsl:variable name="display-audit-here">
+	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
+    </xsl:variable>
+ 
+    <xsl:if test="$display-audit-here = '1'">  
+	<b>display-audit-here = <xsl:value-of select="$display-audit-here"/></b>
+	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
 		<th>Auditable Events</th>
@@ -433,7 +437,7 @@
       </xsl:for-each>
     </tr>
   </table>
-<!--  </xsl:if>   -->
+  </xsl:if>  
 </xsl:template>
 
 
