@@ -397,7 +397,7 @@
   <xsl:template match="cc:audit-event">
     <!-- Get the value of the display-audit-with-sfrs preference -->
     <xsl:variable name="display-audit-here">
-	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
+	<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='display-audit-with-sfrs']"/>
     </xsl:variable>
 	  
 	  <xsl:if test="$display-audit-here = '1'">
