@@ -400,11 +400,14 @@
 	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
     </xsl:variable>
 	  
+	  <xsl:if test="$display-audit-here = '1'">
+		  <b>display-audit-here = 1</b>
+	  </xsl:if>
+	  
     <!-- We display the audit events for this f-component here only if:
        1. The display-audit-with-sfrs preference is set to 1 in the xml PP, and
        2. This is the first audit-event for this f-component.    -->
 	  
-	<b>display-audit-here = <xsl:value-of select="$display-audit-here"/></b>
     <xsl:if test="$display-audit-here = '1'">	  
 <!--    <xsl:if test="not(preceding-sibling::audit-event) and ($display-audit-here = '1')">   -->
 	<table class="" border="1">
