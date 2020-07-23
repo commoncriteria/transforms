@@ -404,8 +404,8 @@
        1. The display-audit-with-sfrs preference is set to 1 in the xml PP, and
        2. This is the first audit-event for this f-component.    -->
 	  
-    <xsl:if test="$display-audit-here = '1'">	  
-<!--    <xsl:if test="not(preceding-sibling::audit-event) and ($display-audit-here = '1')">   -->
+<!--    <xsl:if test="$display-audit-here = '1'">	  -->
+    <xsl:if test="not(preceding-sibling::audit-event) and ($display-audit-here = '1')">  
 	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
