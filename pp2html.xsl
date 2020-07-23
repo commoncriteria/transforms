@@ -15,7 +15,7 @@
 	
   <!-- Set global variables with preferences -->
 <!--   <xsl:variable name="display-audit-with-sfrs">
-	<xsl:value-of select="//cc:pp-preferences/pp-pref[@name='display-audit-with-sfrs']"/>
+	<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='display-audit-with-sfrs']"/>
    </xsl:variable>
 -->
   <xsl:param name="appendicize" select="''"/>
@@ -399,11 +399,7 @@
     <xsl:variable name="display-audit-here">
 	<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='display-audit-with-sfrs']"/>
     </xsl:variable>
-	  
-	  <xsl:if test="$display-audit-here = '1'">
-		  <b>display-audit-here = 1</b>
-	  </xsl:if>
-	  
+  
     <!-- We display the audit events for this f-component here only if:
        1. The display-audit-with-sfrs preference is set to 1 in the xml PP, and
        2. This is the first audit-event for this f-component.    -->
@@ -420,7 +416,7 @@
 	
       <xsl:for-each select="../cc:audit-event">
         <!-- SFR Name -->
-        <td><xsl:apply-templates select="../cc:f-component" mode="getId"/></td>
+        <td><xsl:apply-templates select=".." mode="getId"/></td>
         <!-- Audit event description and additional info -->
         <xsl:choose>
 	  <xsl:when test="(not (cc:audit-event-descr))">
@@ -446,6 +442,7 @@
       </xsl:for-each>
     </tr>
   </table>
+  <br/><br/>
   </xsl:if>  
 </xsl:template>
 
