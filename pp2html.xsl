@@ -412,9 +412,9 @@
 		<th>Auditable Events</th>
 		<th>Additional Audit Record Contents</th>
 	</tr>
-      <tr>
 	
       <xsl:for-each select="../cc:audit-event">
+        <tr>
         <!-- SFR Name -->
         <td><xsl:apply-templates select=".." mode="getId"/></td>
         <!-- Audit event description and additional info -->
@@ -439,8 +439,8 @@
 	    </td>
 	  </xsl:otherwise>
         </xsl:choose>
-      </xsl:for-each>
-    </tr>
+       </tr>
+     </xsl:for-each>
   </table>
   <br/><br/>
   </xsl:if>  
