@@ -405,7 +405,7 @@
        2. This is the first audit-event for this f-component.    -->
 	  
 <!--    <xsl:if test="$display-audit-here = '1'">	  -->
-    <xsl:if test="not(preceding-sibling::audit-event) and ($display-audit-here = '1')">  
+    <xsl:if test="($display-audit-here = '1') and (not(preceding-sibling::audit-event))">  
 	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
