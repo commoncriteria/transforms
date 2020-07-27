@@ -394,7 +394,7 @@
   <!-- The intent is for this to be called only for the first audit-event tag under each f-component  -->
   <!--   and only if the display-audit-with-sfrs preference is set in the PP. -->
   <!--            -->
-  <xsl:template match="cc:audit-event[1]">
+  <xsl:template match="cc:audit-event">
     <!-- Get the value of the display-audit-with-sfrs preference -->
     <xsl:variable name="display-audit-here">
 	<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='display-audit-with-sfrs']"/>
@@ -404,8 +404,8 @@
        1. The display-audit-with-sfrs preference is set to 1 in the xml PP, and
        2. This is the first audit-event for this f-component.    -->
 	  
-<!--    <xsl:if test="$display-audit-here = '1'">	  -->
-    <xsl:if test="($display-audit-here = '1') and (not(preceding-sibling::audit-event))">  
+<!--    <xsl:if test="$display-audit-here = '1'">	   -->
+    <xsl:if test="($display-audit-here = '1') and (not(preceding-sibling::cc:audit-event))"> 
 	<table class="" border="1">
 	<tr>
 		<th>Requirement</th>
