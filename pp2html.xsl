@@ -161,6 +161,32 @@
 <!-- ############### -->
 <!--            -->
 
+  <xsl:template match="cc:audit-table[cc:depends]">
+      <!-- This is the same as the audit-events template below, just with a different name.
+           The other one should disappear eventually. -->
+      <div class="dependent"> The following audit events are included if:
+         <ul> <xsl:for-each select="cc:depends">
+            <li>
+            <xsl:if test="@on='selection'">
+              <xsl:for-each select="cc:uid">  
+                <xsl:variable name="uid" select="text()"/>
+                "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+              </xsl:for-each>
+               is selected from 
+              <xsl:variable name="uid" select="cc:uid[1]/text()"/>
+              <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+            </xsl:if> 
+            <xsl:if test="@on='implements'">
+              the TOE implements 
+              <xsl:variable name="ref-id" select="@ref-id"/>
+              "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+            </xsl:if>
+            </li>
+        </xsl:for-each> </ul><br/>
+        <xsl:call-template name="audit-table"/>
+      </div>        
+  </xsl:template>    
+    
   <xsl:template match="cc:audit-events[cc:depends]">
       <div class="dependent"> The following audit events are included if:
          <ul> <xsl:for-each select="cc:depends">
@@ -185,6 +211,132 @@
       </div>        
   </xsl:template>
 
+<!-- ############### -->
+<!-- This template for audit tables is invoked from XML. --> 
+<!-- This one gets called for the main audit table if displayed in FAU_GEN.1 -->
+	
+  <xsl:template match="cc:audit-table" name="audit-table">
+    <xsl:variable name="thistable" select="@table"/>
+    <xsl:apply-templates/>
+    <table class="" border="1">
+    <tr><th>Requirement</th>
+        <th>Auditable Events</th>
+        <th>Additional Audit Record Contents</th></tr>
+    <xsl:for-each select="//cc:f-component">
+	<xsl:variable name="fcomp" select="."/>
+	<xsl:variable name="fcompstatus">
+		<xsl:choose>
+			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>   
+        <xsl:for-each select="cc:audit-event"> 
+            <!-- The audit event is included in this table only if
+                - The audit event's expressed table attribute matches this table
+                - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
+                - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
+            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+                <tr>
+                    <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
+                    <xsl:choose>
+                        <xsl:when test="(not (cc:audit-event-descr))">
+                            <td>No events specified</td><td></td>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:choose>
+				<!-- When audit events are individually selectable -->
+                                <xsl:when test="@type='optional'">
+					<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                   <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <td>
+				<xsl:for-each select="cc:audit-event-info">
+		 			<xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
+				</xsl:for-each>
+			    </td>
+                        </xsl:otherwise>
+                    </xsl:choose>
+               </tr>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:for-each>
+    </table>
+  </xsl:template>
+  
+<!-- ############### -->
+<!-- This template for audit tables is invoked from XSL. --> 
+<!-- This one gets called for audit tables in Appendixes. -->
+	
+  <xsl:template name="audit-table-xsl">
+    <xsl:param name="table"/>
+    <xsl:variable name="thistable" select="$table"/>
+    <xsl:apply-templates/>  
+    <table class="" border="1">
+	<tr><th>Requirement</th>
+	<th>Auditable Events</th>
+	<th>Additional Audit Record Contents</th></tr>
+	<xsl:for-each select="//cc:f-component">
+	  <xsl:variable name="fcomp" select="."/>
+	<xsl:variable name="fcompstatus">
+		<xsl:choose>
+			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>   
+	  <xsl:for-each select="cc:audit-event"> 
+            <!-- The audit event is included in this table only if 
+                - The audit event's expressed table attribute matches this table
+                - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
+                - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
+	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+		<tr><td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
+		<xsl:choose>
+			<xsl:when test="(not (cc:audit-event-descr))">
+			<td>No events specified</td><td></td>
+		</xsl:when>
+		<xsl:otherwise>
+		<xsl:choose>
+		<!-- When audit events are individually selectable -->
+		<xsl:when test="@type='optional'">
+		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+				</xsl:when>
+			<xsl:otherwise>
+			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
+		</xsl:otherwise>
+				</xsl:choose>
+				<td>
+				<xsl:for-each select="cc:audit-event-info">
+					<xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
+				</xsl:for-each>
+				</td>
+			</xsl:otherwise>
+		</xsl:choose>
+		</tr>
+		</xsl:if>
+		</xsl:for-each>
+		</xsl:for-each>
+    </table>
+  </xsl:template>
+
+<!-- ############### -->
+<!--            -->
+  <xsl:template match="cc:audit-event-info" mode="intable">
+	<xsl:choose>
+	    <xsl:when test="@type='optional'">
+		    <b>[selection:</b>
+		    <i><xsl:apply-templates select="cc:audit-event-info"/>
+			    , None</i><b>]</b>
+	    </xsl:when>
+	    <xsl:otherwise>
+			<xsl:apply-templates select="cc:audit-event-info"/>
+	    </xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
+    
+    
   <xsl:template match="cc:audit-events" name="audit-events">
     <xsl:variable name="table" select="@table"/>
     <xsl:apply-templates/>
@@ -463,30 +615,73 @@
             <xsl:when test="$appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-                <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
-                  <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                  <xsl:apply-templates select="cc:f-component[@status='optional']"/>
-                </xsl:for-each>
+                
+                <xsl:choose>
+		            <xsl:when test="count(//cc:f-component[@status='optional'])=0">
+                        <p>This PP does not define any optional requirements.</p>
+	                </xsl:when>
+		            <xsl:otherwise> 
+                        <h2>Test test Can you hear me</h2>  
+                        <!-- Audit table for optional requirements -->
+		                <!-- Not sure this handles the case of zero optional requirements.  -->
+	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
+	                    <xsl:call-template name="audit-table-xsl">
+		                    <xsl:with-param name="table">optional</xsl:with-param>
+		                </xsl:call-template>
+                
+                        <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
+                            <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                            <xsl:apply-templates select="cc:f-component[@status='optional']"/>
+                        </xsl:for-each>
+                    </xsl:otherwise>
+                </xsl:choose>
 
                 <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>
-                <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
-                  <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                  <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
-                </xsl:for-each>
 
+                <xsl:choose>
+		            <xsl:when test="count(//cc:f-component[@status='objective'])=0">
+                        <p>This PP does not define any objective requirements.</p>
+	                </xsl:when>
+		            <xsl:otherwise> 
+
+                        <!-- Audit table for objective requirements -->
+	                    <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
+		                <xsl:call-template name="audit-table-xsl">
+		                    <xsl:with-param name="table">objective</xsl:with-param>
+		                </xsl:call-template>
+
+                        <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
+                            <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                            <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
+                        </xsl:for-each>
+                    </xsl:otherwise>
+                </xsl:choose>
+             
+                <!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
-                <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+
+              	<xsl:choose>
+        	        <xsl:when test="count(//cc:implements/cc:feature)=0">
+          	            <p>This PP does not define any implementation-dependent requirements.</p>
+                    </xsl:when>
+		            <xsl:otherwise> 
+	                    <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
+		                <xsl:call-template name="audit-table-xsl">
+		                    <xsl:with-param name="table">feature-based</xsl:with-param>
+		                </xsl:call-template>
+
+                        <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-This appendix enumerates requirements <xsl:call-template name="imple_text"/>
-                <xsl:call-template name="handle-features"><xsl:with-param name="level">2</xsl:with-param></xsl:call-template>
+                <xsl:call-template name="imple_text"/>
+                <xsl:call-template name="handle-features">
+                    <xsl:with-param name="level">2</xsl:with-param>
+                </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
-
-        <xsl:if test="count(//cc:implements/cc:feature)=0">
-          <p>This PP does not define any implementation-dependent requirements.</p>
-        </xsl:if>
     </xsl:template>
 
 <!-- ############### -->
