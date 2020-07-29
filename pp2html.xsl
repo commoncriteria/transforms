@@ -187,7 +187,7 @@
       </div>        
   </xsl:template>    
 
-	<!--
+	
   <xsl:template match="cc:audit-events[cc:depends]">
       <div class="dependent"> The following audit events are included if:
          <ul> <xsl:for-each select="cc:depends">
@@ -211,7 +211,7 @@
         <xsl:call-template name="audit-events"/>
       </div>        
   </xsl:template>
--->
+
 
 <!-- ############### -->
 <!-- This template for audit tables is invoked from XML. --> 
@@ -338,7 +338,7 @@
 	  </xsl:choose>
   </xsl:template>
     
-   <!-- 
+   
   <xsl:template match="cc:audit-events" name="audit-events">
     <xsl:variable name="table" select="@table"/>
     <xsl:apply-templates/>
@@ -361,11 +361,11 @@
     </xsl:for-each>
     </table>
   </xsl:template>
--->
+
 	
 <!-- ############### -->
 <!--            -->
-	<!--
+
   <xsl:template match="cc:audit-event" mode="intable">
     <td>
        <xsl:if test="@type='optional'">[OPTIONAL]</xsl:if>
@@ -375,7 +375,7 @@
              <xsl:apply-templates select="cc:add-info"/>
     </td>
   </xsl:template>
--->
+	
 
   <!-- ############### -->
   <!--            -->
