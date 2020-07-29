@@ -710,7 +710,7 @@
                         <xsl:apply-templates select="cc:f-component[@status='sel-based']"/>
                    </xsl:for-each>
 	    </xsl:otherwise>
-	</csl:choose>
+	</xsl:choose>
         </xsl:if>
     </xsl:template>
 
