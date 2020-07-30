@@ -716,12 +716,13 @@
 
 <!-- ############### -->
 <!--                 -->
+
   <xsl:template match="cc:appendix">
-    <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1>
+    <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1> 
       <!-- insert SFRs for "special" appendices, if @id is one of the "special" ones-->
     <xsl:apply-templates select="." mode="hook"/>
     <xsl:apply-templates/>
-  </xsl:template>
+  </xsl:template> 
 
 <!-- ############### -->
 <!--            -->
