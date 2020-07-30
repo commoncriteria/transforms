@@ -623,8 +623,7 @@
                         <p>This PP does not define any optional requirements.</p>
 	                </xsl:when>
 		            <xsl:otherwise> 
-                        <h2>Test test Can you hear me</h2>  
-                        <!-- Audit table for optional requirements -->
+                        	<!-- Audit table for optional requirements -->
 		                <!-- Not sure this handles the case of zero optional requirements.  -->
 	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
 	                    <xsl:call-template name="audit-table-xsl">
