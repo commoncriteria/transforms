@@ -63,8 +63,6 @@
   </xsl:template>
 
 
-
-
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:bibliography">
@@ -275,7 +273,7 @@
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-<!--    <xsl:apply-templates/>  --?
+<!--    <xsl:apply-templates/>  -->
     <table class="" border="1">
 	<tr><th>Requirement</th>
 	<th>Auditable Events</th>
