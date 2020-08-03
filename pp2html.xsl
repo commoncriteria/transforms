@@ -751,6 +751,10 @@
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
 		    
+		  <xsl:variable name="display-audit-here">
+			<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
+    		   </xsl:variable>
+		    
                   <xsl:call-template name="opt_appendix"/>
 
     		  <!-- Strictly optional requirements, a.k.a. "optional"  -->
@@ -763,7 +767,7 @@
 		  <xsl:otherwise> 
 
 		     <!-- Only display the audit events here if they were specified with the SFRs -->
-    		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+    		     <xsl:if test="$display-audit-here=1">
 
      		        <!-- Audit table for optional requirements -->
 		        <!-- Not sure this handles the case of zero optional requirements.  -->
@@ -789,7 +793,7 @@
 	          </xsl:when>
 		  <xsl:otherwise> 
 
-      		    <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+    		     <xsl:if test="$display-audit-here=1">
 
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
@@ -813,7 +817,7 @@
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
 		<xsl:otherwise> 
-      		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+    		     <xsl:if test="$display-audit-here=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feature-based</xsl:with-param>
@@ -847,7 +851,7 @@
                   <p>This PP does not define any optional requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-     	         <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+     	         <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
 		  <!-- Audit table for optional requirements -->
 	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
@@ -879,7 +883,7 @@
                   <p>This PP does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-    		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+    		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
@@ -913,7 +917,7 @@
                   <p>This PP does not define any objective requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
- 		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+ 		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
        		  <!-- Audit table for objective requirements -->
 	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
@@ -943,7 +947,7 @@
                   <p>This PP does not define any implementation-dependent requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-    	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+    	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for Implementation-Dependent requirements -->
 	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
