@@ -545,7 +545,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
          <a:documentation>Name of the preference.</a:documentation>
          <choice>
                <value>display-audit-with-sfrs</value>
-               <value>bogus-variable</value>
+               <value>audit-events-in-sfrs</value>
           </choice>
       </attribute>
       <ref name="basic-content-pat"/>
