@@ -79,6 +79,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
+      <ref name="PreferencesEtc"/>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
@@ -98,7 +99,12 @@ Tags that this section should be indented(left) 2em.
     </element>
   </start>
 
-  
+  <define name="PreferencesEtc">
+  <a:documentation>A place for declarations and preferences</a:documentation>
+  <optional>
+	  <ref name="pp-preferences-pat"/>
+  </optional>
+</define>
   
   <define name="IntroductionChapter">
       <element name="chapter">
@@ -439,6 +445,33 @@ Tags that this section should be indented(left) 2em.
       </optional>
   </define>
     
+   <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <oneOrMore>
+         <ref name="pp-pref-pat" />
+      </oneOrMore>
+    </element>
+  </define> 
+         
+  <define name="pp-pref-pat">
+    <element name="pp-pref">
+      <a:documentation>
+         Declarations and definition of global variables.
+      </a:documentation>
+      <attribute name="name">
+         <a:documentation>Name of the preference.</a:documentation>
+         <choice>
+               <value>display-audit-with-sfrs</value>
+               <value>audit-events-in-sfrs</value>
+          </choice>
+      </attribute>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define> 
+
   
   <define name="PPReference">
       <element name="PPReference">
