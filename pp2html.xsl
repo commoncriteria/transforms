@@ -751,9 +751,11 @@
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
 		    
-		  <xsl:variable name="display-audit-here">
+		  <xsl:variable name="display-audit-app">
 			<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
     		   </xsl:variable>
+		    
+		    <h3>display-audit-app = <xsl:value-of select="$display-audit-app"/></h3>
 		    
                   <xsl:call-template name="opt_appendix"/>
 
@@ -767,7 +769,7 @@
 		  <xsl:otherwise> 
 
 		     <!-- Only display the audit events here if they were specified with the SFRs -->
-    		     <xsl:if test="$display-audit-here=1">
+    		     <xsl:if test="($display-audit-app)=1">
 
      		        <!-- Audit table for optional requirements -->
 		        <!-- Not sure this handles the case of zero optional requirements.  -->
@@ -793,7 +795,7 @@
 	          </xsl:when>
 		  <xsl:otherwise> 
 
-    		     <xsl:if test="$display-audit-here=1">
+    		     <xsl:if test="($display-audit-app)=1">
 
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
@@ -817,7 +819,7 @@
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
 		<xsl:otherwise> 
-    		     <xsl:if test="$display-audit-here=1">
+    		     <xsl:if test="($display-audit-app)=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feature-based</xsl:with-param>
