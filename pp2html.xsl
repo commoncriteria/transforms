@@ -754,9 +754,7 @@
 		  <xsl:variable name="display-audit-app">
 			<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
     		   </xsl:variable>
-		    
-		    <h3>display-audit-app = <xsl:value-of select="$display-audit-app"/></h3>
-		    
+		    		    
                   <xsl:call-template name="opt_appendix"/>
 
     		  <!-- Strictly optional requirements, a.k.a. "optional"  -->
