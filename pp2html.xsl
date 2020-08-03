@@ -762,12 +762,16 @@
 	          </xsl:when>
 		  <xsl:otherwise> 
 
-     		    <!-- Audit table for optional requirements -->
-		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
-	            <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-param name="table">optional</xsl:with-param>
-		    </xsl:call-template>
+		     <!-- Only display the audit events here if they were specified with the SFRs -->
+    		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+
+     		        <!-- Audit table for optional requirements -->
+		        <!-- Not sure this handles the case of zero optional requirements.  -->
+	                <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
+	                <xsl:call-template name="audit-table-xsl">
+		           <xsl:with-param name="table">optional</xsl:with-param>
+		        </xsl:call-template>
+		      </xsl:if>
 	    
 	            <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
                       <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
@@ -784,14 +788,16 @@
                     <p>This PP does not define any objective requirements.</p>
 	          </xsl:when>
 		  <xsl:otherwise> 
-		    
+
+      		    <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">objective</xsl:with-param>
 		    </xsl:call-template>
-		    
+		    </xsl:if>
                     <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                       <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
                       <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
@@ -807,11 +813,12 @@
           	  <p>This PP does not define any implementation-dependent requirements.</p>
                 </xsl:when>
 		<xsl:otherwise> 
+      		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feature-based</xsl:with-param>
 		    </xsl:call-template>
-
+		    </xsl:if>
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
 		</xsl:otherwise> 
 		</xsl:choose>
@@ -839,12 +846,15 @@
 	       <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                   <p>This PP does not define any optional requirements.</p>
 	       </xsl:when>
-	       <xsl:otherwise>0
+	       <xsl:otherwise>
+     	         <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+
 		  <!-- Audit table for optional requirements -->
 	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
+	       </xsl:if>
 	          <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
                      <h3 id="{@id}-opt" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
@@ -869,12 +879,15 @@
                   <p>This PP does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
+    		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
-		  <!-- Loop through all components picking out the selection-based. -->
+		  </xsl:if>
+		       <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='sel-based']">
                      <h3 id="{@id}-opt" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
                      <xsl:apply-templates select="cc:f-component[@status='sel-based']"/>
@@ -900,11 +913,13 @@
                   <p>This PP does not define any objective requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
+ 		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
        		  <!-- Audit table for objective requirements -->
 	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
+		  </xsl:if>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                      <h3 id="{@id}-opt" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
@@ -928,11 +943,14 @@
                   <p>This PP does not define any implementation-dependent requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
+    	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-with-sfrs'] = 1">
+
        		  <!-- Audit table for Implementation-Dependent requirements -->
 	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">impl-dep</xsl:with-param>
 		  </xsl:call-template>
+		  </xsl:if>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='impl-dep']">
                      <h3 id="{@id}-opt" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
