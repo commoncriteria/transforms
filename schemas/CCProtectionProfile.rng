@@ -139,7 +139,10 @@ Tags that this section should be indented(left) 2em.
 	    <attribute name="id"/>
 	    <ref name="basic-content-pat"/>
 	    <oneOrMore>
-              <ref name="f-component-pattern"/>
+	      <choice>
+                  <ref name="f-component-pattern"/>
+  		  <ref name="f-component-decl-pattern"/>
+	      </choice>
 	    </oneOrMore>
 	  </element>
 	</oneOrMore>
@@ -350,7 +353,19 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define> 
 
-
+  <define name="f-component-decl-pattern">
+    <element name="f-component-decl">
+      <a:document>
+        Specifies a component declaration. This is intended for use when a PP defines audit events for
+        an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
+        There is status.
+      </a:document>
+      <ref name="depends-pat"/>
+      <ref name="audit-events-pat"/>
+    </element>
+  </define> 
+	
+	
   <define name="a-component-pattern">
     <element name="a-component">
       <a:document>
