@@ -439,6 +439,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
         There is status.
       </a:document>
+      <ref name="f-comp-content-pat"/>
       <attribute name="pkg-id">
          <a:documentation>Identifier for package this SFR comes from (e.g. "pkg_tls").</a:documentation>
          <data type="string">
