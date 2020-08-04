@@ -439,6 +439,20 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
         There is status.
       </a:document>
+      <attribute name="pkg-id">
+         <a:documentation>Identifier for package this SFR comes from (e.g. "pkg_tls").</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9]+</param>
+         </data>
+      </attribute>
+      <optional>
+         <attribute name="pkg-name">
+            <a:documentation>Informal package name to appear in audit table for this SFR (e.g. "TLS").</a:documentation>
+            <data type="string">
+              <param name="pattern">[\-a-zA-Z0-9]+</param>
+            </data>
+         </attribute>
+      </optional>
       <ref name="depends-pat"/>
       <ref name="audit-events-pat"/>
     </element>
