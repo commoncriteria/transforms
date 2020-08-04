@@ -624,11 +624,11 @@
                 <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
                 
                 <xsl:choose>
-		        <xsl:when test="count(//cc:f-component[@status='optional'])=0">
+		    <xsl:when test="count(//cc:f-component[@status='optional'])=0">
                         <p>This PP does not define any optional requirements.</p>
-	                </xsl:when>
+	            </xsl:when>
+	            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
-		            <xsl:otherwise> 
                         	<!-- Audit table for optional requirements -->
 		                <!-- Not sure this handles the case of zero optional requirements.  -->
 	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
