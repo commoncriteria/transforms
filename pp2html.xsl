@@ -277,6 +277,13 @@
 	    
     <xsl:for-each select="//cc:f-component">
 	    
+	<!-- Really want to call a template here  e.g.
+             <xsl:call-template name="display-audit-table-row">
+ 		<xsl:with-param name="fcomp" select="."/>
+		<xsl:with-param name="table" select="$thistable"/>
+	     </xsl:call-template>
+	-->
+	    
 	<xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
 		<xsl:choose>
