@@ -804,6 +804,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
+          <ref name="consistency-rationale-placeholder"/>
         </element>
       </oneOrMore>
     </element>
@@ -830,9 +831,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             </data>
           </attribute>
           <ref name="description"/>
-          <oneOrMore>
-          <ref name="objective-refer"/>
-          </oneOrMore>
+          <oneOrMore><ref name="objective-refer"/></oneOrMore>
+          <ref name="consistency-rationale-placeholder"/>
         </element>
       </zeroOrMore>
     </element>

@@ -75,11 +75,11 @@
       <h3 id="consecprob-{@short}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
-      The threats defined by this PP-Module (see section 3.1) supplement those defined in the
+      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
       <xsl:value-of select="@short"/> PP as follows:
       <xsl:apply-templates select="./cc:con-sec-prob"/>
-      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
-      <xsl:for-each select="//cc:threat[cc:description]">
+      <table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
+      <xsl:for-each select="//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
 	  <xsl:with-param name="orig" select="."/>
@@ -322,11 +322,11 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <xsl:param name="base"/>
     <xsl:param name="orig"/>
 	<tr>
-	  <td><xsl:value-of select="$orig/@id"/></td>
-	  <!-- if the base has a con-mod equal to the id -->
+	  <td><xsl:value-of select="$orig/@name"/></td>
+	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@id=$orig/@id]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@id=$orig/@id]"/>
+	    <xsl:when test="$base/cc:con-mod[@name=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@name=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->
