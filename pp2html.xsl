@@ -13,6 +13,9 @@
 
   <xsl:variable name="doctype" select="pp"/>
 
+  <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
+  <xsl:variable name="oneOrTwo"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
+
   <xsl:param name="appendicize" select="''"/>
 
   <xsl:param name="custom-css-file" select="''"/>
@@ -142,7 +145,7 @@
 
       <xsl:for-each select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
-          <xsl:if test="count(preceding-sibling::cc:*)=1">
+          <xsl:if test="not(name(preceding-sibling::cc:*[1])='objective-refer')">
             <xsl:attribute name="class">major-row</xsl:attribute>
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
@@ -558,8 +561,6 @@ This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 
 <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
-    <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
-    <xsl:variable name="oneOrTwo"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
