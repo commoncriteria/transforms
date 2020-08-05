@@ -517,20 +517,19 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="description"/>
-          <ref name="consistency-rationale-placeholder"/>
+          <ref name="origin-pat"/>
         </element>
       </oneOrMore>
     </element>
   </define>
-
+<!--
   <define name="consistency-rationale-placeholder">
     <empty/>
   </define>
-
   <define name="description-and">
     <ref name="description"/>
   </define>
+-->
 
   <define name="SO">
     <element name="SO">
@@ -543,7 +542,7 @@ Grouping for Security Objective for the Operation Environment entries.
         </data>
       </attribute>
       <optional><ref name="id-attr"/></optional>
-      <ref name="description"/>
+      <ref name="origin-pat"/>
       <oneOrMore>
         <element name="addressed-by">
           <ref name="basic-content-pat"/>
@@ -552,7 +551,6 @@ Grouping for Security Objective for the Operation Environment entries.
            <ref name="basic-content-pat"/>
         </element>
       </oneOrMore>
-      <ref name="consistency-rationale-placeholder"/>
     </element>
   </define>
 
@@ -805,7 +803,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
-          <ref name="consistency-rationale-placeholder"/>
         </element>
       </oneOrMore>
     </element>
@@ -833,7 +830,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           </attribute>
           <ref name="origin-pat"/>
           <oneOrMore><ref name="objective-refer"/></oneOrMore>
-          <ref name="consistency-rationale-placeholder"/>
         </element>
       </zeroOrMore>
     </element>
@@ -858,7 +854,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                   <param name="pattern">P\.[A-Z_]+</param>
                 </data>
                </attribute>
-          <ref name="description"/>
+                <ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -1115,6 +1111,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <ref name="basic-content-pat"/>
         </element>
       </choice>
+
       <element name="description">
         <a:documentation>Description of the term/name.</a:documentation>
         <ref name="basic-content-pat"/>

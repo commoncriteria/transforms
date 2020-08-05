@@ -60,13 +60,13 @@
     </define>	
 -->
     <define name="origin-pat">
-       <choice>
+      <choice>
+        <group>
           <ref name="description"/>
-          <ref name="from"/>
-       </choice>
-    </define>
-    <define name="consistency-rationale-placeholder">
-      <ref name="consistency-rationale"/>
+          <ref name="consistency-rationale"/>
+        </group>
+        <ref name="from"/>
+      </choice>
     </define>
     <define name="depends-pat">
       <zeroOrMore>
