@@ -280,7 +280,7 @@
 			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>   
-        <xsl:for-each select="$fcomp/cc:audit-event"> 
+        <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
