@@ -92,7 +92,7 @@ PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
 JING_JAR ?= jing-*/bin/jing.jar
 
 #- Schema
-RNG_FILE ?= transforms/schemas/CCProtectionProfile.rng
+RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 
 #- Validation line
 #- Arg 1 is the RNG file path
