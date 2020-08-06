@@ -698,10 +698,9 @@ function fixAbbrs(){
 
 
   <xsl:template name="head">
-    <xsl:param name="title"/>
       <head>
 	<title><xsl:value-of select="$title"/></title>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' ></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' type="text/javascript"></script>
         <script type="text/x-mathjax-config">
             MathJax.Hub.Config({
             extensions: ["tex2jax.js"],
