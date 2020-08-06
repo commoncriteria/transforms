@@ -360,10 +360,41 @@ Tags that this section should be indented(left) 2em.
         an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
         There is status.
       </a:document>
-      <ref name="depends-pat"/>
+      <ref name="f-comp-content-pat"/>
+      <attribute name="pkg-id">
+         <a:documentation>Identifier for package this SFR comes from (e.g. "pkg_tls").</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9_]+</param>
+         </data>
+      </attribute>
+      <choice>
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Sel-based requirements.
+            </a:documentation>
+            <value>sel-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="selection-depends"/>
+          </oneOrMore>
+        </group>
+        <optional>
+          <attribute name="status">
+            <a:documentation>
+              And the rest of the possible statuses.
+            </a:documentation>
+            <choice>
+                <value>optional</value>
+                <value>objective</value>
+                <value>mandatory</value>
+            </choice>
+          </attribute>
+         </optional>
+       </choice>
       <ref name="audit-events-pat"/>
     </element>
-  </define> 
+</define> 
 	
 	
   <define name="a-component-pattern">
