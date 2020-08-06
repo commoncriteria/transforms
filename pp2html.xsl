@@ -384,7 +384,7 @@
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
             <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
                 <tr>
-                    <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
+                    <td><xsl:apply-templates select="$fcomp" mode="getId"/>(from <xsl:value-of select="$fcomp/@pkg-id"/>)</td>      <!-- SFR name -->
                     <xsl:choose>
                         <xsl:when test="(not (cc:audit-event-descr))">
                             <td>No events specified</td><td></td>
@@ -481,7 +481,7 @@
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
 	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
-		<tr><td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
+                    <td><xsl:apply-templates select="$fcomp" mode="getId"/>(from <xsl:value-of select="$fcomp/@pkg-id"/>)</td>      <!-- SFR name -->
 		<xsl:choose>
 			<xsl:when test="(not (cc:audit-event-descr))">
 			<td>No events specified</td><td></td>
