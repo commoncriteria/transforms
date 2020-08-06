@@ -114,6 +114,14 @@ class State:
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
 
+    def is_in_non_xrefable_section(self):
+        return \
+            "a"    in self.ancestors or "abbr"    in self.ancestors or\
+            "dt"   in self.ancestors or "no-link" in self.ancestors or\
+            "h1"   in self.ancestors or "h2"      in self.ancestors or\
+            "h3"   in self.ancestors or "h4"      in self.ancestors or\
+            "head" in self.ancestors or "script"  in self.ancestors
+
 
     def handle_text(self, parent, text):
         # if parent.tag!="p" and parent.tag!="div" and parent.tag!="span":
@@ -123,9 +131,7 @@ class State:
 #           or parent.tag=="style":
          # No tags in tags.
         etext = escape(text)
-        if "a" in self.ancestors or "abbr" in self.ancestors or "dt" in self.ancestors or\
-            "h1" in self.ancestors or "h2" in self.ancestors or "h3" in self.ancestors or\
-            "h4" in self.ancestors or "no-link" in self.ancestors:
+        if self.is_in_non_xrefable_section():
             return etext
         return self.discover_xref(etext)
 
