@@ -32,13 +32,15 @@
   <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
-  <xsl:template match="cc:f-component|cc:f-element" mode="getId">
+  <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
+      <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:variable name="baseID"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@cc-id"/></xsl:when>
+      <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@cc-id"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@cc-id"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:value-of select="translate($baseID, $lower, $upper)"/>
