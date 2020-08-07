@@ -427,7 +427,7 @@
 	<th>Additional Audit Record Contents</th></tr>
 	    
 	<xsl:for-each select="//cc:f-component">
-	  <xsl:variable name="fcomp" select="."/>
+	<xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
 		<xsl:choose>
 			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
@@ -465,7 +465,7 @@
 		</tr>
 		</xsl:if>
 		</xsl:for-each>
-		</xsl:for-each>
+	</xsl:for-each>
 	    
 	<xsl:for-each select="//cc:f-component-decl">
 	  <xsl:variable name="fcomp" select="."/>
