@@ -37,6 +37,16 @@
     <xsl:call-template name="acronyms"/>
   </xsl:template>
 
+
+<!-- ############### -->
+<!--   Overwrites template from pp2html.xsl -->
+<!--            -->
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+      <xsl:value-of select="@name"/>
+      <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>
+   </xsl:template>
+
+
   <xsl:template name="mod-obj-req-map">
     <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
     <xsl:call-template name="obj-req-map"/>

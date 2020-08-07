@@ -132,6 +132,12 @@
 
 <!-- ############### -->
 <!--            -->
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+      <xsl:message>blahblah</xsl:message>
+      <xsl:value-of select="@name"/>
+   </xsl:template>
+<!-- ############### -->
+<!--            -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
@@ -149,7 +155,8 @@
             <xsl:attribute name="class">major-row</xsl:attribute>
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
-              <xsl:value-of select="../@name"/><br/>
+              <xsl:apply-templates select=".." mode="get-representation"/><br/>
+    <!--          <xsl:value-of select="../@name"/><br/> -->
             </td>
           </xsl:if>
           <td><xsl:value-of select="@ref"/></td>
