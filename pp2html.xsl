@@ -903,8 +903,9 @@
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
 
 		<xsl:choose>
-        	<xsl:when test="count(//cc:implements/cc:feature)=0">
-          	  <p>This PP does not define any implementation-dependent requirements.</p>
+      <!--  	<xsl:when test="count(//cc:implements/cc:feature)=0">   -->
+	        <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
+          	  <p>This PP does not define any implementation-dependent requirements (optional-plus-appendix).</p>
                 </xsl:when>
 		<xsl:otherwise> 
     		     <xsl:if test="($display-audit-app)=1">
@@ -1034,7 +1035,7 @@
             This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	    <xsl:choose>
 	       <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
-                  <p>This PP does not define any implementation-dependent requirements.</p>
+                  <p>This PP does not define any implementation-dependent requirements (impl-dep-appendix).</p>
 	       </xsl:when>
 	       <xsl:otherwise>
     	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
