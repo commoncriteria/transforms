@@ -910,7 +910,7 @@
     		     <xsl:if test="($display-audit-app)=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
-		       <xsl:with-param name="table">feature-based</xsl:with-param>
+		       <xsl:with-param name="table">feat-based</xsl:with-param>
 		    </xsl:call-template>
 		    </xsl:if>
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
@@ -1033,7 +1033,7 @@
             <h1 id="impl-dep-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
             This appendix enumerates requirements <xsl:call-template name="imple_text"/>
 	    <xsl:choose>
-	       <xsl:when test="count(//cc:f-component[@status='impl-dep'])=0">
+	       <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
                   <p>This PP does not define any implementation-dependent requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
@@ -1042,13 +1042,13 @@
        		  <!-- Audit table for Implementation-Dependent requirements -->
 	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table">impl-dep</xsl:with-param>
+		     <xsl:with-param name="table">feat-based</xsl:with-param>
 		  </xsl:call-template>
 		  </xsl:if>
 		  <!-- Loop through all components picking out the optional. -->
-	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='impl-dep']">
+	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='feat-based']">
                      <h3 id="{@id}-opt" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
-                     <xsl:apply-templates select="cc:f-component[@status='impl-dep']"/>
+                     <xsl:apply-templates select="cc:f-component[@status='feat-based']"/>
                   </xsl:for-each>
 	       </xsl:otherwise>
 	    </xsl:choose>
