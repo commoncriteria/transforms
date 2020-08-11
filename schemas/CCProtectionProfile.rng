@@ -300,26 +300,8 @@ Tags that this section should be indented(left) 2em.
       </a:document>
       <ref name="f-comp-content-pat"/>
       <choice>
+	      
         <!-- Choice of status -->
-        <!-- If the status is objective, it must have a targetdate(?) -->
-        <group>
-          <optional>
-            <attribute name="targetdate">
-              <a:documentation>
-                Target date that the requirements under this component become
-                manandory. It only makes sense for _objective_ components.
-              </a:documentation>
-              <data type="date"/>
-            </attribute>
-          </optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>objective</value>
-          </attribute>
-        </group>
-
         <!-- If the status is selection-based, it must have dependencies -->
         <group>
           <attribute name="status">
@@ -333,6 +315,19 @@ Tags that this section should be indented(left) 2em.
           </oneOrMore>
         </group>
 
+	<!-- Feature-based -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Feature-based requirements must have dependencies.
+            </a:documentation>
+            <value>feat-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="depends-pat"/>
+          </oneOrMore>
+        </group>
+	      
         <!-- The status could also be optional or nothing (which is indicated here) -->
         <optional>
           <attribute name="status">
@@ -341,6 +336,8 @@ Tags that this section should be indented(left) 2em.
             </a:documentation>
             <choice>
               <value>optional</value>
+              <value>objective</value>
+	      <value>mandatory</value>
             </choice>
           </attribute>
         </optional>
@@ -510,8 +507,8 @@ Tags that this section should be indented(left) 2em.
       <attribute name="name">
          <a:documentation>Name of the preference.</a:documentation>
          <choice>
-               <value>display-audit-with-sfrs</value>
-               <value>audit-events-in-sfrs</value>
+               <value>display-audit-with-sfrs</value>    <!-- Display audit events with SFRs -->
+               <value>audit-events-in-sfrs</value>       <!-- Audit events are defined with the SFRs, vs. in tables -->
           </choice>
       </attribute>
       <ref name="basic-content-pat"/>
