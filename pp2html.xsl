@@ -505,7 +505,7 @@
           </b></i>
         </div>
       </xsl:if>
-      <xsl:if test=".//cc:selection-depends">
+      <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:selection-depends">
@@ -518,7 +518,7 @@
           </i></b>
         </div>
       </xsl:if>
-      <xsl:if test="./cc:depends[@on='implements']">
+      <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
                 Its inclusion depends on whether the TOE implements one (or more) of
@@ -545,8 +545,9 @@
   <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize">
-  <!-- in appendicize mode, don't display objective/sel-based/optional in main body-->
-    <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' and @status!='objective')">
+  <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
+    <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
+		  					and @status!='objective' and @status!='feat-based')">
       <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
@@ -680,7 +681,7 @@
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
+          <h3 class="indexable" data-level="{$level}" id="{@id}">Feature: <xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
              <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
@@ -752,15 +753,16 @@
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
 
               	<xsl:choose>
-        	        <xsl:when test="count(//cc:implements/cc:feature)=0">
-          	            <p>This PP does not define any implementation-dependent requirements.</p>
+        	   <!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
+ 	        	<xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
+			<p>This PP does not define any implementation-dependent requirements.</p>
                     </xsl:when>
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
 
 	                    <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		                <xsl:call-template name="audit-table-xsl">
-		                    <xsl:with-param name="table">feature-based</xsl:with-param>
+		                    <xsl:with-param name="table">feat-based</xsl:with-param>
 		                </xsl:call-template>
 			    </xsl:if>
                         <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
