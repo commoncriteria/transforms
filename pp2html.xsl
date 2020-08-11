@@ -820,7 +820,7 @@
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
+          <h3 class="indexable" data-level="{$level}" id="{@id}">Feature: <xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
              <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
