@@ -857,19 +857,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </element>
   </define>
 
-  <define name="feature-depends">
-      <element name="feature-depends">
-        <a:documentation>
-          Defines conditions for including this feature-based SFR in an ST.
-        </a:documentation>
-        <attribute name="feature-id">
-            <a:documentation>
-                The required feature for inclusion of this SFR.
-            </a:documentation>
-        </attribute>
-    </element>
-  </define>
-
   <define name="basepp-depends">
       <element name="basepp-depends">
         <a:documentation>
