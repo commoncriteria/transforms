@@ -620,7 +620,7 @@
           </b></i>
         </div>
       </xsl:if>
-      <xsl:if test=".//cc:selection-depends">
+      <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:selection-depends">
@@ -633,7 +633,7 @@
           </i></b>
         </div>
       </xsl:if>
-      <xsl:if test="./cc:depends[@on='implements']">
+      <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
                 Its inclusion depends on whether the TOE implements one (or more) of
