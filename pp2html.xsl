@@ -834,10 +834,11 @@
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="handle-features">
+	<h3 class="indexable" data-level="3">Features potentially implemented by the TOE:</h3>
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h3 class="indexable" data-level="{$level}" id="{@id}">Feature: <xsl:value-of select="@title"/></h3>
+          <xsl:variable name="level"><xsl:if test="$appendicize='on'">4</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
+          <h4 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h4>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
 		  
@@ -853,9 +854,14 @@
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
              </xsl:for-each>   -->
-		     
+	
           </xsl:if>
         </xsl:for-each>
+ 	     <!-- Display all the feat-based requirements -->
+	     <h3 class="indexable" data-level="3">Implementation-dependent Requirements:</h3>
+	     <xsl:for-each select="//cc:f-component[@status='feat-based']">
+		     <apply-templates select="." mode="appendicize-nofilter"/>
+       </xsl:for-each>	  
     </xsl:template>
 
 
@@ -934,13 +940,13 @@
           	  <p>This PP does not define any implementation-dependent requirements (optional-plus-appendix).</p>
                 </xsl:when>
 		<xsl:otherwise> 
-		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
     		     <xsl:if test="($display-audit-app)=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feat-based</xsl:with-param>
 		    </xsl:call-template>
 		    </xsl:if>
+		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
 		</xsl:otherwise> 
 		</xsl:choose>
             </xsl:when>
