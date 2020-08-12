@@ -934,13 +934,13 @@
           	  <p>This PP does not define any implementation-dependent requirements (optional-plus-appendix).</p>
                 </xsl:when>
 		<xsl:otherwise> 
+		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
     		     <xsl:if test="($display-audit-app)=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feat-based</xsl:with-param>
 		    </xsl:call-template>
 		    </xsl:if>
-		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
 		</xsl:otherwise> 
 		</xsl:choose>
             </xsl:when>
