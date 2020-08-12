@@ -687,7 +687,7 @@
 		  
 	     <!-- Just output the name of the SFR associated with each feature.  -->
              <ul><xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
-                <li>< id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></li>
+                <li><h4 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></li>
 	     </xsl:for-each></ul>
 		  
 	  </xsl:if>
