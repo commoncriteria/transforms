@@ -834,34 +834,26 @@
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="handle-features">
-	<h3 class="indexable" data-level="3">Features potentially implemented by the TOE:</h3>
         <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="level"><xsl:if test="$appendicize='on'">4</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h4 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h4>
+          <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
+          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
-		  
-  	     <!-- Just output the name of the SFR associated with each feature.  -->
+  	     <!-- First just output the name of the SFR associated with each feature.  -->
              <ul>
 		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/..">
 			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	             </xsl:for-each>
 	     </ul>
-		  
-<!--             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
+             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
-             </xsl:for-each>   -->
-	
+             </xsl:for-each> 
           </xsl:if>
         </xsl:for-each>
- 	     <!-- Display all the feat-based requirements -->
-	     <h3 class="indexable" data-level="3">Implementation-dependent Requirements:</h3>
-	     <xsl:for-each select="//cc:f-component[@status='feat-based']">
-		     <apply-templates select="." mode="appendicize-nofilter"/>
-       </xsl:for-each>	  
     </xsl:template>
 
 
