@@ -636,7 +636,7 @@
       <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
-                Its inclusion depends on whether the TOE implements one (or more) of
+                Its inclusion depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
@@ -704,14 +704,13 @@
         <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
-                Its inclusion depends on whether the TOE implements one (or more) of
+                Its inclusion depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
                     <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
-                as described in Appendix A: Implementation-based Requirements.
         </b></i>
         </div>
 		
