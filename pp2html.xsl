@@ -840,11 +840,18 @@
           <h3 class="indexable" data-level="{$level}" id="{@id}">Feature: <xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+		  
+  	     <!-- Just output the name of the SFR associated with each feature.  -->
+             <ul><xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+                <li>< id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></li>
+	     </xsl:for-each></ul>
+		  
+<!--             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
-             </xsl:for-each>
+             </xsl:for-each>   -->
+		     
           </xsl:if>
         </xsl:for-each>
     </xsl:template>
