@@ -698,13 +698,16 @@
 	    <h3>Handle features</h3>
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
+	       <h3>fid = <xsl:value-of select="$fid"/></h3>
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
   	     <!-- First just output the name of the SFR associated with each feature.  -->
 		  <ul><li>Appendicsise is on</li>
-		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/..">
+<!--		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/..">  -->
+		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements']/..">
+			     
 			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	             </xsl:for-each>
 	     </ul>
