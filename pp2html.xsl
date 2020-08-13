@@ -521,7 +521,7 @@
       <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
-                Its inclusion depends on whether the TOE implements one or more of the following features:
+                Its inclusion iin an ST depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
