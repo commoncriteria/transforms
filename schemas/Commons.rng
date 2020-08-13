@@ -1189,21 +1189,16 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <a:documentation>
           Modifies the parent element such that it depends on something  else.
         </a:documentation>
-        <choice>
-          <group>
-            <attribute name="on"><value>implements</value></attribute>
-            <attribute name="ref-id"/>
-            <empty/>
-          </group>
-          <group>
-            <attribute name="on"><value>selection</value></attribute>
-            <oneOrMore><ref name="ref-id"/></oneOrMore>
-          </group>
-        </choice>
+        <ref name="implements-or-selection-pat"/>
       </element>
     </zeroOrMore>
   </define>
 
+ <define name="implements-or-selection-pat">
+     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
+     <oneOrMore><ref name="ref-id"/></oneOrMore>
+  </define> 
+	
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
