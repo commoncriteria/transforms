@@ -524,8 +524,8 @@
                 Its inclusion iin an ST depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
-                    <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                    <xsl:variable name="rid"><xsl:value-of select="cc:ref-id"/></xsl:variable>
+                    <li><a href="#{$rid}"><xsl:value-of select="//cc:feature[@id=$rid]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
