@@ -521,7 +521,7 @@
       <xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
-                Its inclusion depends on whether the TOE implements one (or more) of
+                Its inclusion depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
                     <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
@@ -585,6 +585,23 @@
             </b>
           </div>
         </xsl:if>
+	    
+	<xsl:if test="@status='feat-based'">
+        <div class="statustag">
+          <i><b>This is an implementation-based component.
+                Its inclusion depends on whether the TOE implements one or more of the following features:
+                <ul>
+                  <xsl:for-each select="cc:depends[@on='implements']">
+                    <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
+                    <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                  </xsl:for-each>
+                </ul>
+        </b></i>
+        </div>
+		
+      </xsl:if>
+
+	    
         <xsl:apply-templates/>
       </div>
   </xsl:template>
@@ -678,28 +695,25 @@
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="handle-features">
-        <xsl:for-each select="//cc:implements/cc:feature">
+       <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
-          <h3 class="indexable" data-level="{$level}" id="{@id}">Feature: <xsl:value-of select="@title"/></h3>
+          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
-	  <xsl:if test="appendicize='on'">
-		  
-	     <!-- Just output the name of the SFR associated with each feature.  -->
-             <ul><xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
-                <li><h4 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h4></li>
-	     </xsl:for-each></ul>
-		  
-	  </xsl:if>
-		
-<!--          <xsl:if test="$appendicize='on'">
+          <xsl:if test="$appendicize='on'">
+  	     <!-- First just output the name of the SFR associated with each feature.  -->
+             <ul>
+		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/..">
+			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
+	             </xsl:for-each>
+	     </ul>
+	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
              <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
-             </xsl:for-each>
-          </xsl:if> -->
-		  
+             </xsl:for-each> 
+          </xsl:if>
         </xsl:for-each>
     </xsl:template>
 
