@@ -704,6 +704,7 @@
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="$appendicize='on'">
   	     <!-- First just output the name of the SFR associated with each feature.  -->
+	     <ul>
 		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/..">  -->
 			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	             </xsl:for-each>
