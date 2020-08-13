@@ -705,12 +705,12 @@
           <xsl:if test="$appendicize='on'">
   	     <!-- First just output the name of the SFR associated with each feature.  -->
 	     <ul>
-		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/..">  -->
+		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/.."> 
 			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	             </xsl:for-each>
 	     </ul>
 	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and @ref-id=$fid]/../..">
+             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/.."
                     mode="appendicize-nofilter"/>
