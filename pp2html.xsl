@@ -176,8 +176,8 @@
             </xsl:if> 
             <xsl:if test="@on='implements'">
               the TOE implements 
-              <xsl:variable name="ref-id" select="@ref-id"/>
-              "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              <xsl:variable name="rid" select="cc:ref-id"/>
+              "<xsl:value-of select="//cc:feature[@id=$rid]/@title"/>"
             </xsl:if>
             </li>
         </xsl:for-each> </ul><br/>
@@ -201,8 +201,8 @@
             </xsl:if> 
             <xsl:if test="@on='implements'">
               the TOE implements 
-              <xsl:variable name="ref-id" select="@ref-id"/>
-              "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              <xsl:variable name="rid" select="cc:ref-id"/>
+              "<xsl:value-of select="//cc:feature[@id=$rid]/@title"/>"
             </xsl:if>
             </li>
         </xsl:for-each> </ul><br/>
@@ -705,14 +705,14 @@
           <xsl:if test="$appendicize='on'">
   	     <!-- First just output the name of the SFR associated with each feature.  -->
 	     <ul>
-		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/.."> 
+		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
 			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	             </xsl:for-each>
 	     </ul>
 	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/../..">
+             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
-                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id/text()=$fid]/.."
+                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
              </xsl:for-each> 
           </xsl:if>
