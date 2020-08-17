@@ -398,6 +398,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           </attribute>
           <oneOrMore>
             <ref name="selection-depends"/>
+            <ref name="depends-pat"/>
           </oneOrMore>
         </group>
 
@@ -460,6 +461,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
           </attribute>
           <oneOrMore>
             <ref name="selection-depends"/>
+            <ref name="depends-pat"/>                  
           </oneOrMore>
         </group>
         <optional>
