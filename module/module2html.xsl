@@ -37,6 +37,16 @@
     <xsl:call-template name="acronyms"/>
   </xsl:template>
 
+
+<!-- ############### -->
+<!--   Overwrites template from pp2html.xsl -->
+<!--            -->
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+      <xsl:value-of select="@name"/>
+      <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>
+   </xsl:template>
+
+
   <xsl:template name="mod-obj-req-map">
     <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
     <xsl:call-template name="obj-req-map"/>
@@ -75,11 +85,11 @@
       <h3 id="consecprob-{@short}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
-      The threats defined by this PP-Module (see section 3.1) supplement those defined in the
+      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
       <xsl:value-of select="@short"/> PP as follows:
       <xsl:apply-templates select="./cc:con-sec-prob"/>
-      <table><tr><th>PP-Module Threat</th><th>Consistency Rationale</th></tr>
-      <xsl:for-each select="//cc:threat[cc:description]">
+      <table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
+      <xsl:for-each select="//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
 	  <xsl:with-param name="orig" select="."/>
@@ -322,11 +332,11 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <xsl:param name="base"/>
     <xsl:param name="orig"/>
 	<tr>
-	  <td><xsl:value-of select="$orig/@id"/></td>
-	  <!-- if the base has a con-mod equal to the id -->
+	  <td><xsl:value-of select="$orig/@name"/></td>
+	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@id=$orig/@id]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@id=$orig/@id]"/>
+	    <xsl:when test="$base/cc:con-mod[@name=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@name=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->
@@ -542,11 +552,19 @@ These components are identified in the following table:
          </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
-
-
   </xsl:template>
-
-
+<!-- TODO: THE SD is not gettting this-->
+  <xsl:template match="htm:*[./cc:depends/cc:base-ref]">
+    The following content should be included if 
+    <xsl:for-each select="cc:depends/cc:base-ref">
+       <xsl:variable name="base" select="text()"/>
+       <xsl:value-of select="//cc:base-pp[@short=$base]/@name|//cc:base-pp[@name=$base]/@name"/>
+    </xsl:for-each>
+    is a base:
+    <div name="base-dependent">
+    <xsl:call-template name="handle-html"/>
+    </div>
+  </xsl:template>
 
   <xsl:template match="cc:base-name">
     <xsl:param name="base"/>

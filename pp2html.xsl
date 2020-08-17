@@ -13,6 +13,9 @@
 
   <xsl:variable name="doctype" select="pp"/>
 
+  <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
+  <xsl:variable name="oneOrTwo"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
+
   <xsl:param name="appendicize" select="''"/>
 
   <xsl:param name="custom-css-file" select="''"/>
@@ -127,6 +130,12 @@
 
 <!-- ############### -->
 <!--            -->
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+      <xsl:message>blahblah</xsl:message>
+      <xsl:value-of select="@name"/>
+   </xsl:template>
+<!-- ############### -->
+<!--            -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
@@ -140,11 +149,12 @@
 
       <xsl:for-each select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
-          <xsl:if test="count(preceding-sibling::cc:*)=1">
+          <xsl:if test="not(name(preceding-sibling::cc:*[1])='objective-refer')">
             <xsl:attribute name="class">major-row</xsl:attribute>
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
-              <xsl:value-of select="../@name"/><br/>
+              <xsl:apply-templates select=".." mode="get-representation"/><br/>
+    <!--          <xsl:value-of select="../@name"/><br/> -->
             </td>
           </xsl:if>
           <td><xsl:value-of select="@ref"/></td>
@@ -191,18 +201,21 @@
          <ul> <xsl:for-each select="cc:depends">
             <li>
             <xsl:if test="@on='selection'">
-              <xsl:for-each select="cc:uid">  
+              <xsl:for-each select="cc:ref-id">  
                 <xsl:variable name="uid" select="text()"/>
                 "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
               </xsl:for-each>
                is selected from 
-              <xsl:variable name="uid" select="cc:uid[1]/text()"/>
+              <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
               <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
             </xsl:if> 
             <xsl:if test="@on='implements'">
               the TOE implements 
-              <xsl:variable name="rid" select="cc:ref-id"/>
-              "<xsl:value-of select="//cc:feature[@id=$rid]/@title"/>"
+              <xsl:for-each select="cc:ref-id">
+                 <xsl:variable name="ref-id" select="text()"/>
+                 <xsl:if test="position()!=1">, </xsl:if>
+                 "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+              </xsl:for-each>
             </xsl:if>
             </li>
         </xsl:for-each> </ul><br/>
@@ -524,8 +537,10 @@
                 Its inclusion in depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends[@on='implements']">
-                    <xsl:variable name="rid"><xsl:value-of select="cc:ref-id"/></xsl:variable>
-                    <li><a href="#{$rid}"><xsl:value-of select="//cc:feature[@id=$rid]/@title"/></a></li>
+                    <xsl:for-each select="cc:ref-id">
+                      <xsl:variable name="ref-id" select="text()"/>
+                      <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                    </xsl:for-each>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
@@ -696,6 +711,7 @@
 <!--                 -->
 <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
      Of course, nobody tells me this so it took a while to debug.   -->
+<!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
     <xsl:template name="handle-features">
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
@@ -887,7 +903,8 @@
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
-           <xsl:if test="count(preceding-sibling::cc:*)=1">
+<!-- BLAHBLAH BLAH -->
+           <xsl:if test="count(preceding-sibling::cc:*)=$oneOrTwo">
              <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">

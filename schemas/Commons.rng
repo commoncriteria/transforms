@@ -582,20 +582,19 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="description"/>
-          <ref name="consistency-rationale-placeholder"/>
+          <ref name="origin-pat"/>
         </element>
       </oneOrMore>
     </element>
   </define>
-
+<!--
   <define name="consistency-rationale-placeholder">
     <empty/>
   </define>
-
   <define name="description-and">
     <ref name="description"/>
   </define>
+-->
 
   <define name="SO">
     <element name="SO">
@@ -608,7 +607,7 @@ Grouping for Security Objective for the Operation Environment entries.
         </data>
       </attribute>
       <optional><ref name="id-attr"/></optional>
-      <ref name="description"/>
+      <ref name="origin-pat"/>
       <oneOrMore>
         <element name="addressed-by">
           <ref name="basic-content-pat"/>
@@ -617,7 +616,6 @@ Grouping for Security Objective for the Operation Environment entries.
            <ref name="basic-content-pat"/>
         </element>
       </oneOrMore>
-      <ref name="consistency-rationale-placeholder"/>
     </element>
   </define>
 
@@ -648,7 +646,8 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="figure"/>
         <ref name="figref"/>
         <ref name="equation"/>
-        <ref name="wsn"/>
+        <element name="choice"><ref name="basic-content-pat"/></element>
+        <!-- <ref name="wsn"/> -->
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -867,7 +866,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             Defines a threat.
           </a:documentation>
           <ref name="threat-name-attr"/>
-          <ref name="description"/>
+          <ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -896,15 +895,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               <param name="pattern">A\.[A-Z_]+</param>
             </data>
           </attribute>
-          <ref name="description"/>
-          <oneOrMore>
-          <ref name="objective-refer"/>
-          </oneOrMore>
+          <ref name="origin-pat"/>
+          <oneOrMore><ref name="objective-refer"/></oneOrMore>
         </element>
       </zeroOrMore>
     </element>
   </define>
 
+  <define name="origin-pat">
+     <a:documentation>Defined so that Module can overwrite it with a choice </a:documentation>
+     <ref name="description"/>
+  </define>
+  
   <define name="OSPs">
     <element name="OSPs">
             <a:documentation>
@@ -919,7 +921,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                   <param name="pattern">P\.[A-Z_]+</param>
                 </data>
                </attribute>
-          <ref name="description"/>
+                <ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -1176,12 +1178,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <ref name="basic-content-pat"/>
         </element>
       </choice>
+
       <element name="description">
         <a:documentation>Description of the term/name.</a:documentation>
         <ref name="basic-content-pat"/>
       </element>
     </element>
   </define>
+
 
   <define name="depends-pat">
     <zeroOrMore>
@@ -1194,11 +1198,19 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
+<<<<<<< HEAD
  <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 	
+=======
+  <define name="implements-or-selection-pat">
+     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
+     <oneOrMore><ref name="ref-id"/></oneOrMore>
+  </define> 
+
+>>>>>>> master
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>

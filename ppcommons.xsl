@@ -366,6 +366,14 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="cc:choice//cc:selectables">
+    <xsl:for-each select="cc:selectable"><xsl:choose>
+	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
+         <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
+         <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
+    </xsl:choose></xsl:for-each>
+  </xsl:template>
+
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
@@ -495,40 +503,45 @@ The following sections list Common Criteria and technology terms used in this do
        namespace to output all in htm namespace. For right now
        this is what we have.
   -->
-  <xsl:template match="htm:*">
-    <xsl:choose>
-      <xsl:when test="cc:depends">
+  <xsl:template match="htm:*[./cc:depends]">
         <div class="dependent"> The following content should be included if:
            <ul> <xsl:for-each select="cc:depends">
               <li>
               <xsl:if test="@on='selection'">
-                <xsl:for-each select="cc:uid">  
-                  <xsl:variable name="uid" select="text()"/>
-                  "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
+                <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
+                <xsl:for-each select="cc:ref-id">  
+                  <xsl:variable name="qtid" select="text()"/>
+                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]"/>"
                 </xsl:for-each>
-                 is selected from 
-                <xsl:variable name="uid" select="cc:uid[1]/text()"/>
-                <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                   is selected from 
+                   <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                </xsl:when>
+                <xsl:otherwise>For 
+                   <xsl:for-each select="cc:ref-id">
+                     <xsl:variable name="tid" select="text()"/>
+                     <xsl:if test="position()!=1">/</xsl:if>
+                     <xsl:apply-templates select="//cc:selectable[./@id=$tid]"/>
+                   </xsl:for-each> TOEs </xsl:otherwise></xsl:choose>
               </xsl:if> 
               <xsl:if test="@on='implements'">
                 the TOE implements 
-                <xsl:variable name="ref-id" select="@ref-id"/>
-                "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                <xsl:for-each select="cc:ref-id">
+                  <xsl:variable name="ref-id" select="text()"/>
+                  <xsl:if test="position()!=1">, </xsl:if>
+                  "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                </xsl:for-each>
               </xsl:if>
+              <!-- This is a module piece... -->
               </li>
           </xsl:for-each> </ul>
           <div class="dependent-content">
             <xsl:call-template name="handle-html"/>
           </div>        
         </div>        
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="handle-html"/>
-      </xsl:otherwise>
-    </xsl:choose>
- </xsl:template>
+  </xsl:template>
 
-  <xsl:template name="handle-html">
+  <xsl:template match="htm:*" name="handle-html">
      <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
@@ -579,7 +592,12 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
        </xsl:if>
     </xsl:for-each>
-
+    <xsl:for-each select="//cc:ref-id">
+	<xsl:variable name="refid" select="text()"/>
+        <xsl:if test="count(//cc:*[@id=$refid])=0">
+         <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
+        </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
 
@@ -700,10 +718,9 @@ function fixAbbrs(){
 
 
   <xsl:template name="head">
-    <xsl:param name="title"/>
       <head>
 	<title><xsl:value-of select="$title"/></title>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' ></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' type="text/javascript"></script>
         <script type="text/x-mathjax-config">
             MathJax.Hub.Config({
             extensions: ["tex2jax.js"],

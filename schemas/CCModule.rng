@@ -59,10 +59,29 @@
 	    </element>
     </define>	
 -->
-
-    <define name="consistency-rationale-placeholder">
-      <ref name="consistency-rationale"/>
+    <define name="origin-pat">
+      <choice>
+        <group>
+          <ref name="description"/>
+          <ref name="consistency-rationale"/>
+        </group>
+        <ref name="from"/>
+      </choice>
     </define>
+    <define name="depends-pat">
+      <zeroOrMore>
+        <element name="depends">
+          <a:documentation>
+            Modifies the parent element such that it depends on something  else.
+          </a:documentation>
+          <choice>
+            <group><ref name="implements-or-selection-pat"/></group>
+            <group><oneOrMore><element name="base-ref"><text/></element></oneOrMore></group>
+          </choice>
+        </element>
+      </zeroOrMore>
+    </define>
+
   </include>
 
 <!--############################## -->
@@ -512,7 +531,11 @@ Referrable section on how the protection profiled item is used.
   </define>
 
 
-
+  <define name="from">
+    <element name="from">
+       <attribute name="base"/>
+    </element>
+  </define>
 
   <define name="base-name">
     <element name="base-name">
