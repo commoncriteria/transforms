@@ -1198,19 +1198,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
-<<<<<<< HEAD
  <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 	
-=======
-  <define name="implements-or-selection-pat">
-     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
-  </define> 
-
->>>>>>> master
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
