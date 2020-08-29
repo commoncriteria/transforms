@@ -93,7 +93,7 @@
       font-style: italic;
     }
     .refinement{
-      text-decoration: underline;
+      font-weight: bold;
     }
     div.eacategory{
       font-style: italic;
