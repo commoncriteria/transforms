@@ -472,7 +472,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:param name="type"/>
     <xsl:choose>
       <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional</span></div></xsl:when>
-      <xsl:when test="$type='M'"><div>X<span class="tooltiptext">Mandatory</span></div></xsl:when>
+      <xsl:when test="$type='M'"><div>M<span class="tooltiptext">Mandatory</span></div></xsl:when>
       <xsl:when test="$type='_'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
       <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
     </xsl:choose>
