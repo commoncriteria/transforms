@@ -131,7 +131,6 @@
 <!-- ############### -->
 <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
-      <xsl:message>blahblah</xsl:message>
       <xsl:value-of select="@name"/>
    </xsl:template>
 <!-- ############### -->
