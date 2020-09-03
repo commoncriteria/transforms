@@ -454,6 +454,32 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   </xsl:template>
 
 <!-- ####################### -->
+ <xsl:template name="RecursiveGrouping">
+
+  <xsl:param name="list"/>
+
+  <!-- Selecting the first author name as group identifier and the group itself-->
+  <xsl:variable name="group-identifier" select="$list[1]/@title"/>
+  <xsl:variable name="group" select="$list[@title=$group-identifier]"/>
+
+  <!-- Do some work for the group -->
+  <tr> <td><xsl:value-of select="$group-identifier"/></td>
+       <td>
+         <xsl:for-each select="//cc:subsection[@title=$group-identifier]/cc:ext-comp-def">
+           <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
+         </xsl:for-each>
+       </td>
+  </tr>
+
+  <!-- If there are other groups left, calls itself -->
+  <xsl:if test="count($list)>count($group)">
+  <xsl:call-template name="RecursiveGrouping">
+    <xsl:with-param name="list" select="$list[not(@title=$group-identifier)]"/>
+  </xsl:call-template>
+  </xsl:if>
+ </xsl:template>
+
+
 <!-- ####################### -->
   <xsl:template name="ext-comp-defs">
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
@@ -464,12 +490,15 @@ including those used in Appendices A through C.
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
 This appendix provides a definition for all of the extended components introduced
 in this PP-Module.
+
+
 These components are identified in the following table:
 
 <table>
   <tr>
-    <th>Functional Class</th><th>Functional Components</th>
-
+    <th>Functional Class</th><th>Functional Components</th> </tr>
+<xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:subsection[cc:ext-comp-def]"/></xsl:call-template>
+<!--
     <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def">
@@ -478,7 +507,7 @@ These components are identified in the following table:
          </td>
       </tr>
     </xsl:for-each>
-  </tr>
+-->
 </table>
 
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
