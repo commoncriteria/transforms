@@ -149,7 +149,7 @@ guidance, and testing.</p>
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
-	<x:value-of select="@name"/> Protection Profile
+	<x:value-of select="@name"/> Evaluation Activities
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
