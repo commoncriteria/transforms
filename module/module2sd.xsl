@@ -119,7 +119,7 @@ guidance, and testing.</p>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
-          (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+          (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
@@ -159,7 +159,7 @@ guidance, and testing.</p>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/> PP is the base.
+	  <x:value-of select="@short"/> PP is the Base-PP.
 	</x:with-param>
       </x:call-template>
       
@@ -201,7 +201,7 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
+	<x:value-of select="//cc:base-pp/@short"/> Base-PP to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
 	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.

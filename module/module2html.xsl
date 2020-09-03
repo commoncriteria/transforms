@@ -167,7 +167,7 @@
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
 	    This PP-Module does not modify any requirements when the
-	    <xsl:value-of select="$base/@short"/> PP is the base.
+	    <xsl:value-of select="$base/@short"/> PP is the Base-PP.
 	  </xsl:with-param>
 	</xsl:call-template>
 
@@ -180,7 +180,7 @@
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not add any requirements when the
-	      <xsl:value-of select="$base/@short"/> PP is the base.
+	      <xsl:value-of select="$base/@short"/> PP is the Base-PP.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</xsl:if>
@@ -560,7 +560,7 @@ These components are identified in the following table:
        <xsl:variable name="base" select="text()"/>
        <xsl:value-of select="//cc:base-pp[@short=$base]/@name|//cc:base-pp[@name=$base]/@name"/>
     </xsl:for-each>
-    is a base:
+    is a Base-PP:
     <div name="base-dependent">
     <xsl:call-template name="handle-html"/>
     </div>
