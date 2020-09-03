@@ -130,7 +130,7 @@ The following section describes the SFRs that must be satisfied by any TOE that 
 These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
       </xsl:when>
       <xsl:otherwise>
-This module does not define any mandatory SFRs that apply regardless of the PP-Configuration.
+This PP-Module does not define any mandatory SFRs that apply regardless of the PP-Configuration.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -145,7 +145,7 @@ Operational Environment that does not meet these assumptions, the TOE may no lon
 provide all of its security functionality.
       </xsl:when>
       <xsl:otherwise>
-This module does not define any assumptions.
+This PP-Module does not define any assumptions.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -159,7 +159,7 @@ The security objectives for the Operational Environment consist of a set of stat
 This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
       <xsl:otherwise>
-This module does not define any objectives for the Operational Environment.
+This PP-Module does not define any objectives for the Operational Environment.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -186,7 +186,7 @@ This module does not define any objectives for the Operational Environment.
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
     As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP.
     This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP.
-    However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
+    However, applied PP-Modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
 
    The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the TOE implementing any function.
    If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs in the ST, but are not required in order to conform to this PP.<br/><br/>
