@@ -885,7 +885,7 @@
 
      		        <!-- Audit table for optional requirements -->
 		        <!-- Not sure this handles the case of zero optional requirements.  -->
-	                <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
+	                <h3 id="strict-opt-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="atref-optional">Audit Table for Strictly Optional Requirements</ctr></h3>
 	                <xsl:call-template name="audit-table-xsl">
 		           <xsl:with-param name="table">optional</xsl:with-param>
 		        </xsl:call-template>
@@ -911,7 +911,7 @@
 
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
+	            <h3 id="obj-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="atref-objective">Audit Table for Objective Requirements</ctr></h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">objective</xsl:with-param>
 		    </xsl:call-template>
@@ -933,7 +933,7 @@
                 </xsl:when>
 		<xsl:otherwise> 
     		     <xsl:if test="($display-audit-app)=1">
-	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
+	            <h3 id="impl-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="atref-impl-dep">Audit Table for Implementation-Dependent Requirements</ctr></h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feat-based</xsl:with-param>
 		    </xsl:call-template>
@@ -969,7 +969,7 @@
      	         <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
 		  <!-- Audit table for optional requirements -->
-	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
+	          <h3 id="strict-opt-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="atref-optional">Audit Table for Optional Requirements</ctr></h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
@@ -1001,7 +1001,7 @@
     		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="atref-sel-based">Audit Table for Selection-Based Requirements</ctr></h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
@@ -1034,7 +1034,7 @@
 	       <xsl:otherwise>
  		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
        		  <!-- Audit table for objective requirements -->
-	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
+	          <h3 id="obj-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="atref-objective">Audit Table for Objective Requirements</ctr></h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
@@ -1065,7 +1065,7 @@
     	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for Implementation-Dependent requirements -->
-	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
+	          <h3 id="impl-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="atref-impl-dep">Audit Table for Implementation-Dependent Requirements</ctr></h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">feat-based</xsl:with-param>
 		  </xsl:call-template>
