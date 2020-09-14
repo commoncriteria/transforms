@@ -245,7 +245,7 @@
                             <xsl:choose>
 				<!-- When audit events are individually selectable -->
                                 <xsl:when test="@type='optional'">
-					<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -286,7 +286,7 @@
                             <xsl:choose>
 				<!-- When audit events are individually selectable -->
                                 <xsl:when test="@type='optional'">
-					<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -343,7 +343,7 @@
 		<xsl:choose>
 		<!-- When audit events are individually selectable -->
 		<xsl:when test="@type='optional'">
-		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
 				</xsl:when>
 			<xsl:otherwise>
 			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -384,7 +384,7 @@
 		<xsl:choose>
 		<!-- When audit events are individually selectable -->
 		<xsl:when test="@type='optional'">
-		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
 				</xsl:when>
 			<xsl:otherwise>
 			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -409,7 +409,7 @@
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
 	    <xsl:when test="@type='optional'">
-		    <b>[selection:</b>
+		    <b>[selection: </b>
 		    <i><xsl:apply-templates select="cc:audit-event-info"/>
 			    , None</i><b>]</b>
 	    </xsl:when>
