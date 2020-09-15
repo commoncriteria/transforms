@@ -258,7 +258,7 @@
                             <xsl:choose>
 				<!-- When audit events are individually selectable -->
                                 <xsl:when test="@type='optional'">
-					<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -299,7 +299,7 @@
                             <xsl:choose>
 				<!-- When audit events are individually selectable -->
                                 <xsl:when test="@type='optional'">
-					<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -356,7 +356,7 @@
 		<xsl:choose>
 		<!-- When audit events are individually selectable -->
 		<xsl:when test="@type='optional'">
-		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
 				</xsl:when>
 			<xsl:otherwise>
 			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -397,7 +397,7 @@
 		<xsl:choose>
 		<!-- When audit events are individually selectable -->
 		<xsl:when test="@type='optional'">
-		<td> <b>[selection:</b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
 				</xsl:when>
 			<xsl:otherwise>
 			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -422,7 +422,7 @@
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
 	    <xsl:when test="@type='optional'">
-		    <b>[selection:</b>
+		    <b>[selection: </b>
 		    <i><xsl:apply-templates select="cc:audit-event-info"/>
 			    , None</i><b>]</b>
 	    </xsl:when>
@@ -738,6 +738,12 @@
 
 <!-- ############### -->
 <!--                 -->
+<!-- Edited to add references for these generated audit tables:
+  - strictly optional = "at-optional"
+  - objective = "at-objective"
+  - sel based = "at-sel-based"
+  - impl-dep = "at-impl-dep"  -->
+
     <xsl:template name="first-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
@@ -757,7 +763,7 @@
 		  	    <xsl:if test="($display-audit-app)=1">
                         	<!-- Audit table for optional requirements -->
 		                <!-- Not sure this handles the case of zero optional requirements.  -->
-	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
+	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-optional">Audit Table for Strictly Optional Requirements</ctr></h3>
 	                    <xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">optional</xsl:with-param>
 		                </xsl:call-template>  
@@ -779,7 +785,7 @@
 		  	    <xsl:if test="($display-audit-app)=1">
 
                         <!-- Audit table for objective requirements -->
-	                    <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
+	                    <h3 id="obj-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-objective">Audit Table for Objective Requirements</ctr></h3>
 		                <xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">objective</xsl:with-param>
 		                </xsl:call-template>
@@ -802,7 +808,7 @@
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
 
-	                    <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
+	                    <h3 id="impl-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-impl-dep">Audit Table for Implementation-Dependent Requirements</ctr></h3>
 		                <xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">feat-based</xsl:with-param>
 		                </xsl:call-template>
@@ -835,7 +841,7 @@
        		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="at-sel-based">Audit Table for Selection-Based Requirements</ctr></h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
