@@ -885,10 +885,11 @@
 
      		        <!-- Audit table for optional requirements -->
 		        <!-- Not sure this handles the case of zero optional requirements.  -->
-	                <h3 id="strict-opt-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="atref-optional">Audit Table for Strictly Optional Requirements</cc:ctr></h3>
+	                <h3 id="strict-opt-reqs" class="indexable" data-level="3">Audit Table for Strictly Optional Requirements</h3>
 	                <xsl:call-template name="audit-table-xsl">
 		           <xsl:with-param name="table">optional</xsl:with-param>
 		        </xsl:call-template>
+			<cc:ctr ctr-type="Table" id="atref-optional">: Auditable Events for Strictly Optional Requirements</cc:ctr>
 		      </xsl:if>
 	    
 	            <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
@@ -911,10 +912,12 @@
 
     		    <!-- Audit table for objective requirements -->
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
-	            <h3 id="obj-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="atref-objective">Audit Table for Objective Requirements</cc:ctr></h3>
+	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">objective</xsl:with-param>
 		    </xsl:call-template>
+   		    <cc:ctr ctr-type="Table" id="atref-objective">: Auditable Events for Objective Requirements</cc:ctr>
+
 		    </xsl:if>
                     <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
                       <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
@@ -933,10 +936,11 @@
                 </xsl:when>
 		<xsl:otherwise> 
     		     <xsl:if test="($display-audit-app)=1">
-	            <h3 id="impl-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="atref-impl-dep">Audit Table for Implementation-Dependent Requirements</cc:ctr></h3>
+	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feat-based</xsl:with-param>
 		    </xsl:call-template>
+    		    <cc:ctr ctr-type="Table" id="atref-impl-dep">: Auditable Events for Implementation-Dependent Requirements</cc:ctr>
 		    </xsl:if>
 		    <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>		 
 		</xsl:otherwise> 
@@ -969,10 +973,11 @@
      	         <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
 		  <!-- Audit table for optional requirements -->
-	          <h3 id="strict-opt-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="atref-optional">Audit Table for Optional Requirements</cc:ctr></h3>
+	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
+		  <cc:ctr ctr-type="Table" id="atref-optional">: Auditable Events for Optional Requirements</cc:ctr>
 	       </xsl:if>
 	          <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
@@ -1001,10 +1006,12 @@
     		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="atref-sel-based">Audit Table for Selection-Based Requirements</cc:ctr></h3>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
+		  <cc:ctr ctr-type="Table" id="atref-sel-based">: Auditable Events for Selection-Based Requirements</cc:ctr>
+
 		  </xsl:if>
 		       <!-- Loop through all components picking out the selection-based. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='sel-based']">
@@ -1034,10 +1041,11 @@
 	       <xsl:otherwise>
  		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
        		  <!-- Audit table for objective requirements -->
-	          <h3 id="obj-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="atref-objective">Audit Table for Objective Requirements</cc:ctr></h3>
+	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
+		  <cc:ctr ctr-type="Table" id="atref-objective">: Auditable Events for Objective Requirements</cc:ctr>
 		  </xsl:if>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
@@ -1065,10 +1073,11 @@
     	          <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for Implementation-Dependent requirements -->
-	          <h3 id="impl-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="atref-impl-dep">Audit Table for Implementation-Dependent Requirements</cc:ctr></h3>
+	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">feat-based</xsl:with-param>
 		  </xsl:call-template>
+			<cc:ctr ctr-type="Table" id="atref-impl-dep">: Auditable Events for Implementation-Dependent Requirements</cc:ctr>
 		  </xsl:if>
 		  <!-- Loop through all components picking out the optional. -->
 	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='feat-based']">
