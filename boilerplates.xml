@@ -47,6 +47,12 @@
      </ul>
    </empty>
 
+   <empty id="a-group">
+      <a-stuff type="D">Developer action</a-stuff>
+      <a-stuff type="C">Content and presentation</a-stuff>
+      <a-stuff type="E">Evaluator action</a-stuff>
+   </empty>
+
    <empty id="DCE">
      <D/><C/><E/>
    </empty>
