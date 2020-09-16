@@ -285,7 +285,7 @@ If it's only an acronym make sure the text content is empty.
       <a:documentation>
         References a counted object.
       </a:documentation>
-      <attribute name="refid">
+      <attribute name="ref-id">
         <a:documentation>
           The unique ID of the object being referenced.
         </a:documentation>
