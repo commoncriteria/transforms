@@ -1172,7 +1172,7 @@
     </span>
   </xsl:template>
 
-  <xsl:template match="ctr-xsl">
+  <xsl:template name="ctr-xsl">
       <xsl:param name="ctr-type"/>
       <xsl:param name="id"/>
       <xsl:variable name="ctrtype"><xsl:choose>
