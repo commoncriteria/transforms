@@ -891,7 +891,6 @@
 				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
 				    <xsl:with-param name="id">atref-optional</xsl:with-param>
 			    </xsl:call-template>: Auditable Events for Strictly Optional Requirements
-				   <!-- <cc:ctr ctr-type="Table" id="atref-optional">: Auditable Events for Strictly Optional Requirements</cc:ctr></xsl:apply-templates>  -->
 			</b>
 	                <xsl:call-template name="audit-table-xsl">
 		           <xsl:with-param name="table">optional</xsl:with-param>
@@ -920,8 +919,11 @@
 		    <!-- Not sure this handles the case of zero optional requirements.  -->
 	            <h3 id="obj-reqs" class="indexable" data-level="3">Audit Table for Objective Requirements</h3>
    		    <br/><b>
-			     <xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-objective">: Auditable Events for Objective Requirements</cc:ctr></xsl:apply-templates>
-				     </b>
+     			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-objective</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Objective Requirements
+		     </b>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">objective</xsl:with-param>
 		    </xsl:call-template>
@@ -946,7 +948,10 @@
     		     <xsl:if test="($display-audit-app)=1">
 	            <h3 id="impl-reqs" class="indexable" data-level="3">Audit Table for Implementation-Dependent Requirements</h3>
     		    <br/><b>
-			     <xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-impl-dep">: Auditable Events for Implementation-Dependent Requirements</cc:ctr></xsl:apply-templates>
+     			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements
 		    </b>
 		    <xsl:call-template name="audit-table-xsl">
 		       <xsl:with-param name="table">feat-based</xsl:with-param>
@@ -984,7 +989,12 @@
 
 		  <!-- Audit table for optional requirements -->
 	          <h3 id="strict-opt-reqs" class="indexable" data-level="2">Audit Table for Optional Requirements</h3>
-		  <br/><b><xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-optional">: Auditable Events for Optional Requirements</cc:ctr></xsl:apply-templates></b>
+		  <br/><b>
+ 			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-optional</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Optional Requirements
+			 </b>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">optional</xsl:with-param>
 		  </xsl:call-template>
@@ -1017,7 +1027,12 @@
 
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2">Audit Table for Selection-Based Requirements</h3>
-		  <br/><b><xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-sel-based">: Auditable Events for Selection-Based Requirements</cc:ctr></xsl:apply-templates></b>
+		  <br/><b>
+			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-sel-based</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Selection-Based Requirements
+			  </b>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
@@ -1052,7 +1067,12 @@
  		  <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
        		  <!-- Audit table for objective requirements -->
 	          <h3 id="obj-reqs" class="indexable" data-level="2">Audit Table for Objective Requirements</h3>
-		  <br/><b><xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-objective">: Auditable Events for Objective Requirements</cc:ctr></xsl:apply-templates></b>
+		  <br/><b>
+  			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-objective</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Objective Requirements
+			  </b>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">objective</xsl:with-param>
 		  </xsl:call-template>
@@ -1084,7 +1104,12 @@
 
        		  <!-- Audit table for Implementation-Dependent requirements -->
 	          <h3 id="impl-reqs" class="indexable" data-level="2">Audit Table for Implementation-Dependent Requirements</h3>
-		  <br/><b><xsl:apply-templates><cc:ctr ctr-type="Table" id="atref-impl-dep">: Auditable Events for Implementation-Dependent Requirements</cc:ctr></xsl:apply-templates></b>
+		  <br/><b>
+  			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements
+			  </b>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">feat-based</xsl:with-param>
 		  </xsl:call-template>
@@ -1175,16 +1200,8 @@
   <xsl:template name="ctr-xsl">
       <xsl:param name="ctr-type"/>
       <xsl:param name="id"/>
-      <xsl:variable name="ctrtype"><xsl:choose>
-        <xsl:when test="$ctr-type"><xsl:value-of select="$ctr-type"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
-    </xsl:variable>
-
-    <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
-      <xsl:apply-templates select="." mode="getPre"/>
-      <span class="counter"><xsl:value-of select="$id"/></span>
+      <xsl:value-of select="$ctr-type"/> <span class="counter"><xsl:value-of select="$id"/></span>
       <xsl:apply-templates/>
-    </span>
   </xsl:template>
 
 	    
