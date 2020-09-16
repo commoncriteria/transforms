@@ -478,12 +478,12 @@
         <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
         <xsl:value-of select="@name"/>
       </h4>
+      <xsl:apply-templates/>
       <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
       <xsl:call-template name="agroup"><xsl:with-param name="type">C</xsl:with-param></xsl:call-template>
       <xsl:call-template name="agroup"><xsl:with-param name="type">E</xsl:with-param></xsl:call-template>
     </div>
   </xsl:template>
-
   <!-- ############### -->
   <!--            -->
   <xsl:template name="agroup">
@@ -494,7 +494,7 @@
            <xsl:when test="$type='C'">Content and presentation</xsl:when>
            <xsl:when test="$type='E'">Evaluator action</xsl:when>
         </xsl:choose> elements: </h4>
-        <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
+        <xsl:apply-templates select="./cc:a-element[@type=$type]" mode="a-element"/>
     </xsl:if>
   </xsl:template>
 
@@ -636,7 +636,9 @@
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:a-element" >
+  <xsl:template match="cc:a-element"/>
+
+  <xsl:template match="cc:a-element" mode="a-element">
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
