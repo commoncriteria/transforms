@@ -1201,8 +1201,9 @@
       <xsl:param name="id"/>
     <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
     <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
-      Table <span class="counter"><xsl:value-of select="$id"/></span>
-      <xsl:apply-templates/>
+<!--      <xsl:apply-templates select="." mode="getPre"/>  -->
+      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
+      <xsl:apply-templates/>  
     </span>
   </xsl:template>
 
