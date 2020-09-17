@@ -1176,8 +1176,7 @@
       <!-- should only run through once, but this is how we're changing contexts -->
  <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
       <xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/>
-      <span class="counter"><xsl:value-of select="$ref-id"/></span>
-      <xsl:apply-templates/>
+      <xsl:apply-templates/><span class="counter"><xsl:value-of select="$ref-id"/></span>
     </a>
   </xsl:template>
 
@@ -1202,8 +1201,7 @@
       <xsl:param name="id"/>
     <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
     <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
-      <xsl:apply-templates select="." mode="getPre"/>
-      <span class="counter"><xsl:value-of select="$id"/></span>
+      Table <span class="counter"><xsl:value-of select="$id"/></span>
       <xsl:apply-templates/>
     </span>
   </xsl:template>
