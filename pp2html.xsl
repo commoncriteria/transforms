@@ -1177,7 +1177,7 @@
  <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
       <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
       <xsl:choose>
-	      <xsl:when test="$hasPre">
+	      <xsl:when test="not($hasPre='')">
 		      <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
 	      </xsl:when>
 	      <xsl:otherwise>
