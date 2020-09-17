@@ -1175,8 +1175,15 @@
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
  <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
-      <xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/>
-      <xsl:apply-templates/><span class="counter"><xsl:value-of select="$ref-id"/></span>
+      <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
+      <xsl:choose>
+	      <xsl:when test="$hasPre">
+		      <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	      </xsl:when>
+	      <xsl:otherwise>
+		      <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	      </xsl:otherwise>
+      </xsl:choose>
     </a>
   </xsl:template>
 
