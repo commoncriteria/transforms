@@ -982,7 +982,7 @@
     <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
 <!--      <xsl:apply-templates select="." mode="getPre"/>  -->
       <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
-      <xsl:apply-templates/>  
+<!--      <xsl:apply-templates/>  -->
     </span>
   </xsl:template>
 	
