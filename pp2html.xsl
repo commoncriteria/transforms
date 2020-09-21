@@ -763,8 +763,15 @@
 		  	    <xsl:if test="($display-audit-app)=1">
                         	<!-- Audit table for optional requirements -->
 		                <!-- Not sure this handles the case of zero optional requirements.  -->
-	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-optional">Audit Table for Strictly Optional Requirements</ctr></h3>
-	                    <xsl:call-template name="audit-table-xsl">
+	                    <h3 id="strict-opt-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-optional">Audit Table for Strictly Optional Requirements</cc:ctr></h3>
+			<br/><b>
+			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-optional</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Strictly Optional Requirements
+			</b>
+	                    
+				<xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">optional</xsl:with-param>
 		                </xsl:call-template>  
 		        </xsl:if>
@@ -785,7 +792,14 @@
 		  	    <xsl:if test="($display-audit-app)=1">
 
                         <!-- Audit table for objective requirements -->
-	                    <h3 id="obj-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-objective">Audit Table for Objective Requirements</ctr></h3>
+	                    <h3 id="obj-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-objective">Audit Table for Objective Requirements</cc:ctr></h3>
+   		    <br/><b>
+     			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-objective</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Objective Requirements
+		     </b>
+				    
 		                <xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">objective</xsl:with-param>
 		                </xsl:call-template>
@@ -808,7 +822,15 @@
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
 
-	                    <h3 id="impl-reqs" class="indexable" data-level="3"><ctr ctr-type="Table" id="at-impl-dep">Audit Table for Implementation-Dependent Requirements</ctr></h3>
+	                    <h3 id="impl-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-impl-dep">Audit Table for Implementation-Dependent Requirements</cc:ctr></h3>
+				    
+    		    <br/><b>
+     			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements
+		    </b>
+				    
 		                <xsl:call-template name="audit-table-xsl">
 		                    <xsl:with-param name="table">feat-based</xsl:with-param>
 		                </xsl:call-template>
@@ -841,7 +863,13 @@
        		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
 
        		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><ctr ctr-type="Table" id="at-sel-based">Audit Table for Selection-Based Requirements</ctr></h3>
+		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="at-sel-based">Audit Table for Selection-Based Requirements</cc:ctr></h3>
+	     		  <br/><b>
+			    <xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-sel-based</xsl:with-param>
+			    </xsl:call-template>: Auditable Events for Selection-Based Requirements
+			  </b>
 		  <xsl:call-template name="audit-table-xsl">
 		     <xsl:with-param name="table">sel-based</xsl:with-param>
 		  </xsl:call-template>
@@ -936,9 +964,15 @@
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
  <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
-      <xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/>
-      <span class="counter"><xsl:value-of select="$ref-id"/></span>
-      <xsl:apply-templates/>
+      <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
+      <xsl:choose>
+	      <xsl:when test="not($hasPre='')">
+		      <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	      </xsl:when>
+	      <xsl:otherwise>
+		      <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	      </xsl:otherwise>
+      </xsl:choose>
     </a>
   </xsl:template>
 
@@ -958,6 +992,17 @@
     </span>
   </xsl:template>
 
+  <xsl:template name="ctr-xsl">
+      <xsl:param name="ctr-type"/>
+      <xsl:param name="id"/>
+    <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
+    <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
+<!--      <xsl:apply-templates select="." mode="getPre"/>  -->
+      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
+<!--      <xsl:apply-templates/>  -->
+    </span>
+  </xsl:template>
+	
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:figref">
