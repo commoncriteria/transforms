@@ -1205,19 +1205,49 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
-<<<<<<< HEAD
- <define name="implements-or-selection-pat">
-     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
-  </define> 
-	
-=======
+  <define name="external-document-pat">
+     <attribute name="product">
+	<a:documentation>
+	  Name of the product the base PP applies to.
+	</a:documentation>
+      </attribute>
+      <attribute name="version">
+      <a:documentation>
+       Version number of base PP
+       </a:documentation>
+       </attribute>
+      <attribute name="name">
+	<a:documentation>
+	  Name of the base PP.
+	</a:documentation>
+      </attribute>
+
+      <attribute name="short">
+	<a:documentation>
+	  Short name of the base PP.
+	</a:documentation>
+      </attribute>
+
+      <attribute name="url">
+	<a:documentation>
+	  URL of the NIAP page for the base PP.
+	</a:documentation>
+      </attribute>
+
+      <optional>
+        <attribute name="xmlurl">
+          <a:documentation>
+URL of the XML defining the base PP (if it exists).
+Ideally it should be NIAP or CC, but for right now it's probably on github.
+          </a:documentation>
+        </attribute>
+      </optional>
+ </define> 
   <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 
->>>>>>> master
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
