@@ -978,6 +978,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             activate this component.
           </a:documentation>
         </attribute>
+	<optional>
+          <attribute name="ext-src">
+          <a:documentation>
+            Identifier for the external package/module/PP in which the selectable and req is found. Default is the current PP.
+	    This must be a package or PP or module that is declared in the Package Inclusion Section.
+          </a:documentation>
+          </attribute>
+        </optional>
       </element>
   </define>
 
@@ -1205,19 +1213,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
-<<<<<<< HEAD
- <define name="implements-or-selection-pat">
-     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
-  </define> 
-	
-=======
   <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
+	  <optional><attribute name="ext-src"/></optional>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 
->>>>>>> master
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
