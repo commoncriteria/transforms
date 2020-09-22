@@ -753,8 +753,7 @@
 
 		    
                 <xsl:call-template name="opt_appendix"/>
-<!--                <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2>  -->
-                <cc:section id="appendix-optional" title="Strictly Optional Requirements">
+                <h2 id="strict-opt-reqs" class="indexable" data-level="2">Strictly Optional Requirements</h2> 
                 
                 <xsl:choose>
 		    <xsl:when test="count(//cc:f-component[@status='optional'])=0">
@@ -782,11 +781,8 @@
                         </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
-	    </cc:section>
 			
- <!--               <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2>   -->
-                <cc:section id="appendix-objective" title="Objective Requirements">
-
+               <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2> 
                 <xsl:choose>
 		            <xsl:when test="count(//cc:f-component[@status='objective'])=0">
                         <p>This PP does not define any objective requirements.</p>
@@ -813,7 +809,6 @@
                         </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
-	    </cc:section>       
 		    
                 <!-- Implementation-dependent requirements -->
                 <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
