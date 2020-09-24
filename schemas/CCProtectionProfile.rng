@@ -79,6 +79,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
+      <ref name="packages"/>
       <ref name="PreferencesEtc"/>
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
@@ -228,7 +229,18 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define>
 
-  
+  <define name="packages">
+    <optional>
+       <element name="packages">
+          <zeroOrMore>
+              <element name="package">
+                 <ref name="external-document-pat"/>
+              </element>
+          </zeroOrMore>
+       </element>
+    </optional>
+  </define> 
+
   <define name="usecases-section">
     <element name="section">
       <a:documentation>
