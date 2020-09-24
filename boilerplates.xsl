@@ -37,7 +37,7 @@ provides evidence that these controls are present and have been evaluated.
 As indicated in the introduction to this <xsl:call-template name="doctype-short"/>,
 the baseline requirements
 (those that must be performed by the TOE or its underlying platform)
-are contained in the body of this PP.
+are contained in the body of this <xsl:call-template name="doctype-short"/>.
 There are additional requirements based on selections in the body of the <xsl:call-template name="doctype-short"/>:
 if certain selections are made, then additional requirements below must be included.
   </xsl:template>
