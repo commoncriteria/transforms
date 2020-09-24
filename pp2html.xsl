@@ -757,7 +757,7 @@
                 
                 <xsl:choose>
 		    <xsl:when test="count(//cc:f-component[@status='optional'])=0">
-                        <p>This PP does not define any optional requirements.</p>
+                        <p>This <xsl:call-template name="doctype-short"/> does not define any optional requirements.</p>
 	            </xsl:when>
 	            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -785,7 +785,7 @@
                <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2> 
                 <xsl:choose>
 		            <xsl:when test="count(//cc:f-component[@status='objective'])=0">
-                        <p>This PP does not define any objective requirements.</p>
+                        <p>This <xsl:call-template name="doctype-short"/> does not define any objective requirements.</p>
 	                </xsl:when>
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -816,7 +816,7 @@
               	<xsl:choose>
         	   <!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
  	        	<xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
-			<p>This PP does not define any implementation-dependent requirements.</p>
+			<p>This <xsl:call-template name="doctype-short"/> does not define any implementation-dependent requirements.</p>
                     </xsl:when>
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -856,7 +856,7 @@
             <xsl:call-template name="selection-based-text"/>
 	    <xsl:choose>
 	       <xsl:when test="count(//cc:f-component[@status='sel-based'])=0">
-                  <p>This PP does not define any selection-based requirements.</p>
+                  <p>This <xsl:call-template name="doctype-short"/> does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
        		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
