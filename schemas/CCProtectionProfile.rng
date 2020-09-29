@@ -105,6 +105,8 @@ Tags that this section should be indented(left) 2em.
   <optional>
 	  <ref name="pp-preferences-pat"/>
   </optional>
+  <zeroOrMore>
+	  <ref name="include-pkg-pat"/>
 </define>
   
   <define name="IntroductionChapter">
@@ -549,6 +551,48 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define> 
 
+  <define name="include-pkg-pat">
+	  <element name="include-pkg">
+	  	<a:documentation>
+		Declarations of packages that are or may be included in the PP. There are three kinds:
+		  Mandatory: This is a package that is always included with the PP.
+		  	<include-pkg name="pkg-name" type="mandatory"/>  
+		  Selection-Based: This is a package that is included dependent on one or more selections. 
+		  <include-pkg name="pkg-name" type="sel-based">
+			  <selection-depends req="dep-req" ids="selection-ids"/>
+		  </include-pkg>
+		  Feature-Based: Package is included if a feature is present in the TOE.
+		  <include-pkg name="pkg-name" type="impl-dep">
+			  This is the text displayed for the ST author to indicate that the feature exists.
+		  </include-pkg>
+	  	</a:documentation>
+	  <attribute name="name"/>
+	  <choice>
+		<group>
+ 			<attribute name="type">
+				<value>mandatory</value>
+			</attribute>
+		</group>
+		<group>
+          		<attribute name="type">
+            			<value>sel-based</value>
+		        </attribute>
+          		<oneOrMore>
+            			<ref name="selection-depends"/>
+          		</oneOrMore>
+        	</group>
+		<group>
+          		<attribute name="type">
+            			<value>impl-dep</value>
+		        </attribute>
+          		<oneOrMore>
+            			<ref name="basic-content-pat"/>
+          		</oneOrMore>
+        	</group>
+	  </choice>
+	  </element>
+  </define>
+  
   
   <define name="PPReference">
       <element name="PPReference">
