@@ -598,7 +598,13 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
         </xsl:if>
     </xsl:for-each>
-  </xsl:template>
+    <xsl:for-each select="//cc:*[@ref-id]">
+	<xsl:variable name="refid" select="@ref-id"/>
+        <xsl:if test="count(//cc:*[@id=$refid])=0">
+         <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
+        </xsl:if>
+    </xsl:for-each>
+   </xsl:template>
 
 
   <!--

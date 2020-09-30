@@ -635,7 +635,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
-        <ref name="appref"/>
+        <ref name="appref"/> 
         <ref name="abbr-el"/>
         <ref name="audit-table-pat"/> 
 <!--        <ref name="audit-events"/>  -->
@@ -1038,6 +1038,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Must match requirements in CC Part 2 (unless it is an _ext requirement).
       </a:documentation>
       <oneOrMore><choice>
+      <!--  <ref name="selectables"/>
+        <ref name="assignable"/> -->
         <ref name="basic-content-pat"/>
         <ref name="management-function-set"/>
       </choice></oneOrMore>
@@ -1198,19 +1200,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
-<<<<<<< HEAD
  <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 	
-=======
-  <define name="implements-or-selection-pat">
-     <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
-  </define> 
-
->>>>>>> master
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
