@@ -577,7 +577,14 @@ These components are identified in the following table:
          <xsl:for-each select="cc:f-element">
             <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
             <h3> <xsl:value-of select="translate($reqid, $lower,$upper)"/> </h3><br/>
-                 <xsl:apply-templates select="cc:title"/>
+                 <xsl:choose>
+                    <xsl:when test="cc:ext-comp-def-title">
+                       <xsl:apply-templates select="cc:ext-comp-def-title/cc:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                       <xsl:apply-templates select="cc:title"/>
+                    </xsl:otherwise>
+                </xsl:choose>
          </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
@@ -627,7 +634,7 @@ These components are identified in the following table:
 
 
   <!-- Hide this when we stumble on it -->
-  <xsl:template match="cc:ext-comp-def"/>
+  <xsl:template match="cc:ext-comp-def|cc:ext-comp-def"/>
   <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
   <xsl:template match="cc:ext-comp-extra-pat"/>
   <xsl:template match="cc:consistency-rationale"/>
