@@ -110,7 +110,14 @@ DIFF_TAGS?=
 # developed 'release' version against
 DIFF_DIR ?= diff-archive
 
+#- The command to diff HTML files
 DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
+
+#- Points to the User.make need for diffing so that it can be
+#- copied to those projects when they are automatically downloaded
+#- for diffing 
+DIFF_USER_MAKE?= 
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
@@ -192,14 +199,15 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 
 #- Build the Diff file
 diff: $(PP_RELEASE_HTML)
-	[ ! -d "$(DIFF_DIR)" ] ||\
+	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
 		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
 	   done;\
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
 	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
-	   done
+	   done;\
+	fi
 	for aa in $(DIFF_TAGS); do\
 		orig=$$(pwd);\
 		cd $(TMP);\
@@ -207,6 +215,7 @@ diff: $(PP_RELEASE_HTML)
 		mkdir $$aa;\
 		cd $$aa;\
 		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+                cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
 		cd $${orig##*/};\
 		TRANS=transforms make;\
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
@@ -217,9 +226,10 @@ diff: $(PP_RELEASE_HTML)
 		rm -rf $(TMP)/$$aa;\
 		kill %1;\
 	done
-	[ -d "$(OUT)/js"  ] || cp -r $(DAISY_DIR)/js $(OUT)
-	[ -d "$(OUT)/css" ] || cp -r $(DAISY_DIR)/css $(OUT)	
-
+	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
