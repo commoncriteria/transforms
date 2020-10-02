@@ -138,7 +138,7 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
 
   <xsl:template match="/cc:Module//cc:*[@title='Assumptions']" mode="hook">
     <xsl:choose>
-      <xsl:when test="cc:assumptions">
+      <xsl:when test=".//cc:assumption">
 These assumptions are made on the Operational Environment in order to be able to ensure that the
 security functionality specified in the PP-Module can be provided by the TOE. If the TOE is placed in an
 Operational Environment that does not meet these assumptions, the TOE may no longer be able to
