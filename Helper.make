@@ -202,7 +202,7 @@ diff-yesterday: $(PP_RELEASE_HTML)
 	git submodule update --recursive &&\
 	mv $(PP_RELEASE_HTML) $(PP_RELEASE_HTML)_ORIG &&\
         make release &&\
-	$(call DIFF_EXE, $(PP_RELEASE_HTML)_ORIG, $(PP_RELEASE_HTML), $(OUT)/diff-yesterday.html); \
+	$(call DIFF_EXE,$(PP_RELEASE_HTML)_ORIG,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html); \
 	git checkout master;\
 	git submodule update --recursive;\
 	git stash pop;\
