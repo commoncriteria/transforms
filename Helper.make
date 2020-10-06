@@ -116,7 +116,7 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- Points to the User.make need for diffing so that it can be
 #- copied to those projects when they are automatically downloaded
 #- for diffing 
-DIFF_USER_MAKE= 
+DIFF_USER_MAKE ?= 
 
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
@@ -213,7 +213,7 @@ diff: $(PP_RELEASE_HTML)
 		rm -rf $$aa;\
 		mkdir $$aa;\
 		cd $$aa;\
-		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+		git clone --depth 1 --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
                 cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
 		cd $${orig##*/};\
 		TRANS=transforms make;\
@@ -298,3 +298,4 @@ meta-info:
 	echo -en '\nBUILD_TIME=' >> $(META_TXT)
 	date +"%Y-%m-%d %H:%M"   >> $(META_TXT)
 
+#git log --max-count=1 --before=yesterday --pretty='format:%H'
