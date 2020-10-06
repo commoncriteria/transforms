@@ -206,8 +206,7 @@ diff-yesterday: $(PP_RELEASE_HTML)
 	git checkout master;\
 	git submodule update --recursive;\
 	git stash pop;\
-	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);\
-	rmdir _master_        
+	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);
 
 
 #- Build the Diff file
