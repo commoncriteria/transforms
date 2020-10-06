@@ -978,6 +978,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             activate this component.
           </a:documentation>
         </attribute>
+	<optional>
+          <attribute name="ext-src">
+          <a:documentation>
+            Identifier for the external package/module/PP in which the selectable and req is found. Default is the current PP.
+	    This must be a package or PP or module that is declared in the Package Inclusion Section.
+          </a:documentation>
+          </attribute>
+        </optional>
       </element>
   </define>
 
@@ -1205,11 +1213,50 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
- <define name="implements-or-selection-pat">
+  <define name="external-document-pat">
+     <attribute name="product">
+	<a:documentation>
+	  Name of the product the base PP applies to.
+	</a:documentation>
+      </attribute>
+      <attribute name="version">
+      <a:documentation>
+       Version number of base PP
+       </a:documentation>
+       </attribute>
+      <attribute name="name">
+	<a:documentation>
+	  Name of the base PP.
+	</a:documentation>
+      </attribute>
+
+      <attribute name="short">
+	<a:documentation>
+	  Short name of the base PP.
+	</a:documentation>
+      </attribute>
+
+      <attribute name="url">
+	<a:documentation>
+	  URL of the NIAP page for the base PP.
+	</a:documentation>
+      </attribute>
+
+      <optional>
+        <attribute name="xmlurl">
+          <a:documentation>
+URL of the XML defining the base PP (if it exists).
+Ideally it should be NIAP or CC, but for right now it's probably on github.
+          </a:documentation>
+        </attribute>
+      </optional>
+ </define> 
+  <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
+	  <optional><attribute name="ext-src"/></optional>
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
-	
+
   <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
