@@ -119,7 +119,7 @@ guidance, and testing.</p>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
-          (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+          (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
@@ -149,7 +149,7 @@ guidance, and testing.</p>
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
-	<x:value-of select="@name"/> Protection Profile
+	<x:value-of select="@name"/> Evaluation Activities
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
@@ -159,7 +159,7 @@ guidance, and testing.</p>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/> PP is the base.
+	  <x:value-of select="@short"/> PP is the Base-PP.
 	</x:with-param>
       </x:call-template>
       
@@ -201,7 +201,7 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
+	<x:value-of select="//cc:base-pp/@short"/> Base-PP to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
 	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
@@ -243,22 +243,19 @@ guidance, and testing.</p>
     to describe the security functionality of 
       <x:value-of select="/cc:Module/@name"/> products in terms of 
     [CC] and to define functional and assurance requirements for them.
-    The PP-Module is intended for use with the
-    <x:choose>
-      <x:when test="count(//cc:base-pp)=1">
-	<a href="{//cc:base-pp/@url}"><x:value-of select="//cc:base-pp/@name"/> Protection Profile</a>
-      </x:when>
-      <x:otherwise>
-	following Base-PPs:
-	<ul>
+    The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
+        <ul>
 	  <x:for-each select="//cc:base-pp">
 	    <li><a href="{@url}"><x:value-of select="@name"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
-      </x:otherwise>
-    </x:choose>.</p>
-    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/>.
-    Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
+    </p>
+    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
+    <ul><li><x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
+    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activites to the Base-PP(s) it modifies.
+   </p>
+    <p> 
+Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
     Functional Requirements (SFR), and may identify particular requirements for the content of Security
     Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly
