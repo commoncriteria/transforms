@@ -93,6 +93,8 @@ class State:
 
     def build_termtable(self):
         for term in self.getElementsByClass('term'):
+            if 'data-plural' in term.attrib:
+                print("I have a plural:" + term.attrib["data-plural"])            
             self.add_to_regex(term.text)
             self.abbrs.append(term.text)
 
