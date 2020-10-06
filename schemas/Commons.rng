@@ -708,7 +708,6 @@ Grouping for Security Objective for the Operation Environment entries.
       <a:documentation>
         Defines a functional requirement.
       </a:documentation>
-      <optional>
         <attribute name="id">
           <a:documentation>
             A non-viewed unique ID. It has nothing to do with the ID that's assigned. It can be 
@@ -716,7 +715,6 @@ Grouping for Security Objective for the Operation Environment entries.
           </a:documentation>
           <ref name="el-id-spat"/>
         </attribute>
-      </optional>
       <ref name="f-element-title"/>
       <optional><ref name="note"/></optional>
       <optional><ref name="aactivity"/></optional>
