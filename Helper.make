@@ -200,14 +200,13 @@ diff-yesterday: $(PP_RELEASE_HTML)
 	git stash &&\
 	git checkout $(git log --before today -n 1 --pretty="format:%P") &&\
 	git submodule update --recursive &&\
-	mkdir _master_ && mv output _master_ &&\
-	make release &&\
-	$(call DIFF_EXE, _master_/$(PP_RELEASE_HTML), $(PP_RELEASE_HTML), _master_$($(OUT)/diff-yesterday.html)); \
+	mv $(PP_RELEASE_HTML) $(PP_RELEASE_HTML)_ORIG &&\
+        make release &&\
+	$(call DIFF_EXE, $(PP_RELEASE_HTML)_ORIG, $(PP_RELEASE_HTML), $(OUT)/diff-yesterday.html); \
 	git checkout master;\
 	git submodule update --recursive;\
 	git stash pop;\
-	rm -rf $(OUT); \
-	mv _master_/$(OUT) $(OUT);\
+	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);\
 	rmdir _master_        
 
 
