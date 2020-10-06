@@ -197,11 +197,15 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
 diff-yesterday: $(PP_RELEASE_HTML)
+        git stash &&\
         git checkout $(git log --before today -n 1 --pretty="format:%P") &&\
         git submodule update --recursive &&\
         mkdir _master_ && mv output _master_ &&\
         make release &&\
         $(call DIFF_EXE, _master_/$(PP_RELEASE_HTML), $(PP_RELEASE_HTML), _master_$($(OUT)/diff-yesterday.html)); \
+        git checkout master;\
+	git submodule update --recursive;\
+        git stash pop;\
         rm -rf $(OUT); \
         mv _master_/$(OUT) $(OUT);\
         rmdir _master_        
