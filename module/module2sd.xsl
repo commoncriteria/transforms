@@ -390,7 +390,9 @@ guidance, and testing.</p>
       </h4>
       <x:choose>
          <x:when test=".//cc:aactivity/cc:no-tests">
-           <x:apply-templates select=".//cc:aactivity"/>
+<!--           <x:apply-templates select=".//cc:aactivity"/>   This one gets eaten and nothing happens. -->
+<!-- In Module SDs, when there are no tests, we want to display the text in the no-tests tag -->
+		 <i><x:value-of select=".//cc:aactivity/cc:no-tests"/></i>	 	
          </x:when>
          <x:otherwise>
            <x:if test=".//cc:TSS">
