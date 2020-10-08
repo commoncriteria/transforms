@@ -210,10 +210,10 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:apply-templates mode="short" select="//cc:base-pp/@short"/> base to which it must claim conformance.
+	<x:apply-templates mode="short" select="//cc:base-pp"/> base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:apply-templates mode="short" select="//cc:base-pp/@short"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:apply-templates mode="short" select="//cc:base-pp"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP

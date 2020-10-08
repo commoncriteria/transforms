@@ -1238,7 +1238,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	  Name of the base PP.
 	</a:documentation>
       </attribute>
-
+      <optional><attribute name="plural">
+         <a:documentation>
+	  Plural name of the product class. By default the framework just adds an 's' to the short.
+	</a:documentation>
+      </attribute></optional> 
       <attribute name="short">
 	<a:documentation>
 	  Short name of the base PP.

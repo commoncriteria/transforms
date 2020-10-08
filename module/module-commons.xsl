@@ -13,7 +13,11 @@
     </xsl:choose>PP</xsl:template>
 
   <xsl:template match="cc:base-pp" mode="expanded">
-    <xsl:if test="cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
-    <xsl:value-of select="@name"/> Protection Profile
+    <xsl:if test="cc:cPP">collaborative<xsl:text> </xsl:text></xsl:if>
+    Protection Profile for<xsl:text> </xsl:text>
+    <xsl:choose>
+       <xsl:when test="@plural"><xsl:value-of select="@plural"/></xsl:when>
+       <xsl:otherwise><xsl:value-of select="@name"/>s</xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
