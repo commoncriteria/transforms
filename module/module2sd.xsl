@@ -115,7 +115,7 @@ guidance, and testing.</p>
   </x:template>
 
   <x:template name="handle-apply-to-all">
-    <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h3>
+    <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
