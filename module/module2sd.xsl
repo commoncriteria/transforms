@@ -154,7 +154,7 @@ guidance, and testing.</p>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
-      <x:call-template name="sub-sfrs">
+     <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
@@ -173,6 +173,14 @@ guidance, and testing.</p>
     </x:for-each>
   </x:template>
   
+  <x:template name="bpp-type-short">
+	  <x:param name="bppt"/>
+	  <x:choose>
+		  <x:when test="$bppt='cPP'">cPP</x:when>
+		  <x:otherwise> PP</x:when>
+	  </x:choose>
+	</x:template>
+	
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
