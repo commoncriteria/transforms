@@ -332,7 +332,8 @@ Modification definition. This text goes in the
       <a:documentation>
 	Holds information specifict to a base PP.
       </a:documentation>
-    <ref name="external-document-pat"/> 
+    <ref name="external-document-pat"/>
+	<optional><element name="cPP"><empty/></element></optional>
     <optional>
          <element name="sec-func-req-dir">
            <a:documentation>
@@ -401,8 +402,14 @@ The ID of the aspect that is being overwritten by the content of this element.
           <ref name="basic-content-pat"/>
         </element>
       </zeroOrMore>
-
-
+ 	<optional>
+		<attribute name="type">
+			<choice>
+				<value>PP</value>
+				<value>cPP</value>
+			</choice>
+		</attribute>
+	    </optional>
     </element>
   </define>
 
