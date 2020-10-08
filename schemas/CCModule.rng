@@ -378,8 +378,14 @@ The ID of the aspect that is being overwritten by the content of this element.
           <ref name="basic-content-pat"/>
         </element>
       </zeroOrMore>
-
-
+ 	<optional>
+		<attribute name="type">
+			<choice>
+				<value>PP</value>
+				<value>cPP</value>
+			</choice>
+		</attribute>
+	    </optional>
     </element>
   </define>
 
