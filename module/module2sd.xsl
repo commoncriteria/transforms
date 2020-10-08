@@ -177,7 +177,7 @@ guidance, and testing.</p>
 	  <x:param name="bppt"/>
 	  <x:choose>
 		  <x:when test="$bppt='cPP'">cPP</x:when>
-		  <x:otherwise> PP</x:when>
+		  <x:otherwise> PP</x:otherwise>
 	  </x:choose>
 	</x:template>
 	
