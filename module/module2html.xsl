@@ -563,7 +563,7 @@ These components are identified in the following table:
        <xsl:variable name="base" select="text()"/>
        <xsl:value-of select="//cc:base-pp[@short=$base]/@name|//cc:base-pp[@name=$base]/@name"/>
     </xsl:for-each>
-    is a base:
+    is a Base-PP:
     <div name="base-dependent">
     <xsl:call-template name="handle-html"/>
     </div>

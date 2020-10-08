@@ -1266,7 +1266,7 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
      <oneOrMore><ref name="ref-id"/></oneOrMore>
   </define> 
 
-  <define name="ref-id">
+ <define name="ref-id">
     <element name="ref-id"><text/></element>
   </define>
 
