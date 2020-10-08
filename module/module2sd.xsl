@@ -18,6 +18,7 @@ XSL for Protection Profile Modules
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <x:include href="../ppcommons.xsl"/>
+  <x:include href="module-commons.xsl"/>
 
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
@@ -149,17 +150,17 @@ guidance, and testing.</p>
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
-	<x:value-of select="@name"/> Protection Profile
+	<x:apply-templates mode="expanded" select="."/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
-      to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
+      to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/> PP is the base.
+	  <x:apply-templates select="." mode="short"/> is the base.
 	</x:with-param>
       </x:call-template>
       
@@ -201,10 +202,10 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
+	<x:apply-templates mode="short" select="//cc:base-pp/@short"/> base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:apply-templates mode="short" select="//cc:base-pp/@short"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP

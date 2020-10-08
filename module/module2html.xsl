@@ -7,7 +7,7 @@
   version="1.0">
 
   <xsl:import href="../pp2html.xsl"/>
-
+  <xsl:include href="module-commons.xsl"/>
   <xsl:output method="xml" encoding="UTF-8"/>
 
   <!-- Directory where the base PPs currently reside (with the names 0.xml, 1.xml,...)-->
@@ -72,7 +72,7 @@
       <xsl:variable name="base" select="."/>
 
       <h2 id="conrat-{@short}" class="indexable" data-level="2">
-	<xsl:value-of select="@name"/> Protection Profile
+	<xsl:apply-templates select="." mode="expanded"/>
       </h2>
 
       <!-- #################### -->
@@ -86,7 +86,7 @@
 	Consistency of Security Problem Definition
       </h3>
       The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
-      <xsl:value-of select="@short"/> PP as follows:
+      <xsl:apply-templates mode="short" select="."/> as follows:
       <xsl:apply-templates select="./cc:con-sec-prob"/>
       <table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]">
@@ -104,7 +104,7 @@
       <p>
       <xsl:apply-templates select="./cc:con-obj"/>
       <xsl:if test="//cc:SO[cc:description]">
-	  The objectives for the TOEs are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+	  The objectives for the TOEs are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
       <table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SO[cc:description]">
 	<xsl:call-template name="consistency-row">
@@ -119,7 +119,7 @@
       <p>
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
-	  The objectives for the TOE's Operational Environment are consistent with the <xsl:value-of select="$base/@short"/> PP based on the following rationale:
+	  The objectives for the TOE's Operational Environment are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
       <table><tr><th>PP-Module Operational Environment Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
@@ -136,14 +136,14 @@
       </h3>
       <xsl:apply-templates select="./cc:con-req"/>
       This PP-Module identifies several SFRs from the
-      <xsl:value-of select="$base/@short"/> PP that are needed to support
+      <xsl:apply-templates mode="short" select="."/> that are needed to support
       <xsl:value-of select="/cc:Module/@target-products"/> functionality.
       This is considered to be consistent because the functionality provided by the
-      <xsl:value-of select="$base/@short"/>  is being used for its intended purpose.
+      <xsl:apply-templates mode="short" select="."/>is being used for its intended purpose.
       <xsl:choose>
         <xsl:when test='$base//cc:modified-sfrs//cc:f-element'>
           The PP-Module also identifies a number of modified SFRs from the
-          <xsl:value-of select="$base/@short"/> PP
+          <xsl:apply-templates mode="short" select="."/>
           <xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
             as well as new SFRs 
           </xsl:if>
@@ -158,7 +158,7 @@
       </xsl:choose>
           The rationale for why this does not conflict with the claims
       defined by the
-      <xsl:value-of select="$base/@short"/> PP are as follows:
+      <xsl:apply-templates mode="short" select="."/> are as follows:
       <table>
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
 	<tr> <th colspan="2"> Modified SFRs</th></tr>
@@ -167,7 +167,7 @@
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
 	    This PP-Module does not modify any requirements when the
-	    <xsl:value-of select="$base/@short"/> PP is the base.
+	    <xsl:apply-templates mode="short" select="."/> is the base.
 	  </xsl:with-param>
 	</xsl:call-template>
 
@@ -180,7 +180,7 @@
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not add any requirements when the
-	      <xsl:value-of select="$base/@short"/> PP is the base.
+	      <xsl:apply-templates mode="short" select="."/> is the base.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</xsl:if>
@@ -269,18 +269,21 @@
     </xsl:choose>
   </xsl:template>
 
+
 <!-- ############################################ -->
 <!-- #            Base-pp Template              # -->
 <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
-      <xsl:value-of select="@short"/>
-      PP Security Functional Requirements Direction
+      <xsl:apply-templates mode="short" select="."/>
+       Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
-      In a PP-Configuration that includes  <xsl:value-of select="@short"/> PP, the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/> as a whole and evaluated against the <xsl:value-of select="@short"/> PP.
-The following sections describe any modifications that the ST author must make to the SFRs
-defined in the <xsl:value-of select="@short"/> PP in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.
+      In a PP-Configuration that includes <xsl:apply-templates mode="short" select="."/>,
+      the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/>
+      as a whole and evaluated against the  <xsl:apply-templates mode="short" select="."/>.
+      The following sections describe any modifications that the ST author must make to the SFRs
+      defined in the <xsl:apply-templates mode="short" select="."/> in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.
     </xsl:if>
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
@@ -292,11 +295,11 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       Modified SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
-      The SFRs listed in this section are defined in the <xsl:value-of select="@short"/> Protection Profile and relevant to the secure operation of the TOE.
+      The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-      This PP-Module does not modify any SFRs defined by the <xsl:value-of select="@short"/> PP.
+      This PP-Module does not modify any SFRs defined by the <xsl:apply-templates mode="short" select="."/>.
     </xsl:otherwise>
     </xsl:choose>
     <!--
@@ -312,11 +315,11 @@ defined in the <xsl:value-of select="@short"/> PP in addition to what is mandate
       Additional SFRs
     </xsl:element>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
-      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:value-of select="@short"/> PP is claimed as the Base-PP.
+      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:value-of select="@short"/> PP is claimed as the Base-PP.
+This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>

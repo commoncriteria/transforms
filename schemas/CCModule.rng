@@ -309,7 +309,8 @@ Modification definition. This text goes in the
       <a:documentation>
 	Holds information specifict to a base PP.
       </a:documentation>
-    <ref name="external-document-pat"/> 
+    <ref name="external-document-pat"/>
+	<optional><element name="cPP"><empty/></element></optional>
     <optional>
          <element name="sec-func-req-dir">
            <a:documentation>
