@@ -173,13 +173,6 @@ guidance, and testing.</p>
     </x:for-each>
   </x:template>
   
-  <x:template name="bpp-type-short">
-	  <x:param name="bppt"/>
-	  <x:choose>
-		  <x:when test="$bppt='cPP'">cPP</x:when>
-		  <x:otherwise> PP</x:otherwise>
-	  </x:choose>
-	</x:template>
 	
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
@@ -255,7 +248,7 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><a href="{@url}"><x:value-of select="@name"/>, Version <x:value-of select="@version"/></a></li>
+	    <li><a href="{@url}"><x:apply-templates select="." mode="expanded"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
     </p>
