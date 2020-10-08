@@ -154,14 +154,14 @@ guidance, and testing.</p>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:value-of select="@short"/>
-	    <x:call-template name="base-PP-type-short"><x:with-param name="bpp" select="."/></x:call-template>.
+	    <x:call-template name="bpp-type-short"><x:with-param name="bppt" select="@type"/></x:call-template>.
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/><x:call-template name="base-PP-type-short"><x:with-param name="bpp" select="."/></x:call-template> is the base.
+	  <x:value-of select="@short"/><x:call-template name="bpp-type-short"><x:with-param name="bppt" select="@type"/></x:call-template> is the base.
 	</x:with-param>
       </x:call-template>
       
@@ -174,9 +174,10 @@ guidance, and testing.</p>
     </x:for-each>
   </x:template>
   
-  <x:template name="base-pp-type-short">
+  <x:template name="bpp-type-short">
+	  <x:param name="bppt"/>
 	  <x:choose>
-		  <x:when test="@type='cPP'">cPP</x:when>
+		  <x:when test="$bppt='cPP'">cPP</x:when>
 		  <x:otherwise> PP</x:when>
 	  </x:choose>
 	</x:template>
@@ -210,11 +211,11 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/><x:call-template name="base-PP-type-short"><x:with-param name="bpp" select="."/></x:call-template> 
+	<x:value-of select="//cc:base-pp/@short"/><x:call-template name="bpp-type-short"><x:with-param name="bppt" select="//cc:base-pp/@type"/></x:call-template> 
 	      base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:value-of select="//cc:base-pp/@short"/><x:call-template name="base-PP-type-short"><x:with-param name="bpp" select="."/></x:call-template> includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:value-of select="//cc:base-pp/@short"/><x:call-template name="bpp-type-short"><x:with-param name="bpp" select="//cc:base-pp/@type"/></x:call-template> includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
