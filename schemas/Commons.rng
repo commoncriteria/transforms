@@ -1222,6 +1222,32 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </zeroOrMore>
   </define>
 
+  <define name="packages">
+    <zeroOrMore> <ref name="include-pkg-pat"/></zeroOrMore>
+  </define> 
+
+ 
+  <define name="include-pkg-pat">
+	  <element name="include-pkg">
+	  	<a:documentation>
+		Declarations of packages that are or may be included in the PP. There are three kinds:
+		  Mandatory: This is a package that is always included with the PP.
+		  	&lt;include-pkg name="pkg-name"/>
+		  Selection-Based: This is a package that is included dependent on one or more selections. 
+		  &lt;include-pkg name="pkg-name" type="sel-based">
+			  &lt;selection-depends req="dep-req" ids="selection-ids"/>
+		  &lt;/include-pkg>
+		  Feature-Based: Package is included if a feature is present in the TOE.
+		  &lt;include-pkg name="pkg-name" type="impl-dep">
+			  This is the text displayed for the ST author to indicate that the feature exists.
+		  &lt;/include-pkg>
+	  	</a:documentation>
+             <ref name="external-document-pat"/>
+             <ref name="depends-pat"/>
+	  </element>
+  </define>
+  
+ 
   <define name="external-document-pat">
      <attribute name="product">
 	<a:documentation>

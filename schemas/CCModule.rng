@@ -91,6 +91,8 @@
         <ref name="from"/>
       </choice>
     </define>
+
+    <!-- Redefines the depends pattern such that it adds the choice of base -->
     <define name="depends-pat">
       <zeroOrMore>
         <element name="depends">
