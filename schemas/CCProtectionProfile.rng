@@ -144,8 +144,9 @@ Tags that this section should be indented(left) 2em.
 	    <ref name="basic-content-pat"/>
 	    <oneOrMore>
 	      <choice>
-                  <ref name="f-component-pattern"/>
-  		  <ref name="f-component-decl-pattern"/>
+		     <ref name="audit-table-pat"/>
+             <ref name="f-component-pattern"/>
+             <ref name="f-component-decl-pattern"/>
 	      </choice>
 	    </oneOrMore>
 	  </element>
