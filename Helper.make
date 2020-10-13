@@ -202,9 +202,11 @@ little-diff: $(PP_RELEASE_HTML)
 	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
 	git submodule update --recursive
 	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
+	git checkout master
 	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
 	git submodule update --recursive
 	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
+	rm -f $(OUT)/yesterday.html
 	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
 	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
