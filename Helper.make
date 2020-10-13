@@ -116,7 +116,7 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- Points to the User.make need for diffing so that it can be
 #- copied to those projects when they are automatically downloaded
 #- for diffing 
-DIFF_USER_MAKE?= 
+DIFF_USER_MAKE ?= 
 
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
@@ -196,20 +196,22 @@ module-target:
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
-diff-yesterday: $(PP_RELEASE_HTML)
-	git stash &&\
-	git checkout $(git log --before today -n 1 --pretty="format:%P") &&\
-	git submodule update --recursive &&\
-	mv $(PP_RELEASE_HTML) $(PP_RELEASE_HTML)_ORIG &&\
-        make release &&\
-	$(call DIFF_EXE,$(PP_RELEASE_HTML)_ORIG,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html); \
-	git checkout master;\
-	git submodule update --recursive;\
-	git stash pop;\
-	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);
+#- Does a diff since two days ago.
+little-diff: $(PP_RELEASE_HTML)
+	[ "$$(git stash)" == "No local changes to save" ] || touch STASH_FLAG
+	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
+	git submodule update --recursive
+	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
+	git checkout master
+	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
+	git submodule update --recursive
+	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
+	rm -f $(OUT)/yesterday.html
+	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 
-
-#- Build the Diff file
 diff: $(PP_RELEASE_HTML)
 	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
@@ -227,7 +229,7 @@ diff: $(PP_RELEASE_HTML)
 		rm -rf $$aa;\
 		mkdir $$aa;\
 		cd $$aa;\
-		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+		git clone --depth 1 --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
                 cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
 		cd $${orig##*/};\
 		TRANS=transforms make;\

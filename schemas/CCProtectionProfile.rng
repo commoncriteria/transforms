@@ -102,12 +102,7 @@ Tags that this section should be indented(left) 2em.
 
   <define name="PreferencesEtc">
   <a:documentation>A place for declarations and preferences</a:documentation>
-  <optional>
-	  <ref name="pp-preferences-pat"/>
-  </optional>
-  <zeroOrMore>
-	  <ref name="include-pkg-pat"/>
-  </zeroOrMore>
+    <optional> <ref name="pp-preferences-pat"/> </optional>
   </define>
   
   <define name="IntroductionChapter">
