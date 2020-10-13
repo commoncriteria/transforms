@@ -105,8 +105,6 @@ Tags that this section should be indented(left) 2em.
   <optional>
 	  <ref name="pp-preferences-pat"/>
   </optional>
-  <zeroOrMore>
-	  <ref name="include-pkg-pat"/>
 </define>
   
   <define name="IntroductionChapter">
