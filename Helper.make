@@ -213,10 +213,10 @@ diff-yesterday: $(PP_RELEASE_HTML)
 little-diff:
 	git stash
 	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
-        git submodule update --recursive
+	git submodule update --recursive
 	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
 	git stash pop
-        git submodule update --recursive
+	git submodule update --recursive
 	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
 	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
@@ -325,9 +325,5 @@ meta-info:
 	echo -en '\nBUILD_TIME=' >> $(META_TXT)
 	date +"%Y-%m-%d %H:%M"   >> $(META_TXT)
 
-<<<<<<< HEAD
-#git log --max-count=1 --before=yesterday --pretty='format:%H'
-=======
 # git checkout $(git log --before today -n 1 --pretty="format:%P")
 # git submodule update --recursive
->>>>>>> master
