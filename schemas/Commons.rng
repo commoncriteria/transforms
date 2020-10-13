@@ -637,7 +637,7 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="assignable"/>
         <ref name="appref"/> 
         <ref name="abbr-el"/>
-        <ref name="audit-table-pat"/> 
+<!--        <ref name="audit-table-pat"/> -->
 <!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>
         <ref name="refinement-type"/>
