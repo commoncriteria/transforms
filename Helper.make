@@ -197,14 +197,17 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
 
-#- Build the Diff file
-
+#- Does a diff since two days ago.
 little-diff:
 	git stash
 	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
 	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
 	git stash pop
-        $(call DIFF_EXE, $(OUT)/yesterday.html, $(PP_RELEASE_HTML), $(OUT)/diff-yesterday.html} 
+	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
+	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 
 diff: $(PP_RELEASE_HTML)
 	if [ -d "$(DIFF_DIR)" ]; then \
