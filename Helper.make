@@ -196,26 +196,13 @@ module-target:
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
-diff-yesterday: $(PP_RELEASE_HTML)
-	git stash &&\
-	git checkout $(git log --before today -n 1 --pretty="format:%P") &&\
-	git submodule update --recursive &&\
-	mv $(PP_RELEASE_HTML) $(PP_RELEASE_HTML)_ORIG &&\
-        make release &&\
-	$(call DIFF_EXE,$(PP_RELEASE_HTML)_ORIG,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html); \
-	git checkout master;\
-	git submodule update --recursive;\
-	git stash pop;\
-	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);
-
-
 #- Does a diff since two days ago.
-little-diff:
-	git stash
+little-diff: $(PP_RELEASE_HTML)
+	[ "$$(git stash)" == "No local changes to save" ] || touch STASH_FLAG
 	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
 	git submodule update --recursive
 	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
-	git stash pop
+	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
 	git submodule update --recursive
 	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
 	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
