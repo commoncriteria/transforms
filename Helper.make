@@ -198,6 +198,14 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 
 
 #- Build the Diff file
+
+little-diff:
+	git stash
+	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
+	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
+	git stash pop
+        $(call DIFF_EXE, $(OUT)/yesterday.html, $(PP_RELEASE_HTML), $(OUT)/diff-yesterday.html} 
+
 diff: $(PP_RELEASE_HTML)
 	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
