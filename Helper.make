@@ -196,13 +196,27 @@ module-target:
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
+diff-yesterday: $(PP_RELEASE_HTML)
+	git stash &&\
+	git checkout $(git log --before today -n 1 --pretty="format:%P") &&\
+	git submodule update --recursive &&\
+	mv $(PP_RELEASE_HTML) $(PP_RELEASE_HTML)_ORIG &&\
+        make release &&\
+	$(call DIFF_EXE,$(PP_RELEASE_HTML)_ORIG,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html); \
+	git checkout master;\
+	git submodule update --recursive;\
+	git stash pop;\
+	mv $(PP_RELASE_HTML)_ORIG $(PP_RELEASE_HTML);
+
 
 #- Does a diff since two days ago.
 little-diff:
 	git stash
 	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
+        git submodule update --recursive
 	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
 	git stash pop
+        git submodule update --recursive
 	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
 	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
 	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
@@ -219,6 +233,7 @@ diff: $(PP_RELEASE_HTML)
 	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
 	   done;\
 	fi
+     
 	for aa in $(DIFF_TAGS); do\
 		orig=$$(pwd);\
 		cd $(TMP);\
@@ -310,4 +325,9 @@ meta-info:
 	echo -en '\nBUILD_TIME=' >> $(META_TXT)
 	date +"%Y-%m-%d %H:%M"   >> $(META_TXT)
 
+<<<<<<< HEAD
 #git log --max-count=1 --before=yesterday --pretty='format:%H'
+=======
+# git checkout $(git log --before today -n 1 --pretty="format:%P")
+# git submodule update --recursive
+>>>>>>> master

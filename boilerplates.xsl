@@ -197,7 +197,7 @@ This PP-Module does not define any objectives for the Operational Environment.
 
   <xsl:template name="opt_appendix">
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
-   As indicated in the introduction to this <xsl:call-template name="doctype-short"/>, the baseline requirements (those that must be
+    As indicated in the introduction to this <xsl:call-template name="doctype-short"/>, the baseline requirements (those that must be
 	  performed by the TOE) are contained in the body of this <xsl:call-template name="doctype-short"/>.
     This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order
 	  to conform to this <xsl:call-template name="doctype-short"/>.

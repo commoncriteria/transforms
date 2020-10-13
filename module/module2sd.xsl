@@ -18,6 +18,7 @@ XSL for Protection Profile Modules
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <x:include href="../ppcommons.xsl"/>
+  <x:include href="module-commons.xsl"/>
 
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
@@ -115,7 +116,7 @@ guidance, and testing.</p>
   </x:template>
 
   <x:template name="handle-apply-to-all">
-    <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
+    <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
@@ -149,17 +150,17 @@ guidance, and testing.</p>
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
-	<x:value-of select="@name"/> Evaluation Activities
+	<x:apply-templates mode="expanded" select="."/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
-      to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
-      <x:call-template name="sub-sfrs">
+      to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
+     <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/> PP is the Base-PP.
+	  <x:apply-templates select="." mode="short"/> is the base.
 	</x:with-param>
       </x:call-template>
       
@@ -172,6 +173,7 @@ guidance, and testing.</p>
     </x:for-each>
   </x:template>
   
+	
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
@@ -201,10 +203,10 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/> Base-PP to which it must claim conformance.
+	<x:apply-templates mode="short" select="//cc:base-pp"/> base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:apply-templates mode="short" select="//cc:base-pp"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
@@ -246,7 +248,7 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><a href="{@url}"><x:value-of select="@name"/>, Version <x:value-of select="@version"/></a></li>
+	    <li><a href="{@url}"><x:apply-templates select="." mode="expanded"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
     </p>
@@ -387,7 +389,9 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       </h4>
       <x:choose>
          <x:when test=".//cc:aactivity/cc:no-tests">
-           <x:apply-templates select=".//cc:aactivity"/>
+<!--           <x:apply-templates select=".//cc:aactivity"/>   This one gets eaten and nothing happens. -->
+<!-- In Module SDs, when there are no tests, we want to display the text in the no-tests tag -->
+		 <i><x:value-of select=".//cc:aactivity/cc:no-tests"/></i>	 	
          </x:when>
          <x:otherwise>
            <x:if test=".//cc:TSS">
