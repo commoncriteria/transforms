@@ -478,15 +478,18 @@
         <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
         <xsl:value-of select="@name"/>
       </h4>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">D</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">C</xsl:with-param></xsl:call-template>
-      <xsl:call-template name="agroup"><xsl:with-param name="type">E</xsl:with-param></xsl:call-template>
+      <xsl:apply-templates/>
+      <xsl:variable name="comp" select="."/>
+      <xsl:for-each select="document('boilerplates.xml')//cc:empty[@id='a-group']/cc:a-stuff">
+         <xsl:variable name="type" select="@type"/>
+         <h4> <xsl:apply-templates/> elements: </h4>
+         <xsl:apply-templates select="$comp/cc:a-element[@type=$type]" mode="a-element"/>
+      </xsl:for-each> 
     </div>
   </xsl:template>
-
   <!-- ############### -->
   <!--            -->
-  <xsl:template name="agroup">
+<!--  <xsl:template name="agroup">
     <xsl:param name="type"/>
     <xsl:if test="./cc:a-element[@type=$type]">
         <h4><xsl:choose>
@@ -494,10 +497,10 @@
            <xsl:when test="$type='C'">Content and presentation</xsl:when>
            <xsl:when test="$type='E'">Evaluator action</xsl:when>
         </xsl:choose> elements: </h4>
-        <xsl:apply-templates select="./cc:a-element[@type=$type]"/>
+        <xsl:apply-templates select="./cc:a-element[@type=$type]" mode="a-element"/>
     </xsl:if>
   </xsl:template>
-
+-->
   <!-- Used to match regular f-components -->
   <!-- ############### -->
   <!--            -->
@@ -636,7 +639,9 @@
 
 <!-- ############### -->
 <!--            -->
-  <xsl:template match="cc:a-element" >
+  <xsl:template match="cc:a-element"/>
+
+  <xsl:template match="cc:a-element" mode="a-element">
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -756,7 +761,7 @@
                 
                 <xsl:choose>
 		    <xsl:when test="count(//cc:f-component[@status='optional'])=0">
-                        <p>This PP does not define any optional requirements.</p>
+                        <p>This <xsl:call-template name="doctype-short"/> does not define any optional requirements.</p>
 	            </xsl:when>
 	            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -784,7 +789,7 @@
                <h2 id="obj-reqs" class="indexable" data-level="2">Objective Requirements</h2> 
                 <xsl:choose>
 		            <xsl:when test="count(//cc:f-component[@status='objective'])=0">
-                        <p>This PP does not define any objective requirements.</p>
+                        <p>This <xsl:call-template name="doctype-short"/> does not define any objective requirements.</p>
 	                </xsl:when>
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -815,7 +820,7 @@
               	<xsl:choose>
         	   <!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
  	        	<xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
-			<p>This PP does not define any implementation-dependent requirements.</p>
+			<p>This <xsl:call-template name="doctype-short"/> does not define any implementation-dependent requirements.</p>
                     </xsl:when>
 		            <xsl:otherwise> 
 		  	    <xsl:if test="($display-audit-app)=1">
@@ -855,7 +860,7 @@
             <xsl:call-template name="selection-based-text"/>
 	    <xsl:choose>
 	       <xsl:when test="count(//cc:f-component[@status='sel-based'])=0">
-                  <p>This PP does not define any selection-based requirements.</p>
+                  <p>This <xsl:call-template name="doctype-short"/> does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
        		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">

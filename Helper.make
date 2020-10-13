@@ -199,14 +199,15 @@ $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 
 #- Build the Diff file
 diff: $(PP_RELEASE_HTML)
-	[ ! -d "$(DIFF_DIR)" ] ||\
+	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
 		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
 	   done;\
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
 	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
-	   done
+	   done;\
+	fi
 	for aa in $(DIFF_TAGS); do\
 		orig=$$(pwd);\
 		cd $(TMP);\
