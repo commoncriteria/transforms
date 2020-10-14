@@ -563,8 +563,9 @@
   <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-    <xsl:if test="(@status='mandatory') or (not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
-		  					and @status!='objective' and @status!='feat-based')">
+    <xsl:if test="(@status!='optional' and @status!='sel-based' and @status!='objective' and @status!='feat-based')">
+<!--    <xsl:if test="(@status='mandatory') or (not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
+		  					and @status!='objective' and @status!='feat-based')">  -->
       <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
