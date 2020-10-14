@@ -138,6 +138,7 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 #- Arg 4 is parameter value pairs
 DOIT ?= python3 $(TRANS)/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
 
+
 FNL_PARM ?=--stringparam release final
 #- Appendicize parameter
 APP_PARM ?=--stringparam appendicize on
@@ -153,7 +154,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean little-diff
 
 
 #---
@@ -177,6 +178,8 @@ linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELE
 	  sed "s/href=['\"]/\nhref=\"/g" $$bb | grep "^href=[\"']#" | sed "s/href=[\"']#//g" | sed "s/[\"'].*//g"\
         ); do grep "id=[\"']$${aa}[\"']" -q  $$bb || echo "Detected missing link $$bb-$$aa"; done; done
 
+
+
 #- Target to build the normal report
 pp:$(PP_HTML)
 
@@ -196,33 +199,55 @@ module-target:
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
+YESTERDAY :=$(shell git log --max-count=1 --before=yesterday --pretty='format:%H')
+
+# 1 commit
+# 2 output file
+# 3 User.make
+# 4 Original file
+DIFF_IT ?= echo $1 $2 $3 &&\
+	rm -rf $(TMP)/$1 && mkdir -p $(TMP)/$1/$(BASE) &&\
+	git clone --recursive . $(TMP)/$1/$(BASE) &&\
+	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
+	cd $(TMP)/$1/$(BASE) &&\
+	PP_RELEASE_HTML=$1.html make release &&\
+	cd - &&\
+	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$(OUT)/diff-yesterday.html)
+
+
 #- Does a diff since two days ago.
 little-diff: $(PP_RELEASE_HTML)
-	[ "$$(git stash)" == "No local changes to save" ] || touch STASH_FLAG
-	git checkout $(git log --max-count=1 --before=yesterday --pretty='format:%H')
-	git submodule update --recursive
-	PP_RELEASE_HTML=$(OUT)/yesterday.html make release 
-	git checkout master
-	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
-	git submodule update --recursive
-	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
-	rm -f $(OUT)/yesterday.html
-	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
-	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
-	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
-	cp -u $(DAISY_DIR)/images/* $(OUT)/images
+	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(USER_MAKE),$(PP_RELEASE_HTML))
 
-diff: $(PP_RELEASE_HTML)
+grumpkin:
+	COMMIT=$$(git log --max-count=1 --before=yesterday --pretty='format:%H') &&\
+        NAME=$${PWD##*/} &&\
+        rm -rf $(TMP)/$$COMMIT && mkdir -p $(TMP)/$$COMMIT/$$NAME &&\
+        git clone --recursive .  $(TMP)/$$COMMIT/$$NAME &&\
+	cd $(TMP)/$$COMMIT/$$NAME && git checkout $$COMMIT &&\
+	git submodule update --recursive &&\
+	PP_RELEASE_HTML=yesterday.html make release  &&\
+        abc=$$PWD && cd - && cp $$abc/yesterday.html &&echo $$PWD
+#	git checkout master
+#	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
+#	git submodule update --recursive
+#	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
+#	rm -f $(OUT)/yesterday.html
+#	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
+#	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+#	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+#	cp -u $(DAISY_DIR)/images/* $(OUT)/images
+
+diff: $(PP_RELEASE_HTML) $(OUT)/js
 	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
 		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
 	   done;\
-           for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
+       for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
 	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
 	   done;\
 	fi
-     
 	for aa in $(DIFF_TAGS); do\
 		orig=$$(pwd);\
 		cd $(TMP);\
@@ -241,13 +266,17 @@ diff: $(PP_RELEASE_HTML)
 		rm -rf $(TMP)/$$aa;\
 		kill %1;\
 	done
-	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
-	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
-	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
-	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
+
+# Copies over resources needed by DIFF
+$(OUT)/js:
+	cp -r $(DAISY_DIR)/js $(OUT)
+	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+	cp -u $(DAISY_DIR)/images/* $(OUT)/images
+
 
 #- Target to build the anchorized report
 $(PP_LINKABLE_HTML): $(PP_RELEASE_HTML) 
