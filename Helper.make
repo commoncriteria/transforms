@@ -217,7 +217,7 @@ DIFF_IT ?= echo $1 $2 $3 &&\
 
 #- Does a diff since two days ago.
 little-diff: $(PP_RELEASE_HTML)
-	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(USER_MAKE),$(PP_RELEASE_HTML))
+	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
 grumpkin:
 	COMMIT=$$(git log --max-count=1 --before=yesterday --pretty='format:%H') &&\
