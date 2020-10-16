@@ -205,67 +205,43 @@ YESTERDAY :=$(shell git log --max-count=1 --before=yesterday --pretty='format:%H
 # 2 output file
 # 3 User.make
 # 4 Original file
-DIFF_IT ?= echo $1 $2 $3 &&\
+DIFF_IT ?= \
 	rm -rf $(TMP)/$1 && mkdir -p $(TMP)/$1/$(BASE) &&\
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
-	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$(OUT)/diff-yesterday.html)
+	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2)
 
 
 #- Does a diff since two days ago.
-little-diff: $(PP_RELEASE_HTML)
+little-diff: $(PP_RELEASE_HTML) $(OUT)/js
 	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
-grumpkin:
-	COMMIT=$$(git log --max-count=1 --before=yesterday --pretty='format:%H') &&\
-        NAME=$${PWD##*/} &&\
-        rm -rf $(TMP)/$$COMMIT && mkdir -p $(TMP)/$$COMMIT/$$NAME &&\
-        git clone --recursive .  $(TMP)/$$COMMIT/$$NAME &&\
-	cd $(TMP)/$$COMMIT/$$NAME && git checkout $$COMMIT &&\
-	git submodule update --recursive &&\
-	PP_RELEASE_HTML=yesterday.html make release  &&\
-        abc=$$PWD && cd - && cp $$abc/yesterday.html &&echo $$PWD
-#	git checkout master
-#	[ ! -f STASH_FLAG ] || ( rm -f STASH_FLAG && git stash pop || true)
-#	git submodule update --recursive
-#	$(call DIFF_EXE,$(OUT)/yesterday.html,$(PP_RELEASE_HTML),$(OUT)/diff-yesterday.html) 
-#	rm -f $(OUT)/yesterday.html
-#	[ -d "$(OUT)/js"     ] || cp -r $(DAISY_DIR)/js $(OUT)
-#	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
-#	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
-#	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 
 diff: $(PP_RELEASE_HTML) $(OUT)/js
 	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
 		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
 	   done;\
-       for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
+           for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
 	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
 	   done;\
 	fi
 	for aa in $(DIFF_TAGS); do\
-		orig=$$(pwd);\
-		cd $(TMP);\
-		rm -rf $$aa;\
-		mkdir $$aa;\
-		cd $$aa;\
-		git clone --depth 1 --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
-                cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
-		cd $${orig##*/};\
-		TRANS=transforms make;\
-		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
-		cd $$orig;\
-		pwd;\
-		(while sleep 60; do echo '#'; done) &\
-		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
-		rm -rf $(TMP)/$$aa;\
-		kill %1;\
-	done
+                commit=$$aa;\
+		if [ "$${aa}" != "$$(git tag -l $$aa)" ]; then\
+			commit=$$(git rev-list -n  1 "$${aa}");\
+                fi;\
+		$(call DIFF_IT,$$commit,$(OUT)/diff-$${aa}.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML));\
+        done
+		#(while sleep 60; do echo '#'; done) &\
+		#$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
+		#rm -rf $(TMP)/$$aa;\
+		#kill %1;\
+#	done
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
