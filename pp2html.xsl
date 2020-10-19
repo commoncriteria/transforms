@@ -236,10 +236,7 @@
     <xsl:for-each select="//cc:f-component">
 	<xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
-		<xsl:choose>
-			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
-			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		</xsl:choose>
+           <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
 	</xsl:variable>   
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
@@ -278,10 +275,7 @@
       <xsl:for-each select="//cc:f-component-decl">
 	<xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
-		<xsl:choose>
-			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
-			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		</xsl:choose>
+           <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
 	</xsl:variable>   
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
@@ -335,10 +329,7 @@
 	<xsl:for-each select="//cc:f-component">
 	  <xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
-		<xsl:choose>
-			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
-			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		</xsl:choose>
+           <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
 	</xsl:variable>   
 	  <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if 
@@ -376,10 +367,8 @@
 	<xsl:for-each select="//cc:f-component-decl">
 	  <xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
-		<xsl:choose>
-			<xsl:when test="not($fcomp/@status)">mandatory</xsl:when>
-			<xsl:otherwise><xsl:value-of select="$fcomp/@status"/></xsl:otherwise>
-		</xsl:choose>
+			<xsl:if test="not($fcomp/@status)">mandatory</xsl:if>
+			<xsl:value-of select="$fcomp/@status"/>
 	</xsl:variable>   
 	  <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if 

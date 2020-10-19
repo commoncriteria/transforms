@@ -210,9 +210,12 @@ DIFF_IT ?= \
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
+	git checkout $1 &&\
+        git submodule update --recursive &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
-	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2)
+	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
+	rm -rf $(TMP)/$1
 
 
 #- Does a diff since two days ago.
