@@ -238,6 +238,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 	fi
 	for aa in $(DIFF_TAGS); do\
                 commit=$$aa;\
+		echo "Does"  "$${aa}" = "$$(git tag -l $$aa)" &&\
 		if [ "$${aa}" = "$$(git tag -l $$aa)" ]; then\
 			commit=$$(git rev-list -n  1 "$${aa}");\
                 fi;\
