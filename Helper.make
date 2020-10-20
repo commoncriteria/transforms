@@ -100,7 +100,7 @@ RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
 
 #- Points to the daisydiff jar file
-DAISY_DIR ?= ../ExecuteDaisy
+DAISY_DIR ?= ExecuteDaisy
 
 #- Git tags that the current release should be diffed against
 DIFF_TAGS?=
