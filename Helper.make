@@ -237,19 +237,24 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 	   done;\
 	fi
 	for aa in $(DIFF_TAGS); do\
-                commit=$$aa;\
-                git tag -l $$aa &&\
-		echo "Does"  "$${aa}" = "$$(git tag -l $${aa})" &&\
-		if [ "$${aa}" = "$$(git tag -l $$aa)" ]; then\
-			commit=$$(git rev-list -n  1 "$${aa}");\
-                fi;\
-		$(call DIFF_IT,$$commit,$(OUT)/diff-$${aa}.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML));\
+		orig=$$(pwd);\
+		cd $(TMP);\
+		rm -rf $$aa;\
+		mkdir $$aa;\
+		cd $$aa;\
+		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+        cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
+		cd $${orig##*/};\
+		TRANS=transforms make release;\
+		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
+		cd $$orig;\
+		pwd;\
+		(while sleep 60; do echo '#'; done) &\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
+		rm -rf $(TMP)/$$aa;\
+		kill %1;\
         done
-		#(while sleep 60; do echo '#'; done) &\
-		#$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
-		#rm -rf $(TMP)/$$aa;\
-		#kill %1;\
-#	done
+
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
