@@ -68,7 +68,19 @@ if certain selections are made, then additional requirements below must be inclu
         <dt>PP Claim </dt>
         <dd>This <xsl:call-template name="doctype-short"/> does not claim conformance to any Protection Profile. </dd>
         <dt>Package Claim</dt>
-        <dd>This <xsl:call-template name="doctype-short"/> is TLS Package Conformant.</dd>
+        <dd>This <xsl:call-template name="doctype-short"/> 
+            <xsl:choose>
+               <xsl:when test="count(//cc:include-pkg)='1'"> is conformant to the 
+                  <xsl:apply-templates select="//cc:include-pkg" mode="show"/></xsl:when>
+               <xsl:when test="//cc:include-pkg">is conformant to the 
+                  <xsl:for-each select="//cc:include-pkg">
+                      <xsl:if test="position()=last()"> and </xsl:if>
+                      <xsl:apply-templates select="." mode="show"/>
+                      <xsl:if test="count(//cc:include-pkg)>2 and not(position()=last())">, </xsl:if>
+                  </xsl:for-each>
+               </xsl:when>
+               <xsl:otherwise> does not claim conformance to any packages</xsl:otherwise> 
+            </xsl:choose>.</dd>
      </dl>
   </xsl:template>
 

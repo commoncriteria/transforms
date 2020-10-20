@@ -128,6 +128,15 @@
   </xsl:template>
 
 
+  <xsl:template match="cc:include-pkg" mode="show">
+    <xsl:element name="a">
+       <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
+       <xsl:value-of select="@name"/>
+       <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
+       Package version <xsl:value-of select="@version"/>
+    </xsl:element>
+  </xsl:template>
+
 <!-- ############### -->
 <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
