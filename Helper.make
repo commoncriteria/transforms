@@ -206,6 +206,7 @@ YESTERDAY :=$(shell git log --max-count=1 --before=yesterday --pretty='format:%H
 # 3 User.make
 # 4 Original file
 DIFF_IT ?= \
+        echo $1 $2 $3 $4 &&\
 	rm -rf $(TMP)/$1 && mkdir -p $(TMP)/$1/$(BASE) &&\
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
@@ -235,7 +236,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 	fi
 	for aa in $(DIFF_TAGS); do\
                 commit=$$aa;\
-		if [ "$${aa}" != "$$(git tag -l $$aa)" ]; then\
+		if [ "$${aa}" = "$$(git tag -l $$aa)" ]; then\
 			commit=$$(git rev-list -n  1 "$${aa}");\
                 fi;\
 		$(call DIFF_IT,$$commit,$(OUT)/diff-$${aa}.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML));\
