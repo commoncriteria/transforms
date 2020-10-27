@@ -154,7 +154,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean little-diff
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff
 
 
 #---
@@ -223,7 +223,7 @@ DIFF_IT ?= \
 
 #- Does a diff since two days ago.
 little-diff: $(PP_RELEASE_HTML) $(OUT)/js
-	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
+	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-little.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
 
 diff: $(PP_RELEASE_HTML) $(OUT)/js
