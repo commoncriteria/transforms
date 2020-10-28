@@ -100,7 +100,7 @@ RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
 
 #- Points to the daisydiff jar file
-DAISY_DIR ?= ../ExecuteDaisy
+DAISY_DIR ?= ExecuteDaisy
 
 #- Git tags that the current release should be diffed against
 DIFF_TAGS?=
@@ -154,7 +154,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean little-diff
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff
 
 
 #---
@@ -206,21 +206,24 @@ YESTERDAY :=$(shell git log --max-count=1 --before=yesterday --pretty='format:%H
 # 3 User.make
 # 4 Original file
 DIFF_IT ?= \
+        echo $1 $2 $3 $4 &&\
 	rm -rf $(TMP)/$1 && mkdir -p $(TMP)/$1/$(BASE) &&\
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
+	ls &&\
 	git checkout $1 &&\
         git submodule update --recursive &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
+        pwd &&\
 	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
 	rm -rf $(TMP)/$1
 
 
 #- Does a diff since two days ago.
 little-diff: $(PP_RELEASE_HTML) $(OUT)/js
-	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-yesterday.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
+	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-little.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
 
 diff: $(PP_RELEASE_HTML) $(OUT)/js
@@ -234,17 +237,24 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 	   done;\
 	fi
 	for aa in $(DIFF_TAGS); do\
-                commit=$$aa;\
-		if [ "$${aa}" != "$$(git tag -l $$aa)" ]; then\
-			commit=$$(git rev-list -n  1 "$${aa}");\
-                fi;\
-		$(call DIFF_IT,$$commit,$(OUT)/diff-$${aa}.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML));\
+		orig=$$(pwd);\
+		cd $(TMP);\
+		rm -rf $$aa;\
+		mkdir $$aa;\
+		cd $$aa;\
+		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
+        cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
+		cd $${orig##*/};\
+		TRANS=transforms make release;\
+		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
+		cd $$orig;\
+		pwd;\
+		(while sleep 60; do echo '#'; done) &\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
+		rm -rf $(TMP)/$$aa;\
+		kill %1;\
         done
-		#(while sleep 60; do echo '#'; done) &\
-		#$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
-		#rm -rf $(TMP)/$$aa;\
-		#kill %1;\
-#	done
+
 # Following was attempted to removed garbage collection limit exception (But then it fails
 # on timeout, so it was probably wise to keep the gc exception).
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\

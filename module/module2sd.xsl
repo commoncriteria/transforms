@@ -94,7 +94,7 @@ guidance, and testing.</p>
     associated with the CEM work unit ASE_TSS.1-1.
     Evaluator verdicts associated with the supplementary evidence will also be 
     associated with ASE_TSS.1-1, 
-    since the requirement to provide such evidence is specified in ASE in the cPP.</p>
+    since the requirement to provide such evidence is specified in ASE in the PP.</p>
     
     <p>For ensuring the guidance documentation provides sufficient information for 
     the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 

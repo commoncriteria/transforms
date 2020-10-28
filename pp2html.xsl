@@ -128,6 +128,15 @@
   </xsl:template>
 
 
+  <xsl:template match="cc:include-pkg" mode="show">
+    <xsl:element name="a">
+       <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
+       <xsl:value-of select="@name"/>
+       <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
+       Package version <xsl:value-of select="@version"/>
+    </xsl:element>
+  </xsl:template>
+
 <!-- ############### -->
 <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
@@ -552,8 +561,8 @@
   <!--            -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-    <xsl:if test="(not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
-		  					and @status!='objective' and @status!='feat-based')">
+    <xsl:if test="(@status='mandatory') or (not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
+		  					and @status!='objective' and @status!='feat-based')"> 
       <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
@@ -909,7 +918,7 @@
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)])">
+    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)]) or count(.//cc:f-component[@status='mandatory'])">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
