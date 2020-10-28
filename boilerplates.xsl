@@ -49,7 +49,7 @@ if certain selections are made, then additional requirements below must be inclu
 	</xsl:choose>
 </xsl:template>
 
-<xsl:template name="doctype-long"  match="cc:doctype-long>
+<xsl:template name="doctype-long"  match="cc:doctype-long">
 	<xsl:choose>
 		<xsl:when test="//cc:PP[@type='package']">Functional Package</xsl:when>
 		<xsl:otherwise>Protection Profile</xsl:otherwise>
