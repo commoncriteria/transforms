@@ -42,14 +42,14 @@ There are additional requirements based on selections in the body of the <xsl:ca
 if certain selections are made, then additional requirements below must be included.
   </xsl:template>
 
-<xsl:template name="doctype-short">
+<xsl:template name="doctype-short" match="cc:doctype-short">
 	<xsl:choose>
 		<xsl:when test="//cc:PP[@type='package']">Package</xsl:when>
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
 
-<xsl:template name="doctype-long">
+<xsl:template name="doctype-long"  match="cc:doctype-long>
 	<xsl:choose>
 		<xsl:when test="//cc:PP[@type='package']">Functional Package</xsl:when>
 		<xsl:otherwise>Protection Profile</xsl:otherwise>
