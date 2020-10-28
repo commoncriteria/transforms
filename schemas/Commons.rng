@@ -161,6 +161,7 @@ If it's only an acronym make sure the text content is empty.
           <element name="term">
             <attribute name="full"/>
             <optional><attribute name="abbr"/></optional>
+			<optional><attribute name="plural"/></optional>
             <ref name="basic-content-pat"/>
           </element>
         </zeroOrMore>
