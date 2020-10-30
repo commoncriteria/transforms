@@ -1291,11 +1291,16 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
         </attribute>
       </optional>
  </define> 
+
   <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
 	  <optional><attribute name="ext-src"/></optional>
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
+     <ref name="ref-ids-pat"/>
   </define> 
+
+  <define name="ref-ids-pat">
+     <oneOrMore><ref name="ref-id"/></oneOrMore>
+  </define>
 
   <define name="ref-id">
     <element name="ref-id"><text/></element>
@@ -1318,6 +1323,39 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
     </optional>
   </define>
 
+  <define name="use-cases-pat">
+    <oneOrMore>
+      <element name="use-case">
+        <ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <ref name="description"/>
+        <oneOrMore><ref name="config"/></oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
+  
+  <define name="config">
+    <element name="config">
+      <ref name="doc-config-pat"/>
+      <ref name="ext-doc-config"/>   
+    </element>
+  </define>             
+
+  <define name="ext-doc-config">
+    <optional>
+       <element name="doc">
+         <attribute name="name"/>
+         <ref name="doc-config-pat"/>
+       </element>
+    </optional>
+  </define> 
+
+  <define name="doc-config-pat">
+       <optional> <ref name="ref-ids-pat"/> </optional>
+       <optional> <element name="not">
+         <ref name="ref-ids-pat"/>
+       </element> </optional> 
+  </define>   
 
   <define name="Chapters">
     <zeroOrMore><ref name="Chapter"/></zeroOrMore>

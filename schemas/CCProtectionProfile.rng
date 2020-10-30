@@ -90,7 +90,7 @@ Tags that this section should be indented(left) 2em.
       <ref name="Chapters"/>
       <ref name="appendix-pat"/>
       <ref name="implements-pat"/>
-
+      <ref name="use-cases-pat"/>
       <!-- This is where we can store extra css -->
       <optional>
         <element name="extra-css">
