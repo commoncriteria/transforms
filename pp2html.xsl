@@ -750,19 +750,19 @@
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
 	    <xsl:variable name="display-audit-app">
-		<xsl:value-of select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
+		<xsl:value-of select="//cc:pp-preferences/cc:audit-events-in-sfrs"/>
      	    </xsl:variable>
 
 		    
                 <xsl:call-template name="opt_appendix"/>
                 <xsl:call-template name="strictly-optional-reqs">
-                    <xsl:with-param name="display-audit-app" select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
+                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
                 </xsl:call-template>
 	        <xsl:call-template name="objective-reqs">
-                    <xsl:with-param name="display-audit-app" select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
+                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
                 </xsl:call-template>
 	        <xsl:call-template name="imple-reqs">
-                    <xsl:with-param name="display-audit-app" select="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs']"/>
+                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
@@ -879,7 +879,7 @@
                   <p>This <xsl:call-template name="doctype-short"/> does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-       		     <xsl:if test="//cc:pp-preferences/cc:pp-pref[@name='audit-events-in-sfrs'] = 1">
+       		     <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
 
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="at-sel-based">Audit Table for Selection-Based Requirements</cc:ctr></h3>

@@ -515,9 +515,10 @@ Tags that this section should be indented(left) 2em.
       <a:documentation>
          A place to define preferences for PP output.
       </a:documentation>
-      <oneOrMore>
-         <ref name="pp-pref-pat" />
-      </oneOrMore>
+      <interleave>
+        <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
+        <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
+      </interleave>
     </element>
   </define> 
          
