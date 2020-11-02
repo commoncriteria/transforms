@@ -1324,14 +1324,14 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
   </define>
 
   <define name="use-cases-pat">
-    <oneOrMore>
+    <zeroOrMore>
       <element name="use-case">
         <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="description"/>
         <oneOrMore><ref name="config"/></oneOrMore>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   
   <define name="config">
