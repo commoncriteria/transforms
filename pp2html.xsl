@@ -785,7 +785,7 @@
                 <p>This <xsl:call-template name="doctype-short"/> does not define any implementation-dependent requirements.</p>
             </xsl:when>
             <xsl:otherwise> 
-                <xsl:if test="($display-audit-app)=1">
+               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
                      <h3 id="impl-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-impl-dep">Audit Table for Implementation-Dependent Requirements</cc:ctr></h3>
     		     <br/>
                      <b><xsl:call-template name="ctr-xsl">
@@ -812,7 +812,7 @@
                <p>This <xsl:call-template name="doctype-short"/> does not define any objective requirements.</p>
 	   </xsl:when>
            <xsl:otherwise> 
-               <xsl:if test="($display-audit-app)=1">
+               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
                         <!-- Audit table for objective requirements -->
                     <h3 id="obj-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-objective">Audit Table for Objective Requirements</cc:ctr></h3>
    		    <br/><b>
@@ -845,7 +845,7 @@
                       <p>This <xsl:call-template name="doctype-short"/> does not define any optional requirements.</p>
 	   </xsl:when>
 	   <xsl:otherwise> 
-              <xsl:if test="($display-audit-app)=1">
+               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
                         	<!-- Audit table for optional requirements -->
 		                <!-- Not sure this handles the case of zero optional requirements.  -->
 	          <h3 id="strict-opt-reqs" class="indexable" data-level="3"><cc:ctr ctr-type="Table" id="at-optional">Audit Table for Strictly Optional Requirements</cc:ctr></h3>
@@ -879,7 +879,7 @@
                   <p>This <xsl:call-template name="doctype-short"/> does not define any selection-based requirements.</p>
 	       </xsl:when>
 	       <xsl:otherwise>
-       		     <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
+               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
 
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2"><cc:ctr ctr-type="Table" id="at-sel-based">Audit Table for Selection-Based Requirements</cc:ctr></h3>
