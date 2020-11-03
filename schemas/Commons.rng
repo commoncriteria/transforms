@@ -1084,7 +1084,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <element name="cclaim">
               <a:documentation>
               </a:documentation>
-              <ref name="title-attr"/>
+              <attribute name="name"/>
               <ref name="description"/>
             </element>
           </oneOrMore>

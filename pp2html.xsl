@@ -105,6 +105,7 @@
 <!-- ############### -->
 <!--            -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
+
     <xsl:choose>
       <xsl:when test="cc:*[cc:description]">
         <dl>
@@ -133,8 +134,8 @@
        <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
        <xsl:value-of select="@name"/>
        <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
-       Package version <xsl:value-of select="@version"/>
-    </xsl:element>
+       Package, Version <xsl:value-of select="@version"/>
+    </xsl:element> Conformant
   </xsl:template>
 
 <!-- ############### -->
@@ -774,6 +775,37 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+    <xsl:template name="app-reqs">
+        <xsl:param name="type"/>
+        <h2 id="impl-reqs" class="indexable" data-level="2">
+               <xsl:value-of select="$type"/>  Requirements
+        </h2>
+        <xsl:choose>
+   	<!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
+            <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
+                <p>This <xsl:call-template name="doctype-short"/> does not define any i<xsl:value-of select="$type"/> requirements.</p>
+            </xsl:when>
+            <xsl:otherwise> 
+               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
+                     <h3 id="impl-reqs" class="indexable" data-level="2">
+                         Auditable Events for Implementation-Dependent Requirements
+                     </h3>
+                     <b><xsl:call-template name="ctr-xsl">
+				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
+                     </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements </b>
+				    
+                     <xsl:call-template name="audit-table-xsl">
+                        <xsl:with-param name="table">feat-based</xsl:with-param>
+                     </xsl:call-template>
+                 </xsl:if>
+                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+            </xsl:otherwise>
+       </xsl:choose>
+    </xsl:template> 
+ 
+
 
     <xsl:template name="imple-reqs">
         <xsl:param name="display-audit-app"/>
