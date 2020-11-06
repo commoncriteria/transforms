@@ -753,59 +753,71 @@
 	    <xsl:variable name="display-audit-app">
 		<xsl:value-of select="//cc:pp-preferences/cc:audit-events-in-sfrs"/>
      	    </xsl:variable>
-
 		    
                 <xsl:call-template name="opt_appendix"/>
-                <xsl:call-template name="strictly-optional-reqs">
-                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
+                <xsl:call-template name="app-reqs">
+                    <xsl:with-param name="type" select="'optional'"/>
                 </xsl:call-template>
-	        <xsl:call-template name="objective-reqs">
-                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
+
+                <xsl:call-template name="app-reqs">
+                    <xsl:with-param name="type" select="'objective'"/>
                 </xsl:call-template>
+            
 	        <xsl:call-template name="imple-reqs">
                     <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
+                </xsl:call-template>
+                <xsl:call-template name="app-reqs">
+                    <xsl:with-param name="type" select="'feat-based'"/>
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
                 <xsl:call-template name="imple_text"/>
-                <xsl:call-template name="handle-features">
-                    <xsl:with-param name="level">2</xsl:with-param>
-                </xsl:call-template>
+                <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
     <xsl:template name="app-reqs">
         <xsl:param name="type"/>
+
+        <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
+
         <h2 id="impl-reqs" class="indexable" data-level="2">
-               <xsl:value-of select="$type"/>  Requirements
+               <xsl:value-of select="$nicename"/>  Requirements
         </h2>
         <xsl:choose>
    	<!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
-            <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
-                <p>This <xsl:call-template name="doctype-short"/> does not define any i<xsl:value-of select="$type"/> requirements.</p>
+            <xsl:when test="count(//cc:f-component[@status=$type])=0">
+                <p>This <xsl:call-template name="doctype-short"/> does not define any <xsl:value-of select="$nicename"/> requirements.</p>
             </xsl:when>
             <xsl:otherwise> 
                <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                     <h3 id="impl-reqs" class="indexable" data-level="2">
-                         Auditable Events for Implementation-Dependent Requirements
+                     <h3 id="{$type}-reqs" class="indexable" data-level="3">
+                         Auditable Events for <xsl:value-of select="$nicename"/> Requirements
                      </h3>
                      <b><xsl:call-template name="ctr-xsl">
 				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
-                     </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements </b>
+				    <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
+                     </xsl:call-template>: 
+                         Auditable Events for <xsl:value-of select="$type"/> Requirements </b>
 				    
                      <xsl:call-template name="audit-table-xsl">
-                        <xsl:with-param name="table">feat-based</xsl:with-param>
+                        <xsl:with-param name="table" select="$type"/>
                      </xsl:call-template>
-                 </xsl:if>
-                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+                     <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+                            <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                            <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
+                     </xsl:for-each>
+                     <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]"/>
+                  </xsl:if>
             </xsl:otherwise>
        </xsl:choose>
     </xsl:template> 
  
-
+    <xsl:template match="cc:mt[@tp='impl-based']">
+       <xsl:call-template name="handle-features"/>
+    </xsl:template>
 
     <xsl:template name="imple-reqs">
         <xsl:param name="display-audit-app"/>
@@ -830,80 +842,11 @@
                         <xsl:with-param name="table">feat-based</xsl:with-param>
                      </xsl:call-template>
                  </xsl:if>
-                 <xsl:call-template name="handle-features"><xsl:with-param name="level">3</xsl:with-param></xsl:call-template>
+                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
        </xsl:choose>
     </xsl:template> 
  
-
-    <xsl:template name="objective-reqs">
-       <xsl:param name="display-audit-app"/>
-		
-       <h2 id="obj-reqs" class="indexable" data-level="2"> Objective Requirements</h2> 
-       <xsl:choose>
-           <xsl:when test="count(//cc:f-component[@status='objective'])=0">
-               <p>This <xsl:call-template name="doctype-short"/> does not define any objective requirements.</p>
-	   </xsl:when>
-           <xsl:otherwise> 
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                        <!-- Audit table for objective requirements -->
-                    <h3 id="obj-reqs" class="indexable" data-level="3">
-                        Auditable Events for Objective Requirements
-                    </h3>
-   		    <b>
-                    <xsl:call-template name="ctr-xsl">
-		        <xsl:with-param name="ctr-type">Table</xsl:with-param>
-                        <xsl:with-param name="id">atref-objective</xsl:with-param>
-                    </xsl:call-template>: Auditable Events for Objective Requirements
-		    </b>
-				    
-                    <xsl:call-template name="audit-table-xsl">
-		        <xsl:with-param name="table">objective</xsl:with-param>
-                    </xsl:call-template>
-               </xsl:if>
-               <xsl:for-each select="//cc:subsection[cc:f-component/@status='objective']">
-                            <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                            <xsl:apply-templates select="cc:f-component[@status='objective']" mode="appendicize-nofilter"/>
-               </xsl:for-each>
-           </xsl:otherwise>
-      </xsl:choose>
-   </xsl:template>
-
-
-
-    <xsl:template name="strictly-optional-reqs">
-        <xsl:param name="display-audit-app"/>
-        
-        <h2 id="strict-opt-reqs" class="indexable" data-level="2"> Strictly Optional Requirements</h2> 
-        <xsl:choose>
-           <xsl:when test="count(//cc:f-component[@status='optional'])=0">
-                      <p>This <xsl:call-template name="doctype-short"/> does not define any optional requirements.</p>
-	   </xsl:when>
-	   <xsl:otherwise> 
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                        	<!-- Audit table for optional requirements -->
-		                <!-- Not sure this handles the case of zero optional requirements.  -->
-	          <h3 id="strict-opt-reqs" class="indexable" data-level="3"> 
-                      Auditable Events for Strictly Optional Requirements
-                  </h3>
-                  <b>
-	          <xsl:call-template name="ctr-xsl">
-		      <xsl:with-param name="ctr-type">Table</xsl:with-param>
-		      <xsl:with-param name="id">atref-optional</xsl:with-param>
-                  </xsl:call-template>: Auditable Events for Strictly Optional Requirements
-                  </b>
-	                   
-                  <xsl:call-template name="audit-table-xsl">
-		      <xsl:with-param name="table">optional</xsl:with-param>
-		  </xsl:call-template>  
-              </xsl:if>
-              <xsl:for-each select="//cc:subsection[cc:f-component/@status='optional']">
-                        <h3 id="{@id}-opt" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                        <xsl:apply-templates select="cc:f-component[@status='optional']"/>
-              </xsl:for-each>
-              </xsl:otherwise>
-         </xsl:choose>
-    </xsl:template>	
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="selection-based-appendix">

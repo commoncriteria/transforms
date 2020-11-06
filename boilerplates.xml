@@ -62,5 +62,15 @@
    	  <doc num="2" name="Security Functional Components"/>
    	  <doc num="3" name="Security Assurance Components"/>
    </empty>
+
+   <empty id="req-types">
+       <mt tp='optional'   nice='Strictly Optional'/>
+       <mt tp='objective'  nice='Objective'/>
+       <mt tp='feat-based' nice='Implementation-based'/>
+       <mt tp='sel-based'  nice='Selection-based'/>
+   </empty>
+
+
+
    
 </boilerplate>
