@@ -724,9 +724,9 @@
           <xsl:if test="$appendicize='on'">
   	     <!-- First just output the name of the SFR associated with each feature.  -->
 	     <ul>
-		     <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
-			     <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
-	             </xsl:for-each>
+                <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
+		   <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
+	        </xsl:for-each>
 	     </ul>
 	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
              <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
@@ -750,10 +750,6 @@
     <xsl:template name="first-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
-	    <xsl:variable name="display-audit-app">
-		<xsl:value-of select="//cc:pp-preferences/cc:audit-events-in-sfrs"/>
-     	    </xsl:variable>
-		    
                 <xsl:call-template name="opt_appendix"/>
                 <xsl:call-template name="app-reqs">
                     <xsl:with-param name="type" select="'optional'"/>
@@ -763,9 +759,6 @@
                     <xsl:with-param name="type" select="'objective'"/>
                 </xsl:call-template>
             
-	        <xsl:call-template name="imple-reqs">
-                    <xsl:with-param name="display-audit-app" select="$display-audit-app"/>
-                </xsl:call-template>
                 <xsl:call-template name="app-reqs">
                     <xsl:with-param name="type" select="'feat-based'"/>
                 </xsl:call-template>
@@ -782,7 +775,6 @@
         <xsl:param name="type"/>
 
         <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
-<xsl:message>WENT THROUGH ERE</xsl:message>
         <h2 id="impl-reqs" class="indexable" data-level="2">
                <xsl:value-of select="$nicename"/>  Requirements
         </h2>
@@ -806,47 +798,19 @@
                         <xsl:with-param name="table" select="$type"/>
                      </xsl:call-template>
                  </xsl:if>
-                 <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
-                    <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                    <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
-                 </xsl:for-each>
-                 <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]"/>
+                 <xsl:choose>
+                    <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
+                    <xsl:otherwise> 
+                      <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+                        <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                        <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
+                      </xsl:for-each>
+                    </xsl:otherwise>
+                 </xsl:choose>
             </xsl:otherwise>
        </xsl:choose>
     </xsl:template> 
- 
-    <xsl:template match="cc:mt[@tp='impl-based']">
-       <xsl:call-template name="handle-features"/>
-    </xsl:template>
 
-    <xsl:template name="imple-reqs">
-        <xsl:param name="display-audit-app"/>
-
-        <h2 id="impl-reqs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
-        <xsl:choose>
-   	<!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
-            <xsl:when test="count(//cc:f-component[@status='feat-based'])=0">
-                <p>This <xsl:call-template name="doctype-short"/> does not define any implementation-dependent requirements.</p>
-            </xsl:when>
-            <xsl:otherwise> 
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                     <h3 id="impl-reqs" class="indexable" data-level="2">
-                         Auditable Events for Implementation-Dependent Requirements
-                     </h3>
-                     <b><xsl:call-template name="ctr-xsl">
-				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				    <xsl:with-param name="id">atref-impl-dep</xsl:with-param>
-                     </xsl:call-template>: Auditable Events for Implementation-Dependent Requirements </b>
-				    
-                     <xsl:call-template name="audit-table-xsl">
-                        <xsl:with-param name="table">feat-based</xsl:with-param>
-                     </xsl:call-template>
-                 </xsl:if>
-                 <xsl:call-template name="handle-features"/>
-            </xsl:otherwise>
-       </xsl:choose>
-    </xsl:template> 
- 
 <!-- ############### -->
 <!--                 -->
     <xsl:template name="selection-based-appendix">
