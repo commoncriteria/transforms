@@ -486,22 +486,8 @@
       </xsl:for-each> 
     </div>
   </xsl:template>
-  <!-- ############### -->
-  <!--            -->
-<!--  <xsl:template name="agroup">
-    <xsl:param name="type"/>
-    <xsl:if test="./cc:a-element[@type=$type]">
-        <h4><xsl:choose>
-           <xsl:when test="$type='D'">Developer action</xsl:when>
-           <xsl:when test="$type='C'">Content and presentation</xsl:when>
-           <xsl:when test="$type='E'">Evaluator action</xsl:when>
-        </xsl:choose> elements: </h4>
-        <xsl:apply-templates select="./cc:a-element[@type=$type]" mode="a-element"/>
-    </xsl:if>
-  </xsl:template>
--->
-  <!-- Used to match regular f-components -->
-  <!-- ############### -->
+
+ <!-- ############### -->
   <!--            -->
   <xsl:template match="cc:f-component">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -528,7 +514,7 @@
               <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
             </i></b>
-            </xsl:for-each>.
+          </xsl:for-each>.
           </i></b>
         </div>
       </xsl:if>
@@ -601,7 +587,8 @@
             </b>
           </div>
         </xsl:if>
-	    
+	    <!-- It's already organized into the feature-based section, so we don't have to repeat it here-->
+<!--
 	<xsl:if test="@status='feat-based'">
         <div class="statustag">
           <i><b>This is an implementation-based component.
@@ -616,7 +603,7 @@
         </div>
 		
       </xsl:if>
-
+-->
 	    
         <xsl:apply-templates/>
       </div>
@@ -721,14 +708,17 @@
           <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
+  	  <!-- First just output the name of the SFR associated with each feature.  -->
+          <p>
+	  If this is implemented by the TOE, the following requirements must be included in the ST:
+          <ul>
+            <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
+	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
+	    </xsl:for-each>
+	  </ul></p>
+          
+	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
           <xsl:if test="$appendicize='on'">
-  	     <!-- First just output the name of the SFR associated with each feature.  -->
-	     <ul>
-                <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
-		   <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
-	        </xsl:for-each>
-	     </ul>
-	     <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
              <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."
@@ -765,7 +755,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-                <xsl:call-template name="imple_text"/>
+                Implementation-Dependent Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>
