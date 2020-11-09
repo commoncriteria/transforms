@@ -782,7 +782,7 @@
         <xsl:param name="type"/>
 
         <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
-
+<xsl:message>WENT THROUGH ERE</xsl:message>
         <h2 id="impl-reqs" class="indexable" data-level="2">
                <xsl:value-of select="$nicename"/>  Requirements
         </h2>
@@ -805,12 +805,12 @@
                      <xsl:call-template name="audit-table-xsl">
                         <xsl:with-param name="table" select="$type"/>
                      </xsl:call-template>
-                     <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
-                            <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                            <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
-                     </xsl:for-each>
-                     <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]"/>
-                  </xsl:if>
+                 </xsl:if>
+                 <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+                    <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
+                    <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
+                 </xsl:for-each>
+                 <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]"/>
             </xsl:otherwise>
        </xsl:choose>
     </xsl:template> 
