@@ -127,7 +127,6 @@
   </xsl:template>
 
   <!-- ############### -->
-  <!-- Appears           -->
   <xsl:template match="cc:if-opt-app">
     <xsl:if test="$appendicize='on'">
       <xsl:apply-templates/>
@@ -135,6 +134,7 @@
   </xsl:template>
 
   
+  <!-- ############### -->
   <xsl:template match="cc:include-pkg" mode="show">
     <xsl:element name="a">
        <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
@@ -337,7 +337,7 @@
   <!-- ############### -->
   <!-- This template for audit tables is invoked from XSL. --> 
   <!-- This one gets called for audit tables in Appendixes. -->
-	
+  <!-- ############### -->
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
@@ -426,8 +426,8 @@
 	  </table>
 	</xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
 	    <xsl:when test="@type='optional'">
@@ -640,8 +640,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:a-element"/>
 
   <!-- ############### -->
@@ -663,8 +663,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:foreword">
     <div class="foreword">
       <h1 style="text-align: center">Foreword</h1>
@@ -673,14 +673,14 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
     <div class="activity_pane_header">
@@ -697,8 +697,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:indent">
     <div class="indent" style="margin-left:2em">
       <xsl:apply-templates/>
@@ -709,19 +709,19 @@
 
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
     <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
     <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
     <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
 
 
 
-<!-- ############### -->
-<!--                 -->
-<!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
-     Of course, nobody tells me this so it took a while to debug.   -->
-<!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
+  <!-- ############### -->
+  <!--                 -->
+  <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
+       Of course, nobody tells me this so it took a while to debug.   -->
+  <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
     <xsl:template name="handle-features">
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
@@ -749,13 +749,13 @@
     </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
-<!-- Edited to add references for these generated audit tables:
-  - strictly optional = "at-optional"
-  - objective = "at-objective"
-  - sel based = "at-sel-based"
-  - impl-dep = "at-impl-dep"  -->
+  <!-- ############### -->
+  <!--                 -->
+  <!-- Edited to add references for these generated audit tables:
+    - strictly optional = "at-optional"
+    - objective = "at-objective"
+    - sel based = "at-sel-based"
+    - impl-dep = "at-impl-dep"  -->
 
     <xsl:template name="first-appendix">
         <xsl:choose>
@@ -824,8 +824,8 @@
        </xsl:choose>
     </xsl:template> 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
     <xsl:template name="selection-based-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
@@ -859,8 +859,8 @@
         </xsl:if>
     </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
 
   <xsl:template match="cc:appendix">
     <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1> 
@@ -869,8 +869,8 @@
     <xsl:apply-templates/>
   </xsl:template> 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:chapter">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:apply-templates mode='hook' select='.'/>
@@ -878,8 +878,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:section">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
     <xsl:apply-templates mode="hook" select="."/>
@@ -887,8 +887,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
@@ -904,7 +904,8 @@
     </xsl:if>
   </xsl:template>
 
-<!-- ######################### -->
+  <!-- ######################### -->
+  <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
@@ -912,7 +913,6 @@
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
-<!-- BLAHBLAH BLAH -->
            <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol">
              <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
@@ -926,14 +926,12 @@
         </xsl:for-each>
       </table>
     </p>
-    
-    <!-- <xsl:if test="@id='obj_map'"><xsl:apply-templates/></xsl:if> -->
   </xsl:template>
 
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
@@ -952,8 +950,8 @@
   </xsl:template>
 
   <!-- Need at least two objects -->
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:ctr">
     <xsl:variable name="ctrtype"><xsl:choose>
         <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
@@ -981,8 +979,8 @@
     </span>
   </xsl:template>
 	
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:figref">
     <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
@@ -992,8 +990,8 @@
     </a>
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
@@ -1006,8 +1004,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:equation">
     <table><tr>
       <td>$$<xsl:apply-templates select="cc:value"/>$$</td>
@@ -1016,8 +1014,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
     <xsl:variable name="label"><xsl:choose>
@@ -1083,7 +1081,7 @@
 
 
    <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">
+  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">
      <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
      <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
        The Security Functional Requirements included in this section
@@ -1095,24 +1093,24 @@
      <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
      <xsl:call-template name="obj-req-map"/>
      
-   </xsl:template>
+  </xsl:template>
 
   
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:appref">
     <a href="#{@linkend}" class="dynref"></a>
     <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
   </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
   
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
 <!-- identity transform - useful for debugging -->
@@ -1126,14 +1124,11 @@
        to calling the identity transform above -->
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="@*|node()" mode="appendicize">
       <xsl:apply-templates select="current()" />
   </xsl:template>
-
-
-
 
 </xsl:stylesheet>
 
