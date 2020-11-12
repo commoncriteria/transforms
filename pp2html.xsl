@@ -43,8 +43,8 @@
     </html>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
     <xsl:call-template name="first-appendix"/>
@@ -52,8 +52,8 @@
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:usecases">
     <dl>
       <xsl:for-each select="cc:usecase">
@@ -66,8 +66,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:bibliography">
     <table>
       <tr class="header">
@@ -102,8 +102,8 @@
     </dd>
  </xsl:template>
 	
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
 
     <xsl:choose>
@@ -120,8 +120,8 @@
     </xsl:choose>
   </xsl:template>
 
-<!-- ############### -->
-<!-- Appears           -->
+  <!-- ############### -->
+  <!-- Appears           -->
   <xsl:template match="cc:if-opt-app">
     <xsl:if test="$appendicize='on'">
       <xsl:apply-templates/>
@@ -138,13 +138,13 @@
     </xsl:element> Conformant
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
       <xsl:value-of select="@name"/>
    </xsl:template>
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
@@ -235,9 +235,9 @@
   </xsl:template>
 
 	
-<!-- ############### -->
-<!-- This template for audit tables is invoked from XML. --> 
-<!-- This one gets called for the main audit table in FAU_GEN.1 -->
+  <!-- ############### -->
+  <!-- This template for audit tables is invoked from XML. --> 
+  <!-- This one gets called for the main audit table in FAU_GEN.1 -->
   <!-- ############### -->
   <!--            -->
   <!-- ############### -->
@@ -328,14 +328,14 @@
   </xsl:template>
 
   
-<!-- ############### -->
-<!-- This template for audit tables is invoked from XSL. --> 
-<!-- This one gets called for audit tables in Appendixes. -->
+  <!-- ############### -->
+  <!-- This template for audit tables is invoked from XSL. --> 
+  <!-- This one gets called for audit tables in Appendixes. -->
 	
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-<!--    <xsl:apply-templates/>  -->
+  <!--    <xsl:apply-templates/>  -->
     <table class="" border="1">
 	<tr><th>Requirement</th>
 	<th>Auditable Events</th>
