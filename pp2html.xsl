@@ -14,7 +14,7 @@
   <xsl:variable name="doctype" select="pp"/>
 
   <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
-  <xsl:variable name="oneOrTwo"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
+  <xsl:variable name="addressedByCol"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
 
   <xsl:param name="appendicize" select="''"/>
 
@@ -907,7 +907,7 @@
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
 <!-- BLAHBLAH BLAH -->
-           <xsl:if test="count(preceding-sibling::cc:*)=$oneOrTwo">
+           <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol">
              <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
@@ -1027,7 +1027,7 @@
   </xsl:template>
 
 
-<!-- ############### -->
+  <!-- ############### -->
   <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
     <div class="eacategory"><xsl:value-of select="name()"/></div>
     <xsl:apply-templates/>
@@ -1036,17 +1036,16 @@
 
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:xref">
     <xsl:variable name="linkendorig" select="@linkend"/>
-    <xsl:variable name="linkend" select="translate(@linkend,$lower,$upper)"/>
     <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
     <xsl:element name="a">
-      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkend"/>')</xsl:attribute>
+      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkendorig"/>')</xsl:attribute>
       <xsl:attribute name="href">
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkend"/>
+        <xsl:value-of select="$linkendorig"/>
       </xsl:attribute>
       <xsl:choose>
         <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
@@ -1070,8 +1069,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:secref">
     <a href="#{@linkend}" class="dynref">Section </a>
   </xsl:template>
@@ -1099,43 +1098,6 @@
     <a href="#{@linkend}" class="dynref"></a>
     <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
   </xsl:template>
-
-<!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:chapter | cc:section | cc:subsection | cc:appendix" mode="secreflookup">
-    <xsl:param name="linkend"/>
-    <xsl:param name="prefix"/>
-    <!-- make the identifier a letter or number as appropriate for appendix or chapter/section -->
-    <xsl:variable name="pos">
-      <xsl:choose>
-        <xsl:when test="name()='appendix'">
-          <xsl:choose>
-            <xsl:when test="$appendicize='on'">
-              <xsl:number format="A"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:number format="A"
-                count="cc:appendix[@id!='optional' and @id!='objective' and @id!='sel-based']"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:number/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="@id=$linkend">
-      <xsl:value-of select="concat($prefix,$pos)"/>
-    </xsl:if>
-    <xsl:if test="./cc:chapter | ./cc:section | ./cc:subsection">
-      <xsl:apply-templates mode="secreflookup"
-        select="./cc:chapter | ./cc:section | ./cc:subsection">
-        <xsl:with-param name="linkend" select="$linkend"/>
-        <xsl:with-param name="prefix" select="concat($prefix,$pos,'.')"/>
-      </xsl:apply-templates>
-    </xsl:if>
-  </xsl:template>
-
 
 <!-- ############### -->
 <!--            -->
