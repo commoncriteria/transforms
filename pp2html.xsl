@@ -1108,37 +1108,14 @@
 <!-- ############### -->
 <!--                 -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
+  
 
-<!-- ############### -->
-<!--                 -->
-  <xsl:template match="cc:util">
-    <span class="util">
-      <xsl:apply-templates/>
-    </span>
-  </xsl:template>
-
-<!-- ############### -->
-<!--                 -->
-  <xsl:template match="cc:path">
-    <span class="path">
-      <xsl:apply-templates/>
-    </span>
-  </xsl:template>
-
-
-  <!-- identity transform - useful for debugging -->
 
 <!-- ############### -->
 <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
-
-    <xsl:choose>
-      <xsl:when test="./cc:depends">
-         <xsl:message> Found a depends </xsl:message>
-      </xsl:when>
-    </xsl:choose>
-
+<!-- identity transform - useful for debugging -->
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
