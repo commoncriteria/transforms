@@ -1,24 +1,22 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
 
-   <!--##############################################
+  <!--##############################################
            Includes
       ##############################################-->
-
-
-  
   <xsl:include href="js-content.xsl"/>
   <xsl:include href="css-content.xsl"/>
-   <!--##############################################
+
+  <!--##############################################
            Parameters
       ##############################################-->
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
   <xsl:param name="release" select="'draft'"/>
-  <!-- #Adds 3 non-breaking spaces -->
-   <!--##############################################
+  <!--##############################################
            Constants
       ##############################################-->
+  <!-- #Adds 3 non-breaking spaces -->
   <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
 
   <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
@@ -29,7 +27,7 @@
       <xsl:otherwise>PP-Module for <xsl:value-of select="/cc:*/@target-products"/></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
- <!-- ############################################################
+  <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
   <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
@@ -62,8 +60,9 @@
 
 
  
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:tech-terms">
     <xsl:param name="num" select="2"/>
 
@@ -85,6 +84,9 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="glossary-entry">
       <tr>
         <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
@@ -99,6 +101,9 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:linkref">
     <xsl:variable name="linkend" select="@linkend"/>
     <xsl:if test="not(//*[@id=$linkend])">
@@ -113,12 +118,18 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:testlist">
     <ul>
       <xsl:apply-templates/>
     </ul>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:test">
     <li>
       <b>Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
@@ -128,6 +139,9 @@ The following sections list Common Criteria and technology terms used in this do
     </li>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="references">
     <h1 id="biblio" class="indexable" data-level="A">References</h1>
     <table>
@@ -136,6 +150,9 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:componentsneeded">
     <table>
       <tr class='header'><th>Component</th><th>Explanation</th></tr>
@@ -143,6 +160,9 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:componentneeded">
     <tr>
         <td><xsl:apply-templates select="cc:componentid"/></td>
@@ -150,6 +170,9 @@ The following sections list Common Criteria and technology terms used in this do
     </tr>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:cc-entry">
 <tr><td><span id='bibCC'> [CC] </span></td><td>Common Criteria for Information Technology Security Evaluation - <ul>
             <li><a href='http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf'>Part
@@ -165,6 +188,9 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:steplist">
     <ul>
       <xsl:apply-templates/>
@@ -197,6 +223,9 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:choice//cc:selectables">
     <xsl:for-each select="cc:selectable"><xsl:choose>
 	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
@@ -230,10 +259,19 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]</xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:note">
     <div class="appnote">
       <span class="note-header"><xsl:choose>
@@ -248,6 +286,9 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
       <tr class="header">
@@ -259,10 +300,16 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:manager">
     <td> <xsl:apply-templates/> </td>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function">
     <tr>
       <td>
@@ -299,6 +346,9 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
@@ -317,6 +367,9 @@ The following sections list Common Criteria and technology terms used in this do
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:bibliography/cc:entry">
     <tr>
       <xsl:variable name='id'><xsl:value-of select="@id"/></xsl:variable>
@@ -372,6 +425,9 @@ The following sections list Common Criteria and technology terms used in this do
         </div>        
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="htm:*" name="handle-html">
      <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
@@ -452,6 +508,9 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:if>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:inline-comment">
     <xsl:choose>
       <xsl:when test="@linebreak='yes'">
@@ -521,6 +580,9 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:text>/</xsl:text>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="head">
       <head>
 	<title><xsl:value-of select="$title"/></title>
@@ -532,52 +594,45 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:template>
 
 
-    <xsl:template name="body-begin">
-      <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
-      <noscript>
-        <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
-            >This page is best viewed with JavaScript enabled!</h1>
-      </noscript>
-      <div class="center">
-	<img src="images/niaplogo.png" alt="NIAP Logo"/>
-        <br/>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="body-begin">
+    <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
+    <noscript>
+      <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
+          >This page is best viewed with JavaScript enabled!</h1>
+    </noscript>
+    <div class="center">
+      <img src="images/niaplogo.png" alt="NIAP Logo"/> <br/>
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
-	<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-        <p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-        <p/><b><xsl:value-of select="//cc:PPAuthor"/></b>
-      </div>
+      Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      <xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
+    </div>
+    <xsl:apply-templates select="//cc:foreword"/>
 
+    <h2 style="page-break-before:always;">Revision History</h2>
+    <table>
+     <tr class="header">
+       <th>Version</th>
+       <th>Date</th>
+       <th>Comment</th>
+     </tr>
+     <xsl:for-each select="//cc:RevisionHistory/cc:entry">
+       <tr>
+         <td> <xsl:value-of select="cc:version"/> </td>
+         <td> <xsl:value-of select="cc:date"/> </td>
+         <td> <xsl:apply-templates select="cc:subject"/> </td>
+       </tr>
+     </xsl:for-each>
+    </table>
+    <h2>Contents</h2>
+    <div class="toc" id="toc"/>
+  </xsl:template>
 
-
-	<xsl:apply-templates select="//cc:foreword"/>
-
-	<h2 style="page-break-before:always;">Revision History</h2>
-        <table>
-          <tr class="header">
-            <th>Version</th>
-            <th>Date</th>
-            <th>Comment</th>
-          </tr>
-          <xsl:for-each select="//cc:RevisionHistory/cc:entry">
-            <tr>
-              <td>
-                <xsl:value-of select="cc:version"/>
-              </td>
-              <td>
-                <xsl:value-of select="cc:date"/>
-              </td>
-              <td>
-                <xsl:apply-templates select="cc:subject"/>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </table>
-	<h2>Contents</h2>
-	<div class="toc" id="toc"/>
-    </xsl:template>
-
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:no-link">
     <span class="no-link">
         <xsl:apply-templates/>
@@ -585,16 +640,16 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template name="acronyms">
     <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
     <xsl:call-template name="acronym-table"/>
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:acronyms" name="acronym-table">
     <table>
       <tr class="header">
@@ -613,8 +668,8 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   
- <!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:cite">
     <xsl:variable name="linkend" select="@linkend"/>
     <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
