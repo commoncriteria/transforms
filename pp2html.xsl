@@ -154,15 +154,14 @@
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
-    
     <table>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
-
-      <xsl:for-each select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
+      <xsl:for-each 
+          select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
           <xsl:if test="not(name(preceding-sibling::cc:*[1])='objective-refer')">
             <xsl:attribute name="class">major-row</xsl:attribute>
@@ -177,8 +176,6 @@
       </xsl:for-each>
     </table>
   </xsl:template>
-
-
 
   <!-- ############### -->
   <!--                 -->
@@ -245,9 +242,7 @@
   <!-- This template for audit tables is invoked from XML. --> 
   <!-- This one gets called for the main audit table in FAU_GEN.1 -->
   <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-   <xsl:template match="cc:audit-table" name="audit-table">
+  <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
@@ -293,7 +288,7 @@
         </xsl:for-each>
     </xsl:for-each>
 
-      <xsl:for-each select="//cc:f-component-decl">
+    <xsl:for-each select="//cc:f-component-decl">
 	<xsl:variable name="fcomp" select="."/>
 	<xsl:variable name="fcompstatus">
            <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
@@ -341,7 +336,6 @@
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
-  <!--    <xsl:apply-templates/>  -->
     <table class="" border="1">
 	<tr><th>Requirement</th>
 	<th>Auditable Events</th>
@@ -428,6 +422,7 @@
 
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
 	    <xsl:when test="@type='optional'">
@@ -468,13 +463,9 @@
     </table>
   </xsl:template>
 
-	
-<!-- ############### -->
-<!--            -->
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
- 
   <xsl:template match="cc:audit-event" mode="intable">
     <td>
        <xsl:if test="@type='optional'">[OPTIONAL]</xsl:if>
@@ -504,7 +495,7 @@
     </div>
   </xsl:template>
 
- <!-- ############### -->
+  <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:f-component">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -705,17 +696,11 @@
     </div>
   </xsl:template>
 
-
-
-
-
   <!-- ############### -->
   <!--                 -->
-    <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
-    <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
-    <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
-
-
+  <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
+  <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
+  <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
 
   <!-- ############### -->
   <!--                 -->
@@ -936,20 +921,18 @@
     <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
       <!-- should only run through once, but this is how we're changing contexts -->
- <!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]/@pre"/> -->
       <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
       <xsl:choose>
-	      <xsl:when test="not($hasPre='')">
-		      <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	      </xsl:when>
-	      <xsl:otherwise>
-		      <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	      </xsl:otherwise>
+        <xsl:when test="not($hasPre='')">
+	  <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
+	</xsl:otherwise>
       </xsl:choose>
     </a>
   </xsl:template>
 
-  <!-- Need at least two objects -->
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:ctr">
@@ -965,7 +948,7 @@
     </span>
   </xsl:template>
 
-   <!-- ############### -->
+  <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="ctr-xsl">
@@ -1092,7 +1075,6 @@
      <xsl:apply-templates/>
      <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
      <xsl:call-template name="obj-req-map"/>
-     
   </xsl:template>
 
   
@@ -1107,26 +1089,22 @@
   <!--                 -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
   
-
-
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
-<!-- identity transform - useful for debugging -->
+    <!-- identity transform - useful for debugging -->
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 
-  <!-- if no template matches when the mode is set to appendicize,
-       default to a template without the mode set.  this may default
-       to calling the identity transform above -->
-
-
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="@*|node()" mode="appendicize">
+      <!-- if no template matches when the mode is set to appendicize,
+       default to a template without the mode set.  this may default
+       to calling the identity transform above -->
       <xsl:apply-templates select="current()" />
   </xsl:template>
 
