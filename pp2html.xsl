@@ -18,8 +18,6 @@
 
   <xsl:param name="appendicize" select="''"/>
 
-  <xsl:param name="custom-css-file" select="''"/>
-
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
@@ -28,8 +26,10 @@
   <xsl:include href="ppcommons.xsl"/>
 
   <xsl:include href="boilerplates.xsl"/>
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--      START      -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="/">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
@@ -163,7 +163,6 @@
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
               <xsl:apply-templates select=".." mode="get-representation"/><br/>
-    <!--          <xsl:value-of select="../@name"/><br/> -->
             </td>
           </xsl:if>
           <td><xsl:value-of select="@ref"/></td>
@@ -175,9 +174,9 @@
 
 
 
-<!-- ############### -->
-<!--            -->
-
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
   <xsl:template match="cc:audit-table[cc:depends]">
       <!-- This is the same as the audit-events template below, just with a different name.
            The other one should disappear eventually. -->
@@ -205,7 +204,10 @@
   </xsl:template>    
 
 	
-  <xsl:template match="cc:audit-events[cc:depends]">
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+   <xsl:template match="cc:audit-events[cc:depends]">
       <div class="dependent"> The following audit events are included if:
          <ul> <xsl:for-each select="cc:depends">
             <li>
@@ -236,7 +238,10 @@
 <!-- ############### -->
 <!-- This template for audit tables is invoked from XML. --> 
 <!-- This one gets called for the main audit table in FAU_GEN.1 -->
-  <xsl:template match="cc:audit-table" name="audit-table">
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
@@ -431,7 +436,10 @@
   </xsl:template>
     
    
-  <xsl:template match="cc:audit-events" name="audit-events">
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+   <xsl:template match="cc:audit-events" name="audit-events">
     <xsl:variable name="table" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
@@ -457,7 +465,10 @@
 	
 <!-- ############### -->
 <!--            -->
-
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+ 
   <xsl:template match="cc:audit-event" mode="intable">
     <td>
        <xsl:if test="@type='optional'">[OPTIONAL]</xsl:if>
@@ -627,7 +638,10 @@
 <!--            -->
   <xsl:template match="cc:a-element"/>
 
-  <xsl:template match="cc:a-element" mode="a-element">
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+   <xsl:template match="cc:a-element" mode="a-element">
     <div class="element">
       <xsl:variable name="type"><xsl:value-of select="@type"/></xsl:variable>
       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -761,7 +775,10 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="app-reqs">
+  <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
+     <xsl:template name="app-reqs">
         <xsl:param name="type"/>
 
         <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
@@ -944,6 +961,9 @@
     </span>
   </xsl:template>
 
+   <!-- ############### -->
+  <!--            -->
+  <!-- ############### -->
   <xsl:template name="ctr-xsl">
       <xsl:param name="ctr-type"/>
       <xsl:param name="id"/>
