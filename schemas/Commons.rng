@@ -736,7 +736,7 @@ Grouping for Security Objective for the Operation Environment entries.
               Denotes a single test.
             </a:documentation>
             <optional>
-              <element name="objective">
+              <element name="test-obj">
                  <a:documentation>Describes the goal of the test </a:documentation>
                 <ref name="basic-content-pat"/>
               </element>
