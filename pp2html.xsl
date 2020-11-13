@@ -43,8 +43,8 @@
     </html>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
     <xsl:call-template name="first-appendix"/>
@@ -52,8 +52,8 @@
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:usecases">
     <dl>
       <xsl:for-each select="cc:usecase">
@@ -66,8 +66,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:bibliography">
     <table>
       <tr class="header">
@@ -102,8 +102,8 @@
     </dd>
  </xsl:template>
 	
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
 
     <xsl:choose>
@@ -120,8 +120,8 @@
     </xsl:choose>
   </xsl:template>
 
-<!-- ############### -->
-<!-- Appears           -->
+  <!-- ############### -->
+  <!-- Appears           -->
   <xsl:template match="cc:if-opt-app">
     <xsl:if test="$appendicize='on'">
       <xsl:apply-templates/>
@@ -138,13 +138,13 @@
     </xsl:element> Conformant
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
       <xsl:value-of select="@name"/>
    </xsl:template>
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
     This section describes how the assumptions, threats, and organization security policies map to the security objectives.
@@ -328,9 +328,9 @@
   </xsl:template>
 
   
-<!-- ############### -->
-<!-- This template for audit tables is invoked from XSL. --> 
-<!-- This one gets called for audit tables in Appendixes. -->
+  <!-- ############### -->
+  <!-- This template for audit tables is invoked from XSL. --> 
+  <!-- This one gets called for audit tables in Appendixes. -->
 	
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
@@ -420,8 +420,8 @@
 	  </table>
 	</xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:audit-event-info" mode="intable">
 	<xsl:choose>
 	    <xsl:when test="@type='optional'">
@@ -634,8 +634,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:a-element"/>
 
   <!-- ############### -->
@@ -657,8 +657,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:foreword">
     <div class="foreword">
       <h1 style="text-align: center">Foreword</h1>
@@ -667,14 +667,14 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
     <div class="activity_pane_header">
@@ -691,8 +691,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:indent">
     <div class="indent" style="margin-left:2em">
       <xsl:apply-templates/>
@@ -703,19 +703,19 @@
 
 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
     <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
     <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
     <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
 
 
 
-<!-- ############### -->
-<!--                 -->
-<!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
-     Of course, nobody tells me this so it took a while to debug.   -->
-<!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
+  <!-- ############### -->
+  <!--                 -->
+  <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
+       Of course, nobody tells me this so it took a while to debug.   -->
+  <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
     <xsl:template name="handle-features">
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
@@ -743,14 +743,14 @@
     </xsl:template>
 
 
-<!-- ############### -->
-<!--                 -->
-<!-- Edited to add references for these generated audit tables:
-  - strictly optional = "at-optional"
-  - objective = "at-objective"
-  - sel based = "at-sel-based"
-  - impl-dep = "at-impl-dep"  -->
-
+  <!-- ############### -->
+  <!--                 -->
+  <!-- Edited to add references for these generated audit tables:
+    - strictly optional = "at-optional"
+    - objective = "at-objective"
+    - sel based = "at-sel-based"
+    - impl-dep = "at-impl-dep"  -->
+  
     <xsl:template name="first-appendix">
         <xsl:choose>
             <xsl:when test="$appendicize='on'">
@@ -818,8 +818,8 @@
        </xsl:choose>
     </xsl:template> 
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
     <xsl:template name="selection-based-appendix">
         <xsl:if test="$appendicize='on'">
             <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
@@ -853,8 +853,8 @@
         </xsl:if>
     </xsl:template>
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
 
   <xsl:template match="cc:appendix">
     <h1 id="{@id}" class="indexable" data-level="A"><xsl:value-of select="@title"/></h1> 
@@ -863,8 +863,8 @@
     <xsl:apply-templates/>
   </xsl:template> 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:chapter">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:apply-templates mode='hook' select='.'/>
@@ -872,8 +872,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:section">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
     <xsl:apply-templates mode="hook" select="."/>
@@ -881,8 +881,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:subsection">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
@@ -898,7 +898,7 @@
     </xsl:if>
   </xsl:template>
 
-<!-- ######################### -->
+  <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
@@ -926,8 +926,8 @@
 
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:ctr-ref">
     <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
@@ -946,8 +946,8 @@
   </xsl:template>
 
   <!-- Need at least two objects -->
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:ctr">
     <xsl:variable name="ctrtype"><xsl:choose>
         <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
@@ -975,8 +975,8 @@
     </span>
   </xsl:template>
 	
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:figref">
     <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
       <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
@@ -986,8 +986,8 @@
     </a>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
@@ -1000,8 +1000,8 @@
     </div>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:equation">
     <table><tr>
       <td>$$<xsl:apply-templates select="cc:value"/>$$</td>
@@ -1010,8 +1010,8 @@
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
     <xsl:variable name="label"><xsl:choose>
@@ -1092,27 +1092,27 @@
    </xsl:template>
 
   
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:appref">
     <a href="#{@linkend}" class="dynref"></a>
     <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:util">
     <span class="util">
       <xsl:apply-templates/>
     </span>
   </xsl:template>
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:path">
     <span class="path">
       <xsl:apply-templates/>
@@ -1122,17 +1122,10 @@
 
   <!-- identity transform - useful for debugging -->
 
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
-
-    <xsl:choose>
-      <xsl:when test="./cc:depends">
-         <xsl:message> Found a depends </xsl:message>
-      </xsl:when>
-    </xsl:choose>
-
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
@@ -1141,15 +1134,11 @@
   <!-- if no template matches when the mode is set to appendicize,
        default to a template without the mode set.  this may default
        to calling the identity transform above -->
-
-
-<!-- ############### -->
-<!--                 -->
+  <!-- ############### -->
+  <!--                 -->
   <xsl:template match="@*|node()" mode="appendicize">
       <xsl:apply-templates select="current()" />
   </xsl:template>
-
-
 
 
 </xsl:stylesheet>
