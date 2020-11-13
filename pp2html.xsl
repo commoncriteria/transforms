@@ -44,12 +44,12 @@
 
   <!-- ############### -->
   <xsl:template match="/">
+    <xsl:call-template name="sanity-checks"/>
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
     <html xmlns="http://www.w3.org/1999/xhtml">
       <xsl:call-template name="head"/>
       <body onLoad="init()">
-        <xsl:call-template name="sanity-checks"/>
         <xsl:call-template name="body-begin"/>
         <xsl:apply-templates select="cc:*"/>
       </body>
@@ -124,7 +124,6 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
-
     <xsl:choose>
       <xsl:when test="cc:*[cc:description]">
         <dl>
@@ -162,11 +161,13 @@
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
       <xsl:value-of select="@name"/>
    </xsl:template>
+
   <!-- ############### -->
   <!--                 -->
    <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
-    This section describes how the assumptions, threats, and organization security policies map to the security objectives.
+    This section describes how the assumptions, threats, and organization 
+    security policies map to the security objectives.
     <table>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
@@ -498,7 +499,7 @@
         <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
         <xsl:value-of select="@name"/>
       </h4>
-      <xsl:apply-templates/>
+      <xsl:apply-templates/><!-- a-elements don't output anything here -->
       <xsl:variable name="comp" select="."/>
       <xsl:for-each select="document('boilerplates.xml')//cc:empty[@id='a-group']/cc:a-stuff">
          <xsl:variable name="type" select="@type"/>
