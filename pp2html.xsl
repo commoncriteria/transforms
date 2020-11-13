@@ -588,31 +588,12 @@
                   <xsl:call-template name="req-refs">
                     <xsl:with-param name="req" select="@req"/>
                   </xsl:call-template>
-                  <!--                <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>-->
                   <xsl:call-template name="commaifnotlast"/>
                 </i></b>
               </xsl:for-each>. </i>
             </b>
           </div>
         </xsl:if>
-	    <!-- It's already organized into the feature-based section, so we don't have to repeat it here-->
-<!--
-	<xsl:if test="@status='feat-based'">
-        <div class="statustag">
-          <i><b>This is an implementation-based component.
-                Its inclusion depends on whether the TOE implements one or more of the following features:
-                <ul>
-                  <xsl:for-each select="cc:depends[@on='implements']">
-                    <xsl:variable name="rid"><xsl:value-of select="cc:ref-id"/></xsl:variable>
-                    <li><a href="#{$rid}"><xsl:value-of select="//cc:feature[@id=$rid]/@title"/></a></li>
-                  </xsl:for-each>
-                </ul>
-        </b></i>
-        </div>
-		
-      </xsl:if>
--->
-	    
         <xsl:apply-templates/>
       </div>
   </xsl:template>
@@ -631,11 +612,7 @@
     </div>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:a-element"/>
-
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
    <xsl:template match="cc:a-element" mode="a-element">
@@ -697,11 +674,13 @@
   </xsl:template>
 
   <!-- ############### -->
-  <!--                 -->
+  <!-- These items are just consumed without output when processed by 'apply-templates' in default mode.      -->
   <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
   <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
   <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
+  <xsl:template match="cc:a-element"/>
 
+ 
  <!-- ############### -->
   <!--                 -->
   <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
