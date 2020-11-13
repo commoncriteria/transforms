@@ -531,8 +531,8 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <!-- Makes a ref to requirement -->
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template name="req-refs">
     <!-- Optional css classes -->
     <xsl:param name="class"/>
@@ -591,7 +591,7 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:call-template name="pp_css"/>
 	</style>
       </head>
-    </xsl:template>
+  </xsl:template>
 
 
   <!-- ############### -->
