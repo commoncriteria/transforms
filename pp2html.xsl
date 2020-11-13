@@ -11,12 +11,24 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
-  <xsl:variable name="addressedByCol"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
-
+  <!-- ############### -->
+  <!--  PARAMETERS     -->
+  <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
 
-  <!-- very important, for special characters and umlauts iso8859-1-->
+  <!-- ############### -->
+  <!--  CONSTANTS      -->
+  <!-- ############### -->
+  <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
+  <xsl:variable name="addressedByCol"><xsl:choose>
+    <xsl:when test="/cc:PP">1</xsl:when>
+    <xsl:otherwise>2</xsl:otherwise>
+  </xsl:choose></xsl:variable>
+
+  <!-- ############### -->
+  <!--  SETTINGS       -->
+  <!-- ############### -->
+    <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
   <!-- ############### -->
@@ -27,9 +39,10 @@
 
 
   <!-- ############### -->
-  <!--      START      -->
+  <!--  TEMPLATES      -->
   <!-- ############### -->
-  <!--            -->
+
+  <!-- ############### -->
   <xsl:template match="/">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
