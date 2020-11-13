@@ -11,8 +11,6 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <xsl:variable name="doctype" select="pp"/>
-
   <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
   <xsl:variable name="addressedByCol"><xsl:choose><xsl:when test="/cc:PP">1</xsl:when><xsl:otherwise>2</xsl:otherwise></xsl:choose></xsl:variable>
 
@@ -21,11 +19,13 @@
   <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
-  <!-- Put all common templates into ppcommons.xsl -->
-  <!-- They can be redefined/overridden  -->
+  <!-- ############### -->
+  <!--     INCLUDES     -->
+  <!-- ############### -->
   <xsl:include href="ppcommons.xsl"/>
-
   <xsl:include href="boilerplates.xsl"/>
+
+
   <!-- ############### -->
   <!--      START      -->
   <!-- ############### -->
