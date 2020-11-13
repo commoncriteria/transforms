@@ -168,6 +168,8 @@
        margin-left: 25px;
        font-style: italic;
    }
+  
+   .evidence, .test-obj { font-style: normal; font-size: 90%;}
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
   </xsl:template>

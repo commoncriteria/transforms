@@ -138,8 +138,22 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:apply-templates/>
     </li>
   </xsl:template>
-
+  
   <!-- ############### -->
+  <!--                 -->
+<!-- ############### -->
+<xsl:template match="cc:test-obj">
+<div class="test-obj"><b>Objective:</b> <xsl:apply-templates/> </div>
+  </xsl:template>
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:evidence">
+    <div class="evidence"><b>Evidence:</b> <xsl:apply-templates/> </div>
+  </xsl:template>
+
+   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="references">
