@@ -735,7 +735,19 @@ Grouping for Security Objective for the Operation Environment entries.
             <a:documentation>
               Denotes a single test.
             </a:documentation>
-            <oneOrMore>
+            <optional>
+              <element name="objective">
+                 <a:documentation>Describes the goal of the test </a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </optional>
+            <optional>
+              <element name="evidence">
+                 <a:documentation>Describes what body of evidence should look like from the lab.</a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </optional>
+             <oneOrMore>
               <choice>
                 <ref name="basic-content-pat"/>
                 <ref name="testlist"/>
