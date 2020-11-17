@@ -63,6 +63,11 @@
     <xsl:apply-templates select="cc:chapter"/>
     <xsl:call-template name="first-appendix"/>
     <xsl:call-template name="selection-based-appendix"/>
+    <xsl:call-template name="app-reqs">
+       <xsl:with-param name="type" select="'sel-based'"/>
+       <xsl:with-param name="level" select="'A'"/>
+       <xsl:with-param name="sublevel" select="'2'"/>
+    </xsl:call-template>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -761,45 +766,65 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-     <xsl:template name="app-reqs">
-        <xsl:param name="type"/>
+  <xsl:template name="app-reqs">
+    <xsl:param name="type"/>
+    <xsl:param name="level" select="2"/>
+    <xsl:param name="sublevel" select="3"/>
 
-        <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
-        <h2 id="impl-reqs" class="indexable" data-level="2">
-               <xsl:value-of select="$nicename"/>  Requirements
-        </h2>
+    <xsl:variable name="levelname"><xsl:choose>
+      <xsl:when test="$level='A'">h1</xsl:when>
+      <xsl:otherwise>h2</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
+ 
+    <xsl:element name="{$levelname}">
+       <xsl:attribute name="id"><xsl:value-of select="concat($type,'-reqs')"/></xsl:attribute>
+       <xsl:attribute name="class">indexable</xsl:attribute>
+       <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
+       <xsl:value-of select="$nicename"/>  Requirements
+    </xsl:element>
+    <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:description"/>
+    <xsl:choose>
+      <xsl:when test="count(//cc:f-component[@status=$type])=0">
+         <p>This <xsl:call-template name="doctype-short"/> does not define any 
+            <xsl:value-of select="$nicename"/> requirements.</p>
+      </xsl:when>
+      <xsl:otherwise> 
+         <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
+           <xsl:element name="h{$sublevel}">
+              <xsl:attribute name="id"><xsl:value-of select="concat($type,'-reqs-audit')"/></xsl:attribute>
+              <xsl:attribute name="class">indexable</xsl:attribute>
+              <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
+              Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
+           </xsl:element>
+          <b><xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
+              </xsl:call-template>: 
+           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </b>
+			    
+           <xsl:call-template name="audit-table-xsl">
+             <xsl:with-param name="table" select="$type"/>
+           </xsl:call-template>
+        </xsl:if>
         <xsl:choose>
-   	<!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
-            <xsl:when test="count(//cc:f-component[@status=$type])=0">
-                <p>This <xsl:call-template name="doctype-short"/> does not define any <xsl:value-of select="$nicename"/> requirements.</p>
-            </xsl:when>
-            <xsl:otherwise> 
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                     <h3 id="{$type}-reqs" class="indexable" data-level="3">
-                         Auditable Events for <xsl:value-of select="$nicename"/> Requirements
-                     </h3>
-                     <b><xsl:call-template name="ctr-xsl">
-				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				    <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
-                     </xsl:call-template>: 
-                         Auditable Events for <xsl:value-of select="$type"/> Requirements </b>
-				    
-                     <xsl:call-template name="audit-table-xsl">
-                        <xsl:with-param name="table" select="$type"/>
-                     </xsl:call-template>
-                 </xsl:if>
-                 <xsl:choose>
-                    <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
-                    <xsl:otherwise> 
-                      <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
-                        <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                        <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
-                      </xsl:for-each>
-                    </xsl:otherwise>
-                 </xsl:choose>
-            </xsl:otherwise>
-       </xsl:choose>
-    </xsl:template> 
+          <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
+          <xsl:otherwise> 
+            <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+              <xsl:element name="h{$sublevel}">
+                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
+                <xsl:attribute name="class">indexable</xsl:attribute>
+                <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
+                <xsl:value-of select="@title"/>
+              </xsl:element>
+     <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
+              <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+     </xsl:otherwise>
+   </xsl:choose>
+ </xsl:template> 
 
   <!-- ############### -->
   <!--                 -->
@@ -816,7 +841,7 @@
 
        		  <!-- Audit table for selection-based requirements -->
 		  <h3 id="sel-based-reqs" class="indexable" data-level="2"> Audit Events for Selection-Based Requirements</h3>
-	     		  <br/><b>
+	     		  <b>
 			    <xsl:call-template name="ctr-xsl">
 				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
 				    <xsl:with-param name="id">atref-sel-based</xsl:with-param>
