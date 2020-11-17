@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<boilerplate xmlns="https://niap-ccevs.org/cc/v1">
+<boilerplate xmlns="https://niap-ccevs.org/cc/v1" 
+             xmlns:h="http://www.w3.org/1999/xhtml"
+             xmlns:cc="https://niap-ccevs.org/cc/v1"> 
   <cc-terms>
     <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <citeCC/>.</term>
     <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used as a basis to build a PP-Configuration.</term>
@@ -69,14 +71,14 @@
        <mt tp='feat-based' nice='Implementation-based'/>
        <mt tp='sel-based'  nice='Selection-based'>
 		 <description>
-	<p>As indicated in the introduction to this <cc:doctype-short/>,
+	<h:p>As indicated in the introduction to this <cc:doctype-short/>,
         the baseline requirements
         (those that must be performed by the TOE or its underlying platform)
         are contained in the body of this <cc:doctype-short/>.
         There are additional requirements based on selections in the body of 
         the <cc:doctype-short/>:
         if certain selections are made, then additional requirements below must be included.
- 	</p>
+ 	</h:p>
 		 </description>
 	   </mt>
    </empty>
