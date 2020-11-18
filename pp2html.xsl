@@ -61,12 +61,16 @@
   <!-- ############### -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
+    <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
-    <xsl:call-template name="app-reqs">
-       <xsl:with-param name="type" select="'sel-based'"/>
-       <xsl:with-param name="level" select="'A'"/>
-       <xsl:with-param name="sublevel" select="'2'"/>
-    </xsl:call-template>
+    <xsl:if test="$appendicize='on'">
+      <xsl:call-template name="app-reqs">
+         <xsl:with-param name="type" select="'sel-based'"/>
+         <xsl:with-param name="level" select="'A'"/>
+         <xsl:with-param name="sublevel" select="'2'"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:call-template name="use-case-appendix"/>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -83,6 +87,52 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="use-case-appendix">
+    <xsl:if test="//cc:usecase/cc:config">
+      <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
+      <xsl:for-each select="//cc:usecase[cc:config]">
+        <h2 id="use-case-appendix" class="indexable" data-level="2">
+          <xsl:value-of select="@title"/>
+       </h2>
+       <xsl:for-each select="cc:config">
+         <table>
+	   <xsl:apply-templates select="cc:*" mode="use-case"/>
+         </table>
+
+<!--         <xsl:for-each select="//cc:f-component[.//cc:selectable/@id=]">
+         blah blah blah
+         </xsl:for-each>-->
+       </xsl:for-each>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:ref-id" mode="use-case">
+    <xsl:variable name="ref-id" select="text()"/>
+    <xsl:message> HERE </xsl:message>
+    <tr>
+      <xsl:choose>
+        <xsl:when test="//cc:selectable[@id=$ref-id]">
+          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/></td>  
+          <td><xsl:if test="../cc:not">DO NOT </xsl:if>
+          choose
+          <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></td>
+        </xsl:when>
+        <xsl:when test="//cc:f-component[@id=$ref-id]">
+          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
+          <td>Include in the ST</td>
+        </xsl:when>
+      </xsl:choose>
+    </tr>
+ </xsl:template> 
+
 
 
   <!-- ############### -->
