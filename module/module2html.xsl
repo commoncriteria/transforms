@@ -28,9 +28,10 @@
     <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
-    <xsl:call-template name="opt-sfrs"/>
+    <xsl:call-template name="first-appendix"/>
+    <!--<xsl:call-template name="opt-sfrs"/>
+    <xsl:call-template name="obj-sfrs"/> -->
     <xsl:call-template name="sel-sfrs"/>
-    <xsl:call-template name="obj-sfrs"/>
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
     <xsl:apply-templates select="//cc:bibliography"/>

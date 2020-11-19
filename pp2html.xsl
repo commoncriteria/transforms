@@ -736,7 +736,7 @@
     - impl-dep = "at-impl-dep"  -->
     <xsl:template name="first-appendix">
         <xsl:choose>
-            <xsl:when test="$appendicize='on'">
+            <xsl:when test="/cc:Module or $appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
                 <xsl:call-template name="app-reqs">
                     <xsl:with-param name="type" select="'optional'"/>
@@ -765,7 +765,7 @@
         <xsl:param name="type"/>
 
         <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
-        <h2 id="impl-reqs" class="indexable" data-level="2">
+        <h2 id="${type}-reqs" class="indexable" data-level="2">
                <xsl:value-of select="$nicename"/>  Requirements
         </h2>
         <xsl:choose>
