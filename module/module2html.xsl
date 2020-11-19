@@ -28,9 +28,10 @@
     <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
-    <xsl:call-template name="opt-sfrs"/>
+    <xsl:call-template name="first-appendix"/>
+    <!--<xsl:call-template name="opt-sfrs"/>
+    <xsl:call-template name="obj-sfrs"/> -->
     <xsl:call-template name="sel-sfrs"/>
-    <xsl:call-template name="obj-sfrs"/>
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
     <xsl:apply-templates select="//cc:bibliography"/>
@@ -139,7 +140,7 @@
       <xsl:apply-templates mode="short" select="."/> that are needed to support
       <xsl:value-of select="/cc:Module/@target-products"/> functionality.
       This is considered to be consistent because the functionality provided by the
-      <xsl:apply-templates mode="short" select="."/>is being used for its intended purpose.
+      <xsl:apply-templates mode="short" select="."/> is being used for its intended purpose.
       <xsl:choose>
         <xsl:when test='$base//cc:modified-sfrs//cc:f-element'>
           The PP-Module also identifies a number of modified SFRs from the

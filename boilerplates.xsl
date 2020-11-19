@@ -14,7 +14,7 @@
 This appendix lists requirements that should be considered satisfied by products
 successfully evaluated against this <xsl:call-template name="doctype-long"/>.   <!-- Protection Profile -->
 However, these requirements are not featured explicitly as SFRs and should not be
-included in the <abbr title="Security Target">ST</abbr>.
+included in the ST.
 They are not included as standalone SFRs because it would
 increase the time, cost, and complexity of evaluation.
 This approach is permitted
@@ -35,7 +35,8 @@ provides evidence that these controls are present and have been evaluated.
 
 <xsl:template name="doctype-short" match="cc:doctype-short">
 	<xsl:choose>
-		<xsl:when test="//cc:PP[@type='package']">Package</xsl:when>
+		<xsl:when test="/cc:PP[@type='package']">Package</xsl:when>
+                <xsl:when test="/cc:Module">PP-Module</xsl:when>
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -43,6 +44,7 @@ provides evidence that these controls are present and have been evaluated.
 <xsl:template name="doctype-long"  match="cc:doctype-long">
 	<xsl:choose>
 		<xsl:when test="//cc:PP[@type='package']">Functional Package</xsl:when>
+                <xsl:when test="/cc:Module">Protection Profile Module</xsl:when>
 		<xsl:otherwise>Protection Profile</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -202,7 +204,7 @@ This PP-Module does not define any objectives for the Operational Environment.
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
     As indicated in the introduction to this <xsl:call-template name="doctype-short"/>, the baseline requirements (those that must be
 	  performed by the TOE) are contained in the body of this <xsl:call-template name="doctype-short"/>.
-    This Appendix contains three other types of optional requirements that may be included in the ST, but are not required in order
+    This appendix contains three other types of optional requirements that may be included in the ST, but are not required in order
 	  to conform to this <xsl:call-template name="doctype-short"/>.
     However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
 

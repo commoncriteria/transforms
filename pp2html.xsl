@@ -799,7 +799,7 @@
     - impl-dep = "at-impl-dep"  -->
     <xsl:template name="first-appendix">
         <xsl:choose>
-            <xsl:when test="$appendicize='on'">
+            <xsl:when test="/cc:Module or $appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
                 <xsl:call-template name="app-reqs">
                     <xsl:with-param name="type" select="'optional'"/>
