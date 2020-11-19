@@ -114,6 +114,17 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:group" mode="use-case">
+    <xsl:choose>
+      <xsl:when test="cc:description">
+      </xsl:when>
+      <xsl:otherwise>
+      </xsl:otherwise>
+  </xsl:template> 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:ref-id" mode="use-case">
     <xsl:variable name="ref-id" select="text()"/>
     <xsl:message> HERE </xsl:message>
