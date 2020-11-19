@@ -33,15 +33,6 @@ provides evidence that these controls are present and have been evaluated.
   </xsl:template>
 
 
-  <xsl:template name="selection-based-text">
-As indicated in the introduction to this <xsl:call-template name="doctype-short"/>,
-the baseline requirements
-(those that must be performed by the TOE or its underlying platform)
-are contained in the body of this <xsl:call-template name="doctype-short"/>.
-There are additional requirements based on selections in the body of the <xsl:call-template name="doctype-short"/>:
-if certain selections are made, then additional requirements below must be included.
-  </xsl:template>
-
 <xsl:template name="doctype-short" match="cc:doctype-short">
 	<xsl:choose>
 		<xsl:when test="/cc:PP[@type='package']">Package</xsl:when>
@@ -196,17 +187,17 @@ This PP-Module does not define any objectives for the Operational Environment.
   </xsl:template>
 
 
-  <xsl:template name="obj-reqs" match="//cc:ref[@to='obj-reqs']">
-    <a href="#obj-reqs" class='dynref'/>
+  <xsl:template name="ref-obj-reqs" match="//cc:ref[@to='obj-reqs']">
+    <a href="#objective-reqs" class='dynref'/>
   </xsl:template>
 
 
-  <xsl:template name="impl-reqs" match="//cc:ref[@to='impl-reqs']">
-    <a href="#impl-reqs" class='dynref'/>
+  <xsl:template name="ref-impl-reqs" match="//cc:ref[@to='impl-reqs']">
+    <a href="#feat-based-reqs" class='dynref'/>
   </xsl:template>
 
   <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']">
-    <a href="#strict-opt-reqs" class='dynref'/>
+    <a href="#optional-reqs" class='dynref'/>
   </xsl:template>
 
   <xsl:template name="opt_appendix">
@@ -222,13 +213,13 @@ This PP-Module does not define any objectives for the Operational Environment.
    If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs
 	  in the ST, but are not required in order to conform to this <xsl:call-template name="doctype-short"/>.<br/><br/>
 
-  The second type (<xsl:call-template name="obj-reqs"/>) are objective requirements that describe security functionality not yet 
+  The second type (<xsl:call-template name="ref-obj-reqs"/>) are objective requirements that describe security functionality not yet 
 	  widely available in commercial technology.
    The requirements are not currently mandated in the body of this <xsl:call-template name="doctype-short"/>, but will be included in
 	  the baseline requirements in future versions of this <xsl:call-template name="doctype-short"/>. Adoption by vendors is
 	  encouraged and expected as soon as possible.<br/><br/>
 
-  The third type (<xsl:call-template name="impl-reqs"/>) <xsl:call-template name="imple_text"/>
+  The third type (<xsl:call-template name="ref-impl-reqs"/>) <xsl:call-template name="imple_text"/>
   </xsl:template>
 
   <xsl:template name="imple_text">

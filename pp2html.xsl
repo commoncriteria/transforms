@@ -61,8 +61,16 @@
   <!-- ############### -->
   <xsl:template match="cc:PP">
     <xsl:apply-templates select="cc:chapter"/>
+    <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
-    <xsl:call-template name="selection-based-appendix"/>
+    <xsl:if test="$appendicize='on'">
+      <xsl:call-template name="app-reqs">
+         <xsl:with-param name="type" select="'sel-based'"/>
+         <xsl:with-param name="level" select="'A'"/>
+         <xsl:with-param name="sublevel" select="'2'"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:call-template name="use-case-appendix"/>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -79,6 +87,52 @@
       </xsl:for-each>
     </dl>
   </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="use-case-appendix">
+    <xsl:if test="//cc:usecase/cc:config">
+      <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
+      <xsl:for-each select="//cc:usecase[cc:config]">
+        <h2 id="use-case-appendix" class="indexable" data-level="2">
+          <xsl:value-of select="@title"/>
+       </h2>
+       <xsl:for-each select="cc:config">
+         <table>
+	   <xsl:apply-templates select="cc:*" mode="use-case"/>
+         </table>
+
+<!--         <xsl:for-each select="//cc:f-component[.//cc:selectable/@id=]">
+         blah blah blah
+         </xsl:for-each>-->
+       </xsl:for-each>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:ref-id" mode="use-case">
+    <xsl:variable name="ref-id" select="text()"/>
+    <xsl:message> HERE </xsl:message>
+    <tr>
+      <xsl:choose>
+        <xsl:when test="//cc:selectable[@id=$ref-id]">
+          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/></td>  
+          <td><xsl:if test="../cc:not">DO NOT </xsl:if>
+          choose
+          <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></td>
+        </xsl:when>
+        <xsl:when test="//cc:f-component[@id=$ref-id]">
+          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
+          <td>Include in the ST</td>
+        </xsl:when>
+      </xsl:choose>
+    </tr>
+ </xsl:template> 
+
 
 
   <!-- ############### -->
@@ -595,13 +649,11 @@
       </xsl:if>
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
-          <b><i>This selection-based component depends upon selection in
+          <b><i>The inclusion of this selection-based component depends upon a selection in
               <xsl:for-each select="cc:selection-depends">
                 <b><i>
-                  <xsl:variable name="capped-req"><xsl:value-of select="translate(@ref,$lower,$upper)"/></xsl:variable>
-                  <xsl:call-template name="req-refs">
-                    <xsl:with-param name="req" select="@req"/>
-                  </xsl:call-template>
+                  <xsl:variable name="ref-id" select="@req"/>
+                  <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
                   <xsl:call-template name="commaifnotlast"/>
                 </i></b>
               </xsl:for-each>. </i>
@@ -761,82 +813,67 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-     <xsl:template name="app-reqs">
-        <xsl:param name="type"/>
+  <xsl:template name="app-reqs">
+    <xsl:param name="type"/>
+    <xsl:param name="level" select="2"/>
+    <xsl:param name="sublevel" select="3"/>
 
-        <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
-        <h2 id="${type}-reqs" class="indexable" data-level="2">
-               <xsl:value-of select="$nicename"/>  Requirements
-        </h2>
-        <xsl:choose>
-   	<!--     <xsl:when test="count(//cc:implements/cc:feature)=0">   -->
-            <xsl:when test="count(//cc:f-component[@status=$type])=0">
-                <p>This <xsl:call-template name="doctype-short"/> does not define any <xsl:value-of select="$nicename"/> requirements.</p>
-            </xsl:when>
-            <xsl:otherwise> 
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-                     <h3 id="{$type}-reqs" class="indexable" data-level="3">
-                         Auditable Events for <xsl:value-of select="$nicename"/> Requirements
-                     </h3>
-                     <b><xsl:call-template name="ctr-xsl">
-				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				    <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
-                     </xsl:call-template>: 
-                         Auditable Events for <xsl:value-of select="$type"/> Requirements </b>
-				    
-                     <xsl:call-template name="audit-table-xsl">
-                        <xsl:with-param name="table" select="$type"/>
-                     </xsl:call-template>
-                 </xsl:if>
-                 <xsl:choose>
-                    <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
-                    <xsl:otherwise> 
-                      <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
-                        <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3>
-                        <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
-                      </xsl:for-each>
-                    </xsl:otherwise>
-                 </xsl:choose>
-            </xsl:otherwise>
-       </xsl:choose>
-    </xsl:template> 
-
-  <!-- ############### -->
-  <!--                 -->
-    <xsl:template name="selection-based-appendix">
-        <xsl:if test="$appendicize='on'">
-            <h1 id="sel-based-reqs" class="indexable" data-level="A">Selection-Based Requirements</h1>
-            <xsl:call-template name="selection-based-text"/>
-	    <xsl:choose>
-	       <xsl:when test="count(//cc:f-component[@status='sel-based'])=0">
-                  <p>This <xsl:call-template name="doctype-short"/> does not define any selection-based requirements.</p>
-	       </xsl:when>
-	       <xsl:otherwise>
-               <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
-
-       		  <!-- Audit table for selection-based requirements -->
-		  <h3 id="sel-based-reqs" class="indexable" data-level="2"> Audit Events for Selection-Based Requirements</h3>
-	     		  <br/><b>
-			    <xsl:call-template name="ctr-xsl">
-				    <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				    <xsl:with-param name="id">atref-sel-based</xsl:with-param>
-			    </xsl:call-template>: Auditable Events for Selection-Based Requirements
-			  </b>
-		  <xsl:call-template name="audit-table-xsl">
-		     <xsl:with-param name="table">sel-based</xsl:with-param>
-		  </xsl:call-template>
-		       </xsl:if>
-		  <!-- Loop through all components picking out the selection-based. -->
-	          <xsl:for-each select="//cc:subsection[cc:f-component/@status='sel-based']">
-                     <h3 id="{@id}-sel" class="indexable" data-level="2"><xsl:value-of select="@title" /></h3>
-                        <xsl:apply-templates select="cc:f-component[@status='sel-based']"/>
-                   </xsl:for-each>
-	    </xsl:otherwise>
-	</xsl:choose>
+    <xsl:variable name="levelname"><xsl:choose>
+      <xsl:when test="$level='A'">h1</xsl:when>
+      <xsl:otherwise>h2</xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$type]/@nice"/>
+ 
+    <xsl:element name="{$levelname}">
+       <xsl:attribute name="id"><xsl:value-of select="concat($type,'-reqs')"/></xsl:attribute>
+       <xsl:attribute name="class">indexable</xsl:attribute>
+       <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
+       <xsl:value-of select="$nicename"/>  Requirements
+    </xsl:element>
+    <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:description"/>
+    <xsl:choose>
+      <xsl:when test="count(//cc:f-component[@status=$type])=0">
+         <p>This <xsl:call-template name="doctype-short"/> does not define any 
+            <xsl:value-of select="$nicename"/> requirements.</p>
+      </xsl:when>
+      <xsl:otherwise> 
+         <xsl:if test="//cc:pp-preferences/cc:audit-events-in-sfrs">
+           <xsl:element name="h{$sublevel}">
+              <xsl:attribute name="id"><xsl:value-of select="concat($type,'-reqs-audit')"/></xsl:attribute>
+              <xsl:attribute name="class">indexable</xsl:attribute>
+              <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
+              Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
+           </xsl:element>
+          <b><xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
+              </xsl:call-template>: 
+           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </b>
+			    
+           <xsl:call-template name="audit-table-xsl">
+             <xsl:with-param name="table" select="$type"/>
+           </xsl:call-template>
         </xsl:if>
-    </xsl:template>
+        <xsl:choose>
+          <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
+          <xsl:otherwise> 
+            <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+              <xsl:element name="h{$sublevel}">
+                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
+                <xsl:attribute name="class">indexable</xsl:attribute>
+                <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
+                <xsl:value-of select="@title"/>
+              </xsl:element>
+     <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
+              <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+     </xsl:otherwise>
+   </xsl:choose>
+ </xsl:template> 
 
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
 
   <xsl:template match="cc:appendix">
