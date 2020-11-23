@@ -53,12 +53,6 @@
     <xsl:call-template name="obj-req-map"/>
   </xsl:template> 
 
-  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="name()"/></div>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:call-template name="secrectext"/>
