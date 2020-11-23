@@ -589,6 +589,9 @@ These components are identified in the following table:
                        <xsl:apply-templates select="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
                     </xsl:when>
                     <xsl:otherwise>
+                       <xsl:if test="cc:title//@id"><xsl:message>
+                          WARNING: Since <xsl:value-of select="$reqid"/> has an 'id' attribute in a descendant node in the title, you probably need to define an alternative 'ext-comp-def-title'.
+                       </xsl:message></xsl:if>
                        <xsl:apply-templates select="cc:title"/>
                     </xsl:otherwise>
                 </xsl:choose>
