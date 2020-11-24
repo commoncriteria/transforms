@@ -1361,12 +1361,34 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
     </optional>
   </define> 
 
+
   <define name="doc-config-pat">
-       <optional> <ref name="ref-ids-pat"/> </optional>
-       <optional> <element name="not">
-         <ref name="ref-ids-pat"/>
-       </element> </optional> 
+       <a:documentation>
+          Specifies the details of a configuration. It's meant to be displayed in row-form.
+       </a:documentation>
+       <!-- Individual settinds -->
+       <zeroOrMore>
+        <choice>
+          <ref name="config-groups"/>
+          <element name="free-text">
+            <ref name="description"/>
+            <optional><ref name="config-groups"/></optional>
+          </element>
+        </choice>
+       </zeroOrMore> 
   </define>   
+
+  <define name="config-groups">
+    <choice>
+      <!-- A list of selectable IDs , component IDs -->
+      <ref name="ref-ids-pat"/>
+      <element name="same-req"><ref name="ref-ids-pat"/></element>
+      <element name="not"><ref name="ref-ids-pat"/></element>
+      <element name="all-or-none"><ref name="ref-ids-pat"/></element>
+    </choice>
+  </define>
+
+
 
   <define name="Chapters">
     <zeroOrMore><ref name="Chapter"/></zeroOrMore>
