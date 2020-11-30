@@ -85,7 +85,8 @@
         <dd>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="cc:config"><p>
-            For a the list of appropriate selections and acceptable assignment values for this configuration, see <a href="#appendix-{@id}" class="dynref"></a>.
+            For a the list of appropriate selections and acceptable assignment 
+            values for this configuration, see <a href="#appendix-{@id}" class="dynref"></a>.
           </p></xsl:if>
         </dd>
       </xsl:for-each>
@@ -115,9 +116,9 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:all-or-none" mode="use-case">
-    <xsl:message>here here</xsl:message>
     <tr>
-      <td>These selections must be selected<br/> as a group in their entirety</td>
+      <td>These selections must be selected (or not selected) <br/>
+          as a group in their entirety</td>
       <td>
         <xsl:for-each select="cc:ref-id">
           <xsl:variable name="id" select="text()"/>
@@ -126,8 +127,6 @@
         </xsl:for-each>
       </td>
     </tr>
-
-    
   </xsl:template>
 
   <!-- ############### -->
@@ -162,20 +161,33 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:free-text" mode="use-case">
+      <tr>
+        <td><xsl:apply-templates select="cc:obj"/></td>
+        <td><xsl:apply-templates select="cc:act"/></td>
+      </tr>
+  </xsl:template>  
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:ref-id" mode="use-case">
     <xsl:variable name="ref-id" select="text()"/>
     <tr>
       <xsl:choose>
         <xsl:when test="//cc:selectable[@id=$ref-id]">
           <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/></td>  
-          <td><xsl:if test="../cc:not">DO NOT </xsl:if>
-          choose
-          <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></td>
+          <td><xsl:if test="parent::cc:not">DO NOT </xsl:if>
+          Select
+          <span class='quote'><xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></span></td>
         </xsl:when>
         <xsl:when test="//cc:f-component[@id=$ref-id]">
           <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
           <td>Include in the ST</td>
         </xsl:when>
+<!--        <xsl:when test="//cc:management-function[@id=$ref-id]">
+          <td>From <xsl:apply-templates select="//cc:f-element[.//cc:management-function/@id=$ref-id]" mode="getId"/>
+              Include  -->
       </xsl:choose>
     </tr>
  </xsl:template> 
