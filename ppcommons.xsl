@@ -306,6 +306,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
       <tr class="header">
+        <td>#</td>
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
       </tr>
@@ -326,6 +327,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template match="cc:management-function">
     <tr>
+      <td>
+        <xsl:value-of select="count(preceding::cc:management-function)+1"/>
+      </td>
       <td>
         <xsl:apply-templates select="cc:text"/>
       </td>
