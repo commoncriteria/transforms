@@ -1135,6 +1135,11 @@
         <xsl:when test="//*/cc:term[text()=$linkendorig]">
           <xsl:value-of select="$linkendorig"/>
         </xsl:when>
+        <xsl:when test="//cc:management-function[@id=$linkendorig]">
+          Function #<xsl:value-of select="count(//cc:management-function[@id=$linkendorig]/preceding::cc:management-function)+1"/>
+        </xsl:when>
+
+
         <xsl:otherwise>
           <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
         </xsl:otherwise>

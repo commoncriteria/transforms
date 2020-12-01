@@ -326,7 +326,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:management-function">
-    <tr>
+    <tr id="{@id}">
       <td>
         <xsl:value-of select="count(preceding::cc:management-function)+1"/>
       </td>
