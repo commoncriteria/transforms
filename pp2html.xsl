@@ -168,6 +168,15 @@
       </tr>
   </xsl:template>  
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <xsl:template match="cc:management-function" mode="getId">
+      <a href="#{@id}"> 
+      Function #<xsl:value-of select="count(preceding::cc:management-function)+1"/></a>
+   </xsl:template>
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -185,9 +194,14 @@
           <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
           <td>Include in the ST</td>
         </xsl:when>
-<!--        <xsl:when test="//cc:management-function[@id=$ref-id]">
-          <td>From <xsl:apply-templates select="//cc:f-element[.//cc:management-function/@id=$ref-id]" mode="getId"/>
-              Include  -->
+        <xsl:when test="//cc:management-function[@id=$ref-id]">
+          <td><xsl:apply-templates select="//cc:f-element[.//cc:management-function/@id=$ref-id]" mode="getId"/>:
+              <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="getId"/></td>
+          <td>Include in the ST</td> 
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
+        </xsl:otherwise>
       </xsl:choose>
     </tr>
  </xsl:template> 
