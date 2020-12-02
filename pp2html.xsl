@@ -36,7 +36,7 @@
   <!-- ############### -->
   <xsl:include href="ppcommons.xsl"/>
   <xsl:include href="boilerplates.xsl"/>
-
+  <xsl:include href="debug.xsl"/>
 
   <!-- ############### -->
   <!--  TEMPLATES      -->
@@ -1138,10 +1138,10 @@
         <xsl:when test="//cc:management-function[@id=$linkendorig]">
           Function #<xsl:value-of select="count(//cc:management-function[@id=$linkendorig]/preceding::cc:management-function)+1"/>
         </xsl:when>
-
-
         <xsl:otherwise>
-          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
+          <xsl:message>Cant find |<xsl:value-of select="$linkendlower"/> 
+             <xsl:call-template name="genPath"/>
+          </xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>
