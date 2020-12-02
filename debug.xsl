@@ -15,7 +15,7 @@
   <xsl:template name="genPath">
     <xsl:param name="prevPath"/>
     <xsl:variable name="currPath" select="concat('/',name(),'[',
-      count(preceding-sibling::*[name() = name(current())])+1,']',$prevPath)"/>
+      count(preceding-sibling::*[name() = name(current())])+1,']','|',substring(text(),0,10),'|',$prevPath)"/>
     <xsl:for-each select="parent::*">
       <xsl:call-template name="genPath">
         <xsl:with-param name="prevPath" select="$currPath"/>
