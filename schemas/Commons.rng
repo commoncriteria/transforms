@@ -1135,6 +1135,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </oneOrMore>
       <oneOrMore>
         <element name="management-function">
+          <optional>
+            <ref name="id-attr"/>
+          </optional>
           <element name="text">
             <a:documentation>Describes the management function.</a:documentation>
             <ref name="basic-content-pat"/>
