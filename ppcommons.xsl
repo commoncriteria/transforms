@@ -276,7 +276,15 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]</xsl:template>
+<!-- Should we include a referencable value? Probably
+     Make it an ID seems like it might be too big.
+     But making it a number seems difficult given that we just can't count
+     the assignables cause they appear in the document in a diffirent order 
+     We could clean it up in the Python.
+  -->
+  <xsl:template match="cc:assignable"><!--
+  -->[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]<!--
+  --><!--<xsl:if test='@id'></xsl:if>--></xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -463,7 +471,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id"/>
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
