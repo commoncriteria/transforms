@@ -664,14 +664,18 @@
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
   </xsl:template>
- 
+
+
+  <xsl:template match="cc:note/cc:aactivity">
+    Evaluation Activity Note:<br/>
+    <xsl:apply-templates/>
+  </xsl:template> 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:management-function/cc:aactivity">
     <b><xsl:apply-templates select=".." mode="getId"/>
        <xsl:for-each select="cc:also">
          <xsl:variable name="ref-id" select="@ref-id"/>
-           <xsl:message>Looking for <xsl:value-of select="count(//cc:management-function[$ref-id=@id])"/> </xsl:message>
          /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
        <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
     </b><br/>
@@ -691,7 +695,7 @@
     <div class="activity_pane_body">
       <i>
         <xsl:apply-templates/>
-        <xsl:apply-templates select="../cc:title/cc:management-function-set/cc:management-function/cc:aactivity"/> 
+        <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:aactivity"/>
       </i>
       <!-- Apply to the management functions -->
     </div>
