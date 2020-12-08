@@ -1021,6 +1021,9 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="cc:_">
+    <xsl:message>XREF ancestor<xsl:value-of select="ancestor::cc:*/@id[1]"/></xsl:message>
+  </xsl:template>
 
   <!-- templates for creating references -->
   <!-- Assumes element with matching @id has a @title. -->

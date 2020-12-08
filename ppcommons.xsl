@@ -291,6 +291,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
+  <xsl:template match="cc:app-note">
+    <p><xsl:apply-templates/></p>
+  </xsl:template>	
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -303,6 +306,7 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:choose> Note: </span>
       <span class="note">
         <xsl:apply-templates/>
+	<xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
       </span>
     </div>
   </xsl:template>
