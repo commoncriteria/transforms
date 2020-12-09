@@ -380,6 +380,7 @@ If it's only an acronym make sure the text content is empty.
       <a:documentation>
         Assignment section
       </a:documentation>
+      <optional><ref name="id-attr"/></optional>
       <ref name="basic-content-pat"/>
     </element>
   </define>
@@ -1114,7 +1115,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <attribute name="default">
         <a:documentation>Is the default value(index).</a:documentation>
         <choice>
-          <value>M</value>
+         <!-- <value>M</value>--><!-- It cant be M for now as we're checking it to see if the funciton is optional -->
           <value>O</value>
           <value>_</value>
         </choice>
@@ -1134,6 +1135,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         </element>
       </oneOrMore>
       <oneOrMore>
+        <choice> 
+          <element name="note"><element name="aactivity"><ref name="basic-content-pat"/></element></element>
+          <ref name="management-function"/>   
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="management-function">
         <element name="management-function">
           <optional>
             <ref name="id-attr"/>
@@ -1142,36 +1152,40 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <a:documentation>Describes the management function.</a:documentation>
             <ref name="basic-content-pat"/>
           </element>
-          <zeroOrMore>
-            <choice>
+          <zeroOrMore> <choice>
               <element name="M">
-                <a:documentation>References for which managers this function is mandatory</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
+                <a:documentation>Indicates that this function is mandatory for this role.</a:documentation>
+                <ref name="ref-attr"/>
               </element>
               <element name="O">
-                <a:documentation>References for which managers this function is optional</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
+                <a:documentation>Indicates that this function is optional for this role</a:documentation>
+                <ref name="ref-attr"/>
               </element>
               <element name="_">
-                <a:documentation>References for which managers this function is not applicable</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
+                <a:documentation>Indicates that this function is not applicable for this role</a:documentation>
+                <ref name="ref-attr"/>
               </element>
-            </choice>
-          </zeroOrMore>
-        </element>
-      </oneOrMore>
-    </element>
-  </define>
+          </choice> </zeroOrMore>
+          <optional><element name="app-note">
+            <a:documentation>Application Note content that is associated with this management function</a:documentation> 
+            <ref name="basic-content-pat"/>
+          </element></optional>
+<!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
+          <optional><element name="aactivity">
+            <zeroOrMore>
+              <a:documentation>Points to other management-function that this action affects.</a:documentation>
+              <element name="also"> <attribute name="ref-id"/> </element>
+            </zeroOrMore>
+            <ref name="basic-content-pat"/>
+          </element></optional>
+       </element>
+   </define>
 
+   <define name="ref-attr">
+    <attribute name="ref">
+      <a:documentation>ID respective manager</a:documentation>
+    </attribute>
+  </define> 
 
   <define name="id-attr">
     <a:documentation>
@@ -1373,9 +1387,9 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
        <zeroOrMore>
         <choice>
           <ref name="config-groups"/>
-          <element name="free-text">
-            <ref name="description"/>
-            <optional><ref name="config-groups"/></optional>
+          <element name="guidance">
+            <ref name="ref-ids-pat"/>
+            <ref name="basic-content-pat"/>
           </element>
         </choice>
        </zeroOrMore> 
