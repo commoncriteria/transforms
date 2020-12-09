@@ -98,7 +98,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
- <xsl:template match="cc:assign-hint" mode="use-case">
+ <xsl:template match="cc:guidance" mode="use-case">
    <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
    <xsl:choose><xsl:when test="parent::cc:config">
      <tr>  

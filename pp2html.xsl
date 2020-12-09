@@ -1022,7 +1022,18 @@
   </xsl:template>
 
   <xsl:template match="cc:_">
-    <xsl:message>XREF ancestor<xsl:value-of select="ancestor::cc:*/@id[1]"/></xsl:message>
+    <xsl:choose>
+      <xsl:when test="ancestor::cc:management-function[@id][1]/cc:also">
+        Functions 
+        <xsl:for-each select="ancestor::cc:*[@id][1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="ancestor::cc:management-function[@id][1]" mode="getId"/> 
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- templates for creating references -->
