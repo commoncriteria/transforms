@@ -1021,7 +1021,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="cc:_">
+  <xsl:template match="cc:management-function//cc:_">
     <xsl:choose>
       <xsl:when test="ancestor::cc:management-function[@id][1]/cc:also">
         Functions 

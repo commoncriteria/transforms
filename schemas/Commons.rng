@@ -642,6 +642,11 @@ Grouping for Security Objective for the Operation Environment entries.
 <!--        <ref name="audit-table-pat"/> -->
 <!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>
+        <element name="_">
+          <a:documentation>A cross-reference to the closest ancestor with an ID. 
+            It only makes sense inside management-functions.</a:documentation>
+          <empty/>
+        </element>
         <ref name="refinement-type"/>
         <ref name="ctr-ref"/>
         <ref name="ctr"/>
@@ -1161,7 +1166,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 <a:documentation>Indicates that this function is optional for this role</a:documentation>
                 <ref name="ref-attr"/>
               </element>
-              <element name="_">
+              <element name="NA">
                 <a:documentation>Indicates that this function is not applicable for this role</a:documentation>
                 <ref name="ref-attr"/>
               </element>
