@@ -610,14 +610,6 @@
 
   <!-- ############### -->
   <!--                 -->
-  <!-- ############### -->
-   <xsl:template match="cc:management-function" mode="getId">
-      <a href="#{@id}"> 
-      Function #<xsl:value-of select="count(preceding::cc:management-function)+1"/></a>
-   </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
   <xsl:template match="cc:f-element" >
     <div class="element">
       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -914,7 +906,7 @@
     </p>
   </xsl:template>
 
-
+  
 
   <!-- ############### -->
   <!--                 -->
@@ -1021,6 +1013,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+  <!-- ############### -->
   <xsl:template match="cc:management-function//cc:_">
     <xsl:choose>
       <xsl:when test="ancestor::cc:management-function[@id][1]/cc:also">
@@ -1036,21 +1029,17 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- templates for creating references -->
-  <!-- Assumes element with matching @id has a @title. -->
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:xref">
-    <xsl:variable name="linkendorig" select="@linkend"/>
+  <xsl:template match="cc:xref[@x]" name="xref">
+    <xsl:param name="x" select="@x"/>
+    <xsl:apply-templates select="//cc:*[@id=$x]" mode="make_xref"/>
+    <!-- <a onclick="showTarget('{$x}')" href="#{$x}"> -->
+    <!--    </a> -->
+  </xsl:template>
+ <!--   <xsl:variable name="linkendorig" select="@linkend"/>
     <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
-    <xsl:element name="a">
-      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkendorig"/>')</xsl:attribute>
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkendorig"/>
-      </xsl:attribute>
-      <xsl:choose>
-        <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
+       <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
         <xsl:when test="//*[@id=$linkendlower]/@title">
           <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
         </xsl:when>
@@ -1072,16 +1061,7 @@
           </xsl:message>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:element>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:secref">
-    <a href="#{@linkend}" class="dynref">Section </a>
-  </xsl:template>
-
+    </xsl:element>-->
 
    <!-- ############## -->
   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">

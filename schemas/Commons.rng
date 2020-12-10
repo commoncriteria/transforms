@@ -213,8 +213,8 @@ If it's only an acronym make sure the text content is empty.
   </define>
 
   <define name="xref-content">
-    <ref name="linkend-attr"/>
-  </define>
+     <attribute name="x"/>
+</define>
 
   <define name="appref">
     <element name="appref">

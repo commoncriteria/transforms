@@ -6,6 +6,7 @@
       ##############################################-->
   <xsl:include href="js-content.xsl"/>
   <xsl:include href="css-content.xsl"/>
+  <xsl:include href="make-ref.xsl"/>
 
   <!--##############################################
            Parameters

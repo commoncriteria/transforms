@@ -57,8 +57,11 @@ Tags that this section should be indented(left) 2em.
     
     <define name="xref-content">
       <choice>
-        <ref name="linkend-attr"/>
+        <attribute name="x">
+          <a:documentation>Points to a user-defined element's ID.</a:documentation>
+        </attribute>
         <attribute name="to">
+          <a:documentation>Points to a generated element</a:documentation>
           <choice>
             <value>ref-strict-optional</value>
             <value>sel-based-reqs</value>

@@ -1,0 +1,45 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:cc="https://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
+
+
+  <!-- ############### -->
+  <!-- This files defines how to make cross-references to different items. -->
+  <!-- ############### -->
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <xsl:template match="cc:section|cc:subsection" mode="make_xref">
+    <a href="#{@id}" class="dynref">Section </a>
+  </xsl:template>
+
+
+   
+
+
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <xsl:template match="cc:f-element" mode="make_xref">
+     <xsl:apply-templates mode="getId" select="."/>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:management-function" name="management-function" mode="make_xref">
+     <xsl:param name="nolink"  select="@nolink"     />
+     <xsl:param name="prefix"  select="'Function #'"/>
+     <xsl:param name="index"   select="count(preceding::cc:management-function)+1"/>
+     <xsl:choose>
+       <xsl:when test="$nolink='y'">
+         <xsl:value-of select="concat($prefix, $index)"/>
+       </xsl:when>
+       <xsl:otherwise>
+        <a href="#{@id}"><xsl:value-of select="concat($prefix, $index)"/></a>
+       </xsl:otherwise>
+     </xsl:choose>
+   </xsl:template>
+
+</xsl:stylesheet>
