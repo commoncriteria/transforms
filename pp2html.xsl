@@ -906,7 +906,21 @@
     </p>
   </xsl:template>
 
-  
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:ctr">
+    <xsl:variable name="ctrtype"><xsl:choose>
+        <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
+    </xsl:variable>
+
+    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
+      <xsl:apply-templates select="." mode="getPre"/>
+      <span class="counter"><xsl:value-of select="@id"/></span>
+      <xsl:apply-templates/>
+    </span>
+  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -926,20 +940,6 @@
     </a>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:ctr">
-    <xsl:variable name="ctrtype"><xsl:choose>
-        <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
-    </xsl:variable>
-
-    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
-      <xsl:apply-templates select="." mode="getPre"/>
-      <span class="counter"><xsl:value-of select="@id"/></span>
-      <xsl:apply-templates/>
-    </span>
-  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -1022,9 +1022,9 @@
   <!--                 -->
   <xsl:template match="cc:xref[@x]" name="xref">
     <xsl:param name="x" select="@x"/>
-    <xsl:apply-templates select="//cc:*[@id=$x]" mode="make_xref"/>
-    <!-- <a onclick="showTarget('{$x}')" href="#{$x}"> -->
-    <!--    </a> -->
+    <xsl:apply-templates select="//cc:*[@id=$x]" mode="make_xref">
+      <xsl:with-param name="prefix" select="@pre"/>
+    </xsl:apply-templates>
   </xsl:template>
  <!--   <xsl:variable name="linkendorig" select="@linkend"/>
     <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>

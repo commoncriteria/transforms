@@ -29,7 +29,16 @@
     </a>
   </xsl:template>
 
-
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:ctr" mode="make_xref">
+    <xsl:param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:param>
+    <xsl:message> HERE </xsl:message>
+    <a onclick="showTarget('cc-{@id}')" href="#cc-{@id}" class="cc-{@id}-ref" >
+      <!-- should only run through once, but this is how we're changing contexts -->
+      <xsl:apply-templates/><xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="id"/></span>
+    </a>
+  </xsl:template>
 
 
   <!-- ############### -->
