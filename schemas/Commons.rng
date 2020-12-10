@@ -181,7 +181,7 @@ If it's only an acronym make sure the text content is empty.
       <ref name="linkend-attr"/>
     </element>
   </define>
-
+<!--
   <define name="linkref">
     <element name="linkref">
       <a:documentation>Cross references components </a:documentation>
@@ -196,6 +196,29 @@ If it's only an acronym make sure the text content is empty.
     </element>
   </define>
 
+  <define name="appref">
+    <element name="appref">
+      <a:documentation>Cross references an item in the appendex</a:documentation>
+      <ref name="linkend-attr"/>
+    </element>
+  </define>
+
+  <define name="ctr-ref">
+    <element name="ctr-ref">
+      <a:documentation>
+        References a counted object.
+      </a:documentation>
+      <attribute name="ref-id">
+        <a:documentation>
+          The unique ID of the object being referenced.
+        </a:documentation>
+      </attribute>
+      <text/>
+    </element>
+  </define>
+
+
+ -->
   <define name="xref">
     <element name="xref">
       <a:documentation>
@@ -216,14 +239,7 @@ If it's only an acronym make sure the text content is empty.
      <attribute name="x"/>
 </define>
 
-  <define name="appref">
-    <element name="appref">
-      <a:documentation>Cross references an item in the appendex</a:documentation>
-      <ref name="linkend-attr"/>
-    </element>
-  </define>
-
-  <define name="audit-events-pat">
+ <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
         <a:documentation>
@@ -382,21 +398,6 @@ If it's only an acronym make sure the text content is empty.
       </a:documentation>
       <optional><ref name="id-attr"/></optional>
       <ref name="basic-content-pat"/>
-    </element>
-  </define>
-
-
-  <define name="ctr-ref">
-    <element name="ctr-ref">
-      <a:documentation>
-        References a counted object.
-      </a:documentation>
-      <attribute name="ref-id">
-        <a:documentation>
-          The unique ID of the object being referenced.
-        </a:documentation>
-      </attribute>
-      <text/>
     </element>
   </define>
 
@@ -630,14 +631,11 @@ Grouping for Security Objective for the Operation Environment entries.
         <text/>
         <ref name="depends-pat"/>
         <ref name="html-element"/>
-        <ref name="linkref"/>
         <ref name="citeCC"/>
         <ref name="cite"/>
-        <ref name="secref"/>
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
-        <ref name="appref"/> 
         <ref name="abbr-el"/>
 <!--        <ref name="audit-table-pat"/> -->
 <!--        <ref name="audit-events"/>  -->
@@ -648,10 +646,8 @@ Grouping for Security Objective for the Operation Environment entries.
           <empty/>
         </element>
         <ref name="refinement-type"/>
-        <ref name="ctr-ref"/>
         <ref name="ctr"/>
         <ref name="figure"/>
-        <ref name="figref"/>
         <ref name="equation"/>
         <element name="choice"><ref name="basic-content-pat"/></element>
         <!-- <ref name="wsn"/> -->

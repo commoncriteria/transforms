@@ -957,17 +957,6 @@
 	
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:figref">
-    <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
-      <xsl:apply-templates select="//cc:figure[@id=$ref-id]" mode="getPre"/>
-<!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]">"/>-->
-      <span class="counter"><xsl:value-of select="$ref-id"/></span>
-    </a>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
@@ -1078,13 +1067,6 @@
   </xsl:template>
 
   
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:appref">
-    <a href="#{@linkend}" class="dynref"></a>
-    <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
-  </xsl:template>
-
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>

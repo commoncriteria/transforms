@@ -9,12 +9,26 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <xsl:template match="cc:section|cc:subsection" mode="make_xref">
+   <xsl:template match="cc:chapter|cc:section|cc:subsection" mode="make_xref">
     <a href="#{@id}" class="dynref">Section </a>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:appendix" mode="make_xref">
+    <a href="#{@id}" class="dynref"></a>
+  </xsl:template>
 
    
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:figure" mode="make_xref">
+    <a onclick="showTarget('figure-{@id}')" href="#figure-{@id}" class="figure-{@id}-ref">
+      <xsl:apply-templates select="." mode="getPre"/>
+      <span class="counter"><xsl:value-of select="@id"/></span>
+    </a>
+  </xsl:template>
+
 
 
 
