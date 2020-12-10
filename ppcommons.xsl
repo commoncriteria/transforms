@@ -564,33 +564,6 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
-  <!--#####################-->
-  <!-- Debugging templates -->
-  <!--#####################-->
-  <xsl:template name="debug-2">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'vv')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- -->
-  <xsl:template name="debug-1">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'v')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- Debugging function -->
-  <xsl:template name="path">
-    <xsl:for-each select="parent::*">
-      <xsl:call-template name="path"/>
-    </xsl:for-each>
-    <xsl:value-of select="name()"/>
-    <xsl:text>/</xsl:text>
-  </xsl:template>
-
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->

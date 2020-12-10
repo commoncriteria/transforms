@@ -5,6 +5,24 @@
 	should go.
     #####################################-->
 
+  <!--#####################-->
+  <!-- Debugging templates -->
+  <!--#####################-->
+  <xsl:template name="debug-2">
+    <xsl:param name="msg"/>
+    <xsl:if test="contains($debug, 'vv')">
+      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- -->
+  <xsl:template name="debug-1">
+    <xsl:param name="msg"/>
+    <xsl:if test="contains($debug, 'v')">
+      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
+    </xsl:if>
+  </xsl:template>
+
 
 <!--#####################################
     This template should construct a path
