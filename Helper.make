@@ -279,6 +279,8 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 
+inter:
+	$(call DOXSL,$(PP_XML),$(PP2HTML_XSL),abc.xml,$(APP_PARM))
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
