@@ -55,9 +55,9 @@ Tags that this section should be indented(left) 2em.
     </define>
 
     
-    <define name="xref-content">
+    <define name="x-content">
       <choice>
-        <attribute name="x">
+        <attribute name="ref">
           <a:documentation>Points to a user-defined element's ID.</a:documentation>
         </attribute>
         <attribute name="to">

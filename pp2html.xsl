@@ -1020,10 +1020,13 @@
 
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:xref[@x]" name="xref">
-    <xsl:param name="x" select="@x"/>
-    <xsl:apply-templates select="//cc:*[@id=$x]" mode="make_xref">
-      <xsl:with-param name="prefix" select="@pre"/>
+  <!--                 -->
+  <xsl:template match="cc:x[@ref]" name="xref">
+    <xsl:param name="ref" select="@ref"/>
+    
+    <xsl:apply-templates select="//cc:*[@id=$ref]" mode="make_xref">
+      <xsl:with-param name="eprefix" select="@pre"/>
+      <xsl:with-param name="has-eprefix"><xsl:if test="@pre">Y</xsl:if></xsl:with-param>
     </xsl:apply-templates>
   </xsl:template>
  <!--   <xsl:variable name="linkendorig" select="@linkend"/>

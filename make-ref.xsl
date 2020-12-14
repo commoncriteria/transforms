@@ -23,6 +23,13 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:figure" mode="make_xref">
+    <xsl:param name="eprefix"/> <!-- explicit prefix -->
+    <xsl:param name="has-eprefix"/>
+    <xsl:variable name="prefix"><xsl:choose>
+      <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
+      <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+
     <a onclick="showTarget('figure-{@id}')" href="#figure-{@id}" class="figure-{@id}-ref">
       <xsl:apply-templates select="." mode="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
@@ -32,8 +39,13 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:ctr" mode="make_xref">
-    <xsl:param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:param>
-    <xsl:message> HERE </xsl:message>
+    <xsl:param name="eprefix"/> <!-- explicit prefix -->
+    <xsl:param name="has-eprefix"/>
+    <xsl:variable name="prefix"><xsl:choose>
+      <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
+      <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+   
     <a onclick="showTarget('cc-{@id}')" href="#cc-{@id}" class="cc-{@id}-ref" >
       <!-- should only run through once, but this is how we're changing contexts -->
       <xsl:apply-templates/><xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="id"/></span>
@@ -63,6 +75,6 @@
         <a href="#{@id}"><xsl:value-of select="concat($prefix, $index)"/></a>
        </xsl:otherwise>
      </xsl:choose>
-   </xsl:template>
+  </xsl:template>
 
 </xsl:stylesheet>
