@@ -45,10 +45,9 @@
       <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
       <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
-   
     <a onclick="showTarget('cc-{@id}')" href="#cc-{@id}" class="cc-{@id}-ref" >
       <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:apply-templates/><xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="id"/></span>
+      <xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="@id"/></span>
     </a>
   </xsl:template>
 
