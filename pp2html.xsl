@@ -924,25 +924,6 @@
 
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:ctr-ref">
-    <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-      <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
-      <xsl:choose>
-        <xsl:when test="not($hasPre='')">
-	  <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:otherwise>
-      </xsl:choose>
-    </a>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
   <!-- ############### -->
   <xsl:template name="ctr-xsl">
       <xsl:param name="ctr-type"/>
