@@ -16,8 +16,7 @@
   <xsl:template match="cc:usecases">
     <dl>
       <xsl:for-each select="cc:usecase">
-        <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/> 
-        </dt>
+        <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/> </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="cc:config"><p>
@@ -40,38 +39,48 @@
           <xsl:value-of select="@title"/>
        </h2>
        <xsl:for-each select="cc:config">
-         <table>
-	   <xsl:apply-templates mode="use-case"/>
-         </table>
+         <xsl:apply-templates mode="use-case"/>
        </xsl:for-each>
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
 
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:all-or-none" mode="use-case">
+   <xsl:template match="cc:and|cc:or" mode="use-case">
+    <xsl:variable name="kids" select="count(cc:*)"/>
+    <table class="uc_table_{name()}" style="border: 1px solid black"><tr>
+      <td rowspan="{$kids}"><xsl:value-of select="name()"/></td>
+      <td> <xsl:apply-templates mode="use-case"/> </td>
+    </tr></table>
+  </xsl:template>
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+<!--  <xsl:template match="cc:all-or-none" mode="use-case">
     <tr>
       <td>These selections must be selected (or not selected) <br/>
           as a group in their entirety</td>
       <td>
         <xsl:for-each select="cc:ref-id">
           <xsl:variable name="id" select="text()"/>
-          From <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$id]" mode="getId"/>
+          From <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$id]" mode="make_xref"/>
           choose <xsl:apply-templates select="//cc:selectable[@id=$id]"/><br/>
         </xsl:for-each>
       </td>
     </tr>
   </xsl:template>
-
+-->
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:same-req" mode="use-case">
      <xsl:variable name="first" select="cc:ref-id[1]/text()"/>
      <tr>  
-       <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$first]" mode="getId"/></td>
+       <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$first]" mode="make_xref"/></td>
        <td>
          <xsl:for-each select="cc:*">
           <xsl:choose>
@@ -102,8 +111,8 @@
    <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
    <xsl:choose><xsl:when test="parent::cc:config">
      <tr>  
-       <td><xsl:apply-templates select="//cc:f-element[.//cc:assignable/@id=$ref-id]" mode="getId"/>:
-              <xsl:apply-templates select="//cc:management-function[.//@id=$ref-id]" mode="getId"/></td>
+       <td><xsl:apply-templates select="//cc:f-element[.//cc:assignable/@id=$ref-id]" mode="make_xref"/>:
+              <xsl:apply-templates select="//cc:management-function[.//@id=$ref-id]" mode="make_xref"/></td>
        <td>Include in ST. <xsl:apply-templates/></td>
      </tr>
    </xsl:when></xsl:choose>
@@ -119,7 +128,6 @@
       </tr>
   </xsl:template>  
 
-
  <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -128,8 +136,8 @@
     <tr>
       <xsl:choose>
         <xsl:when test="//cc:selectable[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/>:  
-              <xsl:apply-templates select="//cc:management-function[.//@id=$ref-id]" mode="getId"/></td>
+          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="make_xref"/>:  
+              <xsl:apply-templates select="//cc:management-function[.//@id=$ref-id]" mode="make_xref"/></td>
           <td>
              <xsl:if test="//cc:f-component[@status='optional' and .//@id=$ref-id] or //cc:f-component[@status='objective' and .//@id=$ref-id]"> Include in the ST </xsl:if> 
   
@@ -138,12 +146,12 @@
           <span class='quote'><xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></span></td>
         </xsl:when>
         <xsl:when test="//cc:f-component[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
+          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="make_xref"/></td>
           <td>Include in the ST</td>
         </xsl:when>
         <xsl:when test="//cc:management-function[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:f-element[.//cc:management-function/@id=$ref-id]" mode="getId"/>:
-              <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="getId"/></td>
+          <td><xsl:apply-templates select="//cc:f-element[.//cc:management-function/@id=$ref-id]" mode="make_xref"/>:
+              <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="make_xref"/></td>
           <td>Include in the ST</td> 
         </xsl:when>
         <xsl:otherwise>

@@ -55,7 +55,8 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <xsl:template match="cc:f-element" mode="make_xref">
+  <!-- Making a references is the same as getting they ID for these structures. -->
+  <xsl:template match="cc:f-component-decl|cc:f-component|cc:f-element" mode="make_xref">
      <xsl:apply-templates mode="getId" select="."/>
   </xsl:template>
 
