@@ -168,7 +168,14 @@
        margin-left: 25px;
        font-style: italic;
    }
-  
+
+   .uc_table_or td, .uc_table_or tr {
+       vertical-align: middle;
+       border: 1px solid black;
+   }
+   .uc_table_and, .uc_table_or {
+       width: 100%;
+   }  
    .evidence, .test-obj { font-style: normal; font-size: 90%;}
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>

@@ -284,8 +284,17 @@ The following sections list Common Criteria and technology terms used in this do
      We could clean it up in the Python.
   -->
   <xsl:template match="cc:assignable"><!--
-  -->[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]<!--
-  --><!--<xsl:if test='@id'></xsl:if>--></xsl:template>
+  -->[<b>assignment</b>: 
+     <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element></xsl:template>
+<!--
+
+  <xsl:element name="sup"><xsl:attribute name="class">a_id</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if>A13</xsl:element></xsl:template>a-->
 
   <!-- ############### -->
   <!--                 -->
