@@ -121,11 +121,15 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:*[@id]" mode="handle-ancestors">
-     
+    <xsl:param name="prev-id"/> 
+    <xsl:message>Prev-id is <xsl:value-of select="$prev-id"/></xsl:message>
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective']">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST. <br/>
     </xsl:if>
-    From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/><br/>
+    <xsl:if test="not(ancestor::cc:f-element//@id=$prev-id)">
+      From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/><br/>
+    </xsl:if>
+   
     <xsl:for-each select="ancestor-or-self::cc:selectable">
       select <xsl:apply-templates select="." mode="make_xref"/> <br/>
     </xsl:for-each>
@@ -162,8 +166,9 @@
     <xsl:variable name="ref-id" select="text()"/>
       <xsl:choose>
         <xsl:when test="//cc:selectable[@id=$ref-id]">
-          <xsl:message>Looking at <xsl:value-of select="$ref-id"/></xsl:message>
-          <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors"/>
+          <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+             <xsl:with-param name="prev-id" select="preceding-sibling::cc:*[1]"/>
+          </xsl:apply-templates>
 <!--
           <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="make_xref"/>:  
               <xsl:apply-templates select="//cc:management-function[.//@id=$ref-id]" mode="make_xref"/></td>
