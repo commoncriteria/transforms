@@ -65,53 +65,6 @@
     </table>
   </xsl:template>
  
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-<!--  <xsl:template match="cc:all-or-none" mode="use-case">
-    <tr>
-      <td>These selections must be selected (or not selected) <br/>
-          as a group in their entirety</td>
-      <td>
-        <xsl:for-each select="cc:ref-id">
-          <xsl:variable name="id" select="text()"/>
-          From <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$id]" mode="make_xref"/>
-          choose <xsl:apply-templates select="//cc:selectable[@id=$id]"/><br/>
-        </xsl:for-each>
-      </td>
-    </tr>
-  </xsl:template>
--->
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-<!--
-  <xsl:template match="cc:same-req" mode="use-case">
-     <xsl:variable name="first" select="cc:ref-id[1]/text()"/>
-     <tr>  
-       <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$first]" mode="make_xref"/></td>
-       <td>
-         <xsl:for-each select="cc:*">
-          <xsl:choose>
-           <xsl:when test="name()='ref-id'">
-             <xsl:variable name="ref-id" select="text()"/>
-             Choose 
-             <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/>
-           </xsl:when>
-           <xsl:when test="name()='not'">
-              Choose a selection other than
-              <ul> <xsl:for-each select="cc:ref-id">
-                <xsl:variable name="ref-id" select="text()"/>
-                <li><xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></li>
-              </xsl:for-each></ul>
-           </xsl:when>
-          </xsl:choose>
-           <br/>
-         </xsl:for-each>
-       </td>
-     </tr>
-  </xsl:template>
--->
 
   <!-- ############### -->
   <!--                 -->
@@ -146,17 +99,6 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <!--
-  <xsl:template match="cc:free-text" mode="use-case">
-      <tr>
-        <td><xsl:apply-templates select="cc:obj"/></td>
-        <td><xsl:apply-templates select="cc:act"/></td>
-      </tr>
-  </xsl:template>  
--->
  <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -183,7 +125,7 @@
           <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
         </xsl:otherwise>
       </xsl:choose>
- </xsl:template> 
+  </xsl:template> 
 </xsl:stylesheet>
 
 
