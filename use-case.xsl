@@ -39,7 +39,7 @@
           <xsl:value-of select="@title"/>
        </h2>
        <xsl:for-each select="cc:config">
-         <xsl:apply-templates mode="use-case"/>
+          <xsl:call-template name="use-case-and"/>
        </xsl:for-each>
       </xsl:for-each>
     </xsl:if>
@@ -49,7 +49,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:and" mode="use-case">
+  <xsl:template match="cc:and" mode="use-case" name="use-case-and">
     <xsl:apply-templates mode="use-case"/>
   </xsl:template>
 
@@ -58,9 +58,9 @@
   <!-- ############### -->
    <xsl:template match="cc:or" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
-      <tr> <td rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
+      <tr> <td style="white-space: nowrap;" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
-        <tr><td><xsl:apply-templates select="." mode="use-case"/></td></tr>
+        <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
       </xsl:for-each>
     </table>
   </xsl:template>
@@ -73,15 +73,21 @@
     <xsl:param name="prev-id"/> 
     <xsl:message>Prev-id is <xsl:value-of select="$prev-id"/></xsl:message>
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
-      Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST. <br/>
+      Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.<br/>
     </xsl:if>
-    <xsl:if test="not(ancestor::cc:f-element//@id=$prev-id)">
-      From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/><br/>
+
+
+    <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
+      From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:<br/>
     </xsl:if>
-   
+    <xsl:if test="ancestor::cc:managment-function and not(ancestor::cc:management-function//@id=$prev-id)">
+      From <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>:<br/>
+    </xsl:if>
+
+
     <xsl:for-each select="ancestor-or-self::cc:selectable">
-      <xsl:if test="not(ancestor::cc:f-component//@id=$prev-id)">
-        select <xsl:apply-templates select="." mode="make_xref"/> <br/>
+      <xsl:if test="not(.//@id=$prev-id)">
+        &#160;&#160;* select <xsl:apply-templates select="." mode="make_xref"/><br/>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
@@ -93,8 +99,11 @@
     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
     <xsl:choose>
       <xsl:when test="//cc:assignable/@id=$ref-id">
-        <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors"/>
-         For <xsl:apply-templates select="$ref-id" mode="make_xref"/>, <xsl:apply-templates/> <br/>
+        <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+          <xsl:with-param name="prev-id" select="preceding-sibling::cc:*[1]"/>
+        </xsl:apply-templates>
+        &#160;&#160;* for <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
+       <xsl:apply-templates/><br/>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
@@ -119,7 +128,7 @@
           </xsl:apply-templates>
           Include
           <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="make_xref"/>
-          in the ST<br/> 
+          in the ST<br/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>

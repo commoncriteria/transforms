@@ -59,8 +59,16 @@
     <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/><xsl:value-of select="@type"/></xsl:if>
   </xsl:template>
 
-
- 
+  <!-- ############################################################
+           Gets the ID for a selectable 
+       ############################################################-->
+  <xsl:template match="cc:selectable[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template> 
+  <xsl:template match="cc:selectable" mode="getId"><!--
+-->_s_<xsl:number count="//cc:selectable" level="any"/>
+  </xsl:template> 
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -258,15 +266,27 @@ The following sections list Common Criteria and technology terms used in this do
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
     <xsl:when test="@linebreak='yes'">
-    <ul>
-    <xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each>
-    <!-- <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->
-    </ul>
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <xsl:message>ID is <xsl:value-of select="$id"/>|</xsl:message>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+      </xsl:for-each></ul>
     </xsl:when>
-    <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
+    <xsl:when test="@linebreak='no'">
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <xsl:message>ID is <xsl:value-of select="$id"/>|</xsl:message>
+        <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
-    <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
-   <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
+    <xsl:when test=".//cc:selectables">
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>i
+      </xsl:for-each></ul></xsl:when>
+    <xsl:otherwise>
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
   </xsl:choose>]</xsl:template>
 
   <!--

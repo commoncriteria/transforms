@@ -5,6 +5,58 @@
   <!-- ############### -->
   <!-- This files defines how to make cross-references to different items. -->
   <!-- ############### -->
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:selectable" mode="make_xref">
+    <xsl:variable name="r-id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
+    <a href="#{$r-id}">
+      <xsl:choose>
+        <xsl:when test="cc:readable"><xsl:apply-templates select="cc:readable"/></xsl:when>
+        <xsl:when test=".//cc:snip"><xsl:apply-templates select=".//cc:snip"/>...</xsl:when>
+        <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+      </xsl:choose>
+    </a>
+  </xsl:template>
+
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:f-element//cc:assignable" mode="make_xref">
+    <a href="#{@id}">
+    <xsl:variable name="index"><xsl:for-each select="ancestor::cc:f-element//cc:assignable">
+      <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+    </xsl:variable>
+
+    <xsl:value-of select="$index"/><sup><xsl:choose>
+	<xsl:when test="$index='1'">st</xsl:when>
+	<xsl:when test="$index='2'">nd</xsl:when>
+	<xsl:when test="$index='3'">rd</xsl:when>
+        <xsl:otherwise>th</xsl:otherwise>
+    </xsl:choose></sup> assignment</a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:management-function//cc:assignable" mode="make_xref">
+   <xsl:message> Went through here for <xsl:value-of select="@id"/></xsl:message> 
+
+    <a href="#{@id}">
+<!--TODO: This seems really inefficient.-->
+    <xsl:variable name="index"><xsl:for-each select="ancestor::cc:management-function//cc:assignable">
+      <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+    </xsl:variable>
+
+    <xsl:value-of select="$index"/><sup><xsl:choose>
+	<xsl:when test="$index='1'">st</xsl:when>
+	<xsl:when test="$index='2'">nd</xsl:when>
+	<xsl:when test="$index='3'">rd</xsl:when>
+        <xsl:otherwise>th</xsl:otherwise>
+    </xsl:choose></sup> assignment</a>
+  </xsl:template>
  
   <!-- ############### -->
   <!--                 -->
