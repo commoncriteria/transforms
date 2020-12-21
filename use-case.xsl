@@ -95,12 +95,23 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template name="get-prev-id">
+    <xsl:choose>
+      <xsl:when test="preceding-sibling::cc:*[1]/cc:ref-id">
+        <xsl:value-of select="preceding-sibling::cc:*[1]/cc:ref-id"/>
+      </xsl:when>
+      <xsl:otherwise><xsl:value-of select="preceding-sibling::cc:*[1]"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:guidance" mode="use-case">
     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
     <xsl:choose>
       <xsl:when test="//cc:assignable/@id=$ref-id">
         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
-          <xsl:with-param name="prev-id" select="preceding-sibling::cc:*[1]"/>
+          <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
         </xsl:apply-templates>
         &#160;&#160;* for <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
        <xsl:apply-templates/><br/>
@@ -116,7 +127,7 @@
       <xsl:choose>
         <xsl:when test="//cc:selectable[@id=$ref-id]">
           <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
-             <xsl:with-param name="prev-id" select="preceding-sibling::cc:*[1]"/>
+            <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
           </xsl:apply-templates>
         </xsl:when>
         <xsl:when test="//cc:f-component[@id=$ref-id]">
@@ -124,7 +135,7 @@
         </xsl:when>
         <xsl:when test="//cc:management-function[@id=$ref-id]">
           <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
-             <xsl:with-param name="prev-id" select="preceding-sibling::cc:*[1]"/>
+            <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
           </xsl:apply-templates>
           Include
           <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="make_xref"/>
