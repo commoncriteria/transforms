@@ -14,7 +14,11 @@
     <a href="#{$r-id}">
       <xsl:choose>
         <xsl:when test="cc:readable"><xsl:apply-templates select="cc:readable"/></xsl:when>
-        <xsl:when test=".//cc:snip"><xsl:apply-templates select=".//cc:snip"/>...</xsl:when>
+
+<!--- We want snips in our selectable, but not snips that are descendants of subselectabls -->
+        <xsl:when test=".//cc:snip">
+          <xsl:apply-templates select="descendant::cc:snip[1]"/>...
+          </xsl:when> 
         <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
       </xsl:choose>
     </a>
@@ -26,37 +30,46 @@
   <!-- ############### -->
   <xsl:template match="cc:f-element//cc:assignable" mode="make_xref">
     <a href="#{@id}">
-    <xsl:variable name="index"><xsl:for-each select="ancestor::cc:f-element//cc:assignable">
-      <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
-    </xsl:variable>
-
-    <xsl:value-of select="$index"/><sup><xsl:choose>
-	<xsl:when test="$index='1'">st</xsl:when>
-	<xsl:when test="$index='2'">nd</xsl:when>
-	<xsl:when test="$index='3'">rd</xsl:when>
+<!--  This won't compile:  <xsl:variable name="index">
+      <xsl:number count="ancestor::cc:f-element//cc:assignable" level="any"/>
+    </xsl:variable>, so I'm using the following inefficient hack -->
+      <xsl:variable name="index"><xsl:for-each select="ancestor::cc:f-element//cc:assignable">
+        <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+      </xsl:variable>
+      <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
+      <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
+      <xsl:value-of select="$index"/>
+      <sup><xsl:choose>
+	<xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
+	<xsl:when test="$lastchar='1'">st</xsl:when>
+	<xsl:when test="$lastchar='2'">nd</xsl:when>
+	<xsl:when test="$lastchar='3'">rd</xsl:when>
         <xsl:otherwise>th</xsl:otherwise>
-    </xsl:choose></sup> assignment</a>
+      </xsl:choose></sup>
+     assignment</a>
   </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:management-function//cc:assignable" mode="make_xref">
-   <xsl:message> Went through here for <xsl:value-of select="@id"/></xsl:message> 
-
     <a href="#{@id}">
 <!--TODO: This seems really inefficient.-->
-    <xsl:variable name="index"><xsl:for-each select="ancestor::cc:management-function//cc:assignable">
-      <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
-    </xsl:variable>
-
-    <xsl:value-of select="$index"/><sup><xsl:choose>
-	<xsl:when test="$index='1'">st</xsl:when>
-	<xsl:when test="$index='2'">nd</xsl:when>
-	<xsl:when test="$index='3'">rd</xsl:when>
+      <xsl:variable name="index"><xsl:for-each select="ancestor::cc:management-function//cc:assignable">
+        <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+      </xsl:variable>
+      <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
+      <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
+      <xsl:value-of select="$index"/>
+      <sup><xsl:choose>
+	<xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
+	<xsl:when test="$lastchar='1'">st</xsl:when>
+	<xsl:when test="$lastchar='2'">nd</xsl:when>
+	<xsl:when test="$lastchar='3'">rd</xsl:when>
         <xsl:otherwise>th</xsl:otherwise>
-    </xsl:choose></sup> assignment</a>
-  </xsl:template>
+      </xsl:choose></sup>
+    assignment</a>
+ </xsl:template>
  
   <!-- ############### -->
   <!--                 -->

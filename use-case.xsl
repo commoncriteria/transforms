@@ -74,8 +74,6 @@
 
     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
      
-
-    <xsl:message>Prev-id <xsl:value-of select="concat($prev-id, ' for ', @id)"/></xsl:message>
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.<br/>
     </xsl:if>
@@ -117,13 +115,14 @@
   <!-- ############### -->
   <xsl:template match="cc:guidance" mode="use-case">
     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
+    <xsl:variable name="sclass">uc_guide<xsl:if test="//cc:management-function//@id=$ref-id"> uc_mf</xsl:if></xsl:variable>
     <xsl:choose>
       <xsl:when test="//cc:assignable/@id=$ref-id">
         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
         </xsl:apply-templates>
-        &#160;&#160;* for <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
-       <xsl:apply-templates/><br/>
+ 	<div class="{$sclass}">* for <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
+       <xsl:apply-templates/></div>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
