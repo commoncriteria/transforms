@@ -81,8 +81,16 @@
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
       From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:<br/>
     </xsl:if>
-    <xsl:if test="ancestor::cc:managment-function and not(ancestor::cc:management-function//@id=$prev-id)">
-      From <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>:<br/>
+    <xsl:if test="ancestor::cc:management-function and not(ancestor::cc:management-function//@id=$prev-id)">
+      <xsl:choose>
+        <xsl:when test="ancestor::cc:management-function/cc:M">
+          <div class="uc_mf">From <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>:</div>
+        </xsl:when>
+        <xsl:otherwise>
+          <div class="uc_mf">Include <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>
+          in the ST and :</div>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
 
     <xsl:for-each select="ancestor-or-self::cc:selectable">
@@ -99,16 +107,6 @@
     <xsl:if test="not(parent::cc:or)">
       <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
     </xsl:if>
-<!--
-  xx<!- 
-
-    <xsl:choose>
-      <xsl:when test="preceding-sibling::cc:*[1]/cc:ref-id">
-        <xsl:value-of select="preceding-sibling::cc:*[1]/cc:ref-id"/>
-      </xsl:when>
-      <xsl:otherwise><xsl:value-of select="preceding-sibling::cc:*[1]"/></xsl:otherwise>
-    </xsl:choose>
--->
   </xsl:template>
   <!-- ############### -->
   <!--                 -->
@@ -121,7 +119,7 @@
         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
         </xsl:apply-templates>
- 	<div class="{$sclass}">* for <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
+ 	<div class="{$sclass}">* for the <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
        <xsl:apply-templates/></div>
       </xsl:when>
     </xsl:choose>
@@ -141,13 +139,13 @@
         <xsl:when test="//cc:f-component[@id=$ref-id]">
           Include <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST <br/>
         </xsl:when>
-        <xsl:when test="//cc:management-function[@id=$ref-id]">
+        <xsl:when test="//cc:management-function//@id=$ref-id">
           <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
             <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
           </xsl:apply-templates>
-          Include
+          <div class="uc_mf">Include
           <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="make_xref"/>
-          in the ST<br/>
+          in the ST</div>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
