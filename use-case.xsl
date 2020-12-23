@@ -70,12 +70,15 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:*[@id]" mode="handle-ancestors">
-    <xsl:param name="prev-id"/> 
-    <xsl:message>Prev-id is <xsl:value-of select="$prev-id"/></xsl:message>
+    <xsl:param name="prev-id"/>
+
+    <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
+     
+
+    <xsl:message>Prev-id <xsl:value-of select="concat($prev-id, ' for ', @id)"/></xsl:message>
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.<br/>
     </xsl:if>
-
 
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
       From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:<br/>
@@ -84,10 +87,9 @@
       From <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>:<br/>
     </xsl:if>
 
-
     <xsl:for-each select="ancestor-or-self::cc:selectable">
       <xsl:if test="not(.//@id=$prev-id)">
-        &#160;&#160;* select <xsl:apply-templates select="." mode="make_xref"/><br/>
+	<div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
@@ -96,12 +98,19 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="get-prev-id">
+    <xsl:if test="not(parent::cc:or)">
+      <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
+    </xsl:if>
+<!--
+  xx<!- 
+
     <xsl:choose>
       <xsl:when test="preceding-sibling::cc:*[1]/cc:ref-id">
         <xsl:value-of select="preceding-sibling::cc:*[1]/cc:ref-id"/>
       </xsl:when>
       <xsl:otherwise><xsl:value-of select="preceding-sibling::cc:*[1]"/></xsl:otherwise>
     </xsl:choose>
+-->
   </xsl:template>
   <!-- ############### -->
   <!--                 -->
