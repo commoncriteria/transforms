@@ -58,7 +58,7 @@
   <!-- ############### -->
    <xsl:template match="cc:or" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
-      <tr> <td style="white-space: nowrap;" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
         <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
       </xsl:for-each>

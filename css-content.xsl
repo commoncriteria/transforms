@@ -183,10 +183,11 @@
    }
 
 
-   .uc_table tr:first-child{
+   .uc_table_or tr td.or_cell{
+      white-space: nowrap;
       border-radius: 0.6em 0 0 0.6em;
       background-color: black;
-      foreground: white;
+      color: white;
    }
 
    .uc_table_and, .uc_table_or {
