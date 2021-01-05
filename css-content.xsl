@@ -175,7 +175,7 @@
        background-color: white;
    }
 
-   .uc_mf, .uc_sel, uc_assign{
+   .uc_mf, .uc_sel, .uc_guide{
        text-indent: 10px;
    }
    .uc_sel.uc_mf, uc_assign.uc_mf{
