@@ -71,7 +71,7 @@
        <mt tp='feat-based' nice='Implementation-based'/>
        <mt tp='sel-based'  nice='Selection-based'>
 		 <description>
-	<h:p>As indicated in the introduction to this <cc:doctype-short/>,
+	<h:p>As indicated in the introduction to this <cc:doctype-long/> <cc:doctype-short/>,
         the baseline requirements
         (those that must be performed by the TOE or its underlying platform)
         are contained in the body of this <cc:doctype-short/>.
