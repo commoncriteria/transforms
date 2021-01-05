@@ -75,11 +75,13 @@
     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
      
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
-      Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.<br/>
+      <div class="uc_inc_fcomp">
+      Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.</div>
     </xsl:if>
 
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
-      From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:<br/>
+      <div class="uc_from_fel">
+      From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:</div>
     </xsl:if>
     <xsl:if test="ancestor::cc:management-function and not(ancestor::cc:management-function//@id=$prev-id)">
       <xsl:choose>
@@ -137,7 +139,7 @@
           </xsl:apply-templates>
         </xsl:when>
         <xsl:when test="//cc:f-component[@id=$ref-id]">
-          Include <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST <br/>
+          <div class="uc_inc_fcomp">Include <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST </div>
         </xsl:when>
         <xsl:when test="//cc:management-function//@id=$ref-id">
           <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
