@@ -245,8 +245,8 @@
 <!-- TODO: Theres probably more to do here. -->
             <td><xsl:apply-templates mode="getId" select="."/></td>
             <td>
-              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref-id=$compId]"/>
-              <xsl:if test="not(//cc:base-pp[@short=$short]//cc:con-mod[@ref-id=$compId])">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=$compId]"/>
+              <xsl:if test="not(//cc:base-pp[@short=$short]//cc:con-mod[@ref=$compId])">
                 <xsl:apply-templates select="cc:consistency-rationale/node()">
                   <xsl:with-param name="base" select="$short"/>
                 </xsl:apply-templates>
@@ -332,8 +332,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	  <td><xsl:value-of select="$orig/@name"/></td>
 	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@ref-id=$orig/@name]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@ref-id=$orig/@name]"/>
+	    <xsl:when test="$base/cc:con-mod[@ref=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@ref=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->

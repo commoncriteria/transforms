@@ -396,9 +396,9 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
 Consistency Rationale Modification. Allows a base to specify rationale that is specific to itself. Linked via the ID attribute.
 	        </a:documentation>
 
-          <attribute name="id">
+          <attribute name="ref">
         	<a:documentation>
-The ID of the aspect that is being overwritten by the content of this element.
+The name of the aspect that is being overwritten by the content of this element.
         	</a:documentation>
           </attribute>
           <ref name="basic-content-pat"/>
