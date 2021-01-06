@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -238,29 +237,23 @@
     <xsl:param name="short"/>
     <xsl:param name="verb"/>
     <xsl:param name="none-msg"/>
-
     <xsl:choose>
       <xsl:when test="$f-comps">
       	<xsl:for-each select="$f-comps">
       	  <xsl:variable name="compId" select="@id"/>
-	        <tr>
+          <tr>
 <!-- TODO: Theres probably more to do here. -->
-	          <td><xsl:apply-templates mode="getId" select="."/></td>
-		        <td>
-		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
-		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
-		          </xsl:when>
- 		          <xsl:otherwise>
-    		        <xsl:apply-templates select="cc:consistency-rationale/node()">
-		              <xsl:with-param name="base" select="$short"/>
-		            </xsl:apply-templates>
-		          </xsl:otherwise>
-		          </xsl:choose>
-		          </td>
-
-	        </tr>
-	      </xsl:for-each>
+            <td><xsl:apply-templates mode="getId" select="."/></td>
+            <td>
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref-id=$compId]"/>
+              <xsl:if test="not(//cc:base-pp[@short=$short]//cc:con-mod[@ref-id=$compId])">
+                <xsl:apply-templates select="cc:consistency-rationale/node()">
+                  <xsl:with-param name="base" select="$short"/>
+                </xsl:apply-templates>
+              </xsl:if>
+	    </td>
+           </tr>
+         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
 	      <tr><td colspan="2" style="text-align:center">
@@ -339,8 +332,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	  <td><xsl:value-of select="$orig/@name"/></td>
 	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@name=$orig/@name]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@name=$orig/@name]"/>
+	    <xsl:when test="$base/cc:con-mod[@ref-id=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@ref-id=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->
