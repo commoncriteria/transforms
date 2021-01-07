@@ -1046,8 +1046,10 @@
        with additional extended functional components.
      </xsl:if>
      <xsl:apply-templates/>
-     <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
-     <xsl:call-template name="obj-req-map"/>
+     <xsl:if test="not(//cc:PP/@type='package')">
+       <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+       <xsl:call-template name="obj-req-map"/>
+     </xsl:if>
   </xsl:template>
 
   
