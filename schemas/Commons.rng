@@ -1155,7 +1155,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 </attribute>
                 <empty/>
               </element>
-              <element name="_">
+              <element name="NA">
                 <a:documentation>References for which managers this function is not applicable</a:documentation>
                 <attribute name="ref">
                   <a:documentation>ID respective manager</a:documentation>
