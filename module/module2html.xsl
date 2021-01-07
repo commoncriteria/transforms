@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -226,40 +225,38 @@
     </xsl:for-each> <!-- End base iteration -->
   </xsl:template>
 
-<!-- Requirement Consistency Rational Section -->
+<!-- ############################################ -->
+<!-- # Requirement Consistency Rational Section # -->
+<!-- ############################################ -->
   <xsl:template name="req-con-rat-sec">
     <xsl:param name="f-comps"/>
     <xsl:param name="short"/>
     <xsl:param name="verb"/>
     <xsl:param name="none-msg"/>
-
     <xsl:choose>
       <xsl:when test="$f-comps">
-      	<xsl:for-each select="$f-comps">
-      	  <xsl:variable name="compId" select="@id"/>
-	        <tr>
+      	<xsl:for-each select="$f-comps"><tr>
 <!-- TODO: Theres probably more to do here. -->
-	          <td><xsl:apply-templates mode="getId" select="."/></td>
-		        <td>
-		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
-		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
-		          </xsl:when>
- 		          <xsl:otherwise>
-    		        <xsl:apply-templates select="cc:consistency-rationale/node()">
-		              <xsl:with-param name="base" select="$short"/>
-		            </xsl:apply-templates>
-		          </xsl:otherwise>
-		          </xsl:choose>
-		          </td>
-
-	        </tr>
-	      </xsl:for-each>
+          <td><xsl:apply-templates mode="getId" select="."/></td>
+          <td> <xsl:choose>
+            <xsl:when test="@iteration and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
+            </xsl:when>
+            <xsl:when test="not(@iteration) and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="cc:consistency-rationale/node()">
+                <xsl:with-param name="base" select="$short"/>
+              </xsl:apply-templates>
+            </xsl:otherwise>
+            </xsl:choose></td>
+         </tr></xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-	      <tr><td colspan="2" style="text-align:center">
-	        <xsl:value-of select="$none-msg"/>
-	      </td></tr>
+        <tr><td colspan="2" style="text-align:center">
+          <xsl:value-of select="$none-msg"/>
+        </td></tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -333,8 +330,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	  <td><xsl:value-of select="$orig/@name"/></td>
 	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@name=$orig/@name]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@name=$orig/@name]"/>
+	    <xsl:when test="$base/cc:con-mod[@ref=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@ref=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->
@@ -583,6 +580,9 @@ These components are identified in the following table:
                        <xsl:apply-templates select="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
                     </xsl:when>
                     <xsl:otherwise>
+                       <xsl:if test="cc:title//@id"><xsl:message>
+                          WARNING: Since <xsl:value-of select="$reqid"/> has an 'id' attribute in a descendant node in the title, you probably need to define an alternative 'ext-comp-def-title'.
+                       </xsl:message></xsl:if>
                        <xsl:apply-templates select="cc:title"/>
                     </xsl:otherwise>
                 </xsl:choose>
