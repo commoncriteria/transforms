@@ -71,6 +71,7 @@
   <!-- ############### -->
   <xsl:template match="cc:*[@id]" mode="handle-ancestors">
     <xsl:param name="prev-id"/>
+    <xsl:param name="not"/>
 
     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
      
@@ -94,12 +95,22 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
-
-    <xsl:for-each select="ancestor-or-self::cc:selectable">
-      <xsl:if test="not(.//@id=$prev-id)">
-	<div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
-      </xsl:if>
-    </xsl:for-each>
+    <xsl:choose>
+      <xsl:when test="$not='1'">
+         <xsl:for-each select="ancestor::cc:selectable">
+          <xsl:if test="not(.//@id=$prev-id)">
+            <div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="ancestor-or-self::cc:selectable">
+          <xsl:if test="not(.//@id=$prev-id)">
+            <div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- ############### -->
@@ -127,7 +138,25 @@
     </xsl:choose>
   </xsl:template>
 
- <!-- ############### -->
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:not" mode="use-case">
+    <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
+    <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+       <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+       <xsl:with-param name="not" select="'1'"/>
+    </xsl:apply-templates>
+    <div class="uc_not">Choose something other than: 
+      <xsl:for-each select="cc:ref-id">
+        <xsl:variable name="ref" select="text()"/>
+        <div class="uc_not_sel">* <xsl:apply-templates select="//cc:selectable[@id=$ref]" mode="make_xref"/></div>
+      </xsl:for-each>
+    </div>
+  </xsl:template>
+
+  <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:ref-id" mode="use-case">
