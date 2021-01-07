@@ -231,7 +231,9 @@
     </xsl:for-each> <!-- End base iteration -->
   </xsl:template>
 
-<!-- Requirement Consistency Rational Section -->
+<!-- ############################################ -->
+<!-- # Requirement Consistency Rational Section # -->
+<!-- ############################################ -->
   <xsl:template name="req-con-rat-sec">
     <xsl:param name="f-comps"/>
     <xsl:param name="short"/>
@@ -239,26 +241,28 @@
     <xsl:param name="none-msg"/>
     <xsl:choose>
       <xsl:when test="$f-comps">
-      	<xsl:for-each select="$f-comps">
-      	  <xsl:variable name="compId" select="@id"/>
-          <tr>
+      	<xsl:for-each select="$f-comps"><tr>
 <!-- TODO: Theres probably more to do here. -->
-            <td><xsl:apply-templates mode="getId" select="."/></td>
-            <td>
-              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=$compId]"/>
-              <xsl:if test="not(//cc:base-pp[@short=$short]//cc:con-mod[@ref=$compId])">
-                <xsl:apply-templates select="cc:consistency-rationale/node()">
-                  <xsl:with-param name="base" select="$short"/>
-                </xsl:apply-templates>
-              </xsl:if>
-	    </td>
-           </tr>
-         </xsl:for-each>
+          <td><xsl:apply-templates mode="getId" select="."/></td>
+          <td> <xsl:choose>
+            <xsl:when test="@iteration and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
+            </xsl:when>
+            <xsl:when test="not(@iteration) and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="cc:consistency-rationale/node()">
+                <xsl:with-param name="base" select="$short"/>
+              </xsl:apply-templates>
+            </xsl:otherwise>
+            </xsl:choose></td>
+         </tr></xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-	      <tr><td colspan="2" style="text-align:center">
-	        <xsl:value-of select="$none-msg"/>
-	      </td></tr>
+        <tr><td colspan="2" style="text-align:center">
+          <xsl:value-of select="$none-msg"/>
+        </td></tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

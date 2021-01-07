@@ -398,9 +398,10 @@ Consistency Rationale Modification. Allows a base to specify rationale that is s
 
           <attribute name="ref">
         	<a:documentation>
-The name of the aspect that is being overwritten by the content of this element.
+The name or cc-id of the aspect that is being overwritten by the content of this element.
         	</a:documentation>
           </attribute>
+          <ref name="iteration-pat"/>
           <ref name="basic-content-pat"/>
         </element>
       </zeroOrMore>
