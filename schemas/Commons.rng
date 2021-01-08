@@ -645,6 +645,12 @@ Grouping for Security Objective for the Operation Environment entries.
             It only makes sense inside management-functions.</a:documentation>
           <empty/>
         </element>
+        <element name="snip">
+          <a:documentation>Designates that when refering to the parent element use only the
+             content wthin this snippet. Currently only makes sense inside a selectable.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
         <ref name="refinement-type"/>
         <ref name="ctr"/>
         <ref name="figure"/>
@@ -1358,18 +1364,18 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
         <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="description"/>
-        <oneOrMore><ref name="config"/></oneOrMore>
+        <optional><ref name="config"/></optional>
       </element>
     </zeroOrMore>
   </define>
   
   <define name="config">
     <element name="config">
-      <ref name="doc-config-pat"/>
-      <ref name="ext-doc-config"/>   
+       <ref name="and-pat"/>   
     </element>
   </define>             
 
+<!--
   <define name="ext-doc-config">
     <optional>
        <element name="doc">
@@ -1379,34 +1385,55 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
     </optional>
   </define> 
 
-
   <define name="doc-config-pat">
        <a:documentation>
           Specifies the details of a configuration. It's meant to be displayed in row-form.
        </a:documentation>
-       <!-- Individual settinds -->
        <zeroOrMore>
         <choice>
           <ref name="config-groups"/>
-          <element name="guidance">
-            <ref name="ref-ids-pat"/>
-            <ref name="basic-content-pat"/>
-          </element>
-        </choice>
+       </choice>
        </zeroOrMore> 
   </define>   
-
-  <define name="config-groups">
-    <choice>
-      <!-- A list of selectable IDs , component IDs -->
-      <ref name="ref-ids-pat"/>
-      <element name="same-req"><ref name="ref-ids-pat"/></element>
-      <element name="not"><ref name="ref-ids-pat"/></element>
-      <element name="all-or-none"><ref name="ref-ids-pat"/></element>
-    </choice>
+-->
+  <define name="or">
+    <element name="or">
+      <zeroOrMore><choice>
+        <ref name="and"/>
+        <ref name="ref-ids-pat"/>
+        <ref name="guidance"/>
+        <ref name="not"/>
+      </choice></zeroOrMore>
+    </element>
   </define>
 
+  <define name="and">
+    <element name="and">
+      <ref name="and-pat"/>
+    </element>
+  </define>
+  
+  <define name="and-pat">
+    <zeroOrMore><choice>
+      <ref name="or"/>
+      <ref name="ref-ids-pat"/>
+      <ref name="not"/>
+      <ref name="guidance"/>
+    </choice></zeroOrMore>
+  </define>
 
+  <define name="not">
+    <element name="not">
+      <ref name="ref-ids-pat"/>
+    </element>
+  </define>
+
+  <define name="guidance">
+    <element name="guidance">
+      <ref name="ref-id"/>
+      <ref name="basic-content-pat"/>
+    </element>
+   </define>
 
   <define name="Chapters">
     <zeroOrMore><ref name="Chapter"/></zeroOrMore>

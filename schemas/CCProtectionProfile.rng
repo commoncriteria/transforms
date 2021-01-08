@@ -252,7 +252,7 @@ Tags that this section should be indented(left) 2em.
             <ref name="id-attr"/>
             <ref name="title-attr"/>
             <ref name="description"/>
-            <ref name="config"/>
+            <optional><ref name="config"/></optional>
           </element>
         </oneOrMore>
       </element>
