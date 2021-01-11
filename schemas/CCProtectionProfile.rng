@@ -147,7 +147,8 @@ Tags that this section should be indented(left) 2em.
 	  </element>
 	</oneOrMore>
       </element>
-      <element name="section">
+
+      <optional><element name="section">
 	<attribute name="title"><value>Security Assurance Requirements</value></attribute>
 	<optional><attribute name="id"/></optional>
 	<ref name="basic-content-pat"/>
@@ -161,7 +162,7 @@ Tags that this section should be indented(left) 2em.
 	    </zeroOrMore>
 	  </element>
 	</oneOrMore>
-      </element>
+      </element></optional>
     </element>
   </define>
   
