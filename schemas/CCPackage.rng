@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="https://niap-ccevs.org/cc/v1"
+         xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         xmlns:htm="http://www.w3.org/1999/xhtml"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         >
+
+
+<!-- ################################# -->
+<!--            START                  -->
+<!-- ################################# -->
+  <start>
+    <element name="PP">
+      <a:documentation>Root element for Protection Profile XML document</a:documentation>
+      <ref name="pp-attributes"/>
+      <ref name="PPReference"/>
+      <ref name="RevisionHistory"/>
+      <ref name="Foreword"/>
+      <ref name="PreferencesEtc"/>
+      <ref name="IntroductionChapter"/>
+      <ref name="CClaimsChapter"/>
+      <ref name="Chapters"/>
+      <ref name="SecurityRequirementsChapter"/>
+      <ref name="Chapters"/>
+      <ref name="appendix-pat"/>
+   </element>
+  </start>
+
+  <define name="PreferencesEtc">
+  <a:documentation>A place for declarations and preferences</a:documentation>
+    <optional> <ref name="pp-preferences-pat"/> </optional>
+  </define>
+  
+  <define name="IntroductionChapter">
+      <element name="chapter">
+        <attribute name="title"/>
+        <ref name="id-attr"/>
+        <ref name="boilerplate-no-attr"/>
+        <ref name="section"/>
+        <ref name="tech-terms"/>
+        <oneOrMore>
+	  <choice>
+            <ref name="section"/>
+	    <ref name="usecases-section"/>
+	  </choice>
+        </oneOrMore>
+        </element>
+  </define>
+
+  <define name="SecurityRequirementsChapter">
+    <element name="chapter">
+      <attribute name="title"><value>Security Requirements</value></attribute>
+      <attribute name="id"/>
+      <ref name="boilerplate-no-attr"/>
+      <ref name="basic-content-pat"/>
+      <zeroOrMore><ref name="section"/></zeroOrMore>
+      <element name="section">
+	<attribute name="title"><value>Security Functional Requirements</value></attribute>
+	<attribute name="id"/>
+	
+	<oneOrMore>
+	  <element name="subsection">
+	    <attribute name="title"/>
+	    <attribute name="id"/>
+	    <ref name="basic-content-pat"/>
+	    <oneOrMore>
+	      <choice>
+	        <ref name="audit-table-pat"/>
+                <ref name="f-component-pattern"/>
+	      </choice>
+	    </oneOrMore>
+	  </element>
+	</oneOrMore>
+      </element>
+    </element>
+  </define>
+  
+
+  <define name="appendix-pat">
+    <a:documentation>
+      Pattern for title attribute.
+    </a:documentation>
+    <oneOrMore>
+      <element name="appendix">
+        <a:documentation>
+          Element that defines an appendix.
+        </a:documentation>
+        <ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <ref name="boilerplate-no-attr"/>
+        <oneOrMore><choice>
+            <ref name="basic-content-pat"/>
+            <ref name="section"/>
+            <ref name="acronyms"/>
+            <ref name="bibliography"/>
+        </choice></oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
+
+  <define name="section">
+    <element name="section">
+      <a:documentation>
+        A block smaller than a chapter.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      <oneOrMore>
+        <choice>
+          <ref name="basic-content-pat"/>
+          <ref name="subsection-pattern"/>
+       </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+ <define name="usecases-section">
+    <element name="section">
+      <a:documentation>
+        Section specific for use cases.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <ref name="title-attr"/>
+      
+      <ref name="basic-content-pat"/>
+      <element name="usecases">
+        <a:documentation>
+          Wrapper element for uses cases.
+        </a:documentation>
+        <oneOrMore>
+          <element name="usecase">
+            <a:documentation>
+              A referrable section on how the protection profiled item is used.
+            </a:documentation>
+            <ref name="id-attr"/>
+            <ref name="title-attr"/>
+            <ref name="description"/>
+            <ref name="config"/>
+          </element>
+        </oneOrMore>
+      </element>
+    </element>
+  </define>
+  
+  <!-- Get rid of the status attribute. It seems like it is duplicative. -->
+  <define name="f-component-pattern">
+    <element name="f-component">
+      <a:document>
+        Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <ref name="f-comp-content-pat"/>
+      <choice>
+	      
+        <!-- Choice of status -->
+        <!-- If the status is objective, it must have a targetdate(?) -->
+        <group>
+          <optional>
+            <attribute name="targetdate">
+              <a:documentation>
+                Target date that the requirements under this component become
+                manandory. It only makes sense for _objective_ components.
+              </a:documentation>
+              <data type="date"/>
+            </attribute>
+          </optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>objective</value>
+          </attribute>
+        </group>
+
+	      
+        <!-- If the status is selection-based, it must have dependencies -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>sel-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="selection-depends"/>
+          </oneOrMore>
+        </group>
+
+	<!-- Feature-based -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Feature-based requirements must have dependencies.
+            </a:documentation>
+            <value>feat-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="depends-pat"/>
+          </oneOrMore>
+        </group>
+	      
+        <!-- The status could also be optional or nothing (which is indicated here) -->
+        <optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <choice>
+              <value>optional</value>
+	      <value>mandatory</value>
+            </choice>
+          </attribute>
+        </optional>
+      </choice>
+<!--      <ref name="depends-pat"/>   -->
+      <optional><ref name="note"/></optional>
+      <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
+      <zeroOrMore><ref name="audit-table-pat"/></zeroOrMore>
+    </element>
+  </define> 
+
+ <define name="glossary-section">
+    <element name="glossary">
+      <a:documentation>
+        Section to define terms.
+      </a:documentation>
+      <oneOrMore>
+        <ref name="entry-el"/>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="RevisionHistory">
+    <oneOrMore>
+        <element name="RevisionHistory">
+          <a:documentation>Documents the major changes to releases.</a:documentation>
+          <zeroOrMore>
+            <element name="entry">
+              <a:documentation>Container for individual revisions.</a:documentation>
+              <element name="version">
+                <a:documentation>Text describing the revision.</a:documentation>
+                <text/>
+              </element>
+              <element name="date">
+                <a:documentation>Date of the revision.</a:documentation>
+                <data type="date"/>
+              </element>
+              <element name="subject">
+                <a:documentation>Description of the revision.</a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </zeroOrMore>
+        </element>
+      </oneOrMore>
+  </define>
+  <define name="Foreword">
+    <optional>
+      <element name="foreword">
+        <a:documentation>Flexible section for a foreword.</a:documentation>
+        <zeroOrMore><ref name="html-element"/></zeroOrMore>
+      </element>
+    </optional>
+  </define>
+  
+  <define name="pp-attributes">
+      <attribute name="name">
+        <a:documentation> The title of this document.</a:documentation>
+      </attribute>
+      <optional>
+        <attribute name="type">
+          <choice><value>package</value><value>pp</value></choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="boilerplate">
+        <a:documentation>
+          Indicates that this document shall use boilerplate sections.
+        </a:documentation>
+        <value>yes</value></attribute>
+      </optional>
+  </define>
+    
+   <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <interleave>
+        <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
+        <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
+      </interleave>
+    </element>
+  </define> 
+         
+  <define name="PPReference">
+      <element name="PPReference">
+        <a:documentation>
+          A wrapper element for document meta-data.
+        </a:documentation>
+
+        <element name="ReferenceTable">
+          <a:documentation>
+            A second wrapper element for document meta-data.
+          </a:documentation>
+          <element name="PPTitle">
+            <a:documentation>Title of this document</a:documentation>
+            <text/>
+          </element>
+          <element name="PPVersion">
+            <a:documentation>
+
+Version of Common Criteria this document follows.
+It should be the version listed in the CCPart1/2/3 files consulted.
+
+            </a:documentation>
+            <data type="NMTOKEN"/>
+          </element>
+          <element name="PPAuthor">
+            <a:documentation>
+              Organization that developed this PP (e.g. National Information Assurance Partnership)
+            </a:documentation>
+            <text/>
+          </element>
+          <element name="PPPubDate">
+            <a:documentation>
+              Date of publication for this PP.
+            </a:documentation>
+            <data type="date"/>
+          </element>
+          <element name="Keywords">
+            <a:documentation>
+              NOT USED. A list of keywords associated with this document.
+            </a:documentation>
+            <text/>
+          </element>
+        </element>
+      </element>
+  </define> 
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+      <choice>
+        <element name="componentsneeded">
+          <oneOrMore>
+            <element name="componentneeded">
+              <element name="componentid">
+                <ref name="comp-id-upper-respat"/>
+              </element>
+              <element name="notes">
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+       <element name="indent">
+          <a:documentation>
+Tags that this section should be indented(left) 2em.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
+      </choice>
+    </define>
+
+    <define name="subsection-pattern">
+      <element name="subsection">
+	<a:documentation>
+          Lower level of grouping
+	</a:documentation>
+	<ref name="id-attr"/>
+	<ref name="title-attr"/>
+	<oneOrMore>
+          <choice>
+            <ref name="glossary-section"/>
+            <ref name="subsection-pattern"/>
+            <ref name="basic-content-pat"/>
+          </choice>
+	</oneOrMore>
+      </element>
+    </define>
+
+    
+    <define name="xref-content">
+      <choice>
+        <ref name="linkend-attr"/>
+        <attribute name="to">
+          <choice>
+            <value>ref-strict-optional</value>
+            <value>sel-based-reqs</value>
+            <value>obj-reqs</value>
+            <value>impl-reqs</value>
+          </choice>
+        </attribute>
+      </choice>
+    </define>
+  </include>
+</grammar>
