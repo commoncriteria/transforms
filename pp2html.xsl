@@ -844,6 +844,11 @@
               <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
               Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
            </xsl:element>
+           
+            <xsl:if test="/cc:package">
+              <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
+            </xsl:if>
+
           <b><xsl:call-template name="ctr-xsl">
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
