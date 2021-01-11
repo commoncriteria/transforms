@@ -6,7 +6,7 @@
 
   <xsl:variable name="doctype">
 	<xsl:choose>
-		<xsl:when test="/cc:PP[@type='package']">Package</xsl:when>
+		<xsl:when test="/cc:package">Package</xsl:when>
                 <xsl:when test="/cc:Module">PP-Module</xsl:when>
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>

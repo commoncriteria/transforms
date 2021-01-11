@@ -11,7 +11,7 @@
 <!--            START                  -->
 <!-- ################################# -->
   <start>
-    <element name="PP">
+    <element name="package">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes"/>
       <ref name="PPReference"/>
@@ -27,6 +27,39 @@
    </element>
   </start>
 
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+      <choice>
+        <element name="componentsneeded">
+          <oneOrMore>
+            <element name="componentneeded">
+              <element name="componentid">
+                <ref name="comp-id-upper-respat"/>
+              </element>
+              <element name="notes">
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+     </choice>
+    </define>
+
+   
+    <define name="xref-content">
+      <choice>
+        <ref name="linkend-attr"/>
+        <attribute name="to">
+          <choice>
+            <value>ref-strict-optional</value>
+            <value>sel-based-reqs</value>
+            <value>obj-reqs</value>
+            <value>impl-reqs</value>
+          </choice>
+        </attribute>
+      </choice>
+    </define>
+  </include>
   <define name="PreferencesEtc">
   <a:documentation>A place for declarations and preferences</a:documentation>
     <optional> <ref name="pp-preferences-pat"/> </optional>
@@ -39,13 +72,8 @@
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
         <ref name="tech-terms"/>
-        <oneOrMore>
-	  <choice>
-            <ref name="section"/>
-	    <ref name="usecases-section"/>
-	  </choice>
-        </oneOrMore>
-        </element>
+        <oneOrMore> <ref name="section"/> </oneOrMore>
+      </element>
   </define>
 
   <define name="SecurityRequirementsChapter">
@@ -115,34 +143,6 @@
     </element>
   </define>
 
- <define name="usecases-section">
-    <element name="section">
-      <a:documentation>
-        Section specific for use cases.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      
-      <ref name="basic-content-pat"/>
-      <element name="usecases">
-        <a:documentation>
-          Wrapper element for uses cases.
-        </a:documentation>
-        <oneOrMore>
-          <element name="usecase">
-            <a:documentation>
-              A referrable section on how the protection profiled item is used.
-            </a:documentation>
-            <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <ref name="description"/>
-            <ref name="config"/>
-          </element>
-        </oneOrMore>
-      </element>
-    </element>
-  </define>
-  
   <!-- Get rid of the status attribute. It seems like it is duplicative. -->
   <define name="f-component-pattern">
     <element name="f-component">
@@ -231,31 +231,7 @@
     </element>
   </define>
 
-  <define name="RevisionHistory">
-    <oneOrMore>
-        <element name="RevisionHistory">
-          <a:documentation>Documents the major changes to releases.</a:documentation>
-          <zeroOrMore>
-            <element name="entry">
-              <a:documentation>Container for individual revisions.</a:documentation>
-              <element name="version">
-                <a:documentation>Text describing the revision.</a:documentation>
-                <text/>
-              </element>
-              <element name="date">
-                <a:documentation>Date of the revision.</a:documentation>
-                <data type="date"/>
-              </element>
-              <element name="subject">
-                <a:documentation>Description of the revision.</a:documentation>
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </zeroOrMore>
-        </element>
-      </oneOrMore>
-  </define>
-  <define name="Foreword">
+ <define name="Foreword">
     <optional>
       <element name="foreword">
         <a:documentation>Flexible section for a foreword.</a:documentation>
@@ -268,18 +244,6 @@
       <attribute name="name">
         <a:documentation> The title of this document.</a:documentation>
       </attribute>
-      <optional>
-        <attribute name="type">
-          <choice><value>package</value><value>pp</value></choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="boilerplate">
-        <a:documentation>
-          Indicates that this document shall use boilerplate sections.
-        </a:documentation>
-        <value>yes</value></attribute>
-      </optional>
   </define>
     
    <define name="pp-preferences-pat">
@@ -338,60 +302,4 @@ It should be the version listed in the CCPart1/2/3 files consulted.
         </element>
       </element>
   </define> 
-  <include href="Commons.rng">
-    <define name="custom-basic-content-pat">
-      <choice>
-        <element name="componentsneeded">
-          <oneOrMore>
-            <element name="componentneeded">
-              <element name="componentid">
-                <ref name="comp-id-upper-respat"/>
-              </element>
-              <element name="notes">
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </oneOrMore>
-        </element>
-       <element name="indent">
-          <a:documentation>
-Tags that this section should be indented(left) 2em.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-      </choice>
-    </define>
-
-    <define name="subsection-pattern">
-      <element name="subsection">
-	<a:documentation>
-          Lower level of grouping
-	</a:documentation>
-	<ref name="id-attr"/>
-	<ref name="title-attr"/>
-	<oneOrMore>
-          <choice>
-            <ref name="glossary-section"/>
-            <ref name="subsection-pattern"/>
-            <ref name="basic-content-pat"/>
-          </choice>
-	</oneOrMore>
-      </element>
-    </define>
-
-    
-    <define name="xref-content">
-      <choice>
-        <ref name="linkend-attr"/>
-        <attribute name="to">
-          <choice>
-            <value>ref-strict-optional</value>
-            <value>sel-based-reqs</value>
-            <value>obj-reqs</value>
-            <value>impl-reqs</value>
-          </choice>
-        </attribute>
-      </choice>
-    </define>
-  </include>
 </grammar>

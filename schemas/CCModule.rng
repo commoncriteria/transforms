@@ -589,22 +589,7 @@ Referrable section on how the protection profiled item is used.
         </element>
       </element>
     </element>
-
-    <oneOrMore>
-      <element name="RevisionHistory">
-	<a:documentation>
-	</a:documentation>
-        <oneOrMore>
-	  <element name="entry">
-	    <a:documentation>
-	    </a:documentation>
-	    <element name="version"><text/></element>
-	    <element name="date"><data type="date"/></element>
-	    <element name="subject"><text/></element>
-	  </element>
-        </oneOrMore>
-      </element>
-    </oneOrMore>
+    <ref name="RevisionHistory"/>
   </define>
 
   <define name="SecReqChapter">

@@ -21,8 +21,8 @@
   <!-- ############### -->
   <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
   <xsl:variable name="addressedByCol"><xsl:choose>
-    <xsl:when test="/cc:PP">1</xsl:when>
-    <xsl:otherwise>2</xsl:otherwise>
+    <xsl:when test="/cc:Module">2</xsl:when>
+    <xsl:otherwise>1</xsl:otherwise>
   </xsl:choose></xsl:variable>
 
   <!-- ############### -->
@@ -59,7 +59,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:PP">
+  <xsl:template match="cc:PP|cc:package">
     <xsl:apply-templates select="cc:chapter"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
@@ -1102,7 +1102,7 @@
        with additional extended functional components.
      </xsl:if>
      <xsl:apply-templates/>
-     <xsl:if test="not(//cc:PP/@type='package')">
+     <xsl:if test="/cc:PP">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
        <xsl:call-template name="obj-req-map"/>
      </xsl:if>

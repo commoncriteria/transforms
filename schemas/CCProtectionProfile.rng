@@ -450,30 +450,6 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define>
 
-  <define name="RevisionHistory">
-    <oneOrMore>
-        <element name="RevisionHistory">
-          <a:documentation>Documents the major changes to releases.</a:documentation>
-          <zeroOrMore>
-            <element name="entry">
-              <a:documentation>Container for individual revisions.</a:documentation>
-              <element name="version">
-                <a:documentation>Text describing the revision.</a:documentation>
-                <text/>
-              </element>
-              <element name="date">
-                <a:documentation>Date of the revision.</a:documentation>
-                <data type="date"/>
-              </element>
-              <element name="subject">
-                <a:documentation>Description of the revision.</a:documentation>
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </zeroOrMore>
-        </element>
-      </oneOrMore>
-  </define>
   <define name="Foreword">
     <optional>
       <element name="foreword">
@@ -484,21 +460,16 @@ Tags that this section should be indented(left) 2em.
   </define>
   
   <define name="pp-attributes">
-      <attribute name="name">
-        <a:documentation> The title of this document.</a:documentation>
-      </attribute>
-      <optional>
-        <attribute name="type">
-          <choice><value>package</value><value>pp</value></choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="boilerplate">
-        <a:documentation>
-          Indicates that this document shall use boilerplate sections.
-        </a:documentation>
-        <value>yes</value></attribute>
-      </optional>
+    <attribute name="name">
+     <a:documentation> The title of this document.</a:documentation>
+    </attribute>
+    <optional>
+      <attribute name="boilerplate">
+      <a:documentation>
+        Indicates that this document shall use boilerplate sections.
+      </a:documentation>
+      <value>yes</value></attribute>
+    </optional>
   </define>
     
    <define name="pp-preferences-pat">
