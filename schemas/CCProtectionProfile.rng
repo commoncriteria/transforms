@@ -42,19 +42,7 @@
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
       <choice>
-        <element name="componentsneeded">
-          <oneOrMore>
-            <element name="componentneeded">
-              <element name="componentid">
-                <ref name="comp-id-upper-respat"/>
-              </element>
-              <element name="notes">
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </oneOrMore>
-        </element>
-        <element name="if-opt-app">
+       <element name="if-opt-app">
           <a:documentation>
 Content that only appears if the optional appendices exist.
           </a:documentation>
