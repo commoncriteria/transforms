@@ -6,6 +6,38 @@
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
          >
 
+<!-- ################################# -->
+<!--            START                  -->
+<!-- ################################# -->
+  <start>
+    <element name="PP">
+      <a:documentation>Root element for Protection Profile XML document</a:documentation>
+      <ref name="pp-attributes"/>
+      <ref name="PPReference"/>
+      <ref name="RevisionHistory"/>
+      <ref name="Foreword"/>
+      <ref name="packages"/>
+      <ref name="PreferencesEtc"/>
+      <ref name="IntroductionChapter"/>
+      <ref name="CClaimsChapter"/>
+      <ref name="Chapters"/>
+      <ref name="SecProbDesChapter"/>
+      <ref name="SecObjChapter"/>
+      <ref name="SecurityRequirementsChapter"/>
+      <ref name="Chapters"/>
+      <ref name="appendix-pat"/>
+      <ref name="implements-pat"/>
+      <ref name="use-cases-pat"/>
+      <!-- This is where we can store extra css -->
+      <optional>
+        <element name="extra-css">
+          <text/>
+        </element>
+      </optional>
+    </element>
+  </start>
+
+
 
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
@@ -69,37 +101,6 @@ Tags that this section should be indented(left) 2em.
       </choice>
     </define>
   </include>
-<!-- ################################# -->
-<!--            START                  -->
-<!-- ################################# -->
-  <start>
-    <element name="PP">
-      <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <ref name="pp-attributes"/>
-      <ref name="PPReference"/>
-      <ref name="RevisionHistory"/>
-      <ref name="Foreword"/>
-      <ref name="packages"/>
-      <ref name="PreferencesEtc"/>
-      <ref name="IntroductionChapter"/>
-      <ref name="CClaimsChapter"/>
-      <ref name="Chapters"/>
-      <ref name="SecProbDesChapter"/>
-      <ref name="SecObjChapter"/>
-      <ref name="SecurityRequirementsChapter"/>
-      <ref name="Chapters"/>
-      <ref name="appendix-pat"/>
-      <ref name="implements-pat"/>
-      <ref name="use-cases-pat"/>
-      <!-- This is where we can store extra css -->
-      <optional>
-        <element name="extra-css">
-          <text/>
-        </element>
-      </optional>
-    </element>
-  </start>
-
   <define name="PreferencesEtc">
   <a:documentation>A place for declarations and preferences</a:documentation>
     <optional> <ref name="pp-preferences-pat"/> </optional>
@@ -148,7 +149,7 @@ Tags that this section should be indented(left) 2em.
 	</oneOrMore>
       </element>
 
-      <optional><element name="section">
+      <element name="section">
 	<attribute name="title"><value>Security Assurance Requirements</value></attribute>
 	<optional><attribute name="id"/></optional>
 	<ref name="basic-content-pat"/>
@@ -162,7 +163,7 @@ Tags that this section should be indented(left) 2em.
 	    </zeroOrMore>
 	  </element>
 	</oneOrMore>
-      </element></optional>
+      </element>
     </element>
   </define>
   
