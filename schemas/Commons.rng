@@ -35,7 +35,7 @@
   </define>
 
   <define name="SecProbDesChapter">
-    <element name="chapter">
+    <element name="section">
       <a:documentation>
       </a:documentation>
       <attribute name="title"><value>Security Problem Description</value></attribute>
@@ -65,7 +65,7 @@
   </define>
 
   <define name="SecObjChapter">
-    <element name="chapter">
+    <element name="section">
       <a:documentation>
 	Chapter describing the Security Objectives for this module.
       </a:documentation>
@@ -792,8 +792,8 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="subsection-pattern">
-    <element name="subsection">
+  <define name="section">
+    <element name="section">
       <a:documentation>
 	Lower level of grouping
       </a:documentation>
@@ -801,7 +801,7 @@ Grouping for Security Objective for the Operation Environment entries.
       <ref name="title-attr"/>
       <oneOrMore>
         <choice>
-	  <ref name="subsection-pattern"/>
+	  <ref name="section"/>
 	  <ref name="basic-content-pat"/>
         </choice>
       </oneOrMore>
@@ -1081,7 +1081,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="CClaimsChapter">
-    <element name="chapter">
+    <element name="section">
       <a:documentation>
       </a:documentation>
       <attribute name="title"><value>Conformance Claims</value></attribute>
@@ -1373,7 +1373,7 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
   </define>
 
   <define name="Chapter">
-    <element name="chapter">
+    <element name="section">
       <a:documentation>Major grouping for the document.</a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>

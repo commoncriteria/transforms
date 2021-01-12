@@ -66,7 +66,7 @@
   </define>
   
   <define name="IntroductionChapter">
-      <element name="chapter">
+      <element name="section">
         <attribute name="title"/>
         <ref name="id-attr"/>
         <ref name="boilerplate-no-attr"/>
@@ -77,7 +77,7 @@
   </define>
 
   <define name="SecurityRequirementsChapter">
-    <element name="chapter">
+    <element name="section">
       <attribute name="title"><value>Security Requirements</value></attribute>
       <attribute name="id"/>
       <ref name="boilerplate-no-attr"/>
@@ -88,7 +88,7 @@
 	<attribute name="id"/>
 	
 	<oneOrMore>
-	  <element name="subsection">
+	  <element name="section">
 	    <attribute name="title"/>
 	    <attribute name="id"/>
 	    <ref name="basic-content-pat"/>
@@ -125,22 +125,6 @@
         </choice></oneOrMore>
       </element>
     </oneOrMore>
-  </define>
-
-  <define name="section">
-    <element name="section">
-      <a:documentation>
-        A block smaller than a chapter.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="subsection-pattern"/>
-       </choice>
-      </oneOrMore>
-    </element>
   </define>
 
   <!-- Get rid of the status attribute. It seems like it is duplicative. -->
