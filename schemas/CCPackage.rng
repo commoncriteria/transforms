@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar ns="https://niap-ccevs.org/cc/v1"
+         xmlns:sec="https://niap-ccevs.org/cc/v1/section"
          xmlns="http://relaxng.org/ns/structure/1.0"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          xmlns:htm="http://www.w3.org/1999/xhtml"
@@ -66,9 +67,7 @@
   </define>
   
   <define name="IntroductionChapter">
-      <element name="section">
-        <attribute name="title"/>
-        <ref name="id-attr"/>
+      <element name="sec:Introduction">
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
         <ref name="tech-terms"/>

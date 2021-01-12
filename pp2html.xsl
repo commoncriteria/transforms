@@ -7,6 +7,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
@@ -60,7 +61,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:PP|cc:package">
-    <xsl:apply-templates select="cc:chapter"/>
+    <xsl:apply-templates select="cc:section|sec:*"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
     <xsl:if test="$appendicize='on'">
@@ -165,7 +166,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="defs-with-notes">
-    <xsl:variable name="class" select="name()"/>
+    <xsl:variable name="class" select="local-name()"/>
     <dt class="{$class}" id="{@name}">
       <xsl:value-of select="@name"/>
     </dt>
@@ -186,7 +187,7 @@
           </xsl:for-each>
         </dl>
       </xsl:when>
-      <xsl:when test="name()='SOs'">
+      <xsl:when test="local-name()='SOs'">
         This CC-Module does not define any new security objectives.
       </xsl:when>
     </xsl:choose>
@@ -888,28 +889,7 @@
     <xsl:apply-templates/>
   </xsl:template> 
 
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:chapter">
-    <xsl:variable name="html-id"><xsl:value-of select="@id"/><xsl:if test="not(@id)"><xsl:value-of select="translate(@title,' ','-')"/></xsl:if></xsl:variable>
-    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
-    <xsl:apply-templates mode='hook' select='.'/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
-    <xsl:apply-templates mode="hook" select="."/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:subsection">
+  <xsl:template match="cc:section[cc:f-component]">
     <!-- the "if" statement is to not display subsection headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)]) or count(.//cc:f-component[@status='mandatory'])">
@@ -922,6 +902,45 @@
         <xsl:apply-templates />
       </xsl:if>
     </xsl:if>
+  </xsl:template>
+
+
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="sec:*">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="title">
+        <xsl:value-of select="@title"/>
+        <xsl:if test="not(@title)"><xsl:value-of select="translate(local-name(), '_', ' ')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="cc:section">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id">
+        <xsl:value-of select="@id"/>
+        <xsl:if test="not(@id)"><xsl:value-of select="translate(@title, ' ', '_')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+
+
+  <xsl:template name="make-section">
+    <xsl:param name="title"/>
+    <xsl:param name="id"/>
+    <xsl:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)"/>
+    <xsl:element name="h{$depth}">
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+      <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:value-of select="$title"/>
+    </xsl:element>
+    <xsl:apply-templates mode="hook" select="."/>
+    <xsl:apply-templates />
   </xsl:template>
 
   <!-- ######################### -->
@@ -1039,7 +1058,7 @@
     <xsl:variable name="label"><xsl:choose>
      <!-- <xsl:when test="text()"><xsl:value-of select="text()"/><xsl:message>Matched on text <xsl:value-of select="text()"/></xsl:message></xsl:when> -->
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
-      <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
+      <xsl:when test="local-name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
       <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
       <xsl:otherwise>Table </xsl:otherwise>
     </xsl:choose></xsl:variable>
@@ -1051,7 +1070,7 @@
 
   <!-- ############### -->
   <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="name()"/></div>
+    <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
   </xsl:template>
 

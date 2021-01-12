@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar 
+    xmlns:sec="https://niap-ccevs.org/cc/v1/section" 
     xmlns:h="http://www.w3.org/1999/xhtml" 
     xmlns="http://relaxng.org/ns/structure/1.0"
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
@@ -317,6 +318,8 @@ If it's only an acronym make sure the text content is empty.
       <ref name="basic-content-pat"/>
     </element>
   </define>	
+
+
 	
   <define name="html-element">
     <a:documentation>
@@ -327,6 +330,7 @@ If it's only an acronym make sure the text content is empty.
       <anyName>
         <except>
           <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="https://niap-ccevs.org/cc/v1/section"/>
         </except>
       </anyName>
       <a:documentation>
@@ -793,18 +797,42 @@ Grouping for Security Objective for the Operation Environment entries.
   </define>
 
   <define name="section">
+    <choice>
+      <ref name="classic-section"/>
+      <ref name="flex-section"/>
+    </choice>
+  </define>
+
+  <define name="classic-section">
     <element name="section">
       <a:documentation>
 	Lower level of grouping
       </a:documentation>
-      <ref name="id-attr"/>
       <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-	  <ref name="section"/>
-	  <ref name="basic-content-pat"/>
-        </choice>
-      </oneOrMore>
+      <ref name="section-content-pat"/>
+    </element>
+  </define>
+
+  <define name="section-content-pat">
+     <optional><ref name="id-attr"/></optional>
+     <oneOrMore><choice>
+       <ref name="section"/>
+       <ref name="basic-content-pat"/>
+     </choice></oneOrMore>
+  </define>
+
+  <define name="flex-section">
+    <a:documentation>
+      A new flexiable section
+    </a:documentation>
+    <element ns="https://niap-ccevs.org/cc/v1/section">
+      <anyName>
+        <except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except>
+      </anyName>
+      <ref name="section-content-pat"/>
     </element>
   </define>
   
