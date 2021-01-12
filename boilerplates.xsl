@@ -135,14 +135,21 @@ provides evidence that these controls are present and have been evaluated.
   </section>
   </xsl:template>
 
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']|/cc:module//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
-      <xsl:choose>
-         <xsl:when test="@boilerplate='no'"/>
-         <xsl:otherwise>
-           <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
-         </xsl:otherwise>
-      </xsl:choose>
+   <xsl:template mode="hook" name="secrectext"
+        match="/cc:PP[@boilerplate='yes']//cc:*[@title='Security Requirements' and not(@boilerplate='no')]"
+       >
+      This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
+     Those requirements comprise functional components from Part 2 and assurance components from Part 3 of 
+       <xsl:call-template name="citeCC"/>.
+       <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
    </xsl:template>
+
+   <xsl:template match="//cc:module//cc:*[@title='Security Requirements']|//cc:package//sec:Security_Functional_Requirements|//cc:package//cc:*[@title='Security Functional Requirements']" mode="hook">
+      This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
+      Those requirements comprise functional components from Part 2 of <xsl:call-template name="citeCC"/>.
+ 
+       <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
+  </xsl:template>
 
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">

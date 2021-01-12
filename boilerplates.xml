@@ -25,9 +25,7 @@
 
   <!-- ############## -->
    <empty title='Security Requirements'>
-     This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
-     Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <citeCC/>.
-     The following conventions are used for the completion of operations:
+    The following conventions are used for the completion of operations:
      <ul xmlns="http://www.w3.org/1999/xhtml">
        <li>
          <b>Refinement</b> operation (denoted by <b>bold text</b> or <strike>strikethrough
