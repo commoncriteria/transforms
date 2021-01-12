@@ -809,12 +809,12 @@ Grouping for Security Objective for the Operation Environment entries.
 	Lower level of grouping
       </a:documentation>
       <ref name="title-attr"/>
+      <optional><ref name="id-attr"/></optional>
       <ref name="section-content-pat"/>
     </element>
   </define>
 
   <define name="section-content-pat">
-     <optional><ref name="id-attr"/></optional>
      <oneOrMore><choice>
        <ref name="section"/>
        <ref name="basic-content-pat"/>
@@ -832,7 +832,8 @@ Grouping for Security Objective for the Operation Environment entries.
           <nsName ns="http://www.w3.org/1999/xhtml"/>
         </except>
       </anyName>
-      <ref name="section-content-pat"/>
+      <optional><ref name="title-attr"/></optional>
+       <ref name="section-content-pat"/>
     </element>
   </define>
   
