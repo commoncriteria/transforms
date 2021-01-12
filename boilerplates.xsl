@@ -53,7 +53,7 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']"
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']|/cc:package//cc:*[@title='Confromance Claims']"
 		mode="hook">
     <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>

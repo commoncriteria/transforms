@@ -891,6 +891,7 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:chapter">
+    <xsl:variable name="html-id"><xsl:value-of select="@id"/><xsl:if test="not(@id)"><xsl:value-of select="translate(@title,' ','-')"/></xsl:if></xsl:variable>
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
     <xsl:apply-templates mode='hook' select='.'/>
     <xsl:apply-templates/>
