@@ -66,16 +66,16 @@
    <empty id="req-types">
        <mt tp='optional'   nice='Strictly Optional'>
 		   <audit-table-explainer>
-The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.
+<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
 		   </audit-table-explainer>   
-	   </mt>
-	   <mt tp='objective'  nice='Objective'>
+       </mt>
+       <mt tp='objective'  nice='Objective'>
 		   <audit-table-explainer>
-The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.
+<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
 		   </audit-table-explainer>   
-	   </mt>
+       </mt>
        <mt tp='feat-based' nice='Implementation-based'>
-		   <audit-table-explainer>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</audit-table-explainer>   
+	   <audit-table-explainer><h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p></audit-table-explainer>   
 	   </mt>
        <mt tp='sel-based'  nice='Selection-based'>
 		 <description>
@@ -89,7 +89,8 @@ The auditable events in the table below are included in a Security Target if bot
  	</h:p>
 		 </description>
          <audit-table-explainer>
-			 The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</audit-table-explainer>
+         <h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+         </audit-table-explainer>
 	   </mt>
 		   
 		   
