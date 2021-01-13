@@ -840,11 +840,11 @@
               <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
             </xsl:if>
 
-          <b><xsl:call-template name="ctr-xsl">
+          <div class="table-caption"><xsl:call-template name="ctr-xsl">
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
               </xsl:call-template>: 
-           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </b>
+           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </div>
 			    
            <xsl:call-template name="audit-table-xsl">
              <xsl:with-param name="table" select="$type"/>

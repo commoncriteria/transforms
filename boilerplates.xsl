@@ -12,8 +12,8 @@
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
   </xsl:variable>
-  <!-- Eat all hook-based cc -->
-  <xsl:template match="cc:*" mode="hook"/>
+  <!-- Eat all unmatched sections for cc and hook -->
+  <xsl:template match="cc:*|sec:*" mode="hook"/>
 
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>

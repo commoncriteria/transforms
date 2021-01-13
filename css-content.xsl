@@ -133,6 +133,10 @@
    table.mfs td:first-child{
        text-align: left;
    }
+  .table-caption{
+       text-align: center;
+       font-weight: bold;
+   }
    table{
        margin:auto;
        margin-top:1em;
