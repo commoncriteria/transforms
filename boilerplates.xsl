@@ -86,7 +86,7 @@ provides evidence that these controls are present and have been evaluated.
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
    <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography" mode="hook">
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography|/cc:package//cc:bibliography|/cc:module//cc:bibliography" mode="hook">
 <tr>
   <td><span id="bibCC"> [CC] </span></td>
   <td>Common Criteria for Information Technology Security Evaluation - 

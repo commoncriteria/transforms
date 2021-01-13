@@ -141,22 +141,12 @@
   <!-- ############### -->
   <xsl:template match="cc:bibliography">
     <table>
-      <tr class="header">
-        <th>Identifier</th>
-        <th>Title</th>
-      </tr>
+      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:for-each select="cc:entry">
         <tr>
-          <td>
-            <xsl:element name="span">
-              <xsl:attribute name="id">
-                <xsl:value-of select="@id"/>
-              </xsl:attribute> [<xsl:value-of select="cc:tag"/>] </xsl:element>
-          </td>
-          <td>
-            <xsl:apply-templates select="cc:description"/>
-          </td>
+          <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+          <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
       </xsl:for-each>
     </table>
