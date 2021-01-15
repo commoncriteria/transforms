@@ -18,6 +18,12 @@
     </element>
   </define>
 -->
+  <define name="project-notes">
+    <optional><element name="project-notes">
+      <text/>
+    </element></optional>
+  </define>
+
   <define name="title-attr">
     <a:documentation>
       Pattern for title attribute.
@@ -1110,12 +1116,25 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="CClaimsChapter">
-    <element name="section">
+    <choice>
+      <element name="section">
+         <attribute name="title"><value>Conformance Claims</value></attribute>
+         <ref name="id-attr"/>
+         <ref name="cclaims-content-pat"/>
+      </element>
+      <element name="sec:Conformance_Claims">
+         <ref name="cclaims-content-pat"/>
+      </element>
+    </choice>
+  </define>
+
+
+
+
+  <define name="cclaims-content-pat">
       <a:documentation>
       </a:documentation>
-      <attribute name="title"><value>Conformance Claims</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="boilerplate-no-attr"/>
+     <ref name="boilerplate-no-attr"/>
       <optional>
         <element name="cclaims">
           <a:documentation>
@@ -1130,7 +1149,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           </oneOrMore>
         </element>
       </optional>
-    </element>
   </define>
 
 
