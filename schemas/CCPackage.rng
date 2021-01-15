@@ -23,7 +23,7 @@
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
-      <ref name="SecurityRequirementsChapter"/>
+      <ref name="sfr-section"/>
       <ref name="Chapters"/>
       <ref name="appendix-pat"/>
    </element>
@@ -76,57 +76,7 @@
       </element>
   </define>
 
-  <define name="SecurityRequirementsChapter">
-    <choice>
-      <element name="section">
-        <attribute name="title"><value>Security Functional Requirements</value></attribute>
-	<attribute name="id"/>
-        <ref name="sfr_content-pat"/>
-      </element>
-      <element name="sec:Security_Functional_Requirements">
-        <ref name="sfr_content-pat"/>
-      </element>
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName>
-          <except>
-            <nsName ns="https://niap-ccevs.org/cc/v1"/>
-            <nsName ns="http://www.w3.org/1999/xhtml"/>
-          </except>
-        </anyName>
-        <attribute name="title"><value>Security Functional Requirements</value></attribute>
-        <ref name="sfr_content-pat"/>
-      </element>
-    </choice>
-  </define>
-
-  <define name="sfr_content-pat">	
-    <oneOrMore><choice>
-      <element name="section">
-        <attribute name="title"/>
-        <optional><attribute name="id"/></optional>
-        <ref name="sfr-sections-content-pat"/>
-      </element>
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName><except>
-          <nsName ns="https://niap-ccevs.org/cc/v1"/>
-          <nsName ns="http://www.w3.org/1999/xhtml"/>
-        </except></anyName>
-        <optional><attribute name="title"/></optional>
-        <ref name="sfr-sections-content-pat"/>
-      </element>
-     </choice> </oneOrMore>
-   </define>
-
-   <define name="sfr-sections-content-pat">
-	    <ref name="basic-content-pat"/>
-	    <oneOrMore>
-	      <choice>
-	        <ref name="audit-table-pat"/>
-                <ref name="f-component-pattern"/>
-	      </choice>
-	    </oneOrMore>
-  </define>
-  
+ 
 
   <define name="appendix-pat">
     <a:documentation>

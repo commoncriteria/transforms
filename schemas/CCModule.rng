@@ -5,6 +5,27 @@
           xmlns:h="http://www.w3.org/1999/xhtml"
           xmlns="http://relaxng.org/ns/structure/1.0"
 >
+<!--############################## -->
+<!--      START                    -->
+<!--############################## -->
+  <start>
+    <element name="Module">
+      <a:documentation>
+	Root element for a Protection Profile Module.
+      </a:documentation>
+      <ref name="module-attributes-pat"/>
+      <ref name="PPRefAndRevision"/>
+      <ref name="IntroductionChapter"/>
+      <ref name="CClaimsChapter"/>
+      <ref name="SecProbDesChapter"/>
+      <ref name="SecObjChapter"/>
+      <ref name="SecReqChapter"/>
+      <ref name="additional-appendices"/>
+      <ref name="bibliography"/>
+      <ref name="acronyms"/>
+    </element>
+  </start>
+
 
   <include href="Commons.rng">
 <!--
@@ -108,27 +129,6 @@
     </define>
 
   </include>
-
-<!--############################## -->
-<!--      START                    -->
-<!--############################## -->
-  <start>
-    <element name="Module">
-      <a:documentation>
-	Root element for a Protection Profile Module.
-      </a:documentation>
-      <ref name="module-attributes-pat"/>
-      <ref name="PPRefAndRevision"/>
-      <ref name="IntroductionChapter"/>
-      <ref name="CClaimsChapter"/>
-      <ref name="SecProbDesChapter"/>
-      <ref name="SecObjChapter"/>
-      <ref name="SecReqChapter"/>
-      <ref name="additional-appendices"/>
-      <ref name="bibliography"/>
-      <ref name="acronyms"/>
-    </element>
-  </start>
 
   <define name="additional-appendices">
     <optional>

@@ -42,73 +42,139 @@
   </define>
 
   <define name="SecProbDesChapter">
-    <element name="section">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Security Problem Description</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
+    <choice>
       <element name="section">
-	<a:documentation>
-	  Section describing threats.
-	</a:documentation>
-	<attribute name="title"><value>Threats</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
+        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="prob-des-content"/>
+      </element>
+      <element name="sec:Security_Problem_Description">
+        <ref name="prob-des-content"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <ref name="prob-des-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="prob-des-content">
+    <ref name="basic-content-pat"/>
+    <choice>
+      <element name="section">
+        <a:documentation>
+          Section describing threats.
+        </a:documentation>
+        <attribute name="title"><value>Threats</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="basic-content-pat"/>
         <ref name="threats"/>
       </element>
-
+      <element name="sec:Threats">
+        <ref name="basic-content-pat"/>
+        <ref name="threats"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <attribute name="title"><value>Threats</value></attribute>
+        <ref name="basic-content-pat"/>
+        <ref name="threats"/>
+      </element>
+    </choice>
+    <choice> 
       <element name="section">
 	<a:documentation>
 	  Section describing Assumptions.
 	</a:documentation>
 	<attribute name="title"><value>Assumptions</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<ref name="basic-content-pat"/>
 	<ref name="assumptions"/>
       </element>
-       <optional> <ref name="osp-section"/> </optional>
-    </element>
+      <element name="sec:Assumptions">
+        <ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+ 	<attribute name="title"><value>Assumptions</value></attribute>
+	<ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+    </choice>
+    <optional> <ref name="osp-section"/> </optional>
   </define>
 
   <define name="SecObjChapter">
-    <element name="section">
-      <a:documentation>
-	Chapter describing the Security Objectives for this module.
-      </a:documentation>
-      <attribute name="title"><value>Security Objectives</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
+    <choice>
       <element name="section">
-	<a:documentation>
+        <a:documentation>
+  	Chapter describing the Security Objectives for this module.
+        </a:documentation>
+        <attribute name="title"><value>Security Objectives</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="sec-obj-content"/>
+      </element>
+      <element name="sec:Security_Objectives">     
+        <ref name="sec-obj-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="sec-obj-content">
+    <ref name="basic-content-pat"/>
+    <choice>
+      <element name="section">
+        <a:documentation>
 	  Section describing the Security Objectives for the TOE.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<!-- Don't know if we need this -->
 	<ref name="basic-content-pat"/>
 	<ref name="SOs"/>
       </element>
+      <element name="sec:Security_Objectives_for_the_TOE">
+         <ref name="basic-content-pat"/>
+	<ref name="SOs"/>
+      </element>
+    </choice>
+    <choice>
       <element name="section">
 	<a:documentation>
 	  Section describing the Security Objectives for the TOE's Operational Environment.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<ref name="basic-content-pat"/>
-	<zeroOrMore>
-	  <ref name="SOEs"/>
-	</zeroOrMore>
+	<zeroOrMore> <ref name="SOEs"/> </zeroOrMore>
       </element>
+      <element name="sec:Security_Objectives_for_the_Operational_Environment">
+	<ref name="basic-content-pat"/>
+	<zeroOrMore> <ref name="SOEs"/> </zeroOrMore>
+      </element>
+    </choice>
+    <choice> 
       <element name="section">
 	<a:documentation>
 	  Section describing the rationale for why this module's security objectives do not
 	  conflict with the base PPs.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
       </element>
-    </element>
+      <element name="sec:Security_Objectives_Rationale"><empty/></element>
+    </choice>
   </define>
 
 
@@ -1070,6 +1136,57 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </data>
   </define>
 
+  <define name="sfr-section">
+    <choice>
+      <element name="section">
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+	<attribute name="id"/>
+        <ref name="sfr_content-pat"/>
+      </element>
+      <element name="sec:Security_Functional_Requirements">
+        <ref name="sfr_content-pat"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <ref name="sfr_content-pat"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="sfr_content-pat">	
+    <oneOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <optional><attribute name="id"/></optional>
+        <ref name="sfr-sections-content-pat"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <optional><attribute name="title"/></optional>
+        <ref name="sfr-sections-content-pat"/>
+      </element>
+     </choice> </oneOrMore>
+   </define>
+
+   <define name="sfr-sections-content-pat">
+	    <ref name="basic-content-pat"/>
+	    <oneOrMore>
+	      <choice>
+	        <ref name="audit-table-pat"/>
+                <ref name="f-component-pattern"/>
+	      </choice>
+	    </oneOrMore>
+  </define>
+ 
   <define name="f-comp-content-pat">
     <attribute name="cc-id">
       <a:documentation>
@@ -1216,6 +1333,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
+
+  <define name="optional-id">
+    <optional><ref name="id-attr"/></optional>
+  </define>
 
   <define name="id-attr">
     <a:documentation>
