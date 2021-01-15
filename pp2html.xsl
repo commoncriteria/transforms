@@ -209,8 +209,8 @@
 
   <!-- ############### -->
   <!--                 -->
-   <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
-    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
+   <xsl:template match="cc:*[@title='Security Objectives Rationale']|sec:Security_Objectives_Rationale|sec:*[@title='Security Objectives Rationale']">
+    <h2 id="{@id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
@@ -1108,8 +1108,21 @@
 
 
    <!-- ############## -->
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">
-     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
+  <xsl:template match="//sec:*[@title='Security Functional Requirements']">
+    <xsl:call-template name="sfr"><xsl:with-param name="id" select="local-name()"/></xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="//cc:*[@title='Security Functional Requirements']">
+    <xsl:call-template name="sfr"/>
+  </xsl:template>
+
+   <xsl:template match="/sec:Security_Functional_Requirements">
+    <xsl:call-template name="sfr"><xsl:with-param name="id" select="Security_Functional_Requirements"/></xsl:call-template>
+   </xsl:template>
+  
+  <xsl:template name="sfr">
+     <xsl:param name="id" select="@id"/>
+     <h2 id="{$id}" class="indexable" data-level="2">Security Functional Requirements</h2>
      <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
        The Security Functional Requirements included in this section
        are derived from Part 2 of the Common Criteria for Information

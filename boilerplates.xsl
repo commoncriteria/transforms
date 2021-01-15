@@ -36,7 +36,8 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" mode="hook">
+  <xsl:template mode="hook"
+    match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no')]"> 
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
@@ -54,9 +55,8 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']|//sec:Conformance_Claims"
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]"
 		mode="hook">
-    <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>
         <dt>Conformance Statement</dt>
         <dd>An <abbr title="Security Target">ST</abbr> must claim exact conformance to this <xsl:call-template name="doctype-short"/>, as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and Optional SFRs (dated May 2017).</dd>
@@ -136,7 +136,7 @@ provides evidence that these controls are present and have been evaluated.
   </xsl:template>
 
    <xsl:template mode="hook" name="secrectext"
-        match="/cc:PP[@boilerplate='yes']//cc:*[@title='Security Requirements' and not(@boilerplate='no')]"
+        match="/cc:PP[@boilerplate='yes']//cc:*[@title='Security Requirements' and not(@boilerplate='no')]|/cc:PP//sec:Security_Requirements[not(@boilerplate='no')]"
        >
       This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
      Those requirements comprise functional components from Part 2 and assurance components from Part 3 of 
