@@ -4,6 +4,13 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
+  <xsl:variable name="doctype">
+	<xsl:choose>
+		<xsl:when test="/cc:package">Package</xsl:when>
+                <xsl:when test="/cc:Module">PP-Module</xsl:when>
+		<xsl:otherwise>PP</xsl:otherwise>
+	</xsl:choose>
+  </xsl:variable>
   <!-- Eat all hook-based cc -->
   <xsl:template match="cc:*" mode="hook"/>
 
@@ -34,17 +41,13 @@ provides evidence that these controls are present and have been evaluated.
 
 
 <xsl:template name="doctype-short" match="cc:doctype-short">
-	<xsl:choose>
-		<xsl:when test="/cc:PP[@type='package']">Package</xsl:when>
-                <xsl:when test="/cc:Module">PP-Module</xsl:when>
-		<xsl:otherwise>PP</xsl:otherwise>
-	</xsl:choose>
+   <xsl:value-of select="$doctype"/>
 </xsl:template>
 
 <xsl:template name="doctype-long"  match="cc:doctype-long">
 	<xsl:choose>
-		<xsl:when test="//cc:PP[@type='package']">Functional Package</xsl:when>
-                <xsl:when test="/cc:Module">Protection Profile Module</xsl:when>
+		<xsl:when test="$doctype='Package'">Functional Package</xsl:when>
+                <xsl:when test="$doctype='PP-Module'">Protection Profile Module</xsl:when>
 		<xsl:otherwise>Protection Profile</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

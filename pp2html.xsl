@@ -21,8 +21,8 @@
   <!-- ############### -->
   <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
   <xsl:variable name="addressedByCol"><xsl:choose>
-    <xsl:when test="/cc:PP">1</xsl:when>
-    <xsl:otherwise>2</xsl:otherwise>
+    <xsl:when test="/cc:Module">2</xsl:when>
+    <xsl:otherwise>1</xsl:otherwise>
   </xsl:choose></xsl:variable>
 
   <!-- ############### -->
@@ -59,7 +59,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:PP">
+  <xsl:template match="cc:PP|cc:package">
     <xsl:apply-templates select="cc:chapter"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
@@ -788,7 +788,7 @@
     - impl-dep = "at-impl-dep"  -->
     <xsl:template name="first-appendix">
         <xsl:choose>
-            <xsl:when test="/cc:Module or $appendicize='on'">
+            <xsl:when test="$appendicize='on'">
                 <xsl:call-template name="opt_appendix"/>
                 <xsl:call-template name="app-reqs">
                     <xsl:with-param name="type" select="'optional'"/>
@@ -844,6 +844,11 @@
               <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
               Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
            </xsl:element>
+           
+            <xsl:if test="/cc:package">
+              <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
+            </xsl:if>
+
           <b><xsl:call-template name="ctr-xsl">
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
@@ -1102,8 +1107,10 @@
        with additional extended functional components.
      </xsl:if>
      <xsl:apply-templates/>
-     <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
-     <xsl:call-template name="obj-req-map"/>
+     <xsl:if test="/cc:PP">
+       <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+       <xsl:call-template name="obj-req-map"/>
+     </xsl:if>
   </xsl:template>
 
   

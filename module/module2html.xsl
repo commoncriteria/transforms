@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -28,9 +27,7 @@
     <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
-    <xsl:call-template name="first-appendix"/>
-    <!--<xsl:call-template name="opt-sfrs"/>
-    <xsl:call-template name="obj-sfrs"/> -->
+    <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
@@ -232,40 +229,38 @@
     </xsl:for-each> <!-- End base iteration -->
   </xsl:template>
 
-<!-- Requirement Consistency Rational Section -->
+<!-- ############################################ -->
+<!-- # Requirement Consistency Rational Section # -->
+<!-- ############################################ -->
   <xsl:template name="req-con-rat-sec">
     <xsl:param name="f-comps"/>
     <xsl:param name="short"/>
     <xsl:param name="verb"/>
     <xsl:param name="none-msg"/>
-
     <xsl:choose>
       <xsl:when test="$f-comps">
-      	<xsl:for-each select="$f-comps">
-      	  <xsl:variable name="compId" select="@id"/>
-	        <tr>
+      	<xsl:for-each select="$f-comps"><tr>
 <!-- TODO: Theres probably more to do here. -->
-	          <td><xsl:apply-templates mode="getId" select="."/></td>
-		        <td>
-		          <xsl:choose>
-		          <xsl:when test="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]">
-		            <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@id=$compId]"/>
-		          </xsl:when>
- 		          <xsl:otherwise>
-    		        <xsl:apply-templates select="cc:consistency-rationale/node()">
-		              <xsl:with-param name="base" select="$short"/>
-		            </xsl:apply-templates>
-		          </xsl:otherwise>
-		          </xsl:choose>
-		          </td>
-
-	        </tr>
-	      </xsl:for-each>
+          <td><xsl:apply-templates mode="getId" select="."/></td>
+          <td> <xsl:choose>
+            <xsl:when test="@iteration and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
+            </xsl:when>
+            <xsl:when test="not(@iteration) and //cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
+              <xsl:apply-templates select="//cc:base-pp[@short=$short]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="cc:consistency-rationale/node()">
+                <xsl:with-param name="base" select="$short"/>
+              </xsl:apply-templates>
+            </xsl:otherwise>
+            </xsl:choose></td>
+         </tr></xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-	      <tr><td colspan="2" style="text-align:center">
-	        <xsl:value-of select="$none-msg"/>
-	      </td></tr>
+        <tr><td colspan="2" style="text-align:center">
+          <xsl:value-of select="$none-msg"/>
+        </td></tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -339,8 +334,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	  <td><xsl:value-of select="$orig/@name"/></td>
 	  <!-- if the base section has a con-mod equal to the id -->
 	  <td><xsl:choose>
-	    <xsl:when test="$base/cc:con-mod[@name=$orig/@name]">
-	      <xsl:apply-templates select="$base/cc:con-mod[@name=$orig/@name]"/>
+	    <xsl:when test="$base/cc:con-mod[@ref=$orig/@name]">
+	      <xsl:apply-templates select="$base/cc:con-mod[@ref=$orig/@name]"/>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <!-- Can only go one element deep here -->
@@ -396,24 +391,25 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
   <xsl:template name="opt-sfrs">
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
-<!-- This para is deleted since readers should know all of this from the base-PP: so says NIAP
-      As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
-    performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
-    Additionally, there are three other types of requirements specified in Appendices A, B, and C.
-    The first type (in this Appendix) are requirements that can be included in the ST, but do not have to be in order for a TOE to claim conformance to this PP-Module.
-    The second type (in Appendix B) are requirements based on selections in the body of the PP-Module: if certain selections are made, then additional requirements in that appendix will need to be included. The third type (in Appendix C) are components that are not required in order to conform to this PP-Module, but will be included in the baseline requirements in future versions of this PP-Module, so adoption by TOE vendors is encouraged.
-    Note that the ST author is responsible for ensuring that requirements that may be
-    associated with those in Appendix A, Appendix B, and/or Appendix C but are not listed (e.g., FMT-type
-    requirements) are also included in the ST.<br/><br/>
- -->
-
+    <h2 id="strictly-optional-sfrs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:opt-sfrs//cc:f-component">
         <xsl:apply-templates select="//cc:opt-sfrs//cc:f-component"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
-	  This PP-Module does not define any optional SFRs.
+	  This PP-Module does not define any Optional SFRs.
+	</p>
+      </xsl:otherwise>
+    </xsl:choose>
+    <h2 id="objective-sfrs" class="indexable" data-level="2">Objective Requirements</h2>
+    <xsl:choose>
+      <xsl:when test="//cc:obj-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:obj-sfrs//cc:f-component"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<p>
+	  This PP-Module does not define any Objective SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
@@ -589,6 +585,9 @@ These components are identified in the following table:
                        <xsl:apply-templates select="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
                     </xsl:when>
                     <xsl:otherwise>
+                       <xsl:if test="cc:title//@id"><xsl:message>
+                          WARNING: Since <xsl:value-of select="$reqid"/> has an 'id' attribute in a descendant node in the title, you probably need to define an alternative 'ext-comp-def-title'.
+                       </xsl:message></xsl:if>
                        <xsl:apply-templates select="cc:title"/>
                     </xsl:otherwise>
                 </xsl:choose>

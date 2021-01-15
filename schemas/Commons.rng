@@ -1155,7 +1155,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 </attribute>
                 <empty/>
               </element>
-              <element name="_">
+              <element name="NA">
                 <a:documentation>References for which managers this function is not applicable</a:documentation>
                 <attribute name="ref">
                   <a:documentation>ID respective manager</a:documentation>
@@ -1387,5 +1387,29 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
     </element>
   </define>
 
+  <define name="RevisionHistory">
+    <oneOrMore>
+        <element name="RevisionHistory">
+          <a:documentation>Documents the major changes to releases.</a:documentation>
+          <zeroOrMore>
+            <element name="entry">
+              <a:documentation>Container for individual revisions.</a:documentation>
+              <element name="version">
+                <a:documentation>Text describing the revision.</a:documentation>
+                <text/>
+              </element>
+              <element name="date">
+                <a:documentation>Date of the revision.</a:documentation>
+                <data type="date"/>
+              </element>
+              <element name="subject">
+                <a:documentation>Description of the revision.</a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </zeroOrMore>
+        </element>
+      </oneOrMore>
+  </define>
   
 </grammar>

@@ -66,9 +66,19 @@
    </empty>
 
    <empty id="req-types">
-       <mt tp='optional'   nice='Strictly Optional'/>
-       <mt tp='objective'  nice='Objective'/>
-       <mt tp='feat-based' nice='Implementation-based'/>
+       <mt tp='optional'   nice='Strictly Optional'>
+		   <audit-table-explainer>
+The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.
+		   </audit-table-explainer>   
+	   </mt>
+	   <mt tp='objective'  nice='Objective'>
+		   <audit-table-explainer>
+The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.
+		   </audit-table-explainer>   
+	   </mt>
+       <mt tp='feat-based' nice='Implementation-based'>
+		   <audit-table-explainer>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</audit-table-explainer>   
+	   </mt>
        <mt tp='sel-based'  nice='Selection-based'>
 		 <description>
 	<h:p>As indicated in the introduction to this <cc:doctype-short/>,
@@ -80,8 +90,12 @@
         if certain selections are made, then additional requirements below must be included.
  	</h:p>
 		 </description>
+         <audit-table-explainer>
+			 The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</audit-table-explainer>
 	   </mt>
-   </empty>
+		   
+		   
+  </empty>
 
 
 
