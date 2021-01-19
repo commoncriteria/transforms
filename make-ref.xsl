@@ -82,7 +82,8 @@
   </xsl:template>
 
   <xsl:template match="sec:*" mode="make_xref">
-    <a href="#{local-name}" class="dynref">Section </a>
+    <xsl:message>IN THROUGH HERE</xsl:message>
+    <a href="#{local-name()}" class="dynref">Section </a>
   </xsl:template>
   <!-- ############### -->
   <!--                 -->

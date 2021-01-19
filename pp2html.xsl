@@ -980,7 +980,6 @@
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
     <xsl:variable name="label"><xsl:choose>
-     <!-- <xsl:when test="text()"><xsl:value-of select="text()"/><xsl:message>Matched on text <xsl:value-of select="text()"/></xsl:message></xsl:when> -->
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="local-name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
       <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>

@@ -120,42 +120,6 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:variable name="to" select="@to"/>
     <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref"/>
   </xsl:template>
-<!--    <a onclick="showTarget('{$to}')" href="#{$to}" class="dynref">-->
-<!--     <xsl:choose>
-        <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
-        <xsl:when test="//cc:figure[@id=$to]"> Figure </xsl:when>
-        <xsl:when test="//sec:*[local-name()=$to]">Section </xsl:when>
-        <xsl:when test="//cc:section[@id=$to]">Section </xsl:when>
-        <xsl:when test="//cc:f-component[@id=$to]|//cc:f-element[@id=$to]|//cc:a-component[@id=$to]|//cc:a-element[@id=$to]">
-            <xsl:apply-templates select="//cc:*[@id=$to]" mode="make_ref"/>
-        </xsl:when>
-        <xsl:when test="//cc:*[@id=$to]|@ref"/>
--->
-<!--
-
-        <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
-          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
-          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
-      </xsl:when>
-         <xsl:otherwise> <xsl:message>Can't find <xsl:value-of select="$to"/></xsl:message></xsl:otherwise>      
-        <xsl:when test="//cc:figure
-        <xsl:when test="//*[@id=$linkendlower]/@title">
-          <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/@name">
-          <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/cc:term">
-          <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
-        </xsl:when>
-        <xsl:when test="//*/cc:term[text()=$linkendorig]">
-          <xsl:value-      </xsl:choose>
-    </a>
-  </xsl:template>
-
-of select="$linkendorig"/>
-        </xsl:when>a -->
-<!--        <xsl:otherwise> Section </xsl:otherwise> -->
 
   <!-- ############### -->
   <!--                 -->
