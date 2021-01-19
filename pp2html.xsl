@@ -1065,48 +1065,6 @@
   </xsl:template>
 
 
-  <!-- templates for creating references -->
-  <!-- Assumes element with matching @id has a @title. -->
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:xref">
-    <xsl:variable name="linkendorig" select="@linkend"/>
-    <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
-    <xsl:element name="a">
-      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkendorig"/>')</xsl:attribute>
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkendorig"/>
-      </xsl:attribute>
-      <xsl:choose>
-        <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/@title">
-          <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/@name">
-          <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/cc:term">
-          <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
-        </xsl:when>
-        <xsl:when test="//*/cc:term[text()=$linkendorig]">
-          <xsl:value-of select="$linkendorig"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:secref">
-    <a href="#{@linkend}" class="dynref">Section </a>
-  </xsl:template>
-
-
    <!-- ############## -->
   <xsl:template match="//sec:*[@title='Security Functional Requirements']">
     <xsl:call-template name="sfr"><xsl:with-param name="id" select="local-name()"/></xsl:call-template>

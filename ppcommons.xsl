@@ -104,17 +104,51 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:linkref">
+  <xsl:template match="cc:xref">
+    <xsl:variable name="to" select="@to|@ref"/> 
+    <a onclick="showTarget('{$to}')" href="#{$to}" class="dynref">
+     <xsl:choose>
+        <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
+        <xsl:when test="//cc:figure[@id=$to]"> Figure </xsl:when>
+        <xsl:when test="//sec:*[local-name()=$to]">Section </xsl:when>
+        <xsl:when test="//cc:section[@id=$to]">Section </xsl:when>
+        <xsl:when test="//cc:f-component[@id=$to]|//cc:f-element[@id=$to]|//cc:a-component[@id=$to]|//cc:a-element[@id=%to]">
+           <xsl:apply-template select="//cc:*[@id=$to]" mode="makeRef"/>
+        </xsl:when>
+        <xsl:when test="//cc:*[@id=$to]|@ref"/>
+<!--
+
+        <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
+          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
+          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
+      </xsl:when>
+         <xsl:otherwise> <xsl:message>Can't find <xsl:value-of select="$to"/></xsl:message></xsl:otherwise>      
+        <xsl:when test="//cc:figure
+        <xsl:when test="//*[@id=$linkendlower]/@title">
+          <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
+        </xsl:when>
+        <xsl:when test="//*[@id=$linkendlower]/@name">
+          <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
+        </xsl:when>
+        <xsl:when test="//*[@id=$linkendlower]/cc:term">
+          <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
+        </xsl:when>
+        <xsl:when test="//*/cc:term[text()=$linkendorig]">
+          <xsl:value-of select="$linkendorig"/>
+        </xsl:when>a -->
+<!--        <xsl:otherwise> Section </xsl:otherwise> -->
+      </xsl:choose>
+    </a>
+  </xsl:template>
+
+
+ <xsl:template match="cc:linkref">
     <xsl:variable name="linkend" select="@linkend"/>
     <xsl:if test="not(//*[@id=$linkend])">
       <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/></xsl:message>
     </xsl:if>
     <xsl:choose>
-      <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
-          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
-          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
-      </xsl:when>
-      <xsl:otherwise><a class="linkref" href="#{$linkend}"><xsl:value-of select="text()"/><xsl:value-of select="$linkend"/></a></xsl:otherwise>
+     <xsl:otherwise><a class="linkref" href="#{$linkend}"><xsl:value-of select="text()"/><xsl:value-of select="$linkend"/></a></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -499,9 +533,9 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
         </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//cc:*[@ref-id]">
-	<xsl:variable name="refid" select="@ref-id"/>
-        <xsl:if test="count(//cc:*[@id=$refid])=0">
+    <xsl:for-each select="//@ref-id">
+	<xsl:variable name="refid" select="text()"/>
+        <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
            for a <xsl:value-of select="name()"/>
            .

@@ -251,24 +251,24 @@ If it's only an acronym make sure the text content is empty.
   <define name="cite">
     <element name="cite">
       <a:documentation>Cites something in the bibliography.</a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="to-attr"/>
     </element>
   </define>
-
+<!--
   <define name="linkref">
     <element name="linkref">
       <a:documentation>Cross references components </a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="to-attr"/>
     </element>
   </define>
 
   <define name="secref">
     <element name="secref">
       <a:documentation>References a section (Adds word 'section').</a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="to-attr"/>
     </element>
   </define>
-
+-->
   <define name="xref">
     <element name="xref">
       <a:documentation>
@@ -277,7 +277,7 @@ If it's only an acronym make sure the text content is empty.
           <h:li>with a title attribute,</h:li> 
           <h:li>with a name attribute, </h:li>
           <h:li>with a term element, or </h:li>
-          <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
+          <h:li>a term element, where its contents(i.e. name) matches the to-attr.</h:li>
           <h:li>OR other. See xref-content-pattern for more information</h:li>
         </h:ul>
       </a:documentation>
@@ -286,16 +286,16 @@ If it's only an acronym make sure the text content is empty.
   </define>
 
   <define name="xref-content">
-    <ref name="linkend-attr"/>
+    <ref name="to-attr"/>
   </define>
-
+<!--
   <define name="appref">
     <element name="appref">
       <a:documentation>Cross references an item in the appendex</a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="to-attr"/>
     </element>
   </define>
-
+-->
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
@@ -417,8 +417,8 @@ If it's only an acronym make sure the text content is empty.
     </element>
   </define>
 
-  <define name="linkend-attr">
-    <attribute name="linkend">
+  <define name="to-attr">
+    <attribute name="to">
       <a:documentation>References an ID of the referenced item.</a:documentation>
       <!--      <data type="NCName"/> -->
     </attribute>
@@ -427,7 +427,7 @@ If it's only an acronym make sure the text content is empty.
   <define name="abbr-el">
     <element name="abbr">
       <optional>
-        <attribute name="linkend">
+        <attribute name="to">
           <a:documentation>
             Identifies the abbreviation definition (should match the text value of the entry).
           </a:documentation>
@@ -705,23 +705,23 @@ Grouping for Security Objective for the Operation Environment entries.
         <text/>
         <ref name="depends-pat"/>
         <ref name="html-element"/>
-        <ref name="linkref"/>
+<!--        <ref name="linkref"/>-->
         <ref name="citeCC"/>
         <ref name="cite"/>
-        <ref name="secref"/>
+<!--        <ref name="secref"/> -->
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
-        <ref name="appref"/> 
+<!--        <ref name="appref"/> -->
         <ref name="abbr-el"/>
 <!--        <ref name="audit-table-pat"/> -->
 <!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>
         <ref name="refinement-type"/>
-        <ref name="ctr-ref"/>
+<!--        <ref name="ctr-ref"/> -->
         <ref name="ctr"/>
         <ref name="figure"/>
-        <ref name="figref"/>
+<!--        <ref name="figref"/>-->
         <ref name="equation"/>
         <element name="choice"><ref name="basic-content-pat"/></element>
         <!-- <ref name="wsn"/> -->
