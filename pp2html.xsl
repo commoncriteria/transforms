@@ -37,7 +37,8 @@
   <!-- ############### -->
   <xsl:include href="ppcommons.xsl"/>
   <xsl:include href="boilerplates.xsl"/>
-
+  <xsl:include href="debug.xsl"/>
+  <xsl:include href="use-case.xsl"/>
 
   <!-- ############### -->
   <!--  TEMPLATES      -->
@@ -74,67 +75,6 @@
     <xsl:call-template name="use-case-appendix"/>
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:usecases">
-    <dl>
-      <xsl:for-each select="cc:usecase">
-        <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/></dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template name="use-case-appendix">
-    <xsl:if test="//cc:usecase/cc:config">
-      <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
-      <xsl:for-each select="//cc:usecase[cc:config]">
-        <h2 id="use-case-appendix" class="indexable" data-level="2">
-          <xsl:value-of select="@title"/>
-       </h2>
-       <xsl:for-each select="cc:config">
-         <table>
-	   <xsl:apply-templates select="cc:*" mode="use-case"/>
-         </table>
-
-<!--         <xsl:for-each select="//cc:f-component[.//cc:selectable/@id=]">
-         blah blah blah
-         </xsl:for-each>-->
-       </xsl:for-each>
-      </xsl:for-each>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:ref-id" mode="use-case">
-    <xsl:variable name="ref-id" select="text()"/>
-    <xsl:message> HERE </xsl:message>
-    <tr>
-      <xsl:choose>
-        <xsl:when test="//cc:selectable[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/></td>  
-          <td><xsl:if test="../cc:not">DO NOT </xsl:if>
-          choose
-          <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></td>
-        </xsl:when>
-        <xsl:when test="//cc:f-component[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
-          <td>Include in the ST</td>
-        </xsl:when>
-      </xsl:choose>
-    </tr>
- </xsl:template> 
-
-
 
   <!-- ############### -->
   <!--                 -->
@@ -183,6 +123,9 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!-- Handle's the sections that appear if the optional 
+       appendices appear (i.e. if this is the release version -->
   <!-- ############### -->
   <xsl:template match="cc:if-opt-app">
     <xsl:if test="$appendicize='on'">
@@ -655,6 +598,7 @@
       </div>
   </xsl:template>
 
+
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:f-element" >
@@ -704,6 +648,23 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+
+  <xsl:template match="cc:note/cc:aactivity">
+    Evaluation Activity Note:<br/>
+    <xsl:apply-templates/>
+  </xsl:template> 
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:management-function/cc:aactivity">
+    <b><xsl:apply-templates select=".." mode="getId"/>
+       <xsl:for-each select="cc:also">
+         <xsl:variable name="ref-id" select="@ref-id"/>
+         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
+       <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
+    </b><br/>
+    <xsl:apply-templates/>
+  </xsl:template>
+ 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
@@ -717,10 +678,13 @@
     <div class="activity_pane_body">
       <i>
         <xsl:apply-templates/>
+        <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:aactivity"/>
       </i>
+      <!-- Apply to the management functions -->
     </div>
     </div>
   </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->
@@ -957,26 +921,7 @@
     </p>
   </xsl:template>
 
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:ctr-ref">
-    <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-      <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
-      <xsl:choose>
-        <xsl:when test="not($hasPre='')">
-	  <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:otherwise>
-      </xsl:choose>
-    </a>
-  </xsl:template>
-
+ 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:ctr">
@@ -1006,17 +951,6 @@
     </span>
   </xsl:template>
 	
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:figref">
-    <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
-      <xsl:apply-templates select="//cc:figure[@id=$ref-id]" mode="getPre"/>
-<!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]">"/>-->
-      <span class="counter"><xsl:value-of select="$ref-id"/></span>
-    </a>
-  </xsl:template>
-
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:figure">
@@ -1064,6 +998,21 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+  <!-- ############### -->
+  <xsl:template match="cc:management-function//cc:_">
+    <xsl:choose>
+      <xsl:when test="ancestor::cc:management-function[@id][1]/cc:also">
+        Functions 
+        <xsl:for-each select="ancestor::cc:*[@id][1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="ancestor::cc:management-function[@id][1]" mode="getId"/> 
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
    <!-- ############## -->
   <xsl:template match="//sec:*[@title='Security Functional Requirements']">
@@ -1081,7 +1030,7 @@
   <xsl:template name="sfr">
      <xsl:param name="id" select="@id"/>
      <h2 id="{$id}" class="indexable" data-level="2">Security Functional Requirements</h2>
-     <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
+    <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
        The Security Functional Requirements included in this section
        are derived from Part 2 of the Common Criteria for Information
        Technology Security Evaluation, <xsl:call-template name="verrev"/>,
@@ -1095,13 +1044,6 @@
   </xsl:template>
 
   
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:appref">
-    <a href="#{@linkend}" class="dynref"></a>
-    <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
-  </xsl:template>
-
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>

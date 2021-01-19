@@ -63,7 +63,7 @@ Tags that this section should be indented(left) 2em.
       <choice>
         <ref name="to-attr"/>
         <attribute name="ref">
-          <choice>
+         <choice>
             <value>ref-strict-optional</value>
             <value>sel-based-reqs</value>
             <value>obj-reqs</value>

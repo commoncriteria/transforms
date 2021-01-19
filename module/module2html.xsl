@@ -35,8 +35,8 @@
     <xsl:call-template name="acronyms"/>
   </xsl:template>
 
-
-<!-- ############### -->
+  
+ <!-- ############### -->
 <!--   Overwrites template from pp2html.xsl -->
 <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
@@ -49,12 +49,6 @@
     <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
     <xsl:call-template name="obj-req-map"/>
   </xsl:template> 
-
-  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="name()"/></div>
-    <xsl:apply-templates/>
-  </xsl:template>
-
 
   <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
     <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
@@ -399,6 +393,17 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
       <xsl:otherwise>
 	<p>
 	  This PP-Module does not define any Optional SFRs.
+	</p>
+      </xsl:otherwise>
+    </xsl:choose>
+    <h2 id="objective-sfrs" class="indexable" data-level="2">Objective Requirements</h2>
+    <xsl:choose>
+      <xsl:when test="//cc:obj-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:obj-sfrs//cc:f-component"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<p>
+	  This PP-Module does not define any Objective SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
