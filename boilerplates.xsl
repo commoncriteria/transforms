@@ -55,7 +55,7 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]"
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:section[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]|//sec:*[@title='Conformance Claims' and not(@boilerplate='no')]"
 		mode="hook">
     <dl>
         <dt>Conformance Statement</dt>
