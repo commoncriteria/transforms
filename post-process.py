@@ -49,6 +49,7 @@ class State:
         self.period_ctr = 0
         self.abbrs = []
         self.key_terms = []
+        self.plural_to_abbr ={}
         self.regex=None
 
     def create_classmapping(self):
@@ -94,7 +95,9 @@ class State:
     def build_termtable(self):
         for term in self.getElementsByClass('term'):
             if 'data-plural' in term.attrib:
-                print("I have a plural:" + term.attrib["data-plural"])            
+                plural = term.attrib['data-plural']
+                self.plural_to_abbr[plural]=term.text
+                self.add_to_regex(plural)
             self.add_to_regex(term.text)
             self.abbrs.append(term.text)
 
@@ -144,9 +147,12 @@ class State:
         ret=""
         for mat in self.regex.finditer(etext):
             ret += etext[last:mat.start()]                   # Append the characters between the last find and this
-            last = mat.end();                                # Move the last indexer up
-            if mat.group() in self.abbrs:                    # If it's an abbreviation
-                ret+='<abbr class="dyn-abbr"><a href="#abbr_'+mat.group()+'">'+mat.group()+'</a></abbr>'
+            last = mat.end()                                 # Move the last indexer up
+            target = mat.group() 
+            if mat.group() in self.plural_to_abbr:
+                target = self.plural_to_abbr[mat.group()]
+            if target in self.abbrs:                         # If target maches  an abbreviation
+                ret+='<abbr class="dyn-abbr"><a href="#abbr_'+target+'">'+mat.group()+'</a></abbr>'
             else:
                 ret+='<a href="#'+mat.group()+'">'+mat.group()+'</a>'
         ret+=etext[last:]
