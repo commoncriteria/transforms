@@ -240,7 +240,7 @@ If it's only an acronym make sure the text content is empty.
         </zeroOrMore>
       </element>
   </define>
-
+<!--
   <define name="citeCC">
     <element name="citeCC">
       <a:documentation>Cites the CC documents.</a:documentation>
@@ -254,7 +254,7 @@ If it's only an acronym make sure the text content is empty.
       <ref name="to-attr"/>
     </element>
   </define>
-<!--
+<!
   <define name="linkref">
     <element name="linkref">
       <a:documentation>Cross references components </a:documentation>
@@ -274,8 +274,21 @@ If it's only an acronym make sure the text content is empty.
      <a:documentation>
         Cross references something 
      </a:documentation>
-      <ref name="xref-content"/>
+       <choice>
+         <ref name="to-attr"/>
+         <attribute name="g">
+           <choice>
+             <value>glossary</value>
+             <value>CC</value>
+             <ref name="gen-values"/>
+            </choice>
+         </attribute>
+       </choice>
     </element>
+  </define>
+
+  <define name="gen-values">
+    <empty/>
   </define>
 
   <define name="xref-content">
@@ -416,16 +429,16 @@ If it's only an acronym make sure the text content is empty.
       <!--      <data type="NCName"/> -->
     </attribute>
   </define>
-
+<!--
   <define name="abbr-el">
     <element name="abbr">
-      <optional>
+<!- -      <optional>
         <attribute name="to">
           <a:documentation>
             Identifies the abbreviation definition (should match the text value of the entry).
           </a:documentation>
         </attribute>
-      </optional>
+      </optional>-/->
       <optional>
         <attribute name="title">
           <a:documentation>
@@ -443,7 +456,7 @@ If it's only an acronym make sure the text content is empty.
       <text/>
     </element>
   </define>
-
+-->
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
@@ -504,7 +517,7 @@ If it's only an acronym make sure the text content is empty.
       </optional>
     </element>
   </define>
-
+<!--
   <define name="figref">
     <element name="figref">
       <a:documentation>
@@ -517,7 +530,7 @@ If it's only an acronym make sure the text content is empty.
       </attribute>
     </element>
   </define>
-
+-->
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
@@ -685,14 +698,14 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="depends-pat"/>
         <ref name="html-element"/>
 <!--        <ref name="linkref"/>-->
-        <ref name="citeCC"/>
-        <ref name="cite"/>
+<!--        <ref name="citeCC"/>
+        <ref name="cite"/>-->
 <!--        <ref name="secref"/> -->
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
 <!--        <ref name="appref"/> -->
-        <ref name="abbr-el"/>
+<!--        <ref name="abbr-el"/>-->
 <!--        <ref name="audit-table-pat"/> -->
 <!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>

@@ -3,7 +3,7 @@
              xmlns:h="http://www.w3.org/1999/xhtml"
              xmlns:cc="https://niap-ccevs.org/cc/v1"> 
   <cc-terms>
-    <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <citeCC/>.</term>
+    <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <xref g='CC'/>.</term>
     <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used as a basis to build a PP-Configuration.</term>
     <term full="Common Criteria" abbr="CC">Common Criteria for Information Technology Security Evaluation (International Standard ISO/IEC 15408).</term>
     <term full="Common Criteria Testing Laboratory">
@@ -20,6 +20,7 @@
     <term full="Security Target" abbr="ST">A set of implementation-dependent security requirements for a specific product.</term>
     <term full="Target of Evaluation" abbr="TOE">The product under evaluation. </term>
     <term full="TOE Security Functionality" abbr="TSF">The security functionality of the product under evaluation.</term>
+    <term full="TSF Interface" abbr="TSFI" plural="TSFIs"/>
     <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in an ST.</term>
   </cc-terms>
 

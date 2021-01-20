@@ -124,6 +124,20 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:xref[@g]">
+    <a href="#{@g}" class="dynref"></a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:xref[@g='CC']">
+      <a href="#bibCC">[CC]</a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:testlist">
     <ul>
       <xsl:apply-templates/>
@@ -665,7 +679,14 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
         <tr>
-            <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
+            <td>
+              <xsl:element name="span">
+                 <xsl:attribute name="class">term</xsl:attribute>
+                 <xsl:attribute name="id">abbr_<xsl:value-of select="@abbr"/></xsl:attribute>
+                 <xsl:if test="@plural"><xsl:attribute name="data-plural"><xsl:value-of select="@plural"/></xsl:attribute></xsl:if>
+                 <xsl:value-of select="@abbr"/>
+              </xsl:element>
+            </td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
        </tr>&#10;
 

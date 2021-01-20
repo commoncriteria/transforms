@@ -1043,11 +1043,7 @@
   </xsl:template>
 
   
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
-  
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->

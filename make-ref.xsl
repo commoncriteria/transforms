@@ -78,11 +78,12 @@
   <!--                 -->
   <!-- ############### -->
    <xsl:template match="cc:section" mode="make_xref">
+    <xsl:param name="format" select="''"/>
     <a href="#{@id}" class="dynref">Section </a>
   </xsl:template>
 
   <xsl:template match="sec:*" mode="make_xref">
-    <xsl:message>IN THROUGH HERE</xsl:message>
+    <xsl:param name="format" select="''"/>
     <a href="#{local-name()}" class="dynref">Section </a>
   </xsl:template>
   <!-- ############### -->
