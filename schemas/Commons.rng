@@ -240,35 +240,6 @@ If it's only an acronym make sure the text content is empty.
         </zeroOrMore>
       </element>
   </define>
-<!--
-  <define name="citeCC">
-    <element name="citeCC">
-      <a:documentation>Cites the CC documents.</a:documentation>
-      <empty/>
-    </element>
-  </define>
-
-  <define name="cite">
-    <element name="cite">
-      <a:documentation>Cites something in the bibliography.</a:documentation>
-      <ref name="to-attr"/>
-    </element>
-  </define>
-<!
-  <define name="linkref">
-    <element name="linkref">
-      <a:documentation>Cross references components </a:documentation>
-      <ref name="to-attr"/>
-    </element>
-  </define>
-
-  <define name="secref">
-    <element name="secref">
-      <a:documentation>References a section (Adds word 'section').</a:documentation>
-      <ref name="to-attr"/>
-    </element>
-  </define>
--->
   <define name="xref">
     <element name="xref">
      <a:documentation>
@@ -429,34 +400,7 @@ If it's only an acronym make sure the text content is empty.
       <!--      <data type="NCName"/> -->
     </attribute>
   </define>
-<!--
-  <define name="abbr-el">
-    <element name="abbr">
-<!- -      <optional>
-        <attribute name="to">
-          <a:documentation>
-            Identifies the abbreviation definition (should match the text value of the entry).
-          </a:documentation>
-        </attribute>
-      </optional>-/->
-      <optional>
-        <attribute name="title">
-          <a:documentation>
-            Full readable definition of the abbreviation.
-          </a:documentation>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="class">
-          <a:documentation>
-            Display class associated with this abbreviation.
-          </a:documentation>
-        </attribute>
-      </optional>
-      <text/>
-    </element>
-  </define>
--->
+
   <define name="assignable">
     <element name="assignable">
       <a:documentation>
@@ -697,17 +641,9 @@ Grouping for Security Objective for the Operation Environment entries.
         <text/>
         <ref name="depends-pat"/>
         <ref name="html-element"/>
-<!--        <ref name="linkref"/>-->
-<!--        <ref name="citeCC"/>
-        <ref name="cite"/>-->
-<!--        <ref name="secref"/> -->
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
-<!--        <ref name="appref"/> -->
-<!--        <ref name="abbr-el"/>-->
-<!--        <ref name="audit-table-pat"/> -->
-<!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>
         <element name="_">
           <a:documentation>A cross-reference to the closest ancestor with an ID. 
@@ -721,13 +657,10 @@ Grouping for Security Objective for the Operation Environment entries.
           <ref name="basic-content-pat"/>
         </element>
         <ref name="refinement-type"/>
-<!--        <ref name="ctr-ref"/> -->
         <ref name="ctr"/>
         <ref name="figure"/>
-<!--        <ref name="figref"/>-->
         <ref name="equation"/>
         <element name="choice"><ref name="basic-content-pat"/></element>
-        <!-- <ref name="wsn"/> -->
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -753,17 +686,6 @@ Grouping for Security Objective for the Operation Environment entries.
       <attribute name="table"/>
       <ref name="basic-content-pat"/>
       <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
-    </element>
-  </define>
-
-  <define name="wsn">
-    <a:documentation>
-      Worksheet notes. Human readable Content that should be included in the worksheet.
-      These only make sense in the note elements in the f-elements.
-    </a:documentation>
-
-    <element name="wsn">
-      <ref name="basic-content-pat"/> 
     </element>
   </define>
 
@@ -1245,7 +1167,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <element name="sec:Conformance_Claims">
          <ref name="cclaims-content-pat"/>
       </element>
-    </choice>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+ 	<attribute name="title"><value>Conformance Claims</value></attribute>
+        <ref name="cclaims-content-pat"/>
+      </element>
+  </choice>
   </define>
 
 

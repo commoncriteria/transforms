@@ -218,27 +218,48 @@ Tags that this section should be indented(left) 2em.
   </define>
 
  <define name="usecases-section">
-    <element name="sec:Use_Cases">
+   <choice>
+     <element name="section">
+       <attribute name="title"><value>Use Cases</value></attribute>
+       <attribute name="id"/>
+        <ref name="usecases-section-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Use Cases</value></attribute>
+        <ref name="usecases-section-content"/>
+      </element>
+     <element name="sec:Use_Cases">
       <a:documentation>
         Section specific for use cases.
       </a:documentation>
-      <ref name="basic-content-pat"/>
-      <element name="usecases">
-        <a:documentation>
-          Wrapper element for uses cases.
-        </a:documentation>
-        <oneOrMore>
-          <element name="usecase">
-            <a:documentation>
-              A referrable section on how the protection profiled item is used.
-            </a:documentation>
-            <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <ref name="description"/>
-            <optional><ref name="config"/></optional>
-          </element>
-        </oneOrMore>
+        <ref name="usecases-section-content"/>
       </element>
+    </choice>
+  </define>
+
+  <define name="usecases-section-content">
+    <ref name="basic-content-pat"/>
+    <element name="usecases">
+      <a:documentation>
+        Wrapper element for uses cases.
+      </a:documentation>
+      <oneOrMore>
+        <element name="usecase">
+          <a:documentation>
+            A referrable section on how the protection profiled item is used.
+          </a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="description"/>
+          <optional><ref name="config"/></optional>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   
