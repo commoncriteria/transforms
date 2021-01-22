@@ -720,6 +720,11 @@ Grouping for Security Objective for the Operation Environment entries.
       <ref name="f-element-title"/>
       <optional><ref name="note"/></optional>
       <optional><ref name="aactivity"/></optional>
+      <optional>
+        <element name="iso">
+          <ref name="aactivity"/>
+        </element>
+      </optional>
     </element>
   </define>
  

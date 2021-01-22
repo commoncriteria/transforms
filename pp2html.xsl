@@ -157,6 +157,10 @@
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
+      <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
+               </xsl:call-template>: Security Objectives Rationale</caption>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
@@ -248,6 +252,13 @@
     <xsl:variable name="thistable" select="@table"/>
     <xsl:apply-templates/>
     <table class="" border="1">
+    <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
+               </xsl:call-template>: <xsl:value-of select="@table"/> Audit Events </caption>
+ 
+
+
     <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
@@ -903,6 +914,10 @@
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
+        <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="t-obj_map"/>
+              </xsl:call-template>: SFR Rationale </caption>
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
