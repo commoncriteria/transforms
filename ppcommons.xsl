@@ -118,7 +118,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template match="cc:xref[@to]">
     <xsl:variable name="to" select="@to"/>
-    <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref"/>
+    <xsl:choose>
+      <xsl:when test="//cc:*[@id=$to]|sec:*[local-name()=$to]">
+        <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref">
+          <xsl:with-param name="format" select="@format"/>
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:otherwise>
+        <a href="#{@to}" class="dynref"></a>>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- ############### -->
