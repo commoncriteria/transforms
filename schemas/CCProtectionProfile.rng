@@ -375,7 +375,6 @@ Tags that this section should be indented(left) 2em.
       <optional><ref name="note"/></optional>
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
-      <zeroOrMore><ref name="audit-table-pat"/></zeroOrMore>
     </element>
   </define> 
 

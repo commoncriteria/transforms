@@ -250,16 +250,19 @@
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="thistable" select="@table"/>
-    <xsl:apply-templates/>
+    <xsl:variable name="nicename"><xsl:choose>
+      <xsl:when test="@table='sel-base'">Selection-based</xsl:when>
+      <xsl:otherwise><xsl:value-of select="concat(translate(substring(@table,1,1),$lower,$upper), substring(@table,2))"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
     <table class="" border="1">
-    <caption><xsl:call-template name="ctr-xsl">
-               <xsl:with-param name="ctr-type">Table</xsl:with-param>
-	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
-               </xsl:call-template>: <xsl:value-of select="@table"/> Audit Events </caption>
- 
-
-
-    <tr><th>Requirement</th>
+      <xsl:if test="not(node())">
+        <caption><xsl:call-template name="ctr-xsl">
+         <xsl:with-param name="ctr-type" select="'Table'"/>
+	 <xsl:with-param name="id" select="concat('t-audit-',@table)"/>
+         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> Requirements</caption>
+      </xsl:if>
+      <xsl:apply-templates/>
+        <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
@@ -272,7 +275,7 @@
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+            <xsl:if test="(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))">
                 <tr>
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
@@ -947,7 +950,7 @@
 
     <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
       <xsl:apply-templates select="." mode="getPre"/>
-      <span class="counter"><xsl:value-of select="@id"/></span>
+      <span id="{@id}" class="counter"><xsl:value-of select="@id"/></span>
       <xsl:apply-templates/>
     </span>
   </xsl:template>
@@ -961,7 +964,8 @@
     <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
     <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
 <!--      <xsl:apply-templates select="." mode="getPre"/>  -->
-      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
+      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text>
+         <span id="{$id}" class="counter"><xsl:value-of select="$id"/></span>
 <!--      <xsl:apply-templates/>  -->
     </span>
   </xsl:template>

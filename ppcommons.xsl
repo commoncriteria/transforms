@@ -125,7 +125,7 @@ The following sections list Common Criteria and technology terms used in this do
         </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
-        <a href="#{@to}" class="dynref"></a>>
+        <a href="#{@to}" class="dynref"></a>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
