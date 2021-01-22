@@ -367,7 +367,6 @@ Tags that this section should be indented(left) 2em.
             </a:documentation>
             <choice>
               <value>optional</value>
-	      <value>mandatory</value>
             </choice>
           </attribute>
         </optional>
