@@ -46,7 +46,6 @@ class State:
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
-        self.period_ctr = 0
         self.abbrs = []
         self.key_terms = []
         self.plural_to_abbr = {}
