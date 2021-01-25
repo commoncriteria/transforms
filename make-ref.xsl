@@ -95,32 +95,21 @@
   <xsl:template match="cc:bibliography/cc:entry" mode="make_xref">
      <a href="#{@id}">[<xsl:apply-templates select="cc:tag"/>]</a>
   </xsl:template>
-   
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:figure" mode="make_xref">
-    <xsl:param name="eprefix"/> <!-- explicit prefix -->
-    <xsl:param name="has-eprefix"/>
-    <xsl:variable name="prefix"><xsl:choose>
-      <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
-      <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
 
-    <a onclick="showTarget('figure-{@id}')" href="#figure-{@id}" class="figure-{@id}-ref">
-      <xsl:apply-templates select="." mode="getPre"/>
-      <span class="counter"><xsl:value-of select="@id"/></span>
-    </a>
+
+  <xsl:template match="cc:*" mode="make_xref">
+    <xsl:message>Unable to make an xref for <xsl:value-of select="name()"/></xsl:message>
   </xsl:template>
-
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:ctr" mode="make_xref">
+  <xsl:template match="cc:ctr|cc:figure|cc:equation" mode="make_xref">
     <xsl:param name="eprefix"/> <!-- explicit prefix -->
     <xsl:param name="has-eprefix"/>
 
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="prefix"><xsl:choose>
         <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
+        <xsl:when test="local-name()='equation'">Eq. </xsl:when>
         <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
       </xsl:choose></xsl:with-param>
       <xsl:with-param name="id" select="@id"/>

@@ -975,21 +975,41 @@
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
-      <p/>
-      <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
-        <xsl:apply-templates select="." mode="getPre"/>
-        <span class="counter"><xsl:value-of select="@id"/></span>
-      </span>:
+      <br/>
+      <xsl:call-template name="make_ctr">
+        <xsl:with-param name="id" select="@id"/>
+        <xsl:with-param name="type" select="'ct-figure'"/>
+        <xsl:with-param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:with-param>
+      </xsl:call-template>:
       <xsl:value-of select="@title"/>
     </div>
   </xsl:template>
+
+
+  <xsl:template name="make_ctr">
+    <xsl:param name="id"/>
+    <xsl:param name="type"/>
+    <xsl:param name="prefix"/>
+
+    <span class="ctr" data-myid="{$id}" data-counter-type="{$type}">
+        <xsl:value-of select="$prefix"/> 
+        <span class="counter"><xsl:value-of select="$id"/></span>
+      </span>
+  </xsl:template>
+
+
 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:equation">
     <table><tr>
-      <td>$$<xsl:apply-templates select="cc:value"/>$$</td>
-      <td style="vertical-align: middle; padding-left: 100px">(<xsl:apply-templates select="cc:label"/>)</td>
+      <td id="{@id}">$$<xsl:apply-templates/>$$</td>
+      <td style="vertical-align: middle; padding-left: 100px"><!--
+          -->(<xsl:call-template name="make_ctr">
+          <xsl:with-param name="id" select="@id"/>
+          <xsl:with-param name="type" select="'equation'"/>
+          <xsl:with-param name="prefix" select="''"/>
+        </xsl:call-template>)</td>
     </tr></table>
   </xsl:template>
 
@@ -1001,7 +1021,7 @@
      <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="local-name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
-      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:message>My ctr type is <xsl:value-of select="@ctr-type"/></xsl:message></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
       <xsl:otherwise>Table </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
