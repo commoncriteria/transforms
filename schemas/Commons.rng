@@ -251,6 +251,7 @@ If it's only an acronym make sure the text content is empty.
            <choice>
              <value>glossary</value>
              <value>CC</value>
+             <value>t-audit-mandatory</value>
              <ref name="gen-values"/>
             </choice>
          </attribute>
@@ -672,11 +673,13 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="equation">
     <element name="equation">
-      <a:documentation>Element for mathematical equation.</a:documentation>
-      <element name="value">
-        <a:documentation>MathML text representing the equation. Do not wrap with dollar signs. These will be added.</a:documentation>
-        <text/></element>
-      <element name="label"><ref name="basic-content-pat"/></element>
+      <a:documentation>
+        Element for mathematical equation.
+        Its content is MathML text representing the equation.
+        Do not wrap with dollar signs. These will be added.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <text/>
     </element>
   </define>
 
