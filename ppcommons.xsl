@@ -119,27 +119,37 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:xref[@to]">
     <xsl:variable name="to" select="@to"/>
     <xsl:choose>
-      <xsl:when test="//cc:*[@id=$to]|sec:*[local-name()=$to]">
+      <xsl:when test="//cc:*[@id=$to]|//sec:*[local-name()=$to]">
         <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref">
           <xsl:with-param name="format" select="@format"/>
         </xsl:apply-templates>
       </xsl:when>
-      <xsl:otherwise>
-        <a href="#{@to}" class="dynref"></a>
+     <xsl:otherwise> 
+        <xsl:message> Failed to find a reference to <xsl:value-of select="@to"/>.</xsl:message>
+        <a href="#{@to}" class="dynref" data-format="{@format}"></a>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:xref[@g]">
-    <a href="#{@g}" class="dynref"></a>
+    <a href="#{@g}" class="dynref" format="{@format}"></a>
   </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:xref[@g='t-audit-mandatory']">
+    <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="'t-audit-mandatory'"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="cc:xref[@g='CC']">
       <a href="#bibCC">[CC]</a>
   </xsl:template>

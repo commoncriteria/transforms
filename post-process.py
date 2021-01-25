@@ -189,7 +189,12 @@ class State:
 # Counters:
 #    Have 'class' attribute with value is 'ctr'
 #    Have 'data-counter-type' attribute with value of counter-type  
-#    Have 'data-myid' attribute equal to a value that is found in the counter refs class followed by '-ref'
+#    Have a subelement with the 'class' attribute equal to counter (which is where the index is put)
+#    Have 'data-myid' attribute 
+#
+# Counter References:
+#    Have 'class' attribute with value equal to the thing their referencing plus the string '-ref'
+#    Have a subelement with the 'class' attribute equal to counter (which is where the index is put)
 
     def fix_counters(self):
         # Bail if there are no ctrs
@@ -208,7 +213,7 @@ class State:
             # And set it's value to the counter's value.
             count_str = str(occurs[typee])
             countable.find("*[@class='counter']").text = count_str
-            self.this_fix_counter_refs(countable.attrib["data-myid"], count_str)
+            self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
 
     def fix_this_counter_refs(self, ctr_id, count_str):
         # Look for all the

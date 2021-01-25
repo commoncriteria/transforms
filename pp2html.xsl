@@ -998,15 +998,12 @@
   <!--                 -->
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
-    <xsl:variable name="label"><xsl:choose>
+     <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
       <xsl:when test="local-name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
-      <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/><xsl:message>My ctr type is <xsl:value-of select="@ctr-type"/></xsl:message></xsl:when>
       <xsl:otherwise>Table </xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:value-of select="$label"/>
-
+    </xsl:choose>
   </xsl:template>
 
 
