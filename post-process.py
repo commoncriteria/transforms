@@ -185,11 +185,17 @@ class State:
         self.ancestors.pop()
         return ret
 
+#
+# Counters:
+#    Have 'class' attribute with value is 'ctr'
+#    Have 'data-counter-type' attribute with value of counter-type  
+#    Have 'data-myid' attribute equal to a value that is found in the counter refs class followed by '-ref'
+
     def fix_counters(self):
         # Bail if there are no ctrs
         occurs = {}
         # Go through all the counters
-        for countable in self.getElementsByClass('ctr'):
+        for countable in self.getElementsByClass('ctr'):   
             # Get the type of counter
             typee = countable.attrib['data-counter-type']
             # If we haven't seen it yet
@@ -198,13 +204,19 @@ class State:
                 occurs[typee] = 0
             # Increment by one
             occurs[typee] += 1
-            countable.find("*[@class='counter']").text = str(occurs[typee])
+            # Find the subelement with the class attribute equailt to 'counter'
+            # And set it's value to the counter's value.
+            count_str = str(occurs[typee])
+            countable.find("*[@class='counter']").text = count_str
+            self.this_fix_counter_refs(countable.attrib["data-myid"], count_str)
 
-            refclass = countable.attrib["data-myid"]+"-ref"
-            if refclass in self.classmap:
-                refs = self.classmap[refclass]
-                for ref in refs:
-                    ref.find("*[@class='counter']").text = str(occurs[typee])
+    def fix_this_counter_refs(self, ctr_id, count_str):
+        # Look for all the
+        refclass = ctr_id + "-ref"
+        if refclass in self.classmap:
+            refs = self.classmap[refclass]
+            for ref in refs:
+                ref.find("*[@class='counter']").text = count_str
 
     def fix_tooltips(self):
         for elem in self.getElementsByClass("tooltiptext"):
