@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           ns="https://niap-ccevs.org/cc/v1"
+          xmlns:sec="https://niap-ccevs.org/cc/v1/section"
           datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
           xmlns:h="http://www.w3.org/1999/xhtml"
           xmlns="http://relaxng.org/ns/structure/1.0"
@@ -15,12 +16,12 @@
       </a:documentation>
       <ref name="module-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
-      <ref name="IntroductionChapter"/>
+      <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
-      <ref name="SecReqChapter"/>
-      <ref name="additional-appendices"/>
+      <ref name="sec-req"/>
+      <ref name="appendices-pat"/>
       <ref name="bibliography"/>
       <ref name="acronyms"/>
     </element>
@@ -130,59 +131,6 @@
 
   </include>
 
-  <define name="additional-appendices">
-    <optional>
-      <element name="appendix">
-        <ref name="id-attr"/>
-        <attribute name="title">
-           <value>Use Case Templates</value>
-        </attribute>
-        <ref name="basic-content-pat"/>
-        <oneOrMore>
-          <ref name="usecase"/>
-          <ref name="basic-content-pat"/>
-        </oneOrMore>
-      </element>
-    </optional>
-
-    <zeroOrMore>
-      <ref name="appendix"/>
-    </zeroOrMore>
-  </define>
-
-  <define name="appendix">
-    <a:documentation>
-      Pattern for title attribute.
-    </a:documentation>
-    <element name="appendix">
-      <a:documentation>
-	Element that defines an appendix.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-	  <ref name="basic-content-pat"/>
-          <ref name="section"/>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
-
-  <define name="section">
-    <element name="section">
-      <a:documentation>
-	A block smaller than a chapter.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <choice>
-	<ref name="basic-content-pat"/>
-	<ref name="subsection-pattern"/>
-      </choice>
-    </element>
-  </define>
-
   <define name="module-attributes-pat">
     <attribute name="name"></attribute>
     <attribute name="target-products"></attribute>
@@ -243,91 +191,36 @@
 
   </define>
 
+
+
   <define name="f-components-pat">
-    <zeroOrMore>
-      <element name="subsection">
+    <zeroOrMore><choice>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <optional><attribute name="title"/></optional>
+        <ref name="f-comp-pat-content"/>
+      </element>
+      <element name="section">
         <a:documentation>
           Defines SFRs that pertain to specific base.
         </a:documentation>
         <ref name="title-attr"/>
         <ref name="id-attr"/>
-        <optional><ref name="description"/></optional>
-        <zeroOrMore>
-          <ref name="ext-comp-def-pat"/>
-          <ref name="f-component"/>
-        </zeroOrMore>
+        <ref name="f-comp-pat-content"/>
       </element>
-    </zeroOrMore>
+    </choice></zeroOrMore>
   </define>
 
-  <define name="ext-comp-def-pat">
+  <define name="f-comp-pat-content">
+    <optional><ref name="description"/></optional>
     <zeroOrMore>
-	    <element name="ext-comp-def">
-        <a:documentation>
-          Extended Component Definition
-        </a:documentation>
-        <attribute name="fam-id">
-          <ref name="fam-id-spat"/>
-        </attribute>
-        <attribute name="title">
-        </attribute>
-        <choice>
-          <element name="mod-def">
-            <a:documentation>
-Modification definition. This text goes in the
-'Extended Components Definitions'.
-            </a:documentation>
-            <ref name="basic-content-pat"/>
-          </element>
-          <element name="fam-behavior">
-            <ref name="basic-content-pat"/>
-          </element>
-        </choice>
-      </element>
+      <ref name="ext-comp-def-pat"/>
+      <ref name="f-component"/>
     </zeroOrMore>
   </define>
-
-  <define name="ext-comp-extra-pat">
-    <optional>
-      <element name="comp-lev">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="management">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="audit">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="dependencies">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-  </define>
-
-  <define name="f-component">
-    <element name="f-component">
-      <a:document>
-	Specifies a component under Security Functional Requirements section..
-      </a:document>
-      <ref name="f-comp-content-pat"/>
-      <!-- Would like to remove this -->
-      <zeroOrMore>
-     	  <ref name="selection-depends"/>
-      </zeroOrMore>
-      <ref name="consistency-rationale"/>
-      <ref name="ext-comp-extra-pat"/>
-      <ref name="f-elements-pat"/>
-      <ref name="audit-events-pat"/>
-    </element>
-  </define>
-
-
 
   <define name="base-pp">
     <element name="base-pp">
@@ -409,13 +302,24 @@ The name or cc-id of the aspect that is being overwritten by the content of this
   </define>
 
   <define name="base-specific-sfrs">
-    <zeroOrMore>
-      <element name="subsection">
-      	<a:documentation>
-Defines SFRs that pertain to specific base.
-      	</a:documentation>
-      	<ref name="title-attr"/>
-        <ref name="id-attr"/>
+    <zeroOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <ref name="optional-id"/>
+        <ref name="base-specific-sfrs-content"/>
+      </element>
+      <element>
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <optional><attribute name="title"/></optional>
+        <ref name="base-specific-sfrs-content"/>
+      </element>
+    </choice></zeroOrMore>
+  </define>
+
+  <define name="base-specific-sfrs-content">
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
           <element name="f-component">
@@ -427,99 +331,30 @@ Specifies a component under Security Functional Requirements section..
                <value>true</value>
             </attribute></optional>
             <ref name="f-comp-content-pat"/>
-	        <ref name="consistency-rationale"/>
+            <ref name="consistency-rationale"/>
             <ref name="ext-comp-extra-pat"/>
-	        <ref name="f-elements-pat"/>
+            <ref name="f-elements-pat"/>
 	  </element>
 	</oneOrMore>
-      </element>
-    </zeroOrMore>
-  </define>
+ </define>
+ 
 
-  <define name="IntroductionChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Introduction</value></attribute>
-      <ref name="id-attr"/>
-      <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Overview</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-      </element>
-      <ref name="tech-terms"/>
-      <element name="section">
-	<a:documentation>
-	</a:documentation>
-	<attribute name="title"><value>Compliant Targets of Evaluation</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
-	<element name="subsection">
-	  <a:documentation>
-	  </a:documentation>
-	  <attribute name="title"><value>TOE Boundary</value></attribute>
-	  <ref name="id-attr"/>
-	  <ref name="basic-content-pat"/>
-	</element>
-	<optional>
-	  <element name="subsection">
-	    <a:documentation>
-	    </a:documentation>
-	    <attribute name="title"><value>TOE Platform</value></attribute>
-	    <ref name="id-attr"/>
-	    <ref name="basic-content-pat"/>
-	  </element>
-	</optional>
-      </element>
-      <element name="section">
-        <a:documentation>
-	      </a:documentation>
-        <attribute name="title"><value>Use Cases</value></attribute>
-	      <ref name="id-attr"/>
-	      <ref name="basic-content-pat"/>
-	      <ref name="usecases"/>
-      </element>
+<define name="f-component">
+    <element name="f-component">
+      <a:document>
+	Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <ref name="f-comp-content-pat"/>
+      <!-- Would like to remove this -->
+      <zeroOrMore>
+     	  <ref name="selection-depends"/>
+      </zeroOrMore>
+      <ref name="consistency-rationale"/>
+      <ref name="ext-comp-extra-pat"/>
+      <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
     </element>
   </define>
-
-  <define name="usecases">
-    <element name="usecases">
-      <a:documentation>
-Wrapper element for uses cases.
-      </a:documentation>
-      <oneOrMore>
-        <ref name="usecase"/>
-      </oneOrMore>
-    </element>
-  </define>
-
-  <define name="usecase">
-    <element name="usecase">
-      <a:documentation>
-Referrable section on how the protection profiled item is used.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <ref name="description"/>
-    </element>
-  </define>
-  <define name="glossary-el">
-    <element name="glossary">
-      <a:documentation>
-      </a:documentation>
-      <oneOrMore>
-	<element name="entry">
-	  <a:documentation>
-	  </a:documentation>
-	  <element name="term"><ref name="basic-content-pat"/></element>
-	  <ref name="description"/>
-	</element>
-      </oneOrMore>
-    </element>
-  </define>
-
 
   <define name="from">
     <element name="from">
@@ -592,13 +427,34 @@ Referrable section on how the protection profiled item is used.
     <ref name="RevisionHistory"/>
   </define>
 
-  <define name="SecReqChapter">
-    <element name="chapter">
+
+
+  <define name="sec-req">
+    <choice>
+      <element name="section">
+        <attribute name="title"><value>Security Requirements</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="sec-req-content"/>
+      </element>
+      <element name="sec:Security_Requirements">
+        <ref name="sec-req-content"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <attribute name="title"><value>Security Requirements</value></attribute>
+        <ref name="sec-req-content"/>
+      </element>
+    </choice>
+  </define>
+
+
+  <define name="sec-req-content">
       <a:documentation>
 	The chapter for security requirements.
       </a:documentation>
-      <attribute name="title"><value>Security Requirements</value></attribute>
-      <ref name="id-attr"/>
       <ref name="basic-content-pat"/>
       <oneOrMore>
 	<ref name="base-pp"/>
@@ -607,7 +463,6 @@ Referrable section on how the protection profiled item is used.
       <ref name="opt-sfrs"/>
       <ref name="sel-sfrs"/>
       <ref name="obj-sfrs"/>
-    </element>
   </define>
 
 
