@@ -731,14 +731,14 @@
           <p>
 	  If this is implemented by the TOE, the following requirements must be included in the ST:
           <ul>
-            <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
+            <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each>
 	  </ul></p>
           
 	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
           <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
+             <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
@@ -858,7 +858,7 @@
   </xsl:template> 
 
   <xsl:template match="cc:section[cc:f-component]">
-    <!-- the "if" statement is to not display subsection headers when there are no
+    <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)]) or count(.//cc:f-component[@status='mandatory'])">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
