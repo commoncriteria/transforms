@@ -154,7 +154,7 @@ provides evidence that these controls are present and have been evaluated.
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
     <xsl:choose>
-      <xsl:when test="cc:subsection[@title='TOE Security Functional Requirements']">
+      <xsl:when test="cc:*[@title='TOE Security Functional Requirements']">
 The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
 These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
       </xsl:when>
