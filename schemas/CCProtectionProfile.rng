@@ -129,8 +129,9 @@ Tags that this section should be indented(left) 2em.
 	    <oneOrMore>
 	      <choice>
 		     <ref name="audit-table-pat"/>
-             <ref name="f-component-pattern"/>
-             <ref name="f-component-decl-pattern"/>
+        	     <ref name="f-component-pattern"/>
+	             <ref name="f-component-decl-pattern"/>
+		     <ref name="ext-comp-def-pat"/>
 	      </choice>
 	    </oneOrMore>
 	  </element>
@@ -357,6 +358,8 @@ Tags that this section should be indented(left) 2em.
       </choice>
 <!--      <ref name="depends-pat"/>   -->
       <optional><ref name="note"/></optional>
+      <optional><ref name="consistency-rationale"/></optional>
+      <optional><ref name="ext-comp-extra-pat"/></optional>
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
       <zeroOrMore><ref name="audit-table-pat"/></zeroOrMore>
@@ -402,6 +405,7 @@ Tags that this section should be indented(left) 2em.
           </attribute>
          </optional>
        </choice>
+	    
       <ref name="audit-events-pat"/>
     </element>
 </define> 
