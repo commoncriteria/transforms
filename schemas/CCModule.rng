@@ -260,55 +260,6 @@
     </zeroOrMore>
   </define>
 
-  <define name="ext-comp-def-pat">
-    <zeroOrMore>
-	    <element name="ext-comp-def">
-        <a:documentation>
-          Extended Component Definition
-        </a:documentation>
-        <attribute name="fam-id">
-          <ref name="fam-id-spat"/>
-        </attribute>
-        <attribute name="title">
-        </attribute>
-        <choice>
-          <element name="mod-def">
-            <a:documentation>
-Modification definition. This text goes in the
-'Extended Components Definitions'.
-            </a:documentation>
-            <ref name="basic-content-pat"/>
-          </element>
-          <element name="fam-behavior">
-            <ref name="basic-content-pat"/>
-          </element>
-        </choice>
-      </element>
-    </zeroOrMore>
-  </define>
-
-  <define name="ext-comp-extra-pat">
-    <optional>
-      <element name="comp-lev">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="management">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="audit">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-    <optional>
-      <element name="dependencies">
-        <ref name="basic-content-pat"/>
-      </element>
-    </optional>
-  </define>
 
   <define name="f-component">
     <element name="f-component">
