@@ -957,12 +957,12 @@ Modification definition. This text goes in the
     </zeroOrMore>
   </define>
 
-
   <define name="f-element">
     <element name="f-element">
       <a:documentation>
         Defines a functional requirement.
       </a:documentation>
+      <optional>
         <attribute name="id">
           <a:documentation>
             A non-viewed unique ID. It has nothing to do with the ID that's assigned. It can be 
@@ -970,18 +970,16 @@ Modification definition. This text goes in the
           </a:documentation>
           <ref name="el-id-spat"/>
         </attribute>
+      </optional>
       <ref name="f-element-title"/>
+	  <optional><element name="ext-comp-def-title"><ref name="f-element-title"/></element></optional>
       <optional><ref name="note"/></optional>
       <optional><ref name="aactivity"/></optional>
-      <optional>
-        <element name="iso">
-          <ref name="aactivity"/>
-        </element>
-      </optional>
+      <zeroOrMore><ref name="or"/></zeroOrMore>
     </element>
   </define>
- 
-  <define name="test-obj-evi-pat">
+
+<define name="test-obj-evi-pat">
     <optional> <element name="test-obj">
        <a:documentation>Describes the goal of the test </a:documentation>
        <ref name="basic-content-pat"/>
