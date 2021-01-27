@@ -1365,7 +1365,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>
                 <ref name="f-component-pattern"/>
-      </choice> </oneOrMore>
+                <ref name="f-component-decl-pattern"/>
+   	        <ref name="ext-comp-def-pat"/>
+	      </choice>
+      </oneOrMore>
   </define>
  
   <define name="f-comp-content-pat">
