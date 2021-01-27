@@ -902,6 +902,8 @@ Modification definition. This text goes in the
       </choice>
 <!--      <ref name="depends-pat"/>   -->
       <optional><ref name="note"/></optional>
+      <optional><ref name="consistency-rationale"/></optional>
+      <optional><ref name="ext-comp-extra-pat"/></optional>
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
     </element>
