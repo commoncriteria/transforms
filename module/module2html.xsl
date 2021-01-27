@@ -648,8 +648,6 @@ These components are identified in the following table:
   <xsl:template match="cc:ext-comp-def|cc:ext-comp-def-title"/>
   <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
   <xsl:template match="cc:ext-comp-extra-pat"/>
-  <xsl:template match="cc:consistency-rationale"/>
-  <xsl:template name="opt_text"/>
 
   <xsl:template match="cc:*" mode="reveal">
      <xsl:apply-templates/>

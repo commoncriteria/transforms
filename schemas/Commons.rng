@@ -1361,15 +1361,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
    <define name="sfr-sections-content-pat">
-	    <ref name="basic-content-pat"/>
-	    <oneOrMore>
-	      <choice>
+      <ref name="basic-content-pat"/>
+      <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>
                 <ref name="f-component-pattern"/>
                 <ref name="f-component-decl-pattern"/>
    	        <ref name="ext-comp-def-pat"/>
 	      </choice>
-	    </oneOrMore>
+      </oneOrMore>
   </define>
  
   <define name="f-comp-content-pat">
