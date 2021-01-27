@@ -745,7 +745,9 @@
   <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
   <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
   <xsl:template match="cc:a-element"/>
-
+  <xsl:template match="cc:ext-comp-def|cc:ext-comp-def-title"/>
+  <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
+  <xsl:template match="cc:ext-comp-extra-pat"/>
  
  <!-- ############### -->
   <!--                 -->
