@@ -1838,12 +1838,17 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
 	Common rationale that will go into the consisteny-rationale in each base-pp
 	section (unless the base redefines it).
       </a:documentation>
+      <ref name="basic-content-pat"/>
+<!--
+Base name does't make sense for PPs and not modules. Also it needs to really be embedded in 
+the basic-content.
       <oneOrMore>
 	<choice>
 	  <ref name="basic-content-pat"/>
 	  <ref name="base-name"/>
 	</choice>
       </oneOrMore>
+-->
     </element>
   </define>
 
