@@ -296,20 +296,6 @@ Specifies a component under Security Functional Requirements section..
     </element>
   </define>
 
-  <define name="consistency-rationale">
-    <element name="consistency-rationale">
-      <a:documentation>
-	Common rationale that will go into the consisteny-rationale in each base-pp
-	section (unless the base redefines it).
-      </a:documentation>
-      <oneOrMore>
-	<choice>
-	  <ref name="basic-content-pat"/>
-	  <ref name="base-name"/>
-	</choice>
-      </oneOrMore>
-    </element>
-  </define>
 
   <define name="boilerplate-pat">
     <optional>
