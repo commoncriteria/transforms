@@ -1,5 +1,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
@@ -11,8 +12,8 @@
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
   </xsl:variable>
-  <!-- Eat all hook-based cc -->
-  <xsl:template match="cc:*" mode="hook"/>
+  <!-- Eat all unmatched sections for cc and hook -->
+  <xsl:template match="cc:*|sec:*" mode="hook"/>
 
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
@@ -35,7 +36,8 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']" mode="hook">
+  <xsl:template mode="hook"
+    match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no')]"> 
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
@@ -53,9 +55,8 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:chapter[@title='Conformance Claims']"
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:section[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]|//sec:*[@title='Conformance Claims' and not(@boilerplate='no')]"
 		mode="hook">
-    <xsl:variable name="impsatreqid"><xsl:value-of select="//cc:*[@title='Implicitly Satisfied Requirements']/@id"/></xsl:variable>
     <dl>
         <dt>Conformance Statement</dt>
         <dd>An <abbr title="Security Target">ST</abbr> must claim exact conformance to this <xsl:call-template name="doctype-short"/>, as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and Optional SFRs (dated May 2017).</dd>
@@ -85,7 +86,7 @@ provides evidence that these controls are present and have been evaluated.
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
    <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography" mode="hook">
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography|/cc:package//cc:bibliography|/cc:module//cc:bibliography" mode="hook">
 <tr>
   <td><span id="bibCC"> [CC] </span></td>
   <td>Common Criteria for Information Technology Security Evaluation - 
@@ -134,19 +135,26 @@ provides evidence that these controls are present and have been evaluated.
   </section>
   </xsl:template>
 
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Requirements']|/cc:module//cc:*[@title='Security Requirements']" mode="hook" name="secrectext">
-      <xsl:choose>
-         <xsl:when test="@boilerplate='no'"/>
-         <xsl:otherwise>
-           <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
-         </xsl:otherwise>
-      </xsl:choose>
+   <xsl:template mode="hook" name="secrectext"
+        match="/cc:PP[@boilerplate='yes']//cc:*[@title='Security Requirements' and not(@boilerplate='no')]|/cc:PP//sec:Security_Requirements[not(@boilerplate='no')]"
+       >
+      This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
+     Those requirements comprise functional components from Part 2 and assurance components from Part 3 of 
+       <xsl:call-template name="citeCC"/>.
+       <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
    </xsl:template>
+
+   <xsl:template match="//cc:module//cc:*[@title='Security Requirements']|//cc:package//sec:Security_Functional_Requirements|//cc:package//cc:*[@title='Security Functional Requirements']" mode="hook">
+      This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
+      Those requirements comprise functional components from Part 2 of <xsl:call-template name="citeCC"/>.
+ 
+       <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
+  </xsl:template>
 
 
   <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
     <xsl:choose>
-      <xsl:when test="cc:subsection[@title='TOE Security Functional Requirements']">
+      <xsl:when test="cc:*[@title='TOE Security Functional Requirements']">
 The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
 These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
       </xsl:when>

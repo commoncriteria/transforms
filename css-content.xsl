@@ -133,6 +133,10 @@
    table.mfs td:first-child{
        text-align: left;
    }
+  .table-caption{
+       text-align: center;
+       font-weight: bold;
+   }
    table{
        margin:auto;
        margin-top:1em;
@@ -168,7 +172,37 @@
        margin-left: 25px;
        font-style: italic;
    }
-  
+
+   .uc_table_or td, .uc_table_or tr {
+       vertical-align: middle;
+       border: 1px solid black;
+       background-color: white;
+   }
+
+   .uc_not, .uc_mf, .uc_sel, .uc_guide{
+       text-indent: 10px;
+   }
+   .uc_not_sel, .uc_sel.uc_mf, uc_assign.uc_mf{
+       text-indent: 20px;
+   }
+
+
+   .uc_table_or tr td.or_cell{
+      white-space: nowrap;
+      border-radius: 0.6em 0 0 0.6em;
+      background-color: black;
+      color: white;
+   }
+
+   .uc_table_and, .uc_table_or {
+       width: 100%;
+       background-color: white;
+   }
+   .uc_guidance{
+       display: table;
+       background-color: gray;
+   }  
+
    .evidence, .test-obj { font-style: normal; font-size: 90%;}
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>

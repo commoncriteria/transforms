@@ -1,11 +1,15 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:cc="https://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:htm="http://www.w3.org/1999/xhtml"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section">
 
   <!--##############################################
            Includes
       ##############################################-->
   <xsl:include href="js-content.xsl"/>
   <xsl:include href="css-content.xsl"/>
+  <xsl:include href="make-ref.xsl"/>
 
   <!--##############################################
            Parameters
@@ -58,8 +62,16 @@
     <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/><xsl:value-of select="@type"/></xsl:if>
   </xsl:template>
 
-
- 
+  <!-- ############################################################
+           Gets the ID for a selectable 
+       ############################################################-->
+  <xsl:template match="cc:selectable[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template> 
+  <xsl:template match="cc:selectable" mode="getId"><!--
+-->_s_<xsl:number count="//cc:selectable" level="any"/>
+  </xsl:template> 
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -104,18 +116,42 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:linkref">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:if test="not(//*[@id=$linkend])">
-      <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/></xsl:message>
-    </xsl:if>
+  <xsl:template match="cc:xref[@to]">
+    <xsl:variable name="to" select="@to"/>
     <xsl:choose>
-      <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
-          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
-          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
+      <xsl:when test="//cc:*[@id=$to]|//sec:*[local-name()=$to]">
+        <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref">
+          <xsl:with-param name="format" select="@format"/>
+        </xsl:apply-templates>
       </xsl:when>
-      <xsl:otherwise><a class="linkref" href="#{$linkend}"><xsl:value-of select="text()"/><xsl:value-of select="$linkend"/></a></xsl:otherwise>
+     <xsl:otherwise> 
+        <xsl:message> Failed to find a reference to <xsl:value-of select="@to"/>.</xsl:message>
+        <a href="#{@to}" class="dynref" data-format="{@format}"></a>
+      </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:xref[@g]">
+    <a href="#{@g}" class="dynref" format="{@format}"></a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:xref[@g='t-audit-mandatory']">
+    <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="'t-audit-mandatory'"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="cc:xref[@g='CC']">
+      <a href="#bibCC">[CC]</a>
   </xsl:template>
 
   <!-- ############### -->
@@ -222,17 +258,17 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <!-- Overloaded abbr here-->
-  <xsl:template match="cc:abbr[@linkend]">
-    <xsl:variable name="target" select="@linkend"/>
+  <xsl:template match="cc:abbr[@to]">
+    <xsl:variable name="target" select="@to"/>
     <xsl:variable name="full" select="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full"/>    
     <xsl:choose>
       <xsl:when test="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full">
-	<a class="abbr" href="#abbr_{@linkend}">
-	  <abbr title="{$full}"><xsl:value-of select="@linkend"/></abbr>
+	<a class="abbr" href="#abbr_{@to}">
+	  <abbr title="{$full}"><xsl:value-of select="@to"/></abbr>
 	</a>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:message>Failed to find the abbreviation: <xsl:value-of select="@linkend"/> </xsl:message>
+	<xsl:message>Failed to find the abbreviation: <xsl:value-of select="@to"/> </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -257,15 +293,25 @@ The following sections list Common Criteria and technology terms used in this do
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
     <xsl:when test="@linebreak='yes'">
-    <ul>
-    <xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each>
-    <!-- <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->
-    </ul>
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+      </xsl:for-each></ul>
     </xsl:when>
-    <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
+    <xsl:when test="@linebreak='no'">
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
-    <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
-   <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
+    <xsl:when test=".//cc:selectables">
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+      </xsl:for-each></ul></xsl:when>
+    <xsl:otherwise>
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
   </xsl:choose>]</xsl:template>
 
   <!--
@@ -276,13 +322,33 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]</xsl:template>
+<!-- Should we include a referencable value? Probably
+     Make it an ID seems like it might be too big.
+     But making it a number seems difficult given that we just can't count
+     the assignables cause they appear in the document in a diffirent order 
+     We could clean it up in the Python.
+  -->
+  <xsl:template match="cc:assignable"><!--
+  -->[<b>assignment</b>: 
+     <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+<!--
+
+  <xsl:element name="sup"><xsl:attribute name="class">a_id</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if>A13</xsl:element></xsl:template>a-->
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
+  <xsl:template match="cc:app-note">
+    <p><xsl:apply-templates/></p>
+  </xsl:template>	
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -295,6 +361,11 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:choose> Note: </span>
       <span class="note">
         <xsl:apply-templates/>
+        <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
+          <br/><br/>
+          <b>Function-specific Application Notes:</b><br/><br/>
+	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
+        </xsl:if>
       </span>
     </div>
   </xsl:template>
@@ -306,6 +377,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
       <tr class="header">
+        <td>#</td>
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
       </tr>
@@ -325,7 +397,10 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:management-function">
-    <tr>
+    <tr id="{@id}">
+      <td>
+        <xsl:value-of select="count(preceding::cc:management-function)+1"/>
+      </td>
       <td>
         <xsl:apply-templates select="cc:text"/>
       </td>
@@ -459,7 +534,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id"/>
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
@@ -499,9 +574,9 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
         </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//cc:*[@ref-id]">
-	<xsl:variable name="refid" select="@ref-id"/>
-        <xsl:if test="count(//cc:*[@id=$refid])=0">
+    <xsl:for-each select="//@ref-id">
+	<xsl:variable name="refid" select="text()"/>
+        <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
            for a <xsl:value-of select="name()"/>
            .
@@ -542,33 +617,6 @@ The following sections list Common Criteria and technology terms used in this do
         </xsl:element>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-
-  <!--#####################-->
-  <!-- Debugging templates -->
-  <!--#####################-->
-  <xsl:template name="debug-2">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'vv')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- -->
-  <xsl:template name="debug-1">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'v')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- Debugging function -->
-  <xsl:template name="path">
-    <xsl:for-each select="parent::*">
-      <xsl:call-template name="path"/>
-    </xsl:for-each>
-    <xsl:value-of select="name()"/>
-    <xsl:text>/</xsl:text>
   </xsl:template>
 
   <!-- ############### -->
@@ -650,20 +698,18 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
         <tr>
-            <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
+            <td>
+              <xsl:element name="span">
+                 <xsl:attribute name="class">term</xsl:attribute>
+                 <xsl:attribute name="id">abbr_<xsl:value-of select="@abbr"/></xsl:attribute>
+                 <xsl:if test="@plural"><xsl:attribute name="data-plural"><xsl:value-of select="@plural"/></xsl:attribute></xsl:if>
+                 <xsl:value-of select="@abbr"/>
+              </xsl:element>
+            </td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
        </tr>&#10;
 
       </xsl:for-each>
     </table>
   </xsl:template>
-
-  
-  <!-- ############### -->
-  <!--            -->
-  <xsl:template match="cc:cite">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
-  </xsl:template>
-
 </xsl:stylesheet>

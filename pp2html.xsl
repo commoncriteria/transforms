@@ -7,6 +7,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
@@ -36,7 +37,8 @@
   <!-- ############### -->
   <xsl:include href="ppcommons.xsl"/>
   <xsl:include href="boilerplates.xsl"/>
-
+  <xsl:include href="debug.xsl"/>
+  <xsl:include href="use-case.xsl"/>
 
   <!-- ############### -->
   <!--  TEMPLATES      -->
@@ -60,7 +62,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:PP|cc:package">
-    <xsl:apply-templates select="cc:chapter"/>
+    <xsl:apply-templates select="cc:section|sec:*"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
     <xsl:if test="$appendicize='on'">
@@ -77,85 +79,14 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:usecases">
-    <dl>
-      <xsl:for-each select="cc:usecase">
-        <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/></dt>
-        <dd>
-          <xsl:apply-templates select="cc:description"/>
-        </dd>
-      </xsl:for-each>
-    </dl>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template name="use-case-appendix">
-    <xsl:if test="//cc:usecase/cc:config">
-      <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
-      <xsl:for-each select="//cc:usecase[cc:config]">
-        <h2 id="use-case-appendix" class="indexable" data-level="2">
-          <xsl:value-of select="@title"/>
-       </h2>
-       <xsl:for-each select="cc:config">
-         <table>
-	   <xsl:apply-templates select="cc:*" mode="use-case"/>
-         </table>
-
-<!--         <xsl:for-each select="//cc:f-component[.//cc:selectable/@id=]">
-         blah blah blah
-         </xsl:for-each>-->
-       </xsl:for-each>
-      </xsl:for-each>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:ref-id" mode="use-case">
-    <xsl:variable name="ref-id" select="text()"/>
-    <xsl:message> HERE </xsl:message>
-    <tr>
-      <xsl:choose>
-        <xsl:when test="//cc:selectable[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$ref-id]" mode="getId"/></td>  
-          <td><xsl:if test="../cc:not">DO NOT </xsl:if>
-          choose
-          <xsl:apply-templates select="//cc:selectable[@id=$ref-id]"/></td>
-        </xsl:when>
-        <xsl:when test="//cc:f-component[@id=$ref-id]">
-          <td><xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="getId"/></td>
-          <td>Include in the ST</td>
-        </xsl:when>
-      </xsl:choose>
-    </tr>
- </xsl:template> 
-
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
   <xsl:template match="cc:bibliography">
     <table>
-      <tr class="header">
-        <th>Identifier</th>
-        <th>Title</th>
-      </tr>
+      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:for-each select="cc:entry">
         <tr>
-          <td>
-            <xsl:element name="span">
-              <xsl:attribute name="id">
-                <xsl:value-of select="@id"/>
-              </xsl:attribute> [<xsl:value-of select="cc:tag"/>] </xsl:element>
-          </td>
-          <td>
-            <xsl:apply-templates select="cc:description"/>
-          </td>
+          <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+          <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
       </xsl:for-each>
     </table>
@@ -165,7 +96,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="defs-with-notes">
-    <xsl:variable name="class" select="name()"/>
+    <xsl:variable name="class" select="local-name()"/>
     <dt class="{$class}" id="{@name}">
       <xsl:value-of select="@name"/>
     </dt>
@@ -186,12 +117,15 @@
           </xsl:for-each>
         </dl>
       </xsl:when>
-      <xsl:when test="name()='SOs'">
+      <xsl:when test="local-name()='SOs'">
         This CC-Module does not define any new security objectives.
       </xsl:when>
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!-- Handle's the sections that appear if the optional 
+       appendices appear (i.e. if this is the release version -->
   <!-- ############### -->
   <xsl:template match="cc:if-opt-app">
     <xsl:if test="$appendicize='on'">
@@ -218,11 +152,15 @@
 
   <!-- ############### -->
   <!--                 -->
-   <xsl:template match="/cc:*//cc:*[@title='Security Objectives Rationale']">
-    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>   
+   <xsl:template match="cc:*[@title='Security Objectives Rationale']|sec:Security_Objectives_Rationale|sec:*[@title='Security Objectives Rationale']">
+    <h2 id="{@id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
+      <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
+               </xsl:call-template>: Security Objectives Rationale</caption>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
@@ -312,9 +250,19 @@
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:variable name="thistable" select="@table"/>
-    <xsl:apply-templates/>
+    <xsl:variable name="nicename"><xsl:choose>
+      <xsl:when test="@table='sel-base'">Selection-based</xsl:when>
+      <xsl:otherwise><xsl:value-of select="concat(translate(substring(@table,1,1),$lower,$upper), substring(@table,2))"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
     <table class="" border="1">
-    <tr><th>Requirement</th>
+      <xsl:if test="not(node())">
+        <caption><xsl:call-template name="ctr-xsl">
+         <xsl:with-param name="ctr-type" select="'Table'"/>
+	 <xsl:with-param name="id" select="concat('t-audit-',@table)"/>
+         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> Requirements</caption>
+      </xsl:if>
+      <xsl:apply-templates/>
+        <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
@@ -327,7 +275,7 @@
                 - The audit event's expressed table attribute matches this table
                 - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                 - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-            <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
+            <xsl:if test="(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))">
                 <tr>
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
@@ -664,6 +612,7 @@
       </div>
   </xsl:template>
 
+
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:f-element" >
@@ -713,6 +662,23 @@
     <xsl:apply-templates/>
   </xsl:template>
 
+
+  <xsl:template match="cc:note/cc:aactivity">
+    Evaluation Activity Note:<br/>
+    <xsl:apply-templates/>
+  </xsl:template> 
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="cc:management-function/cc:aactivity">
+    <b><xsl:apply-templates select=".." mode="getId"/>
+       <xsl:for-each select="cc:also">
+         <xsl:variable name="ref-id" select="@ref-id"/>
+         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
+       <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
+    </b><br/>
+    <xsl:apply-templates/>
+  </xsl:template>
+ 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
@@ -726,10 +692,13 @@
     <div class="activity_pane_body">
       <i>
         <xsl:apply-templates/>
+        <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:aactivity"/>
       </i>
+      <!-- Apply to the management functions -->
     </div>
     </div>
   </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->
@@ -745,6 +714,9 @@
   <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>
   <xsl:template match="cc:appendix[@title='Objective Requirements']"/>
   <xsl:template match="cc:a-element"/>
+  <xsl:template match="cc:ext-comp-def|cc:ext-comp-def-title"/>
+  <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
+  <xsl:template match="cc:ext-comp-extra-pat"/>
 
  
  <!-- ############### -->
@@ -762,14 +734,14 @@
           <p>
 	  If this is implemented by the TOE, the following requirements must be included in the ST:
           <ul>
-            <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
+            <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each>
 	  </ul></p>
           
 	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
           <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:subsection/cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
+             <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."
                     mode="appendicize-nofilter"/>
@@ -849,11 +821,11 @@
               <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
             </xsl:if>
 
-          <b><xsl:call-template name="ctr-xsl">
+          <div class="table-caption"><xsl:call-template name="ctr-xsl">
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
               </xsl:call-template>: 
-           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </b>
+           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </div>
 			    
            <xsl:call-template name="audit-table-xsl">
              <xsl:with-param name="table" select="$type"/>
@@ -862,7 +834,7 @@
         <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
           <xsl:otherwise> 
-            <xsl:for-each select="//cc:subsection[cc:f-component/@status=$type]">
+            <xsl:for-each select="//cc:*[cc:f-component/@status=$type]">
               <xsl:element name="h{$sublevel}">
                 <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
                 <xsl:attribute name="class">indexable</xsl:attribute>
@@ -888,28 +860,8 @@
     <xsl:apply-templates/>
   </xsl:template> 
 
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:chapter">
-    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
-    <xsl:apply-templates mode='hook' select='.'/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
-    <xsl:apply-templates mode="hook" select="."/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:subsection">
-    <!-- the "if" statement is to not display subsection headers when there are no
+  <xsl:template match="cc:section[cc:f-component]">
+    <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)]) or count(.//cc:f-component[@status='mandatory'])">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
@@ -923,12 +875,55 @@
     </xsl:if>
   </xsl:template>
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="sec:*">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="title">
+        <xsl:value-of select="@title"/>
+        <xsl:if test="not(@title)"><xsl:value-of select="translate(local-name(), '_', ' ')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="cc:section">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id">
+        <xsl:value-of select="@id"/>
+        <xsl:if test="not(@id)"><xsl:value-of select="translate(@title, ' ', '_')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+
+
+  <xsl:template name="make-section">
+    <xsl:param name="title"/>
+    <xsl:param name="id"/>
+    <xsl:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)"/>
+    <xsl:element name="h{$depth}">
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+      <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:value-of select="$title"/>
+    </xsl:element>
+    <xsl:apply-templates mode="hook" select="."/>
+    <xsl:apply-templates />
+  </xsl:template>
+
   <!-- ######################### -->
   <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
+        <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="t-obj_map"/>
+              </xsl:call-template>: SFR Rationale </caption>
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
@@ -947,26 +942,7 @@
     </p>
   </xsl:template>
 
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:ctr-ref">
-    <a onclick="showTarget('cc-{@ref-id}')" href="#cc-{@ref-id}" class="cc-{@ref-id}-ref" >
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"/></xsl:variable>
-      <!-- should only run through once, but this is how we're changing contexts -->
-      <xsl:variable name="hasPre"><xsl:apply-templates select="//cc:ctr[@id=$ref-id]" mode="getPre"/></xsl:variable>
-      <xsl:choose>
-        <xsl:when test="not($hasPre='')">
-	  <xsl:apply-templates/><xsl:value-of select="$hasPre"/> <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:apply-templates/>Table <span class="counter"><xsl:value-of select="$ref-id"/></span>
-	</xsl:otherwise>
-      </xsl:choose>
-    </a>
-  </xsl:template>
-
+ 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:ctr">
@@ -975,7 +951,7 @@
         <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
     </xsl:variable>
 
-    <span class="ctr" data-myid="cc-{@id}" data-counter-type="ct-{$ctrtype}" id="cc-{@id}">
+    <span class="ctr" data-myid="{@id}" data-counter-type="ct-{$ctrtype}" id="{@id}">
       <xsl:apply-templates select="." mode="getPre"/>
       <span class="counter"><xsl:value-of select="@id"/></span>
       <xsl:apply-templates/>
@@ -989,44 +965,54 @@
       <xsl:param name="ctr-type"/>
       <xsl:param name="id"/>
     <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
-    <span class="ctr" data-myid="cc-{$id}" data-counter-type="ct-{$ctrtype}" id="cc-{$id}">
+    <span class="ctr" data-myid="{$id}" data-counter-type="ct-{$ctrtype}" id="{$id}">
 <!--      <xsl:apply-templates select="." mode="getPre"/>  -->
-      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
+      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text>
+         <span  class="counter"><xsl:value-of select="$id"/></span>
 <!--      <xsl:apply-templates/>  -->
     </span>
   </xsl:template>
 	
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:figref">
-    <a onclick="showTarget('figure-{@ref-id}')" href="#figure-{@ref-id}" class="figure-{@ref-id}-ref">
-      <xsl:variable name="ref-id"><xsl:value-of select="@ref-id"></xsl:value-of></xsl:variable>
-      <xsl:apply-templates select="//cc:figure[@id=$ref-id]" mode="getPre"/>
-<!--      <xsl:value-of select="//cc:ctr[@id=$ref-id]">"/>-->
-      <span class="counter"><xsl:value-of select="$ref-id"/></span>
-    </a>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
   <xsl:template match="cc:figure">
     <div class="figure" id="figure-{@id}">
       <img id="{@id}" src="{@entity}" width="{@width}" height="{@height}"/>
-      <p/>
-      <span class="ctr" data-myid="figure-{@id}" data-counter-type="ct-figure">
-        <xsl:apply-templates select="." mode="getPre"/>
-        <span class="counter"><xsl:value-of select="@id"/></span>
-      </span>:
+      <br/>
+      <xsl:call-template name="make_ctr">
+        <xsl:with-param name="id" select="@id"/>
+        <xsl:with-param name="type" select="'ct-figure'"/>
+        <xsl:with-param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:with-param>
+      </xsl:call-template>:
       <xsl:value-of select="@title"/>
     </div>
   </xsl:template>
+
+
+  <xsl:template name="make_ctr">
+    <xsl:param name="id"/>
+    <xsl:param name="type"/>
+    <xsl:param name="prefix"/>
+
+    <span class="ctr" data-myid="{$id}" data-counter-type="{$type}">
+        <xsl:value-of select="$prefix"/> 
+        <span class="counter"><xsl:value-of select="$id"/></span>
+      </span>
+  </xsl:template>
+
+
 
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:equation">
     <table><tr>
-      <td>$$<xsl:apply-templates select="cc:value"/>$$</td>
-      <td style="vertical-align: middle; padding-left: 100px">(<xsl:apply-templates select="cc:label"/>)</td>
+      <td id="{@id}">$$<xsl:apply-templates/>$$</td>
+      <td style="vertical-align: middle; padding-left: 100px"><!--
+          -->(<xsl:call-template name="make_ctr">
+          <xsl:with-param name="id" select="@id"/>
+          <xsl:with-param name="type" select="'equation'"/>
+          <xsl:with-param name="prefix" select="''"/>
+        </xsl:call-template>)</td>
     </tr></table>
   </xsl:template>
 
@@ -1035,72 +1021,54 @@
   <!--                 -->
   <!-- <xsl:template match="cc:figure|cc:ctr" mode="getPre" name="getPre"> -->
   <xsl:template match="cc:figure|cc:ctr" mode="getPre" >
-    <xsl:variable name="label"><xsl:choose>
-     <!-- <xsl:when test="text()"><xsl:value-of select="text()"/><xsl:message>Matched on text <xsl:value-of select="text()"/></xsl:message></xsl:when> -->
+     <xsl:choose>
       <xsl:when test="@pre"><xsl:value-of select="@pre"/></xsl:when>
-      <xsl:when test="name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
-      <xsl:when test="@ctr-type"><xsl:if test="not(contains(@ctr-type,'-'))"><xsl:value-of select="@ctr-type"/><xsl:text>  </xsl:text></xsl:if></xsl:when>
+      <xsl:when test="local-name()='figure'"><xsl:text>Figure </xsl:text></xsl:when>
+      <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
       <xsl:otherwise>Table </xsl:otherwise>
-    </xsl:choose></xsl:variable>
-
-    <xsl:value-of select="$label"/>
-
+    </xsl:choose>
   </xsl:template>
 
 
   <!-- ############### -->
   <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="name()"/></div>
+    <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
   </xsl:template>
 
-
-  <!-- templates for creating references -->
-  <!-- Assumes element with matching @id has a @title. -->
   <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:xref">
-    <xsl:variable name="linkendorig" select="@linkend"/>
-    <xsl:variable name="linkendlower" select="translate(@linkend,$upper,$lower)"/>
-    <xsl:element name="a">
-      <xsl:attribute name="onclick">showTarget('<xsl:value-of select="$linkendorig"/>')</xsl:attribute>
-      <xsl:attribute name="href">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$linkendorig"/>
-      </xsl:attribute>
-      <xsl:choose>
-        <xsl:when test="text()"><xsl:value-of select="text()"/></xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/@title">
-          <xsl:value-of select="//*[@id=$linkendlower]/@title"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/@name">
-          <xsl:value-of select="//*[@id=$linkendlower]/@name"/>
-        </xsl:when>
-        <xsl:when test="//*[@id=$linkendlower]/cc:term">
-          <xsl:value-of select="//*[@id=$linkendlower]/cc:term"/>
-        </xsl:when>
-        <xsl:when test="//*/cc:term[text()=$linkendorig]">
-          <xsl:value-of select="$linkendorig"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:message>Cant find <xsl:value-of select="$linkendlower"/></xsl:message>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
+  <xsl:template match="cc:management-function//cc:_">
+    <xsl:choose>
+      <xsl:when test="ancestor::cc:management-function[@id][1]/cc:also">
+        Functions 
+        <xsl:for-each select="ancestor::cc:*[@id][1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="ancestor::cc:management-function[@id][1]" mode="getId"/> 
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
-
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:secref">
-    <a href="#{@linkend}" class="dynref">Section </a>
-  </xsl:template>
-
 
    <!-- ############## -->
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Security Functional Requirements']">
-     <h2 id="{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
-     <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
+  <xsl:template match="//sec:*[@title='Security Functional Requirements']">
+    <xsl:call-template name="sfr"><xsl:with-param name="id" select="local-name()"/></xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="//cc:*[@title='Security Functional Requirements']">
+    <xsl:call-template name="sfr"/>
+  </xsl:template>
+
+   <xsl:template match="/sec:Security_Functional_Requirements">
+    <xsl:call-template name="sfr"><xsl:with-param name="id" select="Security_Functional_Requirements"/></xsl:call-template>
+   </xsl:template>
+  
+  <xsl:template name="sfr">
+     <xsl:param name="id" select="@id"/>
+     <h2 id="{$id}" class="indexable" data-level="2">Security Functional Requirements</h2>
+    <xsl:if test="/cc:*/@boilerplates='yes' and not(@boilerplate='no')">
        The Security Functional Requirements included in this section
        are derived from Part 2 of the Common Criteria for Information
        Technology Security Evaluation, <xsl:call-template name="verrev"/>,
@@ -1114,18 +1082,7 @@
   </xsl:template>
 
   
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:appref">
-    <a href="#{@linkend}" class="dynref"></a>
-    <!-- <a href="#{@linkend}" class="dynref">Appendix </a> -->
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:citeCC"><a href="#bibCC">[CC]</a></xsl:template>
-  
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
   <xsl:template match="@*|node()">
     <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
