@@ -613,7 +613,8 @@ These components are identified in the following table:
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:base-name">
+  <!-- -->
+  <xsl:template match="cc:consistency-rationale//cc:_">
     <xsl:param name="base"/>
     <xsl:value-of select="$base"/>
   </xsl:template>
