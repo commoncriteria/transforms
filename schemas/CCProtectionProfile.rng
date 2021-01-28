@@ -235,6 +235,7 @@ Tags that this section should be indented(left) 2em.
     </oneOrMore>
   </define>
 -->
+<!--
   <define name="section">
     <element name="section">
       <a:documentation>
@@ -246,7 +247,7 @@ Tags that this section should be indented(left) 2em.
         <choice>
           <ref name="basic-content-pat"/>
           <ref name="subsection-pattern"/>
-
+-->
          <!--  <ref name="OSPs"/> -->
          <!--  <element name="SOEs"> -->
          <!--    <a:documentation> -->
@@ -270,10 +271,12 @@ Tags that this section should be indented(left) 2em.
          <!--  <ref name="SOs"/> -->
          <!--  <ref name="assumptions"/> -->
          <!--  <ref name="threats"/> -->
-        </choice>
+<!--        </choice>
       </oneOrMore>
     </element>
   </define>
+-->
+
 <!--
  <define name="usecases-section">
     <element name="section">
