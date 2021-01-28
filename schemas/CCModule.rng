@@ -141,6 +141,23 @@
     </choice></zeroOrMore>
   </define>
 
+  <define name="f-component">
+    <element name="f-component">
+      <a:document>
+	Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <ref name="f-comp-content-pat"/>
+      <!-- Would like to remove this -->
+      <zeroOrMore>
+     	  <ref name="selection-depends"/>
+      </zeroOrMore>
+      <ref name="consistency-rationale"/>
+      <ref name="ext-comp-extra-pat"/>
+      <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
+    </element>
+  </define>
+
   <define name="f-comp-pat-content">
     <optional><ref name="description"/></optional>
     <zeroOrMore>
@@ -148,6 +165,7 @@
       <ref name="f-component"/>
     </zeroOrMore>
   </define>
+
 
   <define name="base-pp">
     <element name="base-pp">
