@@ -166,23 +166,26 @@ The following sections list Common Criteria and technology terms used in this do
     <a href="#{@g}" class="dynref" format="{@format}"></a>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:xref[@g='t-audit-mandatory']">
-    <xsl:call-template name="make_ctr_ref">
-      <xsl:with-param name="id" select="'t-audit-mandatory'"/>
-      <xsl:with-param name="prefix" select="'Table '"/>
-    </xsl:call-template>
-  </xsl:template>
-<!--
-  <xsl:template match="cc:xref[@g='atref-optional-dep'|@g='atref-objective-dep'|@g='atref-sel-based'|@g='atref-impl-dep-dep']">
+  <!-- ################################################### -->
+  <!-- Refs to all the pre-defined auto-generated tables   -->
+  <!-- ################################################### -->
+  <xsl:template match="cc:xref[@g='atref-optional-dep' or @g='atref-objective-dep' or 
+				@g='atref-sel-based-dep' or @g='atref-impl-dep-dep' or
+		       		@g='t-audit-mandatory']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
       <xsl:with-param name="prefix" select="'Table '"/>
     </xsl:call-template>
   </xsl:template>
+
+<!--	<xsl:template match="cc:xref[@g='t-audit-mandatory']">
+    <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="'t-audit-mandatory'"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
 -->	
+	
   <xsl:template match="cc:xref[@g='CC']">
       <a href="#bibCC">[CC]</a>
   </xsl:template>
