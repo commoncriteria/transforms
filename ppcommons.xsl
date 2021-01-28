@@ -175,14 +175,14 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:with-param name="prefix" select="'Table '"/>
     </xsl:call-template>
   </xsl:template>
-
+<!--
   <xsl:template match="cc:xref[@g='atref-optional-dep'|@g='atref-objective-dep'|@g='atref-sel-based'|@g='atref-impl-dep-dep']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
       <xsl:with-param name="prefix" select="'Table '"/>
     </xsl:call-template>
   </xsl:template>
-	
+-->	
   <xsl:template match="cc:xref[@g='CC']">
       <a href="#bibCC">[CC]</a>
   </xsl:template>
