@@ -175,7 +175,7 @@ Tags that this section should be indented(left) 2em.
       </element>
     </choice>
   </define>
-
+-->
   <define name="sfr-content"> 
     <oneOrMore>
 	  <element name="subsection">
