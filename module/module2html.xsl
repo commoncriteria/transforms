@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
@@ -20,11 +21,11 @@
   <!--                   Templates Section                -->
   <!-- ################################################## -->
   <xsl:template match="cc:Module">
-    <xsl:apply-templates select="//cc:chapter[@title='Introduction']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Conformance Claims']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Problem Description']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Objectives']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
+    <xsl:apply-templates select="//*[@title='Introduction']|sec:Introduction"/>
+    <xsl:apply-templates select="//*[@title='Conformance Claims']|sec:Conformance_Claims"/>
+    <xsl:apply-templates select="//*[@title='Security Problem Description']|sec:Security_Problem_Description"/>
+    <xsl:apply-templates select="//*[@title='Security Objectives']|sec:Security_Objectives"/>
+    <xsl:apply-templates select="//*[@title='Security Requirements']|sec:Security_Requirements"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
     <xsl:call-template name="opt-sfrs"/>
@@ -50,8 +51,10 @@
     <xsl:call-template name="obj-req-map"/>
   </xsl:template> 
 
-  <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
-    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
+  <xsl:template match="/cc:Module//*[@title='Security Requirements']|/cc:Module//sec:Security_Requirements">
+    <xsl:variable name="title"><xsl:if test="not(@title)"><xsl:value-of select="local-name()"/></xsl:if><xsl:value-of select="@title"/></xsl:variable>
+
+    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="$title"/></h1>
     <xsl:call-template name="secrectext"/>
    <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
@@ -613,12 +616,17 @@ These components are identified in the following table:
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:base-name">
+  <xsl:template match="cc:consistency-rationale//cc:_">
     <xsl:param name="base"/>
+    <xsl:if test="$base=''">
+      <xsl:message>Unable to figure out the base name for the '_' wildcard at:
+      <xsl:call-template name="genPath"/>
+      This usually happens when an '_' element is buried in html. It must be right under
+      consistency-rationale (sorry).
+     </xsl:message>
+    </xsl:if>
     <xsl:value-of select="$base"/>
   </xsl:template>
-
-
 
 
   <!--

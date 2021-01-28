@@ -17,6 +17,7 @@
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
   <xsl:param name="release" select="'draft'"/>
+
   <!--##############################################
            Constants
       ##############################################-->
@@ -30,6 +31,31 @@
       <xsl:when test="//cc:PPTitle"><xsl:value-of select="//cc:PPTitle"/></xsl:when>
       <xsl:otherwise>PP-Module for <xsl:value-of select="/cc:*/@target-products"/></xsl:otherwise>
   </xsl:choose></xsl:variable>
+
+  <!--##############################################
+           Templates
+      ##############################################-->
+   <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="sec:*">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="title">
+        <xsl:value-of select="@title"/>
+        <xsl:if test="not(@title)"><xsl:value-of select="translate(local-name(), '_', ' ')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="cc:section">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id">
+        <xsl:value-of select="@id"/>
+        <xsl:if test="not(@id)"><xsl:value-of select="translate(@title, ' ', '_')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- ############################################################
            Gets the ID for the f-component or f-element
