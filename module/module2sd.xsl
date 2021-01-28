@@ -45,7 +45,7 @@ This transform PP Modules into Support Documentation.
   <x:template name="make-section">
     <x:param name="title"/>
     <x:param name="id"/>
-    <x:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+1"/>
+    <x:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
     <x:element name="h{$depth}">
       <x:attribute name="id"><x:value-of select="$id"/></x:attribute>
       <x:attribute name="class">indexable,h<x:value-of select="$depth"/></x:attribute>
@@ -135,33 +135,35 @@ guidance, and testing.</p>
   <x:template name="handle-apply-to-all">
     <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
-      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
           (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
+    <h1 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
     <x:choose>
-      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
 
-    <h1 class="indexable" data-level="0" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
+    <h1 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
     <x:choose>
-      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="0" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
+    <h1 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
     <x:choose>
-      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
     </x:choose>
-
-
-
   </x:template>
+
+  <x:template match="cc:man-sfrs|cc:opt-sfrs|cc:sel-sfrs|cc:obj-sfrs">
+    <x:apply-templates select="cc:*|sec:*"/>
+  </x:template>
+
 
   <x:template name="handle-bases">
     <!-- Run through all the base modules -->
