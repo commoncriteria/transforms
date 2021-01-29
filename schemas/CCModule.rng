@@ -16,6 +16,7 @@
       </a:documentation>
       <ref name="module-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
+      <ref name="packages"/>
       <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
