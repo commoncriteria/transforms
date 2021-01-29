@@ -720,14 +720,6 @@
 
 
   <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="cc:indent">
-    <div class="indent" style="margin-left:2em">
-      <xsl:apply-templates/>
-    </div>
-  </xsl:template>
-
-  <!-- ############### -->
   <!-- These items are just consumed without output when processed by 'apply-templates' in default mode.      -->
   <xsl:template match="cc:appendix[@title='Optional Requirements']"/>
   <xsl:template match="cc:appendix[@title='Selection-Based Requirements']"/>

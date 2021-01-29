@@ -42,20 +42,12 @@
 
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
-      <choice>
        <element name="if-opt-app">
           <a:documentation>
 Content that only appears if the optional appendices exist.
           </a:documentation>
           <ref name="basic-content-pat"/>
-        </element>
-        <element name="indent">
-          <a:documentation>
-Tags that this section should be indented(left) 2em.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-      </choice>
+       </element>
     </define>
 
    
