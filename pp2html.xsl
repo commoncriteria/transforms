@@ -578,9 +578,9 @@
         </div>
       </xsl:if>
       <xsl:if test="@status='optional'">
-        <!--  <div class="statustag">
+        <div class="statustag">
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
-        </div>-->
+        </div>
       </xsl:if>
       <xsl:apply-templates/>
     </div>
@@ -880,9 +880,10 @@
   </xsl:template> 
 
   <xsl:template match="cc:section[cc:f-component]">
+    <!-- The other form (e.g. sec:abc cannot be used here b/c they always have parenthesis) -->
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-    <xsl:if test="$appendicize!='on' or count(./cc:f-component)=0 or count(.//cc:f-component[not(@status)]) or count(.//cc:f-component[@status='mandatory'])">
+    <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)]">
       <h3 id="{@id}" class="indexable" data-level="{count(ancestor::*)}"><xsl:value-of select="@title" /></h3>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
