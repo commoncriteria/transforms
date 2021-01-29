@@ -331,6 +331,10 @@ If it's only an acronym make sure the text content is empty.
              <value>glossary</value>
              <value>CC</value>
              <value>t-audit-mandatory</value>
+             <value>atref-optional-dep</value>
+             <value>atref-objective-dep</value>
+             <value>atref-sel-based-dep</value>
+             <value>atref-impl-dep-dep</value>
              <ref name="gen-values"/>
             </choice>
          </attribute>
