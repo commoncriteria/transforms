@@ -93,6 +93,7 @@
       display: inline;
     }
 
+    .indent{ margin-left:2em; }
 
     /* Tooltip container */
     .tooltipped {
