@@ -1151,7 +1151,6 @@
 		
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
-<!--            select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/> -->
             select="count(//cc:f-component[starts-with(@cc-id, $famId)])"/>
           	<xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
               <xsl:attribute name="style">
@@ -1161,7 +1160,6 @@
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
               </xsl:call-template>
-<!--              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">  -->
               <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)]">
                 <xsl:variable name="box_text"><!--
                   --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
@@ -1181,7 +1179,6 @@
         </xsl:otherwise>   -->
       </xsl:choose>
 	    
-<!--      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">  -->
       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h3>Component Leveling</h3>
