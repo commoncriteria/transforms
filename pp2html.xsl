@@ -1226,6 +1226,35 @@
     </xsl:for-each>
   </xsl:template>	
 	
+<xsl:template name="drawbox">
+    <xsl:param name="ybase"/>
+    <xsl:param name="boxtext"/>
+    <xsl:param name="xbase">0</xsl:param>
+    <xsl:param name="ymid"/>
+    <xsl:element name="text">
+      <xsl:attribute name="x"><xsl:value-of select="$xbase + 4"/></xsl:attribute>
+      <xsl:attribute name="fill">black</xsl:attribute>
+      <xsl:attribute name="font-size">11</xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$ybase + 22"/></xsl:attribute>
+      <xsl:value-of select="$boxtext"/>
+    </xsl:element>
+    <xsl:element name="rect">
+      <xsl:attribute name="x"><xsl:value-of select="$xbase + 2"/></xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$ybase + 11"/></xsl:attribute>
+      <xsl:attribute name="width">120</xsl:attribute>
+      <xsl:attribute name="height">16</xsl:attribute>
+      <xsl:attribute name="fill">none</xsl:attribute>
+      <xsl:attribute name="stroke">black</xsl:attribute>
+    </xsl:element>
+    <xsl:if test="$xbase>0">
+      <xsl:element name="line">
+        <xsl:attribute name="x1">122</xsl:attribute> <!-- 2 more than the width above -->
+        <xsl:attribute name="y1"><xsl:value-of select="$ymid + 17"/></xsl:attribute>
+        <xsl:attribute name="x2"><xsl:value-of select="$xbase + 1"/></xsl:attribute>
+        <xsl:attribute name="y2"><xsl:value-of select="$ybase + 17"/></xsl:attribute>
+        <xsl:attribute name="stroke">black</xsl:attribute>
+      </xsl:element>
+    </xsl:if>	
 	
 </xsl:stylesheet>
 
