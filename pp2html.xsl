@@ -73,7 +73,7 @@
       </xsl:call-template>
     </xsl:if>
     <!-- Generate an ext-comp-def appendix if there is at least one ext-comp-def tag anywhere. -->
-    <!-- I hope that's what this test is doing. -->
+    <!-- QQQQ: I hope that's what this test is doing. -->
     <xsl:if test="//cc:ext-comp-def"> 
 	    <xsl:call-template name="ext-comp-defs-pp-appendix"/>
     </xsl:if>
@@ -899,10 +899,10 @@
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
-        <caption><xsl:call-template name="ctr-xsl">
+        <caption><b><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="t-obj_map"/>
-              </xsl:call-template>: SFR Rationale </caption>
+		</xsl:call-template>: SFR Rationale </b></caption>
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
@@ -1085,6 +1085,9 @@
 <!-- This should probably be moved to commons -->
 	
  <xsl:template name="RecursiveGrouping-pp">
+	 
+ <!-- This assumes that ext-comp-def tags are children of only section tags.  
+      Does not handle sec:* -->
 
   <xsl:param name="list"/>
 
@@ -1114,6 +1117,7 @@
 <!-- Extended Component Definitions Appendix for PPs  -->
 <!-- This should be generated as Appendix C, if there -->
 <!-- are any extended components declared in the PP.   -->
+<!-- QQQQ: This assumes all ext-comp-def parents are section tags.  -->
 <!-- ################################################ -->
 	
   <xsl:template name="ext-comp-defs-pp-appendix">
@@ -1121,45 +1125,35 @@
     This appendix contains the definitions for all extended requirements specified in the PP.
 
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
-	All extended components specified in this PP are listed in this table:
+	All extended components specified in the PP are listed in this table:
 
-<table>
- <caption><b><xsl:call-template name="ctr-xsl">
+  <table>
+   <caption><b><xsl:call-template name="ctr-xsl">
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
-  <tr>
+    <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
-<xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
-<!--- QQQQ Concerned about using sec: instead of section. -->
-<!--
-    <xsl:for-each select="//cc:section[cc:ext-comp-def]">
-      <tr> <td><xsl:value-of select="@title"/></td><td>
-         <xsl:for-each select="cc:ext-comp-def"><xsl:sort select="@fam-id" order="ascending"/>
-           <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
-         </xsl:for-each>
-         </td>
-      </tr>
-    </xsl:for-each>
--->
-</table>
+     <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
+  </table>
 	  
-<?flerm
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
+	  
     <xsl:for-each select="//cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
       <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
 
-
       <xsl:choose>
         <xsl:when test="cc:fam-behavior">
           <h3>Family Behavior</h3>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
+		
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
-            select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/>
-          <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
+<!--            select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/> -->
+            select="count(//cc:f-component[starts-with(@cc-id, $famId)])"/>
+          	<xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
               <xsl:attribute name="style">
                 <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
               </xsl:attribute>
@@ -1167,7 +1161,8 @@
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
               </xsl:call-template>
-              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+<!--              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">  -->
+              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)]">
                 <xsl:variable name="box_text"><!--
                   --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
@@ -1180,11 +1175,14 @@
               </xsl:for-each>
           </xsl:element>
         </xsl:when>
-        <xsl:otherwise>
+	    <!-- QQQQ: probably shuld change this to an if since there are no mod-def tags in PPs -->
+<!--        <xsl:otherwise>
           <xsl:apply-templates select="cc:mod-def"/>
-        </xsl:otherwise>
+        </xsl:otherwise>   -->
       </xsl:choose>
-      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+	    
+<!--      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">  -->
+      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
@@ -1229,7 +1227,6 @@
          </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
-?>
   </xsl:template>	
 	
 	
