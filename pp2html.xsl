@@ -1211,8 +1211,8 @@
                     <xsl:when test="cc:ext-comp-def-title">
                        <xsl:apply-templates select="cc:ext-comp-def-title/cc:title"/>
                     </xsl:when>
-                    <xsl:when test="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]">
-                       <xsl:apply-templates select="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
+                    <xsl:when test="document('SFRs.xml')//cc:sfr[@cc-id=$reqid]">
+                       <xsl:apply-templates select="document('SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
                     </xsl:when>
                     <xsl:otherwise>
                        <xsl:if test="cc:title//@id"><xsl:message>
