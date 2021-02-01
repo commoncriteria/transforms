@@ -72,7 +72,12 @@
          <xsl:with-param name="sublevel" select="'2'"/>
       </xsl:call-template>
     </xsl:if>
-    <xsl:call-template name="use-case-appendix"/>
+    <!-- Generate an ext-comp-def appendix if there is at least one ext-comp-def tag anywhere. -->
+    <!-- I hope that's what thios test is doing. -->
+    <xsl:if test="//cc:ext-comp-def"> 
+	    <xsl:call-template name="ext-comp-defs-pp-appendix"/>
+    </xsl:if>
+    <xsl:call-template name="use-case-appendix"/> 
     <xsl:apply-templates select="cc:appendix"/>
   </xsl:template>
 
@@ -1075,6 +1080,159 @@
       <xsl:apply-templates select="current()" />
   </xsl:template>
 
+	
+<!-- ####################### -->
+<!-- This should probably be moved to commons -->
+	
+ <xsl:template name="RecursiveGrouping-pp">
+
+  <xsl:param name="list"/>
+
+  <!-- Selecting the first author name as group identifier and the group itself-->
+  <xsl:variable name="group-identifier" select="$list[1]/@title"/>
+  <xsl:variable name="group" select="$list[@title=$group-identifier]"/>
+
+  <!-- Do some work for the group -->
+  <tr> <td><xsl:value-of select="$group-identifier"/></td>
+       <td>
+         <xsl:for-each select="//cc:subsection[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+           <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
+         </xsl:for-each>
+       </td>
+  </tr>
+
+  <!-- If there are other groups left, calls itself -->
+  <xsl:if test="count($list)>count($group)">
+  <xsl:call-template name="RecursiveGrouping-pp">
+    <xsl:with-param name="list" select="$list[not(@title=$group-identifier)]"/>
+  </xsl:call-template>
+  </xsl:if>
+ </xsl:template>
+
+	
+<!-- ################################################ -->
+<!-- Extended Component Definitions Appendix for PPs  -->
+<!-- This should be generated as Appendix C, if there -->
+<!-- are any extended components declared in the PP.   -->
+<!-- ################################################ -->
+	
+  <xsl:template name="ext-comp-defs-pp-appendix">
+    <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
+    This appendix contains the definitions for all extended requirements specified in the PP.
+
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
+	All extended components specified in this PP are listed in this table:
+
+<table>
+ <caption><xsl:call-template name="ctr-xsl">
+          <xsl:with-param name="ctr-type">Table</xsl:with-param>
+          <xsl:with-param name="id" select="t-ext-comp_map"/>
+	 </xsl:call-template>: Extended Component Definitions</caption>
+  <tr>
+    <th>Functional Class</th><th>Functional Components</th> </tr>
+<xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
+<!--- QQQQ Concerned about using sec: instead of section. -->
+<!--
+    <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
+      <tr> <td><xsl:value-of select="@title"/></td><td>
+         <xsl:for-each select="cc:ext-comp-def"><xsl:sort select="@fam-id" order="ascending"/>
+           <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
+         </xsl:for-each>
+         </td>
+      </tr>
+    </xsl:for-each>
+-->
+</table>
+	  
+<?flerm
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
+    <xsl:for-each select="//cc:ext-comp-def">
+      <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
+      <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
+          <xsl:value-of select="@title"/> </h3>
+
+
+      <xsl:choose>
+        <xsl:when test="cc:fam-behavior">
+          <h3>Family Behavior</h3>
+          <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
+          <!-- Select all f-components that are not new and not a modified-sfr -->
+          <xsl:variable name="dcount"
+            select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/>
+          <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
+              <xsl:attribute name="style">
+                <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
+              </xsl:attribute>
+              <xsl:call-template name="drawbox">
+                <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
+                <xsl:with-param name="boxtext" select="@fam-id"/>
+              </xsl:call-template>
+              <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+                <xsl:variable name="box_text"><!--
+                  --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
+                  --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
+                <xsl:call-template name="drawbox">
+                  <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
+                  <xsl:with-param name="boxtext" select="$box_text"/>
+                  <xsl:with-param name="xbase" select="230"/>
+                  <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
+                </xsl:call-template>
+              </xsl:for-each>
+          </xsl:element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="cc:mod-def"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)]">
+         <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+         <h3>Component Leveling</h3>
+         <p><xsl:value-of select="$upId"/>,
+             <xsl:value-of select="@name"/>,
+             <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
+         </p>
+         <h3>Management: <xsl:value-of select="$upId"/></h3>
+         <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
+            <xsl:apply-templates select="cc:management" mode="reveal"/>
+         </p>
+
+         <h3>Audit: <xsl:value-of select="$upId"/></h3>
+         <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
+            <xsl:apply-templates select="cc:audit" mode="reveal"/>
+         </p>
+         <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
+         </h3>
+         <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
+            <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
+         </p>
+         <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
+            <xsl:apply-templates select="cc:dependencies" mode="reveal"/>
+         </p>
+
+         <xsl:for-each select="cc:f-element">
+            <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+            <h3> <xsl:value-of select="translate($reqid, $lower,$upper)"/> </h3><br/>
+                 <xsl:choose>
+                    <xsl:when test="cc:ext-comp-def-title">
+                       <xsl:apply-templates select="cc:ext-comp-def-title/cc:title"/>
+                    </xsl:when>
+                    <xsl:when test="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]">
+                       <xsl:apply-templates select="document('../SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                       <xsl:if test="cc:title//@id"><xsl:message>
+                          WARNING: Since <xsl:value-of select="$reqid"/> has an 'id' attribute in a descendant node in the title, you probably need to define an alternative 'ext-comp-def-title'.
+                       </xsl:message></xsl:if>
+                       <xsl:apply-templates select="cc:title"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+         </xsl:for-each>
+      </xsl:for-each>
+    </xsl:for-each>
+?>
+  </xsl:template>	
+	
+	
 </xsl:stylesheet>
 
 
