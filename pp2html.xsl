@@ -73,7 +73,7 @@
       </xsl:call-template>
     </xsl:if>
     <!-- Generate an ext-comp-def appendix if there is at least one ext-comp-def tag anywhere. -->
-    <!-- I hope that's what thios test is doing. -->
+    <!-- I hope that's what this test is doing. -->
     <xsl:if test="//cc:ext-comp-def"> 
 	    <xsl:call-template name="ext-comp-defs-pp-appendix"/>
     </xsl:if>
@@ -1095,7 +1095,7 @@
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
-         <xsl:for-each select="//cc:subsection[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
        </td>
@@ -1124,16 +1124,16 @@
 	All extended components specified in this PP are listed in this table:
 
 <table>
- <caption><xsl:call-template name="ctr-xsl">
+ <caption><b><xsl:call-template name="ctr-xsl">
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
-	 </xsl:call-template>: Extended Component Definitions</caption>
+	 </xsl:call-template>: Extended Component Definitions</b></caption>
   <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
 <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
 <!--- QQQQ Concerned about using sec: instead of section. -->
 <!--
-    <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
+    <xsl:for-each select="//cc:section[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def"><xsl:sort select="@fam-id" order="ascending"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
