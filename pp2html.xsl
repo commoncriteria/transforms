@@ -1083,6 +1083,7 @@
 	
 <!-- ####################### -->
 <!-- This should probably be moved to commons -->
+<!-- Lifted from module2html.xsl. only change was "subsection" to "section" -->
 	
  <xsl:template name="RecursiveGrouping-pp">
 	 
@@ -1117,6 +1118,7 @@
 <!-- Extended Component Definitions Appendix for PPs  -->
 <!-- This should be generated as Appendix C, if there -->
 <!-- are any extended components declared in the PP.   -->
+<!-- Lifted from module2html.xsl and simplified for PPs. -->
 <!-- QQQQ: This assumes all ext-comp-def parents are section tags.  -->
 <!-- ################################################ -->
 	
@@ -1220,6 +1222,7 @@
     </xsl:for-each>
   </xsl:template>	
 	
+<!-- Lifted from module2html.xsl. Only changed the name. -->
 <xsl:template name="drawbox-pp">
     <xsl:param name="ybase"/>
     <xsl:param name="boxtext"/>
