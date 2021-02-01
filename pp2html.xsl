@@ -1255,6 +1255,7 @@
         <xsl:attribute name="stroke">black</xsl:attribute>
       </xsl:element>
     </xsl:if>	
+</xsl:template>
 	
 </xsl:stylesheet>
 
