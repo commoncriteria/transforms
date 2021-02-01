@@ -1144,8 +1144,7 @@
       <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
           <xsl:value-of select="@title"/> </h3>
 
-      <xsl:choose>
-        <xsl:when test="cc:fam-behavior">
+        <xsl:if test="cc:fam-behavior">
           <h3>Family Behavior</h3>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
 		
@@ -1172,12 +1171,7 @@
                 </xsl:call-template>
               </xsl:for-each>
           </xsl:element>
-        </xsl:when>
-	    <!-- QQQQ: probably shuld change this to an if since there are no mod-def tags in PPs -->
-<!--        <xsl:otherwise>
-          <xsl:apply-templates select="cc:mod-def"/>
-        </xsl:otherwise>   -->
-      </xsl:choose>
+        </xsl:if>
 	    
       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
