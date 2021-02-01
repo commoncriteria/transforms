@@ -1156,7 +1156,7 @@
               <xsl:attribute name="style">
                 <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
               </xsl:attribute>
-              <xsl:call-template name="drawbox">
+              <xsl:call-template name="drawbox-pp">
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
               </xsl:call-template>
@@ -1164,7 +1164,7 @@
                 <xsl:variable name="box_text"><!--
                   --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
-                <xsl:call-template name="drawbox">
+                <xsl:call-template name="drawbox-pp">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
                   <xsl:with-param name="boxtext" select="$box_text"/>
                   <xsl:with-param name="xbase" select="230"/>
@@ -1226,7 +1226,7 @@
     </xsl:for-each>
   </xsl:template>	
 	
-<xsl:template name="drawbox">
+<xsl:template name="drawbox-pp">
     <xsl:param name="ybase"/>
     <xsl:param name="boxtext"/>
     <xsl:param name="xbase">0</xsl:param>
