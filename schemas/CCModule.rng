@@ -87,6 +87,17 @@
     </element>
   </define>
 
+  <define name="impl-dep-sfrs">
+    <element name="impl-dep-sfrs">
+      <a:documentation>
+	Implementation-dependent SFRs. These may or may not apply to all configurations regardless of base PPs.
+	(See VVOIP for an example of how painful this will be to implement.
+      </a:documentation>
+      <ref name="f-components-pat"/>
+    </element>
+  </define>
+
+	
   <define name="opt-sfrs">
     <element name="opt-sfrs">
       <a:documentation>
