@@ -1084,7 +1084,7 @@
 <!-- ####################### -->
 <!-- This should probably be moved to commons -->
 <!-- Lifted from module2html.xsl. only change was "subsection" to "section" -->
-	
+<?flerm	
  <xsl:template name="RecursiveGrouping-pp">
 	 
  <!-- This assumes that ext-comp-def tags are children of only section tags.  
@@ -1113,7 +1113,7 @@
   </xsl:call-template>
   </xsl:if>
  </xsl:template>
-
+?>
 	
 <!-- ################################################ -->
 <!-- Extended Component Definitions Appendix for PPs  -->
@@ -1135,10 +1135,14 @@
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
-    <tr>
-    <th>Functional Class</th><th>Functional Components</th> </tr>
-     <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]|
-	    									 //sec:*[cc:ext-comp-def]"/></xsl:call-template>
+    <tr><th>Functional Class</th><th>Functional Components</th> </tr>
+	  <tr>
+         <xsl:for-each select="//cc:ext-comp-def">
+		 <td><xsl:value-of select="../@title"/></td>
+		 <td><xsl:value-of select="translate(@fam-id,lower,upper)"/>
+			 <xsl:text> </xsl:text><xsl:value-of select="@title"/></td>
+		 </tr>
+	</xsl:for-each>
   </table>
 	  
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
