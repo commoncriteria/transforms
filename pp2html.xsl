@@ -1136,12 +1136,10 @@
           <xsl:with-param name="id" select="t-ext-comp_map"/>
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
     <tr><th>Functional Class</th><th>Functional Components</th> </tr>
-	  <tr>
          <xsl:for-each select="//cc:ext-comp-def">
-		 <td><xsl:value-of select="../@title"/></td>
+		 <tr><td><xsl:value-of select="../@title"/></td>
 		 <td><xsl:value-of select="translate(@fam-id,lower,upper)"/>
-			 <xsl:text> </xsl:text><xsl:value-of select="@title"/></td>
-		 </tr>
+			 <xsl:text> </xsl:text><xsl:value-of select="@title"/></td></tr>
 	</xsl:for-each>
   </table>
 	  
