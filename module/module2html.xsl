@@ -10,7 +10,7 @@
   <xsl:include href="module-commons.xsl"/>
   <xsl:output method="xml" encoding="UTF-8"/>
 
-  <!-- Directory where the base PPs currently reside (with the names 0.xml, 1.xml,...)-->
+  <!-- Directory where the base PPs currently reside (with apthe names 0.xml, 1.xml,...)-->
   <xsl:param name="basesdir"/>
 
   <!-- Value on whether this is the formal release build -->
@@ -518,18 +518,17 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 <!-- ####################### -->
   <xsl:template name="ext-comp-defs">
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
-This appendix contains the definitions for the extended requirements that are used in the PP-Module
-including those used in Appendices A through C.
+	This appendix contains the definitions for all extended requirements specified in the PP-Module.
 
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
 
-    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
-This appendix provides a definition for all of the extended components introduced
-in this PP-Module.
-
-
-These components are identified in the following table:
+	All extended components specified in the PP are listed in this table:
 
 <table>
+	<caption><b><xsl:call-template name="ctr-xsl">
+          <xsl:with-param name="ctr-type">Table</xsl:with-param>
+          <xsl:with-param name="id" select="t-ext-comp_map"/>
+	 </xsl:call-template>: Extended Component Definitions</b></caption>
   <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
 <xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
