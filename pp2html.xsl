@@ -1137,7 +1137,14 @@
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
     <tr><th>Functional Class</th><th>Functional Components</th> </tr>
          <xsl:for-each select="//cc:ext-comp-def">
-		 <tr><td><xsl:value-of select="../@title"/></td>
+		 <tr><xsl:choice>
+			<xsl:when test="../@title">
+				<td><xsl:value-of select="../@title"/></td>
+			 </xsl:when>
+			 <xsl:otherwise>
+				 <td><xsl:value-of select="translate(local-name(parent::*),'_',' ')"/></td> 
+			 </xsl:otherwise>
+		 </xsl:choice>
 		 <td><xsl:value-of select="translate(@fam-id,lower,upper)"/>
 			 <xsl:text> </xsl:text><xsl:value-of select="@title"/></td></tr>
 	</xsl:for-each>
