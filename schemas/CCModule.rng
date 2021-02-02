@@ -388,6 +388,7 @@ Specifies a component under Security Functional Requirements section..
       <ref name="opt-sfrs"/>
       <ref name="sel-sfrs"/>
       <ref name="obj-sfrs"/>
+      <ref name="impl-dep-sfrs"/>
   </define>
 
 
