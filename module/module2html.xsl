@@ -473,7 +473,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
-         <xsl:for-each select="//cc:subsection[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
        </td>
@@ -505,9 +505,9 @@ These components are identified in the following table:
 <table>
   <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
-<xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:subsection[cc:ext-comp-def]"/></xsl:call-template>
+<xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
 <!--
-    <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
+    <xsl:for-each select="//cc:section[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def"><xsl:sort select="@fam-id" order="ascending"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
