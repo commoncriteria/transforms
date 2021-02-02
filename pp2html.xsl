@@ -93,7 +93,7 @@
           <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
           <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
-      </xsl:for-each>
+      </xsl:for-each>ext-comp-def
     </table>
   </xsl:template>
 
@@ -1099,7 +1099,8 @@
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
-         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def|
+			       //sec:*[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
        </td>
@@ -1136,7 +1137,8 @@
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
     <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
-     <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
+     <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]|
+	    									 //sec:*[cc:ext-comp-def]"/></xsl:call-template>
   </table>
 	  
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
