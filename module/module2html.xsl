@@ -186,7 +186,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any mandatory requirements.
+	      This PP-Module does not define any Mandatory requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -196,7 +196,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any optional requirements.
+	      This PP-Module does not define any Optional requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -206,7 +206,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any selection-based requirements.
+	      This PP-Module does not define any Selection-based requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -216,7 +216,17 @@
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any objective requirements.
+	      This PP-Module does not define any Objective requirements.
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</tr>
+	<tr>
+	  <th colspan="2"> Implementation-Dependent SFRs</th>
+	  <xsl:call-template name="req-con-rat-sec">
+	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component"/>
+	    <xsl:with-param name="short" select="$base/@short"/>
+	    <xsl:with-param name="none-msg">
+	      This PP-Module does not define any Implementation-Dependent requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -410,14 +420,14 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	</p>
       </xsl:otherwise>
     </xsl:choose>
-    <h2 id="objective-sfrs" class="indexable" data-level="2">Objective Requirements</h2>
+    <h2 id="impl-dep-sfrs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
     <xsl:choose>
-      <xsl:when test="//cc:obj-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:obj-sfrs//cc:f-component"/>
+      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
-	  This PP-Module does not define any Objective SFRs.
+	  This PP-Module does not define any Implementation-Dependent SFRs.
 	</p>
       </xsl:otherwise>
     </xsl:choose>
@@ -460,6 +470,23 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+<xsl:template name="impl-dep-sfrs">
+    <h1 id="impl-dep-sfrs" class="indexable" data-level="A">Implementation-Dependent SFRs</h1>
+    This section contains requirements that depend on the TOE implementing certain product features or use cases.
+	<br/><br/>
+    <xsl:choose>
+      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<p>
+	  This PP-Module does not define any Implementaion-Dependent SFRs.
+	</p>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
 <!-- ####################### -->
  <xsl:template name="RecursiveGrouping">
