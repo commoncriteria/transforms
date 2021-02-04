@@ -411,7 +411,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 
     	<x:for-each select=".//cc:aactivity[@level='element']">
 		<!-- Display the element name -->
-	        <h5>Element: <x:apply-templates select=".." mode="getId"/></h5>
+	        <h4>Element: <x:apply-templates select=".." mode="getId"/></h4>
 	      	<x:apply-templates select="." mode="gen-aa"/>
       		<x:choose>
          		<x:when test="cc:no-tests">
