@@ -385,7 +385,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	    
 	<!-- Loop through all the component-level EAs. There should be exactly one. -->
 	<!-- But it should be displayed first, and without a header. -->
-	<!-- Maybe we should test to make sure there is at least one? -->
+	<!-- Maybe we should test to make sure there is at least one?  Naah. -->
 	<x:for-each select=".//cc:aactivity[@level!='element']">
 	      	<x:apply-templates select="." mode="gen-aa"/>
 		<x:choose>
@@ -412,37 +412,27 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     	<x:for-each select=".//cc:aactivity[@level='element']">
 		<!-- Display the element name -->
 	        <h5>Element: <x:apply-templates select=".." mode="getId"/></h5>
-	</x:for-each>
-
-<?flerm    
-    
-	<!-- Now handle all the element-level components -->
-	<x:for-each select=".//cc:aactivity[@level='element']">
-		<!-- Display the element name if this is an element-level EA -->
-	        <h5><x:apply-templates select=".." mode="getId"/></h5>
-		
 	      	<x:apply-templates select="." mode="gen-aa"/>
       		<x:choose>
          		<x:when test="cc:no-tests">
 				<i><x:value-of select="cc:no-tests"/></i>	 	
          		</x:when>
- 	        <x:otherwise>
-	 	       <x:if test="cc:TSS">
-             			<div class="eacategory">TSS</div>
-             			<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
-         		</x:if>
-        	   	<x:if test="cc:Guidance">
-            			 <div class="eacategory">Guidance</div>
-            			 <x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
-          	 	</x:if>
-           		<x:if test="cc:Tests">
-            	 		<div class="eacategory">Tests</div>
-            	 		<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
-	           	</x:if>
-        	</x:otherwise>
-      		</x:choose>
+	 	        <x:otherwise>
+		 	       <x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				 <div class="eacategory">Guidance</div>
+            			 	<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>		
 	</x:for-each>
-?>
     	</div>
   </x:template>
 
