@@ -384,9 +384,9 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
         </h4>
 	 
 	<!-- Loop through all the Component-level EAs. There should be exactly one. -->
-	<xsl:choose>
-		<xsl:when test="count(.//cc:aactivity[@level='component' or @level=''])>0">
-			<xsl:for-each select=".//cc:aactivity[@level='component' or @level='']">
+	<x:choose>
+		<x:when test="count(.//cc:aactivity[@level='component' or @level=''])>0">
+			<x:for-each select=".//cc:aactivity[@level='component' or @level='']">
 			      	<x:apply-templates select="." mode="gen-aa"/>
 	      			<x:choose>
          				<x:when test="cc:no-tests">
@@ -407,15 +407,15 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	           				</x:if>
         				</x:otherwise>
       				</x:choose>
-			</xsl:for-each>
-		</xsl:when>
-		<xsl:otherwise>
+			</x:for-each>
+		</x:when>
+		<x:otherwise>
 			<p>There is no component-level evaluation activity for this component.</p>
-		</xsl:otherwise>
-	</xsl:choose>
+		</x:otherwise>
+	</x:choose>
 	    
 	<!-- Now handle all the element-level components -->
-	<xsl:for-each select=".//cc:aactivity[@level='element']">
+	<x:for-each select=".//cc:aactivity[@level='element']">
 		<!-- Display the element name if this is an element-level EA -->
 	        <h5><x:apply-templates select=".." mode="getId"/></h5>
 		
@@ -439,7 +439,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	           	</x:if>
         	</x:otherwise>
       		</x:choose>
-	</xsl:for-each>
+	</x:for-each>
     	</div>
   </x:template>
 
