@@ -384,9 +384,14 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
         </h4>
 	    
 	<!-- Loop through all EAs in the component -->
-	<x:for-each select=".//cc:aactivity">
+	<x:for-each select=".//cc:aactivity[@level='component']">
 		<!-- Display the element name -->
-	        <h5><x:apply-templates select=".." mode="getId"/></h5>
+	        <h5>Component: <x:apply-templates select=".." mode="getId"/></h5>
+	</x:for-each>
+
+    	<x:for-each select=".//cc:aactivity[@level='element']">
+		<!-- Display the element name -->
+	        <h5>Element: <x:apply-templates select=".." mode="getId"/></h5>
 	</x:for-each>
 
 <?flerm    
