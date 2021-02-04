@@ -711,7 +711,7 @@
 	    <xsl:when test="@level='element'">
 		    <div class="activity_pane_header">
       			<a onclick="toggle(this);return false;" href="#">
-        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:apply-templates select=".." mode="getId"/>
+        		<span class="activity_pane_label"> Evaluation Activity for element <xsl:apply-templates select=".." mode="getId"/>
 			</span>
         			<span class="toggler"/>
 		       </a>
@@ -720,7 +720,7 @@
 	    <xsl:otherwise>  <!-- component-level aactivity -->
 		    <div class="activity_pane_header">
       			<a onclick="toggle(this);return false;" href="#">
-        		<span class="activity_pane_label"> Evaluation Activity for Component <xsl:apply-templates select="../.." mode="getId"/>
+        		<span class="activity_pane_label"> Evaluation Activity for <xsl:apply-templates select="../.." mode="getId"/>
 			</span>
        			<span class="toggler"/>
 		       </a>
