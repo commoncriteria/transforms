@@ -382,7 +382,14 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
         </h4>
-	 
+	    
+	<!-- Loop through all EAs in the component -->
+	<x:for-each select=".//cc:aactivity">
+		<!-- Display the element name -->
+	        <h5><x:apply-templates select=".." mode="getId"/></h5>
+	</x:for-each>
+
+<?flerm    
 	<!-- Loop through all the Component-level EAs. There should be exactly one. -->
 	<x:choose>
 		<x:when test="count(.//cc:aactivity[@level='component' or @level=''])>0">
@@ -440,6 +447,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
         	</x:otherwise>
       		</x:choose>
 	</x:for-each>
+?>
     	</div>
   </x:template>
 
