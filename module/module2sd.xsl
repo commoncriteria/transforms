@@ -376,33 +376,46 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-        <x:apply-templates select="." mode="getId"/><x:text> </x:text>
+
+	<!-- Display component name -->
+	<h4>
+       	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
       </h4>
-      <x:apply-templates select=".//cc:aactivity" mode="gen-aa"/>
-      <x:choose>
-         <x:when test=".//cc:aactivity/cc:no-tests">
-<!--           <x:apply-templates select=".//cc:aactivity"/>   This one gets eaten and nothing happens. -->
-<!-- In Module SDs, when there are no tests, we want to display the text in the no-tests tag -->
-		 <i><x:value-of select=".//cc:aactivity/cc:no-tests"/></i>	 	
-         </x:when>
-         <x:otherwise>
-           <x:if test=".//cc:TSS">
-             <div class="eacategory">TSS</div>
-             <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Guidance">
-             <div class="eacategory">Guidance</div>
-             <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Tests">
-             <div class="eacategory">Tests</div>
-             <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
-           </x:if>
-        </x:otherwise>
-      </x:choose>
-    </div>
+	    
+	<!-- Need to handle more than one EA per SFR -->
+	<!-- If there is a component-level EA, we assume it is first.
+ 		This is a valid assumption since there is usually ony one EA. -->
+	<xsl:for-each select=".//cc:aactivity">
+		<!-- Display the element name if this is an element-level EA -->
+		<xsl:if test="@level='element'>
+		        <h5>
+		        	<x:apply-templates select=".." mode="getId"/><x:text> </x:text>
+	        	</h5>
+		</xsl:if>
+		
+	      	<x:apply-templates select="." mode="gen-aa"/>
+      		<x:choose>
+         		<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+         		</x:when>
+ 	        <x:otherwise>
+	 	       <x:if test="cc:TSS">
+             			<div class="eacategory">TSS</div>
+             			<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         		</x:if>
+        	   	<x:if test="cc:Guidance">
+            			 <div class="eacategory">Guidance</div>
+            			 <x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 	</x:if>
+           		<x:if test="cc:Tests">
+            	 		<div class="eacategory">Tests</div>
+            	 		<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           	</x:if>
+        	</x:otherwise>
+      		</x:choose>
+	</xsl:for-each>
+    	</div>
   </x:template>
 
 
