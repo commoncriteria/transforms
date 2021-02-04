@@ -383,10 +383,30 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	<x:value-of select="@name"/>
         </h4>
 	    
-	<!-- Loop through all EAs in the component -->
-	<x:for-each select=".//cc:aactivity[@level='component']">
-		<!-- Display the element name -->
-	        <h5>Component: <x:apply-templates select=".." mode="getId"/></h5>
+	<!-- Loop through all the component-level EAs. There should be exactly one. -->
+	<!-- But it should be displayed first, and without a header. -->
+	<!-- Maybe we should test to make sure there is at least one? -->
+	<x:for-each select=".//cc:aactivity[@level!='element']">
+	      	<x:apply-templates select="." mode="gen-aa"/>
+		<x:choose>
+			<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+	         	</x:when>
+ 			<x:otherwise>
+				<x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				<div class="eacategory">Guidance</div>
+            				<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>
 	</x:for-each>
 
     	<x:for-each select=".//cc:aactivity[@level='element']">
@@ -395,37 +415,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	</x:for-each>
 
 <?flerm    
-	<!-- Loop through all the Component-level EAs. There should be exactly one. -->
-	<x:choose>
-		<x:when test="count(.//cc:aactivity[@level='component' or @level=''])>0">
-			<x:for-each select=".//cc:aactivity[@level='component' or @level='']">
-			      	<x:apply-templates select="." mode="gen-aa"/>
-	      			<x:choose>
-         				<x:when test="cc:no-tests">
-						<i><x:value-of select="cc:no-tests"/></i>	 	
-			         	</x:when>
- 	        			<x:otherwise>
-	 	       				<x:if test="cc:TSS">
-             						<div class="eacategory">TSS</div>
-             						<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
-         					</x:if>
-        	   				<x:if test="cc:Guidance">
-            			 			<div class="eacategory">Guidance</div>
-            			 			<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
-          	 				</x:if>
-           					<x:if test="cc:Tests">
-            	 					<div class="eacategory">Tests</div>
-            	 					<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
-	           				</x:if>
-        				</x:otherwise>
-      				</x:choose>
-			</x:for-each>
-		</x:when>
-		<x:otherwise>
-			<p>There is no component-level evaluation activity for this component.</p>
-		</x:otherwise>
-	</x:choose>
-	    
+    
 	<!-- Now handle all the element-level components -->
 	<x:for-each select=".//cc:aactivity[@level='element']">
 		<!-- Display the element name if this is an element-level EA -->
