@@ -711,7 +711,7 @@
 	    <xsl:when test="@level='element'">
 		    <div class="activity_pane_header">
       			<a onclick="toggle(this);return false;" href="#">
-        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:value-of select="../local-name()"/> 
+        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:value-of select="local-name(parent::*)"/> 
 			</span>
         			<span class="toggler"/>
 		       </a>
