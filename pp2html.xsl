@@ -711,7 +711,7 @@
 	    <xsl:when test="@level='element'">
 		    <div class="activity_pane_header">
       			<a onclick="toggle(this);return false;" href="#">
-        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:value-of select="local-name(parent::*)"/> 
+        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:value-of select="translate(../@cc-id, $lower, $upper)"/> 
 			</span>
         			<span class="toggler"/>
 		       </a>
@@ -720,7 +720,7 @@
 	    <xsl:otherwise>  <!-- component-level aactivity -->
 		    <div class="activity_pane_header">
       			<a onclick="toggle(this);return false;" href="#">
-        		<span class="activity_pane_label"> Evaluation Activity for Component <xsl:value-of select="../../@cc-id"/> 
+        		<span class="activity_pane_label"> Evaluation Activity for Component <xsl:value-of select="translate(../../@cc-id, $lower, $upper)"/> 
 			</span>
        			<span class="toggler"/>
 		       </a>
