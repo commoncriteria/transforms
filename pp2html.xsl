@@ -707,12 +707,26 @@
   <!--                 -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
     <div class="activity_pane hide">
-    <div class="activity_pane_header">
-      <a onclick="toggle(this);return false;" href="#">
-        <span class="activity_pane_label"> Evaluation Activity </span>
-        <span class="toggler"/>
-      </a>
-    </div>
+    <xsl:choose>
+	    <xsl:when test="@level='element'">
+		    <div class="activity_pane_header">
+      			<a onclick="toggle(this);return false;" href="#">
+        		<span class="activity_pane_label"> Evaluation Activity for Element <xsl:value-of select="../local-name()"/> 
+			</span>
+        			<span class="toggler"/>
+		       </a>
+		    </div>
+	    </xsl:when>
+	    <xsl:otherwise>  <!-- component-level aactivity -->
+		    <div class="activity_pane_header">
+      			<a onclick="toggle(this);return false;" href="#">
+        		<span class="activity_pane_label"> Evaluation Activity for Component <xsl:value-of select="../../@cc-id"/> 
+			</span>
+       			<span class="toggler"/>
+		       </a>
+		    </div>
+	    </xsl:otherwise>	
+    </xsl:choose>
     <div class="activity_pane_body">
       <i>
         <xsl:apply-templates/>
