@@ -381,18 +381,43 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	<h4>
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
-      </h4>
+        </h4>
+	 
+	<!-- Loop through all the Component-level EAs. There should be exactly one. -->
+	<xsl:choose>
+		<xsl:when test="count(.//cc:aactivity[@level='component' or @level=''])>0">
+			<xsl:for-each select=".//cc:aactivity[@level='component' or @level='']">
+			      	<x:apply-templates select="." mode="gen-aa"/>
+	      			<x:choose>
+         				<x:when test="cc:no-tests">
+						<i><x:value-of select="cc:no-tests"/></i>	 	
+			         	</x:when>
+ 	        			<x:otherwise>
+	 	       				<x:if test="cc:TSS">
+             						<div class="eacategory">TSS</div>
+             						<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         					</x:if>
+        	   				<x:if test="cc:Guidance">
+            			 			<div class="eacategory">Guidance</div>
+            			 			<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 				</x:if>
+           					<x:if test="cc:Tests">
+            	 					<div class="eacategory">Tests</div>
+            	 					<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           				</x:if>
+        				</x:otherwise>
+      				</x:choose>
+			</xsl:for-each>
+		</xsl:when>
+		<xsl:otherwise>
+			<p>There is no component-level evaluation activity for this component.</p>
+		</xsl:otherwise>
+	</xsl:choose>
 	    
-	<!-- Need to handle more than one EA per SFR -->
-	<!-- If there is a component-level EA, we assume it is first.
- 		This is a valid assumption since there is usually ony one EA. -->
-	<xsl:for-each select=".//cc:aactivity">
+	<!-- Now handle all the element-level components -->
+	<xsl:for-each select=".//cc:aactivity[@level='element']">
 		<!-- Display the element name if this is an element-level EA -->
-		<xsl:if test="@level='element'>
-		        <h5>
-		        	<x:apply-templates select=".." mode="getId"/><x:text> </x:text>
-	        	</h5>
-		</xsl:if>
+	        <h5><x:apply-templates select=".." mode="getId"/></h5>
 		
 	      	<x:apply-templates select="." mode="gen-aa"/>
       		<x:choose>
