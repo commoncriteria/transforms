@@ -6,6 +6,11 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+    <a:documentation>
+      This file defines things common to Functional Packages, 
+      Protection Profiles, and Modules.
+    </a:documentation>
 <!--
   <define name="audit-event">
     <a:documentation></a:documentation>
@@ -981,7 +986,12 @@ Modification definition. This text goes in the
 	  <optional><element name="ext-comp-def-title"><ref name="f-element-title"/></element></optional>
       <optional><ref name="note"/></optional>
       <optional><ref name="aactivity"/></optional>
-      <zeroOrMore><ref name="or"/></zeroOrMore>
+      <zeroOrMore>
+        <element name="rule">
+          <ref name="id-attr"/>
+          <ref name="or"/>
+        </element>
+      </zeroOrMore>
     </element>
   </define>
 
