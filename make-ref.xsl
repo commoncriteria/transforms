@@ -27,7 +27,25 @@
     </a>
   </xsl:template>
 
- 
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="make-readable-index">
+    <xsl:param name="index"/>
+    <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
+    <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
+    <xsl:value-of select="$index"/>
+    <sup><xsl:choose>
+      <xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
+      <xsl:when test="$lastchar='1'">st</xsl:when>
+      <xsl:when test="$lastchar='2'">nd</xsl:when>
+      <xsl:when test="$lastchar='3'">rd</xsl:when>
+      <xsl:otherwise>th</xsl:otherwise>
+    </xsl:choose></sup>
+  </xsl:template> 
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -36,20 +54,11 @@
 <!--  This won't compile:  <xsl:variable name="index">
       <xsl:number count="ancestor::cc:f-element//cc:assignable" level="any"/>
     </xsl:variable>, so I'm using the following inefficient hack -->
-      <xsl:variable name="index"><xsl:for-each select="ancestor::cc:f-element//cc:assignable">
+     <xsl:call-template name="make-readable-index">
+      <xsl:with-param name="index"><xsl:for-each select="ancestor::cc:f-element//cc:assignable">
         <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
-      </xsl:variable>
-      <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
-      <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
-      <xsl:value-of select="$index"/>
-      <sup><xsl:choose>
-	<xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
-	<xsl:when test="$lastchar='1'">st</xsl:when>
-	<xsl:when test="$lastchar='2'">nd</xsl:when>
-	<xsl:when test="$lastchar='3'">rd</xsl:when>
-        <xsl:otherwise>th</xsl:otherwise>
-      </xsl:choose></sup>
-     assignment</a>
+      </xsl:with-param></xsl:call-template>
+    assignment</a>
   </xsl:template>
 
   <!-- ############### -->

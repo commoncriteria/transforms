@@ -646,9 +646,17 @@
         <a href="#{$reqid}" class="abbr"><xsl:value-of select="$reqid"/></a>
       </div>
       <div class="reqdesc">
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="cc:title"/>
+        <xsl:apply-templates select="cc:note"/>
+        <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
+        <xsl:apply-templates select="cc:aactivity"/>
       </div>
     </div>
+  </xsl:template>
+
+  <xsl:template match="cc:rule" mode="use-case">
+    Rule #<xsl:number count="//cc:rule"/><br/>
+    <xsl:apply-templates mode="use-case"/>
   </xsl:template>
 
  <!-- ############### -->
