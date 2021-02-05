@@ -634,6 +634,7 @@
         </xsl:if>
         <xsl:apply-templates/>
       </div>
+   
   </xsl:template>
 
 
@@ -649,14 +650,36 @@
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
         <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
-        <xsl:apply-templates select="cc:aactivity"/>
+<!--        <xsl:apply-templates select="cc:aactivity"/> -->
       </div>
     </div>
   </xsl:template>
 
   <xsl:template match="cc:rule" mode="use-case">
-    Rule #<xsl:number count="//cc:rule"/><br/>
-    <xsl:apply-templates mode="use-case"/>
+    Rule #<xsl:number count="cc:rule" level="any"/><br/>
+    <xsl:choose>
+      <xsl:when test="cc:description">
+
+
+      <xsl:apply-templates select="cc:description"/>
+      <div class="activity_pane hide"> <div class="activity_pane_header">
+      <a onclick="toggle(this);return false;" href="#">
+        <span class="activity_pane_label"> Definition </span>
+        <span class="toggler"/>
+      </a>
+    </div>
+    <div class="activity_pane_body">
+      <i> <xsl:apply-templates select="cc:or" mode="use-case"/> </i>
+      <!-- Apply to the management functions -->
+    </div> </div>
+ 
+
+
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates mode="use-case"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
  <!-- ############### -->
@@ -807,7 +830,7 @@
     </xsl:template>
 
   <!-- ############### -->
-  <!--                 -->
+  <!--   Appendix Requirements               -->
   <!-- ############### -->
   <xsl:template name="app-reqs">
     <xsl:param name="type"/>

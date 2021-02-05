@@ -348,6 +348,7 @@ If it's only an acronym make sure the text content is empty.
   </define>
 
   <define name="gen-values">
+    <a:documentation> This field is extendable for </a:documentation>
     <empty/>
   </define>
 
@@ -457,9 +458,36 @@ If it's only an acronym make sure the text content is empty.
     </element>
   </define>	
 
+  <define name="any-attributes">
+      <zeroOrMore>
+        <attribute>
+          <anyName/>
+        </attribute>
+      </zeroOrMore>
+  </define>
 
-	
-  <define name="html-element">
+
+
+   <define name="html-only-content">
+    <a:documentation>
+      Only HTML (no embedded cc stuff)
+    </a:documentation>
+    <element ns="http://www.w3.org/1999/xhtml">
+      <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="https://niap-ccevs.org/cc/v1/section"/>
+      </except></anyName>
+      <ref name="any-attributes"/>
+      <a:documentation>
+        Defines all html-elements with an optional number of html attributes and descendants.
+      </a:documentation>
+     <ref name="html-only-content"/>
+    </element>
+  </define>
+
+
+
+   <define name="html-element">
     <a:documentation>
       Pattern defines the html-element, which is any element in the xhtml namespace.
       They have no knowledge of the CC element, and so cannot have any CC descendants.
@@ -471,15 +499,11 @@ If it's only an acronym make sure the text content is empty.
           <nsName ns="https://niap-ccevs.org/cc/v1/section"/>
         </except>
       </anyName>
+      <ref name="any-attributes"/>
       <a:documentation>
         Defines all html-elements with an optional number of html attributes and descendants.
       </a:documentation>
-      <zeroOrMore>
-        <attribute>
-          <anyName/>
-        </attribute>
-      </zeroOrMore>
-      <ref name="basic-content-pat"/>
+     <ref name="basic-content-pat"/>
     </element>
   </define>
 
@@ -989,6 +1013,7 @@ Modification definition. This text goes in the
       <zeroOrMore>
         <element name="rule">
           <ref name="id-attr"/>
+          <optional><ref name="description"/></optional>
           <ref name="or"/>
         </element>
       </zeroOrMore>
