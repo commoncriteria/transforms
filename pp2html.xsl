@@ -93,7 +93,7 @@
           <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
           <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
-      </xsl:for-each>
+      </xsl:for-each>ext-comp-def
     </table>
   </xsl:template>
 
@@ -1092,7 +1092,7 @@
 <!-- ####################### -->
 <!-- This should probably be moved to commons -->
 <!-- Lifted from module2html.xsl. only change was "subsection" to "section" -->
-	
+<?flerm	
  <xsl:template name="RecursiveGrouping-pp">
 	 
  <!-- This assumes that ext-comp-def tags are children of only section tags.  
@@ -1107,7 +1107,8 @@
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
-         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def|
+			       //sec:*[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
        </td>
@@ -1120,7 +1121,7 @@
   </xsl:call-template>
   </xsl:if>
  </xsl:template>
-
+?>
 	
 <!-- ################################################ -->
 <!-- Extended Component Definitions Appendix for PPs  -->
@@ -1142,9 +1143,19 @@
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
-    <tr>
-    <th>Functional Class</th><th>Functional Components</th> </tr>
-     <xsl:call-template name="RecursiveGrouping-pp"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
+    <tr><th>Functional Class</th><th>Functional Components</th> </tr>
+         <xsl:for-each select="//cc:ext-comp-def">
+		 <tr><xsl:choose>
+			<xsl:when test="../@title">
+				<td><xsl:value-of select="../@title"/></td>
+			 </xsl:when>
+			 <xsl:otherwise>
+				 <td><xsl:value-of select="translate(local-name(parent::*),'_',' ')"/></td> 
+			 </xsl:otherwise>
+		 </xsl:choose>
+		 <td><xsl:value-of select="translate(@fam-id,lower,upper)"/>
+			 <xsl:text> </xsl:text><xsl:value-of select="@title"/></td></tr>
+	</xsl:for-each>
   </table>
 	  
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
