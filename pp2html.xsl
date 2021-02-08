@@ -375,15 +375,13 @@
   <!--########################################-->
   <!--########################################-->
   <xsl:template match="cc:rule" mode="use-case">
-    Rule #<xsl:number count="cc:rule" level="any"/><br/>
+    Rule #<xsl:number count="cc:rule" level="any"/>:<br/>
     <xsl:choose>
       <xsl:when test="cc:description">
-
-
       <xsl:apply-templates select="cc:description"/>
       <div class="activity_pane hide"> <div class="activity_pane_header">
       <a onclick="toggle(this);return false;" href="#">
-        <span class="activity_pane_label"> Definition </span>
+        <span class="activity_pane_label">Rule Definition </span>
         <span class="toggler"/>
       </a>
     </div>
