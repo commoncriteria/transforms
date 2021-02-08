@@ -320,6 +320,7 @@
               margin-top:1em;
           }
           div.activity_pane_body{
+              font-style:italic;
               margin-left:0%;
               margin-top:1em;
               margin-bottom:1em;

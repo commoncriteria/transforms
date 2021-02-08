@@ -226,8 +226,10 @@
     </div>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
+  <!-- ######################################## 
+         This template handles f-components when
+         not appendisizing (i.e. NOT RELEASE)
+       ######################################## -->
   <xsl:template match="cc:f-component">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
@@ -279,12 +281,14 @@
         </div>
       </xsl:if>
       <xsl:apply-templates/>
+      <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
 
 
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
     <xsl:if test="(@status='mandatory') or (not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
@@ -295,6 +299,7 @@
 
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize-nofilter">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
@@ -324,13 +329,36 @@
           </div>
         </xsl:if>
         <xsl:apply-templates/>
+      <xsl:call-template name="f-comp-activities"/>
       </div>
-   
   </xsl:template>
 
 
   <!-- ############### -->
-  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="f-comp-activities">
+     <div class="activity_pane hide">
+       <div class="activity_pane_header">
+         <a onclick="toggle(this);return false;" href="#">
+       	  <span class="activity_pane_label"> Evaluation Activities </span>
+          <span class="toggler"/>
+	 </a>
+       </div>
+       <div class="activity_pane_body">
+         <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
+           <xsl:apply-templates select="." mode="getId"/>:<br/>
+           <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
+         </xsl:if>
+         <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
+         <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
+      <!-- Apply to the management functions -->
+    </div>
+    </div>
+  </xsl:template>
+
+
+  <!--########################################-->
+  <!--########################################-->
   <xsl:template match="cc:f-element" >
     <div class="element">
       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
@@ -341,11 +369,11 @@
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
         <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
-<!--        <xsl:apply-templates select="cc:aactivity"/> -->
       </div>
     </div>
   </xsl:template>
-
+  <!--########################################-->
+  <!--########################################-->
   <xsl:template match="cc:rule" mode="use-case">
     Rule #<xsl:number count="cc:rule" level="any"/><br/>
     <xsl:choose>
@@ -409,12 +437,18 @@
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:note/cc:aactivity">
     Evaluation Activity Note:<br/>
     <xsl:apply-templates/>
   </xsl:template> 
+
+
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function/cc:aactivity">
     <b><xsl:apply-templates select=".." mode="getId"/>
        <xsl:for-each select="cc:also">
@@ -427,22 +461,13 @@
  
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
-    <div class="activity_pane hide">
-    <div class="activity_pane_header">
-      <a onclick="toggle(this);return false;" href="#">
-        <span class="activity_pane_label"> Evaluation Activity </span>
-        <span class="toggler"/>
-      </a>
-    </div>
-    <div class="activity_pane_body">
-      <i>
-        <xsl:apply-templates/>
-        <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:aactivity"/>
-      </i>
+      <xsl:if test="@level='element'">
+  	<div class="e-activity-label"><xsl:apply-templates select=".." mode="getId"/></div>
+      </xsl:if>
+      <div class="activity"><xsl:apply-templates/></div>
       <!-- Apply to the management functions -->
-    </div>
-    </div>
   </xsl:template>
 
 

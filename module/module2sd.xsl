@@ -376,33 +376,64 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-        <x:apply-templates select="." mode="getId"/><x:text> </x:text>
+
+	<!-- Display component name -->
+	<h4>
+       	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
-      </h4>
-      <x:apply-templates select=".//cc:aactivity" mode="gen-aa"/>
-      <x:choose>
-         <x:when test=".//cc:aactivity/cc:no-tests">
-<!--           <x:apply-templates select=".//cc:aactivity"/>   This one gets eaten and nothing happens. -->
-<!-- In Module SDs, when there are no tests, we want to display the text in the no-tests tag -->
-		 <i><x:value-of select=".//cc:aactivity/cc:no-tests"/></i>	 	
-         </x:when>
-         <x:otherwise>
-           <x:if test=".//cc:TSS">
-             <div class="eacategory">TSS</div>
-             <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Guidance">
-             <div class="eacategory">Guidance</div>
-             <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Tests">
-             <div class="eacategory">Tests</div>
-             <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
-           </x:if>
-        </x:otherwise>
-      </x:choose>
-    </div>
+        </h4>
+	    
+	<!-- Loop through all the component-level EAs. There should be exactly one. -->
+	<!-- But it should be displayed first, and without a header. -->
+	<!-- Maybe we should test to make sure there is at least one?  Naah. -->
+	<x:for-each select=".//cc:aactivity[@level!='element']">
+	      	<x:apply-templates select="." mode="gen-aa"/>
+		<x:choose>
+			<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+	         	</x:when>
+ 			<x:otherwise>
+				<x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				<div class="eacategory">Guidance</div>
+            				<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>
+	</x:for-each>
+
+    	<x:for-each select=".//cc:aactivity[@level='element']">
+		<!-- Display the element name -->
+	        <h4>Element: <x:apply-templates select=".." mode="getId"/></h4>
+	      	<x:apply-templates select="." mode="gen-aa"/>
+      		<x:choose>
+         		<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+         		</x:when>
+	 	        <x:otherwise>
+		 	       <x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				 <div class="eacategory">Guidance</div>
+            			 	<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>		
+	</x:for-each>
+    	</div>
   </x:template>
 
 
