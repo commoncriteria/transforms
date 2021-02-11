@@ -977,6 +977,10 @@
       </xsl:for-each>
     </xsl:for-each>
   </xsl:template>	
+
+  <xsl:template match="cc:*" mode="reveal">
+     <xsl:apply-templates/>
+  </xsl:template>
 	
 <!-- Lifted from module2html.xsl. Only changed the name. -->
 <xsl:template name="drawbox-pp">
