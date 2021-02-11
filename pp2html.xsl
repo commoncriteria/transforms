@@ -182,10 +182,10 @@
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
-      <caption><xsl:call-template name="ctr-xsl">
+      <caption><b><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
-               </xsl:call-template>: Security Objectives Rationale</caption>
+	      </xsl:call-template>: Security Objectives Rationale</b></caption>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
