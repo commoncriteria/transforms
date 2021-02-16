@@ -223,6 +223,7 @@
          <h4> <xsl:apply-templates/> elements: </h4>
          <xsl:apply-templates select="$comp/cc:a-element[@type=$type]" mode="a-element"/>
       </xsl:for-each> 
+      <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
 
@@ -412,7 +413,8 @@
         </a>
       </div>
       <div class="reqdesc">
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="cc:title"/>
+        <xsl:apply-templates select="cc:note"/>
       </div>
     </div>
   </xsl:template>
