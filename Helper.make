@@ -160,7 +160,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info $(OUT)/index.html
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -298,9 +298,17 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED_XSL), $(SIMPLIFIED), $(FNL_PARAM))
 #	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
-# Validation
+#- The HTML listing file
+$(OUT)/index.html:
+	cd $(OUT) &&\
+	(echo "<html><head><title>${PWD##*/} files</title></head><body><ol>" &&\
+	   for aa in $(find . -name '*.html'); do\
+		echo "<li><a href='$aa'>$aa</a></li>";\
+	   done;\
+	 echo "</ol></body></html>") > index.html
 
 
+#- Validates the input XML file. It probably requires the JING package
 validate:
 	$(call VALIDATOR,$(RNG_FILE),$(PP_XML))
 
