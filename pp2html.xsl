@@ -182,10 +182,10 @@
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
-      <caption><b><xsl:call-template name="ctr-xsl">
+      <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
-	      </xsl:call-template>: Security Objectives Rationale</b></caption>
+	      </xsl:call-template>: Security Objectives Rationale</caption>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
@@ -582,13 +582,17 @@
               <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
             </xsl:if>
 
-          <div class="table-caption"><xsl:call-template name="ctr-xsl">
+     
+          <div class="table-caption"></div>
+			    
+           <xsl:call-template name="audit-table-xsl">
+             <xsl:with-param name="caption"><xsl:call-template name="ctr-xsl">
+                 
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
               </xsl:call-template>: 
-           Auditable Events for <xsl:value-of select="$nicename"/> Requirements </div>
-			    
-           <xsl:call-template name="audit-table-xsl">
+           Auditable Events for <xsl:value-of select="$nicename"/> Requirements 
+             </xsl:with-param>
              <xsl:with-param name="table" select="$type"/>
            </xsl:call-template>
         </xsl:if>
@@ -644,10 +648,10 @@
     <p>The following rationale provides justification for each security objective for the TOE, 
     showing that the SFRs are suitable to meet and achieve the security objectives:<br/>
       <table>
-        <caption><b><xsl:call-template name="ctr-xsl">
+        <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="t-obj_map"/>
-		</xsl:call-template>: SFR Rationale </b></caption>
+		</xsl:call-template>: SFR Rationale</caption>
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
@@ -876,10 +880,10 @@
 	All extended components specified in the PP are listed in this table:
 
   <table>
-   <caption><b><xsl:call-template name="ctr-xsl">
+   <caption><xsl:call-template name="ctr-xsl">
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
-	 </xsl:call-template>: Extended Component Definitions</b></caption>
+	 </xsl:call-template>: Extended Component Definitions</caption>
     <tr><th>Functional Class</th><th>Functional Components</th> </tr>
          <xsl:for-each select="//cc:ext-comp-def">
 		 <tr><xsl:choose>

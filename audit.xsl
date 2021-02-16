@@ -180,6 +180,7 @@
     <xsl:param name="table"/>
     <xsl:variable name="thistable" select="$table"/>
     <table class="" border="1">
+        <caption><xsl:value-of select="$caption"/></caption>
 	<tr><th>Requirement</th>
 	<th>Auditable Events</th>
 	<th>Additional Audit Record Contents</th></tr>
