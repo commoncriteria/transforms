@@ -154,13 +154,13 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff listing
 
 
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info $(OUT)/index.html
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info listing
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -299,7 +299,7 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 #	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
 #- The HTML listing file
-$(OUT)/index.html:
+listing:
 	cd $(OUT) &&\
 	(echo "<html><head><title>${PWD##*/} files</title></head><body><ol>" &&\
 	   for aa in $(find . -name '*.html'); do\
