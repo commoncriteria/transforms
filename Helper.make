@@ -160,7 +160,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info listing
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
