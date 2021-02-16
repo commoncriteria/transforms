@@ -301,9 +301,9 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 #- The HTML listing file
 listing:
 	cd $(OUT) &&\
-	(echo "<html><head><title>${PWD##*/} files</title></head><body><ol>" &&\
-	   for aa in $(find . -name '*.html'); do\
-		echo "<li><a href='$aa'>$aa</a></li>";\
+	(echo "<html><head><title>$(BASE)</title></head><body><ol>" &&\
+	   for aa in $$(find . -name '*.html'); do\
+		echo "<li><a href='$$aa'>$$aa</a></li>";\
 	   done;\
 	 echo "</ol></body></html>") > index.html
 
