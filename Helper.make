@@ -154,7 +154,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff
+.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff listing
 
 
 #---
@@ -279,6 +279,8 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 
+inter:
+	$(call DOXSL,$(PP_XML),$(PP2HTML_XSL),abc.xml,$(APP_PARM))
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
 $(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
@@ -296,9 +298,17 @@ $(SIMPLIFIED): $(PP2SIMPLIFIED_XSL) $(PP_XML)
 	$(call DOXSL, $(PP_XML), $(PP2SIMPLIFIED_XSL), $(SIMPLIFIED), $(FNL_PARAM))
 #	$(XSL_EXE) $(FNL_PARM) -o $(SIMPLIFIED) $(PP2SIMPLIFIED_XSL) $(PP_XML)
 
-# Validation
+#- The HTML listing file
+listing:
+	cd $(OUT) &&\
+	(echo "<html><head><title>$(BASE)</title></head><body><ol>" &&\
+	   for aa in $$(find . -name '*.html'); do\
+		echo "<li><a href='$$aa'>$$aa</a></li>";\
+	   done;\
+	 echo "</ol></body></html>") > index.html
 
 
+#- Validates the input XML file. It probably requires the JING package
 validate:
 	$(call VALIDATOR,$(RNG_FILE),$(PP_XML))
 

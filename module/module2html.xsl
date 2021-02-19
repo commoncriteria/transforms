@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
@@ -9,7 +10,7 @@
   <xsl:include href="module-commons.xsl"/>
   <xsl:output method="xml" encoding="UTF-8"/>
 
-  <!-- Directory where the base PPs currently reside (with the names 0.xml, 1.xml,...)-->
+  <!-- Directory where the base PPs currently reside (with apthe names 0.xml, 1.xml,...)-->
   <xsl:param name="basesdir"/>
 
   <!-- Value on whether this is the formal release build -->
@@ -20,11 +21,11 @@
   <!--                   Templates Section                -->
   <!-- ################################################## -->
   <xsl:template match="cc:Module">
-    <xsl:apply-templates select="//cc:chapter[@title='Introduction']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Conformance Claims']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Problem Description']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Objectives']"/>
-    <xsl:apply-templates select="//cc:chapter[@title='Security Requirements']"/>
+    <xsl:apply-templates select="//*[@title='Introduction']|sec:Introduction"/>
+    <xsl:apply-templates select="//*[@title='Conformance Claims']|sec:Conformance_Claims"/>
+    <xsl:apply-templates select="//*[@title='Security Problem Description']|sec:Security_Problem_Description"/>
+    <xsl:apply-templates select="//*[@title='Security Objectives']|sec:Security_Objectives"/>
+    <xsl:apply-templates select="//*[@title='Security Requirements']|sec:Security_Requirements"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
     <xsl:call-template name="opt-sfrs"/>
@@ -35,8 +36,8 @@
     <xsl:call-template name="acronyms"/>
   </xsl:template>
 
-
-<!-- ############### -->
+  
+ <!-- ############### -->
 <!--   Overwrites template from pp2html.xsl -->
 <!--            -->
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
@@ -50,14 +51,10 @@
     <xsl:call-template name="obj-req-map"/>
   </xsl:template> 
 
-  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="name()"/></div>
-    <xsl:apply-templates/>
-  </xsl:template>
+  <xsl:template match="/cc:Module//*[@title='Security Requirements']|/cc:Module//sec:Security_Requirements">
+    <xsl:variable name="title"><xsl:if test="not(@title)"><xsl:value-of select="local-name()"/></xsl:if><xsl:value-of select="@title"/></xsl:variable>
 
-
-  <xsl:template match="/cc:Module//cc:chapter[@title='Security Requirements']">
-    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="@title"/></h1>
+    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="$title"/></h1>
     <xsl:call-template name="secrectext"/>
    <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
@@ -189,7 +186,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any mandatory requirements.
+	      This PP-Module does not define any Mandatory requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -199,7 +196,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any optional requirements.
+	      This PP-Module does not define any Optional requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -209,7 +206,7 @@
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any selection-based requirements.
+	      This PP-Module does not define any Selection-based requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -219,7 +216,17 @@
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any objective requirements.
+	      This PP-Module does not define any Objective requirements.
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</tr>
+	<tr>
+	  <th colspan="2"> Implementation-Dependent SFRs</th>
+	  <xsl:call-template name="req-con-rat-sec">
+	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component"/>
+	    <xsl:with-param name="short" select="$base/@short"/>
+	    <xsl:with-param name="none-msg">
+	      This PP-Module does not define any Implementation-Dependent requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -413,6 +420,17 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	</p>
       </xsl:otherwise>
     </xsl:choose>
+    <h2 id="impl-dep-sfrs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
+    <xsl:choose>
+      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<p>
+	  This PP-Module does not define any Implementation-Dependent SFRs.
+	</p>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="sel-sfrs">
@@ -453,6 +471,23 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+<xsl:template name="impl-dep-sfrs">
+    <h1 id="impl-dep-sfrs" class="indexable" data-level="A">Implementation-Dependent SFRs</h1>
+    This section contains requirements that depend on the TOE implementing certain product features or use cases.
+	<br/><br/>
+    <xsl:choose>
+      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
+        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<p>
+	  This PP-Module does not define any Implementaion-Dependent SFRs.
+	</p>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
 <!-- ####################### -->
  <xsl:template name="RecursiveGrouping">
 
@@ -465,7 +500,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
-         <xsl:for-each select="//cc:subsection[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
+         <xsl:for-each select="//cc:section[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
          </xsl:for-each>
        </td>
@@ -483,23 +518,22 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 <!-- ####################### -->
   <xsl:template name="ext-comp-defs">
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
-This appendix contains the definitions for the extended requirements that are used in the PP-Module
-including those used in Appendices A through C.
+	This appendix contains the definitions for all extended requirements specified in the PP-Module.
 
+    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
 
-    <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Background and Scope</h2>
-This appendix provides a definition for all of the extended components introduced
-in this PP-Module.
-
-
-These components are identified in the following table:
+	All extended components specified in the PP are listed in this table:
 
 <table>
+	<caption><b><xsl:call-template name="ctr-xsl">
+          <xsl:with-param name="ctr-type">Table</xsl:with-param>
+          <xsl:with-param name="id" select="t-ext-comp_map"/>
+	 </xsl:call-template>: Extended Component Definitions</b></caption>
   <tr>
     <th>Functional Class</th><th>Functional Components</th> </tr>
-<xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:subsection[cc:ext-comp-def]"/></xsl:call-template>
+<xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//cc:section[cc:ext-comp-def]"/></xsl:call-template>
 <!--
-    <xsl:for-each select="//cc:subsection[cc:ext-comp-def]">
+    <xsl:for-each select="//cc:section[cc:ext-comp-def]">
       <tr> <td><xsl:value-of select="@title"/></td><td>
          <xsl:for-each select="cc:ext-comp-def"><xsl:sort select="@fam-id" order="ascending"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>
@@ -608,12 +642,17 @@ These components are identified in the following table:
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:base-name">
+  <xsl:template match="cc:consistency-rationale//cc:_">
     <xsl:param name="base"/>
+    <xsl:if test="$base=''">
+      <xsl:message>Unable to figure out the base name for the '_' wildcard at:
+      <xsl:call-template name="genPath"/>
+      This usually happens when an '_' element is buried in html. It must be right under
+      consistency-rationale (sorry).
+     </xsl:message>
+    </xsl:if>
     <xsl:value-of select="$base"/>
   </xsl:template>
-
-
 
 
   <!--
@@ -643,8 +682,6 @@ These components are identified in the following table:
   <xsl:template match="cc:ext-comp-def|cc:ext-comp-def-title"/>
   <xsl:template match="cc:consistency-rationale|cc:comp-lev|cc:management|cc:audit|cc:heirarchical-to|cc:dependencies"/>
   <xsl:template match="cc:ext-comp-extra-pat"/>
-  <xsl:template match="cc:consistency-rationale"/>
-  <xsl:template name="opt_text"/>
 
   <xsl:template match="cc:*" mode="reveal">
      <xsl:apply-templates/>

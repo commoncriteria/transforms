@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar 
+    xmlns:sec="https://niap-ccevs.org/cc/v1/section" 
     xmlns:h="http://www.w3.org/1999/xhtml" 
     xmlns="http://relaxng.org/ns/structure/1.0"
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+    <a:documentation>
+      This file defines things common to Functional Packages, 
+      Protection Profiles, and Modules.
+    </a:documentation>
 <!--
   <define name="audit-event">
     <a:documentation></a:documentation>
@@ -17,6 +23,69 @@
     </element>
   </define>
 -->
+   <define name="Introduction">
+      <element name="sec:Introduction">
+        <ref name="boilerplate-no-attr"/>
+        <ref name="section"/>
+        <ref name="tech-terms"/>
+        <zeroOrMore> <ref name="section"/> </zeroOrMore>
+        <optional> <ref name="usecases-section"/></optional>
+        <zeroOrMore> <ref name="section"/> </zeroOrMore>
+      </element>
+  </define>
+
+ <define name="usecases-section">
+   <choice>
+     <element name="section">
+       <attribute name="title"><value>Use Cases</value></attribute>
+       <attribute name="id"/>
+        <ref name="usecases-section-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Use Cases</value></attribute>
+        <ref name="usecases-section-content"/>
+      </element>
+     <element name="sec:Use_Cases">
+      <a:documentation>
+        Section specific for use cases.
+      </a:documentation>
+        <ref name="usecases-section-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="usecases-section-content">
+    <ref name="basic-content-pat"/>
+    <element name="usecases">
+      <a:documentation>
+        Wrapper element for uses cases.
+      </a:documentation>
+      <oneOrMore>
+        <element name="usecase">
+          <a:documentation>
+            A referrable section on how the protection profiled item is used.
+          </a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="description"/>
+          <optional><ref name="config"/></optional>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+ 
+ <define name="project-notes">
+    <optional><element name="project-notes">
+      <text/>
+    </element></optional>
+  </define>
+
   <define name="title-attr">
     <a:documentation>
       Pattern for title attribute.
@@ -35,73 +104,161 @@
   </define>
 
   <define name="SecProbDesChapter">
-    <element name="chapter">
-      <a:documentation>
-      </a:documentation>
-      <attribute name="title"><value>Security Problem Description</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
+    <choice>
       <element name="section">
-	<a:documentation>
-	  Section describing threats.
-	</a:documentation>
-	<attribute name="title"><value>Threats</value></attribute>
-	<ref name="id-attr"/>
-	<ref name="basic-content-pat"/>
+        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="prob-des-content"/>
+      </element>
+      <element name="sec:Security_Problem_Description">
+        <ref name="prob-des-content"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <ref name="prob-des-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="prob-des-content">
+    <ref name="basic-content-pat"/>
+    <choice>
+      <element name="section">
+        <a:documentation>
+          Section describing threats.
+        </a:documentation>
+        <attribute name="title"><value>Threats</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="basic-content-pat"/>
         <ref name="threats"/>
       </element>
-
+      <element name="sec:Threats">
+        <ref name="basic-content-pat"/>
+        <ref name="threats"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <attribute name="title"><value>Threats</value></attribute>
+        <ref name="basic-content-pat"/>
+        <ref name="threats"/>
+      </element>
+    </choice>
+    <choice> 
       <element name="section">
 	<a:documentation>
 	  Section describing Assumptions.
 	</a:documentation>
 	<attribute name="title"><value>Assumptions</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<ref name="basic-content-pat"/>
 	<ref name="assumptions"/>
       </element>
-       <optional> <ref name="osp-section"/> </optional>
-    </element>
+      <element name="sec:Assumptions">
+        <ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+ 	<attribute name="title"><value>Assumptions</value></attribute>
+	<ref name="basic-content-pat"/>
+	<ref name="assumptions"/>
+      </element>
+    </choice>
+    <optional> <ref name="osp-section"/> </optional>
   </define>
 
   <define name="SecObjChapter">
-    <element name="chapter">
-      <a:documentation>
-	Chapter describing the Security Objectives for this module.
-      </a:documentation>
-      <attribute name="title"><value>Security Objectives</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
+    <choice>
       <element name="section">
-	<a:documentation>
+        <a:documentation>
+  	Chapter describing the Security Objectives for this module.
+        </a:documentation>
+        <attribute name="title"><value>Security Objectives</value></attribute>
+        <ref name="optional-id"/>
+        <ref name="sec-obj-content"/>
+      </element>
+      <element name="sec:Security_Objectives">     
+        <ref name="sec-obj-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="sec-obj-content">
+    <ref name="basic-content-pat"/>
+    <choice>
+      <element name="section">
+        <a:documentation>
 	  Section describing the Security Objectives for the TOE.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<!-- Don't know if we need this -->
 	<ref name="basic-content-pat"/>
 	<ref name="SOs"/>
       </element>
+      <element name="sec:Security_Objectives_for_the_TOE">
+         <ref name="basic-content-pat"/>
+	<ref name="SOs"/>
+      </element>
+    </choice>
+    <choice>
       <element name="section">
 	<a:documentation>
 	  Section describing the Security Objectives for the TOE's Operational Environment.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives for the Operational Environment</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
 	<ref name="basic-content-pat"/>
-	<zeroOrMore>
-	  <ref name="SOEs"/>
-	</zeroOrMore>
+	<zeroOrMore> <ref name="SOEs"/> </zeroOrMore>
       </element>
+      <element name="sec:Security_Objectives_for_the_Operational_Environment">
+	<ref name="basic-content-pat"/>
+	<zeroOrMore> <ref name="SOEs"/> </zeroOrMore>
+      </element>
+    </choice>
+    <choice> 
       <element name="section">
 	<a:documentation>
 	  Section describing the rationale for why this module's security objectives do not
 	  conflict with the base PPs.
 	</a:documentation>
 	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="id-attr"/>
+	<ref name="optional-id"/>
       </element>
-    </element>
+      <element name="sec:Security_Objectives_Rationale"><empty/></element>
+    </choice>
+  </define>
+
+  <define name="appendices-pat">
+    <a:documentation>
+      Pattern for title attribute.
+    </a:documentation>
+    <oneOrMore>
+      <element name="appendix">
+        <a:documentation>
+          Element that defines an appendix.
+        </a:documentation>
+        <ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <ref name="boilerplate-no-attr"/>
+        <oneOrMore><choice>
+            <ref name="basic-content-pat"/>
+            <ref name="section"/>
+            <ref name="acronyms"/>
+            <ref name="bibliography"/>
+        </choice></oneOrMore>
+      </element>
+    </oneOrMore>
   </define>
 
 
@@ -167,62 +324,45 @@ If it's only an acronym make sure the text content is empty.
         </zeroOrMore>
       </element>
   </define>
-
-  <define name="citeCC">
-    <element name="citeCC">
-      <a:documentation>Cites the CC documents.</a:documentation>
-      <empty/>
-    </element>
-  </define>
-
-  <define name="cite">
-    <element name="cite">
-      <a:documentation>Cites something in the bibliography.</a:documentation>
-      <ref name="linkend-attr"/>
-    </element>
-  </define>
-
-  <define name="linkref">
-    <element name="linkref">
-      <a:documentation>Cross references components </a:documentation>
-      <ref name="linkend-attr"/>
-    </element>
-  </define>
-
-  <define name="secref">
-    <element name="secref">
-      <a:documentation>References a section (Adds word 'section').</a:documentation>
-      <ref name="linkend-attr"/>
-    </element>
-  </define>
-
   <define name="xref">
     <element name="xref">
-      <a:documentation>
+     <a:documentation>
         Cross references something 
-        <h:ul>
-          <h:li>with a title attribute,</h:li> 
-          <h:li>with a name attribute, </h:li>
-          <h:li>with a term element, or </h:li>
-          <h:li>a term element, where its contents(i.e. name) matches the linkend-attr.</h:li>
-          <h:li>OR other. See xref-content-pattern for more information</h:li>
-        </h:ul>
-      </a:documentation>
-      <ref name="xref-content"/>
+     </a:documentation>
+       <choice>
+         <ref name="to-attr"/>
+         <attribute name="g">
+           <choice>
+             <value>glossary</value>
+             <value>CC</value>
+             <value>t-audit-mandatory</value>
+             <value>atref-optional-dep</value>
+             <value>atref-objective-dep</value>
+             <value>atref-sel-based-dep</value>
+             <value>atref-impl-dep-dep</value>
+             <ref name="gen-values"/>
+            </choice>
+         </attribute>
+       </choice>
     </element>
+  </define>
+
+  <define name="gen-values">
+    <a:documentation> This field is extendable for </a:documentation>
+    <empty/>
   </define>
 
   <define name="xref-content">
-    <ref name="linkend-attr"/>
+    <ref name="to-attr"/>
   </define>
-
+<!--
   <define name="appref">
     <element name="appref">
       <a:documentation>Cross references an item in the appendex</a:documentation>
-      <ref name="linkend-attr"/>
+      <ref name="to-attr"/>
     </element>
-  </define>
-
+ </define>
+-->
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
@@ -317,8 +457,37 @@ If it's only an acronym make sure the text content is empty.
       <ref name="basic-content-pat"/>
     </element>
   </define>	
-	
-  <define name="html-element">
+
+  <define name="any-attributes">
+      <zeroOrMore>
+        <attribute>
+          <anyName/>
+        </attribute>
+      </zeroOrMore>
+  </define>
+
+
+
+   <define name="html-only-content">
+    <a:documentation>
+      Only HTML (no embedded cc stuff)
+    </a:documentation>
+    <element ns="http://www.w3.org/1999/xhtml">
+      <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="https://niap-ccevs.org/cc/v1/section"/>
+      </except></anyName>
+      <ref name="any-attributes"/>
+      <a:documentation>
+        Defines all html-elements with an optional number of html attributes and descendants.
+      </a:documentation>
+     <ref name="html-only-content"/>
+    </element>
+  </define>
+
+
+
+   <define name="html-element">
     <a:documentation>
       Pattern defines the html-element, which is any element in the xhtml namespace.
       They have no knowledge of the CC element, and so cannot have any CC descendants.
@@ -327,52 +496,22 @@ If it's only an acronym make sure the text content is empty.
       <anyName>
         <except>
           <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="https://niap-ccevs.org/cc/v1/section"/>
         </except>
       </anyName>
+      <ref name="any-attributes"/>
       <a:documentation>
         Defines all html-elements with an optional number of html attributes and descendants.
       </a:documentation>
-      <zeroOrMore>
-        <attribute>
-          <anyName/>
-        </attribute>
-      </zeroOrMore>
-      <ref name="basic-content-pat"/>
+     <ref name="basic-content-pat"/>
     </element>
   </define>
 
-  <define name="linkend-attr">
-    <attribute name="linkend">
+  <define name="to-attr">
+    <attribute name="to">
       <a:documentation>References an ID of the referenced item.</a:documentation>
       <!--      <data type="NCName"/> -->
     </attribute>
-  </define>
-
-  <define name="abbr-el">
-    <element name="abbr">
-      <optional>
-        <attribute name="linkend">
-          <a:documentation>
-            Identifies the abbreviation definition (should match the text value of the entry).
-          </a:documentation>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="title">
-          <a:documentation>
-            Full readable definition of the abbreviation.
-          </a:documentation>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="class">
-          <a:documentation>
-            Display class associated with this abbreviation.
-          </a:documentation>
-        </attribute>
-      </optional>
-      <text/>
-    </element>
   </define>
 
   <define name="assignable">
@@ -380,22 +519,8 @@ If it's only an acronym make sure the text content is empty.
       <a:documentation>
         Assignment section
       </a:documentation>
+      <optional><ref name="id-attr"/></optional>
       <ref name="basic-content-pat"/>
-    </element>
-  </define>
-
-
-  <define name="ctr-ref">
-    <element name="ctr-ref">
-      <a:documentation>
-        References a counted object.
-      </a:documentation>
-      <attribute name="ref-id">
-        <a:documentation>
-          The unique ID of the object being referenced.
-        </a:documentation>
-      </attribute>
-      <text/>
     </element>
   </define>
 
@@ -449,7 +574,7 @@ If it's only an acronym make sure the text content is empty.
       </optional>
     </element>
   </define>
-
+<!--
   <define name="figref">
     <element name="figref">
       <a:documentation>
@@ -462,7 +587,7 @@ If it's only an acronym make sure the text content is empty.
       </attribute>
     </element>
   </define>
-
+-->
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
@@ -629,26 +754,26 @@ Grouping for Security Objective for the Operation Environment entries.
         <text/>
         <ref name="depends-pat"/>
         <ref name="html-element"/>
-        <ref name="linkref"/>
-        <ref name="citeCC"/>
-        <ref name="cite"/>
-        <ref name="secref"/>
         <ref name="testlist"/>
         <ref name="selectables"/>
         <ref name="assignable"/>
-        <ref name="appref"/> 
-        <ref name="abbr-el"/>
-<!--        <ref name="audit-table-pat"/> -->
-<!--        <ref name="audit-events"/>  -->
         <ref name="xref"/>
+        <element name="_">
+          <a:documentation>A cross-reference to the closest ancestor with an ID. 
+            It only makes sense inside management-functions.</a:documentation>
+          <empty/>
+        </element>
+        <element name="snip">
+          <a:documentation>Designates that when refering to the parent element use only the
+             content wthin this snippet. Currently only makes sense inside a selectable.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+        </element>
         <ref name="refinement-type"/>
-        <ref name="ctr-ref"/>
         <ref name="ctr"/>
         <ref name="figure"/>
-        <ref name="figref"/>
         <ref name="equation"/>
         <element name="choice"><ref name="basic-content-pat"/></element>
-        <!-- <ref name="wsn"/> -->
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -660,11 +785,13 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="equation">
     <element name="equation">
-      <a:documentation>Element for mathematical equation.</a:documentation>
-      <element name="value">
-        <a:documentation>MathML text representing the equation. Do not wrap with dollar signs. These will be added.</a:documentation>
-        <text/></element>
-      <element name="label"><ref name="basic-content-pat"/></element>
+      <a:documentation>
+        Element for mathematical equation.
+        Its content is MathML text representing the equation.
+        Do not wrap with dollar signs. These will be added.
+      </a:documentation>
+      <ref name="id-attr"/>
+      <text/>
     </element>
   </define>
 
@@ -677,17 +804,6 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="wsn">
-    <a:documentation>
-      Worksheet notes. Human readable Content that should be included in the worksheet.
-      These only make sense in the note elements in the f-elements.
-    </a:documentation>
-
-    <element name="wsn">
-      <ref name="basic-content-pat"/> 
-    </element>
-  </define>
-
   <!-- ###################################################
        This is here so that other schemas that import this 
        can redefine this to add their own items to basic
@@ -697,18 +813,190 @@ Grouping for Security Objective for the Operation Environment entries.
     <empty/>
   </define>
 
+
+  <define name="ext-comp-def-pat">
+    <zeroOrMore>
+	    <element name="ext-comp-def">
+        <a:documentation>
+          Extended Component Definition
+        </a:documentation>
+        <attribute name="fam-id">
+          <ref name="fam-id-spat"/>
+        </attribute>
+        <attribute name="title">
+        </attribute>
+        <choice>
+          <element name="mod-def">
+            <a:documentation>
+Modification definition. This text goes in the
+'Extended Components Definitions'.
+            </a:documentation>
+            <ref name="basic-content-pat"/>
+          </element>
+          <element name="fam-behavior">
+            <ref name="basic-content-pat"/>
+          </element>
+        </choice>
+      </element>
+    </zeroOrMore>
+  </define>
+
+  <define name="ext-comp-extra-pat">
+    <optional>
+      <element name="comp-lev">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="management">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="audit">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="dependencies">
+        <ref name="basic-content-pat"/>
+      </element>
+    </optional>
+  </define>
+
+  <!-- Get rid of the status attribute. It seems like it is duplicative. -->
+  <define name="f-component-pattern">
+    <element name="f-component">
+      <a:document>
+        Specifies a component under Security Functional Requirements section..
+      </a:document>
+      <ref name="f-comp-content-pat"/>
+      <choice>
+	      
+        <!-- Choice of status -->
+        <!-- If the status is objective, it must have a targetdate(?) -->
+        <group>
+          <optional>
+            <attribute name="targetdate">
+              <a:documentation>
+                Target date that the requirements under this component become
+                manandory. It only makes sense for _objective_ components.
+              </a:documentation>
+              <data type="date"/>
+            </attribute>
+          </optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>objective</value>
+          </attribute>
+        </group>
+
+	      
+        <!-- If the status is selection-based, it must have dependencies -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <value>sel-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="selection-depends"/>
+          </oneOrMore>
+        </group>
+
+	<!-- Feature-based -->
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Feature-based requirements must have dependencies.
+            </a:documentation>
+            <value>feat-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="depends-pat"/>
+          </oneOrMore>
+        </group>
+	      
+        <!-- The status could also be optional or nothing (which is indicated here) -->
+        <optional>
+          <attribute name="status">
+            <a:documentation>
+              Denotes the status of a requirement.
+            </a:documentation>
+            <choice>
+              <value>optional</value>
+            </choice>
+          </attribute>
+        </optional>
+      </choice>
+<!--      <ref name="depends-pat"/>   -->
+      <optional><ref name="note"/></optional>
+      <optional><ref name="consistency-rationale"/></optional>
+      <optional><ref name="ext-comp-extra-pat"/></optional>
+      <ref name="f-elements-pat"/>
+      <ref name="audit-events-pat"/>
+    </element>
+  </define> 
+
+  <define name="f-component-decl-pattern">
+    <element name="f-component-decl">
+      <a:document>
+        Specifies a component declaration. This is intended for use when a PP defines audit events for
+        an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
+        There is status.
+      </a:document>
+      <ref name="f-comp-content-pat"/>
+      <attribute name="pkg-id">
+         <a:documentation>Identifier for package this SFR comes from (e.g. "pkg_tls").</a:documentation>
+         <data type="string">
+           <param name="pattern">[\-a-zA-Z0-9_]+</param>
+         </data>
+      </attribute>
+      <choice>
+        <group>
+          <attribute name="status">
+            <a:documentation>
+              Sel-based requirements.
+            </a:documentation>
+            <value>sel-based</value>
+          </attribute>
+          <oneOrMore>
+            <ref name="selection-depends"/>
+          </oneOrMore>
+        </group>
+        <optional>
+          <attribute name="status">
+            <a:documentation>
+              And the rest of the possible statuses.
+            </a:documentation>
+            <choice>
+                <value>optional</value>
+                <value>objective</value>
+                <value>mandatory</value>
+            </choice>
+          </attribute>
+         </optional>
+       </choice>
+      <ref name="audit-events-pat"/>
+    </element>
+</define> 
+	
+	
   <define name="f-elements-pat">
     <zeroOrMore>
       <ref name="f-element"/>
     </zeroOrMore>
   </define>
 
-
   <define name="f-element">
     <element name="f-element">
       <a:documentation>
         Defines a functional requirement.
       </a:documentation>
+      <optional>
         <attribute name="id">
           <a:documentation>
             A non-viewed unique ID. It has nothing to do with the ID that's assigned. It can be 
@@ -716,13 +1004,22 @@ Grouping for Security Objective for the Operation Environment entries.
           </a:documentation>
           <ref name="el-id-spat"/>
         </attribute>
+      </optional>
       <ref name="f-element-title"/>
+	  <optional><element name="ext-comp-def-title"><ref name="f-element-title"/></element></optional>
       <optional><ref name="note"/></optional>
-      <optional><ref name="aactivity"/></optional>
+      <zeroOrMore><ref name="aactivity"/></zeroOrMore>
+      <zeroOrMore>
+        <element name="rule">
+          <ref name="id-attr"/>
+          <optional><ref name="description"/></optional>
+          <ref name="or"/>
+        </element>
+      </zeroOrMore>
     </element>
   </define>
- 
-  <define name="test-obj-evi-pat">
+
+<define name="test-obj-evi-pat">
     <optional> <element name="test-obj">
        <a:documentation>Describes the goal of the test </a:documentation>
        <ref name="basic-content-pat"/>
@@ -792,19 +1089,44 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="subsection-pattern">
-    <element name="subsection">
+  <define name="section">
+    <choice>
+      <ref name="classic-section"/>
+      <ref name="flex-section"/>
+    </choice>
+  </define>
+
+  <define name="classic-section">
+    <element name="section">
       <a:documentation>
 	Lower level of grouping
       </a:documentation>
-      <ref name="id-attr"/>
       <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-	  <ref name="subsection-pattern"/>
-	  <ref name="basic-content-pat"/>
-        </choice>
-      </oneOrMore>
+      <optional><ref name="id-attr"/></optional>
+      <ref name="section-content-pat"/>
+    </element>
+  </define>
+
+  <define name="section-content-pat">
+     <oneOrMore><choice>
+       <ref name="section"/>
+       <ref name="basic-content-pat"/>
+     </choice></oneOrMore>
+  </define>
+
+  <define name="flex-section">
+    <a:documentation>
+      A new flexiable section
+    </a:documentation>
+    <element ns="https://niap-ccevs.org/cc/v1/section">
+      <anyName>
+        <except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except>
+      </anyName>
+      <optional><ref name="title-attr"/></optional>
+       <ref name="section-content-pat"/>
     </element>
   </define>
   
@@ -814,6 +1136,10 @@ Grouping for Security Objective for the Operation Environment entries.
 Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
 The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
+	<optional><attribute name="level"><choice>
+			<value>component</value>
+			<value>element</value>
+		</choice></attribute></optional>	
       <ref name="basic-content-pat"/>
       <choice>
         <ref name="no-tests-pat"/>
@@ -1035,6 +1361,58 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </data>
   </define>
 
+  <define name="sfr-section">
+    <choice>
+      <element name="section">
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+	<attribute name="id"/>
+        <ref name="sfr_content-pat"/>
+      </element>
+      <element name="sec:Security_Functional_Requirements">
+        <ref name="sfr_content-pat"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <ref name="sfr_content-pat"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="sfr_content-pat">	
+    <oneOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <optional><attribute name="id"/></optional>
+        <ref name="sfr-sections-content-pat"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+        <optional><attribute name="title"/></optional>
+        <ref name="sfr-sections-content-pat"/>
+      </element>
+     </choice> </oneOrMore>
+   </define>
+
+   <define name="sfr-sections-content-pat">
+      <ref name="basic-content-pat"/>
+      <oneOrMore><choice>
+	        <ref name="audit-table-pat"/>
+                <ref name="f-component-pattern"/>
+                <ref name="f-component-decl-pattern"/>
+   	        <ref name="ext-comp-def-pat"/>
+	      </choice>
+      </oneOrMore>
+  </define>
+ 
   <define name="f-comp-content-pat">
     <attribute name="cc-id">
       <a:documentation>
@@ -1081,12 +1459,33 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="CClaimsChapter">
-    <element name="chapter">
+    <choice>
+      <element name="section">
+         <attribute name="title"><value>Conformance Claims</value></attribute>
+         <ref name="id-attr"/>
+         <ref name="cclaims-content-pat"/>
+      </element>
+      <element name="sec:Conformance_Claims">
+         <ref name="cclaims-content-pat"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName><except>
+          <nsName ns="https://niap-ccevs.org/cc/v1"/>
+          <nsName ns="http://www.w3.org/1999/xhtml"/>
+        </except></anyName>
+ 	<attribute name="title"><value>Conformance Claims</value></attribute>
+        <ref name="cclaims-content-pat"/>
+      </element>
+  </choice>
+  </define>
+
+
+
+
+  <define name="cclaims-content-pat">
       <a:documentation>
       </a:documentation>
-      <attribute name="title"><value>Conformance Claims</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="boilerplate-no-attr"/>
+     <ref name="boilerplate-no-attr"/>
       <optional>
         <element name="cclaims">
           <a:documentation>
@@ -1101,7 +1500,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           </oneOrMore>
         </element>
       </optional>
-    </element>
   </define>
 
 
@@ -1114,7 +1512,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <attribute name="default">
         <a:documentation>Is the default value(index).</a:documentation>
         <choice>
-          <value>M</value>
+         <!-- <value>M</value>--><!-- It cant be M for now as we're checking it to see if the funciton is optional -->
           <value>O</value>
           <value>_</value>
         </choice>
@@ -1134,41 +1532,61 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         </element>
       </oneOrMore>
       <oneOrMore>
-        <element name="management-function">
-          <element name="text">
-            <a:documentation>Describes the management function.</a:documentation>
-            <ref name="basic-content-pat"/>
-          </element>
-          <zeroOrMore>
-            <choice>
-              <element name="M">
-                <a:documentation>References for which managers this function is mandatory</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
-              </element>
-              <element name="O">
-                <a:documentation>References for which managers this function is optional</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
-              </element>
-              <element name="NA">
-                <a:documentation>References for which managers this function is not applicable</a:documentation>
-                <attribute name="ref">
-                  <a:documentation>ID respective manager</a:documentation>
-                </attribute>
-                <empty/>
-              </element>
-            </choice>
-          </zeroOrMore>
-        </element>
+        <choice> 
+          <element name="note"><element name="aactivity"><ref name="basic-content-pat"/></element></element>
+          <ref name="management-function"/>   
+        </choice>
       </oneOrMore>
     </element>
   </define>
 
+  <define name="management-function">
+        <element name="management-function">
+          <optional>
+            <ref name="id-attr"/>
+          </optional>
+          <element name="text">
+            <a:documentation>Describes the management function.</a:documentation>
+            <ref name="basic-content-pat"/>
+          </element>
+          <zeroOrMore> <choice>
+              <element name="M">
+                <a:documentation>Indicates that this function is mandatory for this role.</a:documentation>
+                <ref name="ref-attr"/>
+              </element>
+              <element name="O">
+                <a:documentation>Indicates that this function is optional for this role</a:documentation>
+                <ref name="ref-attr"/>
+              </element>
+              <element name="NA">
+               <a:documentation>Indicates that this function is not applicable for this role</a:documentation>
+                <ref name="ref-attr"/>
+              </element>
+          </choice> </zeroOrMore>
+          <optional><element name="app-note">
+            <a:documentation>Application Note content that is associated with this management function</a:documentation> 
+            <ref name="basic-content-pat"/>
+          </element></optional>
+<!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
+          <optional><element name="aactivity">
+            <zeroOrMore>
+              <a:documentation>Points to other management-function that this action affects.</a:documentation>
+              <element name="also"> <attribute name="ref-id"/> </element>
+            </zeroOrMore>
+            <ref name="basic-content-pat"/>
+          </element></optional>
+       </element>
+   </define>
+
+   <define name="ref-attr">
+    <attribute name="ref">
+      <a:documentation>ID respective manager</a:documentation>
+    </attribute>
+  </define> 
+
+  <define name="optional-id">
+    <optional><ref name="id-attr"/></optional>
+  </define>
 
   <define name="id-attr">
     <a:documentation>
@@ -1242,17 +1660,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="include-pkg-pat">
 	  <element name="include-pkg">
 	  	<a:documentation>
+                 <![CDATA[
 		Declarations of packages that are or may be included in the PP. There are three kinds:
 		  Mandatory: This is a package that is always included with the PP.
-		  	&lt;include-pkg name="pkg-name"/>
+		  	<include-pkg name="pkg-name"/>
 		  Selection-Based: This is a package that is included dependent on one or more selections. 
-		  &lt;include-pkg name="pkg-name" type="sel-based">
-			  &lt;selection-depends req="dep-req" ids="selection-ids"/>
-		  &lt;/include-pkg>
+		  <include-pkg name="pkg-name" type="sel-based">
+			  <selection-depends req="dep-req" ids="selection-ids"/>
+		  </include-pkg>
 		  Feature-Based: Package is included if a feature is present in the TOE.
-		  &lt;include-pkg name="pkg-name" type="impl-dep">
+		  <include-pkg name="pkg-name" type="impl-dep">
+                      <depends on=""/>    
 			  This is the text displayed for the ST author to indicate that the feature exists.
-		  &lt;/include-pkg>
+		  </include-pkg>
+                  ]]>
 	  	</a:documentation>
              <ref name="external-document-pat"/>
              <ref name="depends-pat"/>
@@ -1340,18 +1761,18 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
         <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="description"/>
-        <oneOrMore><ref name="config"/></oneOrMore>
+        <optional><ref name="config"/></optional>
       </element>
     </zeroOrMore>
   </define>
   
   <define name="config">
     <element name="config">
-      <ref name="doc-config-pat"/>
-      <ref name="ext-doc-config"/>   
+       <ref name="and-pat"/>   
     </element>
   </define>             
 
+<!--
   <define name="ext-doc-config">
     <optional>
        <element name="doc">
@@ -1362,18 +1783,61 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
   </define> 
 
   <define name="doc-config-pat">
-       <optional> <ref name="ref-ids-pat"/> </optional>
-       <optional> <element name="not">
-         <ref name="ref-ids-pat"/>
-       </element> </optional> 
+       <a:documentation>
+          Specifies the details of a configuration. It's meant to be displayed in row-form.
+       </a:documentation>
+       <zeroOrMore>
+        <choice>
+          <ref name="config-groups"/>
+       </choice>
+       </zeroOrMore> 
   </define>   
+-->
+  <define name="or">
+    <element name="or">
+      <zeroOrMore><choice>
+        <ref name="and"/>
+        <ref name="ref-ids-pat"/>
+        <ref name="guidance"/>
+        <ref name="not"/>
+      </choice></zeroOrMore>
+    </element>
+  </define>
+
+  <define name="and">
+    <element name="and">
+      <ref name="and-pat"/>
+    </element>
+  </define>
+  
+  <define name="and-pat">
+    <zeroOrMore><choice>
+      <ref name="or"/>
+      <ref name="ref-ids-pat"/>
+      <ref name="not"/>
+      <ref name="guidance"/>
+    </choice></zeroOrMore>
+  </define>
+
+  <define name="not">
+    <element name="not">
+      <ref name="ref-ids-pat"/>
+    </element>
+  </define>
+
+  <define name="guidance">
+    <element name="guidance">
+      <ref name="ref-id"/>
+      <ref name="basic-content-pat"/>
+    </element>
+   </define>
 
   <define name="Chapters">
     <zeroOrMore><ref name="Chapter"/></zeroOrMore>
   </define>
 
   <define name="Chapter">
-    <element name="chapter">
+    <element name="section">
       <a:documentation>Major grouping for the document.</a:documentation>
       <ref name="id-attr"/>
       <ref name="title-attr"/>
@@ -1411,5 +1875,26 @@ Ideally it should be NIAP or CC, but for right now it's probably on github.
         </element>
       </oneOrMore>
   </define>
+	
+  <define name="consistency-rationale">
+    <element name="consistency-rationale">
+      <a:documentation>
+	Common rationale that will go into the consisteny-rationale in each base-pp
+	section (unless the base redefines it).
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+<!--
+Base name does't make sense for PPs and not modules. Also it needs to really be embedded in 
+the basic-content.
+      <oneOrMore>
+	<choice>
+	  <ref name="basic-content-pat"/>
+	  <ref name="base-name"/>
+	</choice>
+      </oneOrMore>
+-->
+    </element>
+  </define>
+
   
 </grammar>

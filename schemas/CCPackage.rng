@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar ns="https://niap-ccevs.org/cc/v1"
+         xmlns:sec="https://niap-ccevs.org/cc/v1/section"
          xmlns="http://relaxng.org/ns/structure/1.0"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          xmlns:htm="http://www.w3.org/1999/xhtml"
@@ -14,6 +15,7 @@
     <element name="package">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes"/>
+      <ref name="project-notes"/>
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
@@ -21,7 +23,7 @@
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
-      <ref name="SecurityRequirementsChapter"/>
+      <ref name="sfr-section"/>
       <ref name="Chapters"/>
       <ref name="appendix-pat"/>
    </element>
@@ -66,9 +68,7 @@
   </define>
   
   <define name="IntroductionChapter">
-      <element name="chapter">
-        <attribute name="title"/>
-        <ref name="id-attr"/>
+      <element name="sec:Introduction">
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
         <ref name="tech-terms"/>
@@ -76,34 +76,7 @@
       </element>
   </define>
 
-  <define name="SecurityRequirementsChapter">
-    <element name="chapter">
-      <attribute name="title"><value>Security Requirements</value></attribute>
-      <attribute name="id"/>
-      <ref name="boilerplate-no-attr"/>
-      <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="section"/></zeroOrMore>
-      <element name="section">
-	<attribute name="title"><value>Security Functional Requirements</value></attribute>
-	<attribute name="id"/>
-	
-	<oneOrMore>
-	  <element name="subsection">
-	    <attribute name="title"/>
-	    <attribute name="id"/>
-	    <ref name="basic-content-pat"/>
-	    <oneOrMore>
-	      <choice>
-	        <ref name="audit-table-pat"/>
-                <ref name="f-component-pattern"/>
-	      </choice>
-	    </oneOrMore>
-	  </element>
-	</oneOrMore>
-      </element>
-    </element>
-  </define>
-  
+ 
 
   <define name="appendix-pat">
     <a:documentation>
@@ -125,22 +98,6 @@
         </choice></oneOrMore>
       </element>
     </oneOrMore>
-  </define>
-
-  <define name="section">
-    <element name="section">
-      <a:documentation>
-        A block smaller than a chapter.
-      </a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="subsection-pattern"/>
-       </choice>
-      </oneOrMore>
-    </element>
   </define>
 
   <!-- Get rid of the status attribute. It seems like it is duplicative. -->
