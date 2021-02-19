@@ -514,10 +514,14 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template match="htm:*[./cc:depends]">
         <div class="dependent"> The following content should be included if:
-           <ul> <xsl:for-each select="cc:depends">
+           <ul> <xsl:for-each select="cc:depends//@*">
               <li>
-              <xsl:if test="@on='selection'">
-                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
+<!--
+                  <xsl:message> Found some dpends on <xsl:value-of select="current()"/></xsl:message>
+              <xsl:if test="//cc:f-component//cc:selectable[@id=current()]">
+                  <xsl:message> Found some dpends on sels</xsl:message>
+              </xsl:if>-->
+              <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
                 <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
                 <xsl:for-each select="cc:ref-id">  
                   <xsl:variable name="qtid" select="text()"/>
@@ -540,7 +544,7 @@ The following sections list Common Criteria and technology terms used in this do
                   <xsl:if test="position()!=1">, </xsl:if>
                   "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
                 </xsl:for-each>
-              </xsl:if>
+              </xsl:if> 
               <!-- This is a module piece... -->
               </li>
           </xsl:for-each> </ul>
@@ -550,6 +554,10 @@ The following sections list Common Criteria and technology terms used in this do
         </div>        
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+ 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
