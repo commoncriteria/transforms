@@ -340,6 +340,11 @@ If it's only an acronym make sure the text content is empty.
              <value>atref-objective-dep</value>
              <value>atref-sel-based-dep</value>
              <value>atref-impl-dep-dep</value>
+             <value>optional-reqs</value>
+             <value>objective-reqs</value>
+             <value>feat-based-reqs</value>
+             <value>sel-based-reqs</value>
+             <value>use-case-appendix</value>
              <ref name="gen-values"/>
             </choice>
          </attribute>
