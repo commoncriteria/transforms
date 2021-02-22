@@ -136,7 +136,8 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 #- Arg 2 is XSL file
 #- Arg 3 is output file
 #- Arg 4 is parameter value pairs
-DOIT ?= python3 $(TRANS)/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
+DOIT ?= python3 $(TRANS)/retrieve-included-docs.py $1 $(OUT) &&\
+	python3 $(TRANS)/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
 
 
 FNL_PARM ?=--stringparam release final
