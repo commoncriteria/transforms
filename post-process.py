@@ -77,7 +77,7 @@ class State:
             return []
 
     def cross_reference_cc_items(self):
-        for clazz in {"assumption", "threat", "OSP", "SOE", "SO"}:
+        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded"}:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
                     self.add_to_regex(el.attrib["id"])
