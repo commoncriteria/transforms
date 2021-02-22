@@ -156,11 +156,70 @@
     </div>
   </xsl:template>
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:doc" mode="use-case">
+    <xsl:variable name="docpath">../output/<xsl:value-of select="@ref"/>.xml</xsl:variable>
+    <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
+    
+    <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="document($docpath)//cc:PPTitle"/></a>: </div>
+    <xsl:for-each select="cc:ref-id">
+      <xsl:message>Made it e |<xsl:value-of select="current()/text()"/></xsl:message>
+      <xsl:message>Made it here |<xsl:value-of select="document($docpath)//cc:*[current()/text()=@id]"/></xsl:message>
+      <xsl:call-template name="handle-ref-ext"> 
+        <xsl:with-param name="ref-id" select="text()"/>
+        <xsl:with-param name="root" select="document($docpath)/cc:*"/>
+      </xsl:call-template>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="handle-ref-ext">
+    <xsl:param name="ref-id"/>
+    <xsl:param name="root"/>
+
+    <xsl:choose>
+      <xsl:when test="$root//cc:selectable[@id=$ref-id]">
+        <xsl:message>It's a selectable</xsl:message>
+        <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="handle-ancestors">
+          <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:when test="$root//cc:f-component[@id=$ref-id]">
+        <div class="uc_inc_fcomp">Include <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST </div>
+      </xsl:when>
+      <xsl:when test="$root//cc:management-function//@id=$ref-id">
+        <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="handle-ancestors">
+          <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+        </xsl:apply-templates>
+        <div class="uc_mf">Include
+        <xsl:apply-templates select="$root//cc:management-function[@id=$ref-id]" mode="make_xref"/>
+        in the ST</div>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> 
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:ref-id" mode="use-case">
-    <xsl:variable name="ref-id" select="text()"/>
+    <xsl:call-template name="handle-ref">
+      <xsl:with-param name="ref-id" select="text()"/>
+    </xsl:call-template>
+  </xsl:template>
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="handle-ref">
+    <xsl:param name="ref-id" select="text()"/>
     <xsl:choose>
       <xsl:when test="//cc:selectable[@id=$ref-id]">
         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">

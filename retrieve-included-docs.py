@@ -8,7 +8,7 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 import os
-
+import pathlib
 
 def warn(msg):
     log(2, msg)
@@ -72,7 +72,9 @@ if __name__ == "__main__":
     for pkg in root.findall(".//cc:include-pkg", ns):
         file_name = pkg.attrib["id"] + ".xml"
         url = "".join(pkg.find("./cc:raw-url", ns).text.split())
-        download_url(url, dir, file_name)
+        f_info = pathlib.Path(file_name)
+        if not f_info.exists():
+            download_url(url, dir, file_name)
         #
 #        open( str(ctr)+".xml", 'wb').write( requests.get( url ) )
 
