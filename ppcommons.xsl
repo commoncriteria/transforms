@@ -61,6 +61,7 @@
            Gets the ID for the f-component or f-element
        ############################################################-->
   <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
+    <xsl:message>HERE <xsl:value-of select="@cc-id"/></xsl:message>
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@iteration"/></xsl:when>
@@ -514,18 +515,14 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template match="htm:*[./cc:depends]">
         <div class="dependent"> The following content should be included if:
-           <ul> <xsl:for-each select="cc:depends//@*">
+           <ul> <xsl:for-each select="cc:depends">
               <li>
-<!--
-                  <xsl:message> Found some dpends on <xsl:value-of select="current()"/></xsl:message>
-              <xsl:if test="//cc:f-component//cc:selectable[@id=current()]">
-                  <xsl:message> Found some dpends on sels</xsl:message>
-              </xsl:if>-->
-              <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
+              <xsl:if test="@on='selection'">
+                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
                 <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
                 <xsl:for-each select="cc:ref-id">  
                   <xsl:variable name="qtid" select="text()"/>
-                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]" mode="make_xref"/>"
+                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]"/>"
                 </xsl:for-each>
                    is selected from 
                    <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
@@ -544,7 +541,7 @@ The following sections list Common Criteria and technology terms used in this do
                   <xsl:if test="position()!=1">, </xsl:if>
                   "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
                 </xsl:for-each>
-              </xsl:if> 
+              </xsl:if>
               <!-- This is a module piece... -->
               </li>
           </xsl:for-each> </ul>
@@ -554,10 +551,6 @@ The following sections list Common Criteria and technology terms used in this do
         </div>        
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
- 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -589,7 +582,7 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
-      <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
+      <xsl:message> Unmatched CC tag: <xsl:call-template name="genPath"/></xsl:message>
     </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>

@@ -178,6 +178,7 @@
   <!-- ############### -->
   <xsl:template name="audit-table-xsl">
     <xsl:param name="table"/>
+    <xsl:param name="caption"/>
     <xsl:variable name="thistable" select="$table"/>
     <table class="" border="1">
         <caption><xsl:value-of select="$caption"/></caption>

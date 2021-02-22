@@ -48,58 +48,6 @@
     </define>
 
    
-    <define name="xref-content">
-      <choice>
-        <ref name="linkend-attr"/>
-        <attribute name="to">
-          <choice>
-            <value>ref-strict-optional</value>
-            <value>sel-based-reqs</value>
-            <value>obj-reqs</value>
-            <value>impl-reqs</value>
-          </choice>
-        </attribute>
-      </choice>
-    </define>
-  </include>
-  <define name="PreferencesEtc">
-  <a:documentation>A place for declarations and preferences</a:documentation>
-    <optional> <ref name="pp-preferences-pat"/> </optional>
-  </define>
-  
-  <define name="IntroductionChapter">
-      <element name="sec:Introduction">
-        <ref name="boilerplate-no-attr"/>
-        <ref name="section"/>
-        <ref name="tech-terms"/>
-        <oneOrMore> <ref name="section"/> </oneOrMore>
-      </element>
-  </define>
-
- 
-
-  <define name="appendix-pat">
-    <a:documentation>
-      Pattern for title attribute.
-    </a:documentation>
-    <oneOrMore>
-      <element name="appendix">
-        <a:documentation>
-          Element that defines an appendix.
-        </a:documentation>
-        <ref name="id-attr"/>
-        <ref name="title-attr"/>
-        <ref name="boilerplate-no-attr"/>
-        <oneOrMore><choice>
-            <ref name="basic-content-pat"/>
-            <ref name="section"/>
-            <ref name="acronyms"/>
-            <ref name="bibliography"/>
-        </choice></oneOrMore>
-      </element>
-    </oneOrMore>
-  </define>
-
   <!-- Get rid of the status attribute. It seems like it is duplicative. -->
   <define name="f-component-pattern">
     <element name="f-component">
@@ -176,7 +124,47 @@
       <zeroOrMore><ref name="audit-table-pat"/></zeroOrMore>
     </element>
   </define> 
+ </include>
 
+
+
+  <define name="PreferencesEtc">
+  <a:documentation>A place for declarations and preferences</a:documentation>
+    <optional> <ref name="pp-preferences-pat"/> </optional>
+  </define>
+  
+  <define name="IntroductionChapter">
+      <element name="sec:Introduction">
+        <ref name="boilerplate-no-attr"/>
+        <ref name="section"/>
+        <ref name="tech-terms"/>
+        <oneOrMore> <ref name="section"/> </oneOrMore>
+      </element>
+  </define>
+
+ 
+
+  <define name="appendix-pat">
+    <a:documentation>
+      Pattern for title attribute.
+    </a:documentation>
+    <oneOrMore>
+      <element name="appendix">
+        <a:documentation>
+          Element that defines an appendix.
+        </a:documentation>
+        <ref name="id-attr"/>
+        <ref name="title-attr"/>
+        <ref name="boilerplate-no-attr"/>
+        <oneOrMore><choice>
+            <ref name="basic-content-pat"/>
+            <ref name="section"/>
+            <ref name="acronyms"/>
+            <ref name="bibliography"/>
+        </choice></oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
  <define name="glossary-section">
     <element name="glossary">
       <a:documentation>
