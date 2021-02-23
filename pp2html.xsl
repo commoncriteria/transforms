@@ -62,7 +62,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:PP|cc:package">
+  <xsl:template match="cc:PP|cc:Package">
     <xsl:apply-templates select="cc:section|sec:*"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
@@ -579,7 +579,7 @@
               Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
            </xsl:element>
            
-            <xsl:if test="/cc:package">
+            <xsl:if test="/cc:Package">
               <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
             </xsl:if>
 

@@ -5,13 +5,7 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <xsl:variable name="doctype">
-	<xsl:choose>
-		<xsl:when test="/cc:package">Package</xsl:when>
-                <xsl:when test="/cc:Module">PP-Module</xsl:when>
-		<xsl:otherwise>PP</xsl:otherwise>
-	</xsl:choose>
-  </xsl:variable>
+  <xsl:variable name="doctype"><xsl:value-of select="local-name(/cc:*)"/></xsl:variable>
   <!-- Eat all unmatched sections for cc and hook -->
   <xsl:template match="cc:*|sec:*" mode="hook"/>
 
@@ -86,7 +80,7 @@ provides evidence that these controls are present and have been evaluated.
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
    <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography|/cc:package//cc:bibliography|/cc:module//cc:bibliography" mode="hook">
+   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography|/cc:Package//cc:bibliography|/cc:module//cc:bibliography" mode="hook">
 <tr>
   <td><span id="bibCC"> [CC] </span></td>
   <td>Common Criteria for Information Technology Security Evaluation - 
@@ -144,7 +138,7 @@ provides evidence that these controls are present and have been evaluated.
        <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
    </xsl:template>
 
-   <xsl:template match="//cc:module//cc:*[@title='Security Requirements']|//cc:package//sec:Security_Functional_Requirements|//cc:package//cc:*[@title='Security Functional Requirements']" mode="hook">
+   <xsl:template match="//cc:module//cc:*[@title='Security Requirements']|//cc:Package//sec:Security_Functional_Requirements|//cc:Package//cc:*[@title='Security Functional Requirements']" mode="hook">
       This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
       Those requirements comprise functional components from Part 2 of <xsl:call-template name="citeCC"/>.
  
