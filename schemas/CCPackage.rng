@@ -12,7 +12,7 @@
 <!--            START                  -->
 <!-- ################################# -->
   <start>
-    <element name="package">
+    <element name="Package">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes"/>
       <ref name="project-notes"/>
