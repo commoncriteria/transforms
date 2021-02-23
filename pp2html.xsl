@@ -227,9 +227,7 @@
     </div>
   </xsl:template>
 
- <!-- Eat the invisible f-comnponents -->
- <xsl:template match="cc:f-component[@status='invisible']"/>
-	
+
   <!-- ######################################## 
          This template handles f-components when
          not appendisizing (i.e. NOT RELEASE)
