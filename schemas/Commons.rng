@@ -933,6 +933,7 @@ Modification definition. This text goes in the
             </a:documentation>
             <choice>
               <value>optional</value>
+	      <value>invisible</value>
             </choice>
           </attribute>
         </optional>
@@ -981,6 +982,7 @@ Modification definition. This text goes in the
                 <value>optional</value>
                 <value>objective</value>
                 <value>mandatory</value>
+		<value>invisible</value>
             </choice>
           </attribute>
          </optional>
