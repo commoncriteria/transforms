@@ -61,7 +61,6 @@
            Gets the ID for the f-component or f-element
        ############################################################-->
   <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
-    <xsl:message>HERE <xsl:value-of select="@cc-id"/></xsl:message>
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@iteration"/></xsl:when>
@@ -607,7 +606,7 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:for-each>
     <xsl:for-each select="//cc:ref-id">
 	<xsl:variable name="refid" select="text()"/>
-        <xsl:if test="count(//cc:*[@id=$refid])=0">
+        <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
         </xsl:if>
     </xsl:for-each>

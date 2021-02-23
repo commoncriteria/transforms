@@ -600,7 +600,7 @@
         <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
           <xsl:otherwise> 
-            <xsl:for-each select="//cc:*[cc:f-component/@status=$type]">
+            <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
                 <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
                 <xsl:attribute name="class">indexable</xsl:attribute>
