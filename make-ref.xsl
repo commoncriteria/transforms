@@ -78,14 +78,16 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <xsl:template match="cc:section" mode="make_xref">
+   <xsl:template match="cc:section|sec:*" mode="make_xref">
     <xsl:param name="format" select="''"/>
-    <a href="#{@id}" class="dynref">Section </a>
-  </xsl:template>
-
-  <xsl:template match="sec:*" mode="make_xref">
-    <xsl:param name="format" select="''"/>
-    <a href="#{local-name()}" class="dynref">Section </a>
+    <xsl:variable name="target"><xsl:choose>
+      <xsl:when test="namespace-uri()='https://niap-ccevs.org/cc/v1'">
+        <xsl:value-of select="@id"/>
+      </xsl:when>
+      <xsl:otherwise><xsl:value-of select="local-name()"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
+    
+    <a href="#{$target}" class="dynref">Section </a>
   </xsl:template>
 
   <!-- ############### -->
