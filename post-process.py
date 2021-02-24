@@ -77,7 +77,7 @@ class State:
             return []
 
     def cross_reference_cc_items(self):
-        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded"}:
+        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded","defined"}:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
                     self.add_to_regex(el.attrib["id"])
@@ -216,12 +216,10 @@ class State:
             self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
 
     def fix_this_counter_refs(self, ctr_id, count_str):
-        # Look for all the
         refclass = ctr_id + "-ref"
-        if refclass in self.classmap:
-            refs = self.classmap[refclass]
-            for ref in refs:
-                ref.find("*[@class='counter']").text = count_str
+        for ref in self.getElementsByClass(refclass):
+            print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
+            ref.find("*[@class='counter']").text = count_str
 
     def fix_tooltips(self):
         for elem in self.getElementsByClass("tooltiptext"):
@@ -321,6 +319,11 @@ def getalltext(elem):
     for child in elem:
         ret = ret+getalltext(child)+child.tail
 
+def safe_get_attribute(element, attribute, default=""):
+    if attribute in element.attrib:
+        return element.attrib[attribute]
+    else:
+        return default
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
