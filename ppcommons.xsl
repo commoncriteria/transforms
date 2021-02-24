@@ -163,7 +163,10 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:xref[@g]">
-    <a href="#{@g}" class="dynref" format="{@format}"></a>
+     <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="@g"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
   </xsl:template>
 
   <!-- ################################################### -->

@@ -184,7 +184,7 @@
     <table>
       <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
-	       <xsl:with-param name="id" select="t-sec-obj-rat"/>
+	       <xsl:with-param name="id" select="'t-sec-obj-rat'"/>
 	      </xsl:call-template>: Security Objectives Rationale</caption>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
@@ -583,20 +583,10 @@
             <xsl:if test="/cc:Package">
               <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
             </xsl:if>
-
-     
-          <div class="table-caption"></div>
 			    
-           <xsl:call-template name="audit-table-xsl">
-             <xsl:with-param name="caption"><xsl:call-template name="ctr-xsl">
-                 
-                <xsl:with-param name="ctr-type">Table</xsl:with-param>
-	        <xsl:with-param name="id" select="concat('atref-',$type,'-dep')"/>
-              </xsl:call-template>: 
-           Auditable Events for <xsl:value-of select="$nicename"/> Requirements 
-             </xsl:with-param>
-             <xsl:with-param name="table" select="$type"/>
-           </xsl:call-template>
+           <xsl:call-template name="audit-table">
+                <xsl:with-param name="thistable" select="$type"/>
+           </xsl:call-template> 
         </xsl:if>
         <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
@@ -652,7 +642,7 @@
       <table>
         <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
-	       <xsl:with-param name="id" select="t-obj_map"/>
+	       <xsl:with-param name="id" select="'t-obj_map'"/>
 		</xsl:call-template>: SFR Rationale</caption>
         <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
@@ -694,12 +684,15 @@
   <xsl:template name="ctr-xsl">
       <xsl:param name="ctr-type"/>
       <xsl:param name="id"/>
-    <xsl:variable name="ctrtype"><xsl:value-of select="$ctr-type"/></xsl:variable>
-    <span class="ctr" data-myid="{$id}" data-counter-type="ct-{$ctrtype}" id="{$id}">
-<!--      <xsl:apply-templates select="." mode="getPre"/>  -->
-      <xsl:value-of select="$ctrtype"/><xsl:text> </xsl:text>
-         <span  class="counter"><xsl:value-of select="$id"/></span>
-<!--      <xsl:apply-templates/>  -->
+
+    <xsl:if test="$id=''">
+      <xsl:message terminate="yes">Detected that a ctr's _id_ attribute is empty</xsl:message>
+    </xsl:if>
+    <span class="ctr" data-myid="{$id}" data-counter-type="ct-{$ctr-type}" id="{$id}">
+<!--      <xsl:apply-templates select="." mode="getPre"/> -->
+      <xsl:value-of select="$ctr-type"/><xsl:text> </xsl:text>
+      <span  class="counter"><xsl:value-of select="$id"/></span>
+<!--      <xsl:apply-templates/>-->
     </span>
   </xsl:template>
 	

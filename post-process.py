@@ -235,6 +235,8 @@ class State:
         for brokeRef in self.getElementsByClass("dynref"):
             linkend = brokeRef.attrib["href"][1:]
             target = root.find(".//*[@id='"+linkend+"']")
+            if not hasattr(target, 'text'):
+                print("Target does not have text field")
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
                 brokeRef.text = " "
