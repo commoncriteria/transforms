@@ -61,7 +61,6 @@
            Gets the ID for the f-component or f-element
        ############################################################-->
   <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
-    <xsl:message>HERE <xsl:value-of select="@cc-id"/></xsl:message>
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@iteration"/></xsl:when>
