@@ -86,13 +86,12 @@
     
     <table class="" border="1">
 <!--      <xsl:if test="not(node())">-->
-<xsl:message>In for here <xsl:value-of select="$thistable"/></xsl:message>
-        <caption>YYYY<xsl:call-template name="ctr-xsl">
+        <caption><xsl:call-template name="ctr-xsl">
          <xsl:with-param name="ctr-type" select="'Table'"/>
 	 <xsl:with-param name="id" select="concat('t-audit-',$thistable)"/>
-         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> RequirementsJJJJ</caption>
+         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> Requirements</caption>
 <!--      </xsl:if>-->
-      <xsl:apply-templates/>
+      <!--<xsl:apply-templates/>-->
         <tr><th>Requirement</th>
         <th>Auditable Events</th>
         <th>Additional Audit Record Contents</th></tr>
