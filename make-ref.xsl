@@ -17,7 +17,6 @@
     <a href="#{$r-id}">
       <xsl:choose>
         <xsl:when test="cc:readable"><xsl:apply-templates select="cc:readable"/></xsl:when>
-
 <!--- We want snips in our selectable, but not snips that are descendants of subselectabls -->
         <xsl:when test=".//cc:snip">
           <xsl:apply-templates select="descendant::cc:snip[1]"/>...
@@ -35,6 +34,7 @@
     <xsl:param name="index"/>
     <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
     <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
+
     <xsl:value-of select="$index"/>
     <sup><xsl:choose>
       <xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
@@ -136,6 +136,7 @@
   <xsl:template name="make_ctr_ref">
     <xsl:param name="id"/>
     <xsl:param name="prefix"/>
+
     <a onclick="showTarget('{$id}')" href="#{$id}" class="{$id}-ref" >
       <xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="$id"/></span>
     </a>
@@ -156,6 +157,7 @@
      <xsl:param name="nolink"  select="@nolink"     />
      <xsl:param name="prefix"  select="'Function #'"/>
      <xsl:param name="index"   select="count(preceding::cc:management-function)+1"/>
+
      <xsl:choose>
        <xsl:when test="$nolink='y'">
          <xsl:value-of select="concat($prefix, $index)"/>
