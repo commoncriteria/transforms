@@ -67,19 +67,11 @@
   <xsl:template match="cc:management-function//cc:assignable" mode="make_xref">
     <a href="#{@id}">
 <!--TODO: This seems really inefficient.-->
-      <xsl:variable name="index"><xsl:for-each select="ancestor::cc:management-function//cc:assignable">
-        <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
-      </xsl:variable>
-      <xsl:variable name="lastchar" select="substring($index, string-length($index))"/>
-      <xsl:variable name="last2char" select="substring($index, string-length($index)-1)"/>
-      <xsl:value-of select="$index"/>
-      <sup><xsl:choose>
-	<xsl:when test="$last2char='11' or $last2char='12' or $last2char='13'">th</xsl:when>
-	<xsl:when test="$lastchar='1'">st</xsl:when>
-	<xsl:when test="$lastchar='2'">nd</xsl:when>
-	<xsl:when test="$lastchar='3'">rd</xsl:when>
-        <xsl:otherwise>th</xsl:otherwise>
-      </xsl:choose></sup>
+      <xsl:call-template name="make-readable-index">
+        <xsl:with-param name="index"><xsl:for-each select="ancestor::cc:management-function//cc:assignable">
+          <xsl:if test="current()/@id=./@id"><xsl:value-of select="position()"/></xsl:if></xsl:for-each>
+        </xsl:with-param>
+      </xsl:call-template>
     assignment</a>
  </xsl:template>
  
@@ -95,22 +87,32 @@
     <xsl:param name="format" select="''"/>
     <a href="#{local-name()}" class="dynref">Section </a>
   </xsl:template>
+
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:appendix" mode="make_xref">
     <a href="#{@id}" class="dynref"></a>
   </xsl:template>
  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:bibliography/cc:entry" mode="make_xref">
      <a href="#{@id}">[<xsl:apply-templates select="cc:tag"/>]</a>
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:*" mode="make_xref">
     <xsl:message>Unable to make an xref for <xsl:value-of select="name()"/></xsl:message>
   </xsl:template>
+
   <!-- ############### -->
   <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:ctr|cc:figure|cc:equation" mode="make_xref">
     <xsl:param name="eprefix"/> <!-- explicit prefix -->
     <xsl:param name="has-eprefix"/>
