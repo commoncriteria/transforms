@@ -80,7 +80,7 @@
 
 
     <xsl:variable name="nicename"><xsl:choose>
-      <xsl:when test="$thistable='sel-base'">Selection-based</xsl:when>
+      <xsl:when test="$thistable='sel-based'">Selection-based</xsl:when>
       <xsl:otherwise><xsl:value-of select="concat(translate(substring($thistable,1,1),$lower,$upper), substring($thistable,2))"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     
