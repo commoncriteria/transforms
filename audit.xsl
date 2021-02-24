@@ -76,18 +76,22 @@
   <!-- This one gets called for the main audit table in FAU_GEN.1 -->
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
-    <xsl:variable name="thistable" select="@table"/>
+    <xsl:param name="thistable" select="@table"/>
+
+
     <xsl:variable name="nicename"><xsl:choose>
-      <xsl:when test="@table='sel-base'">Selection-based</xsl:when>
-      <xsl:otherwise><xsl:value-of select="concat(translate(substring(@table,1,1),$lower,$upper), substring(@table,2))"/></xsl:otherwise>
+      <xsl:when test="$thistable='sel-base'">Selection-based</xsl:when>
+      <xsl:otherwise><xsl:value-of select="concat(translate(substring($thistable,1,1),$lower,$upper), substring($thistable,2))"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
+    
     <table class="" border="1">
-      <xsl:if test="not(node())">
-        <caption><xsl:call-template name="ctr-xsl">
+<!--      <xsl:if test="not(node())">-->
+<xsl:message>In for here <xsl:value-of select="$thistable"/></xsl:message>
+        <caption>YYYY<xsl:call-template name="ctr-xsl">
          <xsl:with-param name="ctr-type" select="'Table'"/>
-	 <xsl:with-param name="id" select="concat('t-audit-',@table)"/>
-         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> Requirements</caption>
-      </xsl:if>
+	 <xsl:with-param name="id" select="concat('t-audit-',$thistable)"/>
+         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> RequirementsJJJJ</caption>
+<!--      </xsl:if>-->
       <xsl:apply-templates/>
         <tr><th>Requirement</th>
         <th>Auditable Events</th>
@@ -172,99 +176,6 @@
   </xsl:template>
 
   
-  <!-- ############### -->
-  <!-- This template for audit tables is invoked from XSL. --> 
-  <!-- This one gets called for audit tables in Appendixes. -->
-  <!-- ############### -->
-  <xsl:template name="audit-table-xsl">
-    <xsl:param name="table"/>
-    <xsl:param name="caption"/>
-    <xsl:variable name="thistable" select="$table"/>
-    <table class="" border="1">
-        <caption><xsl:value-of select="$caption"/></caption>
-	<tr><th>Requirement</th>
-	<th>Auditable Events</th>
-	<th>Additional Audit Record Contents</th></tr>
-	    
-	<xsl:for-each select="//cc:f-component">
-	  <xsl:variable name="fcomp" select="."/>
-	<xsl:variable name="fcompstatus">
-           <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
-	</xsl:variable>   
-	  <xsl:for-each select="cc:audit-event"> 
-            <!-- The audit event is included in this table only if 
-                - The audit event's expressed table attribute matches this table
-                - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
-                - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
-		<tr><td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
-		<xsl:choose>
-			<xsl:when test="(not (cc:audit-event-descr))">
-			<td>No events specified</td><td></td>
-		</xsl:when>
-		<xsl:otherwise>
-		<xsl:choose>
-		<!-- When audit events are individually selectable -->
-		<xsl:when test="@type='optional'">
-		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
-				</xsl:when>
-			<xsl:otherwise>
-			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
-		</xsl:otherwise>
-				</xsl:choose>
-				<td>
-				<xsl:for-each select="cc:audit-event-info">
-					<xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
-				</xsl:for-each>
-				</td>
-			</xsl:otherwise>
-		</xsl:choose>
-		</tr>
-		</xsl:if>
-		</xsl:for-each>
-		</xsl:for-each>
-	    
-	<xsl:for-each select="//cc:f-component-decl">
-	  <xsl:variable name="fcomp" select="."/>
-	<xsl:variable name="fcompstatus">
-			<xsl:if test="not($fcomp/@status)">mandatory</xsl:if>
-			<xsl:value-of select="$fcomp/@status"/>
-	</xsl:variable>   
-	  <xsl:for-each select="cc:audit-event"> 
-            <!-- The audit event is included in this table only if 
-                - The audit event's expressed table attribute matches this table
-                - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
-                - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
-	    <xsl:if test="(@table=$thistable) or ((not(@table)) and ($fcompstatus=$thistable))">
-                    <tr><td><xsl:apply-templates select="$fcomp" mode="getId"/> (from <xsl:value-of select="$fcomp/@pkg-id"/>)</td>      <!-- SFR name -->
-		<xsl:choose>
-			<xsl:when test="(not (cc:audit-event-descr))">
-			<td>No events specified</td><td></td>
-		</xsl:when>
-		<xsl:otherwise>
-		<xsl:choose>
-		<!-- When audit events are individually selectable -->
-		<xsl:when test="@type='optional'">
-		<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
-				</xsl:when>
-			<xsl:otherwise>
-			<td><xsl:apply-templates select="cc:audit-event-descr"/></td>
-		</xsl:otherwise>
-				</xsl:choose>
-				<td>
-				<xsl:for-each select="cc:audit-event-info">
-					<xsl:apply-templates select="."/> <br />  <!-- mode="intable"  --> 
-				</xsl:for-each>
-				</td>
-			</xsl:otherwise>
-		</xsl:choose>
-		</tr>
-		</xsl:if>
-		</xsl:for-each>
-		</xsl:for-each>	  
-	  </table>
-	</xsl:template>
-
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
