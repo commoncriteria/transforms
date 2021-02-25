@@ -261,9 +261,10 @@
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
-          <xsl:for-each select="cc:selection-depends">
+<!-- TODO: What if it's dependent on something an included package chooses?-->
+          <xsl:for-each select="cc:depends/@*">
             <b><i>
-              <xsl:variable name="ref-id" select="@req"/>
+              <xsl:variable name="ref-id" select="."/>
               <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
             </i></b>
@@ -276,11 +277,9 @@
           <i><b>This is an implementation-based component.
                 Its inclusion in depends on whether the TOE implements one or more of the following features:
                 <ul>
-                  <xsl:for-each select="cc:depends[@on='implements']">
-                    <xsl:for-each select="cc:ref-id">
-                      <xsl:variable name="ref-id" select="text()"/>
+                  <xsl:for-each select="cc:depends/@*">
+                    <xsl:variable name="ref-id" select="text()"/>
                       <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
-                    </xsl:for-each>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
@@ -303,9 +302,8 @@
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-    <xsl:if test="(@status='mandatory') or (not(@status) and count(./cc:depends)=0) or (@status!='optional' and @status!='sel-based' 
-		  					and @status!='objective' and @status!='feat-based')"> 
-      <xsl:apply-templates select="self::node()" mode="appendicize-nofilter" />
+    <xsl:if test="not(@status)">
+      <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
 
@@ -330,7 +328,7 @@
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
-              <xsl:for-each select="cc:selection-depends">
+              <xsl:for-each select="cc:depends/@*">
                 <b><i>
                   <xsl:variable name="ref-id" select="@req"/>
                   <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
@@ -507,18 +505,17 @@
           <p>
 	  If this is implemented by the TOE, the following requirements must be included in the ST:
           <ul>
-            <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."> 
+            <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each>
 	  </ul></p>
           
 	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
           <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/../..">
+             <xsl:for-each select="//cc:f-component/cc:depends[@*=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
-                <xsl:apply-templates select="cc:f-component/cc:depends[@on='implements' and cc:ref-id=$fid]/.."
-                    mode="appendicize-nofilter"/>
-             </xsl:for-each> 
+                <xsl:apply-templates select="cc:f-component[cc:depends/@*=$fid]" mode="appendicize-nofilter"/>
+             </xsl:for-each>
           </xsl:if>
         </xsl:for-each>
     </xsl:template>

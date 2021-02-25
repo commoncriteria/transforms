@@ -905,20 +905,7 @@ Modification definition. This text goes in the
             <a:documentation>
               Denotes the status of a requirement.
             </a:documentation>
-            <value>sel-based</value>
-          </attribute>
-          <oneOrMore>
-            <ref name="selection-depends"/>
-          </oneOrMore>
-        </group>
-
-	<!-- Feature-based -->
-        <group>
-          <attribute name="status">
-            <a:documentation>
-              Feature-based requirements must have dependencies.
-            </a:documentation>
-            <value>feat-based</value>
+            <choice><value>sel-based</value><value>feat-based</value></choice>
           </attribute>
           <oneOrMore>
             <ref name="depends-pat"/>
@@ -946,7 +933,7 @@ Modification definition. This text goes in the
       <ref name="audit-events-pat"/>
     </element>
   </define> 
-
+<!--
   <define name="f-component-decl-pattern">
     <element name="f-component-decl">
       <a:document>
@@ -990,7 +977,7 @@ Modification definition. This text goes in the
       <ref name="audit-events-pat"/>
     </element>
 </define> 
-	
+-->	
 	
   <define name="f-elements-pat">
     <zeroOrMore>
@@ -1325,34 +1312,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
 
-  <define name="selection-depends">
-      <element name="selection-depends">
-        <a:documentation>
-          Defines the other requirements whose selection affects whether this component must be also applied.
-        </a:documentation>
-        <attribute name="req">
-          <a:documentation>
-            The value of the id attribute of the requirement is component depends on.
-          </a:documentation>
-          <ref name="el-id-spat"/>
-        </attribute>
-        <attribute name="ids">
-          <a:documentation>
-            A comma delimited list of IDs corresponding to specific 'selectable's which if chosen
-            activate this component.
-          </a:documentation>
-        </attribute>
-	<optional>
-          <attribute name="ext-src">
-          <a:documentation>
-            Identifier for the external package/module/PP in which the selectable and req is found. Default is the current PP.
-	    This must be a package or PP or module that is declared in the Package Inclusion Section.
-          </a:documentation>
-          </attribute>
-        </optional>
-      </element>
-  </define>
-
 <!--#####################################################-->
 <!-- Setion for simple patterns (spat)                   -->
 <!--#####################################################-->
@@ -1426,7 +1385,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>
                 <ref name="f-component-pattern"/>
-                <ref name="f-component-decl-pattern"/>
+  <!--              <ref name="f-component-decl-pattern"/>-->
    	        <ref name="ext-comp-def-pat"/>
 	      </choice>
       </oneOrMore>
@@ -1666,7 +1625,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <a:documentation>
           Modifies the parent element such that it depends on something  else.
         </a:documentation>
-        <ref name="implements-or-selection-pat"/>
+        <ref name="any-attributes"/>
+        <optional>
+          <element name="external-doc"><attribute name="ref"/></element>
+        </optional>
       </element>
     </zeroOrMore>
   </define>
@@ -1683,11 +1645,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		Declarations of packages that are or may be included in the PP. There are three kinds:
 		  Mandatory: This is a package that is always included with the PP.
 		  	<include-pkg name="pkg-name"/>
-		  Selection-Based: This is a package that is included dependent on one or more selections. 
-		  <include-pkg name="pkg-name" type="sel-based">
-			  <selection-depends req="dep-req" ids="selection-ids"/>
-		  </include-pkg>
-		  Feature-Based: Package is included if a feature is present in the TOE.
+          	  Feature-Based: Package is included if a feature is present in the TOE.
 		  <include-pkg name="pkg-name" type="impl-dep">
                       <depends on=""/>    
 			  This is the text displayed for the ST author to indicate that the feature exists.

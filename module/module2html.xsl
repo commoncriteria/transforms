@@ -629,18 +629,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
       </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
-<!-- TODO: THE SD is not gettting this-->
-  <xsl:template match="htm:*[./cc:depends/cc:base-ref]">
-    The following content should be included if 
-    <xsl:for-each select="cc:depends/cc:base-ref">
-       <xsl:variable name="base" select="text()"/>
-       <xsl:value-of select="//cc:base-pp[@short=$base]/@name|//cc:base-pp[@name=$base]/@name"/>
-    </xsl:for-each>
-    is a Base-PP:
-    <div name="base-dependent">
-    <xsl:call-template name="handle-html"/>
-    </div>
-  </xsl:template>
+
 
   <xsl:template match="cc:consistency-rationale//cc:_">
     <xsl:param name="base"/>
