@@ -328,14 +328,10 @@
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
-              <xsl:for-each select="cc:depends/@*">
-                <b><i>
-                  <xsl:variable name="ref-id" select="@req"/>
-                  <xsl:apply-templates select="//cc:f-element[@id=$ref-id]" mode="getId"/>
-                  <xsl:call-template name="commaifnotlast"/>
-                </i></b>
-              </xsl:for-each>. </i>
-            </b>
+              <xsl:for-each select="//cc:f-element[.//@id=current()/cc:depends/@*]">
+                 <xsl:apply-templates mode="getId" select="."/><xsl:call-template name="commaifnotlast"/>
+              </xsl:for-each>
+            </i></b>
           </div>
         </xsl:if>
         <xsl:apply-templates/>
