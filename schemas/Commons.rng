@@ -1272,7 +1272,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               Grouping for Organizational Security Policies
       </a:documentation>
 
-            <oneOrMore>
+            <zeroOrMore>
               <element name="OSP">
                 <optional><ref name="id-attr"/></optional>
                 <attribute name="name">
@@ -1285,23 +1285,35 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <ref name="objective-refer"/>
           </oneOrMore>
               </element>
-            </oneOrMore>
+            </zeroOrMore>
     </element>
   </define>
 
   <define name="osp-section">
-    <element name="section">
-      <a:documentation>
+     <a:documentation>
         Section describing Organizational Security Policies
-      </a:documentation>
-      <attribute name="title"><value>Organizational Security Policies</value></attribute>
-      <ref name="id-attr"/>
-      <ref name="basic-content-pat"/>
-      <zeroOrMore>
+     </a:documentation>
+     <choice>
+      <element name="section">
+        <attribute name="title"><value>Organizational Security Policies</value></attribute>
+	<attribute name="id"/>
         <ref name="OSPs"/>
-      </zeroOrMore>
-    </element>
-  </define>
+      </element>
+      <element name="sec:Organizational_Security_Policies">
+        <ref name="OSPs"/>
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Organizational Security Policies</value></attribute>
+        <ref name="OSPs"/>
+      </element>
+    </choice>
+  </define> 
 
 
   <define name="description">
@@ -1689,6 +1701,19 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   
  
   <define name="external-document-pat">
+     <choice>
+       <ref name="recognized-xml"/>
+       <ref name="non-native-doc"/>
+     </choice>
+  </define>
+
+  <define name="recognized-xml">
+       <ref name="id-attr"/>
+       <element name="url"><text/></element>
+       <element name="raw-url"><text/></element>
+  </define>
+
+  <define name="non-native-doc">
      <attribute name="product">
 	<a:documentation>
 	  Name of the product the base PP applies to.

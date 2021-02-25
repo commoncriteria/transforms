@@ -16,6 +16,7 @@
   <!--  PARAMETERS     -->
   <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
+  <xsl:param name="work-dir" select="'../output'"/>
 
   <!-- ############### -->
   <!--  CONSTANTS      -->
@@ -158,15 +159,24 @@
     </xsl:if>
   </xsl:template>
 
-  
-  <!-- ############### -->
-  <xsl:template match="cc:include-pkg" mode="show">
+   <!-- ############### -->
+  <xsl:template match="cc:include-pkg[@short]" mode="show">
     <xsl:element name="a">
        <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
        <xsl:value-of select="@name"/>
        <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
        Package, Version <xsl:value-of select="@version"/>
     </xsl:element> Conformant
+  </xsl:template>
+
+  
+  <!-- ############### -->
+  <xsl:template match="cc:include-pkg[cc:raw-url]" mode="show">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+    <a href="{@url}">
+       <xsl:value-of select="document($path)//cc:PPTitle"/>, 
+       <xsl:value-of select="document($path)//cc:PPVersion"/>
+    </a> Conformant
   </xsl:template>
 
   <!-- ############### -->
