@@ -1,74 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar ns="https://niap-ccevs.org/cc/v1"
          xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:sec="https://niap-ccevs.org/cc/v1/section"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          xmlns:htm="http://www.w3.org/1999/xhtml"
          xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
          >
 
-
-  <include href="Commons.rng">
-    <define name="custom-basic-content-pat">
-      <choice>
-        <element name="componentsneeded">
-          <oneOrMore>
-            <element name="componentneeded">
-              <element name="componentid">
-                <ref name="comp-id-upper-respat"/>
-              </element>
-              <element name="notes">
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </oneOrMore>
-        </element>
-        <element name="if-opt-app">
-          <a:documentation>
-Content that only appears if the optional appendices exist.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-        <element name="indent">
-          <a:documentation>
-Tags that this section should be indented(left) 2em.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-      </choice>
-    </define>
-
-    <define name="subsection-pattern">
-      <element name="subsection">
-	<a:documentation>
-          Lower level of grouping
-	</a:documentation>
-	<ref name="id-attr"/>
-	<ref name="title-attr"/>
-	<oneOrMore>
-          <choice>
-            <ref name="glossary-section"/>
-            <ref name="subsection-pattern"/>
-            <ref name="basic-content-pat"/>
-          </choice>
-	</oneOrMore>
-      </element>
-    </define>
-
-    
-    <define name="xref-content">
-      <choice>
-        <ref name="linkend-attr"/>
-        <attribute name="to">
-          <choice>
-            <value>ref-strict-optional</value>
-            <value>sel-based-reqs</value>
-            <value>obj-reqs</value>
-            <value>impl-reqs</value>
-          </choice>
-        </attribute>
-      </choice>
-    </define>
-  </include>
 <!-- ################################# -->
 <!--            START                  -->
 <!-- ################################# -->
@@ -76,19 +14,21 @@ Tags that this section should be indented(left) 2em.
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes"/>
+      <ref name="project-notes"/>
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
-      <ref name="IntroductionChapter"/>
+      <ref name="packages"/>
+      <ref name="PreferencesEtc"/>
+      <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecurityRequirementsChapter"/>
       <ref name="Chapters"/>
-      <ref name="appendix-pat"/>
+      <ref name="appendices-pat"/>
       <ref name="implements-pat"/>
-
       <!-- This is where we can store extra css -->
       <optional>
         <element name="extra-css">
@@ -98,42 +38,150 @@ Tags that this section should be indented(left) 2em.
     </element>
   </start>
 
-  
-  
-  <define name="IntroductionChapter">
-      <element name="chapter">
-        <attribute name="title"/>
-        <ref name="id-attr"/>
-        <ref name="boilerplate-no-attr"/>
-        <ref name="section"/>
-        <ref name="tech-terms"/>
-        <oneOrMore>
-	  <choice>
-            <ref name="section"/>
-	    <ref name="usecases-section"/>
-	  </choice>
-        </oneOrMore>
-        </element>
+
+
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+       <element name="if-opt-app">
+          <a:documentation>
+Content that only appears if the optional appendices exist.
+          </a:documentation>
+          <ref name="basic-content-pat"/>
+       </element>
+    </define>
+
+   
+    <define name="xref-content">
+      <choice>
+        <ref name="to-attr"/>
+        <attribute name="ref">
+         <choice>
+            <value>ref-strict-optional</value>
+            <value>sel-based-reqs</value>
+            <value>obj-reqs</value>
+            <value>impl-reqs</value>
+          </choice>
+        </attribute>
+      </choice>
+    </define>
+  </include>
+  <define name="PreferencesEtc">
+  <a:documentation>A place for declarations and preferences</a:documentation>
+    <optional> <ref name="pp-preferences-pat"/> </optional>
   </define>
+  
 
   <define name="SecurityRequirementsChapter">
-    <element name="chapter">
-      <attribute name="title"><value>Security Requirements</value></attribute>
-      <attribute name="id"/>
-      <ref name="boilerplate-no-attr"/>
-      <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="section"/></zeroOrMore>
+    <choice>
       <element name="section">
-	<attribute name="title"><value>Security Functional Requirements</value></attribute>
-	<attribute name="id"/>
-	
-	<oneOrMore>
+        <attribute name="title"><value>Security Requirements</value></attribute>
+        <attribute name="id"/>
+        <ref name="sec-req-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Security Requirements</value></attribute>
+        <ref name="sec-req-content"/>
+      </element>
+      <element name="sec:Security_Requirements">
+         <ref name="sec-req-content"/>
+      </element>
+    </choice>
+  </define>
+
+
+  <define name="sec-req-content">
+    <ref name="boilerplate-no-attr"/>
+    <ref name="basic-content-pat"/>
+    <zeroOrMore><ref name="section"/></zeroOrMore>
+    <ref name="sfr-section"/>
+    <choice>
+      <element name="section">
+        <attribute name="title"><value>Security Assurance Requirements</value></attribute>
+        <attribute name="id"/>
+        <ref name="sar-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Security Assurance Requirements</value></attribute>
+        <ref name="sar-content"/>
+      </element>
+      <element name="sec:Security_Assurance_Requirements">
+        <ref name="sar-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="sar-content">
+    <ref name="basic-content-pat"/>
+    <oneOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <attribute name="id"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>
+    </choice></oneOrMore>
+  </define>
+  
+
+<!-- <choice>
+      <element name="section">
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <optional><attribute name="id"/></optional>
+        <ref name="sfr-content"/>	
+      </element>
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <ref name="sfr-content"/>	
+      </element>
+      <element name="sec:Security_Functional_Requirements">
+        <ref name="sfr-content"/>	
+      </element>
+    </choice>
+  </define>
+-->
+<!--
+  <define name="sfr-content"> 
+    <oneOrMore>
 	  <element name="subsection">
 	    <attribute name="title"/>
 	    <attribute name="id"/>
 	    <ref name="basic-content-pat"/>
 	    <oneOrMore>
-              <ref name="f-component-pattern"/>
+	      <choice>
+		     <ref name="audit-table-pat"/>
+        	     <ref name="f-component-pattern"/>
+	             <ref name="f-component-decl-pattern"/>
+		     <ref name="ext-comp-def-pat"/>
+	      </choice>
 	    </oneOrMore>
 	  </element>
 	</oneOrMore>
@@ -155,8 +203,8 @@ Tags that this section should be indented(left) 2em.
       </element>
     </element>
   </define>
-  
-
+-->  
+<!--
   <define name="appendix-pat">
     <a:documentation>
       Pattern for title attribute.
@@ -178,7 +226,8 @@ Tags that this section should be indented(left) 2em.
       </element>
     </oneOrMore>
   </define>
-
+-->
+<!--
   <define name="section">
     <element name="section">
       <a:documentation>
@@ -190,7 +239,7 @@ Tags that this section should be indented(left) 2em.
         <choice>
           <ref name="basic-content-pat"/>
           <ref name="subsection-pattern"/>
-
+-->
          <!--  <ref name="OSPs"/> -->
          <!--  <element name="SOEs"> -->
          <!--    <a:documentation> -->
@@ -214,13 +263,14 @@ Tags that this section should be indented(left) 2em.
          <!--  <ref name="SOs"/> -->
          <!--  <ref name="assumptions"/> -->
          <!--  <ref name="threats"/> -->
-        </choice>
+<!--        </choice>
       </oneOrMore>
     </element>
   </define>
+-->
 
-  
-  <define name="usecases-section">
+<!--
+ <define name="usecases-section">
     <element name="section">
       <a:documentation>
         Section specific for use cases.
@@ -241,13 +291,13 @@ Tags that this section should be indented(left) 2em.
             <ref name="id-attr"/>
             <ref name="title-attr"/>
             <ref name="description"/>
+            <optional><ref name="config"/></optional>
           </element>
         </oneOrMore>
       </element>
     </element>
   </define>
-  
-
+-->
   
   <define name="a-elements">
     <oneOrMore>
@@ -275,6 +325,9 @@ Tags that this section should be indented(left) 2em.
           <ref name="note"/>
         </optional>
         <optional>
+          <ref name="aactivity-sar"/>
+        </optional>
+        <optional>
           <element name="aactivity">
             <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -284,67 +337,7 @@ Tags that this section should be indented(left) 2em.
     </oneOrMore>
   </define>
 
-  <define name="f-component-pattern">
-    <element name="f-component">
-      <a:document>
-        Specifies a component under Security Functional Requirements section..
-      </a:document>
-      <ref name="f-comp-content-pat"/>
-      <choice>
-        <!-- Choice of status -->
-        <!-- If the status is objective, it must have a targetdate(?) -->
-        <group>
-          <optional>
-            <attribute name="targetdate">
-              <a:documentation>
-                Target date that the requirements under this component become
-                manandory. It only makes sense for _objective_ components.
-              </a:documentation>
-              <data type="date"/>
-            </attribute>
-          </optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>objective</value>
-          </attribute>
-        </group>
-
-        <!-- If the status is selection-based, it must have dependencies -->
-        <group>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>sel-based</value>
-          </attribute>
-          <oneOrMore>
-            <ref name="selection-depends"/>
-          </oneOrMore>
-        </group>
-
-        <!-- The status could also be optional or nothing (which is indicated here) -->
-        <optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <choice>
-              <value>optional</value>
-            </choice>
-          </attribute>
-        </optional>
-      </choice>
-      <ref name="depends-pat"/>
-      <optional><ref name="note"/></optional>
-      <ref name="f-elements-pat"/>
-      <ref name="audit-events-pat"/>
-    </element>
-  </define> 
-
-
-  <define name="a-component-pattern">
+   <define name="a-component-pattern">
     <element name="a-component">
       <a:document>
         Specifies a component under Security Assurance Requirements section.
@@ -387,30 +380,6 @@ Tags that this section should be indented(left) 2em.
     </element>
   </define>
 
-  <define name="RevisionHistory">
-    <oneOrMore>
-        <element name="RevisionHistory">
-          <a:documentation>Documents the major changes to releases.</a:documentation>
-          <zeroOrMore>
-            <element name="entry">
-              <a:documentation>Container for individual revisions.</a:documentation>
-              <element name="version">
-                <a:documentation>Text describing the revision.</a:documentation>
-                <text/>
-              </element>
-              <element name="date">
-                <a:documentation>Date of the revision.</a:documentation>
-                <data type="date"/>
-              </element>
-              <element name="subject">
-                <a:documentation>Description of the revision.</a:documentation>
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </zeroOrMore>
-        </element>
-      </oneOrMore>
-  </define>
   <define name="Foreword">
     <optional>
       <element name="foreword">
@@ -421,24 +390,47 @@ Tags that this section should be indented(left) 2em.
   </define>
   
   <define name="pp-attributes">
-      <attribute name="name">
-        <a:documentation> The title of this document.</a:documentation>
-      </attribute>
-      <optional>
-        <attribute name="type">
-          <choice><value>package</value><value>pp</value></choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="boilerplate">
-        <a:documentation>
-          Indicates that this document shall use boilerplate sections.
-        </a:documentation>
-        <value>yes</value></attribute>
-      </optional>
+    <attribute name="name">
+     <a:documentation> The title of this document.</a:documentation>
+    </attribute>
+    <optional>
+      <attribute name="boilerplate">
+      <a:documentation>
+        Indicates that this document shall use boilerplate sections.
+      </a:documentation>
+      <value>yes</value></attribute>
+    </optional>
   </define>
     
-  
+   <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <interleave>
+        <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
+        <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
+      </interleave>
+    </element>
+  </define> 
+         
+  <define name="pp-pref-pat">
+    <element name="pp-pref">
+      <a:documentation>
+         Declarations and definition of global variables.
+      </a:documentation>
+      <attribute name="name">
+         <a:documentation>Name of the preference.</a:documentation>
+         <choice>
+               <value>display-audit-with-sfrs</value>    <!-- Display audit events with SFRs -->
+               <value>audit-events-in-sfrs</value>       <!-- Audit events are defined with the SFRs, vs. in tables -->
+          </choice>
+      </attribute>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define> 
+
+ 
   <define name="PPReference">
       <element name="PPReference">
         <a:documentation>

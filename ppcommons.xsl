@@ -1,44 +1,74 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:cc="https://niap-ccevs.org/cc/v1" xmlns:htm="http://www.w3.org/1999/xhtml">
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:cc="https://niap-ccevs.org/cc/v1"
+  xmlns:htm="http://www.w3.org/1999/xhtml"
+  xmlns:sec="https://niap-ccevs.org/cc/v1/section">
 
-  <!-- <xsl:key name="abbr" match="cc:glossary/cc:entry/cc:term/cc:abbr" use="text()"/> -->
+  <!--##############################################
+           Includes
+      ##############################################-->
+  <xsl:include href="js-content.xsl"/>
+  <xsl:include href="css-content.xsl"/>
+  <xsl:include href="make-ref.xsl"/>
 
+  <!--##############################################
+           Parameters
+      ##############################################-->
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
-
-
-
   <xsl:param name="release" select="'draft'"/>
+
+  <!--##############################################
+           Constants
+      ##############################################-->
   <!-- #Adds 3 non-breaking spaces -->
   <xsl:variable name="space3">&#160;&#160;&#160;</xsl:variable>
+
+  <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
+  <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
   <xsl:variable name="title"><xsl:choose>
       <xsl:when test="//cc:PPTitle"><xsl:value-of select="//cc:PPTitle"/></xsl:when>
       <xsl:otherwise>PP-Module for <xsl:value-of select="/cc:*/@target-products"/></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
-
-  <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
-  <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-
   <!--##############################################
-        Template for javascript common to all transforms
+           Templates
       ##############################################-->
-  <xsl:template name="common_js">
-    <!-- Include custom javascript defined in the pp -->
-    <xsl:value-of select="//cc:extra-js"/>
+   <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="sec:*">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="title">
+        <xsl:value-of select="@title"/>
+        <xsl:if test="not(@title)"><xsl:value-of select="translate(local-name(), '_', ' ')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="cc:section">
+    <xsl:call-template name="make-section">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id">
+        <xsl:value-of select="@id"/>
+        <xsl:if test="not(@id)"><xsl:value-of select="translate(@title, ' ', '_')"/></xsl:if>
+      </xsl:with-param>
+    </xsl:call-template>
   </xsl:template>
 
   <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
-  <xsl:template match="cc:f-component|cc:f-element" mode="getId">
+  <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
+      <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:variable name="baseID"><xsl:choose>
       <xsl:when test="name()='f-component'"><xsl:value-of select="@cc-id"/></xsl:when>
+      <xsl:when test="name()='f-component-decl'"><xsl:value-of select="@cc-id"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@cc-id"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:value-of select="translate($baseID, $lower, $upper)"/>
@@ -58,179 +88,19 @@
     <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/><xsl:value-of select="@type"/></xsl:if>
   </xsl:template>
 
-
-   <!--##############################################
-      ##############################################-->
- <!-- Common CSS rules for all files-->
-  <xsl:template name="common_css">
-    #toc a{
-        display: block;
-    }
-
-    svg{
-      width: 100%;
-    }
-
-    a[id^="ajq_"]{
-        color:black;
-    }
-
-    <!-- h1{ -->
-    <!--    width: 100%; -->
-    <!--    border-bottom-style: solid; -->
-    <!--    border-bottom-color: black; -->
-    <!-- } -->
-    body{
-       max-width: 900px;
-       margin: auto;
-    }
-    #toc span{
-       margin-left: 20px;
-    }
-    .assignable-content{
-      font-style: italic;
-    }
-    .refinement{
-      text-decoration: underline;
-    }
-    div.eacategory{
-      font-style: italic;
-      font-weight: bold;
-    }
-    .activity_pane .toggler::after, .activity_pane .toggler{
-       display: inline-block;
-       height: auto;
-       content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
-       AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
-       VDz+AAAAB3RJTUUH4gIXFDM7fhmr1wAAAfRJREFUKM+dkk9I02EYxz/P+25uurWR\
-       tTkzI4NGl4jQgkq71K1DhnTQIDolRAQFQYSHTtGhU4e6eujQofBSFLOg0C4RUSjh\
-       FnmqTTdKpj/mfv/eX4cUpmRYn9vz8v3w8D7PA/AWGADCbI4QcAb4AnAF8IBJEdX+\
-       N0tEda40C4AHADviW1LFvpOX6+FwtAacVzqkGiWtwxo4F21OuPu7+yvxRNoDEhpY\
-       cpzavkQyc7D76FCk+vN7j7VU6RdR4xAsikjGGP9FKrN3sPfEpajv2i2zhckR4JUG\
-       UCr0erFavLkn2ytd2WPxcFOsZb74+SIQA0YPHBqIdB8Z6tChJv1m/N4P33OGAUsD\
-       BIFxPNcOkq07jyeSbbo1tTu2q6vHEqU7D/ddSKcz2ZQJjBSmx925b9NjwEMAafha\
-       eyQa/3Dq7O0243sCIEoRGAOA59nm5dM7OHVruzH+AkDjYEp23RrLT+U8Ub+fV0UR\
-       oVyaMfVa9fqquF5GKX3ja2FCuc6yWbMipYNP755UgEdr8o2FMf5ivVYdKRfzRkRW\
-       RfJTOc+2rWdAcUN5hdGP7x8viGgAXLvGbGFCKxW6tj74J3nOqVvP89M5V6kQ86UZ\
-       f7lWvWWMt7Sp41VKb21uSfqnB++6kWi8BLTzL4ioq7H4tgC4z3/QAZSBxEaBXygN\
-       v+jeFnAPAAAAAElFTkSuQmCC');
-       max-width: 15px;
-    }
-
-
-    a {
-      text-decoration: none;
-      word-wrap: break-word;
-    }
-    a.abbr:link{
-      color:black;
-      text-decoration:none;
-    }
-    a.abbr:visited{
-      color:black;
-      text-decoration:none;
-    }
-    a.abbr:hover{
-      color:blue;
-      text-decoration:none;
-    }
-    a.abbr:hover:visited{
-      color:purple;
-      text-decoration:none;
-    }
-    a.abbr:active{
-      color:red;
-      text-decoration:none;
-    }
-    .note-header{
-      font-weight: bold;
-    }
-    .note p:first-child{
-      display: inline;
-    }
-
-
-    /* Tooltip container */
-    .tooltipped {
-       position: relative;
-       display: inline-block;
-       border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-    }
-
-    /* Tooltip text */
-    .tooltiptext {
-       visibility: hidden;
-       width: 120px;
-       background-color: black;
-       color: #fff;
-       text-align: center;
-       padding: 5px 0;
-       border-radius: 6px;
-
-       /* Position the tooltip text - see examples below! */
-       position: absolute;
-       z-index: 1;
-   }
-
-   /* Show the tooltip text when you mouse over the tooltip container */
-   .tooltipped:hover .tooltiptext {
-       visibility: visible;
-   }
-   tr.major-row{
-       border-top-style: double;
-   }
-   tr.major-row td:first-child{
-       border-right-style: ridge;
-       background-color: white;
-   } 
-   table.mfs td{
-       text-align: center;
-   }
-   table.mfs td:first-child{
-       text-align: left;
-   }
-   table{
-       margin:auto;
-       margin-top:1em;
-       border-collapse:collapse; /*border: 1px solid black;*/
-   }
-   td{
-       text-align:left;
-       padding:8px 8px;
-   }
-   th{
-       padding:8px 8px;
-   }
-   thead tr td{
-       text-align: center;
-       font-style: oblique;
-       font-weight: bold;
-   }
-   tr.header{
-       border-bottom:3px solid gray;
-       padding:8px 8px;
-       text-align:left;
-       font-weight:bold; /*font-size: 90%; font-family: verdana, arial, helvetica, sans-serif; */
-   }
-   table tr:nth-child(2n+2){
-       background-color:#F4F4F4;
-   }
-
-   .dependent{
-       border: 1px solid gray;
-       border-radius: 1px
-   }
-   .dependent-content{
-       margin-left: 25px;
-       font-style: italic;
-   }
-   <!-- Include some custom css as defined by in the source PP -->
-    <xsl:value-of select="//cc:extra-css"/>
-  </xsl:template>
-
-
-<!-- ############### -->
-<!--            -->
+  <!-- ############################################################
+           Gets the ID for a selectable 
+       ############################################################-->
+  <xsl:template match="cc:selectable[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template> 
+  <xsl:template match="cc:selectable" mode="getId"><!--
+-->_s_<xsl:number count="//cc:selectable" level="any"/>
+  </xsl:template> 
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:tech-terms">
     <xsl:param name="num" select="2"/>
 
@@ -252,6 +122,9 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="glossary-entry">
       <tr>
         <xsl:variable name="term_id"><xsl:value-of select="translate(@full,' ','_')"/></xsl:variable>
@@ -266,26 +139,72 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
-  <xsl:template match="cc:linkref">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <xsl:if test="not(//*[@id=$linkend])">
-      <xsl:message> Broken linked element at <xsl:value-of select="$linkend"/></xsl:message>
-    </xsl:if>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:xref[@to]">
+    <xsl:variable name="to" select="@to"/>
     <xsl:choose>
-      <xsl:when test="//cc:f-element[@id=$linkend]|//cc:a-element[@id=$linkend]">
-          <xsl:variable name="id"><xsl:apply-templates select="//cc:*[@id=$linkend]" mode="getId"/></xsl:variable>
-          <a class="linkref" href="#{$id}"><xsl:value-of select="concat(text(),$id)"/></a>
+      <xsl:when test="//cc:*[@id=$to]|//sec:*[local-name()=$to]">
+        <xsl:apply-templates select="//cc:*[@id=$to]|//sec:*[local-name()=$to]" mode="make_xref">
+          <xsl:with-param name="format" select="@format"/>
+        </xsl:apply-templates>
       </xsl:when>
-      <xsl:otherwise><a class="linkref" href="#{$linkend}"><xsl:value-of select="text()"/><xsl:value-of select="$linkend"/></a></xsl:otherwise>
+     <xsl:otherwise> 
+        <xsl:message> Failed to find a reference to <xsl:value-of select="@to"/>.</xsl:message>
+        <a href="#{@to}" class="dynref" data-format="{@format}"></a>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
+
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:xref[@g]">
+     <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="@g"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- ################################################### -->
+  <!-- Refs to all the pre-defined auto-generated tables   -->
+  <!-- ################################################### -->
+  <xsl:template match="cc:xref[@g='atref-optional-dep' or @g='atref-objective-dep' or 
+				@g='atref-sel-based-dep' or @g='atref-impl-dep-dep' or
+		       		@g='t-audit-mandatory']">
+    <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="@g"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
+
+<!--	<xsl:template match="cc:xref[@g='t-audit-mandatory']">
+    <xsl:call-template name="make_ctr_ref">
+      <xsl:with-param name="id" select="'t-audit-mandatory'"/>
+      <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
+  </xsl:template>
+-->	
+	
+  <xsl:template match="cc:xref[@g='CC']">
+      <a href="#bibCC">[CC]</a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:testlist">
     <ul>
       <xsl:apply-templates/>
     </ul>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:test">
     <li>
       <b>Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
@@ -294,7 +213,24 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:apply-templates/>
     </li>
   </xsl:template>
+  
+  <!-- ############### -->
+  <!--                 -->
+<!-- ############### -->
+<xsl:template match="cc:test-obj">
+<div class="test-obj"><b>Objective:</b> <xsl:apply-templates/> </div>
+  </xsl:template>
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:evidence">
+    <div class="evidence"><b>Evidence:</b> <xsl:apply-templates/> </div>
+  </xsl:template>
 
+   <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="references">
     <h1 id="biblio" class="indexable" data-level="A">References</h1>
     <table>
@@ -303,6 +239,9 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:componentsneeded">
     <table>
       <tr class='header'><th>Component</th><th>Explanation</th></tr>
@@ -310,13 +249,19 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:componentneeded">
     <tr>
-        <td><xsl:apply-templates select="cc:componentid"/></td>
+        <td class="componentneeded" id="{cc:componentid}"><xsl:apply-templates select="cc:componentid"/></td>
         <td><xsl:apply-templates select="cc:notes"/></td>
     </tr>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:cc-entry">
 <tr><td><span id='bibCC'> [CC] </span></td><td>Common Criteria for Information Technology Security Evaluation - <ul>
             <li><a href='http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf'>Part
@@ -332,6 +277,9 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:steplist">
     <ul>
       <xsl:apply-templates/>
@@ -349,19 +297,30 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <!-- Overloaded abbr here-->
-  <xsl:template match="cc:abbr[@linkend]">
-    <xsl:variable name="target" select="@linkend"/>
+  <xsl:template match="cc:abbr[@to]">
+    <xsl:variable name="target" select="@to"/>
     <xsl:variable name="full" select="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full"/>    
     <xsl:choose>
       <xsl:when test="//cc:term[$target=@abbr]/@full|document('boilerplates.xml')//cc:cc-terms/cc:term[$target=@abbr]/@full">
-	<a class="abbr" href="#abbr_{@linkend}">
-	  <abbr title="{$full}"><xsl:value-of select="@linkend"/></abbr>
+	<a class="abbr" href="#abbr_{@to}">
+	  <abbr title="{$full}"><xsl:value-of select="@to"/></abbr>
 	</a>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:message>Failed to find the abbreviation: <xsl:value-of select="@linkend"/> </xsl:message>
+	<xsl:message>Failed to find the abbreviation: <xsl:value-of select="@to"/> </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:choice//cc:selectables">
+    <xsl:for-each select="cc:selectable"><xsl:choose>
+	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
+         <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
+         <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
+    </xsl:choose></xsl:for-each>
   </xsl:template>
 
   <!-- -->
@@ -373,15 +332,25 @@ The following sections list Common Criteria and technology terms used in this do
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
     <xsl:when test="@linebreak='yes'">
-    <ul>
-    <xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each>
-    <!-- <p style="margin-left: 40px;"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></p> -->
-    </ul>
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+      </xsl:for-each></ul>
     </xsl:when>
-    <xsl:when test="@linebreak='no'"><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
+    <xsl:when test="@linebreak='no'">
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
     <!-- If the selection has a nested selection -->
-    <xsl:when test=".//cc:selectables"><ul><xsl:for-each select="cc:selectable"><li><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li></xsl:for-each></ul></xsl:when>
-   <xsl:otherwise><xsl:for-each select="cc:selectable"><i><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
+    <xsl:when test=".//cc:selectables">
+      <ul><xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+      </xsl:for-each></ul></xsl:when>
+    <xsl:otherwise>
+      <xsl:for-each select="cc:selectable">
+        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
   </xsl:choose>]</xsl:template>
 
   <!--
@@ -389,10 +358,39 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
-  <xsl:template match="cc:assignable">[<b>assignment</b>: <span class="assignable-content"><xsl:apply-templates/></span>]</xsl:template>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+<!-- Should we include a referencable value? Probably
+     Make it an ID seems like it might be too big.
+     But making it a number seems difficult given that we just can't count
+     the assignables cause they appear in the document in a diffirent order 
+     We could clean it up in the Python.
+  -->
+  <xsl:template match="cc:assignable"><!--
+  -->[<b>assignment</b>: 
+     <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+<!--
 
+  <xsl:element name="sup"><xsl:attribute name="class">a_id</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if>A13</xsl:element></xsl:template>a-->
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:refinement"><span class="refinement"><xsl:apply-templates/></span></xsl:template>
 
+  <xsl:template match="cc:app-note">
+    <p><xsl:apply-templates/></p>
+  </xsl:template>	
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:note">
     <div class="appnote">
       <span class="note-header"><xsl:choose>
@@ -402,14 +400,23 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:choose> Note: </span>
       <span class="note">
         <xsl:apply-templates/>
+        <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
+          <br/><br/>
+          <b>Function-specific Application Notes:</b><br/><br/>
+	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
+        </xsl:if>
       </span>
     </div>
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function-set">
     <table class="mfs" style="width: 100%;">
       <tr class="header">
+        <td>#</td>
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
       </tr>
@@ -418,12 +425,21 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:manager">
     <td> <xsl:apply-templates/> </td>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function">
-    <tr>
+    <tr id="{@id}">
+      <td>
+        <xsl:value-of select="count(preceding::cc:management-function)+1"/>
+      </td>
       <td>
         <xsl:apply-templates select="cc:text"/>
       </td>
@@ -458,12 +474,15 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
       <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional</span></div></xsl:when>
-      <xsl:when test="$type='M'"><div>X<span class="tooltiptext">Mandatory</span></div></xsl:when>
-      <xsl:when test="$type='_'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
+      <xsl:when test="$type='M'"><div>M<span class="tooltiptext">Mandatory</span></div></xsl:when>
+      <xsl:when test="$type='NA'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
       <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -476,6 +495,9 @@ The following sections list Common Criteria and technology terms used in this do
     <span class="tooltiptext"><xsl:value-of select="$tip"/></span>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:bibliography/cc:entry">
     <tr>
       <xsl:variable name='id'><xsl:value-of select="@id"/></xsl:variable>
@@ -493,40 +515,48 @@ The following sections list Common Criteria and technology terms used in this do
        namespace to output all in htm namespace. For right now
        this is what we have.
   -->
-  <xsl:template match="htm:*">
-    <xsl:choose>
-      <xsl:when test="cc:depends">
+  <xsl:template match="htm:*[./cc:depends]">
         <div class="dependent"> The following content should be included if:
            <ul> <xsl:for-each select="cc:depends">
               <li>
               <xsl:if test="@on='selection'">
-                <xsl:for-each select="cc:uid">  
-                  <xsl:variable name="uid" select="text()"/>
-                  "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
+                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
+                <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
+                <xsl:for-each select="cc:ref-id">  
+                  <xsl:variable name="qtid" select="text()"/>
+                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]"/>"
                 </xsl:for-each>
-                 is selected from 
-                <xsl:variable name="uid" select="cc:uid[1]/text()"/>
-                <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                   is selected from 
+                   <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+                </xsl:when>
+                <xsl:otherwise>For 
+                   <xsl:for-each select="cc:ref-id">
+                     <xsl:variable name="tid" select="text()"/>
+                     <xsl:if test="position()!=1">/</xsl:if>
+                     <xsl:apply-templates select="//cc:selectable[./@id=$tid]"/>
+                   </xsl:for-each> TOEs </xsl:otherwise></xsl:choose>
               </xsl:if> 
               <xsl:if test="@on='implements'">
                 the TOE implements 
-                <xsl:variable name="ref-id" select="@ref-id"/>
-                "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                <xsl:for-each select="cc:ref-id">
+                  <xsl:variable name="ref-id" select="text()"/>
+                  <xsl:if test="position()!=1">, </xsl:if>
+                  "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
+                </xsl:for-each>
               </xsl:if>
+              <!-- This is a module piece... -->
               </li>
           </xsl:for-each> </ul>
           <div class="dependent-content">
             <xsl:call-template name="handle-html"/>
           </div>        
         </div>        
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="handle-html"/>
-      </xsl:otherwise>
-    </xsl:choose>
- </xsl:template>
+  </xsl:template>
 
-  <xsl:template name="handle-html">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="htm:*" name="handle-html">
      <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
       <xsl:for-each select="@*">
@@ -543,7 +573,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id"/>
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
@@ -554,7 +584,7 @@ The following sections list Common Criteria and technology terms used in this do
   -->
   <xsl:template match="cc:*">
     <xsl:if test="contains($debug,'vv')">
-      <xsl:message> Unmatched CC tag: <xsl:call-template name="path"/></xsl:message>
+      <xsl:message> Unmatched CC tag: <xsl:call-template name="genPath"/></xsl:message>
     </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
@@ -577,8 +607,22 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
        </xsl:if>
     </xsl:for-each>
-
-  </xsl:template>
+    <xsl:for-each select="//cc:ref-id">
+	<xsl:variable name="refid" select="text()"/>
+        <xsl:if test="count(//cc:*[@id=$refid])=0">
+         <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
+        </xsl:if>
+    </xsl:for-each>
+    <xsl:for-each select="//@ref-id">
+	<xsl:variable name="refid" select="text()"/>
+        <xsl:if test="not(//cc:*[@id=$refid])">
+         <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
+           for a <xsl:value-of select="name()"/>
+           .
+         </xsl:message>
+        </xsl:if>
+    </xsl:for-each>
+   </xsl:template>
 
 
   <!--
@@ -592,6 +636,9 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:if>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:inline-comment">
     <xsl:choose>
       <xsl:when test="@linebreak='yes'">
@@ -611,479 +658,59 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
-  <!-- Makes a ref to requirement -->
-<!-- ############### -->
-<!--            -->
-  <xsl:template name="req-refs">
-    <!-- Optional css classes -->
-    <xsl:param name="class"/>
-    <!-- Requirement id -->
-    <xsl:param name="req"/>
-
-    <xsl:param name="iter"/>
-    <!--lower req-->
-    <xsl:variable name="lreq">
-      <xsl:value-of select="translate($req,$upper,$lower)"/>
-    </xsl:variable>
-
-    <!--Uppercase req -->
-    <xsl:variable name="capped-req">
-      <xsl:value-of select="translate($lreq,$lower,$upper)"/>
-    </xsl:variable>
-
-    <a class="{$class}" href="#{$capped-req}{$iter}"><xsl:value-of select="concat($capped-req,$iter)"/></a>
-  </xsl:template>
-
-  <!--#####################-->
-  <!-- Debugging templates -->
-  <!--#####################-->
-  <xsl:template name="debug-2">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'vv')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- -->
-  <xsl:template name="debug-1">
-    <xsl:param name="msg"/>
-    <xsl:if test="contains($debug, 'v')">
-      <xsl:message><xsl:value-of select="$msg"/></xsl:message>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- Debugging function -->
-  <xsl:template name="path">
-    <xsl:for-each select="parent::*">
-      <xsl:call-template name="path"/>
-    </xsl:for-each>
-    <xsl:value-of select="name()"/>
-    <xsl:text>/</xsl:text>
-  </xsl:template>
-
-<!-- ############################ -->
-<!-- Contains JavaScript for initializing the page -->
-  <xsl:template name="init_js">
-    <xsl:text disable-output-escaping="yes">// &lt;![CDATA[
-
-// Called on page load to parse URL parameters and perform actions on them.
-function init(){
-    if(getQueryVariable("expand") == "on"){
-      expand();
-    }
-    fixAbbrs();
-}
-
-
-function fixAbbrs(){
-    var aa;
-    var brk_els = document.getElementsByClassName("dyn-abbr");
-    //
-    for(aa=0; aa!=brk_els.length; aa++){
-        var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
-        var el = document.getElementById("long_"+abbr)
-        if (el==null) {
-             console.log("Could not find 'long_abbr_'"+abbr);
-             continue;
-        }
-        var abbr_def = el.textContent;
-        brk_els[aa].setAttribute("title", abbr_def);
-    }
-}
-
-
-
-// ]]&gt;</xsl:text>
-</xsl:template>
-
-
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template name="head">
-    <xsl:param name="title"/>
       <head>
 	<title><xsl:value-of select="$title"/></title>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' ></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-            extensions: ["tex2jax.js"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-            showMathMenu: false,
-            tex2jax: {
-              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-              displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-              processEscapes: true
-            },
-            styles: {
-
-                ".MathJax_Display": {
-                "text-align": "left !important",
-                margin:       "0em 0em !important"
-            }}
-            });
-        </script>
-        <script type="text/javascript">
-
-<xsl:call-template name="init_js"/>
-
-<xsl:text disable-output-escaping="yes">// &lt;![CDATA[
-const AMPERSAND=String.fromCharCode(38);
-
-// Pass a URL variable to this function and it will return its value
-function getQueryVariable(variable)
-{
-    var query = window.location.search.substring(1);
-    var vars = query.split(AMPERSAND);
-    for (var i=0;i!=vars.length;i++) {
-        var pair = vars[i].split("=");
-        if(pair[0] == variable){return pair[1];}
-    }
-    return(false);
-}
-
-
-//    Expands all evaluation activities
-function expand(){
-    var ap = document.getElementsByClassName('activity_pane');
-    for (var ii = 0; ii!=ap.length; ii++) {
-        ap[ii].classList.remove('hide');
-    }
-}
-
-// Function to expand and contract a given div
-function toggle(descendent) {
-    var cl = descendent.parentNode.parentNode.classList;
-    if (cl.contains('hide')){
-      cl.remove('hide');
-    }
-    else{
-      cl.add('hide');
-    }
-}
-
-// Expands targets if they are hidden
-function showTarget(id){
-    var element = document.getElementById(id);
-    while (element != document.body.rootNode ){
-	element.classList.remove("hide");
-	element = element.parentElement;
-    }
-}
-
-
-// ]]&gt;</xsl:text>
-        </script>
-
+        <xsl:call-template name="pp_js"/>
         <style type="text/css">
-        <xsl:call-template name="common_css"/>
-
-
-          .figure{
-              font-weight:bold;
-          }
-          h1{
-              page-break-before:always;
-              text-align:left;
-              font-size:200%;
-              margin-top:2em;
-              margin-bottom:2em;
-              font-family:verdana, arial, helvetica, sans-serif;
-              margin-bottom:1.0em;
-          }
-          h1.title{
-              text-align:center;
-          }
-          h2{
-              font-size:125%;
-              border-bottom:solid 1px gray;
-              margin-bottom:1.0em;
-              margin-top:2em;
-              margin-bottom:0.75em;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-          h3{
-              font-size:110%;
-              margin-bottom:0.25em;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-          h4{
-              margin-left:0%;
-              font-size:100%;
-              margin-bottom:0.75em;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-          h5,
-          h6{
-              margin-left:6%;
-              font-size:90%;
-              margin-bottom:0.5em;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-          p{
-              margin-bottom:0.6em;
-              margin-top:0.2em;
-          }
-          pre{
-              margin-bottom:0.5em;
-              margin-top:0.25em;
-              margin-left:3%;
-              font-family:monospace;
-              font-size:90%;
-          }
-          ul{
-              margin-bottom:0.5em;
-              margin-top:0.25em;
-          }
-          td{
-              vertical-align:top;
-          }
-          dl{
-              margin-bottom:0.5em;
-              margin-top:0.25em;
-          }
-          dt{
-              margin-top:0.7em;
-              font-weight:bold;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-
-          a.linkref{
-              font-family:verdana, arial, helvetica, sans-serif;
-              font-size:90%;
-          }
-
-          *.simpleText{
-              margin-left:10%;
-          }
-          *.propertyText{
-              margin-left:10%;
-              margin-top:0.2em;
-              margin-bottom:0.2em
-          }
-          *.toc{
-              background:#FFFFFF;
-          }
-          *.toc2{
-              background:#FFFFFF;
-          }
-          div.comp{
-              margin-left:8%;
-              margin-top:1em;
-              margin-bottom:1em;
-          }
-          div.element{
-              margin-bottom:1em;
-          }
-          div.appnote{
-              margin-left:0%;
-              margin-top:1em;
-          }
-          .comment-aa{
-              background-color:beige;
-              color:green;
-          }
-          div.subaact{
-              margin-left:0%;
-              margin-top:1em;
-          }
-          div.activity_pane_body{
-              margin-left:0%;
-              margin-top:1em;
-              margin-bottom:1em;
-              padding:1em;
-              border:2px solid #888888;
-              border-radius:3px;
-              display:block;
-              margin-left:0%;
-              margin-top:1em;
-              margin-bottom:1em;
-              box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
-          }
-          div.optional-appendicies{
-              display:none;
-          }
-
-          div.statustag{
-              margin-left:0%;
-              margin-top:1em;
-              margin-bottom:1em;
-              padding: 0.6em;
-              border:2px solid #888888;
-              border-radius:3px;
-          }
-
-          div.toc{
-              margin-left:8%;
-              margin-bottom:4em;
-              padding-bottom:0.75em;
-              padding-top:1em;
-              padding-left:2em;
-              padding-right:2em;
-          }
-          span.SOlist{
-              font-size:90%;
-              font-family:verdana, arial, helvetica, sans-serif;
-          }
-          h2.toc{
-              border-bottom:none;
-              margin-left:0%;
-              margin-top:0em;
-          }
-          p.toc{
-              margin-left:2em;
-              margin-bottom:0.2em;
-              margin-top:0.5em;
-          }
-          p.toc2{
-              margin-left:5em;
-              margin-bottom:0.1em;
-              margin-top:0.1em;
-          }
-          div.center{
-              display:block;
-              margin-left:auto;
-              margin-right:auto;
-              text-align:center;
-          }
-          div.figure{
-              display:block;
-              margin-left:auto;
-              margin-right:auto;
-              text-align:center;
-              margin-top:1em;
-          }
-          div.activity_pane_header{
-              display:table-cell;
-              vertical-align:middle;
-              padding-top:10px
-          }
-          span.activity_pane_label{
-              vertical-align:middle;
-              color:black;
-              text-decoration:none;
-              font-size:100%;
-              font-weight:bold; /*font-family: verdana, arial, helvetica, sans-serif; */
-          }
-          .dyn-abbr a, .dyn-abbr a:active, .dyn-abbr a:visited{
-              background-color: inherit;
-              color: inherit;
-              text-decoration: inherit;;
-          }
-
-          @media screen{
-              *.reqid{
-                  float:left;
-                  font-size:90%;
-                  font-family:verdana, arial, helvetica, sans-serif;
-                  margin-right:1em;
-              }
-              *.req{
-                  margin-left:0%;
-                  margin-top:1em;
-                  margin-bottom:1em;
-              }
-              *.reqdesc{
-                  margin-left:20%;
-              }
-
-              .activity_pane.hide .toggler::after, .activity_pane.hide .toggler{
-	          content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8A\
-		  AAAPCAYAAAA71pVKAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAQOFAAEDhQGl\
-		  VDz+AAAAB3RJTUUH4gIXFC4BR3keeQAAAfZJREFUKM+d0k1PE1EUBuB37h2nQ+30\
-		  w5YObR0FhIppqBgWuDCaSBQjiQZNTIxLfoAkBHXh2vg7xID+ABPXBl3UdAMaN1CR\
-		  j5ZijZ22DKW9d44LP1KMROvZnMU5z+KcvBzAAgADwCdV1RzXlYQ26tYhrYM6u/qX\
-		  ATwCcKodrAOYv3z9IV28OuP6/NHPAGYZ45G/QQ5AAFjNbyzdTA2NewcGx7xeI5wu\
-		  FZenQOQQuasHncN/9IJo1sn+unkpbqVFIJhgydQo13VjDKCJSnnLBJAHUPoTBoA3\
-		  uzvlfiNgDhn+KMiVCB6xYCZSoaPHz5wrba/cbuztpBWFvQLI+R2DSGZqleKNuJX2\
-		  cVVjAIExDo/uV7pPjGhSNntrleI9+n7Ox33Y549Wq/ZWTyh8rNcfjPlaZ4xzZvUM\
-		  ezrNvnJ+fXFCiL2k2rpQq2wnAqH4tYjZFyZq/Y8CKZoim51z1nIZQ4jGNIC5fZhz\
-		  7fHA4JVuj26AyIWiMDSbdTi1L/T29RO7ahdfKgqbInJLANCKZ6Kx5J24dVowztW6\
-		  Y+8WNt91FNYXc4WN988BzAL4QOT+Aj/x8GFf+MHI+UlI2cBS9kVlLZfxSFdMS9GY\
-		  V1WtKETDPShhz85emLRHx++TETBLAJ4qCov8c7ajsZMr/5PtBQB3AXSpqsbagd8A\
-		  O+HMRUtPNsQAAAAASUVORK5CYII=');
-              }
-
-              .activity_pane.hide .activity_pane_body{
-                  display:none;
-              }
-              div.statustag{
-                  box-shadow:4px 4px 3px #888888;
-              }
-          }
-
-
-          @media print{
-              *.reqid{
-                  font-size:90%;
-                  font-family:verdana, arial, helvetica, sans-serif;
-              }
-              *.req{
-                  margin-left:0%;
-                  margin-top:1em;
-                  margin-bottom:1em;
-              }
-              *.reqdesc{
-                  margin-left:20%;
-              }
-              div.activity_pane_body{
-                  padding:1em;
-                  border:2px solid #888888;
-                  border-radius:3px;
-                  display:block;
-              }
-
-	            img[src="images/collapsed.png"] { display:none;}
-
-          }
+        <xsl:call-template name="pp_css"/>
 	</style>
       </head>
-    </xsl:template>
+  </xsl:template>
 
 
-    <xsl:template name="body-begin">
-      <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
-      <noscript>
-        <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
-            >This page is best viewed with JavaScript enabled!</h1>
-      </noscript>
-      <div class="center">
-	<img src="images/niaplogo.png" alt="NIAP Logo"/>
-        <br/>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template name="body-begin">
+    <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
+    <noscript>
+      <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
+          >This page is best viewed with JavaScript enabled!</h1>
+    </noscript>
+    <div class="center">
+      <img src="images/niaplogo.png" alt="NIAP Logo"/> <br/>
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
-	<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-        <p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-        <p/><b><xsl:value-of select="//cc:PPAuthor"/></b>
-      </div>
+      Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      <xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
+    </div>
+    <xsl:apply-templates select="//cc:foreword"/>
 
+    <h2 style="page-break-before:always;">Revision History</h2>
+    <table>
+     <tr class="header">
+       <th>Version</th>
+       <th>Date</th>
+       <th>Comment</th>
+     </tr>
+     <xsl:for-each select="//cc:RevisionHistory/cc:entry">
+       <tr>
+         <td> <xsl:value-of select="cc:version"/> </td>
+         <td> <xsl:value-of select="cc:date"/> </td>
+         <td> <xsl:apply-templates select="cc:subject"/> </td>
+       </tr>
+     </xsl:for-each>
+    </table>
+    <h2>Contents</h2>
+    <div class="toc" id="toc"/>
+  </xsl:template>
 
-
-	<xsl:apply-templates select="//cc:foreword"/>
-
-	<h2 style="page-break-before:always;">Revision History</h2>
-        <table>
-          <tr class="header">
-            <th>Version</th>
-            <th>Date</th>
-            <th>Comment</th>
-          </tr>
-          <xsl:for-each select="//cc:RevisionHistory/cc:entry">
-            <tr>
-              <td>
-                <xsl:value-of select="cc:version"/>
-              </td>
-              <td>
-                <xsl:value-of select="cc:date"/>
-              </td>
-              <td>
-                <xsl:apply-templates select="cc:subject"/>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </table>
-	<h2>Contents</h2>
-	<div class="toc" id="toc"/>
-    </xsl:template>
-
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:no-link">
     <span class="no-link">
         <xsl:apply-templates/>
@@ -1091,16 +718,16 @@ function showTarget(id){
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template name="acronyms">
     <h1 id="acronyms" class="indexable" data-level="A">Acronyms</h1>
     <xsl:call-template name="acronym-table"/>
   </xsl:template>
 
 
-<!-- ############### -->
-<!--            -->
+  <!-- ############### -->
+  <!--            -->
   <xsl:template match="cc:acronyms" name="acronym-table">
     <table>
       <tr class="header">
@@ -1110,20 +737,18 @@ function showTarget(id){
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
         <tr>
-            <td><span class="term" id="abbr_{@abbr}"><xsl:value-of select="@abbr"/></span></td>
+            <td>
+              <xsl:element name="span">
+                 <xsl:attribute name="class">term</xsl:attribute>
+                 <xsl:attribute name="id">abbr_<xsl:value-of select="@abbr"/></xsl:attribute>
+                 <xsl:if test="@plural"><xsl:attribute name="data-plural"><xsl:value-of select="@plural"/></xsl:attribute></xsl:if>
+                 <xsl:value-of select="@abbr"/>
+              </xsl:element>
+            </td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
        </tr>&#10;
 
       </xsl:for-each>
     </table>
   </xsl:template>
-
-  
- <!-- ############### -->
-<!--            -->
-  <xsl:template match="cc:cite">
-    <xsl:variable name="linkend" select="@linkend"/>
-    <a href="#{$linkend}">[<xsl:value-of select="//cc:bibliography/cc:entry[@id=$linkend]/cc:tag"/>]</a>
-  </xsl:template>
-
 </xsl:stylesheet>

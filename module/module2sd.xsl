@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-XSL for Protection Profile Modules
+This transform PP Modules into Support Documentation.
 -->
 
 <x:stylesheet xmlns:x="http://www.w3.org/1999/XSL/Transform"
 	      xmlns:cc="https://niap-ccevs.org/cc/v1"
+	      xmlns:sec="https://niap-ccevs.org/cc/v1/section"
 	      xmlns="http://www.w3.org/1999/xhtml"
 	      xmlns:h="http://www.w3.org/1999/xhtml"
 	      version="1.0">
@@ -18,6 +19,7 @@ XSL for Protection Profile Modules
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <x:include href="../ppcommons.xsl"/>
+  <x:include href="module-commons.xsl"/>
 
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
@@ -35,6 +37,22 @@ XSL for Protection Profile Modules
 	<x:call-template name="references"/>
       </body>
     </html>
+  </x:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <x:template name="make-section">
+    <x:param name="title"/>
+    <x:param name="id"/>
+    <x:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+    <x:element name="h{$depth}">
+      <x:attribute name="id"><x:value-of select="$id"/></x:attribute>
+      <x:attribute name="class">indexable,h<x:value-of select="$depth"/></x:attribute>
+      <x:attribute name="data-level"><x:value-of select="$depth"/></x:attribute>
+      <x:value-of select="$title"/>
+    </x:element>
+    <x:apply-templates select=".//cc:f-component"/>
   </x:template>
 
 
@@ -93,7 +111,7 @@ guidance, and testing.</p>
     associated with the CEM work unit ASE_TSS.1-1.
     Evaluator verdicts associated with the supplementary evidence will also be 
     associated with ASE_TSS.1-1, 
-    since the requirement to provide such evidence is specified in ASE in the cPP.</p>
+    since the requirement to provide such evidence is specified in ASE in the PP.</p>
     
     <p>For ensuring the guidance documentation provides sufficient information for 
     the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
@@ -115,51 +133,53 @@ guidance, and testing.</p>
   </x:template>
 
   <x:template name="handle-apply-to-all">
-    <h3 class="indexable" data-level="2" id="man-sfrs">TOE SFR Evaluation Activities</h3>
+    <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
-      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
-          (i.e. Requirements that are included in every configuration regardless of the bases selected).</x:otherwise>
+          (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="0" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
+    <h1 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
     <x:choose>
-      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
 
-    <h1 class="indexable" data-level="0" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
+    <h1 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
     <x:choose>
-      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="0" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
+    <h1 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
     <x:choose>
-      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs/cc:*"/></x:when>
+      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs"/></x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
     </x:choose>
-
-
-
   </x:template>
+
+  <x:template match="cc:man-sfrs|cc:opt-sfrs|cc:sel-sfrs|cc:obj-sfrs">
+    <x:apply-templates select="cc:*|sec:*"/>
+  </x:template>
+
 
   <x:template name="handle-bases">
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
-	<x:value-of select="@name"/> Protection Profile
+	<x:apply-templates mode="expanded" select="."/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
-      to a PP-Configuration that includes the <x:value-of select="@short"/> PP.
-      <x:call-template name="sub-sfrs">
+      to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
+     <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
 	<x:with-param name="short" select="@short"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
-	  <x:value-of select="@short"/> PP is the base.
+	  <x:apply-templates select="." mode="short"/> is the base.
 	</x:with-param>
       </x:call-template>
       
@@ -172,6 +192,7 @@ guidance, and testing.</p>
     </x:for-each>
   </x:template>
   
+	
   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
@@ -201,10 +222,10 @@ guidance, and testing.</p>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
       <x:when test="count(//cc:base-pp)=1">
-	<x:value-of select="//cc:base-pp/@short"/> PP base to which it must claim conformance.
+	<x:apply-templates mode="short" select="//cc:base-pp"/> base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:value-of select="//cc:base-pp/@short"/> PP includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:apply-templates mode="short" select="//cc:base-pp"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
@@ -233,7 +254,7 @@ guidance, and testing.</p>
     <p>For ensuring the guidance documentation provides sufficient information for the administrators/users as it pertains to SFRs, the evaluator’s verdicts will be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
 
     <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the EA. The CEM work units that are associated with the EAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
-    <x:apply-templates select="/cc:PP/cc:chapter[@id='req']"/>
+    <x:apply-templates select="//*[@title='Security Requirements']|//sec:Security_Requirements"/>
   </x:template>
 
   <x:template name="intro">
@@ -243,22 +264,19 @@ guidance, and testing.</p>
     to describe the security functionality of 
       <x:value-of select="/cc:Module/@name"/> products in terms of 
     [CC] and to define functional and assurance requirements for them.
-    The PP-Module is intended for use with the
-    <x:choose>
-      <x:when test="count(//cc:base-pp)=1">
-	<a href="{//cc:base-pp/@url}"><x:value-of select="//cc:base-pp/@name"/> Protection Profile</a>
-      </x:when>
-      <x:otherwise>
-	following Base-PPs:
-	<ul>
+    The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
+        <ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><a href="{@url}"><x:value-of select="@name"/>, Version <x:value-of select="@version"/></a></li>
+	    <li><a href="{@url}"><x:apply-templates select="." mode="expanded"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
-      </x:otherwise>
-    </x:choose>.</p>
-    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for <x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/>.
-    Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
+    </p>
+    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
+    <ul><li><x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
+    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activites to the Base-PP(s) it modifies.
+   </p>
+    <p> 
+Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
     Functional Requirements (SFR), and may identify particular requirements for the content of Security
     Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly
@@ -356,58 +374,66 @@ guidance, and testing.</p>
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
 
-  <x:template match="cc:section">
-    <h2 id="{@id}" class="indexable" data-level="1"><x:value-of select="@title"/></h2>
-    <x:apply-templates/>
-  </x:template>
-
-  <x:template match="cc:subsection">
-    <x:call-template name="subsection"><x:with-param name="level"><x:value-of select="count(ancestor::*)-1"></x:value-of></x:with-param></x:call-template>
-  </x:template>
-
-  <!-- Not getting the right level numbers-->
-  <x:template match="cc:opt-sfrs/cc:subsection|cc:sel-sfrs/cc:subsection|cc:obj-sfrs/cc:subsection">
-    <x:call-template name="subsection"><x:with-param name="level"><x:value-of select="1"></x:value-of></x:with-param></x:call-template>
-
-  </x:template>
-
-  <x:template name="subsection">
-    <x:param name="level"/>
-    <x:element name="h3">
-      <x:attribute name="id"><x:value-of select="@id"/></x:attribute>
-      <x:attribute name="class">indexable</x:attribute>
-      <x:attribute name="data-level"><x:value-of select="$level"/></x:attribute>
-      <x:value-of select="@title" />
-    </x:element>
-    <x:apply-templates select="cc:*"/>
-  </x:template>
-
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
-      <h4>
-        <x:apply-templates select="." mode="getId"/><x:text> </x:text>
+
+	<!-- Display component name -->
+	<h4>
+       	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
-      </h4>
-      <x:choose>
-         <x:when test=".//cc:aactivity/cc:no-tests">
-           <x:apply-templates select=".//cc:aactivity"/>
-         </x:when>
-         <x:otherwise>
-           <x:if test=".//cc:TSS">
-             <div class="eacategory">TSS</div>
-             <x:for-each select=".//cc:TSS"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Guidance">
-             <div class="eacategory">Guidance</div>
-             <x:for-each select=".//cc:Guidance"><x:apply-templates/></x:for-each>
-           </x:if>
-           <x:if test=".//cc:Tests">
-             <div class="eacategory">Tests</div>
-             <x:for-each select=".//cc:Tests"><x:apply-templates/></x:for-each>
-           </x:if>
-        </x:otherwise>
-      </x:choose>
-    </div>
+        </h4>
+	    
+	<!-- Loop through all the component-level EAs. There should be exactly one. -->
+	<!-- But it should be displayed first, and without a header. -->
+	<!-- Maybe we should test to make sure there is at least one?  Naah. -->
+	<x:for-each select=".//cc:aactivity[@level!='element']">
+	      	<x:apply-templates select="." mode="gen-aa"/>
+		<x:choose>
+			<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+	         	</x:when>
+ 			<x:otherwise>
+				<x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				<div class="eacategory">Guidance</div>
+            				<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>
+	</x:for-each>
+
+    	<x:for-each select=".//cc:aactivity[@level='element']">
+		<!-- Display the element name -->
+	        <h4>Element: <x:apply-templates select=".." mode="getId"/></h4>
+	      	<x:apply-templates select="." mode="gen-aa"/>
+      		<x:choose>
+         		<x:when test="cc:no-tests">
+				<i><x:value-of select="cc:no-tests"/></i>	 	
+         		</x:when>
+	 	        <x:otherwise>
+		 	       <x:if test="cc:TSS">
+             				<div class="eacategory">TSS</div>
+             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
+         			</x:if>
+        	   		<x:if test="cc:Guidance">
+            				 <div class="eacategory">Guidance</div>
+            			 	<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
+          	 		</x:if>
+           			<x:if test="cc:Tests">
+            	 			<div class="eacategory">Tests</div>
+            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
+	           		</x:if>
+        		</x:otherwise>
+      		</x:choose>		
+	</x:for-each>
+    	</div>
   </x:template>
 
 
@@ -429,8 +455,12 @@ guidance, and testing.</p>
 
   <!-- We're explicity grabbing these all, so ground anytime we run into them -->
   <x:template match="cc:aactivity"/>
-  <x:template match="cc:Guidance">
-    <x:message>TTTT</x:message>
+
+
+  <x:template match="cc:Guidance|cc:Tests|cc:TSS" mode="gen-aa"/>
+
+  <x:template match="cc:aactivity" mode="gen-aa">
+    <x:apply-templates mode="gen-aa"/>
   </x:template>
 
   <!-- Ground all extend component definitions-->

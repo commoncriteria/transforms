@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<boilerplate xmlns="https://niap-ccevs.org/cc/v1">
+<boilerplate xmlns="https://niap-ccevs.org/cc/v1" 
+             xmlns:h="http://www.w3.org/1999/xhtml"
+             xmlns:cc="https://niap-ccevs.org/cc/v1"> 
   <cc-terms>
-    <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <citeCC/>.</term>
-    <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used to build a PP-Configuration.</term>
+    <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <xref g='CC'/>.</term>
+    <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used as a basis to build a PP-Configuration.</term>
     <term full="Common Criteria" abbr="CC">Common Criteria for Information Technology Security Evaluation (International Standard ISO/IEC 15408).</term>
     <term full="Common Criteria Testing Laboratory">
       Within the context of the Common Criteria Evaluation and Validation Scheme (CCEVS), an IT security evaluation facility, accredited by the National Voluntary Laboratory Accreditation Program (NVLAP) and approved by the NIAP Validation Body to conduct Common Criteria-based evaluations.
@@ -18,14 +20,13 @@
     <term full="Security Target" abbr="ST">A set of implementation-dependent security requirements for a specific product.</term>
     <term full="Target of Evaluation" abbr="TOE">The product under evaluation. </term>
     <term full="TOE Security Functionality" abbr="TSF">The security functionality of the product under evaluation.</term>
+    <term full="TSF Interface" abbr="TSFI" plural="TSFIs"/>
     <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in an ST.</term>
   </cc-terms>
 
   <!-- ############## -->
    <empty title='Security Requirements'>
-     This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
-     Those requirements comprise functional components from Part 2 and assurance components from Part 3 of <citeCC/>.
-     The following conventions are used for the completion of operations:
+    The following conventions are used for the completion of operations:
      <ul xmlns="http://www.w3.org/1999/xhtml">
        <li>
          <b>Refinement</b> operation (denoted by <b>bold text</b> or <strike>strikethrough
@@ -47,6 +48,12 @@
      </ul>
    </empty>
 
+   <empty id="a-group">
+      <a-stuff type="D">Developer action</a-stuff>
+      <a-stuff type="C">Content and presentation</a-stuff>
+      <a-stuff type="E">Evaluator action</a-stuff>
+   </empty>
+
    <empty id="DCE">
      <D/><C/><E/>
    </empty>
@@ -56,5 +63,41 @@
    	  <doc num="2" name="Security Functional Components"/>
    	  <doc num="3" name="Security Assurance Components"/>
    </empty>
+
+   <empty id="req-types">
+       <mt tp='optional'   nice='Strictly Optional'>
+		   <audit-table-explainer>
+<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+		   </audit-table-explainer>   
+       </mt>
+       <mt tp='objective'  nice='Objective'>
+		   <audit-table-explainer>
+<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+		   </audit-table-explainer>   
+       </mt>
+       <mt tp='feat-based' nice='Implementation-based'>
+	   <audit-table-explainer><h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p></audit-table-explainer>   
+	   </mt>
+       <mt tp='sel-based'  nice='Selection-based'>
+		 <description>
+	<h:p>As indicated in the introduction to this <cc:doctype-short/>,
+        the baseline requirements
+        (those that must be performed by the TOE or its underlying platform)
+        are contained in the body of this <cc:doctype-short/>.
+        There are additional requirements based on selections in the body of 
+        the <cc:doctype-short/>:
+        if certain selections are made, then additional requirements below must be included.
+ 	</h:p>
+		 </description>
+         <audit-table-explainer>
+         <h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+         </audit-table-explainer>
+	   </mt>
+		   
+		   
+  </empty>
+
+
+
    
 </boilerplate>
