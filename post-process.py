@@ -7,6 +7,7 @@ with XSLT).
 # from io import StringIO
 import re
 import sys
+import string
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
@@ -28,12 +29,28 @@ def log(level, msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
-    
-def get_appendix_prefix(num):
-    if num > 26:
-        err("Cannot handle more than 26 appendices")
-    ABC=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-    return ABC[num]
+
+A_UPPERCASE = ord('A')
+ALPHABET_SIZE = 26
+
+def _decompose(number):
+    """Generate digits from `number` in base alphabet, least significants
+    bits first.
+
+    Since A is 1 rather than 0 in base alphabet, we are dealing with
+    `number - 1` at each iteration to be able to extract the proper digits.
+    """
+    while number:
+        number, remainder = divmod(number-1, ALPHABET_SIZE)
+        yield remainder
+
+
+def base_10_to_alphabet(number):
+    """Convert a decimal number to its base alphabet representation"""
+    return ''.join(
+            chr(A_UPPERCASE + part)
+            for part in _decompose(number+1)
+    )[::-1]
 
 
 def backslashify(phrase):
@@ -255,7 +272,7 @@ class State:
             inums[level]+=1
 
             if is_alpha and level == 0:
-                prefix= "Appendix " + get_appendix_prefix(inums[0]) + " - "
+                prefix= "Appendix " + base_10_to_alphabet(inums[0]) + " - "
             elif is_alpha:
                 prefix = get_appendix_prefix(inums[0])
             else:
