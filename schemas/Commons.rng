@@ -336,10 +336,10 @@ If it's only an acronym make sure the text content is empty.
              <value>glossary</value>
              <value>CC</value>
              <value>t-audit-mandatory</value>
-             <value>atref-optional-dep</value>
-             <value>atref-objective-dep</value>
-             <value>atref-sel-based-dep</value>
-             <value>atref-impl-dep-dep</value>
+             <value>t-audit-optional</value>
+             <value>t-audit-objective</value>
+             <value>t-audit-sel-based</value>
+             <value>t-audit-impl-dep</value>
              <value>optional-reqs</value>
              <value>objective-reqs</value>
              <value>feat-based-reqs</value>
