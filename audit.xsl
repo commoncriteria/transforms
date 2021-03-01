@@ -89,7 +89,7 @@
         <caption><xsl:call-template name="ctr-xsl">
          <xsl:with-param name="ctr-type" select="'Table'"/>
 	 <xsl:with-param name="id" select="concat('t-audit-',$thistable)"/>
-         </xsl:call-template>: Audit Events for <xsl:value-of select="$nicename"/> Requirements</caption>
+         </xsl:call-template>: Auditable Events for <xsl:value-of select="$nicename"/> Requirements</caption>
 <!--      </xsl:if>-->
       <!--<xsl:apply-templates/>-->
         <tr><th>Requirement</th>
