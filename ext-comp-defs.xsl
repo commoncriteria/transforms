@@ -44,10 +44,13 @@ Contains transforms for extended component definitions
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
             select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs)])"/>
+<!--
           <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
               <xsl:attribute name="style">
                 <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
               </xsl:attribute>
+-->
+          <svg xmlns="http://www.w3.org/2000/svg" style="{concat('max-height', 20*$dcount+10, 'px;')}">
               <xsl:call-template name="drawbox">
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
@@ -63,7 +66,8 @@ Contains transforms for extended component definitions
                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
                 </xsl:call-template>
               </xsl:for-each>
-          </xsl:element>
+          </svg>
+<!--          </xsl:element> -->
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="cc:mod-def"/>
