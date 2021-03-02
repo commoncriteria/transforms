@@ -1,2 +1,2 @@
-BoilerplateSummary.html: boilerplates.xsl
-	./bp-documentor.py boilerplates.xsl > BoilerplateSummary.html
+BoilerplateSummary.html: xsl/boilerplates.xsl
+	py/bp-documentor.py xsl/boilerplates.xsl > BoilerplateSummary.html

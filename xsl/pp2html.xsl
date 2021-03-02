@@ -21,7 +21,7 @@
   <!--  PARAMETERS     -->
   <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
-  <xsl:param name="work-dir" select="'../output'"/>
+  <xsl:param name="work-dir" select="'../../output'"/>
 
   <!-- ############### -->
   <!--  CONSTANTS      -->

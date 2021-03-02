@@ -24,13 +24,13 @@ TRANS ?= transforms
 DEBUG ?= v
 
 #- XSL containing templates common to the other transforms
-PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
 
 #- Path to input XML document for the config annex
 CONFIGANNEX_XML ?= $(IN)/configannex.xml
 
 #- XSL that creates regular config annex document
-CONFIGANNEX2HTML_XSL ?= $(TRANS)/configannex2html.xsl
+CONFIGANNEX2HTML_XSL ?= $(TRANS)/xsl/configannex2html.xsl
 
 #- Path where the config annex is written
 CONFIGANNEX_HTML ?= $(OUT)/configannex.html
