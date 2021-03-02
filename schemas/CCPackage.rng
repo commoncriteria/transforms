@@ -76,34 +76,21 @@
             <value>objective</value>
           </attribute>
         </group>
-
-	      
         <!-- If the status is selection-based, it must have dependencies -->
         <group>
           <attribute name="status">
             <a:documentation>
               Denotes the status of a requirement.
             </a:documentation>
-            <value>sel-based</value>
-          </attribute>
-          <oneOrMore>
-            <ref name="selection-depends"/>
-          </oneOrMore>
-        </group>
-
-	<!-- Feature-based -->
-        <group>
-          <attribute name="status">
-            <a:documentation>
-              Feature-based requirements must have dependencies.
-            </a:documentation>
-            <value>feat-based</value>
+            <choice>
+              <value>sel-based</value>
+              <value>feat-based</value>
+            </choice>
           </attribute>
           <oneOrMore>
             <ref name="depends-pat"/>
           </oneOrMore>
         </group>
-	      
         <!-- The status could also be optional or nothing (which is indicated here) -->
         <optional>
           <attribute name="status">
@@ -112,7 +99,6 @@
             </a:documentation>
             <choice>
               <value>optional</value>
-	      <value>mandatory</value>
             </choice>
           </attribute>
         </optional>
