@@ -1167,7 +1167,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="basic-content-pat"/>
      </element>
   </define>
-	
+<!--	
   <define name="aactivity-sar">
       <element name="aactivity-sar">
         <a:documentation>
@@ -1176,7 +1176,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="basic-content-pat"/>
       </element> 
     </define>
-
+-->
   <define name="TSS">
     <element name="TSS">
       <a:documentation>
