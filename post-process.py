@@ -295,11 +295,7 @@ class State:
                 inums[level+1] = 0
             inums[level] += 1
             if is_alpha and level == 0:
-<<<<<<< HEAD
                 prefix= "Appendix " + base_10_to_alphabet(inums[0]) + " - "
-=======
-                prefix = "Appendix " + get_appendix_prefix(inums[0]) + " - "
->>>>>>> 560d1950dd00785200e6dabfa27ac783dc5c0282
             elif is_alpha:
                 prefix = get_appendix_prefix(inums[0])
             else:

@@ -63,6 +63,8 @@ if __name__ == "__main__":
           'htm': "http://www.w3.org/1999/xhtml"}
     ctr = 1
     for pkg in root.findall(".//cc:include-pkg", ns):
+        if "id" not in pkg.attrib:
+            continue
         filename = pkg.attrib["id"] + ".xml"
         url = "".join(pkg.find("./cc:raw-url", ns).text.split())
 
