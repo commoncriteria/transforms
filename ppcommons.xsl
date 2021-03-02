@@ -516,41 +516,33 @@ The following sections list Common Criteria and technology terms used in this do
        this is what we have.
   -->
   <xsl:template match="htm:*[./cc:depends]">
-        <div class="dependent"> The following content should be included if:
-           <ul> <xsl:for-each select="cc:depends">
-              <li>
-              <xsl:if test="@on='selection'">
-                <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
-                <xsl:choose><xsl:when test="//cc:f-element[.//cc:selectable/@id=$uid]">
-                <xsl:for-each select="cc:ref-id">  
-                  <xsl:variable name="qtid" select="text()"/>
-                  "<xsl:apply-templates select="//cc:selectable[@id=$qtid]"/>"
-                </xsl:for-each>
-                   is selected from 
-                   <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
-                </xsl:when>
-                <xsl:otherwise>For 
-                   <xsl:for-each select="cc:ref-id">
-                     <xsl:variable name="tid" select="text()"/>
-                     <xsl:if test="position()!=1">/</xsl:if>
-                     <xsl:apply-templates select="//cc:selectable[./@id=$tid]"/>
-                   </xsl:for-each> TOEs </xsl:otherwise></xsl:choose>
-              </xsl:if> 
-              <xsl:if test="@on='implements'">
-                the TOE implements 
-                <xsl:for-each select="cc:ref-id">
-                  <xsl:variable name="ref-id" select="text()"/>
-                  <xsl:if test="position()!=1">, </xsl:if>
-                  "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
-                </xsl:for-each>
-              </xsl:if>
+    <div class="dependent"> The following content should be included if:
+      <ul> <xsl:for-each select="cc:depends"><li>
+         <xsl:variable name="uid" select="@*[1]"/>
+         <xsl:choose><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
+           <xsl:for-each select="@*">  
+              <xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>,
+           </xsl:for-each>
+           is selected from 
+           <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+         </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
+           <xsl:for-each select="@*">
+             <xsl:if test="position()!=1">/</xsl:if>
+             <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
+           </xsl:for-each> TOEs 
+         </xsl:when><xsl:otherwise>
+           the TOE implements 
+           <xsl:for-each select="@*">
+             <xsl:if test="position()!=1">, </xsl:if>
+             "<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
+           </xsl:for-each>
+         </xsl:otherwise></xsl:choose>
               <!-- This is a module piece... -->
-              </li>
-          </xsl:for-each> </ul>
-          <div class="dependent-content">
-            <xsl:call-template name="handle-html"/>
-          </div>        
-        </div>        
+      </li></xsl:for-each> </ul>
+      <div class="dependent-content">
+          <xsl:call-template name="handle-html"/>
+      </div>        
+    </div>        
   </xsl:template>
 
   <!-- ############### -->
@@ -609,7 +601,7 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:for-each>
     <xsl:for-each select="//cc:ref-id">
 	<xsl:variable name="refid" select="text()"/>
-        <xsl:if test="count(//cc:*[@id=$refid])=0">
+        <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
         </xsl:if>
     </xsl:for-each>

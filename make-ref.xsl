@@ -9,12 +9,7 @@
   <!-- This files defines how to make cross-references to different items. -->
   <!-- ############### -->
   <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:selectable" mode="make_xref">
-    <xsl:variable name="r-id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-
-    <a href="#{$r-id}">
+  <xsl:template name="selectable-nolink">
       <xsl:choose>
         <xsl:when test="cc:readable"><xsl:apply-templates select="cc:readable"/></xsl:when>
 <!--- We want snips in our selectable, but not snips that are descendants of subselectabls -->
@@ -23,7 +18,18 @@
           </xsl:when> 
         <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
       </xsl:choose>
-    </a>
+  </xsl:template>
+
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:selectable" mode="make_xref">
+    <xsl:variable name="r-id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
+    <xsl:choose><xsl:when test="$doctype=local-name(/cc:*)">
+      <a href="#{$r-id}"><xsl:call-template name="selectable-nolink"/></a>
+    </xsl:when><xsl:otherwise>
+      <xsl:call-template name="selectable-nolink"/>
+    </xsl:otherwise></xsl:choose>
   </xsl:template>
 
   

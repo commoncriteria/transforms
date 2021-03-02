@@ -28,20 +28,13 @@ def log(level, msg):
     sys.stderr.write("\n")
 
 
-def download_url(url, root, filename=None):
+def download_url(url, path):
     """Download a file from a url and place it in root.
     Args:
         url (str): URL to download file from
-        root (str): Directory to place downloaded file in
-        filename (str, optional): Name to save the file under. If None, use
-        the basename of the URL
+        fpath(str): Full path to the destination file
     """
 
-    root = os.path.expanduser(root)
-    if not filename:
-        filename = os.path.basename(url)
-    fpath = os.path.join(root, filename)
-    os.makedirs(root, exist_ok=True)
     try:
         print('Downloading ' + url + ' to ' + fpath)
         urllib.request.urlretrieve(url, fpath)
@@ -70,11 +63,17 @@ if __name__ == "__main__":
           'htm': "http://www.w3.org/1999/xhtml"}
     ctr = 1
     for pkg in root.findall(".//cc:include-pkg", ns):
-        file_name = pkg.attrib["id"] + ".xml"
+        filename = pkg.attrib["id"] + ".xml"
         url = "".join(pkg.find("./cc:raw-url", ns).text.split())
-        f_info = pathlib.Path(file_name)
+
+        root = os.path.expanduser(dir)
+        if not filename:
+            filename = os.path.basename(url)
+        fpath = os.path.join(root, filename)
+        os.makedirs(root, exist_ok=True)
+        f_info = pathlib.Path(fpath)
         if not f_info.exists():
-            download_url(url, dir, file_name)
+            download_url(url, fpath)
         #
 #        open( str(ctr)+".xml", 'wb').write( requests.get( url ) )
 
