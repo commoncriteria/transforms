@@ -50,7 +50,7 @@ Contains transforms for extended component definitions
                 <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
               </xsl:attribute>
 -->
-          <svg xmlns="http://www.w3.org/2000/svg" style="{concat('max-height', 20*$dcount+10, 'px;')}">
+          <svg xmlns="http://www.w3.org/2000/svg" style="{concat('max-height: ', 20*$dcount+10, 'px;')}">
               <xsl:call-template name="drawbox">
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
                 <xsl:with-param name="boxtext" select="@fam-id"/>
