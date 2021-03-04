@@ -1703,15 +1703,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	  URL of the NIAP page for the base PP.
 	</a:documentation>
       </attribute>
-
-      <optional>
-        <attribute name="xmlurl">
-          <a:documentation>
-URL of the XML defining the base PP (if it exists).
-Ideally it should be NIAP or CC, but for right now it's probably on github.
-          </a:documentation>
-        </attribute>
-      </optional>
  </define> 
 
   <define name="implements-or-selection-pat">

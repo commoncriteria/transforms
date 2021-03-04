@@ -19,6 +19,7 @@
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
       <ref name="packages"/>
+      <ref name="modules"/>
       <ref name="PreferencesEtc"/>
       <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
@@ -38,7 +39,7 @@
     </element>
   </start>
 
-
+  
 
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
@@ -70,7 +71,19 @@ Content that only appears if the optional appendices exist.
     <optional> <ref name="pp-preferences-pat"/> </optional>
   </define>
   
-
+  <define name="modules">
+    <optional> <element name="modules"><optional><attribute name="required"/></optional>
+    <oneOrMore>
+      <element name="module">
+        <element name="name"><text/></element>
+        <element name="url"><text/></element>
+        <element name="version"><data type="string">
+            <param name="pattern">[0-9]+(\.[0-9]+)+</param>
+        </data></element>
+      </element>
+    </oneOrMore>
+    </element></optional>
+  </define>
   <define name="SecurityRequirementsChapter">
     <choice>
       <element name="section">

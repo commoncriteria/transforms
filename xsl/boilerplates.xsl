@@ -58,6 +58,24 @@ provides evidence that these controls are present and have been evaluated.
         <dd>This <xsl:call-template name="doctype-short"/> is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria <xsl:call-template name="verrev"/>.</dd>
         <dt>PP Claim </dt>
         <dd>This <xsl:call-template name="doctype-short"/> does not claim conformance to any Protection Profile. </dd>
+
+        <xsl:if test="/cc:PP//cc:module">
+          <dt>Module Claim</dt>
+          <dd>One or more of the following modules
+             <xsl:choose>
+               <xsl:when  test="//cc:modules/@required"> must </xsl:when>
+               <xsl:otherwise>can </xsl:otherwise>
+             </xsl:choose>
+            be specified in a PP-Configuration with this PP.
+            <ul>
+              <xsl:for-each select="//cc:modules/cc:module">
+                <li><a href="{cc:url/text()}">PP-Module for 
+                  <xsl:value-of select="concat(cc:name/text(),', version ', cc:version/text())"/>
+                </a></li>
+              </xsl:for-each>
+            </ul>
+          </dd>
+        </xsl:if>
         <dt>Package Claim</dt>
         <dd>This <xsl:call-template name="doctype-short"/><xsl:text> </xsl:text>
             <xsl:choose>
