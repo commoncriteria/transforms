@@ -56,7 +56,7 @@
       <optional>
          <ref name="description"/>
       </optional>
-      <ref name="f-components-pat"/>
+      <ref name="sfr_content-pat"/>
     </element>
   </define>
 
