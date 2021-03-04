@@ -149,9 +149,12 @@
           </xsl:for-each>
         </dl>
       </xsl:when>
-      <xsl:when test="local-name()='SOs'">
-        This CC-Module does not define any new security objectives.
-      </xsl:when>
+      <xsl:otherwise>
+        This <xsl:value-of select="$doctype"/> does not define any 
+
+        <xsl:if test="$doctype='Module'">new</xsl:if> 
+        <xsl:value-of select="document('boilerplates.xml')//cc:policy-mapping/cc:*[local-name()=local-name(current())]/text()"/>.
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 

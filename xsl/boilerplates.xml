@@ -97,7 +97,12 @@
 		   
   </empty>
 
-
-
-   
+  <policy-mapping>
+    <assumptions>Assumptions</assumptions>
+    <cclaims>Confromance Claims</cclaims>
+    <threats>Threats</threats>
+    <OSPs>Organizational Security Policies</OSPs>
+    <SOs>Security Objectives</SOs>
+    <SOEs>Security Objectives for the Operational Environment</SOEs>
+  </policy-mapping>
 </boilerplate>
