@@ -177,7 +177,7 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
   </xsl:template>
 
 
-  <xsl:template match="/cc:Module//cc:*[@title='Assumptions']" mode="hook">
+  <xsl:template match="/cc:Module//*[@title='Assumptions']|/cc:Module//sec:Assumptions[not(@title)]" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:assumption">
 These assumptions are made on the Operational Environment in order to be able to ensure that the
