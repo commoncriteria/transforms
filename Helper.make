@@ -1,3 +1,7 @@
+# --------------------
+#     Helper.make
+# --------------------
+
 # Comments in this file are structured thusly:
 #   Comments that are internal to this file are commented only with '#' such as this
 #   current comment.
@@ -88,6 +92,9 @@ PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
 
+#- Path to SD (empty for PPs)
+SD_HTML ?= 
+
 #- Points to Jing jar file (for validation)
 JING_JAR ?= jing-*/bin/jing.jar
 
@@ -118,11 +125,13 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- for diffing 
 DIFF_USER_MAKE ?= 
 
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
+# Jing does not work for some reason.
 
 #- Does the XSL
 #- Arg 1 is input file
@@ -161,7 +170,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info $(SD_HTML)
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -189,14 +198,16 @@ pp:$(PP_HTML)
 #EXTRA_CSS ?=
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-module-target:
+#module-target:
 #       Download all remote base-pps
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
-	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
+#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
+#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
+#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
+#	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
 
+#$(BASE)-sd.html: $(PP_XML)
 
+ 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
@@ -279,6 +290,7 @@ release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
+	$(BUILD_SD)
 
 inter:
 	$(call DOXSL,$(PP_XML),$(PP2HTML_XSL),abc.xml,$(APP_PARM))
