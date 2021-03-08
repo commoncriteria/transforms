@@ -16,7 +16,6 @@
       ##############################################-->
   <!-- Variable for selecting how much debugging we want -->
   <xsl:param name="debug" select="'v'"/>
-  <xsl:param name="release" select="'draft'"/>
 
   <!--##############################################
            Constants
@@ -631,13 +630,13 @@ The following sections list Common Criteria and technology terms used in this do
   <!--
       Templates associated with debugging follow.
   -->
-  <xsl:template match="cc:inline-comment[@level='critical']">
+<!--  <xsl:template match="cc:inline-comment[@level='critical']">
     <xsl:if test="$release!='draft'">
       <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
         generated: <xsl:value-of select="text()"/>
       </xsl:message>
     </xsl:if>
-  </xsl:template>
+  </xsl:template>a-->
 
   <!-- ############### -->
   <!--                 -->

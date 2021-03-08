@@ -12,7 +12,7 @@
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
-  <xsl:template match="/cc:*[@boilerplate='yes']//cc:*[@title='Implicitly Satisfied Requirements']" mode="hook">    <p>
+  <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">    <p>
 This appendix lists requirements that should be considered satisfied by products
 successfully evaluated against this <xsl:call-template name="doctype-long"/>.   <!-- Protection Profile -->
 However, these requirements are not featured explicitly as SFRs and should not be
@@ -31,7 +31,7 @@ provides evidence that these controls are present and have been evaluated.
 
 
   <xsl:template mode="hook"
-    match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no')]"> 
+    match="/cc:*[@boilerplate='yes']//*[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no') and not(@title)]"> 
     The following sections list Common Criteria and technology terms used in this document.
   </xsl:template>
 
@@ -41,15 +41,18 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 <xsl:template name="doctype-long"  match="cc:doctype-long">
+<xsl:message>DDDD
+   <xsl:value-of select="$doctype"/>
+</xsl:message>
 	<xsl:choose>
 		<xsl:when test="$doctype='Package'">Functional Package</xsl:when>
-                <xsl:when test="$doctype='PP-Module'">Protection Profile Module</xsl:when>
+                <xsl:when test="$doctype='Module'">Protection Profile Module</xsl:when>
 		<xsl:otherwise>Protection Profile</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//cc:section[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]|//sec:*[@title='Conformance Claims' and not(@boilerplate='no')]"
+  <xsl:template  match="/cc:PP[@boilerplate='yes']//*[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]"
 		mode="hook">
     <dl>
         <dt>Conformance Statement</dt>
@@ -148,15 +151,15 @@ provides evidence that these controls are present and have been evaluated.
   </xsl:template>
 
    <xsl:template mode="hook" name="secrectext"
-        match="/cc:PP[@boilerplate='yes']//cc:*[@title='Security Requirements' and not(@boilerplate='no')]|/cc:PP//sec:Security_Requirements[not(@boilerplate='no')]"
+        match="/cc:PP[@boilerplate='yes']//*[@title='Security Requirements' and not(@boilerplate='no')]|/cc:PP//sec:Security_Requirements[not(@boilerplate='no')]"
        >
       This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
      Those requirements comprise functional components from Part 2 and assurance components from Part 3 of 
        <xsl:call-template name="citeCC"/>.
        <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
    </xsl:template>
-
-   <xsl:template match="//cc:module//cc:*[@title='Security Requirements']|//cc:Package//sec:Security_Functional_Requirements|//cc:Package//cc:*[@title='Security Functional Requirements']" mode="hook">
+   <!-- TODO: Review this -->
+   <xsl:template match="/cc:Module//cc:*[@title='Security Requirements']|/cc:Package//sec:Security_Functional_Requirements|//cc:Package//cc:*[@title='Security Functional Requirements']" mode="hook">
       This chapter describes the security requirements which have to be fulfilled by the product under evaluation.
       Those requirements comprise functional components from Part 2 of <xsl:call-template name="citeCC"/>.
  
@@ -164,7 +167,7 @@ provides evidence that these controls are present and have been evaluated.
   </xsl:template>
 
 
-  <xsl:template match="/cc:Module//cc:*[@title='TOE Security Functional Requirements']" mode="hook">
+  <xsl:template match="/cc:Module//*[@title='TOE Security Functional Requirements']|/cc:Module//sec:TOE_Security_Functional_Requirements[not(@title)]" mode="hook">
     <xsl:choose>
       <xsl:when test="cc:*[@title='TOE Security Functional Requirements']">
 The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
@@ -176,6 +179,9 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="*[./cc:OSPs and not(./cc:OSPs/cc:OSP)]" mode="hook">
+This <xsl:call-template name="doctype-long"/> defines no <xsl:if test="/cc:Module">additional </xsl:if> Organizational Security Policies.
+  </xsl:template>
 
   <xsl:template match="/cc:Module//*[@title='Assumptions']|/cc:Module//sec:Assumptions[not(@title)]" mode="hook">
     <xsl:choose>
@@ -186,7 +192,7 @@ Operational Environment that does not meet these assumptions, the TOE may no lon
 provide all of its security functionality.
       </xsl:when>
       <xsl:otherwise>
-This PP-Module does defines no additional assumptions.
+This PP-Module defines no additional assumptions.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
