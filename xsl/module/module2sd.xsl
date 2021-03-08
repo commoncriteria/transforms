@@ -374,66 +374,44 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
 
+
+  <x:template name="collect-cat">
+    <x:param name="cat"/>
+
+    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
+      <div class="eacategory"><x:value-of select="$cat"/></div>
+      <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
+    </x:if>
+  </x:template>
+
+  <x:template name="single-cat">
+    <x:param name="cat"/>
+
+    <x:if test="./cc:aactivity/cc:*[local-name()=$cat]">
+      <div class="eacategory"><x:value-of select="$cat"/></div>
+      <x:apply-templates select=".//cc:aactivity/cc:*[$cat=local-name()]"/>
+    </x:if>
+  </x:template>
+
   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
-
 	<!-- Display component name -->
 	<h4>
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
         </h4>
-	    
-	<!-- Loop through all the component-level EAs. There should be exactly one. -->
-	<!-- But it should be displayed first, and without a header. -->
-	<!-- Maybe we should test to make sure there is at least one?  Naah. -->
-	<x:for-each select=".//cc:aactivity[@level!='element']">
-	      	<x:apply-templates select="." mode="gen-aa"/>
-		<x:choose>
-			<x:when test="cc:no-tests">
-				<i><x:value-of select="cc:no-tests"/></i>	 	
-	         	</x:when>
- 			<x:otherwise>
-				<x:if test="cc:TSS">
-             				<div class="eacategory">TSS</div>
-             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
-         			</x:if>
-        	   		<x:if test="cc:Guidance">
-            				<div class="eacategory">Guidance</div>
-            				<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
-          	 		</x:if>
-           			<x:if test="cc:Tests">
-            	 			<div class="eacategory">Tests</div>
-            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
-	           		</x:if>
-        		</x:otherwise>
-      		</x:choose>
-	</x:for-each>
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
 
-    	<x:for-each select=".//cc:aactivity[@level='element']">
-		<!-- Display the element name -->
-	        <h4>Element: <x:apply-templates select=".." mode="getId"/></h4>
-	      	<x:apply-templates select="." mode="gen-aa"/>
-      		<x:choose>
-         		<x:when test="cc:no-tests">
-				<i><x:value-of select="cc:no-tests"/></i>	 	
-         		</x:when>
-	 	        <x:otherwise>
-		 	       <x:if test="cc:TSS">
-             				<div class="eacategory">TSS</div>
-             				<x:for-each select="cc:TSS"><x:apply-templates/></x:for-each>
-         			</x:if>
-        	   		<x:if test="cc:Guidance">
-            				 <div class="eacategory">Guidance</div>
-            			 	<x:for-each select="cc:Guidance"><x:apply-templates/></x:for-each>
-          	 		</x:if>
-           			<x:if test="cc:Tests">
-            	 			<div class="eacategory">Tests</div>
-            	 			<x:for-each select="cc:Tests"><x:apply-templates/></x:for-each>
-	           		</x:if>
-        		</x:otherwise>
-      		</x:choose>		
+   	<x:for-each select=".//cc:aactivity[@level='element']">
+          <!-- Display the element name -->
+	  <h4><x:apply-templates select=".." mode="getId"/></h4>
+	  <x:call-template name="single-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
 	</x:for-each>
-    	</div>
+    </div>
   </x:template>
 
 

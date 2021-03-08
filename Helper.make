@@ -1,3 +1,7 @@
+# --------------------
+#     Helper.make
+# --------------------
+
 # Comments in this file are structured thusly:
 #   Comments that are internal to this file are commented only with '#' such as this
 #   current comment.
@@ -50,16 +54,16 @@ PP_XML ?= $(IN)/$(BASE).xml
 SD_XML ?= $(IN)/$(BASE)-sd.xml
 
 #- XSL that creates regular HTML document
-PP2HTML_XSL ?= $(TRANS)/pp2html.xsl
+PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
 
 #- XSL that creates the tabularized HTML document
-PP2TABLE_XSL ?= $(TRANS)/pp2table.xsl
+PP2TABLE_XSL ?= $(TRANS)/xsl/pp2table.xsl
 
 #- XSL that creates the tabularized HTML document with just the requirements
-PP2SIMPLIFIED_XSL ?= $(TRANS)/pp2simplified.xsl
+PP2SIMPLIFIED_XSL ?= $(TRANS)/xsl/pp2simplified.xsl
 
 #- XSL containing templates common to the other transforms
-PPCOMMONS_XSL ?= $(TRANS)/ppcommons.xsl
+PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
 
 #- Path to input XML document for the esr
 ESR_XML ?= $(IN)/esr.xml
@@ -87,6 +91,9 @@ PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
+
+#- Path to SD (empty for PPs)
+SD_HTML ?= 
 
 #- Points to Jing jar file (for validation)
 JING_JAR ?= jing-*/bin/jing.jar
@@ -118,11 +125,13 @@ DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 #- for diffing 
 DIFF_USER_MAKE ?= 
 
+
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
 XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
+# Jing does not work for some reason.
 
 #- Does the XSL
 #- Arg 1 is input file
@@ -136,8 +145,8 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 #- Arg 2 is XSL file
 #- Arg 3 is output file
 #- Arg 4 is parameter value pairs
-DOIT ?= python3 $(TRANS)/retrieve-included-docs.py $1 $(OUT) &&\
-	python3 $(TRANS)/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
+DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
+	python3 $(TRANS)/py/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
 
 
 FNL_PARM ?=--stringparam release final
@@ -155,13 +164,13 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff listing
+.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing
 
 
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
+default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info $(SD_HTML)
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
@@ -191,12 +200,14 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2sd.xsl,output/$(BASE)-sd.html) 
-	$(call DOIT,$(PP_XML),$(TRANS)/module/module2html.xsl,$(PP_HTML), )
-	python3 $(TRANS)/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM))
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
+	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
 
+#$(BASE)-sd.html: $(PP_XML)
 
+ 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
@@ -270,22 +281,23 @@ $(OUT)/js:
 
 #- Target to build the anchorized report
 $(PP_LINKABLE_HTML): $(PP_RELEASE_HTML) 
-	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
+	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 
 
 #- Target to build the release report
 #- It also builds the anchorized version (but doesn't care if it succeeds)
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
-	python3 $(TRANS)/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM) $(FNL_PARM))
+	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
+	$(BUILD_SD)
 
 inter:
 	$(call DOXSL,$(PP_XML),$(PP2HTML_XSL),abc.xml,$(APP_PARM))
 #- Builds the essential security requirements
 esr:$(ESR_HTML)
-$(ESR_HTML):  $(TRANS)/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
-	$(call DOXSL,  $(ESR_XML),  $(TRANS)/esr2html.xsl, $(ESR_HTML),)
+$(ESR_HTML):  $(TRANS)/xsl/esr2html.xsl $(PPCOMMONS_XSL) $(ESR_XML)
+	$(call DOXSL,  $(ESR_XML),  $(TRANS)/xsl/esr2html.xsl, $(ESR_HTML),)
 
 #- Builds the PP in html table form
 table: $(TABLE)

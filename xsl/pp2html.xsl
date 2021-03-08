@@ -21,7 +21,7 @@
   <!--  PARAMETERS     -->
   <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
-  <xsl:param name="work-dir" select="'../output'"/>
+  <xsl:param name="work-dir" select="'../../output'"/>
 
   <!-- ############### -->
   <!--  CONSTANTS      -->
@@ -148,10 +148,14 @@
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
         </dl>
-      </xsl:when>
-      <xsl:when test="local-name()='SOs'">
-        This CC-Module does not define any new security objectives.
-      </xsl:when>
+      </xsl:when><!-- TODO: Move this to boilerplates 
+      <xsl:otherwise>
+        <xsl:message>It's a  <xsl:value-of select="$doctype"/></xsl:message>
+        This <xsl:call-template name="doctype-long"/> does not define any 
+
+        <xsl:if test="$doctype='Module'">new</xsl:if> 
+        <xsl:value-of select="document('boilerplates.xml')//cc:policy-mapping/cc:*[local-name()=local-name(current())]/text()"/>.
+      </xsl:otherwise>-->
     </xsl:choose>
   </xsl:template>
 
@@ -171,7 +175,7 @@
        <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
        <xsl:value-of select="@name"/>
        <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
-       Package, Version <xsl:value-of select="@version"/>
+       Package, version <xsl:value-of select="@version"/>
     </xsl:element> Conformant
   </xsl:template>
 
@@ -181,7 +185,7 @@
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
     <a href="{@url}">
        <xsl:value-of select="document($path)//cc:PPTitle"/>, 
-       <xsl:value-of select="document($path)//cc:PPVersion"/>
+       version <xsl:value-of select="document($path)//cc:PPVersion"/>
     </a> Conformant
   </xsl:template>
 
@@ -322,7 +326,7 @@
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
-    <xsl:if test="@status='objective' and @targetdate">
+      <xsl:if test="@status='objective' and @targetdate">
         <div class="statustag">
           <i><b>
               This objective component is scheduled to be mandatory for
@@ -339,10 +343,10 @@
               </xsl:for-each>
             </i></b>
           </div>
-        </xsl:if>
+      </xsl:if>
         <xsl:apply-templates/>
-      <xsl:call-template name="f-comp-activities"/>
-      </div>
+    <!-- <xsl:call-template name="f-comp-activities"/> -->
+    </div>
   </xsl:template>
 
 

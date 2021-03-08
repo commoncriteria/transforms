@@ -593,6 +593,17 @@ The following sections list Common Criteria and technology terms used in this do
 ** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
 ***************************** </xsl:message>
     </xsl:if>
+    <xsl:for-each select="//cc:depends/@id">
+       <xsl:message>
+          Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
+          <xsl:call-template name="genPath"/>
+       </xsl:message>
+    </xsl:for-each>
+    <xsl:for-each select="//cc:title//cc:depends|//cc:note//cc:depends">
+       <xsl:message> Potentially illegal 'depends' element.
+          <xsl:call-template name="genPath"/>
+       </xsl:message>
+    </xsl:for-each>
     <xsl:for-each select="//@id">
        <xsl:variable name="id" select="."/>
        <xsl:if test="count(//*[@id=$id])>1">

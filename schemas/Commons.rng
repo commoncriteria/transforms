@@ -24,14 +24,35 @@
   </define>
 -->
    <define name="Introduction">
+     <choice>
+       <element name="section">
+         <attribute name="title"><value>Introduction</value></attribute>
+         <attribute name="id"/>
+        <ref name="introduction-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"><value>Introduction</value></attribute>
+        <ref name="introduction-content"/>
+      </element>
       <element name="sec:Introduction">
+        <ref name="introduction-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="introduction-content">
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
         <ref name="tech-terms"/>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
         <optional> <ref name="usecases-section"/></optional>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
-      </element>
   </define>
 
  <define name="usecases-section">
@@ -421,9 +442,10 @@ If it's only an acronym make sure the text content is empty.
        Selections are done through an attribute in the audit-event tag. The description will be displayed as a selection with
        an alternative one "None."
        Assignment in audit event descriptions are just wrong.  -->
-      <data type="string">
+<!--      <data type="string">
           <param name="pattern">[^\[]+</param>
-      </data>
+      </data>-->
+      <ref name="basic-content-pat"/>
   </define>
 
     <define name="audit-event-info-pat">
@@ -1703,15 +1725,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	  URL of the NIAP page for the base PP.
 	</a:documentation>
       </attribute>
-
-      <optional>
-        <attribute name="xmlurl">
-          <a:documentation>
-URL of the XML defining the base PP (if it exists).
-Ideally it should be NIAP or CC, but for right now it's probably on github.
-          </a:documentation>
-        </attribute>
-      </optional>
  </define> 
 
   <define name="implements-or-selection-pat">
