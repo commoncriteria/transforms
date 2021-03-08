@@ -200,9 +200,9 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM))
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM))
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2sd.xsl,output/$(BASE)-sd.html) 
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2html.xsl,$(PP_HTML), )
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
 
 #$(BASE)-sd.html: $(PP_XML)
