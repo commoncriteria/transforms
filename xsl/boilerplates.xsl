@@ -186,7 +186,7 @@ Operational Environment that does not meet these assumptions, the TOE may no lon
 provide all of its security functionality.
       </xsl:when>
       <xsl:otherwise>
-This PP-Module does not define any assumptions.
+This PP-Module does defines no additional assumptions.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
