@@ -164,7 +164,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  module-target linkcheck pp help release clean diff little-diff listing
+.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing
 
 
 #---
@@ -198,12 +198,12 @@ pp:$(PP_HTML)
 #EXTRA_CSS ?=
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
-#module-target:
+module-target:
 #       Download all remote base-pps
-#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM))
-#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
-#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
-#	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM))
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2sd.xsl,output/$(BASE)-sd.html) 
+	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module/module2html.xsl,$(PP_HTML), )
+	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
 
 #$(BASE)-sd.html: $(PP_XML)
 
@@ -288,7 +288,7 @@ $(PP_LINKABLE_HTML): $(PP_RELEASE_HTML)
 #- It also builds the anchorized version (but doesn't care if it succeeds)
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM))
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM) $(FNL_PARM))
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
 
