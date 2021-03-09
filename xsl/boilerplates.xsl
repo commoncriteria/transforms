@@ -29,7 +29,7 @@ provides evidence that these controls are present and have been evaluated.
     </p>
 </xsl:template>
 
-
+  
   <xsl:template mode="hook"
     match="/cc:*[@boilerplate='yes']//cc:section[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no')]"> 
     The following sections list Common Criteria and technology terms used in this document.
@@ -176,6 +176,9 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="*[./cc:OSPs and not(./cc:OSPs/cc:OSP)]" mode="hook">
+    This document defines no Organizational Security Policies.
+  </xsl:template>
 
   <xsl:template match="/cc:Module//cc:*[@title='Assumptions']" mode="hook">
     <xsl:choose>
@@ -186,7 +189,7 @@ Operational Environment that does not meet these assumptions, the TOE may no lon
 provide all of its security functionality.
       </xsl:when>
       <xsl:otherwise>
-This PP-Module does defines no additional assumptions.
+This PP-Module defines no additional assumptions.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
