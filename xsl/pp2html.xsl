@@ -353,7 +353,7 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
-     <xsl:if test=".//cc:activity">
+     <xsl:if test=".//cc:aactivity">
        <div class="activity_pane hide">
          <div class="activity_pane_header">
            <a onclick="toggle(this);return false;" href="#">
