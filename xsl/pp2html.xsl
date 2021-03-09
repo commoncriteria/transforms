@@ -308,7 +308,7 @@
 
 
   <!-- ############### -->
-  <!--                 -->
+  <!--  F-components for release l      -->
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
@@ -345,7 +345,7 @@
           </div>
       </xsl:if>
         <xsl:apply-templates/>
-    <!-- <xsl:call-template name="f-comp-activities"/> -->
+      <xsl:if test="not(/cc:Module)"><xsl:call-template name="f-comp-activities"/></xsl:if>
     </div>
   </xsl:template>
 
