@@ -7,9 +7,10 @@
   <!--##############################################
            Includes
       ##############################################-->
-  <xsl:include href="js-content.xsl"/>
-  <xsl:include href="css-content.xsl"/>
-  <xsl:include href="make-ref.xsl"/>
+  <xsl:import href="js-content.xsl"/>
+  <xsl:import href="css-content.xsl"/>
+  <xsl:import href="make-ref.xsl"/>
+  <xsl:import href="debug.xsl"/>
 
   <!--##############################################
            Parameters

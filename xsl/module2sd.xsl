@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-This transform PP Modules into Support Documentation.
+
+FILE: module2sd.xsl
+
+Transforms PP Modules into Support Documentation.
 -->
 
 <x:stylesheet xmlns:x="http://www.w3.org/1999/XSL/Transform"
@@ -10,16 +13,18 @@ This transform PP Modules into Support Documentation.
 	      xmlns:h="http://www.w3.org/1999/xhtml"
 	      version="1.0">
 
-  <x:variable name="doctype" select="sd"/>
+
+  <!-- Put all common templates into ppcommons.xsl -->
+  <!-- They can be redefined/overridden  -->
+  <x:import href="ppcommons.xsl"/>
+  <x:import href="module-commons.xsl"/>
+
+
+  <x:variable name="doctype" select="'SD'"/>
 
   <!-- Forces output to make XML and thus needs to be 
        HTMLized by another transformer  -->
   <x:output method="xml" encoding="UTF-8"/>
-
-  <!-- Put all common templates into ppcommons.xsl -->
-  <!-- They can be redefined/overridden  -->
-  <x:include href="../ppcommons.xsl"/>
-  <x:include href="module-commons.xsl"/>
 
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->

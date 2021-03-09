@@ -16,7 +16,9 @@
 
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
-  <xsl:include href="ppcommons.xsl"/>
+  <xsl:import href="ppcommons.xsl"/>
+
+
 
   <xsl:template match="/co:ConfigAnnex">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->

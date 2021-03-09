@@ -6,8 +6,10 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
-  <xsl:import href="../pp2html.xsl"/>
-  <xsl:include href="module-commons.xsl"/>
+  <xsl:import href="pp2html.xsl"/>
+  <xsl:import href="module-commons.xsl"/>
+
+
   <xsl:output method="xml" encoding="UTF-8"/>
 
   <!-- Directory where the base PPs currently reside (with apthe names 0.xml, 1.xml,...)-->

@@ -30,8 +30,9 @@
 	It was copied from 
     https://stackoverflow.com/questions/953197/how-do-you-output-the-current-element-path-in-xslt
     #####################################-->
+
   <xsl:template name="genPath">
-    <xsl:param name="prevPath"/>
+    <xsl:param name="prevPath" select="''"/>
     <xsl:variable name="currPath" select="concat('/',name(),'[',
       count(preceding-sibling::*[name() = name(current())])+1,']','|',substring(text(),0,10),'|',$prevPath)"/>
     <xsl:for-each select="parent::*">

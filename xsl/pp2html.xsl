@@ -18,6 +18,17 @@
   version="1.0">
 
   <!-- ############### -->
+  <!--     INCLUDES     -->
+  <!-- ############### -->
+  <xsl:import href="ext-comp-defs.xsl"/>
+  <xsl:import href="ppcommons.xsl"/>
+  <xsl:import href="boilerplates.xsl"/>
+  <xsl:import href="debug.xsl"/>
+  <xsl:import href="use-case.xsl"/>
+  <xsl:import href="audit.xsl"/>
+
+ 
+  <!-- ############### -->
   <!--  PARAMETERS     -->
   <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
@@ -38,17 +49,7 @@
     <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
-  <!-- ############### -->
-  <!--     INCLUDES     -->
-  <!-- ############### -->
-  <xsl:include href="ext-comp-defs.xsl"/>
-  <xsl:include href="ppcommons.xsl"/>
-  <xsl:include href="boilerplates.xsl"/>
-  <xsl:include href="debug.xsl"/>
-  <xsl:include href="use-case.xsl"/>
-  <xsl:include href="audit.xsl"/>
-
-  <!-- ############### -->
+ <!-- ############### -->
   <!--  TEMPLATES      -->
   <!-- ############### -->
 

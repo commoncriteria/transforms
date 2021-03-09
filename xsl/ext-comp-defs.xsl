@@ -12,6 +12,7 @@ Contains transforms for extended component definitions
      xmlns:cc="https://niap-ccevs.org/cc/v1"
      version="1.0">
 
+  <xsl:import href="debug.xsl"/>
 <!-- ####################### -->
   <xsl:template name="ext-comp-defs">
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
