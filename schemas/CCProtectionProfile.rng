@@ -337,9 +337,10 @@ Content that only appears if the optional appendices exist.
         <optional>
           <ref name="note"/>
         </optional>
+<!--
         <optional>
           <ref name="aactivity-sar"/>
-        </optional>
+        </optional>-->
         <optional>
           <element name="aactivity">
             <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>

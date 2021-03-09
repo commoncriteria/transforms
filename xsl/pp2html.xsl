@@ -309,7 +309,7 @@
 
 
   <!-- ############### -->
-  <!--                 -->
+  <!--  F-components for release l      -->
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
@@ -346,7 +346,7 @@
           </div>
       </xsl:if>
         <xsl:apply-templates/>
-    <!-- <xsl:call-template name="f-comp-activities"/> -->
+      <xsl:if test="not(/cc:Module)"><xsl:call-template name="f-comp-activities"/></xsl:if>
     </div>
   </xsl:template>
 
@@ -354,23 +354,25 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
-     <div class="activity_pane hide">
-       <div class="activity_pane_header">
-         <a onclick="toggle(this);return false;" href="#">
-       	  <span class="activity_pane_label"> Evaluation Activities </span>
-          <span class="toggler"/>
-	 </a>
+     <xsl:if test=".//cc:aactivity">
+       <div class="activity_pane hide">
+         <div class="activity_pane_header">
+           <a onclick="toggle(this);return false;" href="#">
+            <span class="activity_pane_label"> Evaluation Activities </span>
+            <span class="toggler"/>
+	   </a>
+         </div>
+         <div class="activity_pane_body">
+           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
+             <xsl:apply-templates select="." mode="getId"/>:<br/>
+             <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
+           </xsl:if>
+           <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
+           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
+           <!-- Apply to the management functions -->
+         </div>
        </div>
-       <div class="activity_pane_body">
-         <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
-           <xsl:apply-templates select="." mode="getId"/>:<br/>
-           <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
-         </xsl:if>
-         <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
-         <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
-      <!-- Apply to the management functions -->
-    </div>
-    </div>
+    </xsl:if>
   </xsl:template>
 
 

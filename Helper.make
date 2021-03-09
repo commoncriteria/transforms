@@ -51,7 +51,8 @@ BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
 PP_XML ?= $(IN)/$(BASE).xml
 
 #- Input XML file
-SD_XML ?= $(IN)/$(BASE)-sd.xml
+SD_XML ?= 
+# Empty for PPs.
 
 #- XSL that creates regular HTML document
 PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
@@ -69,7 +70,9 @@ PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
 ESR_XML ?= $(IN)/esr.xml
 
 #- Output of the SD Document
-SD_HTML ?= $(OUT)/$(BASE)-sd.html
+SD_HTML ?= 
+# Empty for PPs
+#SD_HTML ?= $(OUT)/$(BASE)-sd.html
 
 #- Path where tabularized html document
 TABLE ?= $(OUT)/$(BASE)-table.html
@@ -91,9 +94,6 @@ PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
-
-#- Path to SD (empty for PPs)
-SD_HTML ?= 
 
 #- Points to Jing jar file (for validation)
 JING_JAR ?= jing-*/bin/jing.jar

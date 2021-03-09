@@ -62,7 +62,7 @@ if __name__ == "__main__":
           'sec': "https://niap-ccevs.org/cc/v1/section",
           'htm': "http://www.w3.org/1999/xhtml"}
     ctr = 1
-    for pkg in root.findall(".//cc:include-pkg|.//cc:base-pp", ns):
+    for pkg in root.findall(".//cc:include-pkg", ns)+root.findall(".//cc:base-pp", ns):
         if "id" not in pkg.attrib:
             continue
         filename = pkg.attrib["id"] + ".xml"

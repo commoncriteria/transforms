@@ -29,7 +29,7 @@ provides evidence that these controls are present and have been evaluated.
     </p>
 </xsl:template>
 
-
+  
   <xsl:template mode="hook"
     match="/cc:*[@boilerplate='yes']//*[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no') and not(@title)]"> 
     The following sections list Common Criteria and technology terms used in this document.
