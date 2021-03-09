@@ -821,25 +821,6 @@
   </xsl:template>
 
   
- <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="@*|node()">
-    <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
-    <!-- identity transform - useful for debugging -->
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="@*|node()" mode="appendicize">
-      <!-- if no template matches when the mode is set to appendicize,
-       default to a template without the mode set.  this may default
-       to calling the identity transform above -->
-      <xsl:apply-templates select="current()" />
-  </xsl:template>
-
 	
 </xsl:stylesheet>
 

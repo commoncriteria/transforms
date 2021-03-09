@@ -6,6 +6,9 @@
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
 
+  <!-- ################################################## -->
+  <!--                   Imports                          -->
+  <!-- ################################################## -->
   <xsl:import href="pp2html.xsl"/>
   <xsl:import href="module-commons.xsl"/>
 

@@ -38,6 +38,7 @@
    <!-- ############### -->
   <!--                 -->
   <xsl:template match="sec:*">
+<xsl:message>WTH</xsl:message>
     <xsl:call-template name="make-section">
       <xsl:with-param name="id" select="local-name()"/>
       <xsl:with-param name="title">
@@ -754,4 +755,24 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:for-each>
     </table>
   </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="@*|node()">
+    <!-- <xsl:message>Unmatched element caught by identity transform: <xsl:value-of select ="name()"/></xsl:message> -->
+    <!-- identity transform - useful for debugging -->
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <xsl:template match="@*|node()" mode="appendicize">
+      <!-- if no template matches when the mode is set to appendicize,
+       default to a template without the mode set.  this may default
+       to calling the identity transform above -->
+      <xsl:apply-templates select="current()" />
+  </xsl:template>
+
 </xsl:stylesheet>
