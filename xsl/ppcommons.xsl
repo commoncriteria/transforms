@@ -38,7 +38,6 @@
    <!-- ############### -->
   <!--                 -->
   <xsl:template match="sec:*">
-<xsl:message>WTH</xsl:message>
     <xsl:call-template name="make-section">
       <xsl:with-param name="id" select="local-name()"/>
       <xsl:with-param name="title">
