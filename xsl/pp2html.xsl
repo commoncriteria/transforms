@@ -353,23 +353,25 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
-     <div class="activity_pane hide">
-       <div class="activity_pane_header">
-         <a onclick="toggle(this);return false;" href="#">
-       	  <span class="activity_pane_label"> Evaluation Activities </span>
-          <span class="toggler"/>
-	 </a>
+     <xsl:if test=".//cc:activity">
+       <div class="activity_pane hide">
+         <div class="activity_pane_header">
+           <a onclick="toggle(this);return false;" href="#">
+            <span class="activity_pane_label"> Evaluation Activities </span>
+            <span class="toggler"/>
+	   </a>
+         </div>
+         <div class="activity_pane_body">
+           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
+             <xsl:apply-templates select="." mode="getId"/>:<br/>
+             <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
+           </xsl:if>
+           <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
+           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
+           <!-- Apply to the management functions -->
+         </div>
        </div>
-       <div class="activity_pane_body">
-         <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
-           <xsl:apply-templates select="." mode="getId"/>:<br/>
-           <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
-         </xsl:if>
-         <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
-         <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
-      <!-- Apply to the management functions -->
-    </div>
-    </div>
+    </xsl:if>
   </xsl:template>
 
 
