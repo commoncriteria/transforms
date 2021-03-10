@@ -378,17 +378,6 @@ If it's only an acronym make sure the text content is empty.
     <empty/>
   </define>
 
-  <define name="xref-content">
-    <ref name="to-attr"/>
-  </define>
-<!--
-  <define name="appref">
-    <element name="appref">
-      <a:documentation>Cross references an item in the appendex</a:documentation>
-      <ref name="to-attr"/>
-    </element>
- </define>
--->
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">

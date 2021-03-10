@@ -51,7 +51,7 @@ Content that only appears if the optional appendices exist.
        </element>
     </define>
 
-   
+   <!--
     <define name="xref-content">
       <choice>
         <ref name="to-attr"/>
@@ -64,8 +64,10 @@ Content that only appears if the optional appendices exist.
           </choice>
         </attribute>
       </choice>
-    </define>
+    </define>-->
   </include>
+
+
   <define name="PreferencesEtc">
   <a:documentation>A place for declarations and preferences</a:documentation>
     <optional> <ref name="pp-preferences-pat"/> </optional>
