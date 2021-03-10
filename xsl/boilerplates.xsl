@@ -176,15 +176,27 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     </xsl:choose>
   </xsl:template>
 
-<!-- #################### -->
-  <xsl:template match="*[./cc:SOs and not(./cc:SOs/cc:SO)]" mode="hook">
-This <xsl:call-template name="doctype-long"/> defines no <xsl:if test="/cc:Module">additional </xsl:if> Security Objectives.
+  <xsl:template match="/cc:PP//*[./cc:OSPs]" mode="hook">
+   <xsl:if test="not(.//cc:OSP)">
+   <p>    This PP defines no Organizational Security Policies.</p>
+   </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="/cc:Module//*[./cc:SOs]" mode="hook">
+   <xsl:if test="not(.//cc:SO)">
+   <p>    This PP-Module defines no additional Security Objectives.</p>
+   </xsl:if>
   </xsl:template>
 
 
-<!-- #################### -->
-  <xsl:template match="*[./cc:OSPs and not(./cc:OSPs/cc:OSP)]" mode="hook">
-This <xsl:call-template name="doctype-long"/> defines no <xsl:if test="/cc:Module">additional </xsl:if> Organizational Security Policies.
+  <xsl:template match="/cc:Module//*[./cc:OSPs]" mode="hook">
+   <p>An organization deploying the TOE is
+      expected to satisfy the organizational security policy listed below in addition to all
+      organizational security policies defined by the claimed base PP. </p>
+
+   <xsl:if test="not(.//cc:OSP)">
+   <p>    This PP-Module defines no additional Organizational Security Policies.</p>
+   </xsl:if>
   </xsl:template>
 
 

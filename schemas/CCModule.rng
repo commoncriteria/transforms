@@ -39,7 +39,17 @@
         <ref name="from"/>
       </choice>
     </define>
-  </include>
+ 
+    <define name="SOs"><element name="SOs">
+      <a:documentation>
+        Grouping for Security Objective entries.
+      </a:documentation>
+      <zeroOrMore>
+        <ref name="SO"/>
+      </zeroOrMore>
+    </element></define>
+
+ </include>
 
   <define name="module-attributes-pat">
     <attribute name="name"></attribute>
