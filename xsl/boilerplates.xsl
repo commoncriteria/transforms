@@ -41,9 +41,6 @@ provides evidence that these controls are present and have been evaluated.
 </xsl:template>
 
 <xsl:template name="doctype-long"  match="cc:doctype-long">
-<xsl:message>DDDD
-   <xsl:value-of select="$doctype"/>
-</xsl:message>
 	<xsl:choose>
 		<xsl:when test="$doctype='Package'">Functional Package</xsl:when>
                 <xsl:when test="$doctype='Module'">Protection Profile Module</xsl:when>
@@ -179,10 +176,19 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     </xsl:choose>
   </xsl:template>
 
+<!-- #################### -->
+  <xsl:template match="*[./cc:SOs and not(./cc:SOs/cc:SO)]" mode="hook">
+This <xsl:call-template name="doctype-long"/> defines no <xsl:if test="/cc:Module">additional </xsl:if> Security Objectives.
+  </xsl:template>
+
+
+<!-- #################### -->
   <xsl:template match="*[./cc:OSPs and not(./cc:OSPs/cc:OSP)]" mode="hook">
 This <xsl:call-template name="doctype-long"/> defines no <xsl:if test="/cc:Module">additional </xsl:if> Organizational Security Policies.
   </xsl:template>
 
+
+<!-- #################### -->
   <xsl:template match="/cc:Module//*[@title='Assumptions']|/cc:Module//sec:Assumptions[not(@title)]" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:assumption">
