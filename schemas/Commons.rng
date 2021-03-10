@@ -1681,15 +1681,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   
  
   <define name="external-document-pat">
+      <ref name="id-attr"/>
      <choice>
        <ref name="recognized-xml"/>
        <ref name="non-native-doc"/>
      </choice>
+      <element name="url"><text/></element>
   </define>
 
   <define name="recognized-xml">
-       <ref name="id-attr"/>
-       <element name="url"><text/></element>
        <element name="raw-url"><text/></element>
   </define>
 
@@ -1720,12 +1720,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	</a:documentation>
       </attribute>
 
-      <attribute name="url">
-	<a:documentation>
-	  URL of the NIAP page for the base PP.
-	</a:documentation>
-      </attribute>
- </define> 
+  </define> 
 
   <define name="implements-or-selection-pat">
      <attribute name="on"><choice><value>implements</value><value>selection</value></choice></attribute>
