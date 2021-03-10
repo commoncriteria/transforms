@@ -182,6 +182,12 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
    </xsl:if>
   </xsl:template>
 
+  <xsl:template match="/cc:Module//*[./cc:SOs]" mode="hook">
+   <xsl:if test="not(.//cc:SO)">
+   <p>    This PP-Module defines no additional Security Objectives.</p>
+   </xsl:if>
+  </xsl:template>
+
 
   <xsl:template match="/cc:Module//*[./cc:OSPs]" mode="hook">
    <p>An organization deploying the TOE is
