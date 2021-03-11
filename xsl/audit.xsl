@@ -126,12 +126,12 @@
 				<xsl:for-each select="cc:audit-event-info">
 					<xsl:choose>
 	    				<xsl:when test="@type='optional'">
-		    			<b>[selection: </b>
-		    				<i><xsl:apply-templates select="cc:audit-event-info"/>
-			    			, None</i><b>]</b>
+		    				<b>[selection: </b>
+		    					<i><xsl:apply-templates select="."/>
+			    				, None</i><b>]</b>
 	    				</xsl:when>
 	   			 	<xsl:otherwise>
-						<xsl:apply-templates select="cc:audit-event-info"/>
+						<xsl:apply-templates select="."/>
 	    				</xsl:otherwise>
 	 			 	</xsl:choose>
 					
