@@ -32,6 +32,7 @@
   <!--  PARAMETERS     -->
   <!-- ############### -->
   <xsl:param name="appendicize" select="''"/>
+  <xsl:param name="release" select="''"/>
   <xsl:param name="work-dir" select="'../../output'"/>
 
   <!-- ############### -->
@@ -46,7 +47,7 @@
   <!-- ############### -->
   <!--  SETTINGS       -->
   <!-- ############### -->
-    <!-- very important, for special characters and umlauts iso8859-1-->
+  <!-- very important, for special characters and umlauts iso8859-1-->
   <xsl:output method="xml" encoding="UTF-8"/>
 
  <!-- ############### -->
@@ -74,6 +75,7 @@
     <xsl:apply-templates select="cc:section|sec:*"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
+    <xsl:message><xsl:value-of select="concat('Release is ', $release)"/></xsl:message>
     <xsl:if test="$appendicize='on'">
       <xsl:call-template name="app-reqs">
          <xsl:with-param name="type" select="'sel-based'"/>
@@ -142,22 +144,13 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
-    <xsl:choose>
-      <xsl:when test="cc:*[cc:description]">
+    <xsl:choose> <xsl:when test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
         </dl>
-      </xsl:when><!-- TODO: Move this to boilerplates 
-      <xsl:otherwise>
-        <xsl:message>It's a  <xsl:value-of select="$doctype"/></xsl:message>
-        This <xsl:call-template name="doctype-long"/> does not define any 
-
-        <xsl:if test="$doctype='Module'">new</xsl:if> 
-        <xsl:value-of select="document('boilerplates.xml')//cc:policy-mapping/cc:*[local-name()=local-name(current())]/text()"/>.
-      </xsl:otherwise>-->
-    </xsl:choose>
+    </xsl:when></xsl:choose>
   </xsl:template>
 
   <!-- ############### -->
@@ -252,8 +245,9 @@
   <!-- ######################################## 
          This template handles f-components when
          not appendisizing (i.e. NOT RELEASE)
+         Actually this is called ofr Modules!!!
        ######################################## -->
-  <xsl:template match="cc:f-component">
+  <xsl:template match="cc:f-component[not(/cc:Module)]">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
@@ -307,6 +301,9 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="/cc:Module//cc:f-component">
+    <xsl:apply-templates select="." mode="appendicize-nofilter"/>
+  </xsl:template>
 
   <!-- ############### -->
   <!--  F-components for release l      -->
@@ -507,17 +504,18 @@
     <xsl:template name="handle-features">
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="level"><xsl:if test="$appendicize='on'">3</xsl:if><xsl:if test="$appendicize!='on'">2</xsl:if></xsl:variable>
+          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>
+          <xsl:variable name="level" select="2+$oneIfApp"/>
+
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/>
   	  <!-- First just output the name of the SFR associated with each feature.  -->
           <p>
 	  If this is implemented by the TOE, the following requirements must be included in the ST:
-          <ul>
-            <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
+            <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
-	    </xsl:for-each>
-	  </ul></p>
+	    </xsl:for-each></ul>
+          </p>
           
 	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
           <xsl:if test="$appendicize='on'">
