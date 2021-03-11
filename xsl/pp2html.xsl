@@ -116,6 +116,7 @@
     <xsl:param name="title"/>
     <xsl:param name="id"/>
     <xsl:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
+
     <xsl:element name="h{$depth}">
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
       <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
@@ -634,34 +635,44 @@
   <!-- ######################### -->
   <!-- ######################### -->
   <xsl:template match="cc:section[cc:f-component]">
+    <xsl:param name="lmod" select="'0'"/>
+
     <xsl:call-template name="section-with-fcomp">
       <xsl:with-param name="title" select="@title"/>
       <xsl:with-param name="id" select="@id"/>
+      <xsl:with-param name="lmod" select="$lmod"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="sec:*[cc:f-component and @title]">
+    <xsl:param name="lmod" select="'0'"/>
+
      <xsl:call-template name="section-with-fcomp">
       <xsl:with-param name="title" select="@title"/>
       <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="lmod" select="$lmod"/>
     </xsl:call-template>
   </xsl:template>
  
   <xsl:template match="sec:*[cc:f-component and not(@title)]">
+    <xsl:param name="lmod" select="'0'"/>
+
     <xsl:call-template name="section-with-fcomp">
       <xsl:with-param name="title" select="translate(local-name(),'_',' ')"/>
       <xsl:with-param name="id" select="local-name()"/>
+      <xsl:with-param name="lmod" select="$lmod"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="section-with-fcomp">
     <xsl:param name="title"/>
     <xsl:param name="id"/> 
-
+    <xsl:param name="lmod"/>
+  
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)]">
-      <h3 id="{$id}" class="indexable" data-level="{count(ancestor::*)}">
+      <h3 id="{$id}" class="indexable" data-level="{$lmod+count(ancestor::*)}">
         <xsl:value-of select="$title" />
       </h3>
       <xsl:apply-templates mode="hook" select="."/>

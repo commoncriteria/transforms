@@ -427,7 +427,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h2 id="strictly-optional-sfrs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:opt-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:opt-sfrs//cc:f-component"/>
+        <xsl:apply-templates select="//cc:opt-sfrs/*"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
@@ -438,7 +438,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h2 id="objective-sfrs" class="indexable" data-level="2">Objective Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:obj-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:obj-sfrs//cc:f-component"/>
+        <xsl:apply-templates select="//cc:obj-sfrs/*"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
@@ -449,7 +449,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h2 id="impl-dep-sfrs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
+        <xsl:apply-templates select="//cc:impl-dep-sfrs/*"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
@@ -470,16 +470,14 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     There are additional requirements based on selections in the body of the PP-Module:
     if certain selections are made, then additional requirements below will need to be included.<br/><br/>
  -->
-    <xsl:choose>
-      <xsl:when test="//cc:sel-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:sel-sfrs//cc:f-component"/>
-      </xsl:when>
-      <xsl:otherwise>
+      <xsl:if test="not(//cc:sel-sfrs//cc:f-component)">
 	<p>
 	  This PP-Module does not define any selection-based SFRs.
 	</p>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:if>
+      <xsl:apply-templates select="//cc:sel-sfrs/*">
+        <xsl:with-param name="lmod" select="'-1'"/>
+      </xsl:apply-templates>
   </xsl:template>
 
   <!-- ############### -->
@@ -493,7 +491,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     to plan for these objective requirements to be met. <br/><br/>
     <xsl:choose>
       <xsl:when test="//cc:obj-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:obj-sfrs//cc:f-component"/>
+        <xsl:apply-templates select="//cc:obj-sfrs/*"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
@@ -512,7 +510,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	<br/><br/>
     <xsl:choose>
       <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:impl-dep-sfrs//cc:f-component"/>
+        <xsl:apply-templates select="//cc:impl-dep-sfrs/*"/>
       </xsl:when>
       <xsl:otherwise>
 	<p>
