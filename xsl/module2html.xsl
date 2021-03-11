@@ -25,6 +25,9 @@
   <!-- ################################################## -->
   <!--                   Templates Section                -->
   <!-- ################################################## -->
+  <!-- ############### -->
+  <!--   Top Module    -->
+  <!-- ############### -->
   <xsl:template match="cc:Module">
     <xsl:apply-templates select="//*[@title='Introduction']|sec:Introduction"/>
     <xsl:apply-templates select="//*[@title='Conformance Claims']|sec:Conformance_Claims"/>
@@ -42,29 +45,36 @@
   </xsl:template>
 
   
- <!-- ############### -->
-<!--   Overwrites template from pp2html.xsl -->
-<!--            -->
-   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
-      <xsl:value-of select="@name"/>
-      <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>
-   </xsl:template>
+  <!-- ############### -->
+  <!--   Overwrites template from pp2html.xsl -->
+  <!-- ############### -->
+  <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+    <xsl:value-of select="@name"/>
+    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>
+  </xsl:template>
 
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="mod-obj-req-map">
     <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
     <xsl:call-template name="obj-req-map"/>
   </xsl:template> 
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template match="/cc:Module//*[@title='Security Requirements']|/cc:Module//sec:Security_Requirements">
-    <xsl:variable name="title"><xsl:if test="not(@title)"><xsl:value-of select="local-name()"/></xsl:if><xsl:value-of select="@title"/></xsl:variable>
-
-    <h1 id="{@id}" class="indexable" data-level="1"><xsl:value-of select="$title"/></h1>
+    <h1 id="{@id}" class="indexable" data-level="1">Security Requirements</h1>
     <xsl:call-template name="secrectext"/>
-   <xsl:apply-templates select="cc:base-pp"/>
+    <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="consistency-rationale">
     <h1 id="mod-conrat" class="indexable" data-level="1">Consistency Rationale</h1>
 
@@ -278,9 +288,9 @@
   </xsl:template>
 
 
-<!-- ############################################ -->
-<!-- #            Base-pp Template              # -->
-<!-- ############################################ -->
+  <!-- ############################################ -->
+  <!-- #            Base-pp Template              # -->
+  <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="{@short}" class="indexable" data-level="2">
       <xsl:apply-templates mode="short" select="."/>
@@ -296,12 +306,7 @@
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
 
-    <xsl:element name="h2">
-      <xsl:attribute name="id">modsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
-      <xsl:attribute name="class">indexable</xsl:attribute>
-      <xsl:attribute name="data-level">3</xsl:attribute>
-      Modified SFRs
-    </xsl:element>
+    <h2 id="modsfr-{@short}" class="indexable" data-level="3"> Modified SFRs </h2>
     <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
       The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
@@ -315,6 +320,7 @@
 	 In that case there shouldn't be any additional-sfrs (but for some
 	 reason we're allowing it).
     -->
+
     <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
     <xsl:element name="h2">
       <xsl:attribute name="id">addsfr-<xsl:value-of select="@short"></xsl:value-of></xsl:attribute>
@@ -333,12 +339,18 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:if>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template match="cc:con-sec-problem">
     <xsl:apply-templates/>
   </xsl:template>
 
 
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="consistency-row">
     <xsl:param name="base"/>
     <xsl:param name="orig"/>
@@ -359,6 +371,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	</tr>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template match="cc:bibliography">
     <h1 id="bibliography" class="indexable" data-level="A">Bibliography</h1>
     <table>
@@ -384,6 +399,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="man-sfrs">
     <h2 id="man-sfrs" class="indexable" data-level="2">TOE Security Functional Requirements</h2>
     <xsl:choose>
@@ -401,6 +419,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="opt-sfrs">
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
     <h2 id="strictly-optional-sfrs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
@@ -438,6 +459,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="sel-sfrs">
     <h1 id="sel-sfrs" class="indexable" data-level="A">Selection-based SFRs</h1>
 <!-- This paragraph is not needed since the reader should know all of it from the base-PP: so says NIAP.
@@ -458,6 +482,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template name="obj-sfrs">
     <h1 id="obj-sfrs" class="indexable" data-level="A">Objective SFRs</h1>
     This section is reserved for requirements that are not currently prescribed by this PP-Module
@@ -476,6 +503,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
 <xsl:template name="impl-dep-sfrs">
     <h1 id="impl-dep-sfrs" class="indexable" data-level="A">Implementation-Dependent SFRs</h1>
     This section contains requirements that depend on the TOE implementing certain product features or use cases.
@@ -497,6 +527,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!--
       Eat all assurance activities
   -->
+  <!-- ############### -->
+  <!--      -->
+  <!-- ############### -->
   <xsl:template match="cc:aactivity">
     <xsl:if test="not($release='final')">
       <div class="activity_pane hide">
