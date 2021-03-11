@@ -124,7 +124,18 @@
                             </xsl:choose>
                             <td>
 				<xsl:for-each select="cc:audit-event-info">
-		 			<xsl:apply-templates select="." mode="intable"/> <br />   
+					<xsl:choose>
+	    				<xsl:when test="@type='optional'">
+		    			<b>[selection: </b>
+		    				<i><xsl:apply-templates select="cc:audit-event-info"/>
+			    			, None</i><b>]</b>
+	    				</xsl:when>
+	   			 	<xsl:otherwise>
+						<xsl:apply-templates select="cc:audit-event-info"/>
+	    				</xsl:otherwise>
+	 			 	</xsl:choose>
+					
+		 	<!--		<xsl:apply-templates select="."/> --> <br />   
 				</xsl:for-each>
 			    </td>
                         </xsl:otherwise>
