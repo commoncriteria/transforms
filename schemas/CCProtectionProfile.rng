@@ -194,7 +194,6 @@ Content that only appears if the optional appendices exist.
 	      <choice>
 		     <ref name="audit-table-pat"/>
         	     <ref name="f-component-pattern"/>
-	             <ref name="f-component-decl-pattern"/>
 		     <ref name="ext-comp-def-pat"/>
 	      </choice>
 	    </oneOrMore>

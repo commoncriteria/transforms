@@ -944,52 +944,7 @@ Modification definition. This text goes in the
       <ref name="audit-events-pat"/>
     </element>
   </define> 
-<!--
-  <define name="f-component-decl-pattern">
-    <element name="f-component-decl">
-      <a:document>
-        Specifies a component declaration. This is intended for use when a PP defines audit events for
-        an SFR that is in a package. This provides a place to anchor the audit events. There are no elements.
-        There is status.
-      </a:document>
-      <ref name="f-comp-content-pat"/>
-      <attribute name="pkg-id">
-         <a:documentation>Identifier for package this SFR comes from (e.g. "pkg_tls").</a:documentation>
-         <data type="string">
-           <param name="pattern">[\-a-zA-Z0-9_]+</param>
-         </data>
-      </attribute>
-      <choice>
-        <group>
-          <attribute name="status">
-            <a:documentation>
-              Sel-based requirements.
-            </a:documentation>
-            <value>sel-based</value>
-          </attribute>
-          <oneOrMore>
-            <ref name="selection-depends"/>
-          </oneOrMore>
-        </group>
-        <optional>
-          <attribute name="status">
-            <a:documentation>
-              And the rest of the possible statuses.
-            </a:documentation>
-            <choice>
-                <value>optional</value>
-                <value>objective</value>
-                <value>mandatory</value>
-		<value>invisible</value>
-            </choice>
-          </attribute>
-         </optional>
-       </choice>
-      <ref name="audit-events-pat"/>
-    </element>
-</define> 
--->	
-	
+
   <define name="f-elements-pat">
     <zeroOrMore>
       <ref name="f-element"/>
@@ -1396,7 +1351,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>
                 <ref name="f-component-pattern"/>
-  <!--              <ref name="f-component-decl-pattern"/>-->
    	        <ref name="ext-comp-def-pat"/>
 	      </choice>
       </oneOrMore>
