@@ -96,6 +96,29 @@
 		   
 		   
   </empty>
+ 
+  <mod-appendix>
+<!-- Explainer text is not needed since the reader should know all of it from the base-PP: so says NIAP.-->
+    <opt-sfrs level="2" name="Strictly Optional"/>
+    <obj-sfrs level="2" name="Objective"/>
+<!--
+    This section is reserved for requirements that are not currently prescribed by this PP-Module
+    but are expected to be included in future versions of the PP-Module.
+    Vendors planning on having evaluations performed against future products are encouraged
+    to plan for these objective requirements to be met. <br/><br/>
+-->
+    <impl-based-sfrs level="2" name="Implementation-based"/>
+<!--:
+    This section contains requirements that depend on the TOE implementing certain product features or use cases.
+-->	
+    <sel-sfrs level="1" name="Selection-based"/><!--
+      As indicated in the introduction to this PP-Module, the baseline requirements are 
+      contained in the body of this PP-Module.
+      There are additional requirements based on selections in the body of the PP-Module:
+      if certain selections are made, then additional requirements
+      below will need to be included. 
+    </sel-sfrs>-->
+  </mod-appendix>
 
   <policy-mapping>
     <assumptions>Assumptions</assumptions>

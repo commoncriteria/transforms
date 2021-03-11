@@ -58,8 +58,10 @@
   <!--      -->
   <!-- ############### -->
   <xsl:template name="mod-obj-req-map">
-    <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
-    <xsl:call-template name="obj-req-map"/>
+    <xsl:if test="//cc:SO/cc:addressed-by">
+      <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
+      <xsl:call-template name="obj-req-map"/>a
+    </xsl:if>
   </xsl:template> 
 
   <!-- ############### -->
@@ -419,115 +421,51 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+
+  <xsl:template match="cc:opt-sfrs|cc:obj-sfrs|cc:sel-sfrs|cc:impl-dep-sfrs" mode="app-sfr-sec">
+    <xsl:variable name="level"
+      select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@level"/>
+    <xsl:variable name="name"
+      select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@name"/>
+   
+    <xsl:element name="h{$level}">
+      <xsl:attribute name="id"><xsl:value-of select="local-name()"/></xsl:attribute>
+      <xsl:attribute name="class"><xsl:value-of select="'indexable'"/></xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
+      <xsl:value-of select="$name"/> Requirements
+    </xsl:element>
+    <xsl:if test="not(.//cc:f-component)">
+     <p>This PP-Module does not define any 
+       <xsl:value-of select="$name"/>       SFRs.</p>
+    </xsl:if>
+    <xsl:apply-templates>
+       <xsl:with-param name="lmod" select="$level - 2"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
   <!-- ############### -->
   <!--      -->
   <!-- ############### -->
   <xsl:template name="opt-sfrs">
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
-    <h2 id="strictly-optional-sfrs" class="indexable" data-level="2">Strictly Optional Requirements</h2>
-    <xsl:choose>
-      <xsl:when test="//cc:opt-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:opt-sfrs/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<p>
-	  This PP-Module does not define any Optional SFRs.
-	</p>
-      </xsl:otherwise>
-    </xsl:choose>
-    <h2 id="objective-sfrs" class="indexable" data-level="2">Objective Requirements</h2>
-    <xsl:choose>
-      <xsl:when test="//cc:obj-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:obj-sfrs/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<p>
-	  This PP-Module does not define any Objective SFRs.
-	</p>
-      </xsl:otherwise>
-    </xsl:choose>
-    <h2 id="impl-dep-sfrs" class="indexable" data-level="2">Implementation-Dependent Requirements</h2>
-    <xsl:choose>
-      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:impl-dep-sfrs/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<p>
-	  This PP-Module does not define any Implementation-Dependent SFRs.
-	</p>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="//cc:opt-sfrs" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:obj-sfrs" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:impl-based-sfrs" mode="app-sfr-sec"/>
   </xsl:template>
-
   <!-- ############### -->
   <!--      -->
   <!-- ############### -->
   <xsl:template name="sel-sfrs">
-    <h1 id="sel-sfrs" class="indexable" data-level="A">Selection-based SFRs</h1>
-<!-- This paragraph is not needed since the reader should know all of it from the base-PP: so says NIAP.
-      As indicated in the introduction to this PP-Module, the baseline requirements (those that must be
-    performed by the TOE or its underlying platform) are contained in the body of this PP-Module.
-    There are additional requirements based on selections in the body of the PP-Module:
-    if certain selections are made, then additional requirements below will need to be included.<br/><br/>
- -->
-      <xsl:if test="not(//cc:sel-sfrs//cc:f-component)">
-	<p>
-	  This PP-Module does not define any selection-based SFRs.
-	</p>
-      </xsl:if>
-      <xsl:apply-templates select="//cc:sel-sfrs/*">
-        <xsl:with-param name="lmod" select="'-1'"/>
-      </xsl:apply-templates>
+    <xsl:apply-templates select="//cc:sel-sfrs" mode="app-sfr-sec"/> 
   </xsl:template>
 
   <!-- ############### -->
   <!--      -->
   <!-- ############### -->
-  <xsl:template name="obj-sfrs">
-    <h1 id="obj-sfrs" class="indexable" data-level="A">Objective SFRs</h1>
-    This section is reserved for requirements that are not currently prescribed by this PP-Module
-    but are expected to be included in future versions of the PP-Module.
-    Vendors planning on having evaluations performed against future products are encouraged
-    to plan for these objective requirements to be met. <br/><br/>
-    <xsl:choose>
-      <xsl:when test="//cc:obj-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:obj-sfrs/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<p>
-	  This PP-Module does not define any objective SFRs.
-	</p>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--      -->
-  <!-- ############### -->
-<xsl:template name="impl-dep-sfrs">
-    <h1 id="impl-dep-sfrs" class="indexable" data-level="A">Implementation-Dependent SFRs</h1>
-    This section contains requirements that depend on the TOE implementing certain product features or use cases.
-	<br/><br/>
-    <xsl:choose>
-      <xsl:when test="//cc:impl-dep-sfrs//cc:f-component">
-        <xsl:apply-templates select="//cc:impl-dep-sfrs/*"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<p>
-	  This PP-Module does not define any Implementaion-Dependent SFRs.
-	</p>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-
-  <!--
-      Eat all assurance activities
+  <!-- 
+  Handles activities. In the release version( for modules)
+  activites go in the SD.
   -->
-  <!-- ############### -->
-  <!--      -->
-  <!-- ############### -->
   <xsl:template match="cc:aactivity">
     <xsl:if test="not($release='final')">
       <div class="activity_pane hide">
