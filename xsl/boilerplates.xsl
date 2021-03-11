@@ -53,7 +53,22 @@ provides evidence that these controls are present and have been evaluated.
 		mode="hook">
     <dl>
         <dt>Conformance Statement</dt>
-        <dd>An <abbr title="Security Target">ST</abbr> must claim exact conformance to this <xsl:call-template name="doctype-short"/>, as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and Optional SFRs (dated May 2017).</dd>
+        <dd><xsl:choose><xsl:when test="//cc:Module">
+          <p>This PP-Module inherits exact conformance as required from the specified
+          Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-Based
+          SFRs, and Optional SFRs (dated May 2017).</p>
+          <p>The following PPs and PP-Modules are allowed to be specified in a 
+            PP-Configuration with this PP-Module. <ul>
+            <xsl:for-each select="//cc:base-pp">
+              <li><xsl:apply-templates select="." mode="make_xref"/></li>
+            </xsl:for-each>
+          </ul>
+          </p>
+          </xsl:when><xsl:otherwise>
+          An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
+              as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and 
+              Optional SFRs (dated May 2017).
+        </xsl:otherwise></xsl:choose></dd>
         <dt>CC Conformance Claims</dt>
         <dd>This <xsl:call-template name="doctype-short"/> is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria <xsl:call-template name="verrev"/>.</dd>
         <dt>PP Claim </dt>

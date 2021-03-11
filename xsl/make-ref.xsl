@@ -32,7 +32,20 @@
     </xsl:otherwise></xsl:choose>
   </xsl:template>
 
-  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:base-pp" mode="make_xref">
+    <xsl:choose><xsl:when test="@name">
+      <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
+    </xsl:when><xsl:otherwise>
+      <a href="{cc:url/text()}">
+        <xsl:value-of select="document(../output/@id)//cc:PPTitle/text()"/>,
+        version 
+        <xsl:value-of select="document(../output/@id)//cc:PPVersion/text()"/>,
+      </a>
+    </xsl:otherwise></xsl:choose>
+  </xsl:template>  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
