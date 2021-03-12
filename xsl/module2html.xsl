@@ -466,25 +466,6 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   Handles activities. In the release version( for modules)
   activites go in the SD.
   -->
-  <xsl:template match="cc:aactivity">
-    <xsl:if test="not($release='final')">
-      <div class="activity_pane hide">
-	<div class="activity_pane_header">
-	  <a onclick="toggle(this);return false;" href="#">
-            <span class="activity_pane_label"> Evaluation Activity </span>
-            <span class="toggler"/>
-	  </a>
-	</div>
-	<div class="activity_pane_body">
-	  <i>
-            <xsl:apply-templates/>
-	  </i>
-	</div>
-      </div>
-    </xsl:if>
-  </xsl:template>
-
-
 
 
 

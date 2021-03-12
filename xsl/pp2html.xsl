@@ -75,7 +75,6 @@
     <xsl:apply-templates select="cc:section|sec:*"/>
     <!-- this handles the first appendices -->
     <xsl:call-template name="first-appendix"/>
-    <xsl:message><xsl:value-of select="concat('Release is ', $release)"/></xsl:message>
     <xsl:if test="$appendicize='on'">
       <xsl:call-template name="app-reqs">
          <xsl:with-param name="type" select="'sel-based'"/>
@@ -244,16 +243,14 @@
 
 
   <!-- ######################################## 
-         This template handles f-components when
-         not appendisizing (i.e. NOT RELEASE)
-         Actually this is called ofr Modules!!!
+         This template handles f-components for PPs
+         and packages when not appendisizing (i.e. NOT RELEASE)
        ######################################## -->
   <xsl:template match="cc:f-component[not(/cc:Module)]">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
-
       <xsl:if test="@status='objective'">
         <div class="statustag">
           <i><b> This is an objective component.
@@ -344,7 +341,7 @@
           </div>
       </xsl:if>
         <xsl:apply-templates/>
-      <xsl:if test="not(/cc:Module)"><xsl:call-template name="f-comp-activities"/></xsl:if>
+      <xsl:if test="not(/cc:Module and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
     </div>
   </xsl:template>
 
@@ -352,6 +349,7 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
+<xsl:message>YYY<xsl:value-of select="local-name()"/></xsl:message>
      <xsl:if test=".//cc:aactivity">
        <div class="activity_pane hide">
          <div class="activity_pane_header">

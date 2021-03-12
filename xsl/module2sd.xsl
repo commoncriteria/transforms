@@ -29,7 +29,10 @@ Transforms PP Modules into Support Documentation.
 <!-- ################################################## -->
 <!--                  Templates                         -->
 <!-- ################################################## -->
-  <x:template match="/cc:Module">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <html xmlns="http://www.w3.org/1999/xhtml">
       <x:call-template name="module-head"/>
@@ -63,7 +66,10 @@ Transforms PP Modules into Support Documentation.
   </x:template>
 
 
-  <x:template name="meta-data">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+ <x:template name="meta-data">
     <div style="text-align: center; margin-left: auto; margin-right: auto;">
       <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
         Mandatory Technical Document</h1>
@@ -78,12 +84,18 @@ Transforms PP Modules into Support Documentation.
   </x:template>
 
 
-  <x:template name="toc">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="toc">
     <h1>Table of Contents</h1>
     <div id="toc"/>
   </x:template>
 
-  <x:template name="module-head">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="module-head">
     <head> 
       <title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
       <style type="text/css">
@@ -92,11 +104,9 @@ Transforms PP Modules into Support Documentation.
     </head>
   </x:template>
 
-  <!-- <x:template name="acronyms"> -->
-  <!--   <h2 id="sup-info" class="indexable" data-level="A">Acronyms</h2> -->
-  <!--   <x:apply-templates select="//cc:*/cc:acronyms]"/> -->
-  <!-- </x:template> -->
-
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <x:template name="sup-info">
     <h1 id="sup-info" class="indexable" data-level="0">Required Supplementary Information</h1>
     <p>This Supporting Document has no required supplementary information beyond the ST, operational
@@ -104,7 +114,10 @@ guidance, and testing.</p>
   </x:template>
 
 
-  <x:template name="sfrs">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="sfrs">
     <h1 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
     <p>The EAs presented in this section capture the actions the evaluator performs 
     to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
@@ -139,7 +152,10 @@ guidance, and testing.</p>
     <x:call-template name="handle-apply-to-all"/>
   </x:template>
 
-  <x:template name="handle-apply-to-all">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="handle-apply-to-all">
     <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs"/></x:when>
@@ -167,12 +183,18 @@ guidance, and testing.</p>
     </x:choose>
   </x:template>
 
-  <x:template match="cc:man-sfrs|cc:opt-sfrs|cc:sel-sfrs|cc:obj-sfrs">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template match="cc:man-sfrs|cc:opt-sfrs|cc:sel-sfrs|cc:obj-sfrs">
     <x:apply-templates select="cc:*|sec:*"/>
   </x:template>
 
 
-  <x:template name="handle-bases">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="handle-bases">
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-${@short}">
@@ -200,7 +222,10 @@ guidance, and testing.</p>
   </x:template>
   
 	
-  <x:template name="sub-sfrs">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="sub-sfrs">
     <x:param name="f-comps"/>
     <x:param name="short"/>
     <x:param name="none-msg"/>
@@ -224,7 +249,10 @@ guidance, and testing.</p>
 
 
 
-  <x:template name="sars">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="sars">
     <h1 id="sar_aas" class="indexable" data-level="0">Evaluation Activities for SARs</h1>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
@@ -252,7 +280,10 @@ guidance, and testing.</p>
     </p>
   </x:template>
 
-  <x:template name="aaforsfrs">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="aaforsfrs">
     <h1 id="mandatory_aas" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
     <p>The EAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
 
@@ -264,7 +295,10 @@ guidance, and testing.</p>
     <x:apply-templates select="//*[@title='Security Requirements']|//sec:Security_Requirements"/>
   </x:template>
 
-  <x:template name="intro">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="intro">
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
     <p>The scope of the <x:value-of select="/cc:Module/@target-products"/> PP-Module is
@@ -319,7 +353,10 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     </x:apply-templates>
   </x:template>
 
-  <x:template name="foreward">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="foreward">
     <div class="foreword">
       <h1 style="text-align: center">Foreword</h1>
       <p>This is a Supporting Document (SD), intended to complement the Common Criteria version 3
@@ -366,7 +403,10 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   </x:template>
 
 
-  <x:template match="cc:glossary|cc:acronyms">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template match="cc:glossary|cc:acronyms">
     <table>
       <x:for-each select="cc:entry">
         <tr>
@@ -377,12 +417,18 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     </table>
   </x:template>
 
-  <x:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
 
 
-  <x:template name="collect-cat">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="collect-cat">
     <x:param name="cat"/>
 
     <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
@@ -391,7 +437,10 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     </x:if>
   </x:template>
 
-  <x:template name="single-cat">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="single-cat">
     <x:param name="cat"/>
 
     <x:if test="./cc:aactivity/cc:*[local-name()=$cat]">
@@ -400,13 +449,17 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     </x:if>
   </x:template>
 
-  <x:template match="cc:f-component | cc:a-component">
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
 	<!-- Display component name -->
 	<h4>
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
         </h4>
+        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:Tests)]"/>
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
@@ -436,7 +489,10 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   </x:template>
 -->
 
-  <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 
   <!-- We're explicity grabbing these all, so ground anytime we run into them -->
   <x:template match="cc:aactivity"/>
