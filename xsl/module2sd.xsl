@@ -13,9 +13,9 @@ Transforms PP Modules into Support Documentation.
 	      xmlns:h="http://www.w3.org/1999/xhtml"
 	      version="1.0">
 
-
-  <!-- Put all common templates into ppcommons.xsl -->
-  <!-- They can be redefined/overridden  -->
+<!-- ################################################## -->
+<!--                  Imports                           -->
+<!-- ################################################## -->
   <x:import href="ppcommons.xsl"/>
   <x:import href="module-commons.xsl"/>
 
@@ -26,9 +26,11 @@ Transforms PP Modules into Support Documentation.
        HTMLized by another transformer  -->
   <x:output method="xml" encoding="UTF-8"/>
 
+<!-- ################################################## -->
+<!--                  Templates                         -->
+<!-- ################################################## -->
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
-
     <html xmlns="http://www.w3.org/1999/xhtml">
       <x:call-template name="module-head"/>
       <body>
