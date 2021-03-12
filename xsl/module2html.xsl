@@ -408,12 +408,12 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h2 id="man-sfrs" class="indexable" data-level="2">TOE Security Functional Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:man-sfrs/cc:description">
-         <xsl:apply-templates select="//cc:man-sfrs/cc:*"/>
+         <xsl:apply-templates select="//cc:man-sfrs"/>
       </xsl:when>
       <xsl:when test="//cc:man-sfrs//cc:f-component">
 	The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.
 	These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.
-        <xsl:apply-templates select="//cc:man-sfrs/cc:*"/>
+        <xsl:apply-templates select="//cc:man-sfrs"/>
       </xsl:when>
       <xsl:otherwise>
 	This PP-Module does not define any mandatory SFRs.
