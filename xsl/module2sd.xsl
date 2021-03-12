@@ -31,7 +31,6 @@ Transforms PP Modules into Support Documentation.
 <!-- ################################################## -->
   <x:template match="/cc:Module">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
-
     <html xmlns="http://www.w3.org/1999/xhtml">
       <x:call-template name="module-head"/>
       <body>
