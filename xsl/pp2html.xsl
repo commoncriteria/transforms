@@ -150,7 +150,9 @@
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
         </dl>
-    </xsl:when></xsl:choose>
+    </xsl:when><xsl:otherwise>
+      This document does not define any additional <xsl:value-of select="local-name()"/>.
+    </xsl:otherwise> </xsl:choose>
   </xsl:template>
 
   <!-- ############### -->

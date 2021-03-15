@@ -1168,26 +1168,30 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="test-obj-evi-pat"/>
     </element>
   </define>
+
   <define name="threats">
     <element name="threats">
       <a:documentation>
       </a:documentation>
       <oneOrMore>
-        <element name="threat">
-          <a:documentation>
-            Defines a threat.
-          </a:documentation>
-          <ref name="threat-name-attr"/>
-          <ref name="origin-pat"/>
-          <oneOrMore>
-            <ref name="objective-refer"/>
-          </oneOrMore>
-        </element>
+        <ref name="threat"/>
       </oneOrMore>
     </element>
   </define>
- 
-  
+
+  <define name="threat"> 
+    <element name="threat">
+      <a:documentation>
+        Defines a threat.
+      </a:documentation>
+      <ref name="threat-name-attr"/>
+      <ref name="origin-pat"/>
+      <oneOrMore>
+        <ref name="objective-refer"/>
+      </oneOrMore>
+    </element>
+  </define>
+
   <define name="assumptions">
     <element name="assumptions">
       <a:documentation>

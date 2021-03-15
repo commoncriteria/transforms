@@ -49,6 +49,17 @@
       </zeroOrMore>
     </element></define>
 
+    <define name="threats">
+      <element name="threats">
+        <a:documentation>
+        </a:documentation>
+        <zeroOrMore>
+          <ref name="threat"/>
+        </zeroOrMore>
+      </element>
+  </define>
+ 
+ 
  </include>
 
   <define name="module-attributes-pat">
