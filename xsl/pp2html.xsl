@@ -103,7 +103,7 @@
           <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
           <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
-      </xsl:for-each>ext-comp-def
+      </xsl:for-each>
     </table>
   </xsl:template>
 
