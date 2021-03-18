@@ -142,7 +142,7 @@
           <nsName ns="https://niap-ccevs.org/cc/v1"/>
           <nsName ns="http://www.w3.org/1999/xhtml"/>
         </except></anyName>
-        <optional><attribute name="title"/></optional>
+        <attribute name="title"/>
         <ref name="f-comp-pat-content"/>
       </element>
       <element name="section">
