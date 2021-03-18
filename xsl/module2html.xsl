@@ -175,7 +175,7 @@
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
 	<tr> <th colspan="2"> Modified SFRs</th></tr>
 	<xsl:call-template name="req-con-rat-sec">
-	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component"/>
+	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component[not(@status='invisible')]"/>
 	  <xsl:with-param name="short" select="$base/@short"/>
 	  <xsl:with-param name="none-msg">
 	    This PP-Module does not modify any requirements when the
@@ -183,12 +183,12 @@
 	  </xsl:with-param>
 	</xsl:call-template>
 
-  <xsl:if test="$base/cc:additional-sfrs//cc:f-component">
+  <xsl:if test="$base/cc:additional-sfrs//cc:f-component[not(@status='invisible')]">
   	<tr>
 	    <th colspan="2"> Additional SFRs</th>
 	  </tr>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not add any requirements when the
@@ -200,7 +200,7 @@
 	<tr>
 	  <th colspan="2"> Mandatory SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Mandatory requirements.
@@ -210,7 +210,7 @@
 	<tr>
 	  <th colspan="2"> Optional SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Optional requirements.
@@ -220,7 +220,7 @@
 	<tr>
 	  <th colspan="2"> Selection-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Selection-based requirements.
@@ -230,7 +230,7 @@
 	<tr>
 	  <th colspan="2"> Objective SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Objective requirements.
@@ -240,7 +240,7 @@
 	<tr>
 	  <th colspan="2"> Implementation-Dependent SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component"/>
+	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
 	    <xsl:with-param name="short" select="$base/@short"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Implementation-Dependent requirements.
