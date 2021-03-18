@@ -35,17 +35,19 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp" mode="make_xref">
+  <xsl:template match="cc:base-pp|cc:include-pkg" mode="make_xref">
     <xsl:choose><xsl:when test="@name">
       <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
     </xsl:when><xsl:otherwise>
       <a href="{cc:url/text()}">
-        <xsl:value-of select="document(../output/@id)//cc:PPTitle/text()"/>,
+        <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
+        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
-        <xsl:value-of select="document(../output/@id)//cc:PPVersion/text()"/>,
+        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>,
       </a>
     </xsl:otherwise></xsl:choose>
-  </xsl:template>  
+  </xsl:template> 
+ 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -157,7 +159,7 @@
     <xsl:param name="prefix"/>
 
     <a onclick="showTarget('{$id}')" href="#{$id}" class="{$id}-ref" >
-      <xsl:value-of select="$prefix"/> <span class="counter"><xsl:value-of select="$id"/></span>
+      <xsl:value-of select="$prefix"/><xsl:text> </xsl:text><span class="counter"><xsl:value-of select="$id"/></span>
     </a>
   </xsl:template>
 
