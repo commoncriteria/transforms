@@ -351,7 +351,6 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
-<xsl:message>YYY<xsl:value-of select="local-name()"/></xsl:message>
      <xsl:if test=".//cc:aactivity">
        <div class="activity_pane hide">
          <div class="activity_pane_header">

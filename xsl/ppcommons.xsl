@@ -584,13 +584,11 @@ The following sections list Common Criteria and technology terms used in this do
         Template for universal sanity checks.
       ##############################################-->
   <xsl:template name="sanity-checks">
-    <xsl:if test="//cc:TSS[.=''] or //cc:Guidance[.=''] or //cc:Tests[.='']">
-      <xsl:message>*****************************
-**
-** TSS, Guidance, and Tests tags no longer precede their content, but rather encapsulate it.  **
-** The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.              **
-***************************** </xsl:message>
-    </xsl:if>
+    <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:Tests[.='']">
+      <xsl:message> Illegal empty <xsl:value-of select="local-name()"/> element at:
+        <xsl:call-template name="genPath"/>
+      </xsl:message>
+    </xsl:for-each>
     <xsl:for-each select="//cc:depends/@id">
        <xsl:message>
           Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
