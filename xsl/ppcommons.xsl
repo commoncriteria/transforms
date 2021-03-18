@@ -35,6 +35,14 @@
   <!--##############################################
            Templates
       ##############################################-->
+  <xsl:template match="text()" mode="lowercase">
+    <xsl:value-of select="translate(., $upper, $lower)"/>
+  </xsl:template>
+   
+  <xsl:template match="text()" mode="uppercase">
+    <xsl:value-of select="translate(., $lower, $upper)"/>
+  </xsl:template>
+   
    <!-- ############### -->
   <!--                 -->
   <xsl:template match="sec:*">
