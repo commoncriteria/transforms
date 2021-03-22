@@ -450,7 +450,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
     <xsl:apply-templates select="//cc:opt-sfrs" mode="app-sfr-sec"/>
     <xsl:apply-templates select="//cc:obj-sfrs" mode="app-sfr-sec"/>
-    <xsl:apply-templates select="//cc:impl-based-sfrs" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:impl-dep-sfrs" mode="app-sfr-sec"/>
   </xsl:template>
   <!-- ############### -->
   <!--      -->

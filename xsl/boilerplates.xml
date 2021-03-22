@@ -107,7 +107,7 @@
     Vendors planning on having evaluations performed against future products are encouraged
     to plan for these objective requirements to be met. <br/><br/>
 -->
-    <impl-based-sfrs level="2" name="Implementation-based"/>
+    <impl-dep-sfrs level="2" name="Implementation-based"/>
 <!--:
     This section contains requirements that depend on the TOE implementing certain product features or use cases.
 -->	
