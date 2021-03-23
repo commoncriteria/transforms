@@ -637,6 +637,13 @@ If it's only an acronym make sure the text content is empty.
         Denotes the start of a selectable in a selectables section.
       </a:documentation>
       <optional>
+        <attribute name="style">
+          <a:documentation>
+          Style attributes that are passsed on to the *li* element.
+          </a:documentation>
+         </attribute>
+      </optional>
+      <optional>
         <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
       <optional>

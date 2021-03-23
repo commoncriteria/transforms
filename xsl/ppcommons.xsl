@@ -340,7 +340,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:when test="@linebreak='yes'">
       <ul><xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+        <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
       </xsl:for-each></ul>
     </xsl:when>
     <xsl:when test="@linebreak='no'">
@@ -351,7 +351,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:when test=".//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-        <li><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+        <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
       </xsl:for-each></ul></xsl:when>
     <xsl:otherwise>
       <xsl:for-each select="cc:selectable">
