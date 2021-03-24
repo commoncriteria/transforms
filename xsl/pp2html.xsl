@@ -87,8 +87,24 @@
     <xsl:if test="//cc:ext-comp-def"> 
 	    <xsl:call-template name="ext-comp-defs"/>
     </xsl:if>
+    <xsl:call-template name="rules-appendix"/>
     <xsl:call-template name="use-case-appendix"/> 
     <xsl:apply-templates select="cc:appendix"/>
+  </xsl:template>
+  
+
+  <xsl:template name="rules-appendix">
+     <h1 id="appendix-rules" class="indexable" data-level="A">Selection Rules</h1>
+     This rules in this appendix define which combinations of selections are considered valid.
+     An ST is considered conforming only if it statisfies all rules.
+     <xsl:for-each select="//cc:rule">
+       <h2 id="{@id}">
+         Rule #<xsl:number count="cc:rule" level="any"/>
+       </h2>
+       <div>  <xsl:apply-templates select="cc:description"/></div>
+       
+       <xsl:apply-templates select="cc:or" mode="use-case"/>
+     </xsl:for-each>
   </xsl:template>
 
   <!-- ############### -->
@@ -103,7 +119,7 @@
           <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
           <td><xsl:apply-templates select="cc:description"/></td>
         </tr>
-      </xsl:for-each>
+      </xsl:for-each>ext-comp-def
     </table>
   </xsl:template>
 
@@ -351,6 +367,7 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
+<xsl:message>YYY<xsl:value-of select="local-name()"/></xsl:message>
      <xsl:if test=".//cc:aactivity">
        <div class="activity_pane hide">
          <div class="activity_pane_header">
@@ -392,8 +409,7 @@
   <!--########################################-->
   <xsl:template match="cc:rule" mode="use-case">
     Rule #<xsl:number count="cc:rule" level="any"/>:<br/>
-    <xsl:choose>
-      <xsl:when test="cc:description">
+    <xsl:choose> <xsl:when test="cc:description">
       <xsl:apply-templates select="cc:description"/>
       <div class="activity_pane hide"> <div class="activity_pane_header">
       <a onclick="toggle(this);return false;" href="#">
@@ -405,14 +421,9 @@
       <i> <xsl:apply-templates select="cc:or" mode="use-case"/> </i>
       <!-- Apply to the management functions -->
     </div> </div>
- 
-
-
-      </xsl:when>
-      <xsl:otherwise>
+      </xsl:when> <xsl:otherwise>
         <xsl:apply-templates mode="use-case"/>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:otherwise> </xsl:choose>
   </xsl:template>
 
  <!-- ############### -->
