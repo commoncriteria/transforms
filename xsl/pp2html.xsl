@@ -87,9 +87,10 @@
     <xsl:if test="//cc:ext-comp-def"> 
 	    <xsl:call-template name="ext-comp-defs"/>
     </xsl:if>
+    <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
     <xsl:call-template name="rules-appendix"/>
     <xsl:call-template name="use-case-appendix"/> 
-    <xsl:apply-templates select="cc:appendix"/>
+    <xsl:apply-templates select="//cc:bibliography"/>
   </xsl:template>
   
 
@@ -111,6 +112,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:bibliography">
+    <h1 id="appendix-bibliography" class="indexable" data-level="A">Bibliography</h1>
     <table>
       <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
