@@ -369,7 +369,6 @@
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
-<xsl:message>YYY<xsl:value-of select="local-name()"/></xsl:message>
      <xsl:if test=".//cc:aactivity">
        <div class="activity_pane hide">
          <div class="activity_pane_header">
@@ -403,17 +402,20 @@
       <div class="reqdesc">
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
-        <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
+        <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
+          Selections in this requirement are restricted by the following rule(s):<br/>
+          <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
+        </xsl:if>
       </div>
     </div>
   </xsl:template>
   <!--########################################-->
   <!--########################################-->
   <xsl:template match="cc:rule" mode="use-case">
-    Rule #<xsl:number count="cc:rule" level="any"/>:<br/>
-    <xsl:choose> <xsl:when test="cc:description">
+    <a href="#{@id}">Rule #<xsl:number count="cc:rule" level="any"/></a>
+    <xsl:choose> <xsl:when test="cc:description">:
       <xsl:apply-templates select="cc:description"/>
-      <div class="activity_pane hide"> <div class="activity_pane_header">
+<!--      <div class="activity_pane hide"> <div class="activity_pane_header">
       <a onclick="toggle(this);return false;" href="#">
         <span class="activity_pane_label">Rule Definition </span>
         <span class="toggler"/>
@@ -421,10 +423,9 @@
     </div>
     <div class="activity_pane_body">
       <i> <xsl:apply-templates select="cc:or" mode="use-case"/> </i>
-      <!-- Apply to the management functions -->
-    </div> </div>
+    </div> </div>-->
       </xsl:when> <xsl:otherwise>
-        <xsl:apply-templates mode="use-case"/>
+    <!--    <xsl:apply-templates mode="use-case"/> -->
       </xsl:otherwise> </xsl:choose>
   </xsl:template>
 
