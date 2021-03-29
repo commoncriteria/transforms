@@ -4,12 +4,11 @@
 ![license](https://img.shields.io/badge/license-Unlicensed-blue.svg)
 
 This poorly named _transforms_ project (should really be called 'commons' or something similiar as it is meant to be used as a submodule to other CC projects),
-contains three basic file types (and one subproject) that are common resources to various protection profile projects.
+contains four basic file types (and one subproject) that are common resources to various protection profile projects.
 
 These three types are:
-* XSL Files, in the project's top directory, which transform the protection profile input file into
-  various readable html documents,
-* Schema Files (currently just schema.rng) in the _schemas_ directory, which defines, roughly, the structure of an input file, and
+* Transforming files which are housed in the _xsl_ directory. These are primarily _XSL_ files, but also contain _python_ scripts and _XML_ files.
+* RelaxNG Schema Files which are housed in the _schemas_ directory, which defines, roughly, the structure of an input file, and
 * Dictionary files, in the _dictionaries_ directory, which include various lists of words that are frequently used by protection
 profiles but not recognized by _hunspell_, a spell checker we use.
 
