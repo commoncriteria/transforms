@@ -87,9 +87,10 @@
     <xsl:if test="//cc:ext-comp-def"> 
 	    <xsl:call-template name="ext-comp-defs"/>
     </xsl:if>
-    <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
+    <xsl:apply-templates select="cc:appendix[not(cc:bibliography) and not(cc:acronyms)]"/>
     <xsl:call-template name="rules-appendix"/>
-    <xsl:call-template name="use-case-appendix"/> 
+    <xsl:call-template name="use-case-appendix"/>  
+    <xsl:apply-templates select="//cc:acronyms"/>
     <xsl:apply-templates select="//cc:bibliography"/>
   </xsl:template>
   
@@ -403,9 +404,9 @@
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
         <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
-          <br/>Selections in this requirement affect the following rule(s):<br/>
-          <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/><br/>
-        </xsl:if>
+          Selections in this requirement involve the following rule(s):<br/>
+          <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
+	</xsl:if>
       </div>
     </div>
   </xsl:template>
@@ -413,7 +414,7 @@
   <!--########################################-->
   <xsl:template match="cc:rule" mode="use-case">
     <a href="#{@id}">Rule #<xsl:number count="cc:rule" level="any"/></a>
-    <xsl:choose> <xsl:when test="cc:description">:
+    <xsl:choose> <xsl:when test="cc:description">:<br/>
       <xsl:apply-templates select="cc:description"/><br/>
 <!--      <div class="activity_pane hide"> <div class="activity_pane_header">
       <a onclick="toggle(this);return false;" href="#">
