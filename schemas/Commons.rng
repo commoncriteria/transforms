@@ -1683,7 +1683,13 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define> 
 
   <define name="ref-ids-pat">
-     <oneOrMore><ref name="ref-id"/></oneOrMore>
+     <oneOrMore><choice>
+       <ref name="ref-id"/>
+       <element name="doc">
+         <attribute name="ref"/>
+         <ref name="ref-id"/>
+       </element>
+     </choice></oneOrMore>
   </define>
 
   <define name="ref-id">
