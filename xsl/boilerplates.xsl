@@ -208,10 +208,10 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
    <p>An organization deploying the TOE is
       expected to satisfy the organizational security policy listed below in addition to all
       organizational security policies defined by the claimed base PP. </p>
-
+<!--
    <xsl:if test="not(.//cc:OSP)">
    <p>    This PP-Module defines no additional Organizational Security Policies.</p>
-   </xsl:if>
+   </xsl:if>-->
   </xsl:template>
 
 
@@ -224,9 +224,9 @@ security functionality specified in the PP-Module can be provided by the TOE. If
 Operational Environment that does not meet these assumptions, the TOE may no longer be able to
 provide all of its security functionality.
       </xsl:when>
-      <xsl:otherwise>
+<!--      <xsl:otherwise>
 This PP-Module defines no additional assumptions.
-      </xsl:otherwise>
+      </xsl:otherwise>-->
     </xsl:choose>
   </xsl:template>
 
