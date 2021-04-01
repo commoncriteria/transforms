@@ -980,7 +980,7 @@ Modification definition. This text goes in the
         <element name="rule">
           <ref name="id-attr"/>
           <optional><ref name="description"/></optional>
-          <ref name="or"/>
+          <ref name="rule-body"/>
         </element>
       </zeroOrMore>
     </element>
@@ -1751,6 +1751,33 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
        </zeroOrMore> 
   </define>   
 -->
+
+  <define name="rule-body">
+   <choice>
+        <ref name="logical-expr"/>
+	<ref name="if-then-expr"/>
+    </choice>
+  </define>
+	
+  <define name="if-then">
+    <element name="if">
+	  <ref name="logical-expr"/>
+      </element>
+    <element name="then">
+	  <ref name="logical-expr"/>
+    </element>
+  </define>
+	
+  <define name="logical-expr">
+    <choice>
+        <ref name="or"/>	  
+        <ref name="and"/>
+        <ref name="ref-ids-pat"/>
+        <ref name="guidance"/>
+        <ref name="not"/>
+     </choice>
+  </define>
+	
   <define name="or">
     <element name="or">
       <zeroOrMore><choice>
