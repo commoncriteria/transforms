@@ -103,11 +103,52 @@
          Rule #<xsl:number count="cc:rule" level="any"/>
        </h2>
        <div>  <xsl:apply-templates select="cc:description"/></div>
-       
-       <xsl:apply-templates select="cc:rule-body" mode="use-case"/>
+       <xsl:apply-templates select="cc:if" mode="rule"/>
+       <xsl:apply-templates select="cc:or" mode="rule"/>
+       <xsl:apply-templates select="cc:then" mode="rule"/>
      </xsl:for-each>
   </xsl:template>
 
+  <xsl:template match="if" mode="rule">
+	  
+  </xsl:template>
+     
+		
+  <xsl:template match="cc:and" mode="use-case" name="use-case-and">
+    <xsl:apply-templates mode="use-case"/>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <xsl:template match="cc:or" mode="rule">
+    <table class="uc_table_or" style="border: 1px solid black">
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
+      <xsl:for-each select="cc:*">
+        <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="cc:if" mode="rule">
+    <table class="uc_table_or" style="border: 1px solid black">
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">IF</td><td style="display:none"></td></tr>
+      <xsl:for-each select="cc:*">
+        <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+	
+  <xsl:template match="cc:then" mode="rule">
+    <table class="uc_table_or" style="border: 1px solid black">
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">THEN</td><td style="display:none"></td></tr>
+      <xsl:for-each select="cc:*">
+        <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+	
+	
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
