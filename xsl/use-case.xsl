@@ -267,7 +267,7 @@
         in the ST</div>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
+        <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/> (use case or rule)</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> 
