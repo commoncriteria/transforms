@@ -104,7 +104,7 @@
        </h2>
        <div>  <xsl:apply-templates select="cc:description"/></div>
        
-       <xsl:apply-templates select="cc:or" mode="use-case"/>
+       <xsl:apply-templates select="cc:rule-body" mode="use-case"/>
      </xsl:for-each>
   </xsl:template>
 
@@ -403,7 +403,7 @@
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
         <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
-          Selections in this requirement involve the following rule(s):<br/>
+          <p/>Selections in this requirement involve the following rule(s):<br/>
           <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
 	</xsl:if>
       </div>
