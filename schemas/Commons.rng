@@ -1693,7 +1693,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="ref-id">
-    <element name="ref-id"><text/></element>
+    <element name="ref-id">
+	    <optional><attribute name="alt"/>
+	    </optional>
+	    <text/>
+    </element>
   </define>
 
   <define name="implements-pat">
