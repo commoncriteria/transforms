@@ -192,9 +192,9 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
   </xsl:template>
 
   <xsl:template match="/cc:PP//*[./cc:OSPs]" mode="hook">
-   <xsl:if test="not(.//cc:OSP)">
+<!--   <xsl:if test="not(.//cc:OSP)">
    <p>    This PP defines no Organizational Security Policies.</p>
-   </xsl:if>
+   </xsl:if>  -->
   </xsl:template>
 
   <xsl:template match="/cc:Module//*[./cc:SOs]" mode="hook">
