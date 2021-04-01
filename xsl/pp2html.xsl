@@ -109,11 +109,6 @@
      </xsl:for-each>
   </xsl:template>
 
-  <xsl:template match="if" mode="rule">
-	  
-  </xsl:template>
-     
-		
   <xsl:template match="cc:and" mode="use-case" name="use-case-and">
     <xsl:apply-templates mode="use-case"/>
   </xsl:template>
