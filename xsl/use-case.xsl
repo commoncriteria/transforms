@@ -238,7 +238,7 @@
       <xsl:otherwise>
         <xsl:message> Failed to find <xsl:value-of select="$ref-id-txt"/> in <xsl:call-template name="genPath"/> (use case or rule)</xsl:message>
         <xsl:if test="./@alt">
-          <xsl:value-of select="./@alt"/>
+          <b><i><xsl:value-of select="./@alt"/></i></b>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
