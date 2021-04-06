@@ -614,7 +614,7 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:message>Error: Detected multiple elements with an id of '<xsl:value-of select="$id"/>'.</xsl:message>
        </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//cc:ref-id">
+    <xsl:for-each select="//cc:ref-id[not(parent::cc:doc)]">
 	<xsl:variable name="refid" select="text()"/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
