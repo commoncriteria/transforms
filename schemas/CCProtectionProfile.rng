@@ -75,16 +75,10 @@ Content that only appears if the optional appendices exist.
   
   <define name="modules">
     <optional> <element name="modules"><optional><attribute name="required"/></optional>
-    <oneOrMore>
-      <element name="module">
-        <element name="name"><text/></element>
-        <element name="url"><text/></element>
-        <element name="version"><data type="string">
-            <param name="pattern">[0-9]+(\.[0-9]+)+</param>
-        </data></element>
-      </element>
-    </oneOrMore>
-    </element></optional>
+    <zeroOrMore>
+      <element name="module"><ref name="external-document-pat"/></element>
+    </zeroOrMore>
+   </element></optional>
   </define>
   <define name="SecurityRequirementsChapter">
     <choice>

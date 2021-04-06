@@ -1693,11 +1693,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="ref-id">
-    <element name="ref-id">
-	    <optional><attribute name="alt"/>
-	    </optional>
-	    <text/>
-    </element>
+    <element name="ref-id"><text/></element>
   </define>
 
   <define name="implements-pat">
@@ -1763,7 +1759,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </choice>
   </define>
 	
-  <define name="if-then">
+  <define name="if-then-expr">
     <element name="if">
 	  <ref name="logical-expr"/>
       </element>
@@ -1778,7 +1774,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="and"/>
         <ref name="ref-ids-pat"/>
         <ref name="guidance"/>
-        <ref name="not"/>
+<!--        <ref name="not"/> -->
      </choice>
   </define>
 	
