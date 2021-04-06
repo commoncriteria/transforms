@@ -161,7 +161,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:doc" mode="use-case">
-    <xsl:variable name="docpath">../output/<xsl:value-of select="@ref"/>.xml</xsl:variable>
+    <xsl:variable name="docpath"><xsl:value-of select="concat($work-dir,'/',@ref)"/>.xml</xsl:variable>
     <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
     
     <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="document($docpath)//cc:PPTitle"/></a>: </div>
