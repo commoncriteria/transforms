@@ -163,11 +163,10 @@
   <xsl:template match="cc:doc" mode="use-case">
     <xsl:variable name="docpath"><xsl:value-of select="concat($work-dir,'/',@ref)"/>.xml</xsl:variable>
     <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
-    
-    <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="document($docpath)//cc:PPTitle"/></a>: </div>
+    <xsl:variable name="name"><xsl:value-of select="document($docpath)//cc:PPTitle"/><xsl:if test="not(document($docpath)//cc:PPTitle)">PP-Module for <xsl:value-of select="document($docpath)/cc:Module/@name"/></xsl:if></xsl:variable>
+   
+    <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="$name"/></a>: </div>
     <xsl:for-each select="cc:ref-id">
-      <xsl:message>Made it e |<xsl:value-of select="current()/text()"/></xsl:message>
-      <xsl:message>Made it here |<xsl:value-of select="document($docpath)//cc:*[current()/text()=@id]"/></xsl:message>
       <xsl:call-template name="handle-ref-ext"> 
         <xsl:with-param name="ref-id" select="text()"/>
         <xsl:with-param name="root" select="document($docpath)/cc:*"/>
