@@ -183,6 +183,10 @@
    .uc_not, .uc_mf, .uc_sel, .uc_guide{
        text-indent: 10px;
    }
+   .uc_sel{ 
+       font-style: italic;
+   }
+
    .uc_not_sel, .uc_sel.uc_mf, uc_assign.uc_mf{
        text-indent: 20px;
    }
