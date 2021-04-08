@@ -97,8 +97,8 @@
       <h3 id="consecprob-{@short}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
-      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
-      <xsl:apply-templates mode="short" select="."/> as follows:
+<!--      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
+      <xsl:apply-templates mode="short" select="."/> as follows: -->
       <xsl:apply-templates select="./cc:con-sec-prob"/>
       <table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]">
