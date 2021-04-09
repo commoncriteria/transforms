@@ -272,7 +272,7 @@ This PP-Module does not define any objectives for the Operational Environment.
 
    The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the
 	  TOE implementing any function.
-   If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to included the SFRs
+   If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to include the SFRs
 	  in the ST, but are not required in order to conform to this <xsl:call-template name="doctype-short"/>.<br/><br/>
 
   The second type (<xsl:call-template name="ref-obj-reqs"/>) are objective requirements that describe security functionality not yet 
