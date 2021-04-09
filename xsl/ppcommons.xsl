@@ -522,7 +522,7 @@ The following sections list Common Criteria and technology terms used in this do
        this is what we have.
   -->
   <xsl:template match="htm:*[./cc:depends]">
-    <div class="dependent"> <xsl:if test="cc:depends[not(@hide)]">The following content should be included if:
+    <div class="dependent"> <xsl:if test="cc:depends[not(@hide)] and not(self::htm:tr)">The following content should be included if:
       <ul> <xsl:for-each select="cc:depends"><li>
          <xsl:variable name="uid" select="@*[1]"/>
          <xsl:choose><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
