@@ -736,7 +736,7 @@ The following sections list Common Criteria and technology terms used in this do
 
   <!-- ############### -->
   <!--            -->
-  <xsl:template match="cc:acronyms" name="acronym-table">
+  <xsl:template name="acronym-table">
     <table>
       <tr class="header">
         <th>Acronym</th>

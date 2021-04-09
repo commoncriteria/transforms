@@ -90,6 +90,7 @@
     <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
     <xsl:call-template name="rules-appendix"/>
     <xsl:call-template name="use-case-appendix"/>  
+    <xsl:call-template name="acronyms"/>
     <xsl:apply-templates select="//cc:bibliography"/>
   </xsl:template>
   

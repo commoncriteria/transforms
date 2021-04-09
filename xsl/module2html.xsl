@@ -40,8 +40,8 @@
     <xsl:call-template name="sel-sfrs"/>
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
-    <xsl:apply-templates select="//cc:bibliography"/>
     <xsl:call-template name="acronyms"/>
+    <xsl:apply-templates select="//cc:bibliography"/>
   </xsl:template>
 
   
