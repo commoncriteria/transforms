@@ -84,9 +84,7 @@ provides evidence that these controls are present and have been evaluated.
             be specified in a PP-Configuration with this PP.
             <ul>
               <xsl:for-each select="//cc:modules/cc:module">
-                <li><a href="{cc:url/text()}">PP-Module for 
-                  <xsl:value-of select="concat(cc:name/text(),', version ', cc:version/text())"/>
-                </a></li>
+                <li><xsl:apply-templates select="." mode="make_xref"/></li>
               </xsl:for-each>
             </ul>
           </dd>

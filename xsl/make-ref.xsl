@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:cc="https://niap-ccevs.org/cc/v1"
@@ -5,9 +6,12 @@
    xmlns:htm="http://www.w3.org/1999/xhtml">
 
 
-  <!-- ############### -->
-  <!-- This files defines how to make cross-references to different items. -->
-  <!-- ############### -->
+  <!-- ############################################# -->
+  <!-- This files defines how to make cross-references
+       to different items. -->
+  <!-- ################################### -->
+
+
   <!-- ############### -->
   <xsl:template name="selectable-nolink">
       <xsl:choose>
@@ -35,17 +39,30 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp|cc:include-pkg" mode="make_xref">
-    <xsl:choose><xsl:when test="@name">
+  <xsl:template match="cc:module[@name]|cc:base-pp[@name]/cc:include-pkg[@name]" mode="make_xref">
       <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
-    </xsl:when><xsl:otherwise>
+  </xsl:template>
+
+  <xsl:template match="cc:module[not(@name)]" mode="make_xref">
+      <a href="{cc:url/text()}">
+        <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
+        PP-Module for 
+        <xsl:value-of select="document($path)/cc:Module/@name"/>,
+        version 
+        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
+      </a>
+  </xsl:template> 
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:base-pp|cc:include-pkg" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>,
       </a>
-    </xsl:otherwise></xsl:choose>
   </xsl:template> 
  
   <!-- ############### -->
