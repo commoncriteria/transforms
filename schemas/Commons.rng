@@ -1551,15 +1551,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </attribute>
   </define>
 
-  <define name="acronyms">
-    <element name="acronyms">
-      <a:documentation>
-        Declares where acronyms are visually defined.
-      </a:documentation>
-      <empty/>
-    </element>
-  </define>
-
   <define name="entry-el">
     <element name="entry">
       <a:documentation>

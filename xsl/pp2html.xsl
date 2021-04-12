@@ -91,7 +91,7 @@
     <xsl:call-template name="rules-appendix"/>
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
-    <xsl:apply-templates select="//cc:bibliography"/>
+    <xsl:call-template name="bibliography"/>
   </xsl:template>
   
 
@@ -148,12 +148,13 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:bibliography">
+  <xsl:template name="bibliography">
     <h1 id="appendix-bibliography" class="indexable" data-level="A">Bibliography</h1>
     <table>
       <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
-      <xsl:for-each select="cc:entry">
+      <xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc-docs']/cc:entry">
+        <xsl:sort/>
         <tr>
           <td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
           <td><xsl:apply-templates select="cc:description"/></td>

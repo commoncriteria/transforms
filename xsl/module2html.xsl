@@ -41,7 +41,7 @@
     <xsl:call-template name="ext-comp-defs"/>
     <xsl:apply-templates select="//cc:appendix"/>
     <xsl:call-template name="acronyms"/>
-    <xsl:apply-templates select="//cc:bibliography"/>
+    <xsl:call-template name="bibliography"/>
   </xsl:template>
 
   
@@ -371,34 +371,6 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	    </xsl:otherwise>
 	  </xsl:choose></td>
 	</tr>
-  </xsl:template>
-
-  <!-- ############### -->
-  <!--      -->
-  <!-- ############### -->
-  <xsl:template match="cc:bibliography">
-    <h1 id="bibliography" class="indexable" data-level="A">Bibliography</h1>
-    <table>
-      <tr class="header">
-        <th>Identifier</th>
-        <th>Title</th>
-      </tr>
-      <xsl:apply-templates mode="hook" select="."/>
-      <xsl:for-each select="cc:entry">
-        <tr>
-          <td>
-            <xsl:element name="span">
-              <xsl:attribute name="id">
-                <xsl:value-of select="@id"/>
-              </xsl:attribute> [<xsl:value-of select="cc:tag"/>] </xsl:element>
-          </td>
-          <td>
-            <xsl:apply-templates select="cc:description"/>
-          </td>
-        </tr>
-      </xsl:for-each>
-    </table>
-
   </xsl:template>
 
   <!-- ############### -->

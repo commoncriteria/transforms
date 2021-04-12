@@ -110,28 +110,6 @@ provides evidence that these controls are present and have been evaluated.
   <!-- ############## -->
    <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
 
-   <!-- ############## -->
-   <xsl:template match="/cc:*[@boilerplate='yes']//cc:bibliography|/cc:Package//cc:bibliography|/cc:module//cc:bibliography" mode="hook">
-<tr>
-  <td><span id="bibCC"> [CC] </span></td>
-  <td>Common Criteria for Information Technology Security Evaluation - 
-    <ul>
-      <xsl:for-each select="document('boilerplates.xml')//*[@id='cc-ref-docs']/cc:doc">
-        <li>
-          <a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART{@num}V3.1R5.pdf">Part
-             <xsl:value-of select="@num"/>: <xsl:value-of select="@name"/></a>,
-             CCMB-2017-04-00<xsl:value-of select="@num"/>, <xsl:call-template name="verrev"/>,  April 2017.
-         </li>
-      </xsl:for-each>
-    </ul>
-  </td>
-</tr>
-  </xsl:template>
-
-
-  <!-- ############## -->
-  <xsl:template match="citeCC" name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
-
   <!-- ############## -->
   <xsl:template name="format-of-document">
     <section title="Format of this Document" id="docformat">
@@ -176,7 +154,15 @@ provides evidence that these controls are present and have been evaluated.
        <xsl:apply-templates select="document('boilerplates.xml')//*[@title='Security Requirements']"/>
   </xsl:template>
 
+  <!-- ################################################## 
 
+       ################################################## -->
+  <xsl:template name="citeCC"><a href="#bibCC">[CC]</a></xsl:template>
+
+
+  <!-- ################################################## 
+
+       ################################################## -->
   <xsl:template match="/cc:Module//*[@title='TOE Security Functional Requirements']|/cc:Module//sec:TOE_Security_Functional_Requirements[not(@title)]" mode="hook">
     <xsl:choose>
       <xsl:when test="cc:*[@title='TOE Security Functional Requirements']">

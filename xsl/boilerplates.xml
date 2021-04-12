@@ -48,6 +48,23 @@
      </ul>
    </empty>
 
+   <empty id="cc-docs">
+      <entry id="bibCC">
+        <tag>CC</tag>
+        <description>Common Criteria for Information Technology Security Evaluation - <h:ul>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART1V3.1R5.pdf">Part
+                1: Introduction and General Model</h:a>, CCMB-2017-04-001, Version 3.1 Revision 5,
+              April 2017.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART2V3.1R5.pdf">Part
+                2: Security Functional Components</h:a>, CCMB-2017-04-002, Version 3.1 Revision 5,
+              April 2017.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CCPART3V3.1R5.pdf">Part
+                3: Security Assurance Components</h:a>, CCMB-2017-04-003, Version 3.1 Revision 5,
+              April 2017.</h:li>
+          </h:ul></description>
+      </entry>
+   </empty>
+ 
    <empty id="a-group">
       <a-stuff type="D">Developer action</a-stuff>
       <a-stuff type="C">Content and presentation</a-stuff>

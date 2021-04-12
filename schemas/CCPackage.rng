@@ -26,6 +26,7 @@
       <ref name="sfr-section"/>
       <ref name="Chapters"/>
       <ref name="appendix-pat"/>
+      <ref name="bibliography"/>
    </element>
   </start>
 
@@ -145,8 +146,6 @@
         <oneOrMore><choice>
             <ref name="basic-content-pat"/>
             <ref name="section"/>
-            <ref name="acronyms"/>
-            <ref name="bibliography"/>
         </choice></oneOrMore>
       </element>
     </oneOrMore>
