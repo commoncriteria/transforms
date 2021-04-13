@@ -943,6 +943,7 @@ Modification definition. This text goes in the
         </optional>
       </choice>
 <!--      <ref name="depends-pat"/>   -->
+	    <optional><ref name="exportable"/></optional>
       <optional><ref name="note"/></optional>
       <optional><ref name="consistency-rationale"/></optional>
       <optional><ref name="ext-comp-extra-pat"/></optional>
@@ -1871,5 +1872,27 @@ the basic-content.
     </element>
   </define>
 
+   <define name="sel-ref">
+	   <a:documentation>
+		   A reference to a selection in the current f-component indicating that the feature indicated by the 
+		   selection is exported in a composed TOE.
+	   </a:documentation>
+	   <element name="sel-ref">
+		   <text/>
+	   </element>
+	</define>
+		   
+   <define name="exportable">
+	   <a:documentation>
+		   Tag indicating that the current f-component exports an interface to dependent components in a composed TOE.
+	   </a:documentation>
+	   <element name="exportable">
+		   <ref name="id-attr"/>
+		   <optional><attribute name="descr"/></optional>
+		   <zeroOrMore>
+			   <ref name="sel-ref"/>
+		   </zeroOrMore>
+	    </element>
+	</define>  
   
 </grammar>
