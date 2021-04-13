@@ -907,9 +907,6 @@
      </xsl:if>
   </xsl:template>
 
-  <!-- Exportable and Importable -->
-  <!-- Eat the exportables till we figure out what to do with them -->
-  <xsl:template match="cc:exportable"/>  
 	
 </xsl:stylesheet>
 
