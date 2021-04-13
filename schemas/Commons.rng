@@ -1872,28 +1872,12 @@ the basic-content.
     </element>
   </define>
 
-   <define name="exp-sel">
-	   <a:documentation>
-		   A reference to a selection in the current f-component indicating that the feature indicated by the 
-		   selection is exported in a composed TOE.
-	   </a:documentation>
-	   <element name="exp-sel">
-		   <attribute name="descr"/>
-		   <text/>
-	   </element>
-	</define>
 		   
    <define name="exportable">
 	   <a:documentation>
 		   Tag indicating that the current f-component exports an interface to dependent components in a composed TOE.
 	   </a:documentation>
-	   <element name="exportable">
-		   <ref name="id-attr"/>
-		   <optional><attribute name="descr"/></optional>
-		   <zeroOrMore>
-			   <ref name="exp-sel"/>
-		   </zeroOrMore>
-	    </element>
+	   <element name="exportable"/>
 	</define>  
-  
+	
 </grammar>
