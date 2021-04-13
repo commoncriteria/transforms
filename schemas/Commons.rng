@@ -1872,12 +1872,13 @@ the basic-content.
     </element>
   </define>
 
-   <define name="sel-ref">
+   <define name="exp-sel">
 	   <a:documentation>
 		   A reference to a selection in the current f-component indicating that the feature indicated by the 
 		   selection is exported in a composed TOE.
 	   </a:documentation>
-	   <element name="sel-ref">
+	   <element name="exp-sel">
+		   <attribute name="descr"/>
 		   <text/>
 	   </element>
 	</define>
@@ -1890,7 +1891,7 @@ the basic-content.
 		   <ref name="id-attr"/>
 		   <optional><attribute name="descr"/></optional>
 		   <zeroOrMore>
-			   <ref name="sel-ref"/>
+			   <ref name="exp-sel"/>
 		   </zeroOrMore>
 	    </element>
 	</define>  
