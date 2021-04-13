@@ -943,7 +943,8 @@ Modification definition. This text goes in the
         </optional>
       </choice>
 <!--      <ref name="depends-pat"/>   -->
-	    <optional><ref name="exportable"/></optional>
+	    <optional><ref name="importable-pat"/></optional>
+	    <optional><ref name="exportable-pat"/></optional>
       <optional><ref name="note"/></optional>
       <optional><ref name="consistency-rationale"/></optional>
       <optional><ref name="ext-comp-extra-pat"/></optional>
@@ -1873,11 +1874,20 @@ the basic-content.
   </define>
 
 		   
-   <define name="exportable">
+   <define name="exportable-pat">
 	   <a:documentation>
 		   Tag indicating that the current f-component exports an interface to dependent components in a composed TOE.
 	   </a:documentation>
 	   <element name="exportable"/>
+	</define>  
+	
+   <define name="importable-pat">
+	   <a:documentation>
+		   Tag indicating that the current f-component can be satisfied by the referenced base component SFR(s) in a composed TOE.
+	   </a:documentation>
+	   <element name="importable">
+		  <ref name="ref-ids-pat"/>
+	   </element>
 	</define>  
 	
 </grammar>
