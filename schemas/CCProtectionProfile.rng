@@ -400,9 +400,10 @@ Content that only appears if the optional appendices exist.
   </define>
   
   <define name="pp-attributes">
-    <attribute name="name">
-     <a:documentation> The title of this document.</a:documentation>
+    <attribute name="target-products">
+     <a:documentation>The class of products targetted by this document.</a:documentation>
     </attribute>
+    
     <optional>
       <attribute name="boilerplate">
       <a:documentation>

@@ -430,6 +430,20 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="/cc:PP" mode="get_title">
+    <xsl:value-of select="//cc:PPTitle"/>
+  </xsl:template>
+
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="/cc:Module" mode="get_title">
+    PP-Module for <xsl:value-of select="/cc:Module/@target-products"/>
+  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->

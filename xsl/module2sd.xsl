@@ -32,7 +32,7 @@ Transforms PP Modules into Support Documentation.
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template match="/cc:Module">
+   <x:template match="/cc:*">
     <!-- Start with !doctype preamble for valid (X)HTML document. -->
     <html xmlns="http://www.w3.org/1999/xhtml">
       <x:call-template name="module-head"/>
@@ -42,7 +42,7 @@ Transforms PP Modules into Support Documentation.
 	<x:call-template name="toc"/>
 	<x:call-template name="intro"/>
 	<x:call-template name="sfrs"/>
-	<x:call-template name="sars"/>
+	<x:apply-templates select="/cc:*" mode="sars"/>
 	<x:call-template name="sup-info"/>
 	<x:call-template name="references"/>
       </body>
@@ -55,7 +55,9 @@ Transforms PP Modules into Support Documentation.
   <x:template name="make-section">
     <x:param name="title"/>
     <x:param name="id"/>
-    <x:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+    <x:variable name="depth" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
     <x:element name="h{$depth}">
       <x:attribute name="id"><x:value-of select="$id"/></x:attribute>
       <x:attribute name="class">indexable,h<x:value-of select="$depth"/></x:attribute>
@@ -75,11 +77,11 @@ Transforms PP Modules into Support Documentation.
         Mandatory Technical Document</h1>
       <img src="images/niaplogo.png" alt="NIAP"/>
       <hr width="50%"/>
-      <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript>
-      <br/>PP-Module for <x:value-of select="/cc:Module/@target-products"/>
-      <p/>Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
-      <p/><x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
-      <p/><b><x:value-of select="//cc:PPAuthor"/></b>
+      <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript><br/>
+      <x:apply-templates select="/cc:*" mode="get_title"/><br/>
+      Version: <x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      <b><x:value-of select="//cc:PPAuthor"/></b>
       </div>
   </x:template>
 
@@ -97,7 +99,7 @@ Transforms PP Modules into Support Documentation.
   <!-- ############### -->
    <x:template name="module-head">
     <head> 
-      <title>Supporting Document - PP-Module for <x:value-of select="/cc:Module/@name"/> Products</title>
+      <title>Supporting Document - <x:apply-templates select="/cc:*" mode="get_title"/></title>
       <style type="text/css">
 	<x:call-template name="common_css"/>
       </style>
@@ -230,6 +232,7 @@ guidance, and testing.</p>
     <x:param name="short"/>
     <x:param name="none-msg"/>
     <x:param name="title"/>
+
     <x:choose>
       <x:when test="($none-msg='') and (count($f-comps//cc:f-component)=0)"/>
       <x:otherwise>
@@ -252,7 +255,64 @@ guidance, and testing.</p>
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template name="sars">
+  <x:template mode="sars" match="/cc:PP">
+    <h1 id="sar_aas" class="indexable" data-level="0">Evaluation Activities for SARs</h1>
+    <x:choose> <x:when test="//cc:a-component">
+      <x:for-each select="//cc:a-component/..">
+        <x:apply-templates mode="make_header" select="."/>
+        <x:apply-templates select=".//cc:a-component"/>
+      </x:for-each>
+      </x:when> <x:otherwise>
+        <p>This PP does not define any SARs.</p>
+     </x:otherwise></x:choose>
+  </x:template> 
+
+   <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <x:template mode="make_header" match="cc:section">
+    <x:call-template name="make_header">
+      <x:with-param name="title" select="@title"/>
+      <x:with-param name="id" select="@id"/>
+    </x:call-template>
+  </x:template>
+
+  <x:template mode="make_header" match="sec:*[@title]">
+     <x:call-template name="make_header">
+      <x:with-param name="title" select="@title"/>
+      <x:with-param name="id" select="local-name()"/>
+    </x:call-template>
+  </x:template>
+
+  <x:template mode="make_header" match="sec:*[not(@title)]">
+     <x:call-template name="make_header">
+      <x:with-param name="title" select="translate(local-name(),'_',' ')"/>
+      <x:with-param name="id" select="local-name()"/>
+    </x:call-template>
+  </x:template>
+
+
+  <x:template name="make_header">
+    <x:param name="level" select="1"/>
+    <x:param name="title"/>
+    <x:param name="id"/>
+
+    <x:element name="h{$level + 1}">
+      <x:attribute name="class">indexable</x:attribute>
+      <x:attribute name="data-level"><x:value-of select="$level"/></x:attribute>
+      <x:attribute name="id"><x:value-of select="$id"/></x:attribute>
+      <x:value-of select="$title"/>
+    </x:element>
+  </x:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template mode="sars" match="/cc:Module">
     <h1 id="sar_aas" class="indexable" data-level="0">Evaluation Activities for SARs</h1>
     <p>The PP-Module does not define any SARs beyond those defined within the
     <x:choose>
@@ -301,21 +361,24 @@ guidance, and testing.</p>
    <x:template name="intro">
     <h1 id="introduction" class="indexable" data-level="0">Introduction</h1>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
-    <p>The scope of the <x:value-of select="/cc:Module/@target-products"/> PP-Module is
+    <p>The scope of the <x:apply-templates select="/cc:*" mode="get_title"/> is
     to describe the security functionality of 
-      <x:value-of select="/cc:Module/@name"/> products in terms of 
+      <x:value-of select="/cc:*/@target-products"/> products in terms of 
     [CC] and to define functional and assurance requirements for them.
+
+    <x:if test="//cc:base-pp">
     The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
 	    <li><a href="{@url}"><x:apply-templates select="." mode="expanded"/>, Version <x:value-of select="@version"/></a></li>
 	  </x:for-each>
 	</ul>
-    </p>
-    <p>This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
-    <ul><li><x:value-of select="concat(/cc:Module/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
+    <br/>
+    This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
+    <ul><li><x:value-of select="concat(/cc:*/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
     As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activites to the Base-PP(s) it modifies.
-   </p>
+    </x:if>
+    </p>
     <p> 
 Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
     The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
@@ -392,11 +455,11 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       </p>
       <p><b>General Purpose:</b><br/>
       The purpose of this SD is to define evaluation methods for the functional behavior of 
-      <x:value-of select="/cc:Module/@name"/>  products.
+      <x:value-of select="/cc:*/@target-products"/>  products.
       </p>
       <p><b>Acknowledgements:</b><br/>
-      This SD was developed with support from NIAP <x:value-of select="/cc:PP/@name"/> 
-      <x:value-of select="/cc:Module/@target-products"/> Technical Community members, with representatives from industry, government 
+      This SD was developed with support from NIAP 
+      <x:value-of select="/cc:*/@target-products"/> Technical Community members, with representatives from industry, government 
       agencies, Common Criteria Test Laboratories, and members of academia.
       </p>
     </div>
@@ -406,7 +469,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template match="cc:glossary|cc:acronyms">
+   <x:template match="cc:glossary">
     <table>
       <x:for-each select="cc:entry">
         <tr>

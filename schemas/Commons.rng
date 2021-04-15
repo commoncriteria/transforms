@@ -1878,7 +1878,7 @@ the basic-content.
 	   <a:documentation>
 		   Tag indicating that the current f-component exports an interface to dependent components in a composed TOE.
 	   </a:documentation>
-	   <element name="exportable"/>
+	   <element name="exportable"><empty/></element>
 	</define>  
 	
    <define name="importable-pat">
