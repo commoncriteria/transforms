@@ -170,7 +170,7 @@
   <xsl:template name="make-section">
     <xsl:param name="title"/>
     <xsl:param name="id"/>
-    <xsl:variable name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
+    <xsl:param name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
 
     <xsl:element name="h{$depth}">
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
@@ -404,31 +404,6 @@
   </xsl:template>
 
 
-  <!-- ############### -->
-  <!-- ############### -->
-  <xsl:template name="f-comp-activities">
-     <xsl:if test=".//cc:aactivity">
-       <div class="activity_pane hide">
-         <div class="activity_pane_header">
-           <a onclick="toggle(this);return false;" href="#">
-            <span class="activity_pane_label"> Evaluation Activities </span>
-            <span class="toggler"/>
-	   </a>
-         </div>
-         <div class="activity_pane_body">
-           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
-             <xsl:apply-templates select="." mode="getId"/>:<br/>
-             <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
-           </xsl:if>
-           <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
-           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
-           <!-- Apply to the management functions -->
-         </div>
-       </div>
-    </xsl:if>
-  </xsl:template>
-
-
   <!--########################################-->
   <!--########################################-->
   <xsl:template match="cc:f-element" >
@@ -526,17 +501,6 @@
     <xsl:apply-templates/>
   </xsl:template>
  
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
-      <xsl:if test="@level='element'">
-  	<div class="e-activity-label"><xsl:apply-templates select=".." mode="getId"/></div>
-      </xsl:if>
-      <div class="activity"><xsl:apply-templates/></div>
-      <!-- Apply to the management functions -->
-  </xsl:template>
-
 
   <!-- ############### -->
   <!-- These items are just consumed without output when processed by 'apply-templates' in default mode.      -->

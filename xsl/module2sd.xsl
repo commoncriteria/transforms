@@ -52,10 +52,11 @@ Transforms PP Modules into Support Documentation.
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+<!--
   <x:template name="make-section">
     <x:param name="title"/>
     <x:param name="id"/>
-    <x:variable name="depth" 
+    <x:param name="depth" 
       select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
 
     <x:element name="h{$depth}">
@@ -66,7 +67,7 @@ Transforms PP Modules into Support Documentation.
     </x:element>
     <x:apply-templates select=".//cc:f-component"/>
   </x:template>
-
+-->
 
   <!-- ############### -->
   <!--                 -->
@@ -159,15 +160,27 @@ guidance, and testing.</p>
   <!-- ############### -->
    <x:template name="handle-apply-to-all">
     <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
+    <x:for-each select="/cc:PP//cc:f-component[not(@status)]/.."><x:message>
+      <x:value-of select="@title"/>
+    </x:message></x:for-each>
     <x:choose>
-      <x:when test="//cc:man-sfrs//cc:f-component"><x:apply-templates select="//cc:man-sfrs"/></x:when>
+      <x:when test="//cc:man-sfrs//cc:f-component|/cc:PP//cc:f-component[not(@status)]">
+
+
+
+        <x:apply-templates select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
+          <x:with-param name="depth" select="'2'"/>
+        </x:apply-templates>
+      </x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
           (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
     <h1 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
     <x:choose>
-      <x:when test="//cc:opt-sfrs//cc:f-component"><x:apply-templates select="//cc:opt-sfrs"/></x:when>
+      <x:when test="//cc:opt-sfrs//cc:f-component">
+         <x:apply-templates select="//cc:opt-sfrs"/>
+      </x:when>
       <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
@@ -262,9 +275,9 @@ guidance, and testing.</p>
         <x:apply-templates mode="make_header" select="."/>
         <x:apply-templates select=".//cc:a-component"/>
       </x:for-each>
-      </x:when> <x:otherwise>
+    </x:when> <x:otherwise>
         <p>This PP does not define any SARs.</p>
-     </x:otherwise></x:choose>
+    </x:otherwise></x:choose>
   </x:template> 
 
    <!-- ############### -->
@@ -320,7 +333,8 @@ guidance, and testing.</p>
 	<x:apply-templates mode="short" select="//cc:base-pp"/> base to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
 	inherently evaluated against this Base-PP as well. 
-	The <x:apply-templates mode="short" select="//cc:base-pp"/> includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The <x:apply-templates mode="short" select="//cc:base-pp"/> 
+        includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
 	that similarly refine the SARs of the Base-PPs.
 	The evaluation laboratory will evaluate the TOE against the Base-PP
@@ -487,6 +501,36 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
 
+  <x:template match="sec:*">
+    <x:param name="depth" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+    <x:call-template name="make-section-heading">
+      <x:with-param name="id" select="local-name()"/>
+      <x:with-param name="title">
+        <x:value-of select="@title"/>
+        <x:if test="not(@title)"><x:value-of select="translate(local-name(), '_', ' ')"/></x:if>
+      </x:with-param>
+      <x:with-param name="depth" select="$depth"/>
+    </x:call-template>
+    <x:apply-templates select="cc:f-components"/>
+  </x:template>
+
+  <x:template match="cc:section">
+    <x:param name="depth" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+    <x:call-template name="make-section-heading">
+      <x:with-param name="title" select="@title"/>
+      <x:with-param name="id">
+        <x:value-of select="@id"/>
+        <x:if test="not(@id)"><x:value-of select="translate(@title, ' ', '_')"/></x:if>
+      </x:with-param>
+      <x:with-param name="depth" select="$depth"/>
+    </x:call-template>
+    <x:apply-templates select="cc:f-components"/>
+  </x:template>
+
 
   <!-- ############### -->
   <!--                 -->
@@ -516,6 +560,8 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!--                 -->
   <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component">
+     <x:message> In cc:f-compoent
+	<x:value-of select="@name"/> </x:message>
     <div class="comp" id="{translate(@id, $lower, $upper)}">
 	<!-- Display component name -->
 	<h4>

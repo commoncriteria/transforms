@@ -43,26 +43,21 @@
     <xsl:value-of select="translate(., $lower, $upper)"/>
   </xsl:template>
    
-   <!-- ############### -->
-  <!--                 -->
-  <xsl:template match="sec:*">
-    <xsl:call-template name="make-section">
-      <xsl:with-param name="id" select="local-name()"/>
-      <xsl:with-param name="title">
-        <xsl:value-of select="@title"/>
-        <xsl:if test="not(@title)"><xsl:value-of select="translate(local-name(), '_', ' ')"/></xsl:if>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
+  <!-- ############### -->
+  <!--  Section related templates -->
+  <!-- ############### -->
+  <xsl:template name="make-section-heading">
+    <xsl:param name="title"/>
+    <xsl:param name="id"/>
+    <xsl:param name="depth"/>
 
-  <xsl:template match="cc:section">
-    <xsl:call-template name="make-section">
-      <xsl:with-param name="title" select="@title"/>
-      <xsl:with-param name="id">
-        <xsl:value-of select="@id"/>
-        <xsl:if test="not(@id)"><xsl:value-of select="translate(@title, ' ', '_')"/></xsl:if>
-      </xsl:with-param>
-    </xsl:call-template>
+    <xsl:message>Depth is <xsl:value-of select="$depth"/></xsl:message>
+    <xsl:element name="h{$depth}">
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+      <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$depth"/></xsl:attribute>
+      <xsl:value-of select="$title"/>
+    </xsl:element>
   </xsl:template>
 
   <!-- ############################################################
@@ -104,6 +99,43 @@
 -->_s_<xsl:number count="//cc:selectable" level="any"/>
   </xsl:template> 
   
+ 
+  <!-- ############### -->
+  <!-- ############### -->
+  <xsl:template name="f-comp-activities">
+     <xsl:if test=".//cc:aactivity">
+       <div class="activity_pane hide">
+         <div class="activity_pane_header">
+           <a onclick="toggle(this);return false;" href="#">
+            <span class="activity_pane_label"> Evaluation Activities </span>
+            <span class="toggler"/>
+	   </a>
+         </div>
+         <div class="activity_pane_body">
+           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
+             <xsl:apply-templates select="." mode="getId"/>:<br/>
+             <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
+           </xsl:if>
+           <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
+           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
+           <!-- Apply to the management functions -->
+         </div>
+       </div>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
+      <xsl:if test="@level='element'">
+  	<div class="e-activity-label"><xsl:apply-templates select=".." mode="getId"/></div>
+      </xsl:if>
+      <div class="activity"><xsl:apply-templates/></div>
+      <!-- Apply to the management functions -->
+  </xsl:template>
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
