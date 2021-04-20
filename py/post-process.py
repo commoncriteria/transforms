@@ -250,7 +250,7 @@ class State:
             linkend = brokeRef.attrib["href"][1:]
             target = root.find(".//*[@id='"+linkend+"']")
             if not hasattr(target, 'text'):
-                print("Target does not have text field")
+                print("Target does not have text field: "+linkend)
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
                 brokeRef.text = " "
