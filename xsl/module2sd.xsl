@@ -160,50 +160,69 @@ guidance, and testing.</p>
   <!-- ############### -->
    <x:template name="handle-apply-to-all">
     <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
-    <x:for-each select="/cc:PP//cc:f-component[not(@status)]/.."><x:message>
-      <x:value-of select="@title"/>
-    </x:message></x:for-each>
     <x:choose>
       <x:when test="//cc:man-sfrs//cc:f-component|/cc:PP//cc:f-component[not(@status)]">
-
-
-
-        <x:apply-templates select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
-          <x:with-param name="depth" select="'2'"/>
-        </x:apply-templates>
+        <x:for-each select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[not(@status) and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+        </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
           (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h1>
+    <h2 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h2>
     <x:choose>
-      <x:when test="//cc:opt-sfrs//cc:f-component">
-         <x:apply-templates select="//cc:opt-sfrs"/>
+      <x:when test="//cc:man-sfrs//cc:f-component|/cc:PP//cc:f-component[not(@status)]">
+        <x:for-each select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[not(@status) and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+        </x:for-each>
       </x:when>
-      <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any mandatory requirements 
+          (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
     </x:choose>
 
-
-    <h1 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h1>
-    <x:choose>
-      <x:when test="//cc:sel-sfrs//cc:f-component"><x:apply-templates select="//cc:sel-sfrs"/></x:when>
+    <h2 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h2>
+     <x:choose>
+      <x:when test="//cc:sel-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='sel-based']">
+        <x:for-each select="//cc:sel-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='sel-based']/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[@status='sel-based' and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+        </x:for-each>
+      </x:when>
       <x:otherwise>The PP-Module does not define any selection-based requirements.</x:otherwise>
     </x:choose>
 
-    <h1 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h1>  
-    <x:choose>
-      <x:when test="//cc:obj-sfrs//cc:f-component"><x:apply-templates select="//cc:obj-sfrs"/></x:when>
+   <h2 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h2>  
+     <x:choose>
+      <x:when test="//cc:obj-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='objective']">
+        <x:for-each select="//cc:obj-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='objective']/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[@status='objective' and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+        </x:for-each>
+      </x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
     </x:choose>
-  </x:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-   <x:template match="cc:man-sfrs|cc:opt-sfrs|cc:sel-sfrs|cc:obj-sfrs">
-    <x:apply-templates select="cc:*|sec:*"/>
-  </x:template>
+
+
+
+
+ </x:template>
+
 
 
   <!-- ############### -->
@@ -272,7 +291,9 @@ guidance, and testing.</p>
     <h1 id="sar_aas" class="indexable" data-level="0">Evaluation Activities for SARs</h1>
     <x:choose> <x:when test="//cc:a-component">
       <x:for-each select="//cc:a-component/..">
-        <x:apply-templates mode="make_header" select="."/>
+        <x:apply-templates mode="make_header" select=".">
+          <x:with-param name="level" select="'1'"/>
+        </x:apply-templates>
         <x:apply-templates select=".//cc:a-component"/>
       </x:for-each>
     </x:when> <x:otherwise>
@@ -284,23 +305,35 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
   <x:template mode="make_header" match="cc:section">
+    <x:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
     <x:call-template name="make_header">
       <x:with-param name="title" select="@title"/>
-      <x:with-param name="id" select="@id"/>
+      <x:with-param name="id"    select="@id"/>
+      <x:with-param name="level" select="$level"/>
     </x:call-template>
   </x:template>
 
   <x:template mode="make_header" match="sec:*[@title]">
-     <x:call-template name="make_header">
+     <x:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+    <x:call-template name="make_header">
       <x:with-param name="title" select="@title"/>
-      <x:with-param name="id" select="local-name()"/>
+      <x:with-param name="id"    select="local-name()"/>
+      <x:with-param name="level" select="$level"/>
     </x:call-template>
   </x:template>
 
   <x:template mode="make_header" match="sec:*[not(@title)]">
-     <x:call-template name="make_header">
+      <x:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+   <x:call-template name="make_header">
       <x:with-param name="title" select="translate(local-name(),'_',' ')"/>
-      <x:with-param name="id" select="local-name()"/>
+      <x:with-param name="id"    select="local-name()"/>
+      <x:with-param name="level" select="$level"/>
     </x:call-template>
   </x:template>
 
@@ -500,7 +533,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
    <x:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
-
+<!--
   <x:template match="sec:*">
     <x:param name="depth" 
       select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
@@ -513,7 +546,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       </x:with-param>
       <x:with-param name="depth" select="$depth"/>
     </x:call-template>
-    <x:apply-templates select="cc:f-components"/>
+    <x:apply-templates/>
   </x:template>
 
   <x:template match="cc:section">
@@ -528,9 +561,9 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       </x:with-param>
       <x:with-param name="depth" select="$depth"/>
     </x:call-template>
-    <x:apply-templates select="cc:f-components"/>
+    <x:apply-templates/>
   </x:template>
-
+-->
 
   <!-- ############### -->
   <!--                 -->
