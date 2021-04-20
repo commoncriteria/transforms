@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+This python module takes in xml files that have been processed
 Module that fixes internal references and counters (which are hard to do
 with XSLT).
 """
@@ -341,20 +342,26 @@ def safe_get_attribute(element, attribute, default=""):
     else:
         return default
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        #        0                        1
-        print("Usage: <protection-profile>[=<output-file>]")
-        sys.exit(0)
-    # Split on equals
-    out = sys.argv[1].split("=")
+
+def derive_file_path(arg):
+    out = arg.split("=")
     infile = out[0]
     outfile = ""
     if len(out) < 2:
         outfile = infile.split('.')[0]+".html"
     else:
         outfile = out[1]
+    return infile, outfile
+   
 
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        #        0                        1
+        print("Usage: <pp-processed-file>[=<output-file>] <sd-xml-file>[=<out>]")
+        sys.exit(0)
+    # Split on equals
+
+    infile, outfile = derive_file_path(sys.argv[1])
     if infile == "-":
         root = ET.fromstring(sys.stdin.read())
     else:
@@ -367,6 +374,7 @@ if __name__ == "__main__":
     state.cross_reference_cc_items()
     state.build_comp_regex()
     state.build_termtable()
+
 
     if sys.version_info >= (3, 0):
         with open(outfile, "w+", encoding="utf-8") as outstream:
