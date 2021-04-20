@@ -482,37 +482,6 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
    <x:template match="cc:glossary/cc:entry/cc:term/cc:abbr">
     <span id="abbr_{text()}"><x:value-of select="@title"/> (<abbr><x:value-of select="text()"/></abbr>)</span>
   </x:template>
-<!--
-  <x:template match="sec:*">
-    <x:param name="depth" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
-
-    <x:call-template name="make-section-heading">
-      <x:with-param name="id" select="local-name()"/>
-      <x:with-param name="title">
-        <x:value-of select="@title"/>
-        <x:if test="not(@title)"><x:value-of select="translate(local-name(), '_', ' ')"/></x:if>
-      </x:with-param>
-      <x:with-param name="depth" select="$depth"/>
-    </x:call-template>
-    <x:apply-templates/>
-  </x:template>
-
-  <x:template match="cc:section">
-    <x:param name="depth" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
-
-    <x:call-template name="make-section-heading">
-      <x:with-param name="title" select="@title"/>
-      <x:with-param name="id">
-        <x:value-of select="@id"/>
-        <x:if test="not(@id)"><x:value-of select="translate(@title, ' ', '_')"/></x:if>
-      </x:with-param>
-      <x:with-param name="depth" select="$depth"/>
-    </x:call-template>
-    <x:apply-templates/>
-  </x:template>
--->
 
   <!-- ############### -->
   <!--                 -->
@@ -542,8 +511,6 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!--                 -->
   <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component">
-     <x:message> In cc:f-compoent
-	<x:value-of select="@name"/> </x:message>
     <div class="comp" id="{translate(@id, $lower, $upper)}">
 	<!-- Display component name -->
 	<h4>
@@ -565,21 +532,6 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
     </div>
   </x:template>
 
-
-<!--  <x:template match="cc:testlist">
-       <b>Test Set
-    <x:variable name="ctrtype">testlist-<x:value-of select="ancestor::cc:f-component/@id"/></x:variable>
-
-    <span class="ctr" data-myid="cc-" data-counter-type="ct-{$ctrtype}">
-      <span class="counter"></span>
-    </span>
-        
-        
-       </b>
-      <x:apply-templates/> 
-  </x:template>
--->
-
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -588,13 +540,13 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!-- We're explicity grabbing these all, so ground anytime we run into them -->
   <x:template match="cc:aactivity"/>
 
-
+<!--
   <x:template match="cc:Guidance|cc:Tests|cc:TSS" mode="gen-aa"/>
 
   <x:template match="cc:aactivity" mode="gen-aa">
     <x:apply-templates mode="gen-aa"/>
   </x:template>
-
+-->
   <!-- Ground all extend component definitions-->
   <x:template match="cc:ext-comp-def"/>
 

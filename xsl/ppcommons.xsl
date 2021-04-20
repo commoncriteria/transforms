@@ -43,24 +43,7 @@
     <xsl:value-of select="translate(., $lower, $upper)"/>
   </xsl:template>
    
-  <!-- ############### -->
-  <!--  Section related templates -->
-  <!-- ############### -->
-  <xsl:template name="make-section-heading">
-    <xsl:param name="title"/>
-    <xsl:param name="id"/>
-    <xsl:param name="depth"/>
-
-    <xsl:message>Depth is <xsl:value-of select="$depth"/></xsl:message>
-    <xsl:element name="h{$depth}">
-      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
-      <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
-      <xsl:attribute name="data-level"><xsl:value-of select="$depth"/></xsl:attribute>
-      <xsl:value-of select="$title"/>
-    </xsl:element>
-  </xsl:template>
-
-  <!-- ############################################################
+ <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
   <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">

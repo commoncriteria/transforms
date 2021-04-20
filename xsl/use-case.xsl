@@ -183,7 +183,6 @@
 
     <xsl:choose>
       <xsl:when test="$root//cc:selectable[@id=$ref-id]">
-        <xsl:message>It's a selectable</xsl:message>
         <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="handle-ancestors">
           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
         </xsl:apply-templates>
