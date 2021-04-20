@@ -593,14 +593,9 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!--                 -->
   <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component">
-     <x:message> In cc:f-compoent
-	<x:value-of select="@name"/> </x:message>
-    <div class="comp" id="{translate(@id, $lower, $upper)}">
+     <div class="comp" id="{translate(@id, $lower, $upper)}">
 	<!-- Display component name -->
-	<h4>
-       	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
-	<x:value-of select="@name"/>
-        </h4>
+	<h4><x:apply-templates select="." mode="getId"/><x:text> </x:text> <x:value-of select="@name"/> </h4>
         <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:Tests)]"/>
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
