@@ -176,6 +176,62 @@ The following sections list Common Criteria and technology terms used in this do
       </tr>
   </xsl:template>
 
+  <xsl:template match="sec:*|cc:section">  
+    <xsl:apply-templates select="." mode="make_header"/>
+    <xsl:apply-templates select="." mode="hook"/>
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template mode="make_header" match="cc:section">
+    <xsl:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+    <xsl:call-template name="make_header">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id"    select="@id"/>
+      <xsl:with-param name="level" select="$level"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="make_header" match="sec:*[@title]">
+     <xsl:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+    <xsl:call-template name="make_header">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id"    select="local-name()"/>
+      <xsl:with-param name="level" select="$level"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="make_header" match="sec:*[not(@title)]">
+      <xsl:param name="level" 
+      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+
+   <xsl:call-template name="make_header">
+      <xsl:with-param name="title" select="translate(local-name(),'_',' ')"/>
+      <xsl:with-param name="id"    select="local-name()"/>
+      <xsl:with-param name="level" select="$level"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
+  <xsl:template name="make_header">
+    <xsl:param name="level" select="1"/>
+    <xsl:param name="title"/>
+    <xsl:param name="id"/>
+
+    <xsl:element name="h{$level + 1}">
+      <xsl:attribute name="class">indexable</xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+      <xsl:value-of select="$title"/>
+    </xsl:element>
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->

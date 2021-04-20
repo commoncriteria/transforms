@@ -66,6 +66,14 @@ class State:
         self.key_terms = []
         self.plural_to_abbr = {}
         self.regex = None
+        self.fix_indices()
+        self.fix_index_refs()
+        self.fix_counters()
+        self.fix_tooltips()
+        self.cross_reference_cc_items()
+        self.build_comp_regex()
+        self.build_termtable()
+
 
     def create_classmapping(self):
         self.classmap = {}
@@ -353,29 +361,21 @@ def derive_file_path(arg):
         outfile = out[1]
     return infile, outfile
    
+def parse_into_tree(path):
+    if path == "-":
+        return ET.fromstring(sys.stdin.read())
+    else:
+        return ET.parse(path).getroot()
+ 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         #        0                        1
         print("Usage: <pp-processed-file>[=<output-file>] <sd-xml-file>[=<out>]")
         sys.exit(0)
-    # Split on equals
-
     infile, outfile = derive_file_path(sys.argv[1])
-    if infile == "-":
-        root = ET.fromstring(sys.stdin.read())
-    else:
-        root = ET.parse(infile).getroot()
+    root = parse_into_tree(infile)
     state = State(root)
-    state.fix_indices()
-    state.fix_index_refs()
-    state.fix_counters()
-    state.fix_tooltips()
-    state.cross_reference_cc_items()
-    state.build_comp_regex()
-    state.build_termtable()
-
-
     if sys.version_info >= (3, 0):
         with open(outfile, "w+", encoding="utf-8") as outstream:
             outstream.write(state.to_html())

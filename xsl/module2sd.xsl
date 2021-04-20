@@ -300,57 +300,6 @@ guidance, and testing.</p>
         <p>This PP does not define any SARs.</p>
     </x:otherwise></x:choose>
   </x:template> 
-
-   <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <x:template mode="make_header" match="cc:section">
-    <x:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
-
-    <x:call-template name="make_header">
-      <x:with-param name="title" select="@title"/>
-      <x:with-param name="id"    select="@id"/>
-      <x:with-param name="level" select="$level"/>
-    </x:call-template>
-  </x:template>
-
-  <x:template mode="make_header" match="sec:*[@title]">
-     <x:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
-
-    <x:call-template name="make_header">
-      <x:with-param name="title" select="@title"/>
-      <x:with-param name="id"    select="local-name()"/>
-      <x:with-param name="level" select="$level"/>
-    </x:call-template>
-  </x:template>
-
-  <x:template mode="make_header" match="sec:*[not(@title)]">
-      <x:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
-
-   <x:call-template name="make_header">
-      <x:with-param name="title" select="translate(local-name(),'_',' ')"/>
-      <x:with-param name="id"    select="local-name()"/>
-      <x:with-param name="level" select="$level"/>
-    </x:call-template>
-  </x:template>
-
-
-  <x:template name="make_header">
-    <x:param name="level" select="1"/>
-    <x:param name="title"/>
-    <x:param name="id"/>
-
-    <x:element name="h{$level + 1}">
-      <x:attribute name="class">indexable</x:attribute>
-      <x:attribute name="data-level"><x:value-of select="$level"/></x:attribute>
-      <x:attribute name="id"><x:value-of select="$id"/></x:attribute>
-      <x:value-of select="$title"/>
-    </x:element>
-  </x:template>
-
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -593,9 +542,14 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!--                 -->
   <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component">
-     <div class="comp" id="{translate(@id, $lower, $upper)}">
+     <x:message> In cc:f-compoent
+	<x:value-of select="@name"/> </x:message>
+    <div class="comp" id="{translate(@id, $lower, $upper)}">
 	<!-- Display component name -->
-	<h4><x:apply-templates select="." mode="getId"/><x:text> </x:text> <x:value-of select="@name"/> </h4>
+	<h4>
+       	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
+	<x:value-of select="@name"/>
+        </h4>
         <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:Tests)]"/>
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
