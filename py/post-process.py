@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-This python module takes in xml files that have been processed
-Module that fixes internal references and counters (which are hard to do
+This python module takes in xml files that have been processed and
+fixes internal references and counters (which are hard to do
 with XSLT).
 """
 
@@ -58,6 +58,11 @@ def backslashify(phrase):
 
 
 class State:
+    def __init__(self, root, state):
+        self.main_doc = state
+        __init__(self, root)
+
+
     def __init__(self, root):
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
@@ -243,7 +248,7 @@ class State:
     def fix_this_counter_refs(self, ctr_id, count_str):
         refclass = ctr_id + "-ref"
         for ref in self.getElementsByClass(refclass):
-            print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
+            # print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
             ref.find("*[@class='counter']").text = count_str
 
     def fix_tooltips(self):
@@ -258,8 +263,16 @@ class State:
         for brokeRef in self.getElementsByClass("dynref"):
             linkend = brokeRef.attrib["href"][1:]
             target = root.find(".//*[@id='"+linkend+"']")
+            if target is None:
+                if hasattr(self, "main_doc") and True:
+                   print("Main doc detected")
+                else:
+                   print("Can't really find it")
+
             if not hasattr(target, 'text'):
                 print("Target does not have text field: "+linkend)
+                continue
+                
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
                 brokeRef.text = " "

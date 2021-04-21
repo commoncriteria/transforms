@@ -50,9 +50,6 @@ BASE ?= $(shell abc=`pwd`;echo $${abc\#\#*/})
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
 
-#- Input XML file
-SD_XML ?= 
-# Empty for PPs.
 
 #- XSL that creates regular HTML document
 PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
