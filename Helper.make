@@ -63,13 +63,14 @@ PP2SIMPLIFIED_XSL ?= $(TRANS)/xsl/pp2simplified.xsl
 #- XSL containing templates common to the other transforms
 PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
 
+#- XSL that creates an SD-ish document from the PP_XML 
+SD_XSL ?= $(TRANS)/xsl/module2sd.xsl
+
 #- Path to input XML document for the esr
 ESR_XML ?= $(IN)/esr.xml
 
 #- Output of the SD Document
-SD_HTML ?= 
-# Empty for PPs
-#SD_HTML ?= $(OUT)/$(BASE)-sd.html
+SD_HTML ?= $(OUT)/$(BASE)-sd.html
 
 #- Path where tabularized html document
 TABLE ?= $(OUT)/$(BASE)-table.html
@@ -145,8 +146,18 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
 	python3 $(TRANS)/py/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
 
+#- Transforms with XML and calls post-process.py
+#- Arg 1 is input file
+#- Arg 2 is XSL file
+#- Arg 3 is output file
+#- Arg 4 is parameter value pairs
+DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
+           python3 $(TRANS)/py/post-process.py\
+           <($(XSL_EXE) $(4) $(2) $(1))\=$(3)\
+           <($(XSL_EXE)      $(5) $(1))\=$(6) 
 
 FNL_PARM ?=--stringparam release final
+
 #- Appendicize parameter
 APP_PARM ?=--stringparam appendicize on
 
@@ -197,8 +208,8 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM))
-	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2sd.xsl,output/$(BASE)-sd.html) 
+	$(call DOIT_SD,$(PP_XML),$(TRANS)/xsl/module2html.xsl,$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM),$(TRANS)/xsl/module2sd.xsl,$(SD_HTML))
+#	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2sd.xsl,output/$(BASE)-sd.html) 
 	$(call DOIT,$(PP_XML),$(TRANS)/xsl/module2html.xsl,$(PP_HTML), )
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
 

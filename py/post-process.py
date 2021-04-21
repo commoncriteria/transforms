@@ -58,12 +58,8 @@ def backslashify(phrase):
 
 
 class State:
-    def __init__(self, root, state):
-        self.main_doc = state
-        __init__(self, root)
 
-
-    def __init__(self, root):
+    def __init__(self, root, main_doc=None):
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
@@ -71,6 +67,7 @@ class State:
         self.key_terms = []
         self.plural_to_abbr = {}
         self.regex = None
+        self.main_doc = main_doc
         self.fix_indices()
         self.fix_index_refs()
         self.fix_counters()
@@ -78,7 +75,15 @@ class State:
         self.cross_reference_cc_items()
         self.build_comp_regex()
         self.build_termtable()
+        self.fix_refs_to_main_doc()
 
+    def write_out(self, outfile):
+        if sys.version_info >= (3, 0):
+            with open(outfile, "w+", encoding="utf-8") as outstream:
+                outstream.write(state.to_html())
+        else:
+            with open(outfile, "w+") as outstream:
+                outstream.write(state.to_html().encode('utf-8'))
 
     def create_classmapping(self):
         self.classmap = {}
@@ -245,11 +250,23 @@ class State:
             countable.find("*[@class='counter']").text = count_str
             self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
 
+
     def fix_this_counter_refs(self, ctr_id, count_str):
         refclass = ctr_id + "-ref"
         for ref in self.getElementsByClass(refclass):
             # print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
             ref.find("*[@class='counter']").text = count_str
+   
+    def fix_refs_to_main_doc(self):
+        if self.main_doc == None:
+            return
+        for countable in self.main_doc.getElementsByClass('ctr'):
+            new_text = countable.find("*[@class='counter']").text + " in the main document"
+            ctr_id = countable.attrib['data-myid']
+            for ref in self.getElementsByClass(ctr_id+'-ref'):
+                ref.tag = "span"
+                sub_field = ref.find("*[@class='counter']") 
+                sub_field.text = new_text
 
     def fix_tooltips(self):
         for elem in self.getElementsByClass("tooltiptext"):
@@ -265,7 +282,10 @@ class State:
             target = root.find(".//*[@id='"+linkend+"']")
             if target is None:
                 if hasattr(self, "main_doc") and True:
-                   print("Main doc detected")
+                   target = self.main_doc.root.find(".//*[@id='"+linkend+"']")
+                   if target is None:
+                      warn("Cannot find "+linkend)
+                   brokeRef.tag = "span"
                 else:
                    print("Can't really find it")
 
@@ -364,7 +384,7 @@ def safe_get_attribute(element, attribute, default=""):
         return default
 
 
-def derive_file_path(arg):
+def derive_paths(arg):
     out = arg.split("=")
     infile = out[0]
     outfile = ""
@@ -384,14 +404,19 @@ def parse_into_tree(path):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         #        0                        1
-        print("Usage: <pp-processed-file>[=<output-file>] <sd-xml-file>[=<out>]")
+        print("Usage: <pp-processed-file>[=<output-file>] [<sd-xml-file>[=<out>]]")
         sys.exit(0)
-    infile, outfile = derive_file_path(sys.argv[1])
+    infile, outfile = derive_paths(sys.argv[1])
     root = parse_into_tree(infile)
     state = State(root)
-    if sys.version_info >= (3, 0):
-        with open(outfile, "w+", encoding="utf-8") as outstream:
-            outstream.write(state.to_html())
-    else:
-        with open(outfile, "w+") as outstream:
-            outstream.write(state.to_html().encode('utf-8'))
+    state.write_out(outfile)
+    if len(sys.argv) < 3:
+        sys.exit(0)
+    sd_infile, sd_outfile = derive_paths(sys.argv[2])
+    root = parse_into_tree(sd_infile)
+    state = State(root, state)
+    state.write_out(sd_outfile)
+ 
+
+
+
