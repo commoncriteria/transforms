@@ -70,7 +70,7 @@
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
-        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>,
+        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
   </xsl:template> 
  
