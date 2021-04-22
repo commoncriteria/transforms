@@ -11,6 +11,15 @@
        to different items. -->
   <!-- ################################### -->
 
+  <xsl:template name="make_xref">
+    <xsl:param name="id"/>
+    <xsl:choose><xsl:when test="//cc:*[@id=$id]">
+      <xsl:apply-templates mode="make_xref" select="//cc:*[@id=$id]"/>
+    </xsl:when><xsl:otherwise>
+      Could not find a reference to <xsl:value-of select="@id"/>
+    </xsl:otherwise></xsl:choose>
+  </xsl:template>
+
 
   <!-- ############### -->
   <xsl:template name="selectable-nolink">

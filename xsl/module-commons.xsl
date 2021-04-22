@@ -9,7 +9,7 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp" mode="short">
+  <xsl:template match="cc:base-pp[@name]" mode="short">
     <xsl:value-of select="@short"/><xsl:choose>
        <xsl:when test="cc:cPP">c</xsl:when>
        <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
@@ -18,7 +18,7 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp" mode="expanded">
+  <xsl:template match="cc:base-pp[@name]" mode="expanded">
     <xsl:if test="cc:cPP">collaborative<xsl:text> </xsl:text></xsl:if>
     Protection Profile for<xsl:text> </xsl:text>
     <xsl:choose>
