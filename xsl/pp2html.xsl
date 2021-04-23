@@ -188,7 +188,7 @@
   <!-- ############### -->
   <xsl:template name="defs-with-notes">
     <xsl:variable name="class" select="local-name()"/>
-    <dt class="{$class}" id="{@name}">
+    <dt class="{$class},defined" id="{@name}">
       <xsl:value-of select="@name"/>
     </dt>
     <dd>
