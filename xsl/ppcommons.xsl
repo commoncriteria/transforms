@@ -683,6 +683,17 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
+    <xsl:for-each select="//cc:depends/@*[not(../cc:doc)]">
+       <xsl:if test="not(//*[@id=current()])">
+        <xsl:message>Error: Detected dangling id-reference to <xsl:value-of select="current()"/> from attribute
+           <xsl:value-of select="name()"/>
+ 
+       <!--<xsl:message>
+          Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
+          <xsl:call-template name="genPath"/>-->
+       </xsl:message>
+       </xsl:if>
+    </xsl:for-each>
     <xsl:for-each select="//cc:depends/@id">
        <xsl:message>
           Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
