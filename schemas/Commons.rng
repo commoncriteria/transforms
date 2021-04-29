@@ -1114,6 +1114,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <group>
           <ref name="TSS"/>
           <optional>
+            <ref name="KMD"/>
+          </optional>
+          <optional>
+            <ref name="Guidance"/>
+          </optional>
+          <optional>
+            <ref name="Tests"/>
+          </optional>
+        </group>
+        <group>
+          <ref name="KMD"/>
+          <optional>
             <ref name="Guidance"/>
           </optional>
           <optional>
@@ -1155,6 +1167,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <element name="TSS">
       <a:documentation>
         Denotes a TSS section.
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+  <define name="KMD">
+    <element name="KMD">
+      <a:documentation>
+        Denotes a KMD section.
       </a:documentation>
       <ref name="basic-content-pat"/>
     </element>
