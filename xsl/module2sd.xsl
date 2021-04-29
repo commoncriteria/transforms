@@ -517,9 +517,10 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
         </h4>
-        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:Tests)]"/>
+        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
 
    	<x:for-each select=".//cc:aactivity[@level='element']">
@@ -527,6 +528,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	  <h4><x:apply-templates select=".." mode="getId"/></h4>
 	  <x:call-template name="single-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
           <x:call-template name="single-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
           <x:call-template name="single-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
 	</x:for-each>
     </div>
@@ -541,7 +543,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <x:template match="cc:aactivity"/>
 
 <!--
-  <x:template match="cc:Guidance|cc:Tests|cc:TSS" mode="gen-aa"/>
+  <x:template match="cc:Guidance|cc:Tests|cc:TSS|cc:KMD" mode="gen-aa"/>
 
   <x:template match="cc:aactivity" mode="gen-aa">
     <x:apply-templates mode="gen-aa"/>
