@@ -1114,19 +1114,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <group>
           <ref name="TSS"/>
           <optional>
+            <ref name="Guidance"/>
+          </optional>
+          <optional>
             <ref name="KMD"/>
-          </optional>
-          <optional>
-            <ref name="Guidance"/>
-          </optional>
-          <optional>
-            <ref name="Tests"/>
-          </optional>
-        </group>
-        <group>
-          <ref name="KMD"/>
-          <optional>
-            <ref name="Guidance"/>
           </optional>
           <optional>
             <ref name="Tests"/>
@@ -1134,6 +1125,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         </group>
         <group>
           <ref name="Guidance"/>
+          <optional>
+            <ref name="KMD"/>
+          </optional>
+          <optional>
+            <ref name="Tests"/>
+          </optional>
+        </group>
+        <group>
+          <ref name="KMD"/>
           <optional>
             <ref name="Tests"/>
           </optional>
