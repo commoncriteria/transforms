@@ -837,7 +837,7 @@
 
 
   <!-- ############### -->
-  <xsl:template match="cc:TSS|cc:Guidance|cc:Tests">
+  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
   </xsl:template>
