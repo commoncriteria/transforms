@@ -678,7 +678,7 @@ The following sections list Common Criteria and technology terms used in this do
         Template for universal sanity checks.
       ##############################################-->
   <xsl:template name="sanity-checks">
-    <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:Tests[.='']|//cc:KMD[.='']">
+    <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
       <xsl:message> Illegal empty <xsl:value-of select="local-name()"/> element at:
         <xsl:call-template name="genPath"/>
       </xsl:message>
