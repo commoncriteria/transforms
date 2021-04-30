@@ -14,6 +14,7 @@
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes"/>
+      <ref name="cPP-flag"/>
       <ref name="project-notes"/>
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
@@ -104,6 +105,10 @@ Content that only appears if the optional appendices exist.
     </choice>
   </define>
 
+  <define name="cPP-flag">
+    <a:documentation>Denotes that this PP is a collaborative PP (cPP)</a:documentation>
+    <optional><element name="cPP"><empty/></element></optional>
+  </define>
 
   <define name="sec-req-content">
     <ref name="boilerplate-no-attr"/>

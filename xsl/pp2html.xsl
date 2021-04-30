@@ -357,7 +357,7 @@
         </div>
       </xsl:if>
       <xsl:apply-templates/>
-      <xsl:call-template name="f-comp-activities"/>
+        <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
 
@@ -415,7 +415,7 @@
           </div>
       </xsl:if>
         <xsl:apply-templates/>
-      <xsl:if test="not(/cc:Module and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
+      <xsl:if test="not( (/cc:Module or //cc:cPP) and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
     </div>
   </xsl:template>
 
