@@ -469,14 +469,29 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:note[@id]">
+    <div class="appnote" id="{@id}">
+      <xsl:call-template name="handle-note"/>
+    </div>
+  </xsl:template>
+
   <xsl:template match="cc:note">
     <div class="appnote">
+      <xsl:call-template name="handle-note"/>
+    </div>
+  </xsl:template>
+
+  <xsl:template name="handle-note-header">
       <span class="note-header"><xsl:choose>
         <xsl:when test="@role='application'">Application</xsl:when>
         <xsl:when test="@role='developer'">Developer</xsl:when>
         <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
       </xsl:choose> Note: </span>
-      <span class="note">
+  </xsl:template>
+ 
+  <xsl:template name="handle-note">
+    <xsl:call-template name="handle-note-header"/>
+     <span class="note">
         <xsl:apply-templates/>
         <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
           <br/><br/>
@@ -484,9 +499,7 @@ The following sections list Common Criteria and technology terms used in this do
 	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
         </xsl:if>
       </span>
-    </div>
   </xsl:template>
-
 
   <!-- ############### -->
   <!--                 -->
