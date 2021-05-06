@@ -2,6 +2,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
   xmlns:htm="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:sec="https://niap-ccevs.org/cc/v1/section">
 
   <!--##############################################
@@ -700,7 +701,7 @@ The following sections list Common Criteria and technology terms used in this do
           <xsl:call-template name="genPath"/>
        </xsl:message>
     </xsl:for-each>
-    <xsl:for-each select="//cc:title//cc:depends|//cc:note//cc:depends">
+    <xsl:for-each select="//cc:title//cc:depends[not(parent::htm:tr)]|//cc:note//cc:depends">
        <xsl:message> Potentially illegal 'depends' element.
           <xsl:call-template name="genPath"/>
        </xsl:message>
