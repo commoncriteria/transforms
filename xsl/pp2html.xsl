@@ -99,9 +99,9 @@
      	This appendix contains "rules" specified by the PP Authors that indicate whether certain selections
 	  require the making of other selections in order for a Security Target to be valid. For example, selecting 
 	  "HMAC-SHA-3-384" as a supported keyed-hash algorithm would require that "SHA-3-384" be selected
-	  as a hash algorithm.<h:p/>
+	  as a hash algorithm.<p/>
 	  This appendix contains only such "rules" as have been defined by the PP Authors, and does not necessarily
-	  represent all such dependencies in the document.<h:p/>
+	  represent all such dependencies in the document.<p/>
      <xsl:for-each select="//cc:rule">
        <h2 id="{@id}">
          Rule #<xsl:number count="cc:rule" level="any"/>
