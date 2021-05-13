@@ -95,7 +95,7 @@
   </xsl:template>
   
   <xsl:template match="cc:rule[1]">
-     <h1 id="appendix-rules" class="indexable" data-level="A">Selection Rules</h1>
+     <h1 id="appendix-rules" class="indexable" data-level="A">Validation Rules</h1>
      This rules in this appendix define which combinations of selections are considered valid.
      An ST is considered conforming only if it satisfies all rules.
      <xsl:for-each select="//cc:rule">
