@@ -88,14 +88,13 @@
 	    <xsl:call-template name="ext-comp-defs"/>
     </xsl:if>
     <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
-    <xsl:call-template name="rules-appendix"/>
+    <xsl:apply-templates select="//cc:rule[1]"/>
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
     <xsl:call-template name="bibliography"/>
   </xsl:template>
   
-
-  <xsl:template name="rules-appendix">
+  <xsl:template match="cc:rule[1]">
      <h1 id="appendix-rules" class="indexable" data-level="A">Selection Rules</h1>
      This rules in this appendix define which combinations of selections are considered valid.
      An ST is considered conforming only if it satisfies all rules.
@@ -598,7 +597,8 @@
     <xsl:param name="type"/>
     <xsl:param name="level" select="2"/>
     <xsl:param name="sublevel" select="3"/>
-
+    
+ <!--   <xsl:choose><xsl:when test="//cc:hide-empty-req-appendices"/><xsl:otherwise>-->
     <xsl:variable name="levelname"><xsl:choose>
       <xsl:when test="$level='A'">h1</xsl:when>
       <xsl:otherwise>h2</xsl:otherwise>
@@ -651,6 +651,7 @@
         </xsl:choose>
      </xsl:otherwise>
    </xsl:choose>
+   <!-- </xsl:otherwise></xsl:choose> -->
  </xsl:template> 
 
  <!-- ############### -->
