@@ -88,13 +88,13 @@
 	    <xsl:call-template name="ext-comp-defs"/>
     </xsl:if>
     <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
-    <xsl:apply-templates select="//cc:rule[1]"/>
+    <xsl:apply-templates select="(//cc:rule)[1]"/>
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
     <xsl:call-template name="bibliography"/>
   </xsl:template>
   
-  <xsl:template match="cc:rule[1]">
+  <xsl:template match="(//cc:rule)[1]">
      <h1 id="appendix-rules" class="indexable" data-level="A">Validation Guidelines</h1>
      	This appendix contains "rules" specified by the PP Authors that indicate whether certain selections
 	  require the making of other selections in order for a Security Target to be valid. For example, selecting 
