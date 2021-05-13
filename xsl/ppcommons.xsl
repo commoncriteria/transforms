@@ -136,7 +136,7 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:for-each>
     </table>
     <h3 id="tech-terms" class="indexable" data-level="{$num+1}">Technical Terms</h3>
-    <table>
+    <table style="width: 100%">
       <xsl:for-each select="cc:term[text()]">
         <xsl:sort select="@full"/>
         <xsl:call-template name="glossary-entry"/>
