@@ -95,7 +95,7 @@
   </xsl:template>
   
   <xsl:template match="cc:rule[1]">
-     <h1 id="appendix-rules" class="indexable" data-level="A">Validation "Rules"</h1>
+     <h1 id="appendix-rules" class="indexable" data-level="A">Validation Guidelines</h1>
      	This appendix contains "rules" specified by the PP Authors that indicate whether certain selections
 	  require the making of other selections in order for a Security Target to be valid. For example, selecting 
 	  "HMAC-SHA-3-384" as a supported keyed-hash algorithm would require that "SHA-3-384" be selected
