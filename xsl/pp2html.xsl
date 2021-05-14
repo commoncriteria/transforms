@@ -82,21 +82,17 @@
          <xsl:with-param name="sublevel" select="'2'"/>
       </xsl:call-template>
     </xsl:if>
-    <!-- Generate an ext-comp-def appendix if there is at least one ext-comp-def tag anywhere. -->
-    <!-- QQQQ: I hope that's what this test is doing. -->
-    <xsl:if test="//cc:ext-comp-def"> 
-	    <xsl:call-template name="ext-comp-defs"/>
-    </xsl:if>
+    <xsl:apply-templates select="//cc:ext-comp-def[not(preceding::cc:ext-comp-def or ancestor::cc:ext-comp-def)]" mode="app"/>
     <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
-    <!-- <xsl:apply-templates select="//cc:rule[1]"/> -->
-    <xsl:call-template name="rules-appendix"/>  
+    <xsl:apply-templates select="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]"/>
+<!--    <xsl:call-template name="rules-appendix"/>  -->
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
     <xsl:call-template name="bibliography"/>
   </xsl:template>
   
-  <!-- <xsl:template match="//cc:rule[1]">-->
-  <xsl:template name="rules-appendix"><xsl:if test="//cc:rule">
+  <xsl:template match="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]">
+<!--  <xsl:template name="rules-appendix"><xsl:if test="//cc:rule">-->
      <h1 id="appendix-rules" class="indexable" data-level="A">Validation Guidelines</h1>
      	This appendix contains "rules" specified by the PP Authors that indicate whether certain selections
 	  require the making of other selections in order for a Security Target to be valid. For example, selecting 
@@ -113,7 +109,7 @@
        <xsl:apply-templates select="cc:or" mode="rule"/>
        <xsl:apply-templates select="cc:then" mode="rule"/>
      </xsl:for-each>
-  </xsl:if>  </xsl:template>
+  </xsl:template>
 
   <xsl:template match="cc:and" mode="use-case" name="use-case-and">
     <xsl:apply-templates mode="use-case"/>
