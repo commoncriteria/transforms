@@ -82,6 +82,7 @@
          <xsl:with-param name="sublevel" select="'2'"/>
       </xsl:call-template>
     </xsl:if>
+    <!-- This line means, match the first, which will handle adding the prolog and then handle all the ext-comp-defs-->
     <xsl:apply-templates select="//cc:ext-comp-def[not(preceding::cc:ext-comp-def or ancestor::cc:ext-comp-def)]" mode="app"/>
     <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
     <xsl:apply-templates select="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]"/>
