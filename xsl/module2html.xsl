@@ -34,6 +34,7 @@
     <xsl:apply-templates select="//*[@title='Security Problem Description']|sec:Security_Problem_Description"/>
     <xsl:apply-templates select="//*[@title='Security Objectives']|sec:Security_Objectives"/>
     <xsl:apply-templates select="//*[@title='Security Requirements']|sec:Security_Requirements"/>
+<xsl:message>HERE</xsl:message>
     <xsl:call-template name="mod-obj-req-map"/>
     <xsl:call-template name="consistency-rationale"/>
     <xsl:call-template name="opt-sfrs"/>
