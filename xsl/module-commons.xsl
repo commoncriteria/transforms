@@ -28,6 +28,7 @@
 
     <xsl:if test="document($path)/cc:PP/cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
     Protection Profile for<xsl:text> </xsl:text>
+    <xsl:value-of select="document($path)//cc:PP/@name"/>
   </xsl:template>
 
 

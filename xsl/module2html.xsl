@@ -83,18 +83,18 @@
     <xsl:for-each select="//cc:base-pp">
       <xsl:variable name="base" select="."/>
 
-      <h2 id="conrat-{@short}" class="indexable" data-level="2">
+      <h2 id="conrat-{@id}" class="indexable" data-level="2">
 	<xsl:apply-templates select="." mode="expanded"/>
       </h2>
 
       <!-- #################### -->
-      <h3 id="contoe-{@short}" class="indexable" data-level="3">
+      <h3 id="contoe-{@id}" class="indexable" data-level="3">
 	Consistency of TOE Type
       </h3>
       <xsl:apply-templates select="./cc:con-toe"/>
 
       <!-- #################### -->
-      <h3 id="consecprob-{@short}" class="indexable" data-level="3">
+      <h3 id="consecprob-{@id}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
 <!--      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
