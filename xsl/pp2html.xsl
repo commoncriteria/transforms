@@ -174,6 +174,7 @@
     <xsl:param name="id"/>
     <xsl:param name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
 
+
     <xsl:element name="h{$depth}">
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
       <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
