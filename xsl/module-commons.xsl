@@ -5,6 +5,32 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   version="1.0">
+  
+
+
+  <xsl:param name="work-dir" select="'../../output'"/>
+<!-- ################################################## --> 
+<!--                                                    -->
+<!-- ################################################## --> 
+  <xsl:template match="cc:base-pp[cc:raw-url]" mode="short">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+
+    <xsl:value-of select="document($path)//cc:PP/@name"/><xsl:choose>
+       <xsl:when test="document($path)/cc:PP/cc:cPP">c</xsl:when>
+       <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
+    </xsl:choose>PP</xsl:template>
+
+<!-- ################################################## --> 
+<!--                                                    -->
+<!-- ################################################## --> 
+  <xsl:template match="cc:base-pp[cc:raw-url]" mode="expanded">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+
+    <xsl:if test="document($path)/cc:PP/cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
+    Protection Profile for<xsl:text> </xsl:text>
+    <xsl:value-of select="document($path)//cc:PP/@name"/>
+  </xsl:template>
+
 
 <!-- ################################################## --> 
 <!--                                                    -->

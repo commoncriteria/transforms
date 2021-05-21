@@ -14,7 +14,8 @@ Contains transforms for extended component definitions
 
   <xsl:import href="debug.xsl"/>
 <!-- ####################### -->
-  <xsl:template name="ext-comp-defs">
+  <xsl:template name="ext-comp-defs"><xsl:if test="//cc:ext-comp-def">
+    
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
 	This appendix contains the definitions for all extended requirements specified in the PP-Module.
 
@@ -119,7 +120,7 @@ Contains transforms for extended component definitions
          </xsl:for-each>
       </xsl:for-each>
     </xsl:for-each>
-  </xsl:template>
+  </xsl:if></xsl:template>
 
 <!-- ####################### -->
 <!-- ####################### -->

@@ -176,17 +176,16 @@ guidance, and testing.</p>
 
     <h2 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h2>
     <x:choose>
-      <x:when test="//cc:man-sfrs//cc:f-component|/cc:PP//cc:f-component[not(@status)]">
-        <x:for-each select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
+      <x:when test="//cc:opt-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='optional']">
+        <x:for-each select="//cc:opt-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='optional']/..">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
-          <x:apply-templates select="cc:f-component[not(@status) and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[@status='optional' and /cc:PP]"/>
           <x:apply-templates select="cc:f-component[/cc:Module]"/>
         </x:for-each>
       </x:when>
-      <x:otherwise>The PP-Module does not define any mandatory requirements 
-          (i.e. Requirements that are included in every configuration regardless of the PP-Bases selected).</x:otherwise>
+      <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
     </x:choose>
 
     <h2 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h2>

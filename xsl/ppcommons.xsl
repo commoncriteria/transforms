@@ -169,9 +169,13 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template name="compute-level">
+    <xsl:value-of 
+      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs)"/>
+  </xsl:template>
+
   <xsl:template mode="make_header" match="cc:section">
-    <xsl:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+    <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
 
     <xsl:call-template name="make_header">
       <xsl:with-param name="title" select="@title"/>
@@ -181,8 +185,7 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <xsl:template mode="make_header" match="sec:*[@title]">
-     <xsl:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+    <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
 
     <xsl:call-template name="make_header">
       <xsl:with-param name="title" select="@title"/>
@@ -192,8 +195,7 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <xsl:template mode="make_header" match="sec:*[not(@title)]">
-      <xsl:param name="level" 
-      select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:base-pp)"/>
+    <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
 
    <xsl:call-template name="make_header">
       <xsl:with-param name="title" select="translate(local-name(),'_',' ')"/>
