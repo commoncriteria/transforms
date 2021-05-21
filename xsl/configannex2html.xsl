@@ -11,13 +11,13 @@
 		xmlns:htm="http://www.w3.org/1999/xhtml"
 		version="1.0">
 
-  <!-- very important, for special characters and umlauts iso8859-1-->
-  <xsl:output method="html" encoding="UTF-8" indent="yes"/>
-
   <!-- Put all common templates into ppcommons.xsl -->
   <!-- They can be redefined/overridden  -->
   <xsl:import href="ppcommons.xsl"/>
 
+
+ <!-- very important, for special characters and umlauts iso8859-1-->
+  <xsl:output method="html" encoding="UTF-8" indent="yes"/>
 
 
   <xsl:template match="/co:ConfigAnnex">
