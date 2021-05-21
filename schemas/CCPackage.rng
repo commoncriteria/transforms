@@ -25,7 +25,7 @@
       <ref name="Chapters"/>
       <ref name="sfr-section"/>
       <ref name="Chapters"/>
-      <ref name="appendix-pat"/>
+      <ref name="appendices-pat"/>
       <ref name="bibliography"/>
    </element>
   </start>
@@ -131,25 +131,6 @@
 
  
 
-  <define name="appendix-pat">
-    <a:documentation>
-      Pattern for title attribute.
-    </a:documentation>
-    <oneOrMore>
-      <element name="appendix">
-        <a:documentation>
-          Element that defines an appendix.
-        </a:documentation>
-        <ref name="id-attr"/>
-        <ref name="title-attr"/>
-        <ref name="boilerplate-no-attr"/>
-        <oneOrMore><choice>
-            <ref name="basic-content-pat"/>
-            <ref name="section"/>
-        </choice></oneOrMore>
-      </element>
-    </oneOrMore>
-  </define>
  <define name="glossary-section">
     <element name="glossary">
       <a:documentation>

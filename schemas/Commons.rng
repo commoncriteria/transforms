@@ -264,7 +264,7 @@
     <a:documentation>
       Pattern for title attribute.
     </a:documentation>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="appendix">
         <a:documentation>
           Element that defines an appendix.
@@ -278,7 +278,7 @@
             <ref name="bibliography"/>
         </choice></oneOrMore>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
 
 
