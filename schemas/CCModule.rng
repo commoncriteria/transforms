@@ -33,7 +33,7 @@
       <choice>
         <group>
           <ref name="description"/>
-          <ref name="consistency-rationale"/>
+          <optional><ref name="consistency-rationale"/></optional>
         </group>
         <ref name="from"/>
       </choice>
