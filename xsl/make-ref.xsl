@@ -48,7 +48,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:module[@name]|cc:base-pp[@name]/cc:include-pkg[@name]" mode="make_xref">
+  <xsl:template match="cc:module[@name]|cc:base-pp[@name]|cc:include-pkg[@name]" mode="make_xref">
       <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
   </xsl:template>
 
@@ -65,7 +65,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp|cc:include-pkg" mode="make_xref">
+  <xsl:template match="cc:base-pp[cc:raw-url]|cc:include-pkg[cc:raw-url]" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
