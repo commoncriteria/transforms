@@ -281,8 +281,9 @@ class State:
             linkend = brokeRef.attrib["href"][1:]
             target = root.find(".//*[@id='"+linkend+"']")
             if target is None:
-                if hasattr(self, "main_doc") and True:
+                if hasattr(self, "main_doc") and self.main_doc != None:
                    target = self.main_doc.root.find(".//*[@id='"+linkend+"']")
+                 
                    if target is None:
                       warn("Cannot find "+linkend)
                    brokeRef.tag = "span"
