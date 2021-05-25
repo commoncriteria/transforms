@@ -292,6 +292,7 @@ Specifies a component under Security Functional Requirements section..
             <ref name="consistency-rationale"/>
             <ref name="ext-comp-extra-pat"/>
             <ref name="f-elements-pat"/>
+	    <zeroOrMore><ref name="audit-events-pat"/></zeroOrMore>
 	  </element>
 	</oneOrMore>
  </define>
