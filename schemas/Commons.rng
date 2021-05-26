@@ -454,7 +454,7 @@ If it's only an acronym make sure the text content is empty.
                   </choice>
               </attribute>
           </optional>
-          <text/>
+         <ref name="basic-content-pat"/>   <!-- formerly <text/> -->
       </element>
     </define>	
 	
