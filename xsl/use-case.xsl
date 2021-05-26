@@ -138,6 +138,16 @@
     </xsl:choose>
   </xsl:template>
 
+   <!-- ############### --> 
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:not[cc:ref-id/text()=//cc:threat/@id]" mode="use-case">
+    <xsl:for-each select="cc:ref-id[text() = //cc:threat/@id]">
+      <xsl:variable name="theid" select="text()"/>
+      <xsl:apply-templates mode="make_xref" select="//cc:*[@id=$theid]"/> does not apply in this use case.
+    </xsl:for-each>
+  </xsl:template>
+  
 
   <!-- ############### -->
   <!--                 -->
