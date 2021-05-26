@@ -158,6 +158,7 @@
  <define name="f-comp-pat-content">
     <optional><ref name="description"/></optional>
     <zeroOrMore>
+      <ref name="audit-table-pat"/>
       <ref name="ext-comp-def-pat"/>
       <ref name="f-component"/>
     </zeroOrMore>
