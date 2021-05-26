@@ -1213,6 +1213,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Defines a threat.
       </a:documentation>
       <ref name="threat-name-attr"/>
+      <optional><ref name="id-attr"/></optional>
       <ref name="origin-pat"/>
       <oneOrMore>
         <ref name="objective-refer"/>
