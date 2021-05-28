@@ -70,7 +70,18 @@
       </div>        
   </xsl:template>
 
-	
+  <xsl:template match="/cc:PP//cc:f-component|/cc:Package//cc:f-component" mode="compute-fcomp-status">
+      <xsl:if test="not(@status)">mandatory</xsl:if><xsl:value-of select="@status"/>
+  </xsl:template>
+ 
+  <xsl:template match="/cc:Module//cc:f-component" mode="compute-fcomp-status"><xsl:choose>
+    <xsl:when test="ancestor::cc:sel-sfrs">sel-based</xsl:when>
+    <xsl:when test="ancestor::cc:opt-sfrs">optional</xsl:when>
+    <xsl:when test="ancestor::cc:obj-sfrs">objective</xsl:when>
+    <xsl:when test="ancestor::cc:man-sfrs">mandatory</xsl:when>
+    <xsl:when test="ancestor::cc:impl-dep-sfrs">feat-based</xsl:when>
+    <xsl:otherwise><xsl:message>Detected unknown status of f-compoenent in mandatory</xsl:message></xsl:otherwise>
+  </xsl:choose></xsl:template>
   <!-- ############### -->
   <!-- This template for audit tables is invoked from XML. --> 
   <!-- This one gets called for the main audit table in FAU_GEN.1 -->
@@ -97,9 +108,7 @@
         <th>Additional Audit Record Contents</th></tr>
     <xsl:for-each select="//cc:f-component">
 	<xsl:variable name="fcomp" select="."/>
-	<xsl:variable name="fcompstatus">
-           <xsl:if test="not($fcomp/@status)">mandatory</xsl:if><xsl:value-of select="$fcomp/@status"/>
-	</xsl:variable>   
+	<xsl:variable name="fcompstatus"><xsl:apply-templates select="." mode="compute-fcomp-status"/></xsl:variable>   
         <xsl:for-each select="cc:audit-event"> 
             <!-- The audit event is included in this table only if
                 - The audit event's expressed table attribute matches this table
