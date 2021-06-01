@@ -124,6 +124,17 @@
     </attribute>
   </define>
 
+ <define name="subaactivity-decl">
+   <element name="subaactivity-decl">
+     <oneOrMore>
+       <element name="val">
+         <ref name="id-attr"/>
+         <text/>
+       </element>
+     </oneOrMore>
+    </element>
+ </define>
+ 
   <define name="SecProbDesChapter">
     <choice>
       <element name="section">
