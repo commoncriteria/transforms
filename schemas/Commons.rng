@@ -1187,15 +1187,43 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="basic-content-pat"/>
     </element>
   </define>
+	
   <define name="Tests">
     <element name="Tests">
       <a:documentation>
         Denotes a tests section.
       </a:documentation>
-      <ref name="basic-content-pat"/>
-      <ref name="test-obj-evi-pat"/>
+      <oneOrMore>
+	      <choice>
+		     <ref name="subaactivity"/>
+		      <ref name="basic-content-pat"/>
+		      <ref name="test-obj-evi-pat"/>
+		</choice>
+	  </oneOrMore>
     </element>
   </define>
+	
+  <define name="subaactivity">
+	<element name="subaactivity">
+		<attribute name="platform"/>
+		<oneOrMore>
+        	<choice>
+          		<ref name="basic-content-pat"></ref>
+          		<element name="path">
+		            <oneOrMore>
+              			<choice>
+	                	<text></text>
+   	             		<element name="i"><text/></element>
+      	        		</choice>
+            		</oneOrMore>
+          		</element>
+          		<element name="util">
+            			<text></text>
+          		</element>
+        	</choice>
+      		</oneOrMore>
+	  </element>
+	</define>
 
   <define name="threats">
     <element name="threats">
