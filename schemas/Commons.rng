@@ -1371,9 +1371,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <element name="section">
         <attribute name="title"><value>Security Functional Requirements</value></attribute>
 	<attribute name="id"/>
+	<optional><ref name="description"/></optional>
         <ref name="sfr_content-pat"/>
       </element>
       <element name="sec:Security_Functional_Requirements">
+        <optional><ref name="description"/></optional>
         <ref name="sfr_content-pat"/>
       </element>
       <element ns="https://niap-ccevs.org/cc/v1/section">
@@ -1384,6 +1386,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           </except>
         </anyName>
         <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <optional><ref name="description"/></optional>
         <ref name="sfr_content-pat"/>
       </element>
     </choice>
