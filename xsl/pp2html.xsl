@@ -843,11 +843,11 @@
 
 
   <!-- ############### -->
-  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests">
+<!--  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
     <br/>
-  </xsl:template>
+  </xsl:template>-->
 
   <!-- ############### -->
   <xsl:template match="cc:management-function//cc:_">

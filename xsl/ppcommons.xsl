@@ -1,5 +1,6 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:x="http://www.w3.org/1999/XSL/Transform"
   xmlns:cc="https://niap-ccevs.org/cc/v1"
   xmlns:htm="http://www.w3.org/1999/xhtml"
   xmlns:h="http://www.w3.org/1999/xhtml"
@@ -96,12 +97,14 @@
 	   </a>
          </div>
          <div class="activity_pane_body">
-           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
+       	  <x:apply-templates select="." mode="getId"/><br/>
+          <xsl:apply-templates select="." mode="handle-activities"/>
+<!--           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
              <xsl:apply-templates select="." mode="getId"/>:<br/>
              <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
            </xsl:if>
            <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
-           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>
+           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>-->
            <!-- Apply to the management functions -->
          </div>
        </div>
@@ -117,6 +120,60 @@
       </xsl:if>
       <div class="activity"><xsl:apply-templates/></div>
       <!-- Apply to the management functions -->
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="collect-cat">
+    <x:param name="cat"/>
+
+    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
+      <div class="eacategory"><x:value-of select="$cat"/></div>
+      <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
+    </x:if>
+  </x:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+   <x:template name="single-cat">
+    <x:param name="cat"/>
+
+    <x:if test=".//cc:aactivity/cc:*[local-name()=$cat]">
+      <div class="eacategory"><x:value-of select="$cat"/></div>
+      <x:apply-templates select=".//cc:aactivity/cc:*[$cat=local-name()]"/>
+    </x:if>
+  </x:template>
+
+   <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
+	<!-- Display component name -->
+        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
+        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+
+   	<x:for-each select=".//cc:aactivity[@level='element']">
+          <!-- Display the element name -->
+	  <h4><x:apply-templates select=".." mode="getId"/></h4>
+	  <x:call-template name="single-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
+          <x:call-template name="single-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+	</x:for-each>
+   </x:template>
+ 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:subaactivity">
+    <div class="subaact">
+      <div class="subaact-header">
+        For <xsl:choose><xsl:when test="@ref"><xsl:value-of select="//cc:subaactivity-decl/cc:val[@id=current()/@ref]/@full"/></xsl:when><xsl:otherwise>all others</xsl:otherwise></xsl:choose>:
+      </div>
+      <xsl:apply-templates/>
+    </div>
   </xsl:template>
 
 

@@ -348,10 +348,15 @@
               background-color:beige;
               color:green;
           }
+
           div.subaact{
               margin-left:0%;
               margin-top:1em;
           }
+          .subaact-header{
+              font-weight: bold;
+          }
+
           div.activity_pane_body{
               font-style:italic;
               margin-left:0%;

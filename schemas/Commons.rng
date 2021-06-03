@@ -125,14 +125,16 @@
   </define>
 
  <define name="subaactivity-decl">
-   <element name="subaactivity-decl">
+   
+   <optional><element name="subaactivity-decl">
      <oneOrMore>
        <element name="val">
          <ref name="id-attr"/>
+         <attribute name="full"/>
          <text/>
        </element>
      </oneOrMore>
-    </element>
+    </element></optional>
  </define>
  
   <define name="SecProbDesChapter">
@@ -1124,30 +1126,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="no-tests-pat"/>
         <group>
           <ref name="TSS"/>
-          <optional>
-            <ref name="Guidance"/>
-          </optional>
-          <optional>
-            <ref name="KMD"/>
-          </optional>
-          <optional>
-            <ref name="Tests"/>
-          </optional>
+          <optional> <ref name="Guidance"/> </optional>
+          <optional> <ref name="KMD"/> </optional>
+          <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
           <ref name="Guidance"/>
-          <optional>
-            <ref name="KMD"/>
-          </optional>
-          <optional>
-            <ref name="Tests"/>
-          </optional>
+          <optional> <ref name="KMD"/> </optional>
+          <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
           <ref name="KMD"/>
-          <optional>
-            <ref name="Tests"/>
-          </optional>
+          <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
             <ref name="Tests"/>
@@ -1204,8 +1194,16 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Denotes a tests section.
       </a:documentation>
       <ref name="basic-content-pat"/>
+      <zeroOrMore><ref name="subaactivity"/></zeroOrMore>
       <ref name="test-obj-evi-pat"/>
+      <ref name="basic-content-pat"/>
     </element>
+  </define>
+  <define name="subaactivity">
+    <element name="subaactivity">
+      <attribute name="ref"/>
+      <ref name="basic-content-pat"/>
+   </element>
   </define>
 
   <define name="threats">

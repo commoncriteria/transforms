@@ -485,55 +485,18 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template name="collect-cat">
-    <x:param name="cat"/>
-
-    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
-      <div class="eacategory"><x:value-of select="$cat"/></div>
-      <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
-    </x:if>
-  </x:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-   <x:template name="single-cat">
-    <x:param name="cat"/>
-
-    <x:if test="./cc:aactivity/cc:*[local-name()=$cat]">
-      <div class="eacategory"><x:value-of select="$cat"/></div>
-      <x:apply-templates select=".//cc:aactivity/cc:*[$cat=local-name()]"/>
-    </x:if>
-  </x:template>
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
-	<!-- Display component name -->
-	<h4>
+      <h4>
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
-        </h4>
-        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+      </h4>
+      <x:apply-templates select="." mode="handle-activities"/>
+     </div>
+   </x:template>
 
-   	<x:for-each select=".//cc:aactivity[@level='element']">
-          <!-- Display the element name -->
-	  <h4><x:apply-templates select=".." mode="getId"/></h4>
-	  <x:call-template name="single-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
-	</x:for-each>
-    </div>
-  </x:template>
 
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
    <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
