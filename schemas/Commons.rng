@@ -1202,7 +1202,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
   <define name="subaactivity">
     <element name="subaactivity">
-      <attribute name="ref"/>
+      <optional><attribute name="ref"/></optional>
       <ref name="basic-content-pat"/>
    </element>
   </define>
