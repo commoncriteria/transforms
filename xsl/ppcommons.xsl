@@ -248,7 +248,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:param name="title"/>
     <xsl:param name="id"/>
 
-    <xsl:element name="h{$level + 1}">
+    <xsl:element name="h{$level}">
       <xsl:attribute name="class">indexable</xsl:attribute>
       <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>

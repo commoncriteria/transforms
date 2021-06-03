@@ -79,7 +79,7 @@
       <xsl:call-template name="app-reqs">
          <xsl:with-param name="type" select="'sel-based'"/>
          <xsl:with-param name="level" select="'A'"/>
-         <xsl:with-param name="sublevel" select="'1'"/>
+         <xsl:with-param name="sublevel" select="'2'"/>
       </xsl:call-template>
     </xsl:if>
     <!-- This line means, match the first, which will handle adding the prolog and then handle all the ext-comp-defs-->
