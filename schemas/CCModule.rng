@@ -156,7 +156,6 @@
   </define>
 
  <define name="f-comp-pat-content">
-    <optional><ref name="description"/></optional>
     <zeroOrMore>
       <optional><ref name="audit-table-pat"/></optional>
       <ref name="ext-comp-def-pat"/>
