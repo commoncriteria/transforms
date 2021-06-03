@@ -97,16 +97,8 @@
 	   </a>
          </div>
          <div class="activity_pane_body">
-       	  <x:apply-templates select="." mode="getId"/><br/>
           <xsl:apply-templates select="." mode="handle-activities"/>
-<!--           <xsl:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]">
-             <xsl:apply-templates select="." mode="getId"/>:<br/>
-             <xsl:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function-set)]"/>
-           </xsl:if>
-           <xsl:apply-templates select=".//cc:aactivity[@level='element']"/>
-           <xsl:apply-templates select="cc:management-function-set//cc:aactivity"/>-->
-           <!-- Apply to the management functions -->
-         </div>
+        </div>
        </div>
     </xsl:if>
   </xsl:template>
@@ -114,13 +106,6 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:aactivity"> <!-- should change this to cc:evalactivity-->
-      <xsl:if test="@level='element'">
-  	<div class="e-activity-label"><xsl:apply-templates select=".." mode="getId"/></div>
-      </xsl:if>
-      <div class="activity"><xsl:apply-templates/></div>
-      <!-- Apply to the management functions -->
-  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -135,32 +120,28 @@
   </x:template>
 
   <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-   <x:template name="single-cat">
-    <x:param name="cat"/>
+  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
+    <div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:apply-templates/>
+    <br/>
+  </xsl:template>
 
-    <x:if test=".//cc:aactivity/cc:*[local-name()=$cat]">
-      <div class="eacategory"><x:value-of select="$cat"/></div>
-      <x:apply-templates select=".//cc:aactivity/cc:*[$cat=local-name()]"/>
-    </x:if>
-  </x:template>
 
    <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
 	<!-- Display component name -->
-        <x:apply-templates select=".//cc:aactivity/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
+        <x:if test=".//cc:aactivity[not(@level) or @level='component']">
+          <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
+          <x:apply-templates
+            select=".//cc:aactivity[not(@level) or @level='component']/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
-
+        </x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
           <!-- Display the element name -->
-	  <h4><x:apply-templates select=".." mode="getId"/></h4>
-	  <x:call-template name="single-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-          <x:call-template name="single-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+	  <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
+          <x:apply-templates mode="single-cat"/>
 	</x:for-each>
    </x:template>
  
@@ -267,7 +248,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:param name="title"/>
     <xsl:param name="id"/>
 
-    <xsl:element name="h{$level}">
+    <xsl:element name="h{$level + 1}">
       <xsl:attribute name="class">indexable</xsl:attribute>
       <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>

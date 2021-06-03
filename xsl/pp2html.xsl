@@ -623,7 +623,6 @@
     <xsl:param name="level" select="2"/>
     <xsl:param name="sublevel" select="3"/>
  
-   <xsl:message>app-reqs <xsl:value-of select="concat($sublevel)"/></xsl:message>   
  <!--   <xsl:choose><xsl:when test="//cc:hide-empty-req-appendices"/><xsl:otherwise>-->
     <xsl:variable name="levelname"><xsl:choose>
       <xsl:when test="$level='A'">h1</xsl:when>
@@ -865,13 +864,6 @@
     </xsl:choose>
   </xsl:template>
 
-
-  <!-- ############### -->
-<!--  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests">
-    <div class="eacategory"><xsl:value-of select="local-name()"/></div>
-    <xsl:apply-templates/>
-    <br/>
-  </xsl:template>-->
 
   <!-- ############### -->
   <xsl:template match="cc:management-function//cc:_">
