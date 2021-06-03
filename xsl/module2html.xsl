@@ -308,7 +308,7 @@
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
 
-    <h2 id="modsfr-{@short}" class="indexable" data-level="3"> Modified SFRs </h2>
+    <h3 id="modsfr-{@short}" class="indexable" data-level="3"> Modified SFRs </h3>
     <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
       The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
@@ -399,6 +399,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
       select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@level"/>
     <xsl:variable name="name"
       select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@name"/>
+
    
     <xsl:element name="h{$level}">
       <xsl:attribute name="id"><xsl:value-of select="local-name()"/></xsl:attribute>

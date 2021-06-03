@@ -88,6 +88,7 @@ Content that only appears if the optional appendices exist.
       <element name="section">
         <attribute name="title"><value>Security Requirements</value></attribute>
         <attribute name="id"/>
+      	<optional><ref name="description"/></optional>
         <ref name="sec-req-content"/>
       </element>   
       <element ns="https://niap-ccevs.org/cc/v1/section">
@@ -98,9 +99,11 @@ Content that only appears if the optional appendices exist.
           </except>
         </anyName>
         <attribute name="title"><value>Security Requirements</value></attribute>
+	<optional><ref name="description"/></optional>
         <ref name="sec-req-content"/>
       </element>
       <element name="sec:Security_Requirements">
+	<optional><ref name="description"/></optional>
          <ref name="sec-req-content"/>
       </element>
     </choice>
@@ -166,6 +169,7 @@ Content that only appears if the optional appendices exist.
       <element name="section">
         <attribute name="title"><value>Security Functional Requirements</value></attribute>
         <optional><attribute name="id"/></optional>
+	<optional><ref name="description"/></optional>
         <ref name="sfr-content"/>	
       </element>
       <element ns="https://niap-ccevs.org/cc/v1/section">
@@ -176,9 +180,11 @@ Content that only appears if the optional appendices exist.
           </except>
         </anyName>
         <attribute name="title"><value>Security Functional Requirements</value></attribute>
+        <optional><ref name="description"/></optional>
         <ref name="sfr-content"/>	
       </element>
       <element name="sec:Security_Functional_Requirements">
+        <optional><ref name="description"/></optional>
         <ref name="sfr-content"/>	
       </element>
     </choice>
