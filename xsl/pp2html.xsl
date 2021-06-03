@@ -79,7 +79,7 @@
       <xsl:call-template name="app-reqs">
          <xsl:with-param name="type" select="'sel-based'"/>
          <xsl:with-param name="level" select="'A'"/>
-         <xsl:with-param name="sublevel" select="'2'"/>
+         <xsl:with-param name="sublevel" select="'1'"/>
       </xsl:call-template>
     </xsl:if>
     <!-- This line means, match the first, which will handle adding the prolog and then handle all the ext-comp-defs-->
@@ -169,12 +169,14 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template name="make-section">
+<!--  <xsl:template name="make-section">
     <xsl:param name="title"/>
     <xsl:param name="id"/>
     <xsl:param name="depth" select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
-
-
+    <xsl:message>Making a section of <xsl:value-of select="concat($title, ' ',$depth)"/>
+ gg
+    <xsl:value-of select="count(ancestor-or-self::cc:section) + count(ancestor-or-self::sec:*)+count(ancestor::cc:appendix)"/>
+    </xsl:message>
     <xsl:element name="h{$depth}">
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
       <xsl:attribute name="class">indexable,h<xsl:value-of select="$depth"/></xsl:attribute>
@@ -183,7 +185,7 @@
     </xsl:element>
     <xsl:apply-templates mode="hook" select="."/>
     <xsl:apply-templates />
-  </xsl:template>
+  </xsl:template>-->
 
 
   <!-- ############### -->
@@ -252,8 +254,26 @@
 
   <!-- ############### -->
   <!--                 -->
-   <xsl:template match="cc:*[@title='Security Objectives Rationale']|sec:Security_Objectives_Rationale|sec:*[@title='Security Objectives Rationale']">
-    <h2 id="{@id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+  <xsl:template match="cc:*[@title='Security Objectives Rationale' and @id]">
+    <xsl:call-template name="sec_obj_rat">
+      <xsl:with-param name="id" select="@id"/>
+    </xsl:call-template>
+  </xsl:template>
+  <xsl:template match="cc:*[@title='Security Objectives Rationale' and not(@id)]|sec:Security_Objectives_Rationale">
+    <xsl:call-template name="sec_obj_rat">
+      <xsl:with-param name="id" select="Security_Objectives_Rationale"/>
+    </xsl:call-template>
+  </xsl:template>
+  <xsl:template match="sec:*[@title='Security Objectives Rationale']">
+    <xsl:call-template name="sec_obj_rat">
+      <xsl:with-param name="id" select="local_name()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="sec_obj_rat">
+    <xsl:param name="id"/>
+
+    <h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
     This section describes how the assumptions, threats, and organization 
     security policies map to the security objectives.
     <table>
@@ -602,7 +622,8 @@
     <xsl:param name="type"/>
     <xsl:param name="level" select="2"/>
     <xsl:param name="sublevel" select="3"/>
-    
+ 
+   <xsl:message>app-reqs <xsl:value-of select="concat($sublevel)"/></xsl:message>   
  <!--   <xsl:choose><xsl:when test="//cc:hide-empty-req-appendices"/><xsl:otherwise>-->
     <xsl:variable name="levelname"><xsl:choose>
       <xsl:when test="$level='A'">h1</xsl:when>
@@ -705,13 +726,16 @@
     <xsl:param name="title"/>
     <xsl:param name="id"/> 
     <xsl:param name="lmod"/>
-  
+    <xsl:variable name="level" select="$lmod+count(ancestor::*)"/>
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
     <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)]">
-      <h3 id="{$id}" class="indexable" data-level="{$lmod+count(ancestor::*)}">
+      <xsl:element name="h{$level}">
+        <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+        <xsl:attribute name="class">indexable</xsl:attribute>
+        <xsl:attribute name="data-level"><xsl:value-of select="$lmod+count(ancestor::*)"/></xsl:attribute>
         <xsl:value-of select="$title" />
-      </h3>
+      </xsl:element>
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:if test="$appendicize = 'on'">
         <xsl:apply-templates mode="appendicize" />
