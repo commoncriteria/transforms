@@ -168,9 +168,12 @@
 The following sections list Common Criteria and technology terms used in this document.
     <h3 id="cc-terms" class="indexable" data-level="{$num+1}">Common Criteria Terms</h3>
     <table>
+      <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
       <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
         <xsl:sort select="@full"/>
-        <xsl:call-template name="glossary-entry"/>
+        <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
+          <xsl:call-template name="glossary-entry"/>
+        </xsl:if>
       </xsl:for-each>
     </table>
     <h3 id="tech-terms" class="indexable" data-level="{$num+1}">Technical Terms</h3>
