@@ -407,7 +407,7 @@
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
-      <xsl:if test="@status='objective' and @targetdate">
+      <xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
         <div class="statustag">
           <i><b>
               This objective component is scheduled to be mandatory for
@@ -416,7 +416,7 @@
           </b></i>
           </div>
       </xsl:if>
-      <xsl:if test="@status='sel-based'">
+      <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
            <xsl:for-each select="cc:depends/@*">
