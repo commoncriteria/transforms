@@ -346,14 +346,14 @@
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="cc:depends/@*">
-              <xsl:variable name="ref-id" select="."/>
+              <xsl:variable name="refId" select="."/>
               <xsl:choose><xsl:when test="../cc:external-doc">
                 <xsl:variable name="doc_id" select="//cc:*[@id=current()/../cc:external-doc/@ref]/@id"/>
                 <xsl:variable name="path" select="concat($work-dir,'/',$doc_id,'.xml')"/>
-                <xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$ref-id]"/> from 
+                <xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/> from 
                 <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template>
               </xsl:when><xsl:otherwise>
-                <xsl:apply-templates select="//cc:f-element[.//@id=$ref-id]" mode="getId"/>
+                <xsl:apply-templates select="//cc:f-element[.//@id=$refId]" mode="getId"/>
               </xsl:otherwise></xsl:choose>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>.
@@ -419,41 +419,20 @@
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
-           
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
                 <xsl:call-template name="commaifnotlast"/>
            </xsl:for-each>
            <xsl:variable name="fcomp" select="."/>
+           <!-- Go through the referenced bases -->
            <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
-               <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
-               <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]]">      <xsl:apply-templates select="." mode="make_xref"/>
-               </xsl:for-each>
-               from <xsl:apply-templates select="." mode="make_xref"/>
-
-           </xsl:for-each>
-
-          .
-
-<!--
-
-           <xsl:for-each select="cc:depends/@*">
-              <xsl:variable name="ref-id" select="."/>
-              <xsl:choose><xsl:when test="../cc:external-doc">
-                <xsl:variable name="doc_id" select="//cc:*[@id=current()/../cc:external-doc/@ref]/@id"/>
-                <xsl:variable name="path" select="concat($work-dir,'/',$doc_id,'.xml')"/>
-                <xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$ref-id]"/> from 
-                <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template>
-              </xsl:when><xsl:otherwise>
-                <xsl:apply-templates select="//cc:f-element[.//@id=$ref-id]" mode="getId"/>
-              </xsl:otherwise></xsl:choose>
-              <xsl:call-template name="commaifnotlast"/>
-          </xsl:for-each>.
--->
- <!--             <xsl:for-each select="//cc:f-element[.//@id=current()/cc:depends/@*]">
-                 <xsl:apply-templates mode="getId" select="."/><xsl:call-template name="commaifnotlast"/>
-              </xsl:for-each>-->
-            </i></b>
+             <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
+             <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
+               <xsl:apply-templates select="." mode="make_xref"/>
+             </xsl:for-each>
+             from <xsl:apply-templates select="." mode="make_xref"/>
+           </xsl:for-each>.
+           </i></b>
           </div>
       </xsl:if>
         <xsl:apply-templates/>
