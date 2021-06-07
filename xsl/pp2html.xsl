@@ -419,11 +419,18 @@
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
+           
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
                 <xsl:call-template name="commaifnotlast"/>
            </xsl:for-each>
-           <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]">
+           <xsl:variable name="fcomp" select="."/>
+           <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
+               <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
+               <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]]">      <xsl:apply-templates select="." mode="make_xref"/>
+               </xsl:for-each>
+               from <xsl:apply-templates select="." mode="make_xref"/>
+
            </xsl:for-each>
 
           .

@@ -71,7 +71,7 @@
       <xsl:otherwise><xsl:value-of select="../@cc-id"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:value-of select="translate($baseID, $lower, $upper)"/>
-    <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element)+1"/><xsl:value-of select="@type"/></xsl:if>
+    <xsl:if test="name()='a-element'">.<xsl:value-of select="count(preceding-sibling::cc:a-element[@type=current()/@type])+1"/><xsl:value-of select="@type"/></xsl:if>
   </xsl:template>
 
   <!-- ############################################################
