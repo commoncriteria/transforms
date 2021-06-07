@@ -59,7 +59,7 @@ Contains transforms for extended component definitions
               </xsl:call-template>
               <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
                 <xsl:variable name="box_text"><!--
-                  --><xsl:value-of select="translate(@cc-id,$lower,$upper)"/><!--
+                  --><xsl:value-of select="position()"/><!--
                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
                 <xsl:call-template name="drawbox">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
@@ -162,29 +162,36 @@ Contains transforms for extended component definitions
     <xsl:value-of select="$base"/>
   </xsl:template>
 
+  <!-- ####################### -->
+  <!--                         -->
+  <!-- ####################### -->
   <xsl:template name="drawbox">
     <xsl:param name="ybase"/>
     <xsl:param name="boxtext"/>
     <xsl:param name="xbase">0</xsl:param>
     <xsl:param name="ymid"/>
+    <xsl:variable name="width"><xsl:choose><xsl:when test="$xbase='0'">150</xsl:when>
+      <xsl:otherwise><xsl:value-of select="string-length($boxtext)*12"/></xsl:otherwise></xsl:choose></xsl:variable>
+
+
     <xsl:element name="text">
       <xsl:attribute name="x"><xsl:value-of select="$xbase + 4"/></xsl:attribute>
       <xsl:attribute name="fill">black</xsl:attribute>
-      <xsl:attribute name="font-size">11</xsl:attribute>
-      <xsl:attribute name="y"><xsl:value-of select="$ybase + 22"/></xsl:attribute>
+      <xsl:attribute name="font-size">15</xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$ybase + 24"/></xsl:attribute>
       <xsl:value-of select="$boxtext"/>
     </xsl:element>
     <xsl:element name="rect">
       <xsl:attribute name="x"><xsl:value-of select="$xbase + 2"/></xsl:attribute>
-      <xsl:attribute name="y"><xsl:value-of select="$ybase + 11"/></xsl:attribute>
-      <xsl:attribute name="width">120</xsl:attribute>
+      <xsl:attribute name="y"><xsl:value-of select="$ybase + 11"/></xsl:attribute> 
+      <xsl:attribute name="width"><xsl:value-of select="$width"/></xsl:attribute>
       <xsl:attribute name="height">16</xsl:attribute>
       <xsl:attribute name="fill">none</xsl:attribute>
       <xsl:attribute name="stroke">black</xsl:attribute>
     </xsl:element>
     <xsl:if test="$xbase>0">
       <xsl:element name="line">
-        <xsl:attribute name="x1">122</xsl:attribute> <!-- 2 more than the width above -->
+        <xsl:attribute name="x1">152</xsl:attribute> <!-- 2 more than the width above -->
         <xsl:attribute name="y1"><xsl:value-of select="$ymid + 17"/></xsl:attribute>
         <xsl:attribute name="x2"><xsl:value-of select="$xbase + 1"/></xsl:attribute>
         <xsl:attribute name="y2"><xsl:value-of select="$ybase + 17"/></xsl:attribute>
