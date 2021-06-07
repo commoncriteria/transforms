@@ -124,21 +124,21 @@ guidance, and testing.</p>
     <h1 id="sfr" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
     <p>The EAs presented in this section capture the actions the evaluator performs 
     to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
-    ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units 
+    ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
     that are performed in Section <a href="#sar_aas" class="dynref"></a>.</p>
     
     <p>Regarding design descriptions (designated by the subsections labelled TSS, as 
     well as any required supplementary material that may be treated as proprietary), 
     the evaluator must ensure there is specific information that satisfies the EA. 
     For findings regarding the TSS section, the evaluator’s verdicts will be 
-    associated with the CEM work unit ASE_TSS.1-1.
+    associated with the CEM workunit ASE_TSS.1-1.
     Evaluator verdicts associated with the supplementary evidence will also be 
     associated with ASE_TSS.1-1, 
     since the requirement to provide such evidence is specified in ASE in the PP.</p>
     
     <p>For ensuring the guidance documentation provides sufficient information for 
     the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
-    be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
+    be associated with CEM workunits ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
 
     <p>Finally, the subsection labelled Tests is where the authors have determined 
     that testing of the product in the context of the associated SFR is necessary.
@@ -149,7 +149,7 @@ guidance, and testing.</p>
     tests in lieu of executing the tests. 
     In this case, the evaluator must ensure the developer’s tests are executing both 
     in the manner declared by the developer and as mandated by the EA. 
-    The CEM work units that are associated with the EAs specified in this section 
+    The CEM workunits that are associated with the EAs specified in this section 
     are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     <x:call-template name="handle-bases"/>
     <x:call-template name="handle-apply-to-all"/>
@@ -340,13 +340,27 @@ guidance, and testing.</p>
   <!-- ############### -->
    <x:template name="aaforsfrs">
     <h1 id="mandatory_aas" class="indexable" data-level="0">Evaluation Activities for SFRs</h1>
-    <p>The EAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
+    <p>The EAs presented in this section capture the actions the evaluator performs to address technology
+	    specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in
+	    addition to the CEM workunits that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
 
-    <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary material that may be treated as proprietary), the evaluator must ensure there is specific information that satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the CEM work unit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the PP. </p>
+    <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary
+	    material that may be treated as proprietary), the evaluator must ensure there is specific information that
+	    satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the
+	    CEM workunit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated 
+	    with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the PP. </p>
 
-    <p>For ensuring the guidance documentation provides sufficient information for the administrators/users as it pertains to SFRs, the evaluator’s verdicts will be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
+    <p>For ensuring the guidance documentation provides sufficient information for the administrators/users as it 
+	    pertains to SFRs, the evaluator’s verdicts will be associated with CEM workunits ADV_FSP.1-7, AGD_OPE.1-4, 
+	    and AGD_OPE.1-5.</p>
 
-    <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the EA. The CEM work units that are associated with the EAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
+    <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the 
+	    context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be 
+	    instances where it is more practical for the developer to construct tests, or where the developer may have
+	    existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of 
+	    executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the
+	    manner declared by the developer and as mandated by the EA. The CEM workunits that are associated with the EAs
+	    specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.</p>
     <x:apply-templates select="//*[@title='Security Requirements']|//sec:Security_Requirements"/>
   </x:template>
 
