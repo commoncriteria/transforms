@@ -230,7 +230,7 @@ guidance, and testing.</p>
    <x:template name="handle-bases">
     <!-- Run through all the base modules -->
     <x:for-each select="//cc:base-pp">
-      <h2 class="indexable" data-level="1" id="aa-${@short}">
+      <h2 class="indexable" data-level="1" id="aa-{@id}">
 	<x:apply-templates mode="expanded" select="."/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
@@ -238,7 +238,7 @@ guidance, and testing.</p>
      <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
-	<x:with-param name="short" select="@short"/>
+	<x:with-param name="short" select="@id"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
 	  <x:apply-templates select="." mode="short"/> is the base.
@@ -248,7 +248,7 @@ guidance, and testing.</p>
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Additional</x:with-param>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
-	<x:with-param name="short" select="@short"/>
+	<x:with-param name="short" select="@id"/>
 	<x:with-param name="none-msg"/>
       </x:call-template>
     </x:for-each>

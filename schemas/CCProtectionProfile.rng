@@ -423,6 +423,10 @@ Content that only appears if the optional appendices exist.
       </a:documentation>
       <value>yes</value></attribute>
     </optional>
+    <optional>
+      <attribute name="short"/> 
+    </optional>
+
   </define>
     
    <define name="pp-preferences-pat">
