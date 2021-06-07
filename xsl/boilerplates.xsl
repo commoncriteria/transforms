@@ -13,20 +13,14 @@
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">    <p>
-This appendix lists requirements that should be considered satisfied by products
-successfully evaluated against this <xsl:call-template name="doctype-long"/>.   <!-- Protection Profile -->
-However, these requirements are not featured explicitly as SFRs and should not be
-included in the ST.
-They are not included as standalone SFRs because it would
-increase the time, cost, and complexity of evaluation.
-This approach is permitted
-by <a href="#bibCC">[CC]</a> Part 1, <b>8.2 Dependencies between components</b>.
-    </p>
-    <p>
-This information benefits systems engineering activities which call for inclusion of
-particular security controls.  Evaluation against the <xsl:call-template name="doctype-long"/>
-provides evidence that these controls are present and have been evaluated.
-    </p>
+	<p>This appendix lists requirements that should be considered satisfied by products
+	successfully evaluated against this PP. These requirements are not featured
+	explicitly as SFRs and should not be included in the ST. They are not included as 
+	standalone SFRs because it would increase the time, cost, and complexity of evaluation.
+	This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
+	<p>This information benefits systems engineering activities which call for inclusion of particular
+	security controls. Evaluation against the PP provides evidence that these controls are present 
+	and have been evaluated.</p>.
 </xsl:template>
 
   
