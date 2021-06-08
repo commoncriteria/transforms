@@ -754,7 +754,7 @@
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="'t-obj_map'"/>
 		</xsl:call-template>: SFR Rationale</caption>
-        <tr><th>OBJECTIVE</th><th>ADDRESSED BY</th><th>RATIONALE</th></tr>
+        <tr><th>Objective</th><th>Addressed by</th><th>Rationale</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
            <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol">
