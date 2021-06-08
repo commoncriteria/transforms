@@ -37,13 +37,13 @@ Contains transforms for extended component definitions
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
     <xsl:for-each select="//cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
-      <h3><xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text>
-          <xsl:value-of select="@title"/> </h3>
+      <h3 id="ext-comp-{@fam-id}" class="indexable" data-level="3">
+          <xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text><xsl:value-of select="@title"/></h3>
       <xsl:choose>
         <xsl:when test="cc:fam-behavior">
-          <h3>Family Behavior</h3>
+          <h4>Family Behavior</h4>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
-          <h3>Component Leveling</h3>
+          <h4>Component Leveling</h4>
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
             select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)])"/>
@@ -76,17 +76,16 @@ Contains transforms for extended component definitions
              <xsl:value-of select="@name"/>,
              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
          </p>
-         <h3>Management: <xsl:value-of select="$upId"/></h3>
+         <h4>Management: <xsl:value-of select="$upId"/></h4>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
             <xsl:apply-templates select="cc:management" mode="reveal"/>
          </p>
 
-         <h3>Audit: <xsl:value-of select="$upId"/></h3>
+         <h4>Audit: <xsl:value-of select="$upId"/></h4>
          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
             <xsl:apply-templates select="cc:audit" mode="reveal"/>
          </p>
-         <h3><xsl:value-of select="$upId"/> <xsl:text> </xsl:text><xsl:value-of select="@name"/>
-         </h3>
+         <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
          <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
             <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
          </p>
@@ -96,7 +95,9 @@ Contains transforms for extended component definitions
 
          <xsl:for-each select="cc:f-element">
             <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-            <h3> <xsl:value-of select="translate($reqid, $lower,$upper)"/> </h3><br/>
+            <h4  id="ext-comp-{$reqid}" >
+              <xsl:value-of select="translate($reqid, $lower,$upper)"/>
+            </h4>
                  <xsl:choose>
                     <xsl:when test="cc:ext-comp-def-title">
                        <xsl:apply-templates select="cc:ext-comp-def-title/cc:title"/>
