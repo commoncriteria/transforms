@@ -21,7 +21,7 @@ Contains transforms for extended component definitions
 
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
 
-	All extended components specified in the PP are listed in this table:
+	All extended components specified in the PP-Module are listed in this table:
 
 <table>
 	<caption><b><xsl:call-template name="ctr-xsl">
