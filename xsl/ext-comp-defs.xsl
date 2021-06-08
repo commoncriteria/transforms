@@ -43,15 +43,10 @@ Contains transforms for extended component definitions
         <xsl:when test="cc:fam-behavior">
           <h3>Family Behavior</h3>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
+          <h3>Component Leveling</h3>
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
             select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)])"/>
-<!--
-          <xsl:element name="svg" namespace="http://www.w3.org/2000/svg">
-              <xsl:attribute name="style">
-                <xsl:value-of select="concat('max-height:', 20*$dcount+10,'px ;')"/>
-              </xsl:attribute>
--->
           <svg xmlns="http://www.w3.org/2000/svg" style="{concat('max-height: ', 20*$dcount+10, 'px;')}">
               <xsl:call-template name="drawbox">
                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
@@ -77,7 +72,6 @@ Contains transforms for extended component definitions
       </xsl:choose>
       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-         <h3>Component Leveling</h3>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
