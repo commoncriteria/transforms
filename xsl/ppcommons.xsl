@@ -588,7 +588,7 @@ The following sections list Common Criteria and technology terms used in this do
       <td>
         <xsl:value-of select="count(preceding::cc:management-function)+1"/>
       </td>
-      <td>
+      <td style="text-align:left">
         <xsl:apply-templates select="cc:text"/>
       </td>
 	<xsl:variable name="manfunc" select="."/>
