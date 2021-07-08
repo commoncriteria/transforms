@@ -274,7 +274,7 @@
     <xsl:param name="id"/>
 
     <h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
-    This section describes how the assumptions, threats, and organization 
+    This section describes how the assumptions, threats, and organizational 
     security policies map to the security objectives.
     <table>
       <caption><xsl:call-template name="ctr-xsl">
