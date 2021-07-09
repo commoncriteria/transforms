@@ -54,7 +54,7 @@ Contains transforms for extended component definitions
               </xsl:call-template>
               <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
                 <xsl:variable name="box_text"><!--
-                  --><xsl:value-of select="position()"/><!--
+                  --><xsl:value-of select="substring-after(@cc-id, '.')"/><!--
                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
                 <xsl:call-template name="drawbox">
                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
