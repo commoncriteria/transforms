@@ -41,9 +41,11 @@ Contains transforms for extended component definitions
           <xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text><xsl:value-of select="@title"/></h3>
       <xsl:choose>
         <xsl:when test="cc:fam-behavior">
+		
           <h4>Family Behavior</h4>
           <div> <xsl:apply-templates select="cc:fam-behavior"/> </div>
-          <h4>Component Leveling</h4>
+
+	  <h4>Component Leveling</h4>
           <!-- Select all f-components that are not new and not a modified-sfr -->
           <xsl:variable name="dcount"
             select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)])"/>
@@ -70,12 +72,19 @@ Contains transforms for extended component definitions
           <xsl:apply-templates select="cc:mod-def"/>
         </xsl:otherwise>
       </xsl:choose>
+
+	<!-- All Component descriptions --> 
       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <p><xsl:value-of select="$upId"/>,
              <xsl:value-of select="@name"/>,
              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
          </p>
+      </xsl:for-each>
+	    
+      <!-- Individual Management, Audit, and Component definitions -->
+      <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
+         <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h4>Management: <xsl:value-of select="$upId"/></h4>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
             <xsl:apply-templates select="cc:management" mode="reveal"/>
