@@ -96,6 +96,7 @@ Contains transforms for extended component definitions
             <xsl:apply-templates select="cc:audit" mode="reveal"/>
          </p>
          <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
+         <div style="margin-left: 1em;">
          <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
             <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
          </p>
@@ -123,6 +124,7 @@ Contains transforms for extended component definitions
                     </xsl:otherwise>
                 </xsl:choose>
          </xsl:for-each>
+	 </div>
       </xsl:for-each>
       </div>
     </xsl:for-each>
