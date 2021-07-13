@@ -39,6 +39,7 @@ Contains transforms for extended component definitions
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
       <h3 id="ext-comp-{@fam-id}" class="indexable" data-level="3">
           <xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text><xsl:value-of select="@title"/></h3>
+      <div style="margin-left: 1em;">
       <xsl:choose>
         <xsl:when test="cc:fam-behavior">
 		
@@ -123,6 +124,7 @@ Contains transforms for extended component definitions
                 </xsl:choose>
          </xsl:for-each>
       </xsl:for-each>
+      </div>
     </xsl:for-each>
   </xsl:if></xsl:template>
 
