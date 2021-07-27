@@ -416,6 +416,18 @@
           </b></i>
           </div>
       </xsl:if>
+      <xsl:if test="@status='optional' or ancestor::cc:opt-sfrs">
+          <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+              <b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
+              <ul>
+                <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
+                  <li><b><i><xsl:value-of select="@title"/></i></b></li>
+                </xsl:for-each>
+              </ul>
+            </div>
+          </xsl:if>
+        </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
           <b><i>The inclusion of this selection-based component depends upon a selection in
