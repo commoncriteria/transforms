@@ -430,7 +430,7 @@
         </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
-          <b><i>The inclusion of this selection-based component depends upon a selection in
+          <b><i>The inclusion of this selection-based component depends upon selection in
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
                 <xsl:call-template name="commaifnotlast"/>
@@ -445,6 +445,14 @@
              from <xsl:apply-templates select="." mode="make_xref"/>
            </xsl:for-each>.
            </i></b>
+           <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
+             <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
+             <ul>
+               <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
+                 <li><b><i><xsl:value-of select="@title"/></i></b></li>
+               </xsl:for-each>
+             </ul>
+           </xsl:if>
           </div>
       </xsl:if>
         <xsl:apply-templates/>
