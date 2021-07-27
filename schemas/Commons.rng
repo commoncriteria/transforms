@@ -969,6 +969,9 @@ Modification definition. This text goes in the
 	      <value>invisible</value>
             </choice>
           </attribute>
+          <zeroOrMore>
+            <ref name="depends-pat"/>
+          </zeroOrMore>
         </optional>
       </choice>
 <!--      <ref name="depends-pat"/>   -->
