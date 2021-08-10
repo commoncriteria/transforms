@@ -158,9 +158,11 @@
  <define name="f-comp-pat-content">
     <optional><ref name="basic-content-pat"/></optional>
     <zeroOrMore>
-      <optional><ref name="audit-table-pat"/></optional>
-      <ref name="ext-comp-def-pat"/>
-      <ref name="f-component"/>
+      <choice>
+	      <ref name="audit-table-pat"/>
+	      <ref name="ext-comp-def-pat"/>
+      	       <ref name="f-component"/>
+       </choice>
     </zeroOrMore>
   </define>
 
