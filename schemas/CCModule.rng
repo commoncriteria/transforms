@@ -170,6 +170,17 @@
 	Specifies a component under Security Functional Requirements section..
       </a:document>
       <ref name="f-comp-content-pat"/>
+      <optional>
+        <attribute name="status">
+          <choice>
+            <value>optional</value>
+            <value>objective</value>
+            <value>sel-based</value>
+            <value>feat-based</value>
+            <value>invisible</value>
+         </choice>
+       </attribute>
+      </optional>    
       <!-- Would like to remove this -->
       <zeroOrMore>
      	  <ref name="depends-pat"/>
