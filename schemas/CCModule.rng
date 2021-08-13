@@ -89,7 +89,10 @@
       <optional>
          <ref name="description"/>
       </optional>
-      <ref name="sar-content"/>
+      <choice>
+	<ref name="basic-content-pat"/>
+	<ref name="sar-content"/>
+      </choice>
     </element>
   </define>
 
