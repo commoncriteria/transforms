@@ -95,7 +95,8 @@
 	
 <define name="mod-sar-content">
     <ref name="basic-content-pat"/>
-    <zeroOrMore><choice>
+    <zeroOrMore>
+     <choice>
       <element name="section">
         <attribute name="title"/>
         <attribute name="id"/>
@@ -113,7 +114,8 @@
         <ref name="basic-content-pat"/>
 <!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
       </element>
-    </choice></oneOrMore>
+    </choice>
+   </zeroOrMore>
   </define>	
 
   <define name="obj-sfrs">
