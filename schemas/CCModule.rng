@@ -95,7 +95,7 @@
 	
 <define name="mod-sar-content">
     <ref name="basic-content-pat"/>
-    <oneOrMore><choice>
+    <zeroOrMore><choice>
       <element name="section">
         <attribute name="title"/>
         <attribute name="id"/>
