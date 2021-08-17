@@ -389,7 +389,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="mod-sars">
+  <xsl:template match="mod-sars">
     <h2 id="mod-sars" class="indexable" data-level="2">TOE Security Assurance Requirements</h2>
     <xsl:choose>
       <xsl:when test="//cc:mod-sars/cc:description">
