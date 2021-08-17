@@ -100,7 +100,7 @@
         <attribute name="title"/>
         <attribute name="id"/>
         <ref name="basic-content-pat"/>
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
       </element>   
       <element ns="https://niap-ccevs.org/cc/v1/section">
         <anyName>
@@ -111,7 +111,7 @@
         </anyName>
         <attribute name="title"/>
         <ref name="basic-content-pat"/>
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
       </element>
     </choice></oneOrMore>
   </define>	
