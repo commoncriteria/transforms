@@ -44,7 +44,33 @@
     <xsl:call-template name="bibliography"/>
   </xsl:template>
 
-  
+  <xsl:template name="sars">
+      <xsl:call-template name="make_header">
+	    <xsl:with-param name="title" select="'TOE Security Assurance Requirements'"/>
+		<xsl:with-param name="id" select="'mod-sars'"/>
+		<xsl:with-param name="level" select="2"/>
+      </xsl:call-template>
+      <xsl:choose><xsl:when test="//cc:a-component">FILL IN THIS BOILERPLATE TEXT</xsl:when>
+	  <xsl:otherwise>
+      
+        This PP-Module does not define any SARs beyond those defined within the Base-PPs to which it can
+		claim conformance. It is important to note that a TOE that is evaluated against this PP-Module is
+		inherently evaluated against the 
+		<xsl:for-each select="//cc:base-pp">
+		  <xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
+		  <xsl:apply-templates mode="short" select="."/>
+		  <xsl:call-template name="commaifnotlast"/>
+		</xsl:for-each>	
+		as well. 
+		<xsl:choose>
+		  <xsl:when test="count(//cc:base-pp)=1">This PP includes</xsl:when>
+		  <xsl:otherwise>These PPs include </xsl:otherwise></xsl:choose> a
+		number of EAs associated with both Security Functional Requirements (SFRs) and SARs. Additionally, this
+        PP-Module includes a number of SFR-based EAs that similarly refine the SARs of the Base-PPs. The
+		evaluation laboratory will evaluate the TOE against the chosen Base-PP and supplement that evaluation
+		with the necessary SFRs that are taken from this PP-Module.
+	  </xsl:otherwise></xsl:choose>
+  </xsl:template>
   <!-- ############### -->
   <!--   Overwrites template from pp2html.xsl -->
   <!-- ############### -->
@@ -189,7 +215,7 @@
 	  </tr>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not add any requirements when the
 	      <xsl:apply-templates mode="short" select="."/> is the base.
@@ -201,7 +227,7 @@
 	  <th colspan="2"> Mandatory SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Mandatory requirements.
 	    </xsl:with-param>
@@ -211,7 +237,7 @@
 	  <th colspan="2"> Optional SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Optional requirements.
 	    </xsl:with-param>
@@ -221,7 +247,7 @@
 	  <th colspan="2"> Selection-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Selection-based requirements.
 	    </xsl:with-param>
@@ -231,7 +257,7 @@
 	  <th colspan="2"> Objective SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Objective requirements.
 	    </xsl:with-param>
@@ -241,7 +267,7 @@
 	  <th colspan="2"> Implementation-Dependent SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
-	    <xsl:with-param name="short"><xsl:apply-templates mode="short" select="."/></xsl:with-param>
+	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Implementation-Dependent requirements.
 	    </xsl:with-param>
@@ -266,13 +292,19 @@
       <xsl:when test="$f-comps">
       	<xsl:for-each select="$f-comps"><tr>
 <!-- TODO: Theres probably more to do here. -->
+<xsl:message>HEREHRHERHERH<xsl:value-of select="$id"/></xsl:message>
           <td><xsl:apply-templates mode="getId" select="."/></td>
-          <td> <xsl:choose>
+          <td> <xsl:choose><!--
             <xsl:when test="@iteration and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
             </xsl:when>
             <xsl:when test="not(@iteration) and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
-              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>-->
+
+
+
+            <xsl:when test="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]">
+              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="cc:consistency-rationale/node()">
