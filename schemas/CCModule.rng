@@ -385,6 +385,9 @@ Specifies a component under Security Functional Requirements section..
         <element name="PPVersion">
 	  <a:documentation>
 	  </a:documentation>
+          <data type="token">
+             <param name="pattern">[0-9]+\.[0-9]("-Draft")?</param>
+           </data>
           <!-- <data type="decimal"/> -->
         </element>
         <element name="PPAuthor">
