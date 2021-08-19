@@ -211,7 +211,6 @@
 	  </xsl:with-param>
 	</xsl:call-template>
 
-  <xsl:if test="$base/cc:additional-sfrs//cc:f-component[not(@status='invisible')]">
   	<tr>
 	    <th colspan="2"> Additional SFRs</th>
 	  </tr>
@@ -223,7 +222,6 @@
 	      <xsl:apply-templates mode="short" select="."/> is the base.
 	    </xsl:with-param>
 	  </xsl:call-template>
-	</xsl:if>
 
 	<tr>
 	  <th colspan="2"> Mandatory SFRs</th>
@@ -287,9 +285,8 @@
   <xsl:template name="req-con-rat-sec">
     <xsl:param name="f-comps"/>
     <xsl:param name="id"/>
-    <xsl:param name="verb"/>
     <xsl:param name="none-msg"/>
-
+    
     <xsl:choose>
       <xsl:when test="$f-comps">
       	<xsl:for-each select="$f-comps"><tr>
