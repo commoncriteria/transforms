@@ -37,6 +37,7 @@
     <xsl:call-template name="mod-obj-req-map"/>
 	<xsl:call-template name="sars"/>
     <xsl:call-template name="consistency-rationale"/>
+    <xsl:call-template name="mod-sars"/>
     <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
     <xsl:call-template name="ext-comp-defs"/>
@@ -420,6 +421,25 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	This PP-Module does not define any mandatory SFRs.
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="mod-sars">
+	  <xsl:if test="//cc:mod-sars">		  
+	    <h2 id="mod-sars" class="indexable" data-level="2">TOE Security Assurance Requirements</h2>
+    	    <xsl:choose>
+   	    	    <xsl:when test="//cc:mod-sars/cc:description">
+        		 <xsl:apply-templates select="//cc:mod-sars"/>
+		    </xsl:when>
+		    <xsl:when test="//cc:mod-sars//cc:a-component">
+			The following section describes the SARs that must be satisfied by any TOE that claims conformance to this PP-Module.
+			These SARs must be claimed regardless of which PP-Configuration is used to define the TOE.
+        		<xsl:apply-templates select="//cc:mod-sars"/>
+	      	</xsl:when>
+	    	<xsl:otherwise>
+			This PP-Module does not define any Security Assurance requirements. The SARs from the Base-PP must be satisfied.
+	      </xsl:otherwise>
+    	</xsl:choose>
+	  </xsl:if>
   </xsl:template>
 
 
