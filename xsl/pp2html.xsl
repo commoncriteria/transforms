@@ -710,10 +710,8 @@
   <!-- ######################### -->
   <!-- ######################### -->
   <xsl:template match="cc:section[cc:f-component]">
-
     <xsl:param name="lmod" select="'0'"/>
 
-<xsl:message>ERHEHREHHER</xsl:message>
     <xsl:call-template name="section-with-fcomp">
       <xsl:with-param name="title" select="@title"/>
       <xsl:with-param name="id" select="@id"/>
