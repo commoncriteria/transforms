@@ -266,14 +266,19 @@
     <xsl:choose>
       <xsl:when test="$f-comps">
       	<xsl:for-each select="$f-comps"><tr>
+
+    <xsl:message>HEREHERREHRE</xsl:message>
 <!-- TODO: Theres probably more to do here. -->
           <td><xsl:apply-templates mode="getId" select="."/></td>
-          <td> <xsl:choose>
+          <td> <xsl:choose><!--
             <xsl:when test="@iteration and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
             </xsl:when>
             <xsl:when test="not(@iteration) and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+-->
+            <xsl:when test="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]">
+              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="cc:consistency-rationale/node()">

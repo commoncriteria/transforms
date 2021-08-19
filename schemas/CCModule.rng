@@ -385,7 +385,7 @@ Specifies a component under Security Functional Requirements section..
         <element name="PPVersion">
 	  <a:documentation>
 	  </a:documentation>
-          <data type="decimal"/>
+          <!-- <data type="decimal"/> -->
         </element>
         <element name="PPAuthor">
 	  <a:documentation>
