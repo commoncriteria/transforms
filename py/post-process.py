@@ -162,7 +162,8 @@ class State:
             "dt"   in self.ancestors or "no-link" in self.ancestors or\
             "h1"   in self.ancestors or "h2"      in self.ancestors or\
             "h3"   in self.ancestors or "h4"      in self.ancestors or\
-            "head" in self.ancestors or "script"  in self.ancestors
+            "head" in self.ancestors or "script"  in self.ancestors or\
+            "svg"  in self.ancestors
 
     def handle_text(self, parent, text):
         etext = escape(text)
