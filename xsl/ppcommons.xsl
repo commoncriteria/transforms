@@ -201,7 +201,7 @@ The following sections list Common Criteria and technology terms used in this do
       </tr>
   </xsl:template>
 
-  <xsl:template match="sec:*|cc:section">  
+  <xsl:template match="sec:*|cc:section">
     <xsl:apply-templates select="." mode="make_header"/>
     <xsl:apply-templates select="." mode="hook"/>
     <xsl:apply-templates/>
@@ -212,7 +212,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template name="compute-level">
     <xsl:value-of 
-      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs)"/>
+      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-sfrs)"/>
   </xsl:template>
 
   <xsl:template mode="make_header" match="cc:section">
