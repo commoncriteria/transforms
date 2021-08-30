@@ -1705,7 +1705,13 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="recognized-xml">
-       <element name="raw-url"><text/></element>
+       <element name="raw-url"><data type="string">
+        <param name="pattern">https://raw.githubusercontent.com/commoncriteria/[\-_a-zA-Z0-9]+/[a-z0-9]+/input/[\-_A-Z0-9a-z]+\.xml</param>
+      </data></element>
+	   
+	   
+<!--	   https://raw.githubusercontent.com/commoncriteria/mobile-device/364a5f555560452f7bf5ad79553e769ee9a2bdc1/input/mobile-device.xml -->
+	   
   </define>
 
   <define name="non-native-doc">
