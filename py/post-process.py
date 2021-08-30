@@ -223,7 +223,7 @@ class State:
 #
 # Counters:
 #    Have 'class' attribute with value is 'ctr'
-#    Have 'data-counter-type' attribute with value of counter-type  
+#    Have 'data-counter-type' attribute with value of counter-type
 #    Have a subelement with the 'class' attribute equal to counter (which is where the index is put)
 #    Have 'data-myid' attribute 
 #
@@ -235,7 +235,7 @@ class State:
         # Bail if there are no ctrs
         occurs = {}
         # Go through all the counters
-        for countable in self.getElementsByClass('ctr'):   
+        for countable in self.getElementsByClass('ctr'):
             # Get the type of counter
             typee = countable.attrib['data-counter-type']
             # If we haven't seen it yet
@@ -250,13 +250,12 @@ class State:
             countable.find("*[@class='counter']").text = count_str
             self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
 
-
     def fix_this_counter_refs(self, ctr_id, count_str):
         refclass = ctr_id + "-ref"
         for ref in self.getElementsByClass(refclass):
             # print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
             ref.find("*[@class='counter']").text = count_str
-   
+
     def fix_refs_to_main_doc(self):
         if self.main_doc == None:
             return
@@ -282,18 +281,17 @@ class State:
             target = root.find(".//*[@id='"+linkend+"']")
             if target is None:
                 if hasattr(self, "main_doc") and self.main_doc != None:
-                   target = self.main_doc.root.find(".//*[@id='"+linkend+"']")
-                 
-                   if target is None:
-                      warn("Cannot find "+linkend)
-                   brokeRef.tag = "span"
+                    target = self.main_doc.root.find(".//*[@id='"+linkend+"']")
+                    if target is None:
+                        warn("Cannot find "+linkend)
+                    brokeRef.tag = "span"
                 else:
-                   print("Can't really find it")
+                    print("Can't really find it")
 
             if not hasattr(target, 'text'):
                 print("Target does not have text field: "+linkend)
                 continue
-                
+
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
                 brokeRef.text = " "
@@ -339,7 +337,7 @@ class State:
                 inums[level+1] = 0
             inums[level] += 1
             if is_alpha and level == 0:
-                prefix= "Appendix " + base_10_to_alphabet(inums[0]) + " - "
+                prefix = "Appendix " + base_10_to_alphabet(inums[0]) + " - "
             elif is_alpha:
                 prefix = base_10_to_alphabet(inums[0])
             else:
@@ -378,6 +376,7 @@ def getalltext(elem):
     for child in elem:
         ret = ret+getalltext(child)+child.tail
 
+
 def safe_get_attribute(element, attribute, default=""):
     if attribute in element.attrib:
         return element.attrib[attribute]
@@ -394,18 +393,26 @@ def derive_paths(arg):
     else:
         outfile = out[1]
     return infile, outfile
-   
+
+
 def parse_into_tree(path):
     if path == "-":
         return ET.fromstring(sys.stdin.read())
     else:
         return ET.parse(path).getroot()
- 
+
+
+def build_from_string(xmldocument):
+    root = ET.fromstring(xmldocument)
+    state = State(root)
+    return state.to_html()
+
 
 if __name__ == "__main__":
+    usage = "<pp-processed-file>[=<output-file>] [<sd-xml-file>[=<out>]]"
     if len(sys.argv) < 2:
         #        0                        1
-        print("Usage: <pp-processed-file>[=<output-file>] [<sd-xml-file>[=<out>]]")
+        print("Usage: " + usage)
         sys.exit(0)
     infile, outfile = derive_paths(sys.argv[1])
     root = parse_into_tree(infile)
@@ -417,7 +424,7 @@ if __name__ == "__main__":
     root = parse_into_tree(sd_infile)
     state = State(root, state)
     state.write_out(sd_outfile)
- 
+
 
 
 
