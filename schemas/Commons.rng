@@ -1706,7 +1706,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="recognized-xml">
        <element name="raw-url"><data type="string">
+	   <!--
         <param name="pattern">https://raw.githubusercontent.com/commoncriteria/[\-_a-zA-Z0-9]+/[a-z0-9]+/input/[\-_A-Z0-9a-z]+\.xml</param>
+		-->
       </data></element>
 	   
 	   
