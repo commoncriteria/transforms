@@ -79,6 +79,44 @@
       <ref name="sfr_content-pat"/>
     </element>
   </define>
+	
+  <define name="mod-sars">
+    <element name="mod-sars">
+      <a:documentation>
+	SARs. This section is usually either absent from Modules, or is just an explanation of why there are no SARs.
+	But it is theorietically possible that a Module introduce additional SARs, I suppose.
+      </a:documentation>
+      <optional>
+         <ref name="description"/>
+      </optional>
+      <ref name="mod-sar-content"/>
+    </element>
+  </define>
+	
+<define name="mod-sar-content">
+    <ref name="basic-content-pat"/>
+    <zeroOrMore>
+     <choice>
+      <element name="section">
+        <attribute name="title"/>
+        <attribute name="id"/>
+        <ref name="basic-content-pat"/>
+<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"/>
+        <ref name="basic-content-pat"/>
+<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+      </element>
+    </choice>
+   </zeroOrMore>
+  </define>	
 
   <define name="obj-sfrs">
     <element name="obj-sfrs">
@@ -158,9 +196,11 @@
  <define name="f-comp-pat-content">
     <optional><ref name="basic-content-pat"/></optional>
     <zeroOrMore>
-      <optional><ref name="audit-table-pat"/></optional>
-      <ref name="ext-comp-def-pat"/>
-      <ref name="f-component"/>
+      <choice>
+	      <ref name="audit-table-pat"/>
+	      <ref name="ext-comp-def-pat"/>
+      	       <ref name="f-component"/>
+       </choice>
     </zeroOrMore>
   </define>
 
@@ -170,6 +210,17 @@
 	Specifies a component under Security Functional Requirements section..
       </a:document>
       <ref name="f-comp-content-pat"/>
+      <optional>
+        <attribute name="status">
+          <choice>
+            <value>optional</value>
+            <value>objective</value>
+            <value>sel-based</value>
+            <value>feat-based</value>
+            <value>invisible</value>
+         </choice>
+       </attribute>
+      </optional>    
       <!-- Would like to remove this -->
       <zeroOrMore>
      	  <ref name="depends-pat"/>
@@ -334,7 +385,10 @@ Specifies a component under Security Functional Requirements section..
         <element name="PPVersion">
 	  <a:documentation>
 	  </a:documentation>
-          <data type="decimal"/>
+          <data type="token">
+             <param name="pattern">[0-9]+\.[0-9](-Draft)?</param>
+           </data>
+          <!-- <data type="decimal"/> -->
         </element>
         <element name="PPAuthor">
 	  <a:documentation>
@@ -390,6 +444,7 @@ Specifies a component under Security Functional Requirements section..
 	<ref name="base-pp"/>
       </oneOrMore>
       <ref name="man-sfrs"/>
+      <optional><ref name="mod-sars"/></optional>
       <ref name="opt-sfrs"/>
       <ref name="sel-sfrs"/>
       <ref name="obj-sfrs"/>
