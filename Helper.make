@@ -44,7 +44,7 @@ TRANS ?= transforms
 DEBUG ?= v
 
 #- Base name(with extensions) of input and output files
-BASE ?= $(shell echo $${PWD##*/})
+BASE ?= $(shell echo $${PWD\#\#*/})
 
 
 #- Input XML file
