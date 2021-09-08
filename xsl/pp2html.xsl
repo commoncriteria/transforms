@@ -777,7 +777,10 @@
         <tr><th>Objective</th><th>Addressed by</th><th>Rationale</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
-           <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol">
+	   <xsl:message><xsl:value-of select="concat(count(preceding-sibling::cc:*),' = ',$addressedByCol)"/></xsl:message>
+	   <!--           <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol"> -->
+	   <xsl:if test="not(preceding-sibling::cc:addressed-by)">
+
              <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
