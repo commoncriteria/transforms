@@ -35,14 +35,6 @@
   <xsl:param name="release" select="''"/>
   <xsl:param name="work-dir" select="'../../output'"/>
 
-  <!-- ############### -->
-  <!--  CONSTANTS      -->
-  <!-- ############### -->
-  <!-- In PPs th addressed-by element is at position 1, but in Modules its in position 2.-->
-  <xsl:variable name="addressedByCol"><xsl:choose>
-    <xsl:when test="/cc:Module">2</xsl:when>
-    <xsl:otherwise>1</xsl:otherwise>
-  </xsl:choose></xsl:variable>
 
   <!-- ############### -->
   <!--  SETTINGS       -->
@@ -777,8 +769,6 @@
         <tr><th>Objective</th><th>Addressed by</th><th>Rationale</th></tr>
         <xsl:for-each select="//cc:SO/cc:addressed-by">
           <tr>
-	   <xsl:message><xsl:value-of select="concat(count(preceding-sibling::cc:*),' = ',$addressedByCol)"/></xsl:message>
-	   <!--           <xsl:if test="count(preceding-sibling::cc:*)=$addressedByCol"> -->
 	   <xsl:if test="not(preceding-sibling::cc:addressed-by)">
 
              <xsl:attribute name="class">major-row</xsl:attribute>
