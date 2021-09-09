@@ -43,8 +43,10 @@ TRANS ?= transforms
 #- Debugging levels '','v','vv' make sense right now.
 DEBUG ?= v
 
+H := \#\#
+
 #- Base name(with extensions) of input and output files
-BASE ?= $(shell echo $${PWD\#\#*/})
+BASE ?= $(shell echo "$${PWD$H*/}")
 
 
 #- Input XML file
