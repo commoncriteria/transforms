@@ -58,7 +58,7 @@
  <define name="usecases-section">
    <choice>
      <element name="section">
-       <attribute name="title"><value>Use Cases</value></attribute>
+       <attribute name="title"/>
        <optional><attribute name="id"/></optional>
         <ref name="usecases-section-content"/>
       </element>   
@@ -69,7 +69,7 @@
             <nsName ns="http://www.w3.org/1999/xhtml"/>
           </except>
         </anyName>
-        <optional><attribute name="title"><value>Use Cases</value></attribute></optional>
+        <optional><attribute name="title"/></optional>
         <ref name="usecases-section-content"/>
       </element>
     </choice>
@@ -1692,18 +1692,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="external-document-pat">
     <ref name="id-attr"/>
 
-    <attribute name="version">
-      <a:documentation>
-	Version number of the included document
-      </a:documentation>
-    </attribute>
-    
-    <attribute name="name">
-      <a:documentation>
-	Name of the base PP.
-      </a:documentation>
-    </attribute>
-
     <choice>
       <ref name="recognized-xml"/>
       <ref name="non-native-doc"/>
@@ -1724,7 +1712,19 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="non-native-doc">
-     <attribute name="product">
+     <attribute name="version">
+      <a:documentation>
+	Version number of the included document
+      </a:documentation>
+    </attribute>
+    
+    <attribute name="name">
+      <a:documentation>
+	Name of the base PP.
+      </a:documentation>
+    </attribute>
+
+    <attribute name="product">
 	<a:documentation>
 	  Name of the product the base PP applies to.
 	</a:documentation>
