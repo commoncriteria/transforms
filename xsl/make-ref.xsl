@@ -202,7 +202,7 @@
   <!-- ############### -->
   <xsl:template match="cc:management-function" name="management-function" mode="make_xref">
      <xsl:param name="nolink"  select="@nolink"     />
-     <xsl:param name="prefix"  select="'Function #'"/>
+     <xsl:param name="prefix"/>
      <xsl:param name="index"   select="count(preceding::cc:management-function)+1"/>
 
      <xsl:choose>

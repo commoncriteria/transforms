@@ -546,7 +546,13 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
       </xsl:choose> Note: </span>
   </xsl:template>
- 
+
+  <xsl:template match="cc:management-function-set//cc:app-note">
+    <p><xsl:apply-templates /></p>
+  </xsl:template>
+
+
+
   <xsl:template name="handle-note">
     <xsl:call-template name="handle-note-header"/>
      <span class="note">
@@ -554,7 +560,9 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
           <br/><br/>
           <b>Function-specific Application Notes:</b><br/><br/>
-	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
+          <xsl:for-each select="../cc:title/cc:management-function-set//cc:app-note">
+	    <xsl:apply-templates select="."/>
+          </xsl:for-each>
         </xsl:if>
       </span>
   </xsl:template>
