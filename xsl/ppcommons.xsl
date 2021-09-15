@@ -108,14 +108,24 @@
   <!-- ############### -->
 
   <!-- ############### -->
-  <!--                 -->
+  <!--  collect-cat[egory]                     -->
+  <!--                                         -->
   <!-- ############### -->
    <x:template name="collect-cat">
     <x:param name="cat"/>
 
-    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
+    <x:if test="(.//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]) or (.//cc:management-function/cc:*[local-name()=$cat])">
       <div class="eacategory"><x:value-of select="$cat"/></div>
       <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
+      <x:for-each select=".//cc:management-function[.//cc:Tests]">
+	<x:apply-templates select="." mode="make_xref"/>
+	
+	<x:for-each select=".//cc:also">
+	  <x:variable name="also" select="@ref-id"/>
+	  , <x:apply-templates select="cc:management-function[@id=$also]" mode="make_xref"/>
+	  </x:for-each>:<br/>
+	  <x:apply-templates select="cc:mf_test_activity"/>
+      </x:for-each>
     </x:if>
   </x:template>
 
@@ -123,7 +133,7 @@
   <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
-    <br/>
+   <br/>
   </xsl:template>
 
 
@@ -137,7 +147,10 @@
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
-        </x:if>
+
+
+
+	</x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
           <!-- Display the element name -->
 	  <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
