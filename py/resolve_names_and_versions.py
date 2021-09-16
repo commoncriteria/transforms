@@ -39,13 +39,17 @@ if __name__ == "__main__":
     print("  <self version='"+ root.find(".//cc:PPVersion",ns).text+ "' ")
     print("        name='"+name+"'/>'")
     for pkg in root.findall(".//cc:include-pkg", ns)+\
-        root.findall(".//cc:base-pp", ns)+\
-        root.findall(".//cc:module", ns):
+          root.findall(".//cc:base-pp", ns)+\
+          root.findall(".//cc:module", ns):
         print("<"+pkg.tag.split("}")[1]+" rel-id='"+pkg.attrib["id"]+"'")
-        url_vector=pkg.find(".//cc:raw-url", ns).text.split("/")
-        
-        print(" version='"+url_vector[5].strip()+"'")
-        print(" name='"+url_vector[4].strip()+"'")
+        url=pkg.find(".//cc:raw-url", ns)
+        if url==None:
+            print(" version='"+pkg.attrib["version"]+"'")
+            print(" name='"+pkg.attrib["name"]+"'/>")
+        else:
+            url_vector=url.text.split("/")
+            print(" version='"+url_vector[5].strip()+"'")
+            print(" name='"+url_vector[4].strip()+"'/>")
 # https://raw.githubusercontent.com/commoncriteria/tls/v1.1/input/tls.xml
 # https://raw.githubusercontent.com/commoncriteria/tls/ed2d9042c27f7793d1f96e08e47bd12b04970977/input/tls.xml
     print("</versions>")
