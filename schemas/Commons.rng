@@ -564,11 +564,12 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
 
   <define name="ctr">
     <element name="ctr">
-      <attribute name="id">
+      
+      <optional><attribute name="id">
         <a:documentation>
           Unique ID for this object.
         </a:documentation>
-      </attribute>
+      </attribute></optional>
 
       <attribute name="ctr-type">
         <a:documentation>

@@ -793,10 +793,15 @@
         <xsl:when test="@ctr-type"><xsl:value-of select="@ctr-type"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="@pre"/></xsl:otherwise></xsl:choose>
     </xsl:variable>
+    <xsl:variable name="id"><xsl:choose>
+      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
-    <span class="ctr" data-myid="{@id}" data-counter-type="ct-{$ctrtype}" id="{@id}">
+    
+    <span class="ctr" data-myid="{$id}" data-counter-type="ct-{$ctrtype}" id="{$id}">
       <xsl:apply-templates select="." mode="getPre"/><xsl:text> </xsl:text>
-      <span class="counter"><xsl:value-of select="@id"/></span>
+      <span class="counter"><xsl:value-of select="$id"/></span>
       <xsl:apply-templates/>
     </span>
   </xsl:template>
