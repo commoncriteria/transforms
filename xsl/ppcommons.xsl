@@ -117,14 +117,12 @@
     <x:if test="(.//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]) or (.//cc:management-function/cc:*[local-name()=$cat])">
       <div class="eacategory"><x:value-of select="$cat"/></div>
       <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
-      <x:for-each select=".//cc:management-function[.//cc:Tests]">
-	<x:apply-templates select="." mode="make_xref"/>
-	
-	<x:for-each select=".//cc:also">
-	  <x:variable name="also" select="@ref-id"/>
-	  , <x:apply-templates select="cc:management-function[@id=$also]" mode="make_xref"/>
-	  </x:for-each>:<br/>
-	  <x:apply-templates select="cc:mf_test_activity"/>
+      <x:for-each select=".//cc:management-function/cc:*[local-name()=$cat]/..">
+	<div class="heading-function">
+	Function<x:if test=".//cc:also">s</x:if> <x:text> </x:text>
+	<x:apply-templates select="." mode="make_xref"/><x:for-each select=".//cc:also"><x:variable name="also" select="@ref-id"/>,
+	<x:apply-templates select="//cc:management-function[@id=$also]" mode="make_xref"/></x:for-each>:</div>
+	  <x:apply-templates select="cc:Tests"/>
       </x:for-each>
     </x:if>
   </x:template>
@@ -820,7 +818,7 @@ The following sections list Common Criteria and technology terms used in this do
         </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//@ref-id">
-	<xsl:variable name="refid" select="text()"/>
+	<xsl:variable name="refid" select="."/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
            for a <xsl:value-of select="name()"/>

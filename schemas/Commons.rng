@@ -1586,7 +1586,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <ref name="basic-content-pat"/>
           </element></optional>
 <!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
-          <optional><element name="aactivity">
+          <optional><element name="Tests">
             <zeroOrMore>
               <a:documentation>Points to other management-function that this action affects.</a:documentation>
               <element name="also"> <attribute name="ref-id"/> </element>
