@@ -58,14 +58,25 @@
   <!-- ############### -->
    <xsl:template match="cc:or" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
-      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr>
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">DECISION</td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
-        <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+	<tr><td style="width: 99%">
+	  CHOICE <xsl:apply-templates mode="choice-path" select="."/> <br/>
+	<xsl:apply-templates select="." mode="use-case"/></td></tr>
       </xsl:for-each>
     </table>
   </xsl:template>
  
-
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:config"  mode="choice-path"/>
+  <xsl:template match="cc:*" mode="choice-path">
+    <xsl:apply-templates mode="choice-path"
+			 select="parent::cc:*"/>
+    <xsl:if test="parent::cc:or"><xsl:value-of select="count(preceding-sibling::cc:*)+1"/>.</xsl:if>   <xsl:if test="cc:or"><xsl:number count="cc:or" format="A"/></xsl:if>
+  </xsl:template>
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
