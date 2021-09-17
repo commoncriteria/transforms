@@ -76,12 +76,13 @@
     </xsl:if>
     <!-- This line means, match the first, which will handle adding the prolog and then handle all the ext-comp-defs-->
     <xsl:call-template name="ext-comp-defs"/>
-    <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
+    <xsl:apply-templates select="cc:appendix[not(cc:bibliography) and not(cc:after_bib)]"/>
     <xsl:apply-templates select="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]"/>
 <!--    <xsl:call-template name="rules-appendix"/>  -->
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
     <xsl:call-template name="bibliography"/>
+    <xsl:apply-templates select="cc:appendix[cc:after_bib]"/>
   </xsl:template>
   
   <xsl:template match="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]">

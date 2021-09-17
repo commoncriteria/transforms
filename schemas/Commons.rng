@@ -279,6 +279,11 @@
         <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="boilerplate-no-attr"/>
+	
+	<optional><element name="after_bib">
+	  <a:documentation>Signifies that this appendix goes after the bibliography</a:documentation>
+	  <empty/>
+	</element></optional>
         <oneOrMore><choice>
             <ref name="basic-content-pat"/>
             <ref name="section"/>
