@@ -16,7 +16,7 @@
   <xsl:template match="cc:usecases">
     <dl>
       <xsl:for-each select="cc:usecase">
-        <dt> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/> </dt>
+        <dt id="{@id}"> [USE CASE <xsl:value-of select="position()"/>] <xsl:value-of select="@title"/> </dt>
         <dd>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="cc:config"><p>
@@ -34,13 +34,18 @@
   <xsl:template name="use-case-appendix">
     <xsl:if test="//cc:usecase/cc:config">
       <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
-      <xsl:for-each select="//cc:usecase[cc:config]">
-        <h2 id="appendix-{@id}" class="indexable" data-level="2">
-          <xsl:value-of select="@title"/>
-       </h2>
-       <xsl:for-each select="cc:config">
-          <xsl:call-template name="use-case-and"/>
-       </xsl:for-each>
+      <xsl:for-each select="//cc:usecase">
+        <h2 id="appendix-{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
+	<xsl:choose><xsl:when test="cc:config">
+	  The configuration specified below is for the <xsl:value-of select="@title"/>
+	  use case describe as	<a href="#{@id}" class="dynref"></a>.<br/>
+          <xsl:for-each select="cc:config">
+            <xsl:call-template name="use-case-and"/>
+	  </xsl:for-each>
+        </xsl:when><xsl:otherwise>
+	There are currently no specified configurations for <a href="#{@id}" class="dynref"></a>.
+
+	</xsl:otherwise></xsl:choose>
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
@@ -78,10 +83,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:or/cc:*">
-
-
-  </xsl:template>
+  <!-- <xsl:template match="cc:or/cc:*"/> -->
 
   <xsl:template match="cc:or" mode="or_path">
     <xsl:number count="cc:or" level="any" format="A"/>
@@ -148,7 +150,7 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="get-prev-id">
-    <xsl:if test="not(parent::cc:or)">
+    <xsl:if test="not(parent::cc:or or preceding-sibling::cc:*[1][self::cc:or])">
       <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
     </xsl:if>
   </xsl:template>
