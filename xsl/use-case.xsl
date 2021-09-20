@@ -58,10 +58,10 @@
   <!-- ############### -->
    <xsl:template match="cc:or" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
-      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">DECISION</td><td style="display:none"></td></tr>
+      <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">DECISION <xsl:apply-templates select="." mode="or_path"/></td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
 	<tr><td style="width: 99%">
-	  CHOICE <xsl:apply-templates mode="choice-path" select="."/> <br/>
+	  <div class="choicelabel">CHOICE <xsl:apply-templates mode="choice-path" select="."/></div>
 	<xsl:apply-templates select="." mode="use-case"/></td></tr>
       </xsl:for-each>
     </table>
@@ -72,11 +72,29 @@
   <!-- ############### -->
   <xsl:template match="cc:config"  mode="choice-path"/>
   <xsl:template match="cc:*" mode="choice-path">
-    <xsl:apply-templates mode="choice-path"
-			 select="parent::cc:*"/>
-    <xsl:if test="parent::cc:or"><xsl:value-of select="count(preceding-sibling::cc:*)+1"/>.</xsl:if>   <xsl:if test="cc:or"><xsl:number count="cc:or" format="A"/></xsl:if>
+    <xsl:if test="parent::cc:or"><xsl:apply-templates mode="or_path" select=".."/><xsl:value-of select="count(preceding-sibling::cc:*)+1"/></xsl:if>
   </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:or/cc:*">
+
+
+  </xsl:template>
+
+  <xsl:template match="cc:or" mode="or_path">
+    <xsl:number count="cc:or" level="any" format="A"/>
+  </xsl:template>
+
   
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="*" mode="handle-ancestors">
+    <xsl:message>Definitely shouldn't be here</xsl:message>
+  </xsl:template>
+    
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -85,12 +103,14 @@
     <xsl:param name="not"/>
 
     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
-     
+    
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
       <div class="uc_inc_fcomp">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.</div>
     </xsl:if>
 
+    
+    <!-- If the ancestor is an f-element and the previous one doesn't have the same f-element -->
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
       <div class="uc_from_fel">
       From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:</div>
@@ -144,8 +164,11 @@
           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
         </xsl:apply-templates>
  	<div class="{$sclass}">* for the <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
-       <xsl:apply-templates/></div>
+	<xsl:apply-templates/></div>
       </xsl:when>
+      <xsl:otherwise>
+	<xsl:message>Can't find assignable with ID of  <xsl:value-of select="$ref-id"/></xsl:message>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
