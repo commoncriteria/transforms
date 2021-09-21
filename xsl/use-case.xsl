@@ -90,7 +90,7 @@
       <div class="uc_inc_fcomp">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.</div>
     </xsl:if>
-
+    <xsl:message>ID of f-element <xsl:value-of select="concat(@id, ':', ancestor::cc:f-element/@id)"/></xsl:message>
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
       <div class="uc_from_fel">
       From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:</div>
