@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import os
 import xml.etree.ElementTree as ET
 import sys
 from urllib.request import urlopen
@@ -32,7 +32,8 @@ if __name__ == "__main__":
         name = sys.argv[1].split('/')[4]
         
     else:
-        name = Path(sys.argv[1]).parent.parent.name
+        name = Path(os.path.abspath(sys.argv[1])).parent.parent.name
+
         root = ET.parse(sys.argv[1]).getroot()
         
     print("<versions>")
