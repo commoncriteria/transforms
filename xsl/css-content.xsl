@@ -332,6 +332,9 @@
           *.toc2{
               background:#FFFFFF;
           }
+	  .choicelabel{
+	    font-weight: bold;
+	  }
           div.comp{
               margin-left:8%;
               margin-top:1em;
