@@ -14,7 +14,7 @@
 
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
 	<p>This appendix lists requirements that should be considered satisfied by products
-	successfully evaluated against this PP. These requirements are not featured
+	successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
 	explicitly as SFRs and should not be included in the ST. They are not included as 
 	standalone SFRs because it would increase the time, cost, and complexity of evaluation.
 	This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
