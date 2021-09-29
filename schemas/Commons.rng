@@ -882,6 +882,7 @@ Grouping for Security Objective for the Operation Environment entries.
 
 
   <define name="ext-comp-def-pat">
+    <optional><ref name="ext-comp-class"/></optional>
     <zeroOrMore>
 	    <element name="ext-comp-def">
         <a:documentation>
@@ -908,6 +909,18 @@ Modification definition. This text goes in the
     </zeroOrMore>
   </define>
 
+
+  <define name="ext-comp-class">
+    <a:document>
+      This defines a new class of requirements.
+    </a:document>
+    <element name="ext-comp-class">
+      <attribute name="class"/>
+      <ref name="description"/>
+    </element>
+  </define>
+
+  
   <define name="ext-comp-extra-pat">
     <optional>
       <element name="comp-lev">
@@ -1428,6 +1441,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
    <define name="sfr-sections-content-pat">
+     <optional>
+       <element name="class-description">
+	 <a:documentation>
+	   A description for classes that aren't defined in CC Part 2.
+	   It goes in the extended component definitions table.
+	 </a:documentation>
+	 <ref name="basic-content-pat"/>
+       </element>
+     </optional>
       <ref name="basic-content-pat"/>
       <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>

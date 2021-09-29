@@ -745,7 +745,8 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id|cc:class-description"/>
+
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
