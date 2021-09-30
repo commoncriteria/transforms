@@ -73,12 +73,12 @@ Contains transforms for extended component definitions
       <xsl:variable name="classid" select="substring-after(substring-before($title, ')'), '(')"/>
       
       <h3 id="ext-comp-{$classid}" class="indexable" data-level="3">
-	<xsl:value-of select="concat($classid, ' - ', $classtitle)"/>
+	Class <xsl:value-of select="concat($classid, ' - ', $classtitle)"/>
       </h3>
       <xsl:choose>
 	<xsl:when test="//*[@title=$title]/cc:class-description"><xsl:apply-templates select="//*[@title=$title]/cc:class-description/node()"/></xsl:when>
 	<xsl:otherwise>This PP-Module defines the following extended components as part of the
-	  <xsl:value-of select="$classid"/> original defined by CC Part2:
+	 <xsl:value-of select="$classid"/> class originally defined by CC Part 2:
 	</xsl:otherwise>
       </xsl:choose>
       
