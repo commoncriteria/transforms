@@ -76,7 +76,7 @@ Contains transforms for extended component definitions
 	<xsl:value-of select="concat($classid, ' - ', $classtitle)"/>
       </h3>
       <xsl:choose>
-	<xsl:when test="cc:class-description"><xsl:apply-templates select="cc:class-description/node()"/></xsl:when>
+	<xsl:when test="//*[@title=$title]/cc:class-description"><xsl:apply-templates select="//*[@title=$title]/cc:class-description/node()"/></xsl:when>
 	<xsl:otherwise>This PP-Module defines the following extended components as part of the
 	  <xsl:value-of select="$classid"/> original defined by CC Part2:
 	</xsl:otherwise>
