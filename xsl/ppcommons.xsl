@@ -459,11 +459,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:choice//cc:selectables">
-    <xsl:for-each select="cc:selectable"><xsl:choose>
+     <ul>
+       <xsl:for-each select="cc:selectable">
+	       <li><xsl:apply-templates/></li>
+	       <!--	<xsl:choose>
 	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
          <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
          <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
-    </xsl:choose></xsl:for-each>
+    </xsl:choose>   -->
+     </xsl:for-each>
+	  </ul>
   </xsl:template>
 
   <!-- -->
