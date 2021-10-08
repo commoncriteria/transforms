@@ -420,6 +420,16 @@
               </ul>
             </div>
           </xsl:if>
+	  <xsl:if test="//cc:f-component[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+               <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
+               <ul>
+                 <xsl:for-each select="//cc:f-component[.//@id = current()/cc:depends/@*]">
+			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
+                 </xsl:for-each>
+               </ul>
+             </div>
+           </xsl:if>
         </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
