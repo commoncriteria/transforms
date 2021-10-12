@@ -693,7 +693,7 @@
           <xsl:otherwise> 
             <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
-                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
+                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
                 <xsl:attribute name="class">indexable</xsl:attribute>
                 <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
                 <xsl:value-of select="@title"/>
