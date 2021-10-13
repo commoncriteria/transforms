@@ -52,6 +52,10 @@ BASE ?= $(shell echo "$${PWD$H*/}")
 #- Input XML file
 PP_XML ?= $(IN)/$(BASE).xml
 
+#- Folder containing TDs
+TD_DIR = TDs
+TDs = $(shell [ ! -d $(TD_DIR) ] || find $(TD_DIR) -name '*.xml' -type f)
+
 
 #- XSL that creates regular HTML document
 PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
@@ -91,6 +95,9 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
+
+# Path where the report with TDs applied is generated
+#PP_EFFECTIVE ?= $(OUT)/$(BASE)-effective.html
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
@@ -174,7 +181,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing
+.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing effective
 
 
 #---
@@ -216,7 +223,6 @@ module-target:
 
 #$(BASE)-sd.html: $(PP_XML)
 
- 
 $(PP_HTML):  $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML)        ,           )
 
@@ -300,6 +306,14 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM) $(FNL_PARM))
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
+
+# Target to build the effective
+# effective: $(PP_EFFECTIVE)
+# $(PP_EFFECTIVE): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML) $(TDs)
+# 	python3 $(TRANS)/py/apply_tds.py $(PP_XML) $(TDs) $(OUT)/effective.xml
+# 	$(call DOIT,$(OUT)/effective.xml,$(PP2HTML_XSL),$(PP_EFFECTIVE),$(APP_PARM) $(FNL_PARM))
+
+
 
 inter:
 	$(call DOXSL,$(PP_XML),$(PP2HTML_XSL),abc.xml,$(APP_PARM))
