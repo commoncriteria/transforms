@@ -466,6 +466,20 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose></xsl:for-each>
   </xsl:template>
 
+  <xsl:template match="keycol">[<b>selection</b>
+    <ul><xsl:for-each select="../cc:keycol">
+      <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+    </xsl:for-each></ul>]
+
+    
+  </xsl:template>
+
+  
+  <xsl:template match="cc:selectables[cc:tabularize]">
+    <xsl:apply-templates select="cc:tabularize"/>
+  </xsl:template>
+
   <!-- -->
   <!-- Selectables template -->
   <!-- -->

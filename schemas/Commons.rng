@@ -658,7 +658,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <oneOrMore>
       <element name="selectable">
 	<optional><attribute name="id"/></optional>
-	<element name="key"><ref name="basic-content-pat"/></element>
+	<element name="key"><text/></element>
 	<oneOrMore>
 	  <element name="col">
 	    <ref name="basic-content-pat"/>
