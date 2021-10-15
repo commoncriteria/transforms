@@ -586,7 +586,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
         <attribute name="pre">
           <a:documentation>
             Text that goes before the counter (e.g. 'Table ').
-            If it's not present, this value is "@ctr-type" + " " 
+            If it is not present, this value is "@ctr-type" + " " 
           </a:documentation>
         </attribute>
       </optional>
@@ -632,6 +632,42 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     </element>
   </define>
 -->
+  <define name="selectables_classic_content">
+     <optional>
+        <attribute name="linebreak">
+          <a:documentation>
+            Indicates that new lines should be appended to every selectable.
+          </a:documentation>
+          <choice><value>yes</value></choice>
+        </attribute>
+      </optional>
+      <ref name="selectable-group"/>
+  </define>
+
+  <define name="selectables_table_content">
+    <element name="tabularize">
+      <optional><attribute name="id"/></optional>
+      <optional><attribute name="title"/></optional>
+      <element name="keycol"><text/></element>
+      <oneOrMore><choice>
+	<element name="reqtext"><text/></element>
+	<element name="assigncol"><text/></element>
+	<element name="textcol"><text/></element>
+      </choice></oneOrMore>
+    </element>
+    <oneOrMore>
+      <element name="selectable">
+	<optional><attribute name="id"/></optional>
+	<element name="key"><ref name="basic-content-pat"/></element>
+	<oneOrMore>
+	  <element name="col">
+	    <ref name="basic-content-pat"/>
+	  </element>
+	</oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
+
   <define name="selectables">
     <element name="selectables">
       <a:documentation>
@@ -645,15 +681,10 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
           <choice><value>yes</value></choice>
         </attribute>
       </optional>
-      <optional>
-        <attribute name="linebreak">
-          <a:documentation>
-            Indicates that new lines should be appended to every selectable.
-          </a:documentation>
-          <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <ref name="selectable-group"/>
+      <choice>
+	<ref name="selectables_classic_content"/>
+	<ref name="selectables_table_content"/>
+      </choice>
     </element>
   </define>
 
