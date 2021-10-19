@@ -506,9 +506,22 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
   
   <xsl:template match="cc:selectables[cc:tabularize]">
-    <xsl:apply-templates select="cc:tabularize"/>.<br/>
-    <hr/>
+    <xsl:apply-templates select="cc:tabularize"/>
+    <p>
+      The rows of
+      <xsl:call-template name="make_ctr_ref">
+	<xsl:with-param name="id" select="cc:tabularize/@id"/>
+	<xsl:with-param name="prefix" select="'Table'"/>
+      </xsl:call-template>
+      provide the allowable values for completion of the assignments and selections for
+      <xsl:apply-templates select="ancestor::cc:f-element[1]" mode="getId"/>.
+    </p>
     <table>
+      <caption><xsl:call-template name="ctr-xsl">
+	<xsl:with-param name="ctr-type" select="'Table'"/>
+	<xsl:with-param name="id" select="cc:tabularize/@id"/>
+	</xsl:call-template>: <xsl:value-of select="cc:tabularize/@title"/>
+      </caption>
       <xsl:apply-templates mode="tabular"/>
     </table>
   </xsl:template>
