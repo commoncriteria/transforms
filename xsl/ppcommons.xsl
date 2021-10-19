@@ -455,6 +455,65 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:choose>
   </xsl:template>
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+
+  <xsl:template match="cc:keycol">[<b>selection</b>
+  <ul>
+    <xsl:for-each select="../../cc:selectable">
+      <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <li style="{@style}"><i id="{$id}"><xsl:apply-templates select="cc:key"/></i><xsl:call-template name="commaifnotlast"/></li>
+    </xsl:for-each></ul>]
+  </xsl:template>
+  <xsl:template match="cc:reqtext"><xsl:apply-templates/></xsl:template>
+
+  
+  <xsl:template match="cc:tabularize" mode="tabular">
+    <tr><xsl:apply-templates mode="tabular"/></tr>
+  </xsl:template>
+  
+  <xsl:template match="cc:reqtext" mode="tabular"/>
+
+  <xsl:template match="cc:key|cc:col" mode="tabular">
+    <td><xsl:apply-templates/></td>
+  </xsl:template>
+  
+  <xsl:template match="cc:keycol|cc:assigncol|cc:textcol" mode="tabular">
+    <th><xsl:apply-templates/></th>
+  </xsl:template>
+
+  <xsl:template match="cc:textcol"/>
+
+  <xsl:template match="cc:selectables[cc:tabularize]/cc:selectable" mode="tabular">
+    <tr><xsl:apply-templates mode="tabular"/></tr>
+  </xsl:template>
+  
+  <xsl:template match="cc:assigncol">
+    [<b>assignment</b>: 
+    <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+  
+  <xsl:template match="cc:reqtext">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="cc:tabularize">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
+  <xsl:template match="cc:selectables[cc:tabularize]">
+    <xsl:apply-templates select="cc:tabularize"/>.<br/>
+    <hr/>
+    <table>
+      <xsl:apply-templates mode="tabular"/>
+    </table>
+  </xsl:template>
+
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -465,21 +524,7 @@ The following sections list Common Criteria and technology terms used in this do
          <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
     </xsl:choose></xsl:for-each>
   </xsl:template>
-
-  <xsl:template match="keycol">[<b>selection</b>
-    <ul><xsl:for-each select="../cc:keycol">
-      <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-      <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
-    </xsl:for-each></ul>]
-
-    
-  </xsl:template>
-
   
-  <xsl:template match="cc:selectables[cc:tabularize]">
-    <xsl:apply-templates select="cc:tabularize"/>
-  </xsl:template>
-
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
