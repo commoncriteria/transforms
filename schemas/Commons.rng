@@ -1688,6 +1688,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <optional>
           <element name="external-doc"><attribute name="ref"/></element>
         </optional>
+        <optional><element name="manual"><empty/></element></optional>
       </element>
     </zeroOrMore>
   </define>
