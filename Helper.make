@@ -233,7 +233,7 @@ DIFF_IT ?= \
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
 	echo "Bcheckout" &&\
-	git checkout $1 &&i echo "B update" &&\
+	git checkout $1 && echo "B update" &&\
         git submodule update --recursive &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
