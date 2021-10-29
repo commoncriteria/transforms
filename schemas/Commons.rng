@@ -633,6 +633,38 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
   </define>
 -->
   <define name="selectables">
+    <choice>
+       <ref name="selectables-classic"/>
+       <ref name="selectables-table"/>
+     </choice>
+  </define> 
+
+  <define name="selectables-table">
+     <element name="selectables">
+       <element name="tabularize">
+          <attribute name="id"/>
+          <attribute name="title"/>
+          <element name="keycol"><text/></element>
+          <oneOrMore> <choice>
+              <element name="reqtext"><text/></element>
+              <element name="assigncol"><text/></element>
+              <element name="keycol"><text/></element>
+              <element name="textcol"><text/></element>
+          </choice></oneOrMore>
+        </element>
+      <oneOrMore>
+        <element name="selectable">
+            <attribute name="id"/>
+            <element name="key"><text/></element>
+            <oneOrMore>
+              <element name="col"><ref name="basic-content-pat"/></element>
+            </oneOrMore>
+        </element>
+      </oneOrMore>
+     </element>
+  </define>
+
+  <define name="selectables-classic">
     <element name="selectables">
       <a:documentation>
         A grouping of selectable elements.
