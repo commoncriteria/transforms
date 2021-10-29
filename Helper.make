@@ -239,7 +239,8 @@ DIFF_IT ?= \
 	cd - &&\
         pwd &&\
 	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
-	rm -rf $(TMP)/$1
+	echo done
+        #rm -rf $(TMP)/$1
 
 
 #- Does a diff since two days ago.
