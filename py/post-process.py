@@ -398,7 +398,7 @@ def derive_paths(arg):
 
 def parse_into_tree(path):
     if path == "-":
-        return ET.fromstring(sys.stdin.read())
+        return ET.fromstring(sys.stdin.read().encode('utf-8'))
     else:
         return ET.parse(path).getroot()
 

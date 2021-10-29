@@ -350,6 +350,7 @@
               </xsl:otherwise></xsl:choose>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>.
+          <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
           </i></b>
         </div>
       </xsl:if>
@@ -364,6 +365,7 @@
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
+               <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
         </b></i>
         </div>
       </xsl:if>
@@ -372,7 +374,7 @@
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
         </div>
       </xsl:if>
-      <xsl:apply-templates/>
+     <xsl:apply-templates/>
         <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
@@ -433,7 +435,7 @@
         </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
-	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]">
+	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
           <b><i>The inclusion of this selection-based component depends upon selection in
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
@@ -448,6 +450,9 @@
              </xsl:for-each>
              from <xsl:apply-templates select="." mode="make_xref"/>
            </xsl:for-each>.
+           <xsl:if test="cc:depends/cc:manual">
+             <i><b>This component may also be optionally included in the TD.</b></i>
+           </xsl:if>
            </i></b>
 		</xsl:if>
            <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
