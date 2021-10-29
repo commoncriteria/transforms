@@ -445,7 +445,6 @@
            <!-- Go through the referenced bases -->
            <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
              <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
-<xsl:message> LOOKING FOR <xsl:value-of select="$path"/></xsl:message>
              <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
                <xsl:apply-templates select="." mode="make_xref"/>
              </xsl:for-each>
