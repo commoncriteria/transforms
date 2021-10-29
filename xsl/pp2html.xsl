@@ -435,7 +435,7 @@
         </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
-	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]">
+	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
           <b><i>The inclusion of this selection-based component depends upon selection in
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
@@ -445,6 +445,7 @@
            <!-- Go through the referenced bases -->
            <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
              <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
+<xsl:message> LOOKING FOR <xsl:value-of select="$path"/></xsl:message>
              <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
                <xsl:apply-templates select="." mode="make_xref"/>
              </xsl:for-each>

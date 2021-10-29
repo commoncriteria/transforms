@@ -1704,7 +1704,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         </a:documentation>
         <ref name="any-attributes"/>
         <optional>
-          <element name="external-doc"><attribute name="ref"/></element>
+          <element name="external-doc">
+            <a:documentation>
+               A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+            </a:documentation>
+            <attribute name="ref">
+               <a:documentation>Points to the id of the external document</a:documentation>
+            </attribute>
+          </element>
         </optional>
         <optional><element name="manual"><empty/></element></optional>
       </element>
