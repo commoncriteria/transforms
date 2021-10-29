@@ -706,21 +706,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <optional>
         <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
-      <optional>
-        <ref name="id-attr"/>
-      </optional>
-      <zeroOrMore>
-        <element name="requires">
-          <a:documentation>
-            Denotes a selection-based element that is required should this selection chosen.
-          </a:documentation>
-          <attribute name="req">
-            <a:documentation>
-              The ID of the required element.
-            </a:documentation>
-          </attribute>
-        </element>
-      </zeroOrMore>
+      <optional> <ref name="id-attr"/> </optional>
       <ref name="basic-content-pat"/>
     </element>
   </define>
