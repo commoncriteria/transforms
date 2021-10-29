@@ -76,12 +76,13 @@
     </xsl:if>
     <!-- This line means, match the first, which will handle adding the prolog and then handle all the ext-comp-defs-->
     <xsl:call-template name="ext-comp-defs"/>
-    <xsl:apply-templates select="cc:appendix[not(cc:bibliography)]"/>
+    <xsl:apply-templates select="cc:appendix[not(cc:bibliography) and not(cc:after_bib)]"/>
     <xsl:apply-templates select="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]"/>
 <!--    <xsl:call-template name="rules-appendix"/>  -->
     <xsl:call-template name="use-case-appendix"/>  
     <xsl:call-template name="acronyms"/>
     <xsl:call-template name="bibliography"/>
+    <xsl:apply-templates select="cc:appendix[cc:after_bib]"/>
   </xsl:template>
   
   <xsl:template match="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]">
@@ -349,6 +350,7 @@
               </xsl:otherwise></xsl:choose>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>.
+          <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
           </i></b>
         </div>
       </xsl:if>
@@ -363,6 +365,7 @@
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
+               <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
         </b></i>
         </div>
       </xsl:if>
@@ -371,7 +374,7 @@
           <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
         </div>
       </xsl:if>
-      <xsl:apply-templates/>
+     <xsl:apply-templates/>
         <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
@@ -419,9 +422,20 @@
               </ul>
             </div>
           </xsl:if>
+	  <xsl:if test="//cc:f-component[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+               <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
+               <ul>
+                 <xsl:for-each select="//cc:f-component[.//@id = current()/cc:depends/@*]">
+			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
+                 </xsl:for-each>
+               </ul>
+             </div>
+           </xsl:if>
         </xsl:if>
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
+	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]">
           <b><i>The inclusion of this selection-based component depends upon selection in
            <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
                 <xsl:apply-templates select="." mode="getId"/>
@@ -436,7 +450,11 @@
              </xsl:for-each>
              from <xsl:apply-templates select="." mode="make_xref"/>
            </xsl:for-each>.
+           <xsl:if test="cc:depends/cc:manual">
+             <i><b>This component may also be optionally included in the TD.</b></i>
+           </xsl:if>
            </i></b>
+		</xsl:if>
            <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
              <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
              <ul>
@@ -444,6 +462,14 @@
                  <li><b><i><xsl:value-of select="@title"/></i></b></li>
                </xsl:for-each>
              </ul>
+           </xsl:if>
+	  <xsl:if test="//cc:f-component[@id = current()/cc:depends/@*]">
+               <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
+               <ul>
+                 <xsl:for-each select="//cc:f-component[@id = current()/cc:depends/@*]">
+			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
+                 </xsl:for-each>
+               </ul>
            </xsl:if>
           </div>
       </xsl:if>
@@ -674,7 +700,7 @@
           <xsl:otherwise> 
             <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
-                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-obj')"/></xsl:attribute>
+                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
                 <xsl:attribute name="class">indexable</xsl:attribute>
                 <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
                 <xsl:value-of select="@title"/>

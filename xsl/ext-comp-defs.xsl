@@ -10,6 +10,7 @@ Contains transforms for extended component definitions
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
      xmlns="http://w3.org/1999/xhthml"
      xmlns:cc="https://niap-ccevs.org/cc/v1"
+     xmlns:sec="https://niap-ccevs.org/cc/v1/section"
      version="1.0">
 
   <xsl:import href="debug.xsl"/>
@@ -35,9 +36,55 @@ Contains transforms for extended component definitions
 <xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//*[cc:ext-comp-def]"/></xsl:call-template>
 </table>
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
-    <xsl:for-each select="//cc:ext-comp-def">
+    <xsl:variable name="alltitles"><xsl:for-each select="//*[./cc:ext-comp-def]/@title"><xsl:sort/><xsl:value-of select="."/>@@</xsl:for-each></xsl:variable>
+    
+    <xsl:call-template name="extcompdef_no_repeats">
+      <xsl:with-param name="titles" select="$alltitles"/>
+    </xsl:call-template>
+    
+  </xsl:if></xsl:template>
+
+  <xsl:template name="extcompdef_no_repeats">
+    <xsl:param name="titles"/>
+
+    <xsl:variable name="first" select="substring-before($titles,'@@')"/>
+    <xsl:variable name="rest" select="substring-after($titles,'@@')"/>
+
+    <xsl:if test="not(contains($rest, concat($first, '@@')))">
+      <xsl:call-template name="handle_ext_comp_def">
+	<xsl:with-param name="title" select="$first"/>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="not($rest='')">
+      <xsl:call-template name="extcompdef_no_repeats">
+	<xsl:with-param name="titles" select="$rest"/>
+      </xsl:call-template>
+    </xsl:if>
+    
+  </xsl:template>
+
+<!-- ####################### -->
+<!-- ####################### -->
+  <xsl:template name="handle_ext_comp_def">
+    <xsl:param name="title"/>
+
+      <xsl:variable name="classtitle" select="substring-before($title, '(')"/>
+      <xsl:variable name="classid" select="substring-after(substring-before($title, ')'), '(')"/>
+      
+      <h3 id="ext-comp-{$classid}" class="indexable" data-level="3">
+	Class <xsl:value-of select="concat($classid, ' - ', $classtitle)"/>
+      </h3>
+      <xsl:choose>
+	<xsl:when test="//*[@title=$title]/cc:class-description"><xsl:apply-templates select="//*[@title=$title]/cc:class-description/node()"/></xsl:when>
+	<xsl:otherwise>This PP-Module defines the following extended components as part of the
+	 <xsl:value-of select="$classid"/> class originally defined by CC Part 2:
+	</xsl:otherwise>
+      </xsl:choose>
+      
+      <xsl:for-each select="//*[@title=$title]/cc:ext-comp-def">
       <xsl:variable name="famId"><xsl:value-of select="translate(@fam-id,$upper,$lower)"/></xsl:variable>
-      <h3 id="ext-comp-{@fam-id}" class="indexable" data-level="3">
+      <h3 id="ext-comp-{@fam-id}" class="indexable" data-level="4">
           <xsl:value-of select="@fam-id"/> <xsl:text> </xsl:text><xsl:value-of select="@title"/></h3>
       <div style="margin-left: 1em;">
       <xsl:choose>
@@ -127,9 +174,13 @@ Contains transforms for extended component definitions
 	 </div>
       </xsl:for-each>
       </div>
-    </xsl:for-each>
-  </xsl:if></xsl:template>
+    </xsl:for-each> <!-- f-component loop -->
 
+
+
+    
+  </xsl:template>
+  
 <!-- ####################### -->
 <!-- ####################### -->
  <xsl:template name="RecursiveGrouping">

@@ -279,6 +279,11 @@
         <ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="boilerplate-no-attr"/>
+	
+	<optional><element name="after_bib">
+	  <a:documentation>Signifies that this appendix goes after the bibliography</a:documentation>
+	  <empty/>
+	</element></optional>
         <oneOrMore><choice>
             <ref name="basic-content-pat"/>
             <ref name="section"/>
@@ -628,6 +633,38 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
   </define>
 -->
   <define name="selectables">
+    <choice>
+       <ref name="selectables-classic"/>
+       <ref name="selectables-table"/>
+     </choice>
+  </define> 
+
+  <define name="selectables-table">
+     <element name="selectables">
+       <element name="tabularize">
+          <attribute name="id"/>
+          <attribute name="title"/>
+          <element name="keycol"><text/></element>
+          <oneOrMore> <choice>
+              <element name="reqtext"><text/></element>
+              <element name="assigncol"><text/></element>
+              <element name="keycol"><text/></element>
+              <element name="textcol"><text/></element>
+          </choice></oneOrMore>
+        </element>
+      <oneOrMore>
+        <element name="selectable">
+            <attribute name="id"/>
+            <element name="key"><text/></element>
+            <oneOrMore>
+              <element name="col"><ref name="basic-content-pat"/></element>
+            </oneOrMore>
+        </element>
+      </oneOrMore>
+     </element>
+  </define>
+
+  <define name="selectables-classic">
     <element name="selectables">
       <a:documentation>
         A grouping of selectable elements.
@@ -669,21 +706,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <optional>
         <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
-      <optional>
-        <ref name="id-attr"/>
-      </optional>
-      <zeroOrMore>
-        <element name="requires">
-          <a:documentation>
-            Denotes a selection-based element that is required should this selection chosen.
-          </a:documentation>
-          <attribute name="req">
-            <a:documentation>
-              The ID of the required element.
-            </a:documentation>
-          </attribute>
-        </element>
-      </zeroOrMore>
+      <optional> <ref name="id-attr"/> </optional>
       <ref name="basic-content-pat"/>
     </element>
   </define>
@@ -877,6 +900,7 @@ Grouping for Security Objective for the Operation Environment entries.
 
 
   <define name="ext-comp-def-pat">
+    <optional><ref name="ext-comp-class"/></optional>
     <zeroOrMore>
 	    <element name="ext-comp-def">
         <a:documentation>
@@ -903,6 +927,18 @@ Modification definition. This text goes in the
     </zeroOrMore>
   </define>
 
+
+  <define name="ext-comp-class">
+    <a:document>
+      This defines a new class of requirements.
+    </a:document>
+    <element name="ext-comp-class">
+      <attribute name="class"/>
+      <ref name="description"/>
+    </element>
+  </define>
+
+  
   <define name="ext-comp-extra-pat">
     <optional>
       <element name="comp-lev">
@@ -1423,6 +1459,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
    <define name="sfr-sections-content-pat">
+     <optional>
+       <element name="class-description">
+	 <a:documentation>
+	   A description for classes that aren't defined in CC Part 2.
+	   It goes in the extended component definitions table.
+	 </a:documentation>
+	 <ref name="basic-content-pat"/>
+       </element>
+     </optional>
       <ref name="basic-content-pat"/>
       <oneOrMore><choice>
 	        <ref name="audit-table-pat"/>
@@ -1661,6 +1706,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <optional>
           <element name="external-doc"><attribute name="ref"/></element>
         </optional>
+        <optional><element name="manual"><empty/></element></optional>
       </element>
     </zeroOrMore>
   </define>

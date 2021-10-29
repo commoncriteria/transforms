@@ -31,7 +31,7 @@
 
   <xsl:variable name="title"><xsl:choose>
       <xsl:when test="//cc:PPTitle"><xsl:value-of select="//cc:PPTitle"/></xsl:when>
-      <xsl:otherwise>PP-Module for <xsl:value-of select="/cc:*/@target-products"/></xsl:otherwise>
+      <xsl:otherwise>PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="/cc:*/@target-products"/></xsl:call-template></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
   <!--##############################################
@@ -44,7 +44,29 @@
   <xsl:template match="text()" mode="uppercase">
     <xsl:value-of select="translate(., $lower, $upper)"/>
   </xsl:template>
-   
+
+  <!-- ###################################
+           Capitalize Letters after WHitespace
+       ###################################-->
+  <xsl:template name="cap_first_letters">
+    <xsl:param name="val"/>
+    <xsl:variable name="rest" select="substring($val,2)"/>
+    
+    <xsl:value-of select="translate(substring($val,1,1), $lower, $upper)"/>
+    <xsl:choose>
+      <xsl:when test="contains($rest, ' ')">
+	<xsl:value-of select="substring-before($rest, ' ')"/>
+	<xsl:text> </xsl:text>
+	<xsl:call-template name="cap_first_letters">
+	  <xsl:with-param name="val" select="substring-after($rest, ' ')"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$rest"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
  <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
@@ -108,22 +130,14 @@
   <!-- ############### -->
 
   <!-- ############### -->
-  <!--  collect-cat[egory]                     -->
-  <!--                                         -->
+  <!--                 -->
   <!-- ############### -->
    <x:template name="collect-cat">
     <x:param name="cat"/>
 
-    <x:if test="(.//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]) or (.//cc:management-function/cc:*[local-name()=$cat])">
+    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
       <div class="eacategory"><x:value-of select="$cat"/></div>
       <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
-      <x:for-each select=".//cc:management-function/cc:*[local-name()=$cat]/..">
-	<div class="heading-function">
-	Function<x:if test=".//cc:also">s</x:if> <x:text> </x:text>
-	<x:apply-templates select="." mode="make_xref"/><x:for-each select=".//cc:also"><x:variable name="also" select="@ref-id"/>,
-	<x:apply-templates select="//cc:management-function[@id=$also]" mode="make_xref"/></x:for-each>:</div>
-	  <x:apply-templates select="cc:Tests"/>
-      </x:for-each>
     </x:if>
   </x:template>
 
@@ -131,7 +145,7 @@
   <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:apply-templates/>
-   <br/>
+    <br/>
   </xsl:template>
 
 
@@ -145,10 +159,7 @@
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
         <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
-
-
-
-	</x:if>
+        </x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
           <!-- Display the element name -->
 	  <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
@@ -448,28 +459,18 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:choice//cc:selectables">
-    <xsl:for-each select="cc:selectable"><xsl:choose>
+     <ul>
+       <xsl:for-each select="cc:selectable">
+	       <li><xsl:apply-templates/></li>
+	       <!--	<xsl:choose>
 	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
-             <xsl:when test="position() = last()">
-	       <xsl:choose><xsl:when test="@atleastone">and</xsl:when>
-	                   <xsl:otherwise>or</xsl:otherwise></xsl:choose>
-	     <xsl:apply-templates/></xsl:when>
+         <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
          <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
-    </xsl:choose></xsl:for-each>
+    </xsl:choose>   -->
+     </xsl:for-each>
+	  </ul>
   </xsl:template>
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:choice//cc:selectables[@linebreak='yes']">
-    <ul>
-      <xsl:for-each select="cc:selectable">
-	<li><xsl:apply-templates/></li>
-      </xsl:for-each>
-    </ul>
-  </xsl:template>
-
-  
   <!-- -->
   <!-- Selectables template -->
   <!-- -->
@@ -557,13 +558,7 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
       </xsl:choose> Note: </span>
   </xsl:template>
-
-  <xsl:template match="cc:management-function-set//cc:app-note">
-    <p><xsl:apply-templates /></p>
-  </xsl:template>
-
-
-
+ 
   <xsl:template name="handle-note">
     <xsl:call-template name="handle-note-header"/>
      <span class="note">
@@ -571,9 +566,7 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
           <br/><br/>
           <b>Function-specific Application Notes:</b><br/><br/>
-          <xsl:for-each select="../cc:title/cc:management-function-set//cc:app-note">
-	    <xsl:apply-templates select="."/>
-          </xsl:for-each>
+	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
         </xsl:if>
       </span>
   </xsl:template>
@@ -604,7 +597,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="/cc:Module" mode="get_title">
-    PP-Module for <xsl:value-of select="/cc:Module/@target-products"/>
+    PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="/cc:Module/@target-products"/></xsl:call-template>
   </xsl:template>
 
   <!-- ############### -->
@@ -757,7 +750,8 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id|cc:class-description"/>
+
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)
   -->
@@ -818,7 +812,7 @@ The following sections list Common Criteria and technology terms used in this do
         </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//@ref-id">
-	<xsl:variable name="refid" select="."/>
+	<xsl:variable name="refid" select="text()"/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
            for a <xsl:value-of select="name()"/>
