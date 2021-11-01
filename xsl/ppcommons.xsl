@@ -479,27 +479,29 @@ The following sections list Common Criteria and technology terms used in this do
     <!-- Selections are always 'atleastone -->
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
-    <xsl:when test="@linebreak='yes'">
+    <xsl:when test="@linebreak='yes' or .//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
         <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
       </xsl:for-each></ul>
-    </xsl:when>
+    </xsl:when><!--
     <xsl:when test="@linebreak='no'">
       <xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
         <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
-    <!-- If the selection has a nested selection -->
+    - If the selection has a nested selection - -
     <xsl:when test=".//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
         <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
-      </xsl:for-each></ul></xsl:when>
+      </xsl:for-each></ul></xsl:when>-->
     <xsl:otherwise>
       <xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
       <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
   </xsl:choose>]</xsl:template>
+
+
 
   <!--
       Delineates a list with commas
@@ -781,7 +783,6 @@ The following sections list Common Criteria and technology terms used in this do
        <xsl:if test="not(//*[@id=current()])">
         <xsl:message>Error: Detected dangling id-reference to <xsl:value-of select="current()"/> from attribute
            <xsl:value-of select="name()"/>
- 
        <!--<xsl:message>
           Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
           <xsl:call-template name="genPath"/>-->
@@ -819,6 +820,9 @@ The following sections list Common Criteria and technology terms used in this do
            .
          </xsl:message>
         </xsl:if>
+    </xsl:for-each>
+    <xsl:for-each select="//cc:deprecated">
+       <xsl:message> Warning: Detected a deprecated tag.  <xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
    </xsl:template>
 
