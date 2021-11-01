@@ -273,7 +273,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 		pwd;\
 		(while sleep 60; do echo '#'; done) &\
 		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
-		rm -rf $(TMP)/$$aa;\
+#		rm -rf $(TMP)/$$aa;\
 		kill %1;\
         done
 
