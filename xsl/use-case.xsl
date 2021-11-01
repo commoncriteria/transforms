@@ -20,8 +20,7 @@
         <dd>
           <xsl:apply-templates select="cc:description"/>
           <xsl:if test="cc:config"><p>
-            For a the list of appropriate selections and acceptable assignment 
-            values for this configuration, see <a href="#appendix-{@id}" class="dynref"></a>.
+            For changes to included SFRs, selections, and assignents required for this use case, see <a href="#appendix-{@id}" class="dynref"></a>.
           </p></xsl:if>
         </dd>
       </xsl:for-each>
