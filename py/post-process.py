@@ -295,10 +295,10 @@ class State:
 
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
-                brokeRef.text = " "
+                brokeRef.text = ""
             try:
                 # Append ref text.
-                brokeRef.text = brokeRef.text + target.text
+                brokeRef.text = (brokeRef.text + target.text).strip()
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
