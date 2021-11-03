@@ -350,7 +350,7 @@
               </xsl:otherwise></xsl:choose>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>.
-          <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
+          <xsl:if test="cc:depends/cc:manual"><p>This component may also be included in the ST as if optional.</p></xsl:if>
           </i></b>
         </div>
       </xsl:if>
@@ -365,7 +365,7 @@
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
-               <xsl:if test="cc:depends/cc:manual">This component may also be optionally included in the TD.</xsl:if>
+               <xsl:if test="cc:depends/cc:manual"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
       </xsl:if>
@@ -450,9 +450,6 @@
              </xsl:for-each>
              from <xsl:apply-templates select="." mode="make_xref"/>
            </xsl:for-each>.
-           <xsl:if test="cc:depends/cc:manual">
-             <i><b>This component may also be optionally included in the TD.</b></i>
-           </xsl:if>
            </i></b>
 		</xsl:if>
            <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
@@ -470,6 +467,9 @@
 			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
                  </xsl:for-each>
                </ul>
+           </xsl:if>
+           <xsl:if test="cc:depends/cc:manual">
+		   <p><i><b>This component may also be included in the ST as if optional.</b></i></p>
            </xsl:if>
           </div>
       </xsl:if>
