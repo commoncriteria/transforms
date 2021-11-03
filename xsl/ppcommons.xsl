@@ -530,7 +530,24 @@ The following sections list Common Criteria and technology terms used in this do
        <xsl:if test="@id"><xsl:attribute name="id">
          <xsl:value-of select="@id"/>
        </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+
+  <xsl:template match="cc:int[@hide]" priority="1"/>
+
+  <xsl:template match="cc:int[@lte and @gte]">
+       integer between <xsl:value-of select="concat(@gte,' and ',@lte)"/>, inclusive
+  </xsl:template>
+
+  <xsl:template match="cc:int[@gte and not(@lte)]">
+       integer greater than or equal to <xsl:value-of select="@gte"/>
+  </xsl:template>
+
+  <xsl:template match="cc:int[@lte and not(@gte)]">
+       integer less than or equal to <xsl:value-of select="@lte"/>
+  </xsl:template>
+
 <!--
+
+
 
   <xsl:element name="sup"><xsl:attribute name="class">a_id</xsl:attribute>
        <xsl:if test="@id"><xsl:attribute name="id">
