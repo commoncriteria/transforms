@@ -1715,7 +1715,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             </attribute>
           </element>
         </optional>
-        <optional><element name="manual"><empty/></element></optional>
+        <optional><element name="optional"><empty/></element></optional>
       </element>
     </zeroOrMore>
   </define>

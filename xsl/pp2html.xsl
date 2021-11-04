@@ -350,7 +350,7 @@
               </xsl:otherwise></xsl:choose>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>.
-          <xsl:if test="cc:depends/cc:manual"><p>This component may also be included in the ST as if optional.</p></xsl:if>
+          <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
           </i></b>
         </div>
       </xsl:if>
@@ -365,7 +365,7 @@
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
-               <xsl:if test="cc:depends/cc:manual"><p>This component may also be included in the ST as if optional.</p></xsl:if>
+               <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
       </xsl:if>
@@ -468,7 +468,7 @@
                  </xsl:for-each>
                </ul>
            </xsl:if>
-           <xsl:if test="cc:depends/cc:manual">
+           <xsl:if test="cc:depends/cc:optional">
 		   <p><i><b>This component may also be included in the ST as if optional.</b></i></p>
            </xsl:if>
           </div>
