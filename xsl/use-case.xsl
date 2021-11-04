@@ -155,7 +155,9 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:guidance" mode="use-case">
+  <xsl:template match="cc:guidance|cc:restrict" mode="use-case">
+
+<xsl:message>I found a <xsl:value-of select="local-name()"/></xsl:message>
     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
     <xsl:variable name="sclass">uc_guide<xsl:if test="//cc:management-function//@id=$ref-id"> uc_mf</xsl:if></xsl:variable>
     <xsl:choose>

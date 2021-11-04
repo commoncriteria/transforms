@@ -563,7 +563,17 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
         Assignment section
       </a:documentation>
       <optional><ref name="id-attr"/></optional>
-      <ref name="basic-content-pat"/>
+      <!-- <ref name="basic-content-pat"/> -->
+      <text/>
+      <optional><ref name="int"/><optional><text/></optional></optional>
+    </element>
+  </define>
+
+  <define name="int">
+    <element name="int">
+      <optional><attribute name="gte"><data type="integer"/> </attribute></optional>
+      <optional><attribute name="lte"><data type="integer"/> </attribute></optional>
+      <optional><attribute name="hide"/></optional>
     </element>
   </define>
 
@@ -1964,10 +1974,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="guidance">
-    <element name="guidance">
-      <ref name="ref-id"/>
-      <ref name="basic-content-pat"/>
-    </element>
+    <choice>
+      <element name="restrict">
+        <ref name="ref-id"/>
+        <optional><text/></optional>
+        <optional>
+          <ref name="int"/>
+          <optional><text/></optional>
+        </optional>
+      </element>
+      <element name="guidance">
+        <ref name="ref-id"/>
+        <ref name="basic-content-pat"/>
+      </element>
+    </choice>
    </define>
 
   <define name="Chapters">
