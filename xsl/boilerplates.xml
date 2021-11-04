@@ -5,6 +5,8 @@
   <cc-terms>
     <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <xref g='CC'/>.</term>
     <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used as a basis to build a PP-Configuration.</term>
+    <term full="Collaborative Protection Profile" abbr="cPP" plural="cPPs">A Protection Profile developed by
+    international technical communities and approved by multiple schemes</term>
     <term full="Common Criteria" abbr="CC">Common Criteria for Information Technology Security Evaluation (International Standard ISO/IEC 15408).</term>
     <term full="Common Criteria Testing Laboratory">
       Within the context of the Common Criteria Evaluation and Validation Scheme (CCEVS), an IT security evaluation facility, accredited by the National Voluntary Laboratory Accreditation Program (NVLAP) and approved by the NIAP Validation Body to conduct Common Criteria-based evaluations.

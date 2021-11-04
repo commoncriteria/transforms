@@ -119,7 +119,7 @@
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
                         <xsl:when test="(not (cc:audit-event-descr))">
-                            <td>No events specified</td><td></td>
+                            <td>No events specified</td><td>N/A</td>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
@@ -189,7 +189,7 @@
          <td><xsl:apply-templates select="." mode="getId"/></td>
          <xsl:choose>
             <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">
-              <td>No events specified</td><td></td>
+              <td>No events specified</td><td>N/A</td>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table]" mode="intable"/>

@@ -238,14 +238,15 @@ DIFF_IT ?= \
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
-	ls &&\
-	git checkout $1 &&\
+	echo "Bcheckout" &&\
+	git checkout $1 && echo "B update" &&\
         git submodule update --recursive &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
         pwd &&\
 	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
-	rm -rf $(TMP)/$1
+	echo done
+        #rm -rf $(TMP)/$1
 
 
 #- Does a diff since two days ago.
@@ -278,7 +279,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 		pwd;\
 		(while sleep 60; do echo '#'; done) &\
 		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
-		rm -rf $(TMP)/$$aa;\
+#		rm -rf $(TMP)/$$aa;\
 		kill %1;\
         done
 

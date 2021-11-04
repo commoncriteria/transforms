@@ -222,9 +222,9 @@ This PP-Module does not define any objectives for the Operational Environment.
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="sel-based-reqs" match="//cc:ref[@to='sel-based-reqs']">
-    <a href="#sel-based-reqs" class='dynref'/>
-  </xsl:template>
+  <xsl:template name="sel-based-reqs" match="//cc:ref[@to='sel-based-reqs']"><!--
+    --><a href="#sel-based-reqs" class='dynref'/><!-- 
+  --></xsl:template>
 
 
   <xsl:template name="ref-obj-reqs" match="//cc:ref[@to='obj-reqs']">
@@ -236,9 +236,9 @@ This PP-Module does not define any objectives for the Operational Environment.
     <a href="#feat-based-reqs" class='dynref'/>
   </xsl:template>
 
-  <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']">
-    <a href="#optional-reqs" class='dynref'/>
-  </xsl:template>
+  <xsl:template name="ref-strict-optional" match="//cc:ref[@to='ref-strict-optional']"><!--
+    --><a href="#optional-reqs" class='dynref'/><!--
+  --></xsl:template>
 
   <xsl:template name="opt_appendix">
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>

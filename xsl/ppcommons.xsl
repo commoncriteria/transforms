@@ -531,11 +531,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:choice//cc:selectables">
-    <xsl:for-each select="cc:selectable"><xsl:choose>
+     <ul>
+       <xsl:for-each select="cc:selectable">
+	       <li><xsl:apply-templates/></li>
+	       <!--	<xsl:choose>
 	     <xsl:when test="position() = 1"><xsl:apply-templates/></xsl:when>
          <xsl:when test="position() = last()"> or <xsl:apply-templates/></xsl:when>
          <xsl:otherwise>, <xsl:apply-templates/></xsl:otherwise>
-    </xsl:choose></xsl:for-each>
+    </xsl:choose>   -->
+     </xsl:for-each>
+	  </ul>
   </xsl:template>
   
   <!-- -->
@@ -546,27 +551,36 @@ The following sections list Common Criteria and technology terms used in this do
     <!-- Selections are always 'atleastone -->
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
-    <xsl:when test="@linebreak='yes'">
+    <xsl:when test="@linebreak='yes' or .//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
-        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-        <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
+        <li style="{@style}"><xsl:call-template name="handle_sel"/></li>
       </xsl:for-each></ul>
     </xsl:when>
+    <xsl:otherwise>
+      <xsl:for-each select="cc:selectable"><xsl:call-template name="handle_sel"/></xsl:for-each>
+    </xsl:otherwise>
+ </xsl:choose>]</xsl:template>
+
+ <xsl:template name="handle_sel">
+     
+    <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+    <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
+ </xsl:template>
+
+ <xsl:template match="cc:deprecated">!DEPRECATED!</xsl:template>
+<!--
     <xsl:when test="@linebreak='no'">
       <xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
         <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:when>
-    <!-- If the selection has a nested selection -->
+    - If the selection has a nested selection - -
     <xsl:when test=".//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
         <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
         <li style="{@style}"><i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></li>
-      </xsl:for-each></ul></xsl:when>
-    <xsl:otherwise>
-      <xsl:for-each select="cc:selectable">
-        <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-      <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/></xsl:for-each></xsl:otherwise>
-  </xsl:choose>]</xsl:template>
+      </xsl:for-each></ul></xsl:when>-->
+
+
 
   <!--
       Delineates a list with commas
@@ -588,7 +602,24 @@ The following sections list Common Criteria and technology terms used in this do
        <xsl:if test="@id"><xsl:attribute name="id">
          <xsl:value-of select="@id"/>
        </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+
+  <xsl:template match="cc:int[@hide]" priority="1"/>
+
+  <xsl:template match="cc:int[@lte and @gte]">
+       between <xsl:value-of select="concat(@gte,' and ',@lte)"/>, inclusive
+  </xsl:template>
+
+  <xsl:template match="cc:int[@gte and not(@lte)]">
+       greater than or equal to <xsl:value-of select="@gte"/>
+  </xsl:template>
+
+  <xsl:template match="cc:int[@lte and not(@gte)]">
+       less than or equal to <xsl:value-of select="@lte"/>
+  </xsl:template>
+
 <!--
+
+
 
   <xsl:element name="sup"><xsl:attribute name="class">a_id</xsl:attribute>
        <xsl:if test="@id"><xsl:attribute name="id">
@@ -844,11 +875,10 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
-    <xsl:for-each select="//cc:depends/@*[not(../cc:doc)]">
+    <xsl:for-each select="//cc:depends/@*[not(../cc:external-doc)]">
        <xsl:if test="not(//*[@id=current()])">
         <xsl:message>Error: Detected dangling id-reference to <xsl:value-of select="current()"/> from attribute
            <xsl:value-of select="name()"/>
- 
        <!--<xsl:message>
           Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
           <xsl:call-template name="genPath"/>-->
@@ -886,6 +916,9 @@ The following sections list Common Criteria and technology terms used in this do
            .
          </xsl:message>
         </xsl:if>
+    </xsl:for-each>
+    <xsl:for-each select="//cc:deprecated">
+       <xsl:message> Warning: Detected a deprecated tag.  <xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
    </xsl:template>
 

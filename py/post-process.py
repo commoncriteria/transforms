@@ -295,10 +295,10 @@ class State:
 
             if not hasattr(brokeRef, 'text')\
                or brokeRef.text == None:
-                brokeRef.text = " "
+                brokeRef.text = ""
             try:
                 # Append ref text.
-                brokeRef.text = brokeRef.text + target.text
+                brokeRef.text = (brokeRef.text + target.text).strip()
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
@@ -398,7 +398,7 @@ def derive_paths(arg):
 
 def parse_into_tree(path):
     if path == "-":
-        return ET.fromstring(sys.stdin.read())
+        return ET.fromstring(sys.stdin.read().encode('utf-8'))
     else:
         return ET.parse(path).getroot()
 

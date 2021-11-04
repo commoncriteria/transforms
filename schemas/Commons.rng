@@ -669,6 +669,39 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
   </define>
 
   <define name="selectables">
+    <choice>
+       <ref name="selectables-classic"/>
+       <ref name="selectables-table"/>
+     </choice>
+  </define> 
+
+  <define name="selectables-table">
+     <element name="selectables">
+       <element name="tabularize">
+          <attribute name="id"/>
+          <attribute name="title"/>
+          <element name="keycol"><text/></element>
+          <oneOrMore> <choice>
+              <element name="reqtext"><text/></element>
+              <element name="assigncol"><text/></element>
+              <element name="keycol"><text/></element>
+              <element name="textcol"><text/></element>
+          </choice></oneOrMore>
+        </element>
+      <oneOrMore>
+        <element name="selectable">
+            <attribute name="id"/>
+             <optional><element name="deprecated"><empty/></element></optional>
+            <element name="key"><text/></element>
+            <oneOrMore>
+              <element name="col"><ref name="basic-content-pat"/></element>
+            </oneOrMore>
+        </element>
+      </oneOrMore>
+     </element>
+  </define>
+
+  <define name="selectables-classic">
     <element name="selectables">
       <a:documentation>
         A grouping of selectable elements.
@@ -705,21 +738,8 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <optional>
         <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
       </optional>
-      <optional>
-        <ref name="id-attr"/>
-      </optional>
-      <zeroOrMore>
-        <element name="requires">
-          <a:documentation>
-            Denotes a selection-based element that is required should this selection chosen.
-          </a:documentation>
-          <attribute name="req">
-            <a:documentation>
-              The ID of the required element.
-            </a:documentation>
-          </attribute>
-        </element>
-      </zeroOrMore>
+      <optional> <ref name="id-attr"/> </optional>
+      <optional><element name="deprecated"><empty/></element></optional>
       <ref name="basic-content-pat"/>
     </element>
   </define>
@@ -1717,8 +1737,16 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         </a:documentation>
         <ref name="any-attributes"/>
         <optional>
-          <element name="external-doc"><attribute name="ref"/></element>
+          <element name="external-doc">
+            <a:documentation>
+               A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+            </a:documentation>
+            <attribute name="ref">
+               <a:documentation>Points to the id of the external document</a:documentation>
+            </attribute>
+          </element>
         </optional>
+        <optional><element name="optional"><empty/></element></optional>
       </element>
     </zeroOrMore>
   </define>
