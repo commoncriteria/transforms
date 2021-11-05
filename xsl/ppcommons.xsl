@@ -14,6 +14,7 @@
   <xsl:import href="make-ref.xsl"/>
   <xsl:import href="debug.xsl"/>
   <xsl:import href="sanity_checks.xsl"/>
+  <xsl:import href="functions.xsl"/>
 
   <!--##############################################
            Parameters
@@ -38,36 +39,7 @@
   <!--##############################################
            Templates
       ##############################################-->
-  <xsl:template match="text()" mode="lowercase">
-    <xsl:value-of select="translate(., $upper, $lower)"/>
-  </xsl:template>
-   
-  <xsl:template match="text()" mode="uppercase">
-    <xsl:value-of select="translate(., $lower, $upper)"/>
-  </xsl:template>
-
-  <!-- ###################################
-           Capitalize Letters after WHitespace
-       ###################################-->
-  <xsl:template name="cap_first_letters">
-    <xsl:param name="val"/>
-    <xsl:variable name="rest" select="substring($val,2)"/>
-    
-    <xsl:value-of select="translate(substring($val,1,1), $lower, $upper)"/>
-    <xsl:choose>
-      <xsl:when test="contains($rest, ' ')">
-	<xsl:value-of select="substring-before($rest, ' ')"/>
-	<xsl:text> </xsl:text>
-	<xsl:call-template name="cap_first_letters">
-	  <xsl:with-param name="val" select="substring-after($rest, ' ')"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:value-of select="$rest"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  
+ 
  <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
@@ -129,10 +101,6 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
    <x:template name="collect-cat">
     <x:param name="cat"/>
 
@@ -150,6 +118,9 @@
   </xsl:template>
 
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
 	<!-- Display component name -->
         <x:if test=".//cc:aactivity[not(@level) or @level='component']">
@@ -224,6 +195,10 @@ The following sections list Common Criteria and technology terms used in this do
       </tr>
   </xsl:template>
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="sec:*|cc:section">
     <xsl:apply-templates select="." mode="make_header"/>
     <xsl:apply-templates select="." mode="hook"/>
@@ -238,6 +213,9 @@ The following sections list Common Criteria and technology terms used in this do
       select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-sfrs)"/>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template mode="make_header" match="cc:section">
     <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
 
@@ -582,11 +560,6 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:for-each></ul></xsl:when>-->
 
 
-
-  <!--
-      Delineates a list with commas
-  -->
-  <xsl:template name="commaifnotlast"><xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if></xsl:template>
 
   <!-- ############### -->
   <!--                 -->
