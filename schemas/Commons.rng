@@ -658,7 +658,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <element name="tabularize">
       <optional><attribute name="id"/></optional>
       <optional><attribute name="title"/></optional>
-      <element name="keycol"><text/></element>
+      <element name="keycol"><attribute name="assign"/><text/></element>
       <oneOrMore><choice>
 	<element name="reqtext"><text/></element>
 	<element name="assigncol"><text/></element>

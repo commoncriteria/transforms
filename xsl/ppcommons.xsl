@@ -78,8 +78,14 @@
   <xsl:template match="cc:selectable" mode="getId"><!--
 -->_s_<xsl:number count="//cc:selectable" level="any"/>
   </xsl:template> 
+
+  <xsl:template match="cc:assignable[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template> 
+  <xsl:template match="cc:assignable" mode="getId"><!--
+-->_a_<xsl:number count="//cc:assignable" level="any"/>
+  </xsl:template> 
   
- 
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
@@ -435,77 +441,7 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-
-  <xsl:template match="cc:keycol">[<b>selection</b>
-  <ul>
-    <xsl:for-each select="../../cc:selectable">
-      <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-      <li style="{@style}"><i id="{$id}"><xsl:apply-templates select="cc:key"/></i><xsl:call-template name="commaifnotlast"/></li>
-    </xsl:for-each></ul>]
-  </xsl:template>
-  <xsl:template match="cc:reqtext"><xsl:apply-templates/></xsl:template>
-
-  
-  <xsl:template match="cc:tabularize" mode="tabular">
-    <tr><xsl:apply-templates mode="tabular"/></tr>
-  </xsl:template>
-  
-  <xsl:template match="cc:reqtext" mode="tabular"/>
-
-  <xsl:template match="cc:key|cc:col" mode="tabular">
-    <td><xsl:apply-templates/></td>
-  </xsl:template>
-  
-  <xsl:template match="cc:keycol|cc:assigncol|cc:textcol" mode="tabular">
-    <th><xsl:apply-templates/></th>
-  </xsl:template>
-
-  <xsl:template match="cc:textcol"/>
-
-  <xsl:template match="cc:selectables[cc:tabularize]/cc:selectable" mode="tabular">
-    <tr><xsl:apply-templates mode="tabular"/></tr>
-  </xsl:template>
-  
-  <xsl:template match="cc:assigncol">
-    [<b>assignment</b>: 
-    <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
-       <xsl:if test="@id"><xsl:attribute name="id">
-         <xsl:value-of select="@id"/>
-       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
-  
-  <xsl:template match="cc:reqtext">
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="cc:tabularize">
-    <xsl:apply-templates/>
-  </xsl:template>
-  
-  <xsl:template match="cc:selectables[cc:tabularize]">
-    <xsl:apply-templates select="cc:tabularize"/>
-    <p>
-      The rows of
-      <xsl:call-template name="make_ctr_ref">
-	<xsl:with-param name="id" select="cc:tabularize/@id"/>
-	<xsl:with-param name="prefix" select="'Table'"/>
-      </xsl:call-template>
-      provide the allowable values for completion of the assignments and selections for
-      <xsl:apply-templates select="ancestor::cc:f-element[1]" mode="getId"/>.
-    </p>
-    <table>
-      <caption><xsl:call-template name="ctr-xsl">
-	<xsl:with-param name="ctr-type" select="'Table'"/>
-	<xsl:with-param name="id" select="cc:tabularize/@id"/>
-	</xsl:call-template>: <xsl:value-of select="cc:tabularize/@title"/>
-      </caption>
-      <xsl:apply-templates mode="tabular"/>
-    </table>
-  </xsl:template>
-
-  
+ 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -733,6 +669,94 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+   <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:keycol[not(@assign)]">[<b>selection</b>
+  <ul>
+    <xsl:for-each select="../../cc:selectable">
+      <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+      <li style="{@style}"><i id="{$id}"><xsl:apply-templates select="cc:key"/></i><xsl:call-template name="commaifnotlast"/></li>
+    </xsl:for-each></ul>]
+  </xsl:template>
+
+  <xsl:template match="cc:keycol[@assign]">
+    [<b>assignment</b>:
+    <span class="assignable-content"><xsl:apply-templates/></span>]
+  </xsl:template>
+
+
+
+
+  <xsl:template match="cc:reqtext"><xsl:apply-templates/></xsl:template>
+
+  <xsl:template match="cc:assigncol">
+    [<b>assignment</b>: 
+    <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+  
+  <xsl:template match="cc:reqtext">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="cc:tabularize">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
+  <xsl:template match="cc:selectables[cc:tabularize]">
+    <xsl:apply-templates select="cc:tabularize"/>
+  </xsl:template>
+
+  <!-- The post_title mode is a hook that runs after the initial title transform. -->
+  <xsl:template match="node()" mode="post_title">
+     <xsl:apply-templates mode="post_title"/>
+  </xsl:template>
+  
+ 
+
+  <xsl:template match="cc:tabularize" mode="tabular">
+    <tr><xsl:apply-templates mode="tabular"/></tr>
+  </xsl:template>
+  
+  <xsl:template match="cc:reqtext" mode="tabular"/>
+
+  <xsl:template match="cc:key|cc:col" mode="tabular">
+    <td><xsl:apply-templates/></td>
+  </xsl:template>
+  
+  <xsl:template match="cc:keycol|cc:assigncol|cc:textcol" mode="tabular">
+    <th><xsl:apply-templates/></th>
+  </xsl:template>
+
+  <xsl:template match="cc:textcol"/>
+
+  <xsl:template match="cc:selectables[cc:tabularize]/cc:selectable" mode="tabular">
+    <tr><xsl:apply-templates mode="tabular"/></tr>
+  </xsl:template>
+  
+  <xsl:template match="cc:selectables[cc:tabularize]" mode="post_title" priority="2">
+<!--    <p>
+      The rows of
+      <xsl:call-template name="make_ctr_ref">
+	<xsl:with-param name="id" select="cc:tabularize/@id"/>
+	<xsl:with-param name="prefix" select="'Table'"/>
+      </xsl:call-template>
+      provide the allowable values for completion of the assignments and selections for
+      <xsl:apply-templates select="ancestor::cc:f-element[1]" mode="getId"/>.
+    </p>-->
+    <table>
+      <caption><xsl:call-template name="ctr-xsl">
+	<xsl:with-param name="ctr-type" select="'Table'"/>
+	<xsl:with-param name="id" select="cc:tabularize/@id"/>
+	</xsl:call-template>: <xsl:value-of select="cc:tabularize/@title"/>
+      </caption>
+      <xsl:apply-templates mode="tabular"/>
+    </table>
+  </xsl:template>
+
 
   <!--
       Template that makes a tool tip. Uses javascript

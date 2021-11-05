@@ -552,10 +552,10 @@
   <!--                 -->
   <xsl:template match="cc:title">
     <xsl:apply-templates/>
+    <xsl:apply-templates mode="post_title"/>
   </xsl:template>
 
-
-  <!-- ############### -->
+ <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:note/cc:aactivity">
