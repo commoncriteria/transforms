@@ -658,7 +658,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <element name="tabularize">
       <optional><attribute name="id"/></optional>
       <optional><attribute name="title"/></optional>
-      <element name="keycol"><attribute name="assign"/><text/></element>
+<!--      <element name="keycol"><attribute name="assign"/><text/></element>  -->
       <oneOrMore><choice>
 	<element name="reqtext"><text/></element>
 	<element name="assigncol"><text/></element>
@@ -668,7 +668,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <oneOrMore>
       <element name="selectable">
 	<optional><attribute name="id"/></optional>
-	<element name="key"><text/></element>
+<!--	<element name="key"><text/></element>  -->
 	<oneOrMore>
 	  <element name="col">
 	    <ref name="basic-content-pat"/>
@@ -690,11 +690,11 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
        <element name="tabularize">
           <attribute name="id"/>
           <attribute name="title"/>
-          <element name="keycol"><text/></element>
+<!--          <element name="keycol"><text/></element> -->
           <oneOrMore> <choice>
               <element name="reqtext"><text/></element>
               <element name="assigncol"><text/></element>
-              <element name="keycol"><text/></element>
+<!--              <element name="keycol"><text/></element>  -->
               <element name="textcol"><text/></element>
           </choice></oneOrMore>
         </element>
@@ -702,7 +702,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
         <element name="selectable">
             <attribute name="id"/>
              <optional><element name="deprecated"><empty/></element></optional>
-            <element name="key"><text/></element>
+<!--            <element name="key"><text/></element>  -->
             <oneOrMore>
               <element name="col"><ref name="basic-content-pat"/></element>
             </oneOrMore>
