@@ -44,6 +44,8 @@ Contains transforms for extended component definitions
     
   </xsl:if></xsl:template>
 
+  <!-- ####################### -->
+  <!-- ####################### -->
   <xsl:template name="extcompdef_no_repeats">
     <xsl:param name="titles"/>
 
@@ -69,11 +71,12 @@ Contains transforms for extended component definitions
   <xsl:template name="handle_ext_comp_def">
     <xsl:param name="title"/>
 
-      <xsl:variable name="classtitle" select="substring-before($title, '(')"/>
+      <xsl:variable name="classtitle" select="substring-before(substring-after($title, 'Class: '), '(')"/>
       <xsl:variable name="classid" select="substring-after(substring-before($title, ')'), '(')"/>
       
       <h3 id="ext-comp-{$classid}" class="indexable" data-level="3">
-	Class <xsl:value-of select="concat($classid, ' - ', $classtitle)"/>
+        <xsl:value-of select="$title"/>
+	<!-- Class <xsl:value-of select="concat($classid, ' - ', $classtitle)"/> -->
       </h3>
       <xsl:choose>
 	<xsl:when test="//*[@title=$title]/cc:class-description"><xsl:apply-templates select="//*[@title=$title]/cc:class-description/node()"/></xsl:when>
@@ -175,10 +178,6 @@ Contains transforms for extended component definitions
       </xsl:for-each>
       </div>
     </xsl:for-each> <!-- f-component loop -->
-
-
-
-    
   </xsl:template>
   
 <!-- ####################### -->
@@ -186,7 +185,7 @@ Contains transforms for extended component definitions
  <xsl:template name="RecursiveGrouping">
   <xsl:param name="list"/>
 
-  <!-- Selecting the first author name as group identifier and the group itself-->
+  <!-- Selecting the title as group identifier and the group itself-->
   <xsl:variable name="group-identifier" select="$list[1]/@title"/>
   <xsl:variable name="group" select="$list[@title=$group-identifier]"/>
 
