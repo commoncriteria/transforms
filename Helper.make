@@ -181,7 +181,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing effective
+.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing #effective
 
 
 #---
@@ -344,6 +344,9 @@ listing:
 	   done;\
 	 echo "</ol></body></html>") > index.html
 
+
+$(OUT)/SanityChecksOutput.txt:
+	$(XSL_EXE) --noout $(TRANS)/xsl/sanity_checks.xsl $(PP_XML) 2>$(OUT)/SanityChecksOutput.txt
 
 #- Validates the input XML file. It probably requires the JING package
 validate:
