@@ -345,8 +345,8 @@ listing:
 	 echo "</ol></body></html>") > index.html
 
 
-$(OUT)/SanityChecksOutput.txt:
-	$(XSL_EXE) --noout $(TRANS)/xsl/sanity_checks.xsl $(PP_XML) 2>$(OUT)/SanityChecksOutput.txt
+$(OUT)/SanityChecksOutput.md:
+	$(XSL_EXE) --noout $(TRANS)/xsl/sanity_checks.xsl $(PP_XML) 2>$(OUT)/SanityChecksOutput.md
 
 #- Validates the input XML file. It probably requires the JING package
 validate:
