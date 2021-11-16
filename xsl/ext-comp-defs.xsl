@@ -18,11 +18,11 @@ Contains transforms for extended component definitions
   <xsl:template name="ext-comp-defs"><xsl:if test="//cc:ext-comp-def">
     
     <h1 id="ext-comp-defs" class="indexable" data-level="A">Extended Component Definitions</h1>
-	This appendix contains the definitions for all extended requirements specified in the PP-Module.
+	This appendix contains the definitions for all extended requirements specified in the <xsl:call-template name="doctype-short"/>.
 
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Components Table</h2>
 
-	All extended components specified in the PP-Module are listed in this table:
+	All extended components specified in the <xsl:call-template name="doctype-short"/> are listed in this table:
 
 <table>
 	<caption><b><xsl:call-template name="ctr-xsl">
@@ -77,7 +77,7 @@ Contains transforms for extended component definitions
       </h3>
       <xsl:choose>
 	<xsl:when test="//*[@title=$title]/cc:class-description"><xsl:apply-templates select="//*[@title=$title]/cc:class-description/node()"/></xsl:when>
-	<xsl:otherwise>This PP-Module defines the following extended components as part of the
+	<xsl:otherwise>This <xsl:call-template name="doctype-short"/> defines the following extended components as part of the
 	 <xsl:value-of select="$classid"/> class originally defined by CC Part 2:
 	</xsl:otherwise>
       </xsl:choose>
