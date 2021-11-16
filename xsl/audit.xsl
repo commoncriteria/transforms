@@ -119,13 +119,13 @@
                     <td><xsl:apply-templates select="$fcomp" mode="getId"/></td>      <!-- SFR name -->
                     <xsl:choose>
                         <xsl:when test="(not (cc:audit-event-descr))">
-                            <td>No events specified</td><td>N/A</td>
+                            <td>No events specified.</td><td>N/A</td>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
 				<!-- When audit events are individually selectable -->
                                 <xsl:when test="@type='optional'">
-					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> </td>
+					<td> <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>].</b> </td>
                                 </xsl:when>
                                 <xsl:otherwise>
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
@@ -137,7 +137,7 @@
 	    				<xsl:when test="@type='optional'">
 		    				<b>[selection: </b>
 		    					<i><xsl:apply-templates select="."/>
-			    				, None</i><b>]</b>
+			    				, None</i><b>].</b>
 	    				</xsl:when>
 	   			 	<xsl:otherwise>
 						<xsl:apply-templates select="."/>
@@ -165,7 +165,7 @@
 	    <xsl:when test="@type='optional'">
 		    <b>[selection: </b>
 		    <i><xsl:apply-templates select="cc:audit-event-info"/>
-			    , None</i><b>]</b>
+			    , None</i><b>].</b>
 	    </xsl:when>
 	    <xsl:otherwise>
 			<xsl:apply-templates select="cc:audit-event-info"/>
@@ -189,7 +189,7 @@
          <td><xsl:apply-templates select="." mode="getId"/></td>
          <xsl:choose>
             <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">
-              <td>No events specified</td><td>N/A</td>
+              <td>No events specified.</td><td>N/A</td>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table]" mode="intable"/>
