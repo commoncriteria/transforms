@@ -344,7 +344,9 @@ listing:
 	   done;\
 	 echo "</ol></body></html>") > index.html
 
-
+#- Runs a series of sanity checks on the input XML file. The output is saved to
+#- $(OUT)/SanityChecksOutput.md
+check-sanity: $(OUT)/SanityChecksOutput.md
 $(OUT)/SanityChecksOutput.md:
 	$(XSL_EXE) --noout $(TRANS)/xsl/sanity_checks.xsl $(PP_XML) 2>$(OUT)/SanityChecksOutput.md
 
