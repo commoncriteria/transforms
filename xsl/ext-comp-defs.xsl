@@ -36,16 +36,23 @@ Contains transforms for extended component definitions
 <xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//*[cc:ext-comp-def]"/></xsl:call-template>
 </table>
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
+
+    <xsl:call-template name="RecursiveGrouping">
+      <xsl:with-param name="list" select="//*[cc:ext-comp-def]"/>
+      <xsl:with-param name="fake_mode" select="'sections'"/>
+    </xsl:call-template>
+<!--
     <xsl:variable name="alltitles"><xsl:for-each select="//*[./cc:ext-comp-def]/@title"><xsl:sort/><xsl:value-of select="."/>@@</xsl:for-each></xsl:variable>
     
     <xsl:call-template name="extcompdef_no_repeats">
       <xsl:with-param name="titles" select="$alltitles"/>
-    </xsl:call-template>
+    </xsl:call-template> -->
     
   </xsl:if></xsl:template>
 
   <!-- ####################### -->
   <!-- ####################### -->
+<!--
   <xsl:template name="extcompdef_no_repeats">
     <xsl:param name="titles"/>
 
@@ -65,7 +72,7 @@ Contains transforms for extended component definitions
     </xsl:if>
     
   </xsl:template>
-
+-->
 <!-- ####################### -->
 <!-- ####################### -->
   <xsl:template name="handle_ext_comp_def">
@@ -184,11 +191,13 @@ Contains transforms for extended component definitions
 <!-- ####################### -->
  <xsl:template name="RecursiveGrouping">
   <xsl:param name="list"/>
+  <xsl:param name="fake_mode" select="'table'"/>
 
   <!-- Selecting the title as group identifier and the group itself-->
   <xsl:variable name="group-identifier" select="$list[1]/@title"/>
   <xsl:variable name="group" select="$list[@title=$group-identifier]"/>
 
+  <xsl:choose><xsl:when test="$fake_mode='table'">
   <!-- Do some work for the group -->
   <tr> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
@@ -197,11 +206,18 @@ Contains transforms for extended component definitions
          </xsl:for-each>
        </td>
   </tr>
+  </xsl:when>
+  <xsl:otherwise>
+    <xsl:call-template name="handle_ext_comp_def">
+      <xsl:with-param name="title" select="$group-identifier"/>
+    </xsl:call-template>
+  </xsl:otherwise></xsl:choose>
 
     <!-- If there are other groups left, calls itself -->
     <xsl:if test="count($list)>count($group)">
       <xsl:call-template name="RecursiveGrouping">
         <xsl:with-param name="list" select="$list[not(@title=$group-identifier)]"/>
+        <xsl:with-param name="fake_mode" select="$fake_mode"/>
       </xsl:call-template>
     </xsl:if>
  </xsl:template>
