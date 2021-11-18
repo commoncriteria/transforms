@@ -13,6 +13,10 @@
     </term>
     <term full="Common Evaluation Methodology" abbr="CEM">Common Evaluation Methodology for Information Technology Security Evaluation.</term>
     <term full="Distributed TOE">A TOE composed of multiple components operating as a logical whole.</term>
+    <term full="Extended Package" abbr="EP">A deprecated document form for collecting SFRs that implement a particular protocol, technology,
+	    or functionality. See Functional Packages.</term>
+    <term full="Functional Package" abbr="FP">A document that collects SFRs for a particular protocol, technology,
+	    or functionality.</term>
     <term full="Operational Environment" abbr="OE">Hardware and software that are outside the TOE boundary that support the TOE functionality and security policy.</term>
     <term full="Protection Profile" abbr="PP">An implementation-independent set of security requirements for a category of products.</term>
     <term full="Protection Profile Configuration" abbr="PP-Configuration">A comprehensive set of security requirements for a product type that consists of at least one Base-PP and at least one PP-Module.</term>
