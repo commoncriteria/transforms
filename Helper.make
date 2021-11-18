@@ -153,7 +153,7 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 #- Arg 3 is output file
 #- Arg 4 is parameter value pairs
 DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
-	python3 $(TRANS)/py/post-process.py <($(XSL_EXE) $(4) $(2) $(1))\=$(3) 
+	python3 $(TRANS)/py/post-process.py <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) 
 
 #- Transforms with XML and calls post-process.py
 #- Arg 1 is input file
@@ -172,6 +172,9 @@ APP_PARM ?=--stringparam appendicize on
 
 #- A temporary directory argument
 TMP?=/tmp
+
+#- Path to where sanity checks messages go
+WARN_PATH = $(OUT)/SanityChecksOutput.md
 
 # Transforms Version File
 META_TXT ?= $(OUT)/meta-info.txt
@@ -304,7 +307,7 @@ $(PP_LINKABLE_HTML): $(PP_RELEASE_HTML)
 #- It also builds the anchorized version (but doesn't care if it succeeds)
 release: $(PP_RELEASE_HTML)
 $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
-	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM) $(FNL_PARM))
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(APP_PARM) $(FNL_PARM)) 
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
 
