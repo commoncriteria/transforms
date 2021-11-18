@@ -207,7 +207,11 @@
        display: table;
        background-color: gray;
    }  
-
+   div.uc_inc_fcomp{
+       display: list-item;
+       list-style-type: disc;
+       list-style-position: inside;
+   }
    .evidence, .test-obj { font-style: normal; font-size: 90%;}
    
    

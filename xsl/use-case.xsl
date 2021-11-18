@@ -38,11 +38,9 @@
 	<xsl:choose><xsl:when test="cc:config">
 		The configuration for <i><a href="#{@id}" class="dynref"></a></i> modifies
 		the base requirements as follows:<br/>
-		<ul>
           <xsl:for-each select="cc:config">
-		  <li><xsl:call-template name="use-case-and"/></li>
+	    <xsl:call-template name="use-case-and"/>
 	  </xsl:for-each>
-		</ul>
         </xsl:when><xsl:otherwise>
 		The use case <i><a href="#{@id}" class="dynref"></a></i> makes no changes to the base requirements.
 
@@ -158,10 +156,9 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:guidance|cc:restrict" mode="use-case">
-
-<xsl:message>I found a <xsl:value-of select="local-name()"/></xsl:message>
     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
     <xsl:variable name="sclass">uc_guide<xsl:if test="//cc:management-function//@id=$ref-id"> uc_mf</xsl:if></xsl:variable>
+
     <xsl:choose>
       <xsl:when test="//cc:assignable/@id=$ref-id">
         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
