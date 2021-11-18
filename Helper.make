@@ -35,7 +35,7 @@ IN ?= input
 OUT ?= output
 
 #- Local dictionary file
-PROJDICTIONARY ?= local/Dictionary.txt
+PROJDICTIONARY ?= Dictionary.txt
 
 #- FPath
 TRANS ?= transforms
