@@ -36,8 +36,8 @@
       <xsl:for-each select="//cc:usecase">
         <h2 id="appendix-{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
 	<xsl:choose><xsl:when test="cc:config">
-	  The configuration specified below is for the <xsl:value-of select="@title"/>
-	  use case describe as	<a href="#{@id}" class="dynref"></a>.<br/>
+		The configuration specified below is for the <i><xsl:value-of select="@title"/></i>
+	  use case described as	<a href="#{@id}" class="dynref"></a>.<br/>
           <xsl:for-each select="cc:config">
             <xsl:call-template name="use-case-and"/>
 	  </xsl:for-each>
