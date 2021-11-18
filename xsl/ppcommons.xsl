@@ -691,6 +691,14 @@ The following sections list Common Criteria and technology terms used in this do
 
   <xsl:template match="cc:reqtext"><xsl:apply-templates/></xsl:template>
 
+   <xsl:template match="cc:selectcol">
+    [<b>selection</b>: 
+    <xsl:element name="span"><xsl:attribute name="class">selection-content</xsl:attribute>
+       <xsl:if test="@id"><xsl:attribute name="id">
+         <xsl:value-of select="@id"/>
+       </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+    
+
   <xsl:template match="cc:assigncol">
     [<b>assignment</b>: 
     <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>

@@ -662,6 +662,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <oneOrMore><choice>
 	<element name="reqtext"><text/></element>
 	<element name="assigncol"><text/></element>
+        <element name="selectcol"><ref name="basic-content-pat"/></element>
 	<element name="textcol"><text/></element>
       </choice></oneOrMore>
     </element>
@@ -695,6 +696,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
               <element name="reqtext"><text/></element>
               <element name="assigncol"><text/></element>
 <!--              <element name="keycol"><text/></element>  -->
+              <element name="selectcol"><ref name="basic-content-pat"/></element>
               <element name="textcol"><text/></element>
           </choice></oneOrMore>
         </element>
