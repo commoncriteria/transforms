@@ -6,6 +6,7 @@
   xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:sec="https://niap-ccevs.org/cc/v1/section">
 
+  <xsl:import href="debug.xsl"/>
    <!--##############################################
         Template for universal sanity checks.
       ##############################################-->
