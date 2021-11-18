@@ -170,7 +170,7 @@ The following sections list Common Criteria and technology terms used in this do
     <table>
       <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
       <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
-        <xsl:sort select="@full"/>
+        <xsl:sort select="translate(@full, $upper, $lower)"/>
         <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
           <xsl:call-template name="glossary-entry"/>
         </xsl:if>
