@@ -156,7 +156,15 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:*" mode="make_xref">
-    <xsl:message>Unable to make an xref for <xsl:value-of select="name()"/></xsl:message>
+    <xsl:message>Unable to make an xref for <xsl:value-of select="name()"/> <xsl:call-template name="genPath"/></xsl:message>
+  </xsl:template>
+
+  
+  <xsl:template match="cc:tabularize" mode="make_xref">
+    <xsl:call-template name="make_ctr_ref">
+        <xsl:with-param name="id" select="@id"/>
+        <xsl:with-param name="prefix" select="'Table '"/>
+    </xsl:call-template>
   </xsl:template>
 
   <!-- ############### -->
