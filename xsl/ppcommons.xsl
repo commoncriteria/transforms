@@ -735,7 +735,7 @@ The following sections list Common Criteria and technology terms used in this do
     <td><xsl:apply-templates/></td>
   </xsl:template>
   
-  <xsl:template match="cc:keycol|cc:assigncol|cc:textcol" mode="tabular">
+  <xsl:template match="cc:keycol|cc:assigncol|cc:textcol|cc:selectcol" mode="tabular">
     <th><xsl:apply-templates/></th>
   </xsl:template>
 

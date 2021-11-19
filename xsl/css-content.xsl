@@ -34,6 +34,9 @@
     .assignable-content{
       font-style: italic;
     }
+    .selection-content{
+      font-style: italic;
+    }
     .refinement{
       font-weight: bold;
     }
