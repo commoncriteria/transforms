@@ -50,4 +50,4 @@ DIT
 STs
 SAR
 SARs
-
+strikethrough

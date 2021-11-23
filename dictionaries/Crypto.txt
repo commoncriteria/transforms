@@ -9,7 +9,8 @@ MODP
 th
 # As in "ith" message
 GCM
-
+keychain
+KeyedHash
 OID
 DES
 plaintext
@@ -121,3 +122,8 @@ DSS
 DT
 OAEP
 PKV
+# AES-CCMP-256 is defined in IEEE 802.11ac
+11ac
+pkcs
+pkcs1
+RSAES

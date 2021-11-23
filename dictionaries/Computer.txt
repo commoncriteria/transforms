@@ -127,3 +127,5 @@ Locator
 username
 webserver
 UDP
+IPv4
+IPv6
