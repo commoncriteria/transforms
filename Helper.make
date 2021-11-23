@@ -96,8 +96,8 @@ PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
-# Path where the report with TDs applied is generated
-#PP_EFFECTIVE ?= $(OUT)/$(BASE)-effective.html
+#- Path where the spellcheck output is written
+SPELL_OUT ?= $(OUT)/SpellCheckReport.txt
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
@@ -184,7 +184,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr  linkcheck pp help release clean diff little-diff listing #effective
+.PHONY: default meta-info all spellcheck spellcheck-esr spellcheck-release linkcheck pp help release clean diff little-diff listing #effective
 
 
 #---
@@ -198,6 +198,9 @@ all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u"
+
+spellcheck-release: $(PP_RELEASE_HTML)
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(PP_RELEASE_HTML) | sort -u > $(SPELL_OUT)"
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"

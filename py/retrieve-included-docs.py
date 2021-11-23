@@ -36,13 +36,13 @@ def download_url(url, path):
     """
 
     try:
-        print('Downloading ' + url + ' to ' + fpath)
+        print('Downloading ' + url + ' to ' + fpath, file=sys.stderr)
         urllib.request.urlretrieve(url, fpath)
     except (urllib.error.URLError, IOError) as e:
         if url[:5] == 'https':
             url = url.replace('https:', 'http:')
             print('Failed download. Trying https -> http instead.'
-                  ' Downloading ' + url + ' to ' + fpath)
+                  ' Downloading ' + url + ' to ' + fpath, file=sys.stderr)
             urllib.request.urlretrieve(url, fpath)
 
 
