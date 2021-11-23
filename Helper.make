@@ -200,7 +200,7 @@ spellcheck: $(ESR_HTML) $(PP_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u"
 
 spellcheck-release: $(PP_RELEASE_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(PP_RELEASE_HTML) | sort -u > $(SPELL_OUT)"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u > $(SPELL_OUT)"
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
