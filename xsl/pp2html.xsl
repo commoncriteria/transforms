@@ -417,7 +417,7 @@
               <b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
               <ul>
                 <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
-                  <li><b><i><xsl:value-of select="@title"/></i></b></li>
+                  <li><b><i> <a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
                 </xsl:for-each>
               </ul>
             </div>
@@ -427,7 +427,7 @@
                <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
                <ul>
                  <xsl:for-each select="//cc:f-component[.//@id = current()/cc:depends/@*]">
-			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
+			<li><b><i><a href="#{@id}"><xsl:apply-templates select="." mode="getId"/></a></i></b></li>
                  </xsl:for-each>
                </ul>
              </div>
@@ -456,7 +456,7 @@
              <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
              <ul>
                <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
-                 <li><b><i><xsl:value-of select="@title"/></i></b></li>
+                 <li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
                </xsl:for-each>
              </ul>
            </xsl:if>
