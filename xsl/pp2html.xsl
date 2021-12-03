@@ -805,7 +805,8 @@
            </xsl:if>
            <td><xsl:apply-templates/></td>
            <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
-          </tr> 
+          </tr><xsl:text>&#xa;</xsl:text> 
+       
         </xsl:for-each>
       </table>
     </p>

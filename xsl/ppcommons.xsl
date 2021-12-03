@@ -198,7 +198,7 @@ The following sections list Common Criteria and technology terms used in this do
             </xsl:choose>
         </div></td>
         <td><xsl:apply-templates/></td>
-      </tr>
+      </tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
 
 
@@ -588,7 +588,7 @@ The following sections list Common Criteria and technology terms used in this do
         <td>#</td>
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
-      </tr>
+      </tr><xsl:text>&#xa;</xsl:text>
       <xsl:apply-templates select="./cc:management-function"/>
     </table>
   </xsl:template>
@@ -653,7 +653,7 @@ The following sections list Common Criteria and technology terms used in this do
 	    </xsl:choose>
 	  </td>
 	</xsl:for-each>
-    </tr>
+    </tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
 
 
@@ -726,7 +726,7 @@ The following sections list Common Criteria and technology terms used in this do
  
 
   <xsl:template match="cc:tabularize" mode="tabular">
-    <tr><xsl:apply-templates mode="tabular"/></tr>
+    <tr><xsl:apply-templates mode="tabular"/></tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
   
   <xsl:template match="cc:reqtext" mode="tabular"/>
@@ -742,7 +742,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:textcol"/>
 
   <xsl:template match="cc:selectables[cc:tabularize]/cc:selectable" mode="tabular">
-    <tr><xsl:apply-templates mode="tabular"/></tr>
+    <tr><xsl:apply-templates mode="tabular"/></tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
   
   <xsl:template match="cc:selectables[cc:tabularize]" mode="post_title" priority="2">
@@ -783,7 +783,7 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:for-each select="cc:*">
 	<td><xsl:choose><xsl:when test="not(preceding-sibling::*)"><span id="{$id}"/>[<xsl:apply-templates/>]</xsl:when><xsl:otherwise><xsl:apply-templates/></xsl:otherwise></xsl:choose></td>
       </xsl:for-each>
-    </tr>
+    </tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
 
 
@@ -950,7 +950,7 @@ The following sections list Common Criteria and technology terms used in this do
          <td> <xsl:value-of select="cc:version"/> </td>
          <td> <xsl:value-of select="cc:date"/> </td>
          <td> <xsl:apply-templates select="cc:subject"/> </td>
-       </tr>
+       </tr><xsl:text>&#xa;</xsl:text>
      </xsl:for-each>
     </table>
     <h2>Contents</h2>
@@ -994,7 +994,7 @@ The following sections list Common Criteria and technology terms used in this do
               </xsl:element>
             </td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
-       </tr>&#10;
+       </tr><xsl:text>&#10;</xsl:text>
 
       </xsl:for-each>
     </table>
