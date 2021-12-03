@@ -29,6 +29,9 @@ Transforms PP Modules into Support Documentation.
 <!-- ################################################## -->
 <!--                  Templates                         -->
 <!-- ################################################## -->
+
+  <x:template match="/"><x:apply-templates/></x:template>
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
