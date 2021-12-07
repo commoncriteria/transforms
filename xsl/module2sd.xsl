@@ -277,7 +277,7 @@ guidance, and testing.</p>
           <x:value-of select="$title"/> SFRs
         </x:element>
         <x:choose>
-          <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps"/></x:when>
+          <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps" mode="sd_sections"/></x:when>
           <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
         </x:choose>
       </x:otherwise>
@@ -306,6 +306,15 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <x:template match="sec:*|cc:section" mode="sd_sections">
+    <x:apply-templates select="." mode="make_header"/>
+    <x:apply-templates select="cc:f-component|cc:a-component"/>
+  </x:template>
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
