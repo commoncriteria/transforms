@@ -79,8 +79,9 @@
     <xsl:when test="ancestor::cc:opt-sfrs">optional</xsl:when>
     <xsl:when test="ancestor::cc:obj-sfrs">objective</xsl:when>
     <xsl:when test="ancestor::cc:man-sfrs">mandatory</xsl:when>
+    <xsl:when test="ancestor::cc:base-pp">base-based</xsl:when>
     <xsl:when test="ancestor::cc:impl-dep-sfrs">feat-based</xsl:when>
-    <xsl:otherwise><xsl:message>Detected unknown status of f-compoenent in mandatory</xsl:message></xsl:otherwise>
+    <xsl:otherwise><xsl:message>Detected unknown status of f-compoenent in mandatory <xsl:apply-templates mode="getId" select="."/></xsl:message></xsl:otherwise>
   </xsl:choose></xsl:template>
   <!-- ############### -->
   <!-- This template for audit tables is invoked from XML. --> 
