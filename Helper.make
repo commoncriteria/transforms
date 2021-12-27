@@ -114,7 +114,7 @@ RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
 
 #- Points to the daisydiff jar file
-DAISY_DIR ?= ExecuteDaisy
+#DAISY_DIR ?= ExecuteDaisy
 
 #- Git tags that the current release should be diffed against
 DIFF_TAGS?=
@@ -125,7 +125,9 @@ DIFF_TAGS?=
 DIFF_DIR ?= diff-archive
 
 #- The command to diff HTML files
-DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
+# DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
+DIFF_EXE ?= diff -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
+
 
 #- Points to the User.make need for diffing so that it can be
 #- copied to those projects when they are automatically downloaded
@@ -250,14 +252,17 @@ DIFF_IT ?= \
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
         pwd &&\
-	$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
+	diff -y\
+             <(pandoc -f html -t markdown $(TMP)/$1/$(BASE)/$1.html)\
+             <(pandoc -f html -t markdown $4) > $2
+	#$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
 	echo done
         #rm -rf $(TMP)/$1
 
 
 #- Does a diff since two days ago.
 little-diff: $(PP_RELEASE_HTML) $(OUT)/js
-	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-little.html,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
+	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-little.txt,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
 
 diff: $(PP_RELEASE_HTML) $(OUT)/js
@@ -267,7 +272,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 	   done;\
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
-	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.html);\
+	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.txt);\
 	   done;\
 	fi
 	for aa in $(DIFF_TAGS); do\
@@ -284,7 +289,7 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 		cd $$orig;\
 		pwd;\
 		(while sleep 60; do echo '#'; done) &\
-		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.html);\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.txt);\
 #		rm -rf $(TMP)/$$aa;\
 		kill %1;\
         done
@@ -294,11 +299,11 @@ diff: $(PP_RELEASE_HTML) $(OUT)/js
 #		java -XX:-UseGCOverheadLimit -jar $(DAISY_DIR)/*.jar "$$OLD" "$(PP_RELEASE_HTML)"  --file="$(OUT)/diff-$${aa}.html";\
 
 # Copies over resources needed by DIFF
-$(OUT)/js:
-	cp -r $(DAISY_DIR)/js $(OUT)
-	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
-	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
-	cp -u $(DAISY_DIR)/images/* $(OUT)/images
+#$(OUT)/js:
+#	cp -r $(DAISY_DIR)/js $(OUT)
+#	[ -d "$(OUT)/css"    ] || cp -r $(DAISY_DIR)/css $(OUT)	
+#	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images"
+#	cp -u $(DAISY_DIR)/images/* $(OUT)/images
 
 
 #- Target to build the anchorized report
