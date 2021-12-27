@@ -261,11 +261,11 @@ DIFF_IT ?= \
 
 
 #- Does a diff since two days ago.
-little-diff: $(PP_RELEASE_HTML) $(OUT)/js
+little-diff: $(PP_RELEASE_HTML)
 	$(call DIFF_IT,$(YESTERDAY),$(OUT)/diff-little.txt,$(DIFF_USER_MAKE),$(PP_RELEASE_HTML))
 
 
-diff: $(PP_RELEASE_HTML) $(OUT)/js
+diff: $(PP_RELEASE_HTML)
 	if [ -d "$(DIFF_DIR)" ]; then \
 	   for old in `find "$(DIFF_DIR)" -type f -name '*.html'`; do\
 		$(call DIFF_EXE,$$old,$(PP_RELEASE_HTML),$(OUT)/diff-$${old##*/});\
