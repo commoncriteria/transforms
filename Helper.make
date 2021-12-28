@@ -90,9 +90,6 @@ PP_HTML ?= $(OUT)/$(BASE).html
 #- Path where the ESR is written
 ESR_HTML ?= $(OUT)/$(BASE)-esr.html
 
-#- Path where the report that has the different appendices for the different types of requirements is written
-PP_OP_HTML ?= $(OUT)/$(BASE)-optionsappendix.html
-
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
@@ -211,10 +208,10 @@ spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
 
 #- Checks the internal links to make sure they point to an existing anchor
-linkcheck: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_OP_HTML) $(PP_RELEASE_HTML)
-	for bb in $(OUT)/*.html; do for aa in $$(\
+linkcheck: $(ESR_HTML)  $(PP_RELEASE_HTML)
+	for bb in $(ESR_HTML) $(PP_RELEASE_HTML); do for aa in $$(\
 	  sed "s/href=['\"]/\nhref=\"/g" $$bb | grep "^href=[\"']#" | sed "s/href=[\"']#//g" | sed "s/[\"'].*//g"\
-        ); do grep "id=[\"']$${aa}[\"']" -q  $$bb || echo "Detected missing link $$bb-$$aa"; done; done
+        ); do grep "id=[\"']$${aa}[\"']" -q  $$bb || echo "Detected missing link('$$aa') in $$bb"; done; done
 
 
 
