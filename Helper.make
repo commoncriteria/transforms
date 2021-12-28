@@ -125,9 +125,12 @@ DIFF_TAGS?=
 DIFF_DIR ?= diff-archive
 
 #- The command to diff HTML files
-# DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
-DIFF_EXE ?= diff -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
+#- $1 Is the first HTML file to diff
+#- $2 Is the first HTML file to diff
+#- $3 Is the output file (txt)
+DIFF_EXE ?= diff -W 180 -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
 
+# DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 
 #- Points to the User.make need for diffing so that it can be
 #- copied to those projects when they are automatically downloaded
@@ -241,23 +244,20 @@ YESTERDAY :=$(shell git log --max-count=1 --before=yesterday --pretty='format:%H
 # 3 User.make
 # 4 Original file
 DIFF_IT ?= \
-        echo $1 $2 $3 $4 &&\
 	rm -rf $(TMP)/$1 && mkdir -p $(TMP)/$1/$(BASE) &&\
 	git clone --recursive . $(TMP)/$1/$(BASE) &&\
 	if [ -r "$3" ]; then cp $3 $(TMP)/$1/$(BASE); fi &&\
 	cd $(TMP)/$1/$(BASE) &&\
-	echo "Bcheckout" &&\
 	git checkout $1 && echo "B update" &&\
         git submodule update --recursive &&\
 	PP_RELEASE_HTML=$1.html make release &&\
 	cd - &&\
-        pwd &&\
-	diff -y\
-             <(pandoc -f html -t markdown $(TMP)/$1/$(BASE)/$1.html)\
-             <(pandoc -f html -t markdown $4) > $2
-	#$(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) &&\
-	echo done
-        #rm -rf $(TMP)/$1
+        $(call DIFF_EXE,$(TMP)/$1/$(BASE)/$1.html,$4,$2) ||\
+	true
+#	diff -W 160 -y \
+#             <(pandoc -f html -t markdown $(TMP)/$1/$(BASE)/$1.html)\
+#             <(pandoc -f html -t markdown $4) > $2 ||\
+
 
 
 #- Does a diff since two days ago.
@@ -282,16 +282,14 @@ diff: $(PP_RELEASE_HTML)
 		mkdir $$aa;\
 		cd $$aa;\
 		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
-        cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
+                cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
 		cd $${orig##*/};\
 		TRANS=transforms make release;\
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
 		cd $$orig;\
 		pwd;\
-		(while sleep 60; do echo '#'; done) &\
-		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.txt);\
-#		rm -rf $(TMP)/$$aa;\
-		kill %1;\
+		ls $$OLD $(PP_RELEASE_HTML);\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.txt) || true;\
         done
 
 # Following was attempted to removed garbage collection limit exception (But then it fails
