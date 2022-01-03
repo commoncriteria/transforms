@@ -130,3 +130,9 @@ webserver
 UDP
 IPv4
 IPv6
+programmatically
+Programmatically
+scannable
+Scannable
+connectable
+Connectable
