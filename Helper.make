@@ -93,8 +93,10 @@ ESR_HTML ?= $(OUT)/$(BASE)-esr.html
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
-#- Path where the spellcheck output is written
-SPELL_OUT ?= $(OUT)/SpellCheckReport.txt
+#- Hook for spellcheck output
+#- It should be ""(EMPTY) or Greater-than followed by path i.e.:
+#-    >some/path.txt
+SPELL_OUT ?=
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
@@ -105,10 +107,16 @@ JING_JAR ?= jing-*/bin/jing.jar
 #- Schema
 RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 
+#- Hook for validation output
+#- It should be ""(EMPTY) or Greater-than followed by path i.e.:
+#-    RNG_OUT=">some/path.txt"
+RNG_OUT ?=
+
+
 #- Validation line
 #- Arg 1 is the RNG file path
 #- ARg 2 is the XML file path
-VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)"
+VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)" $3
 
 #- Points to the daisydiff jar file
 #DAISY_DIR ?= ExecuteDaisy
@@ -199,10 +207,10 @@ all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u $(SPELL_OUT)"
 
 spellcheck-release: $(PP_RELEASE_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u > $(SPELL_OUT)"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u >SpellCheckReport.txt"
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
@@ -358,7 +366,7 @@ $(OUT)/SanityChecksOutput.md:
 
 #- Validates the input XML file. It probably requires the JING package
 validate:
-	$(call VALIDATOR,$(RNG_FILE),$(PP_XML))
+	$(call VALIDATOR,$(RNG_FILE),$(PP_XML),$(RNG_OUT))
 
 #- Builds quick help
 help:
