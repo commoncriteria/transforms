@@ -132,10 +132,12 @@
          <xsl:variable name="ref-id" select="@ref-id"/>
          /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
        <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
-    </b><br/>
-    <xsl:apply-templates/>
+       </b><br/>
+       <xsl:apply-templates mode="single-cat"/>
   </xsl:template>
+  
 
+  
   <!-- ############### -->
   <xsl:template match="cc:management-function//cc:_">
     <xsl:choose>
