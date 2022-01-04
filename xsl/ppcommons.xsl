@@ -123,6 +123,21 @@
     <br/>
   </xsl:template>
 
+  <!-- ############### -->
+  <xsl:template match="cc:management-function//cc:_">
+    <xsl:choose>
+      <xsl:when test="ancestor::cc:management-function[1]/cc:also">
+        <xsl:for-each select="ancestor::cc:*[1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->
