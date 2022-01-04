@@ -124,6 +124,19 @@
   </xsl:template>
 
   <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:management-function/cc:aactivity">
+    <b><xsl:apply-templates select=".." mode="getId"/>
+       <xsl:for-each select="cc:also">
+         <xsl:variable name="ref-id" select="@ref-id"/>
+         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
+       <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
+    </b><br/>
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <!-- ############### -->
   <xsl:template match="cc:management-function//cc:_">
     <xsl:choose>
       <xsl:when test="ancestor::cc:management-function[1]/cc:also">
