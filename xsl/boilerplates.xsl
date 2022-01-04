@@ -31,8 +31,8 @@
 
 
   <xsl:template name="doctype-short" match="cc:doctype-short">
-    <xsl:value-of select="local-name(/cc:*)"/>
-    <!-- <xsl:value-of select="$doctype"/> -->
+    <!-- <xsl:value-of select="local-name(/cc:*)"/> -->
+    <xsl:value-of select="$doctype"/>
 </xsl:template>
 
 <xsl:template name="doctype-long"  match="cc:doctype-long">
