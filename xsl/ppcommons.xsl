@@ -646,11 +646,22 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:management-function[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template>
+  <xsl:template match="cc:management-function[not(@id)]" mode="getId"><!--
+    -->_mf_<xsl:number count="//cc:management-function" level="any"/><!--
+    --></xsl:template>
+  
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function">
-    <tr id="{@id}">
-      <td>
-        <xsl:value-of select="count(preceding::cc:management-function)+1"/>
-      </td>
+    <xsl:variable name="mf_num"><xsl:number count="//cc:management-function" level="any"/></xsl:variable>
+    <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+    <tr id="{$mf_id}">
+      <td><xsl:value-of select="$mf_num"/></td>
       <td style="text-align:left">
         <xsl:apply-templates select="cc:text"/>
       </td>

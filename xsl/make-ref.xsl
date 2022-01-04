@@ -209,16 +209,17 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:management-function" name="management-function" mode="make_xref">
-     <xsl:param name="nolink"  select="@nolink"     />
+     <xsl:param name="nolink"  select="@nolink"/>
      <xsl:param name="prefix"/>
-     <xsl:param name="index"   select="count(preceding::cc:management-function)+1"/>
-     <xsl:message>HEREHRHER</xsl:message>
+     <xsl:param name="index"><xsl:number count="//cc:management-function" level="any"/></xsl:param>
+     <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
      <xsl:choose>
        <xsl:when test="$nolink='y'">
          <xsl:value-of select="concat($prefix, $index)"/>
        </xsl:when>
        <xsl:otherwise>
-        <a href="#{@id}"><xsl:value-of select="concat($prefix, $index)"/></a>
+        <a href="#{$mf_id}"><xsl:value-of select="concat($prefix, $index)"/></a>
        </xsl:otherwise>
      </xsl:choose>
   </xsl:template>
