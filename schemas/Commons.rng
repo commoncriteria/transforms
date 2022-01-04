@@ -1231,7 +1231,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	<optional><attribute name="level"><choice>
 			<value>component</value>
 			<value>element</value>
-		</choice></attribute></optional>	
+	</choice></attribute></optional>
+	<ref name="alsos"/>
       <ref name="basic-content-pat"/>
       <choice>
         <ref name="no-tests-pat"/>
@@ -1673,27 +1674,22 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               </element>
           </choice> </zeroOrMore>
           <optional><element name="app-note">
+	    <ref name="alsos"/>
             <a:documentation>Application Note content that is associated with this management function</a:documentation> 
             <ref name="basic-content-pat"/>
           </element></optional>
 <!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
-          <optional><element name="TSS">
-            <zeroOrMore>
-              <a:documentation>Points to other management-function that this action affects.</a:documentation>
-              <element name="also"> <attribute name="ref-id"/> </element>
-            </zeroOrMore>
-            <ref name="basic-content-pat"/>
-          </element></optional>
-           <optional><element name="Tests">
-            <zeroOrMore>
-              <a:documentation>Points to other management-function that this action affects.</a:documentation>
-              <element name="also"> <attribute name="ref-id"/> </element>
-            </zeroOrMore>
-            <ref name="basic-content-pat"/>
-          </element></optional>
+          <zeroOrMore><ref name="aactivity"/></zeroOrMore>
        </element>
    </define>
 
+   <define name="alsos">
+     <zeroOrMore>
+       <a:documentation>Points to other management-function that this action affects.</a:documentation>
+       <element name="also"> <attribute name="ref-id"/> </element>
+     </zeroOrMore>
+   </define>
+   
    <define name="ref-attr">
     <attribute name="ref">
       <a:documentation>ID respective manager</a:documentation>
