@@ -183,8 +183,10 @@ APP_PARM ?=--stringparam appendicize on
 #- A temporary directory argument
 TMP?=/tmp
 
-#- Path to where sanity checks messages go
-WARN_PATH = $(OUT)/SanityChecksOutput.md
+
+#- Path for sanity checks messages
+#- an &2 means stderr
+WARN_PATH ?= &2
 
 # Transforms Version File
 META_TXT ?= $(OUT)/meta-info.txt
