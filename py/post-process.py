@@ -60,6 +60,7 @@ def backslashify(phrase):
 class State:
 
     def __init__(self, root, main_doc=None):
+        print("Called into STATE")
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
@@ -68,6 +69,7 @@ class State:
         self.plural_to_abbr = {}
         self.regex = None
         self.main_doc = main_doc
+ 
         self.fix_indices()
         self.fix_index_refs()
         self.fix_counters()
@@ -267,6 +269,10 @@ class State:
                 ref.tag = "span"
                 sub_field = ref.find("*[@class='counter']") 
                 sub_field.text = new_text
+            for link in self.root.find(".//a"):
+                for key in link.attrib.keys():
+                     print("Key is" + key)
+                #print("Looking at stuff"+link.attrib["href"])
 
     def fix_tooltips(self):
         for elem in self.getElementsByClass("tooltiptext"):
@@ -287,7 +293,7 @@ class State:
                         warn("Cannot find "+linkend)
                     brokeRef.tag = "span"
                 else:
-                    print("Can't really find it")
+                    print("Cannot find '"+linkend+"'")
 
             if not hasattr(target, 'text'):
                 print("Target does not have text field: "+linkend)

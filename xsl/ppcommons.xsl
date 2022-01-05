@@ -110,9 +110,9 @@
    <x:template name="collect-cat">
     <x:param name="cat"/>
 
-    <x:if test=".//cc:aactivity[not(@level='element')]/cc:*[local-name()=$cat]">
+    <x:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[local-name()=$cat]">
       <div class="eacategory"><x:value-of select="$cat"/></div>
-      <x:apply-templates select=".//cc:aactivity[not(@level='element')]/cc:*[$cat=local-name()]"/>
+      <x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]"/>
     </x:if>
   </x:template>
 
@@ -123,26 +123,68 @@
     <br/>
   </xsl:template>
 
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:management-function/cc:aactivity"  mode="manact">
+    <b><xsl:apply-templates select=".." mode="make_xref"><xsl:with-param name="prefix" select="'Function '"/></xsl:apply-templates>
+       <xsl:for-each select="cc:also">
+         <xsl:variable name="ref-id" select="@ref-id"/>
+         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
+       <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
+       </b><br/>
+       <xsl:apply-templates mode="single-cat"/>
+  </xsl:template>
+  
+
+  
+  <!-- ############### -->
+  <xsl:template match="cc:management-function//cc:_">
+    <xsl:choose>
+      <xsl:when test="ancestor::cc:management-function[1]/cc:also">
+        <xsl:for-each select="ancestor::cc:*[1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
    <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
 	<!-- Display component name -->
-        <x:if test=".//cc:aactivity[not(@level) or @level='component']">
+        <x:if test=".//cc:aactivity[not(@level='element')]">
           <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
           <x:apply-templates
-            select=".//cc:aactivity[not(@level) or @level='component']/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+            select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
         </x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
           <!-- Display the element name -->
 	  <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
           <x:apply-templates mode="single-cat"/>
 	</x:for-each>
+	<x:if test=".//cc:management-function/cc:aactivity">
+	  
+	  <div class="management_function_activities">
+	    The following EAs correspond to specific management functions.
+	    <x:for-each select=".//cc:management-function[./cc:aactivity]">
+	      <div class="management_function_ea">
+		<x:apply-templates select="cc:aactivity" mode="manact"/>
+	      </div>
+	    </x:for-each>
+	  </div>
+	</x:if>
+
    </x:template>
  
   <!-- ############### -->
@@ -216,7 +258,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template name="compute-level">
     <xsl:value-of 
-      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-sfrs)"/>
+      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-dep-sfrs)"/>
   </xsl:template>
 
   <!-- ############### -->
@@ -618,11 +660,22 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:management-function[@id]" mode="getId">
+    <xsl:value-of select="@id"/>
+  </xsl:template>
+  <xsl:template match="cc:management-function[not(@id)]" mode="getId"><!--
+    -->_mf_<xsl:number count="//cc:management-function" level="any"/><!--
+    --></xsl:template>
+  
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:management-function">
-    <tr id="{@id}">
-      <td>
-        <xsl:value-of select="count(preceding::cc:management-function)+1"/>
-      </td>
+    <xsl:variable name="mf_num"><xsl:number count="//cc:management-function" level="any"/></xsl:variable>
+    <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+    <tr id="{$mf_id}">
+      <td><xsl:value-of select="$mf_num"/></td>
       <td style="text-align:left">
         <xsl:apply-templates select="cc:text"/>
       </td>

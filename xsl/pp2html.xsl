@@ -564,18 +564,6 @@
   </xsl:template> 
 
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:management-function/cc:aactivity">
-    <b><xsl:apply-templates select=".." mode="getId"/>
-       <xsl:for-each select="cc:also">
-         <xsl:variable name="ref-id" select="@ref-id"/>
-         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
-       <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
-    </b><br/>
-    <xsl:apply-templates/>
-  </xsl:template>
  
 
   <!-- ############### -->
@@ -907,23 +895,6 @@
     </xsl:choose>
   </xsl:template>
 
-
-  <!-- ############### -->
-  <xsl:template match="cc:management-function//cc:_">
-<xsl:message>IN CC:_</xsl:message>
-    <xsl:choose>
-      <xsl:when test="ancestor::cc:management-function[1]/cc:also">
-        <xsl:for-each select="ancestor::cc:*[@id][1]/cc:also">
-          <xsl:variable name="ref" select="@ref-id"/>
-          <xsl:apply-templates mode="getId" select="//cc:management-function[@ref=@ref-id]"/>,
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>
-        <!--<xsl:apply-templates select="ancestor::cc:management-function[@id][1]" mode="make_xref"/> -->
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
    <!-- ############## -->
   <xsl:template match="//sec:*[@title='Security Functional Requirements']">

@@ -130,7 +130,7 @@ guidance, and testing.</p>
     ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
     that are performed in Section <a href="#sar_aas" class="dynref"></a>.</p>
     
-    <p>Regarding design descriptions (designated by the subsections labelled TSS, as 
+    <p>Regarding design descriptions (designated by the subsections labeled TSS, as 
     well as any required supplementary material that may be treated as proprietary), 
     the evaluator must ensure there is specific information that satisfies the EA. 
     For findings regarding the TSS section, the evaluator’s verdicts will be 
@@ -143,7 +143,7 @@ guidance, and testing.</p>
     the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
     be associated with CEM workunits ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.</p>
 
-    <p>Finally, the subsection labelled Tests is where the authors have determined 
+    <p>Finally, the subsection labeled Tests is where the authors have determined 
     that testing of the product in the context of the associated SFR is necessary.
     While the evaluator is expected to develop tests, there may be instances where 
     it is more practical for the developer to construct tests, or where the 
@@ -356,7 +356,7 @@ guidance, and testing.</p>
 	    specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in
 	    addition to the CEM workunits that are performed in <a href="#sar_aas" class="dynref"></a>.</p>
 
-    <p>Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary
+    <p>Regarding design descriptions (designated by the subsections labeled TSS, as well as any required supplementary
 	    material that may be treated as proprietary), the evaluator must ensure there is specific information that
 	    satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the
 	    CEM workunit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated 
@@ -366,7 +366,7 @@ guidance, and testing.</p>
 	    pertains to SFRs, the evaluator’s verdicts will be associated with CEM workunits ADV_FSP.1-7, AGD_OPE.1-4, 
 	    and AGD_OPE.1-5.</p>
 
-    <p>Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the 
+    <p>Finally, the subsection labeled Tests is where the authors have determined that testing of the product in the 
 	    context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be 
 	    instances where it is more practical for the developer to construct tests, or where the developer may have
 	    existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of 
@@ -397,7 +397,7 @@ guidance, and testing.</p>
     <br/>
     This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
     <ul><li><x:value-of select="concat(/cc:*/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
-    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activites to the Base-PP(s) it modifies.
+    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activities to the Base-PP(s) it modifies.
     </x:if>
     </p>
     <p> 
@@ -478,7 +478,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       The purpose of this SD is to define evaluation methods for the functional behavior of 
       <x:value-of select="/cc:*/@target-products"/>  products.
       </p>
-      <p><b>Acknowledgements:</b><br/>
+      <p><b>Acknowledgments:</b><br/>
       This SD was developed with support from NIAP 
       <x:value-of select="/cc:*/@target-products"/> Technical Community members, with representatives from industry, government 
       agencies, Common Criteria Test Laboratories, and members of academia.
