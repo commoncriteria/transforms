@@ -269,10 +269,13 @@ class State:
                 ref.tag = "span"
                 sub_field = ref.find("*[@class='counter']") 
                 sub_field.text = new_text
-            for link in self.root.find(".//a"):
-                for key in link.attrib.keys():
-                     print("Key is" + key)
-                #print("Looking at stuff"+link.attrib["href"])
+        for link in self.root.findall(".//a[@href]"):
+            href = link.attrib["href"]
+            if href.startswith('#'):
+                target=href[1:]
+                if self.root.find(".//*[@id='"+target+"']") == None\
+                        and self.main_doc.root.find(".//*[@id='"+target+"']") != None:
+                    link.tag = "span"
 
     def fix_tooltips(self):
         for elem in self.getElementsByClass("tooltiptext"):
