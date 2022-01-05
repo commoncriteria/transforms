@@ -258,7 +258,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template name="compute-level">
     <xsl:value-of 
-      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-sfrs)"/>
+      select="count(ancestor-or-self::cc:section|ancestor-or-self::sec:*|ancestor::cc:base-pp|ancestor::cc:appendix|ancestor::cc:man-sfrs|ancestor::cc:obj-sfrs|ancestor::cc:opt-sfrs|ancestor::cc:impl-dep-sfrs)"/>
   </xsl:template>
 
   <!-- ############### -->
