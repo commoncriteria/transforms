@@ -212,7 +212,7 @@
      <xsl:param name="nolink"  select="@nolink"     />
      <xsl:param name="prefix"/>
      <xsl:param name="index"   select="count(preceding::cc:management-function)+1"/>
-     <xsl:message>HEREHRHER</xsl:message>
+     
      <xsl:choose>
        <xsl:when test="$nolink='y'">
          <xsl:value-of select="concat($prefix, $index)"/>
