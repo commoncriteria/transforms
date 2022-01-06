@@ -94,9 +94,8 @@ ESR_HTML ?= $(OUT)/$(BASE)-esr.html
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
 
 #- Hook for spellcheck output
-#- It should be ""(EMPTY) or Greater-than followed by path i.e.:
-#-    >some/path.txt
-SPELL_OUT ?=
+#- It should be a '&1' (stdout) or a path
+SPELL_OUT ?=&1
 
 #- Path where the linkable version is written
 PP_LINKABLE_HTML ?= $(OUT)/$(BASE)-release-linkable.html
@@ -108,15 +107,14 @@ JING_JAR ?= jing-*/bin/jing.jar
 RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 
 #- Hook for validation output
-#- It should be ""(EMPTY) or Greater-than followed by path i.e.:
-#-    RNG_OUT=">some/path.txt"
-RNG_OUT ?=
+#- It should be a '&1' (stdout) or a path 
+RNG_OUT ?=&1
 
 
 #- Validation line
 #- Arg 1 is the RNG file path
 #- ARg 2 is the XML file path
-VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)" $3
+VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)" >$3
 
 #- Points to the daisydiff jar file
 #DAISY_DIR ?= ExecuteDaisy
@@ -209,7 +207,7 @@ all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u $(SPELL_OUT)"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
 
 spellcheck-release: $(PP_RELEASE_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u >SpellCheckReport.txt"
