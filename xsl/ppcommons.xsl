@@ -504,7 +504,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- Selectables template -->
   <!-- -->
   <xsl:template match="cc:selectables">[<b>selection</b>
-    <xsl:if test="@exclusive">, choose one of</xsl:if><xsl:text>: </xsl:text>
+    <xsl:if test="@onlyone">, choose one of</xsl:if><xsl:text>: </xsl:text>
     <!-- Selections are always 'atleastone -->
 <!--    <xsl:if test="@atleastone">, at least one of</xsl:if>:  -->
     <xsl:choose>
