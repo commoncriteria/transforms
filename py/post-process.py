@@ -60,7 +60,6 @@ def backslashify(phrase):
 class State:
 
     def __init__(self, root, main_doc=None):
-        print("Called into STATE")
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
