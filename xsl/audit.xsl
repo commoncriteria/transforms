@@ -132,6 +132,8 @@
                                    <td><xsl:apply-templates select="cc:audit-event-descr"/></td>
                                 </xsl:otherwise>
                             </xsl:choose>
+			    <xsl:choose>
+			      <xsl:when test="cc:audit-event-info">
                             <td>
 				<xsl:for-each select="cc:audit-event-info">
 					<xsl:choose>
@@ -148,6 +150,11 @@
 		 	<!--		<xsl:apply-templates select="."/> --> <br />   
 				</xsl:for-each>
 			    </td>
+				    </xsl:when>
+				    <xsl:otherwise>
+					    <td>None.</td>
+				    </xsl:otherwise>
+				</xsl:choose>
                         </xsl:otherwise>
                     </xsl:choose>
                </tr>
