@@ -51,7 +51,7 @@
     Protection Profile for<xsl:text> </xsl:text>
     <xsl:choose>
        <xsl:when test="@plural"><xsl:value-of select="@plural"/></xsl:when>
-       <xsl:otherwise><xsl:value-of select="@name"/>s</xsl:otherwise>
+       <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
