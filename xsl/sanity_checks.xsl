@@ -19,10 +19,11 @@
     <xsl:for-each select="//cc:depends/@*[not(../cc:external-doc)]">
        <xsl:if test="not(//*[@id=current()])">
         <xsl:message>* Error: Detected dangling id-reference to <xsl:value-of select="current()"/> from attribute
-           <xsl:value-of select="name()"/>
+        <xsl:value-of select="name()"/>
+	<xsl:call-template name="genPath"/>	
        <!--<xsl:message>
           Error: Detected an 'id' attribute in a 'depends' element which is not allowed.
-          <xsl:call-template name="genPath"/>-->
+          -->
        </xsl:message>
        </xsl:if>
     </xsl:for-each>
@@ -45,14 +46,17 @@
     <xsl:for-each select="//cc:ref-id[not(parent::cc:doc)]">
 	<xsl:variable name="refid" select="text()"/>
         <xsl:if test="not(//cc:*[@id=$refid])">
-         <xsl:message>* Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.</xsl:message>
+          <xsl:message>* Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>'.
+	  <xsl:call-template name="genPath"/>	
+	  </xsl:message>
         </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//@ref-id">
-	<xsl:variable name="refid" select="text()"/>
+	<xsl:variable name="refid" select="."/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>* Error: Detected dangling ref-id to '<xsl:value-of select="$refid"/>' 
-           for a <xsl:value-of select="name()"/>.
+         for a <xsl:value-of select="name()"/>.
+	  <xsl:call-template name="genPath"/>	
          </xsl:message>
         </xsl:if>
     </xsl:for-each>
