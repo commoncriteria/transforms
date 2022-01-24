@@ -127,13 +127,14 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:management-function/cc:aactivity"  mode="manact">
-    <b><xsl:apply-templates select=".." mode="make_xref"><xsl:with-param name="prefix" select="'Function '"/></xsl:apply-templates>
-       <xsl:for-each select="cc:also">
-         <xsl:variable name="ref-id" select="@ref-id"/>
-         /<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="getId"/></xsl:for-each>
+    <b>Function<xsl:if test="cc:also">s</xsl:if><xsl:text> </xsl:text>
+    <xsl:apply-templates select=".." mode="make_xref"/>
+       <xsl:for-each select="cc:also"><xsl:variable name="ref-id" select="@ref-id"/><!--
+         -->/<xsl:apply-templates select="//cc:management-function[$ref-id=@id]" mode="make_xref"/></xsl:for-each>
        <xsl:if test="not(../cc:M)"> [CONDITIONAL] </xsl:if>
        </b><br/>
        <xsl:apply-templates mode="single-cat"/>
+       <h:br/>
   </xsl:template>
   
 
