@@ -301,7 +301,7 @@
     </table>
   </xsl:template>
 
-  <xsl:template name="underscore_breaker">
+  <xsl:template name="underscore_breaker" mode="underscore_breaker" match="@*">
     <xsl:param name="valu" select="."/>
     <xsl:if test="string-length($valu) > 0">
       <xsl:variable name="before" select="substring-before($valu, '_')"/>
@@ -808,7 +808,7 @@
              <xsl:attribute name="class">major-row</xsl:attribute>
              <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
              <td rowspan="{$rowspan}">
-               <xsl:value-of select="../@name"/><br/>
+               <xsl:apply-templates mode="underscore_breaker" select="../@name"/><br/>
              </td>
            </xsl:if>
            <td><xsl:apply-templates/></td>
