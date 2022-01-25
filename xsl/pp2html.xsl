@@ -286,16 +286,36 @@
             <xsl:attribute name="class">major-row</xsl:attribute>
             <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
             <td rowspan="{$rowspan}">
-              <xsl:apply-templates select=".." mode="get-representation"/><br/>
+	      <xsl:call-template name="underscore_breaker">
+		<xsl:with-param name="valu"><xsl:apply-templates select=".." mode="get-representation"/></xsl:with-param></xsl:call-template>
             </td>
           </xsl:if>
-          <td><xsl:value-of select="@ref"/></td>
+          <td>
+	    <xsl:call-template name="underscore_breaker">
+	      <xsl:with-param name="valu" select="@ref"/>
+	    </xsl:call-template>
+	</td>
           <td><xsl:apply-templates select="cc:rationale"/></td>
         </tr>
       </xsl:for-each>
     </table>
   </xsl:template>
 
+  <xsl:template name="underscore_breaker">
+    <xsl:param name="valu" select="."/>
+    <xsl:if test="string-length($valu) > 0">
+      <xsl:variable name="before" select="substring-before($valu, '_')"/>
+      <xsl:variable name="after"  select="substring-after($valu, '_')"/>
+      <xsl:choose><xsl:when test="string-length($before)+string-length($after) = 0">
+	<xsl:value-of select="$valu"/>
+      </xsl:when><xsl:otherwise>
+      <xsl:value-of select="substring-before($valu,'_')"/>_&#8203;<!--
+      --><xsl:call-template name="underscore_breaker"><xsl:with-param name="valu" select="substring-after($valu,'_')"/></xsl:call-template>
+      </xsl:otherwise></xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+  
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:a-component">
