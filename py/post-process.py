@@ -115,7 +115,13 @@ class State:
         for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded","defined"}:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
-                    self.add_to_regex(el.attrib["id"])
+                    term = el.attrib["id"]
+                    self.add_to_regex(term)
+                    wrappable = term.replace("_", "_\u200B")
+                    if not term == wrappable:
+                        self.add_to_regex(wrappable)
+                        self.plural_to_abbr[wrappable] = term
+                    
 
     def build_comp_regex(self):
         comps = self.getElementsByClass('reqid') +\
@@ -178,10 +184,8 @@ class State:
         last = 0
         ret = ""
         for mat in self.regex.finditer(etext):
-            # Append the characters between the last find and this
-            ret += etext[last:mat.start()]
-            # Move the last indexer up
-            last = mat.end()
+            ret += etext[last:mat.start()]                                   # Append the characters between the last find and this
+            last = mat.end()                                                 # Move the last indexer up
             target = mat.group()
             if mat.group() in self.plural_to_abbr:
                 target = self.plural_to_abbr[mat.group()]
@@ -190,7 +194,7 @@ class State:
                 ret += '<abbr class="dyn-abbr"><a href="#abbr_' + target+'">'
                 ret += mat.group()+'</a></abbr>'
             else:
-                ret += '<a href="#'+mat.group()+'">'+mat.group()+'</a>'
+                ret += '<a href="#'+target+'">'+mat.group()+'</a>'
         ret += etext[last:]
         return ret
 
