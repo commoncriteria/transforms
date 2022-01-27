@@ -511,6 +511,9 @@
         <xsl:apply-templates select="cc:title"/>
         <xsl:apply-templates select="cc:note"/>
         <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
+	  <xsl:if test="not(cc:note)">
+	    <span class="note-header">Application Note:</span>
+	  </xsl:if>
           <div class="validationguidelines_label">Validation Guidelines:</div>
 <!--          <p/>Selections in this requirement involve the following rule(s):<br/> -->
           <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
