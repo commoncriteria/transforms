@@ -207,13 +207,13 @@ all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
 
 spellcheck-release: $(PP_RELEASE_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u >SpellCheckReport.txt"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)); python3  ./transforms/py/list_capitalizations.py $(PP_XML) transforms/xsl/boilerplates.xml ) $(PP_RELEASE_HTML) | sort -u >SpellCheckReport.txt"
 
 spellcheck-esr: $(ESR_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt $(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
+	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
 
 #- Checks the internal links to make sure they point to an existing anchor
 linkcheck: $(ESR_HTML)  $(PP_RELEASE_HTML)
