@@ -214,7 +214,12 @@
        display: list-item;
        list-style-type: disc;
        list-style-position: inside;
+       }
+
+   div.validationguidelines{
+        padding-top: 10px;
    }
+	
    .evidence, .test-obj { font-style: normal; font-size: 90%;}
    
    
