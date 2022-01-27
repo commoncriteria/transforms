@@ -1673,11 +1673,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 <ref name="ref-attr"/>
               </element>
           </choice> </zeroOrMore>
-          <optional><element name="app-note">
-	    <ref name="alsos"/>
+          <zeroOrMore><element name="app-note">
             <a:documentation>Application Note content that is associated with this management function</a:documentation> 
+	    <ref name="alsos"/>
             <ref name="basic-content-pat"/>
-          </element></optional>
+          </element></zeroOrMore>
 <!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
           <zeroOrMore><ref name="aactivity"/></zeroOrMore>
        </element>
