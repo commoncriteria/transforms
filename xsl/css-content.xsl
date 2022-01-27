@@ -216,7 +216,7 @@
        list-style-position: inside;
        }
 
-   div.validationguidelines{
+   div.validationguidelines_label{
         padding-top: 10px;
    }
 	
