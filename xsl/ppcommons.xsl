@@ -619,11 +619,10 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
   <xsl:template name="handle-note-header">
-      <span class="note-header"><xsl:choose>
-        <xsl:when test="@role='application'">Application</xsl:when>
-        <xsl:when test="@role='developer'">Developer</xsl:when>
-        <xsl:otherwise><xsl:value-of select="@role"/></xsl:otherwise>
-      </xsl:choose> Note: </span>
+    <span class="note-header">
+      <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="@role"/></xsl:call-template>
+      Note:
+    </span>
   </xsl:template>
  
   <xsl:template name="handle-note">
