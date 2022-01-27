@@ -137,10 +137,26 @@
        <h:br/>
   </xsl:template>
   
-
+  <!-- ############### -->
+  <xsl:template match="cc:management-function/cc:app-note//cc:_">
+    <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>        
+    <xsl:choose>
+      <xsl:when test="count(ancestor::cc:app-note[1]/cc:also)=1">
+        <xsl:variable name="ref" select="ancestor::cc:app-note[1]/cc:also/@ref-id"/>
+        and <xsl:apply-templates select="//cc:*[@id=$ref]" mode="make_xref"/>
+      </xsl:when>
+      <xsl:when test="count(ancestor::cc:app-note[1]/cc:also)>1">
+	<xsl:for-each select="ancestor::cc:app-note[1]/cc:also">
+          <xsl:variable name="ref" select="@ref-id"/>
+          , <xsl:if test="position() = last()">and </xsl:if>
+	  <xsl:apply-templates select="//cc:*[@id=$ref]" mode="make_xref"/>
+	</xsl:for-each>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
   
   <!-- ############### -->
-  <xsl:template match="cc:management-function//cc:_">
+  <xsl:template match="cc:management-function/cc:aactivity/cc:_">
     <xsl:choose>
       <xsl:when test="ancestor::cc:management-function[1]/cc:also">
         <xsl:for-each select="ancestor::cc:*[1]/cc:also">
@@ -149,7 +165,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>
+	<xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>    
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
