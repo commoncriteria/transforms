@@ -19,8 +19,6 @@ NIAP
 conformant
 TOE's
 TSS
-IFC
-TST
 selectable
 misconfigure
 misconfigured
@@ -29,17 +27,9 @@ TLSC
 TLSS
 PII
 TRRT
-AEX
-AGD
-ALC
 TSFI
 TSF's
 ITSEF
-FCS
-FDP
-FFC
-FIA
-FMT
 ESR
 EAs
 EA
@@ -70,4 +60,13 @@ workunits
 FSP
 ASE
 'fail'
+1C
+1D
+1E
+2C
+2D
+2E
+3C
+3D
+3E
 
