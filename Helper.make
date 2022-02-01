@@ -173,6 +173,13 @@ DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
            <($(XSL_EXE) $(4) $(2) $(1))\=$(3)\
            <($(XSL_EXE)      $(5) $(1))\=$(6) 
 
+#- Arg 1 is input file
+#- Arg 2 is File/Pattern to be spellchecked
+#- Arg 3 is output
+
+SPELLCHECKER?=bash -c "hunspell -l -H -p <(python3 $(TRANS)/py/get_spell_allowlist.py $1; cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $2 | sort -u >$3"
+
+
 FNL_PARM ?=--stringparam release final
 
 #- Appendicize parameter
@@ -210,7 +217,7 @@ spellcheck: $(ESR_HTML) $(PP_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
 
 spellcheck-release: $(PP_RELEASE_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(PP_RELEASE_HTML) | sort -u >$(SPELL_OUT)"
+	$(call SPELLCHECKER,$(PP_XML),$(PP_RELEASE_HTML),$(SPELL_OUT))
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
