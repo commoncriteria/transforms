@@ -214,7 +214,8 @@ all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
 spellcheck: $(ESR_HTML) $(PP_HTML)
-	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
+	$(call SPELLCHECKER,$(PP_XML),$(OUT)/*.html,$(SPELL_OUT))
+#	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
 
 spellcheck-release: $(PP_RELEASE_HTML)
 	$(call SPELLCHECKER,$(PP_XML),$(PP_RELEASE_HTML),$(SPELL_OUT))
