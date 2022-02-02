@@ -23,6 +23,13 @@ def extract_from_doc(path):
             for part in re.split('[\._0-9]', comp.attrib["cc-id"]):
                 allowlist.add(part.upper())
         add_val_if_attrib(comp, "iteration", allowlist)
+    for tag in root.findall(".//cc:entry/cc:tag", ns):
+        allowlist.add(tag.text)
+    for item in {"assumption", "threat", "SO", "SOE"}:
+        for el in root.findall(".//cc:"+item, ns):
+            if "name" in el.attrib:
+                for part in re.split('[\._0-9]', el.attrib["name"].split(".")[1]):
+                    allowlist.add(part.upper())
     for wurd in allowlist:
         print(wurd)
                 
