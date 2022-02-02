@@ -207,18 +207,19 @@ META_TXT ?= $(OUT)/meta-info.txt
 #---
 #- Builds normal PP outputs (not modules)
 #---
-default:  $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML) meta-info
+default:  $(PP_HTML) $(PP_RELEASE_HTML) meta-info
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
 
 #- Spellchecks the htmlfiles using _hunspell_
-spellcheck: $(ESR_HTML) $(PP_HTML)
+spellcheck: $(PP_HTML)
 	$(call SPELLCHECKER,$(PP_XML),$(OUT)/*.html,$(SPELL_OUT))
 #	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(OUT)/*.html | sort -u >$(SPELL_OUT)"
 
+#- Spellchecks the release
 spellcheck-release: $(PP_RELEASE_HTML)
-	$(call SPELLCHECKER,$(PP_XML),$(PP_RELEASE_HTML),$(SPELL_OUT))
+	$(call SPELLCHECKER,$(PP_XML),$(PP_RELEASE_HTML) $(SD_HTML),$(SPELL_OUT))
 
 spellcheck-esr: $(ESR_HTML)
 	bash -c "hunspell -l -H -p <(cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $(ESR_HTML) | sort -u"
