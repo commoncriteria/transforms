@@ -39,6 +39,7 @@
               <element name="componentid">
                 <ref name="comp-id-upper-respat"/>
               </element>
+              <ref name="depends-pat"/> 
               <element name="notes">
                 <ref name="basic-content-pat"/>
               </element>
