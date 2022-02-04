@@ -442,7 +442,10 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:componentneeded">
     <tr>
         <td class="componentneeded" id="{cc:componentid}"><xsl:apply-templates select="cc:componentid"/></td>
-        <td><xsl:apply-templates select="cc:notes"/></td>
+        <td>
+            <xsl:apply-templates select="cc:notes"/><br/>
+            <xsl:if test=".//cc:depends"><xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'Required if:'"/></xsl:call-template></xsl:if>
+        </td>
     </tr>
   </xsl:template>
 
@@ -864,7 +867,16 @@ The following sections list Common Criteria and technology terms used in this do
        this is what we have.
   -->
   <xsl:template match="htm:*[./cc:depends]">
-    <div class="dependent"><xsl:choose>
+    <div class="dependent"><xsl:call-template name="depends-explainer"/>
+       <div class="dependent-content">
+          <xsl:call-template name="handle-html"/>
+      </div>        
+    </div>        
+  </xsl:template>
+
+  <xsl:template name="depends-explainer">
+    <xsl:param name="words" select="'The following content should be included if:'"/>
+    <xsl:choose>
       <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
          <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
          <xsl:for-each select="cc:depends/@*">
@@ -873,7 +885,7 @@ The following sections list Common Criteria and technology terms used in this do
             <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
          </xsl:for-each>
       </xsl:when>
-      <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)">The following content should be included if:
+      <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/>
       <ul> <xsl:for-each select="cc:depends"><li>
          <xsl:variable name="uid" select="@*[1]"/>
          <xsl:choose><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
@@ -897,11 +909,7 @@ The following sections list Common Criteria and technology terms used in this do
               <!-- This is a module piece... -->
       </li></xsl:for-each> </ul>
       </xsl:when></xsl:choose>
-      <div class="dependent-content">
-          <xsl:call-template name="handle-html"/>
-      </div>        
-    </div>        
-  </xsl:template>
+ </xsl:template>
 
   <!-- ############### -->
   <!--                 -->

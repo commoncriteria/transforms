@@ -36,6 +36,7 @@
         <element name="componentsneeded">
           <oneOrMore>
             <element name="componentneeded">
+              <optional><ref name="id-attr"/></optional>
               <element name="componentid">
                 <ref name="comp-id-upper-respat"/>
               </element>
