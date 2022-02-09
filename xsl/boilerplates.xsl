@@ -50,7 +50,7 @@
         <dt>Conformance Statement</dt>
         <dd><xsl:choose><xsl:when test="//cc:Module">
           <p>This PP-Module inherits exact conformance as required from the specified
-          Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-Based
+          Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-based
           SFRs, and Optional SFRs (dated May 2017).</p>
           <p>The following PPs and PP-Modules are allowed to be specified in a 
             PP-Configuration with this PP-Module. <ul>
@@ -61,7 +61,7 @@
           </p>
           </xsl:when><xsl:otherwise>
           An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
-              as defined in the CC and CEM addenda for Exact Conformance, Selection-Based SFRs, and 
+              as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 
               Optional SFRs (dated May 2017).
         </xsl:otherwise></xsl:choose></dd>
         <dt>CC Conformance Claims</dt>
