@@ -186,7 +186,7 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
   <xsl:template match="/cc:Module//*[./cc:OSPs]" mode="hook">
    <p>An organization deploying the TOE is
       expected to satisfy the organizational security policy listed below in addition to all
-      organizational security policies defined by the claimed base PP. </p>
+      organizational security policies defined by the claimed Base-PP. </p>
 <!--
    <xsl:if test="not(.//cc:OSP)">
    <p>    This PP-Module defines no additional Organizational Security Policies.</p>
