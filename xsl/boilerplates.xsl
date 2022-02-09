@@ -20,7 +20,7 @@
 	This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
 	<p>This information benefits systems engineering activities which call for inclusion of particular
 	security controls. Evaluation against the PP provides evidence that these controls are present 
-	and have been evaluated.</p>.
+	and have been evaluated.</p>
 </xsl:template>
 
   
