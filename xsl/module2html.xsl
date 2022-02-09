@@ -263,12 +263,12 @@
 	  </xsl:call-template>
 	</tr>
 	<tr>
-	  <th colspan="2"> Implementation-Dependent SFRs</th>
+	  <th colspan="2"> Implementation-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
 	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any Implementation-Dependent requirements.
+	      This PP-Module does not define any Implementation-based requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>

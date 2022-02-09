@@ -656,8 +656,8 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-Dependent Requirements</h1>
-                Implementation-Dependent Requirements <xsl:call-template name="imple_text"/>
+                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-based Requirements</h1>
+                Implementation-based Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>
