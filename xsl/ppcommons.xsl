@@ -694,7 +694,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:variable name="mf_num"><xsl:number count="//cc:management-function" level="any"/></xsl:variable>
     <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
     <tr id="{$mf_id}">
-      <td><xsl:value-of select="$mf_num"/></td>
+      <td><xsl:value-of select="concat(ancestor::cc:management-function-set/@ctr-prefix,$mf_num)"/></td>
       <td style="text-align:left">
         <xsl:apply-templates select="cc:text"/>
       </td>

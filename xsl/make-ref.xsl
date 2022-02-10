@@ -210,7 +210,7 @@
   <!-- ############### -->
   <xsl:template match="cc:management-function" name="management-function" mode="make_xref">
      <xsl:param name="nolink"  select="@nolink"/>
-     <xsl:param name="prefix"/>
+     <xsl:param name="prefix" select="ancestor::cc:management-function-set/@ctr-prefix"/>
      <xsl:param name="index"><xsl:number count="//cc:management-function" level="any"/></xsl:param>
      <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
