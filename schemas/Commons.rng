@@ -1438,7 +1438,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 <!--#####################################################-->
   <define name="el-id-spat">
     <data type="string">
-      <param name="pattern">[\-0-9a-zA-Z_]+</param>
+      <param name="pattern">[a-zA-Z][\-0-9a-zA-Z_]+</param>
     </data>
   </define>
 
