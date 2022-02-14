@@ -1059,8 +1059,12 @@ The following sections list Common Criteria and technology terms used in this do
         <th>Acronym</th>
         <th>Meaning</th>
       </tr>
+      <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
+
       <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
+
+        <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
         <tr>
             <td>
               <xsl:element name="span">
@@ -1072,7 +1076,7 @@ The following sections list Common Criteria and technology terms used in this do
             </td>
             <td><span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span></td>
        </tr><xsl:text>&#10;</xsl:text>
-
+	</xsl:if>
       </xsl:for-each>
     </table>
   </xsl:template>
