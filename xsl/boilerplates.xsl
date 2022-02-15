@@ -197,10 +197,11 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
 <!-- #################### -->
   <xsl:template match="/cc:Module//*[@title='Assumptions']|/cc:Module//sec:Assumptions[not(@title)]" mode="hook">
     <xsl:choose>
+      <xsl:when test="@boilerplate='no'"/>
       <xsl:when test=".//cc:assumption">
-These assumptions are made on the Operational Environment in order to be able to ensure that the
-security functionality specified in the PP-Module can be provided by the TOE. If the TOE is placed in an
-Operational Environment that does not meet these assumptions, the TOE may no longer be able to
+These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the
+security functionality specified in the PP-Module can be provided by the TOE.
+If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to
 provide all of its security functionality.
       </xsl:when>
 <!--      <xsl:otherwise>
@@ -213,12 +214,13 @@ This PP-Module defines no additional assumptions.
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
       <xsl:when test=".//cc:SOEs">
-The Operational Environment of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
-The security objectives for the Operational Environment consist of a set of statements describing the goals that the Operational Environment should achieve.
-This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means. The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+The OE of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+The security objectives for the OE consist of a set of statements describing the goals that the OE should achieve.
+This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means.
+The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
       <xsl:otherwise>
-This PP-Module does not define any objectives for the Operational Environment.
+This PP-Module does not define any objectives for the OE.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
