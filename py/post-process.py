@@ -54,7 +54,7 @@ def base_10_to_alphabet(number):
     )[::-1]
 
 def backslashify(phrase):
-    return re.sub("([_.^-])", r"\\\1", phrase)
+    return re.sub("([_.^() -])", r"\\\1", phrase)
 
 
 class State:
@@ -64,10 +64,13 @@ class State:
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.abbrs = []
+        self.used_abbrs = set()
+        self.full_abbrs = set()
         self.key_terms = []
         self.plural_to_abbr = {}
         self.regex = None
         self.main_doc = main_doc
+        self.is_handling_first_abbrs = True
  
         self.fix_indices()
         self.fix_index_refs()
@@ -141,10 +144,16 @@ class State:
                 self.add_to_regex(plural)
             self.add_to_regex(term.text)
             self.abbrs.append(term.text)
-
+            if self.is_handling_first_abbrs:
+                longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
+                self.full_abbrs = "("+longname.text+")"
+                self.add_to_regex("("+longname.text+")")
+            
     def add_to_regex(self, word):
         if len(word) > 1 and not(word.startswith(".")):
-            self.key_terms.append(backslashify(word))
+            expre = backslashify(word)
+            print("Backslashifying " + expre)
+            self.key_terms.append(expre)
 
     def to_html(self):
         try:
@@ -189,15 +198,28 @@ class State:
             target = mat.group()
             if mat.group() in self.plural_to_abbr:
                 target = self.plural_to_abbr[mat.group()]
-            # If target maches  an abbreviation
+            # If target maches an abbreviation
             if target in self.abbrs:
+                if self.is_first_abbr_usage(target):
+                    print("Found first of " + target)
                 ret += '<abbr class="dyn-abbr"><a href="#abbr_' + target+'">'
                 ret += mat.group()+'</a></abbr>'
+            elif target in self.full_abbrs:
+                print("Eating a " + target)
+                pass
             else:
                 ret += '<a href="#'+target+'">'+mat.group()+'</a>'
         ret += etext[last:]
         return ret
 
+    def is_first_abbr_usage(self, target):
+        if target in self.used_abbrs:
+            return False
+        else:
+            self.used_abbrs.add(target)
+            return True
+        
+    
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
         tagr = elem.tag.split('}')
