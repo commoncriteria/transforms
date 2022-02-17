@@ -88,6 +88,12 @@
    </empty>
 
    <empty id="req-types">
+       <mt tp='mandatory'   nice='Mandatory'>
+	 <audit-table-explainer>
+	   <h:p> The auditable events in the table below must be included in a Security Target.</h:p>
+	 </audit-table-explainer>
+       </mt>
+
        <mt tp='optional'   nice='Strictly Optional'>
 		   <audit-table-explainer>
 <h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>

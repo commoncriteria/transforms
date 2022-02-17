@@ -89,13 +89,8 @@
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:param name="thistable" select="@table"/>
+    <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/>
 
-
-    <xsl:variable name="nicename"><xsl:choose>
-      <xsl:when test="$thistable='sel-based'">Selection-based</xsl:when>
-      <xsl:otherwise><xsl:value-of select="concat(translate(substring($thistable,1,1),$lower,$upper), substring($thistable,2))"/></xsl:otherwise>
-    </xsl:choose></xsl:variable>
-    
     <table class="" border="1">
 <!--      <xsl:if test="not(node())">-->
         <caption><xsl:call-template name="ctr-xsl">
