@@ -222,7 +222,7 @@
   <!-- ############### -->
   <xsl:template match="cc:tech-terms">
     <xsl:param name="num" select="2"/>
-
+    <div class="no-link">
     <h2 id='glossary' class='indexable' data-level='{$num}'>Terms</h2>
 The following sections list Common Criteria and technology terms used in this document.
     <h3 id="cc-terms" class="indexable" data-level="{$num+1}">Common Criteria Terms</h3>
@@ -242,6 +242,7 @@ The following sections list Common Criteria and technology terms used in this do
         <xsl:call-template name="glossary-entry"/>
       </xsl:for-each>
     </table>
+    </div>
   </xsl:template>
 
   <!-- ############### -->

@@ -4,12 +4,13 @@
              xmlns:cc="https://niap-ccevs.org/cc/v1"> 
   <cc-terms>
     <term full="Assurance">Grounds for confidence that a TOE meets the SFRs <xref g='CC'/>.</term>
-    <term full="Base Protection Profile" abbr="Base-PP">Protection Profile used as a basis to build a PP-Configuration.</term>
+    <term full="Base Protection Profile" abbr="Base-PP" plural="Base-PPs">Protection Profile used as a basis to build a PP-Configuration.</term>
     <term full="Collaborative Protection Profile" abbr="cPP" plural="cPPs">A Protection Profile developed by
     international technical communities and approved by multiple schemes</term>
     <term full="Common Criteria" abbr="CC">Common Criteria for Information Technology Security Evaluation (International Standard ISO/IEC 15408).</term>
     <term full="Common Criteria Testing Laboratory">
-      Within the context of the Common Criteria Evaluation and Validation Scheme (CCEVS), an IT security evaluation facility, accredited by the National Voluntary Laboratory Accreditation Program (NVLAP) and approved by the NIAP Validation Body to conduct Common Criteria-based evaluations.
+      Within the context of the Common Criteria Evaluation and Validation Scheme (CCEVS), an IT security evaluation facility,
+      accredited by the National Voluntary Laboratory Accreditation Program (NVLAP) and approved by the NIAP Validation Body to conduct Common Criteria-based evaluations.
     </term>
     <term full="Common Evaluation Methodology" abbr="CEM">Common Evaluation Methodology for Information Technology Security Evaluation.</term>
     <term full="Distributed TOE">A TOE composed of multiple components operating as a logical whole.</term>
@@ -18,13 +19,13 @@
     <term full="Functional Package" abbr="FP">A document that collects SFRs for a particular protocol, technology,
 	    or functionality.</term>
     <term full="Operational Environment" abbr="OE">Hardware and software that are outside the TOE boundary that support the TOE functionality and security policy.</term>
-    <term full="Protection Profile" abbr="PP">An implementation-independent set of security requirements for a category of products.</term>
+    <term full="Protection Profile" abbr="PP" plural="PPs">An implementation-independent set of security requirements for a category of products.</term>
     <term full="Protection Profile Configuration" abbr="PP-Configuration">A comprehensive set of security requirements for a product type that consists of at least one Base-PP and at least one PP-Module.</term>
     <term full="Protection Profile Module" abbr="PP-Module">An implementation-independent statement of security needs for a TOE type complementary to one or more Base Protection Profiles.</term>
-    <term full="Security Functional Requirement" abbr="SFR">A requirement for security enforcement by the TOE.</term>
-    <term full="Security Assurance Requirement" abbr="SAR">A requirement to assure the security of the TOE.</term>
-    <term full="Security Target" abbr="ST">A set of implementation-dependent security requirements for a specific product.</term>
-    <term full="Target of Evaluation" abbr="TOE">The product under evaluation. </term>
+    <term full="Security Functional Requirement" abbr="SFR" plural="SFRs">A requirement for security enforcement by the TOE.</term>
+    <term full="Security Assurance Requirement" abbr="SAR" plural="SARs">A requirement to assure the security of the TOE.</term>
+    <term full="Security Target" abbr="ST" plural="STs">A set of implementation-dependent security requirements for a specific product.</term>
+    <term full="Target of Evaluation" abbr="TOE" plural="TOEs">The product under evaluation. </term>
     <term full="TOE Security Functionality" abbr="TSF">The security functionality of the product under evaluation.</term>
     <term full="TSF Interface" abbr="TSFI" plural="TSFIs"/>
     <term full="TOE Summary Specification" abbr="TSS">A description of how a TOE satisfies the SFRs in an ST.</term>

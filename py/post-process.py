@@ -53,8 +53,9 @@ def base_10_to_alphabet(number):
             for part in _decompose(number+1)
     )[::-1]
 
+# Does not do spaces which should be handled later
 def backslashify(phrase):
-    return re.sub("([_.^() -])", r"\\\1", phrase)
+    return re.sub("([_.^()-])", r"\\\1", phrase)
 
 
 class State:
@@ -63,15 +64,16 @@ class State:
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
-        self.abbrs = []
+        self.abbrs = {}
         self.used_abbrs = set()
-        self.full_abbrs = set()
+        self.full_abbrs = {}
         self.key_terms = []
         self.plural_to_abbr = {}
         self.regex = None
         self.main_doc = main_doc
         self.is_handling_first_abbrs = True
- 
+        self.abbr_def = set()
+        
         self.fix_indices()
         self.fix_index_refs()
         self.fix_counters()
@@ -136,6 +138,11 @@ class State:
                 # The MDF has some unorthodox items
                 print("Cannot find: "+comp.text)
 
+    def add_to_inline_abbr_def(self, abbr, full):
+        partial =  backslashify(full+" (" + abbr+")")
+        self.abbr_def.add(re.sub(r'\s+', '\\\s+', partial))
+
+        
     def build_termtable(self):
         for term in self.getElementsByClass('term'):
             if 'data-plural' in term.attrib:
@@ -143,16 +150,16 @@ class State:
                 self.plural_to_abbr[plural] = term.text
                 self.add_to_regex(plural)
             self.add_to_regex(term.text)
-            self.abbrs.append(term.text)
+            longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
+            self.abbrs[term.text] = longname.text
             if self.is_handling_first_abbrs:
-                longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
-                self.full_abbrs = "("+longname.text+")"
-                self.add_to_regex("("+longname.text+")")
+                self.add_to_inline_abbr_def(term.text, longname.text)
+                fulldef = (longname.text + " ("+term.text+")").upper()
+                self.full_abbrs[fulldef] = term.text
             
     def add_to_regex(self, word):
         if len(word) > 1 and not(word.startswith(".")):
             expre = backslashify(word)
-            print("Backslashifying " + expre)
             self.key_terms.append(expre)
 
     def to_html(self):
@@ -163,6 +170,8 @@ class State:
             self.key_terms.sort(key=len, reverse=True)
             if self.key_terms:
                 regex_str = "(?<!-)\\b(" + "|".join(self.key_terms) + ")\\b"
+                regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
+#                print(regex_str)
                 self.regex = re.compile(regex_str)
         except re.error:
             warn("Failed to compile regular expression: " +
@@ -172,6 +181,10 @@ class State:
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
 
+    def is_in_regular_text(self):
+        return True
+            
+    
     def is_in_non_xrefable_section(self):
         return \
             "a"    in self.ancestors or "abbr"    in self.ancestors or\
@@ -199,14 +212,26 @@ class State:
             if mat.group() in self.plural_to_abbr:
                 target = self.plural_to_abbr[mat.group()]
             # If target maches an abbreviation
+            endparen = ""
             if target in self.abbrs:
                 if self.is_first_abbr_usage(target):
-                    print("Found first of " + target)
+                    ret += self.abbrs[target]
+                    if target != mat.group():
+                        ret += "s"
+                    ret += " ("
+                    endparen = ")"
                 ret += '<abbr class="dyn-abbr"><a href="#abbr_' + target+'">'
-                ret += mat.group()+'</a></abbr>'
-            elif target in self.full_abbrs:
-                print("Eating a " + target)
-                pass
+                ret += mat.group()+'</a></abbr>'+ endparen
+            elif target.upper() in self.full_abbrs:
+#                print("Anscetors are " + "$".join(self.ancestors))
+                found_abbr = self.full_abbrs[target.upper()]
+                if self.is_first_abbr_usage(found_abbr):
+#                    print("Foudn for the first time: "+target)
+                    ret += target
+                else:
+#                    print("Found again " + target)
+                    ret += ' <abbr class="dyn-abbr"><a href="#abbr_' + found_abbr+'">'
+                    ret += found_abbr +'</a></abbr> '
             else:
                 ret += '<a href="#'+target+'">'+mat.group()+'</a>'
         ret += etext[last:]
@@ -227,10 +252,8 @@ class State:
         # Breaks elements are converted to empty tags
         if noname == "br":
             return "<br/>"
-        if "class" in elem.attrib and elem.attrib["class"] == 'no-link':
+        if "class" in elem.attrib and "no-link" in elem.attrib["class"]:
             self.ancestors.append("no-link")
-#        if noname=="span" and len(elem)==0 and elem.text is None:
-#            return "JJJ"
         else:
             self.ancestors.append(noname)
         # Everything else is beginning and end tags (even if they're empty)
