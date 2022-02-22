@@ -47,7 +47,7 @@
 <!--                                                    -->
 <!-- ################################################## --> 
   <xsl:template match="cc:base-pp[@name]" mode="expanded">
-    <xsl:if test="cc:cPP">collaborative<xsl:text> </xsl:text></xsl:if>
+    <xsl:if test="cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
     Protection Profile for<xsl:text> </xsl:text>
     <xsl:choose>
        <xsl:when test="@plural"><xsl:value-of select="@plural"/></xsl:when>
