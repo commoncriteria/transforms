@@ -392,7 +392,6 @@ guidance, and testing.</p>
         <ul>
 	  <x:for-each select="//cc:base-pp">
 	    <li><x:apply-templates select="." mode="make_xref"/></li>
-<!--	    <a href="{@url}"><x:apply-templates select="." mode="expanded"/>, Version <x:value-of select="@version"/></a></li>-->
 	  </x:for-each>
 	</ul>
     <br/>
