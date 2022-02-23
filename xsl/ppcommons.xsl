@@ -1071,7 +1071,8 @@ The following sections list Common Criteria and technology terms used in this do
               <xsl:element name="span">
                  <xsl:attribute name="class">term</xsl:attribute>
                  <xsl:attribute name="id">abbr_<xsl:value-of select="@abbr"/></xsl:attribute>
-                 <xsl:if test="@plural"><xsl:attribute name="data-plural"><xsl:value-of select="@plural"/></xsl:attribute></xsl:if>
+		 <xsl:apply-templates select="@plural" mode="passthru-data-attr"/>
+		 <xsl:apply-templates select="@lower"  mode="passthru-data-attr"/>
                  <xsl:value-of select="@abbr"/>
               </xsl:element>
             </td>
@@ -1082,6 +1083,10 @@ The following sections list Common Criteria and technology terms used in this do
     </table>
   </xsl:template>
 
+  <xsl:template match="@*" mode="passthru-data-attr">
+    <xsl:attribute name="data-{name()}"><xsl:value-of select="."/></xsl:attribute>
+  </xsl:template>
+  
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="@*|node()">
