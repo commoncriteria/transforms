@@ -187,7 +187,9 @@ Contains transforms for extended component definitions
     </xsl:for-each> <!-- f-component loop -->
   </xsl:template>
   
-<!-- ####################### -->
+  <!-- ####################### -->
+
+  
 <!-- ####################### -->
  <xsl:template name="RecursiveGrouping">
   <xsl:param name="list"/>
