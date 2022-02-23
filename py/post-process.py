@@ -65,14 +65,14 @@ class State:
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
         self.abbrs = {}
-        self.used_abbrs = set()
-        self.full_abbrs = {}
-        self.key_terms = []
-        self.plural_to_abbr = {}
-        self.regex = None
-        self.main_doc = main_doc
-        self.is_handling_first_abbrs = True
-        self.abbr_def = set()
+        self.used_abbrs = set()               # Set of abbreviations that we've seen
+        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
+        self.key_terms = []                   # List of terms we're looking for
+        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
+        self.regex = None                     # Regex used to find things of interest in the documetn
+        self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
+        self.is_handling_first_abbrs = True   # Flag to say we're handling first abbreviations
+        self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
         
         self.fix_indices()
         self.fix_index_refs()
@@ -149,6 +149,10 @@ class State:
                 plural = term.attrib['data-plural']
                 self.plural_to_abbr[plural] = term.text
                 self.add_to_regex(plural)
+            # if 'data-aliases' in term.attrib:
+            #     for alias in term.attrib['data-aliases']:
+            #         self.add_to_regex(alias)
+            # Endif
             self.add_to_regex(term.text)
             longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
             self.abbrs[term.text] = longname.text
@@ -181,9 +185,6 @@ class State:
 <!DOCTYPE html>
 """ + self.to_html_helper(self.root)
 
-    def is_in_regular_text(self):
-        return True
-            
     
     def is_in_non_xrefable_section(self):
         return \
@@ -212,31 +213,40 @@ class State:
             if mat.group() in self.plural_to_abbr:
                 target = self.plural_to_abbr[mat.group()]
             # If target maches an abbreviation
-            endparen = ""
             if target in self.abbrs:
-                if self.is_first_abbr_usage(target):
-                    ret += self.abbrs[target]
-                    if target != mat.group():
-                        ret += "s"
-                    ret += " ("
-                    endparen = ")"
-                ret += '<abbr class="dyn-abbr"><a href="#abbr_' + target+'">'
-                ret += mat.group()+'</a></abbr>'+ endparen
+                ret += self.get_rep_for_abbr(target, mat.group())
             elif target.upper() in self.full_abbrs:
-#                print("Anscetors are " + "$".join(self.ancestors))
-                found_abbr = self.full_abbrs[target.upper()]
-                if self.is_first_abbr_usage(found_abbr):
-#                    print("Foudn for the first time: "+target)
-                    ret += target
-                else:
-#                    print("Found again " + target)
-                    ret += ' <abbr class="dyn-abbr"><a href="#abbr_' + found_abbr+'">'
-                    ret += found_abbr +'</a></abbr> '
+                ret += self.get_rep_for_full(target)
             else:
                 ret += '<a href="#'+target+'">'+mat.group()+'</a>'
         ret += etext[last:]
         return ret
 
+    def get_rep_for_full(self, target):
+        found_abbr = self.full_abbrs[target.upper()]
+        if self.is_first_abbr_usage(found_abbr):
+            ret = target
+        else:
+            ret = '<abbr class="dyn-abbr"><a href="#abbr_' + found_abbr+'">'
+            ret += found_abbr +'</a></abbr> '
+        return ret
+    
+        
+    
+    def get_rep_for_abbr(self,target, orig):
+        endparen = ""
+        ret = ""
+        if self.is_first_abbr_usage(target):
+            ret += self.abbrs[target]
+            if target != orig:
+                ret += "s"
+            ret += " ("
+            endparen = ")"
+        ret += '<abbr class="dyn-abbr"><a href="#abbr_' + target+'">'
+        ret += orig +'</a></abbr>'+ endparen
+        return ret
+        
+    
     def is_first_abbr_usage(self, target):
         if target in self.used_abbrs:
             return False
