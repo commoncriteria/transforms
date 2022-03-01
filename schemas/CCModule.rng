@@ -56,7 +56,14 @@
           <ref name="threat"/>
         </zeroOrMore>
       </element>
-  </define>
+    </define>
+    <define name="f-comp-sel-based-parts">
+    <group>
+      <oneOrMore>
+        <ref name="depends-pat"/>
+      </oneOrMore>
+    </group>
+    </define>
  
  
  </include>
@@ -123,7 +130,8 @@
       <a:documentation>
 	Objective SFRs. These apply to all configurations regardless of base PPs.
       </a:documentation>
-      <ref name="f-components-pat"/>
+      <ref name="sfr_content-pat"/>
+      <!-- <ref name="f-components-pat"/> -->
     </element>
   </define>
 
@@ -133,7 +141,8 @@
 	Implementation-dependent SFRs. These may or may not apply to all configurations regardless of base PPs.
 	(See VVOIP for an example of how painful this will be to implement.
       </a:documentation>
-      <ref name="f-components-pat"/>
+      <ref name="sfr_content-pat"/>
+      <!-- <ref name="f-components-pat"/> -->
     </element>
   </define>
 
@@ -143,7 +152,7 @@
       <a:documentation>
 	Optional SFRs. These could apply to all configurations regardless of base PPs.
       </a:documentation>
-      <ref name="f-components-pat"/>
+      <ref name="sfr_content-pat"/>
     </element>
   </define>
 
@@ -152,7 +161,8 @@
       <a:documentation>
 	Selection-based SFRs. These can apply to any configuration regardless of base PPs.
       </a:documentation>
-      <ref name="f-components-pat"/>
+      <ref name="sfr_content-pat"/>
+      <!-- <ref name="f-components-pat"/> -->
       <!--
 	   This is probably the right way to do it, but
 	   it's too drastic of a change currently (and
@@ -172,65 +182,65 @@
 
 
 
-  <define name="f-components-pat">
-    <zeroOrMore><choice>
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName><except>
-          <nsName ns="https://niap-ccevs.org/cc/v1"/>
-          <nsName ns="http://www.w3.org/1999/xhtml"/>
-        </except></anyName>
-        <attribute name="title"/>
-        <ref name="f-comp-pat-content"/>
-      </element>
-      <element name="section">
-        <a:documentation>
-          Defines SFRs that pertain to specific base.
-        </a:documentation>
-        <ref name="title-attr"/>
-        <ref name="id-attr"/>
-        <ref name="f-comp-pat-content"/>
-      </element>
-    </choice></zeroOrMore>
-  </define>
+ <!--  <define name="f-components-pat"> -->
+ <!--    <zeroOrMore><choice> -->
+ <!--      <element ns="https://niap-ccevs.org/cc/v1/section"> -->
+ <!--        <anyName><except> -->
+ <!--          <nsName ns="https://niap-ccevs.org/cc/v1"/> -->
+ <!--          <nsName ns="http://www.w3.org/1999/xhtml"/> -->
+ <!--        </except></anyName> -->
+ <!--        <attribute name="title"/> -->
+ <!--        <ref name="f-comp-pat-content"/> -->
+ <!--      </element> -->
+ <!--      <element name="section"> -->
+ <!--        <a:documentation> -->
+ <!--          Defines SFRs that pertain to specific base. -->
+ <!--        </a:documentation> -->
+ <!--        <ref name="title-attr"/> -->
+ <!--        <ref name="id-attr"/> -->
+ <!--        <ref name="f-comp-pat-content"/> -->
+ <!--      </element> -->
+ <!--    </choice></zeroOrMore> -->
+ <!--  </define> -->
 
- <define name="f-comp-pat-content">
-    <optional><ref name="basic-content-pat"/></optional>
-    <zeroOrMore>
-      <choice>
-	      <ref name="audit-table-pat"/>
-	      <ref name="ext-comp-def-pat"/>
-      	       <ref name="f-component"/>
-       </choice>
-    </zeroOrMore>
-  </define>
+ <!-- <define name="f-comp-pat-content"> -->
+ <!--    <optional><ref name="basic-content-pat"/></optional> -->
+ <!--    <zeroOrMore> -->
+ <!--      <choice> -->
+ <!-- 	      <ref name="audit-table-pat"/> -->
+ <!-- 	      <ref name="ext-comp-def-pat"/> -->
+ <!--      	       <ref name="f-component"/> -->
+ <!--       </choice> -->
+ <!--    </zeroOrMore> -->
+ <!--  </define> -->
 
-  <define name="f-component">
-    <element name="f-component">
-      <a:document>
-	Specifies a component under Security Functional Requirements section..
-      </a:document>
-      <ref name="f-comp-content-pat"/>
-      <optional>
-        <attribute name="status">
-          <choice>
-            <value>optional</value>
-            <value>objective</value>
-            <value>sel-based</value>
-            <value>feat-based</value>
-            <value>invisible</value>
-         </choice>
-       </attribute>
-      </optional>    
-      <!-- Would like to remove this -->
-      <zeroOrMore>
-     	  <ref name="depends-pat"/>
-      </zeroOrMore>
-      <ref name="consistency-rationale"/>
-      <ref name="ext-comp-extra-pat"/>
-      <ref name="f-elements-pat"/>
-      <ref name="audit-events-pat"/>
-    </element>
-  </define>
+ <!--  <define name="f-component"> -->
+ <!--    <element name="f-component"> -->
+ <!--      <a:document> -->
+ <!-- 	Specifies a component under Security Functional Requirements section.. -->
+ <!--      </a:document> -->
+ <!--      <ref name="f-comp-content-pat"/> -->
+ <!--      <optional> -->
+ <!--        <attribute name="status"> -->
+ <!--          <choice> -->
+ <!--            <value>optional</value> -->
+ <!--            <value>objective</value> -->
+ <!--            <value>sel-based</value> -->
+ <!--            <value>feat-based</value> -->
+ <!--            <value>invisible</value> -->
+ <!--         </choice> -->
+ <!--       </attribute> -->
+ <!--      </optional>     -->
+ <!--      <!-\- Would like to remove this -\-> -->
+ <!--      <zeroOrMore> -->
+ <!--     	  <ref name="depends-pat"/> -->
+ <!--      </zeroOrMore> -->
+ <!--      <ref name="consistency-rationale"/> -->
+ <!--      <ref name="ext-comp-extra-pat"/> -->
+ <!--      <ref name="f-elements-pat"/> -->
+ <!--      <ref name="audit-events-pat"/> -->
+ <!--    </element> -->
+ <!--  </define> -->
 
    <define name="base-pp">
     <element name="base-pp">
