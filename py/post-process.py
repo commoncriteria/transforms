@@ -83,6 +83,10 @@ class State:
         self.build_termtable()
         self.fix_refs_to_main_doc()
 
+    def set_handle_first_abbrs(self, dfa):
+        self.is_handling_first_abbrs
+        return self
+        
     def write_out(self, outfile):
         if sys.version_info >= (3, 0):
             with open(outfile, "w+", encoding="utf-8") as outstream:
@@ -301,7 +305,6 @@ class State:
 
     def fix_counters(self):
         occurs = {}
-
         for countable in self.getElementsByClass('ctr'):               # Go through all the counters
             typee = countable.attrib['data-counter-type']              # Get the type of counter
             if typee not in occurs:                                    # If we haven't seen it yet
@@ -464,22 +467,38 @@ def build_from_string(xmldocument):
     state = State(root)
     return state.to_html()
 
+class Argy:
+    def __init__(self):
+        self.curr = 0
+
+    def get_next_arg(self, is_mandatory):
+        """ Ignores the first argument """
+        self.curr += 1
+        if self.curr < len(sys.argv):
+            return sys.argv[self.curr]
+        if is_mandatory:
+            usage = "[--define-first-abbr] <pp-processed-file>[=<output-file>] [<sd-xml-file>[=<out>]]"        
+            print("Usage: " + usage)
+            sys.exit(1)
+        sys.exit(0)
+        
 
 if __name__ == "__main__":
-    usage = "<pp-processed-file>[=<output-file>] [<sd-xml-file>[=<out>]]"
-    if len(sys.argv) < 2:
-        #        0                        1
-        print("Usage: " + usage)
-        sys.exit(0)
-    infile, outfile = derive_paths(sys.argv[1])
+    dfa = False
+    argy = Argy()
+    first = argy.get_next_arg(True)
+    if first == '--define-first-abbr':
+        dfa = True
+        first = argy.get_next_arg(True)
+    infile, outfile = derive_paths(first)
     root = parse_into_tree(infile)
-    state = State(root)
+    state = State(root).set_handle_first_abbrs(dfa)
     state.write_out(outfile)
-    if len(sys.argv) < 3:
-        sys.exit(0)
-    sd_infile, sd_outfile = derive_paths(sys.argv[2])
+
+    second = argy.get_next_arg(False)
+    sd_infile, sd_outfile = derive_paths(second)
     root = parse_into_tree(sd_infile)
-    state = State(root, state)
+    state = State(root, state).set_handle_first_abbrs(dfa)
     state.write_out(sd_outfile)
 
 
