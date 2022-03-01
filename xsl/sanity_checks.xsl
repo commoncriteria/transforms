@@ -70,7 +70,10 @@
       </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//cc:deprecated">
-       <xsl:message>* Warning: Detected a deprecated tag.  <xsl:call-template name="genPath"/> </xsl:message>
+       <xsl:message>* Warning: Detected a deprecated tag. <xsl:call-template name="genPath"/> </xsl:message>
+    </xsl:for-each>
+    <xsl:for-each select="//htm:p[not(node())]">
+      <xsl:message>* Warning: Detected an empty _p_ element.<xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
    </xsl:template>
 

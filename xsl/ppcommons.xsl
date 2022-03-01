@@ -112,15 +112,16 @@
 
     <x:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[local-name()=$cat]">
       <div class="eacategory"><x:value-of select="$cat"/></div>
-      <x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]"/>
+      <div class="ea">
+	<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]"/>
+      </div>
     </x:if>
   </x:template>
 
   <!-- ############### -->
   <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
-    <xsl:apply-templates/>
-    <br/>
+    <div class="ea"><xsl:apply-templates/></div>
   </xsl:template>
 
   <!-- ############### -->
@@ -915,6 +916,10 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <!-- <xsl:template match="htm:p[not(node())]"> -->
+  <!--   <xsl:message>Eating empty paragraph element</xsl:message> -->
+  <!-- </xsl:template> -->
+  
   <xsl:template match="htm:*" name="handle-html">
      <xsl:element name="{local-name()}">
       <!-- Copy all the attributes -->
@@ -1105,5 +1110,6 @@ The following sections list Common Criteria and technology terms used in this do
        to calling the identity transform above -->
       <xsl:apply-templates select="current()" />
   </xsl:template>
+
 
 </xsl:stylesheet>
