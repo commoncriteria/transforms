@@ -432,7 +432,11 @@
               margin-left:auto;
               margin-right:auto;
               text-align:center;
+              }
+          div.ea{
+	      padding-bottom:10px;
           }
+	      
           div.figure{
               display:block;
               margin-left:auto;
@@ -443,7 +447,7 @@
           div.activity_pane_header{
               display:table-cell;
               vertical-align:middle;
-              padding-top:10px
+              padding-top:10px;
           }
           span.activity_pane_label{
               vertical-align:middle;
