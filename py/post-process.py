@@ -209,20 +209,23 @@ class State:
         for mat in self.regex.finditer(etext):
             ret += etext[last:mat.start()]                                   # Append the characters between the last find and this
             last = mat.end()                                                 # Move the last indexer up
-            target = mat.group()
-            if mat.group() in self.plural_to_abbr:
-                target = self.plural_to_abbr[mat.group()]
-            # If target maches an abbreviation
-            if target in self.abbrs:
-                ret += self.get_rep_for_abbr(target, mat.group())
-            elif target.upper() in self.full_abbrs:
-                ret += self.get_rep_for_full(target)
+            target = mat.group()                                             # Get the next match
+            if mat.group() in self.plural_to_abbr:                           # If it's a plural
+                target = self.plural_to_abbr[mat.group()]                    # Set the target to the original abbr
+            if target in self.abbrs:                                         # If the target is an abbr
+                ret += self.get_rep_for_abbr(target, mat.group())            # Build the link to the abbr
+            elif target.upper() in self.full_abbrs:                          # If all uppers matches a full definition
+                ret += self.get_rep_for_full(target)                         # Get the representative for the full definition
             else:
                 ret += '<a href="#'+target+'">'+mat.group()+'</a>'
         ret += etext[last:]
         return ret
 
     def get_rep_for_full(self, target):
+        """ 
+        Gets the representation for an abbreviated term when the whole
+        character sequence is found.
+        """
         found_abbr = self.full_abbrs[target.upper()]
         if self.is_first_abbr_usage(found_abbr):
             ret = target
@@ -234,6 +237,10 @@ class State:
         
     
     def get_rep_for_abbr(self,target, orig):
+        """
+        Gets the representation for an abbreviated term when the abbreviation
+        is found.
+        """
         endparen = ""
         ret = ""
         if self.is_first_abbr_usage(target):
@@ -293,18 +300,13 @@ class State:
 #    Have a subelement with the 'class' attribute equal to counter (which is where the index is put)
 
     def fix_counters(self):
-        # Bail if there are no ctrs
         occurs = {}
-        # Go through all the counters
-        for countable in self.getElementsByClass('ctr'):
-            # Get the type of counter
-            typee = countable.attrib['data-counter-type']
-            # If we haven't seen it yet
-            if typee not in occurs:
-                # Make a list
-                occurs[typee] = 0
-            # Increment by one
-            occurs[typee] += 1
+
+        for countable in self.getElementsByClass('ctr'):               # Go through all the counters
+            typee = countable.attrib['data-counter-type']              # Get the type of counter
+            if typee not in occurs:                                    # If we haven't seen it yet
+                occurs[typee] = 0                                      # Make a list
+            occurs[typee] += 1                                         # Increment by one
             # Find the subelement with the class attribute equailt to 'counter'
             # And set it's value to the counter's value.
             count_str = str(occurs[typee])
@@ -314,7 +316,6 @@ class State:
     def fix_this_counter_refs(self, ctr_id, count_str):
         refclass = ctr_id + "-ref"
         for ref in self.getElementsByClass(refclass):
-            # print("Found format attribute " + safe_get_attribute(ref, "format", default="nt"))
             ref.find("*[@class='counter']").text = count_str
 
     def fix_refs_to_main_doc(self):
@@ -370,38 +371,26 @@ class State:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
     def fix_indices(self):
-        # Find the table of contents
-        toc = self.root.find(".//*[@id='toc']")
-        # Initialize the index number generator
-        inums = [0, 0, 0, 0, 0, 0]
-        # Initialize the is_alpha switch
-        is_alpha = False
-        # Gather all elements with a data-level
-        eles = self.root.findall(".//*[@data-level]")
-        #
+        toc = self.root.find(".//*[@id='toc']")                       # Find the table of contents
+        inums = [0, 0, 0, 0, 0, 0]                                    # Initialize the index number generator
+        is_alpha = False                                              # Initialize the is_alpha switch
+        eles = self.root.findall(".//*[@data-level]")                 # Gather all elements with a data-level
         base = -1
-        # Go through the elemeents
-        for aa in range(len(eles)):
+        for aa in range(len(eles)):                                   # Go through the elemeents
             level = eles[aa].attrib["data-level"]
-
-            # If this is the first time we see an appendix
-            if level == 'A' and not is_alpha:
+            if level == 'A' and not is_alpha:                         # If this is the first time we see an appendix
                 inums = [-1, 0, 0, 0, 0]
                 is_alpha = True
-
-            # Turn it into an index
-            if level == 'A':
+            if level == 'A':                                          # Turn it into an index
                 level = 0
             else:
                 level = int(level)
                 if base == -1:
                     base = level
                 level = level-base
-            # If we have to pad out
-            while level > len(inums):
+            while level > len(inums):                                 # If we have to pad out
                 inums.append(0)
-            # If we go up one set
-            if level+1 < len(inums):
+            if level+1 < len(inums):                                  # If we go up one set
                 inums[level+1] = 0
             inums[level] += 1
             if is_alpha and level == 0:
@@ -415,8 +404,8 @@ class State:
                 prefix = prefix + "." + str(inums[bb])
                 spacer = spacer + "&nbps;"
 
-            # Fix inline index number
-            spany = ET.Element("span")
+
+            spany = ET.Element("span")                                # Fix inline index number
             spany.text = eles[aa].text
 
             if eles[aa].text:
