@@ -307,9 +307,9 @@ class State:
             if typee not in occurs:                                    # If we haven't seen it yet
                 occurs[typee] = 0                                      # Make a list
             occurs[typee] += 1                                         # Increment by one
-            # Find the subelement with the class attribute equailt to 'counter'
-            # And set it's value to the counter's value.
             count_str = str(occurs[typee])
+            # Find the subelement with the class attribute equal to 'counter'
+            # And set it's value to the counter's value.
             countable.find("*[@class='counter']").text = count_str
             self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
 
