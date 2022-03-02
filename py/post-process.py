@@ -64,14 +64,15 @@ class State:
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
-        self.abbrs = {}
+        self.abbrs = {}                       # Full set of abbreviaiotns
         self.used_abbrs = set()               # Set of abbreviations that we've seen
         self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
+        #                                     # full_abbrs are empty if is_handling_first_abbrs is False
         self.key_terms = []                   # List of terms we're looking for
         self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
         self.regex = None                     # Regex used to find things of interest in the documetn
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
-        self.is_handling_first_abbrs = True   # Flag to say we're handling first abbreviations
+        self.is_handling_first_abbrs = False  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
         
         self.fix_indices()
@@ -84,7 +85,7 @@ class State:
         self.fix_refs_to_main_doc()
 
     def set_handle_first_abbrs(self, dfa):
-        self.is_handling_first_abbrs
+        self.is_handling_first_abbrs = dfa
         return self
         
     def write_out(self, outfile):
@@ -98,13 +99,10 @@ class State:
     def create_classmapping(self):
         self.classmap = {}
         for el in self.root.findall(".//*[@class]"):
-            classes = el.attrib["class"].split(",")
-            # Go through all the classes the elment is a part of
-            for clazz in classes:
-                # If we already have this class in the classmap
-                if clazz in self.classmap:
-                    # Grab the old
-                    clazzset = self.classmap[clazz]
+            classes = el.attrib["class"].split(",")                   
+            for clazz in classes: #                                   # Go through all the classes the element is a part of
+                if clazz in self.classmap: #                          # If we already have this class in the classmap
+                    clazzset = self.classmap[clazz]                   # Grab the old
                     # We're working with a list here, not a set
                     # Should really only not meet this if the
                     # input document has an element where a
@@ -178,7 +176,8 @@ class State:
             self.key_terms.sort(key=len, reverse=True)
             if self.key_terms:
                 regex_str = "(?<!-)\\b(" + "|".join(self.key_terms) + ")\\b"
-                regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
+                if self.abbr_def:
+                    regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
 #                print(regex_str)
                 self.regex = re.compile(regex_str)
         except re.error:
@@ -210,7 +209,7 @@ class State:
             return etext
         last = 0
         ret = ""
-        for mat in self.regex.finditer(etext):
+        for mat in self.regex.finditer(etext):                               # For each match
             ret += etext[last:mat.start()]                                   # Append the characters between the last find and this
             last = mat.end()                                                 # Move the last indexer up
             target = mat.group()                                             # Get the next match
@@ -259,6 +258,8 @@ class State:
         
     
     def is_first_abbr_usage(self, target):
+        if not(self.is_handling_first_abbrs):
+            return False
         if target in self.used_abbrs:
             return False
         else:
@@ -494,7 +495,6 @@ if __name__ == "__main__":
     root = parse_into_tree(infile)
     state = State(root).set_handle_first_abbrs(dfa)
     state.write_out(outfile)
-
     second = argy.get_next_arg(False)
     sd_infile, sd_outfile = derive_paths(second)
     root = parse_into_tree(sd_infile)

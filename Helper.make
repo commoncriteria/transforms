@@ -14,12 +14,15 @@
 # defines all the environment variables then includes this one.
 # For example:
 #   ```
+#   -include ~/commoncriteria/User.make
+#   -include User.make
 #   TRANS?=transforms
-#   -include LocalUser.make
 #   include $(TRANS)/Helper.make
 #   ```
-# LocalUser.make is where each user would add their appropriate hooks. The file should not be committed 
-# to git.
+# User.make is where each user would add their appropriate hooks for this particular project.
+# This file should not be committed to git.
+# Hooks that are general to most projects, e.g. location of Jing jarfile,  should be put in a file
+# located at ~/commoncriteria/User.make
 
 # If we don't specify it, make will default to the less featureful bourne shell
 SHELL=/bin/bash
@@ -110,6 +113,11 @@ RNG_FILE ?= $(TRANS)/schemas/CCProtectionProfile.rng
 #- It should be a '&1' (stdout) or a path 
 RNG_OUT ?=&1
 
+#- Hook to handle abbreviations
+#- By default it's off, but if you want to enable
+#- it, set it to:
+#- --define-first-abbr
+HANDLE_ABBRS ?= 
 
 #- Validation line
 #- Arg 1 is the RNG file path
@@ -161,7 +169,8 @@ DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 #- Arg 3 is output file
 #- Arg 4 is parameter value pairs
 DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
-	python3 $(TRANS)/py/post-process.py <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) 
+	python3 $(TRANS)/py/post-process.py\
+        $(HANDLE_ABBRS) <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) 
 
 #- Transforms with XML and calls post-process.py
 #- Arg 1 is input file
@@ -170,7 +179,8 @@ DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
 #- Arg 4 is parameter value pairs
 DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
            python3 $(TRANS)/py/post-process.py\
-           <($(XSL_EXE) $(4) $(2) $(1))\=$(3)\
+	   $(HANDLE_ABBRS)                    \
+           <($(XSL_EXE) $(4) $(2) $(1))\=$(3) \
            <($(XSL_EXE)      $(5) $(1))\=$(6) 
 
 #- Arg 1 is input file
