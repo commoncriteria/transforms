@@ -1,3 +1,4 @@
+-include ~/commoncriteria/User.make
 SHELL=/bin/bash
 
 #- Path to the Trang java library 
