@@ -60,7 +60,7 @@ def backslashify(phrase):
 
 class State:
 
-    def __init__(self, root, main_doc=None):
+    def __init__(self, root, main_doc, handle_abbrs):
         self.root = root
         self.parent_map = {c: p for p in self.root.iter() for c in p}
         self.create_classmapping()
@@ -72,7 +72,7 @@ class State:
         self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
         self.regex = None                     # Regex used to find things of interest in the documetn
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
-        self.is_handling_first_abbrs = False  # Flag to say we're handling first abbreviations
+        self.is_handling_first_abbrs = handle_abbrs  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
         
         self.fix_indices()
@@ -178,7 +178,6 @@ class State:
                 regex_str = "(?<!-)\\b(" + "|".join(self.key_terms) + ")\\b"
                 if self.abbr_def:
                     regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
-#                print(regex_str)
                 self.regex = re.compile(regex_str)
         except re.error:
             warn("Failed to compile regular expression: " +
@@ -231,7 +230,7 @@ class State:
         """
         found_abbr = self.full_abbrs[target.upper()]
         if self.is_first_abbr_usage(found_abbr):
-            ret = target
+            return target
         else:
             ret = '<abbr class="dyn-abbr"><a href="#abbr_' + found_abbr+'">'
             ret += found_abbr +'</a></abbr> '
@@ -463,10 +462,10 @@ def parse_into_tree(path):
         return ET.parse(path).getroot()
 
 
-def build_from_string(xmldocument):
-    root = ET.fromstring(xmldocument)
-    state = State(root)
-    return state.to_html()
+# def build_from_string(xmldocument):
+#     root = ET.fromstring(xmldocument)
+#     state = State(root)
+#     return state.to_html()
 
 class Argy:
     def __init__(self):
@@ -493,12 +492,12 @@ if __name__ == "__main__":
         first = argy.get_next_arg(True)
     infile, outfile = derive_paths(first)
     root = parse_into_tree(infile)
-    state = State(root).set_handle_first_abbrs(dfa)
+    state = State(root, None, dfa)
     state.write_out(outfile)
     second = argy.get_next_arg(False)
     sd_infile, sd_outfile = derive_paths(second)
     root = parse_into_tree(sd_infile)
-    state = State(root, state).set_handle_first_abbrs(dfa)
+    state = State(root, state, dfa)
     state.write_out(sd_outfile)
 
 
