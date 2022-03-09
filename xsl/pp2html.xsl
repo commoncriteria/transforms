@@ -699,13 +699,19 @@
               Auditable Events for <xsl:value-of select="$nicename"/>  Requirements
            </xsl:element>
            
-            <xsl:if test="/cc:Package">
-              <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
-            </xsl:if>
-			    
-           <xsl:call-template name="audit-table">
-                <xsl:with-param name="thistable" select="$type"/>
-           </xsl:call-template> 
+	    <xsl:choose>
+	      <xsl:when test="//*[cc:fcomponent/@status=$type]//cc:audit-event">
+		<xsl:if test="/cc:Package">
+		  <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
+		</xsl:if>
+		<xsl:call-template name="audit-table">
+                  <xsl:with-param name="thistable" select="$type"/>
+		</xsl:call-template>
+	      </xsl:when>
+	      <xsl:otherwise>
+		This document does not define any audit events for <xsl:value-of select="$nicename"/>  Requirements.
+	      </xsl:otherwise>
+	    </xsl:choose>
         </xsl:if>
         <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
