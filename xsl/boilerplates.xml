@@ -152,7 +152,7 @@
 
   <policy-mapping>
     <assumptions>Assumptions</assumptions>
-    <cclaims>Confromance Claims</cclaims>
+    <cclaims>Conformance Claims</cclaims>
     <threats>Threats</threats>
     <OSPs>Organizational Security Policies</OSPs>
     <SOs>Security Objectives</SOs>
