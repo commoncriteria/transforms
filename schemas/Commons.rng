@@ -1231,9 +1231,11 @@ Modification definition. This text goes in the
 Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
 The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
-	<optional><attribute name="level"><choice>
-			<value>component</value>
-			<value>element</value>
+	<optional><attribute name="level">
+	  <a:documentation>aactivity elements without a level attribute are treated as component level activities.</a:documentation>
+	  <choice>
+	    <value>component</value>
+	    <value>element</value>
 	</choice></attribute></optional>
 	<ref name="alsos"/>
       <ref name="basic-content-pat"/>
