@@ -171,7 +171,18 @@
     </xsl:choose>
   </xsl:template>
 
+  <x:template name="get-endnote-label">
+    <x:number count="//cc:endnote" level="any"/>
+  </x:template>
 
+
+  <x:template match="cc:endnote">
+    <x:variable name="label"><x:call-template name="get-endnote-label"/></x:variable>
+    <a class="endnoteref" href="#_endnote_{$label}"><sup><x:value-of select="$label"/></sup></a>
+  </x:template>
+
+  <x:template match="cc:endnote" mode="revealendnote">
+  </x:template>
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
