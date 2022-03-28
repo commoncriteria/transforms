@@ -11,8 +11,14 @@
         Template for universal sanity checks.
       ##############################################-->
   <xsl:template name="sanity-checks">
+    <!--                                          if it has an aactivity or a sibling has a non-element-specific aactivity -->
+    <xsl:for-each select="//cc:f-element[not(.//cc:aactivity or ..//cc:aactivity[not(@level='element' or parent::cc:management-function)])]">
+      <xsl:message>* Error: F-Element <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
+        <xsl:call-template name="genPath"/>
+      </xsl:message>
+    </xsl:for-each>
     <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
-      <xsl:message>*Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
+      <xsl:message>* Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
