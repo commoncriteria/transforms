@@ -886,6 +886,10 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="refinement-type"/>
         <ref name="ctr"/>
         <ref name="figure"/>
+	<element name="endnote">
+	  <a:documentation>Will define an endnote in the future (but right now it does nothing).</a:documentation>
+	  <ref name="basic-content-pat"/>
+	</element>
         <ref name="equation"/>
         <element name="choice">
            <optional><attribute name="prefix">

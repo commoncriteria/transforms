@@ -177,8 +177,8 @@
 
 
   <x:template match="cc:endnote">
-    <x:variable name="label"><x:call-template name="get-endnote-label"/></x:variable>
-    <a class="endnoteref" href="#_endnote_{$label}"><sup><x:value-of select="$label"/></sup></a>
+    <!-- <x:variable name="label"><x:call-template name="get-endnote-label"/></x:variable> -->
+    <!-- <a class="endnoteref" href="#_endnote_{$label}"><sup><x:value-of select="$label"/></sup></a> -->
   </x:template>
 
   <x:template match="cc:endnote" mode="revealendnote">
