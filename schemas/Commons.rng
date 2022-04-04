@@ -1058,6 +1058,8 @@ Modification definition. This text goes in the
           </zeroOrMore>
         </optional>
       </choice>
+
+
 <!--      <ref name="depends-pat"/>   -->
 	    <optional><ref name="importable-pat"/></optional>
 	    <optional><ref name="exportable-pat"/></optional>

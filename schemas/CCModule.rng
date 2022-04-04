@@ -352,6 +352,7 @@ Specifies a component under Security Functional Requirements section..
             </attribute></optional>
             <ref name="f-comp-content-pat"/>
 	<ref name="depends-pat"/>
+	<optional><ref name="note"/></optional>
             <ref name="consistency-rationale"/>
             <ref name="ext-comp-extra-pat"/>
             <ref name="f-elements-pat"/>
