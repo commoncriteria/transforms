@@ -406,7 +406,8 @@ Content that only appears if the optional appendices exist.
     <optional>
       <element name="foreword">
         <a:documentation>Flexible section for a foreword.</a:documentation>
-        <zeroOrMore><ref name="basic-content-pat"/></zeroOrMore>
+        <zeroOrMore><choice><ref name="html-content"/>
+			<ref name="section"/></choice></zeroOrMore>
       </element>
     </optional>
   </define>
