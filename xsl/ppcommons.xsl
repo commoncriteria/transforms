@@ -294,12 +294,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+
   <xsl:template mode="make_header" match="cc:section">
     <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
+    <xsl:variable name="ID"><xsl:value-of select="@id"/><!--
+    --><xsl:if test="not(@id)">_sec_<xsl:number count="//cc:section" level="any"/></xsl:if><!--
+    --></xsl:variable>
 
     <xsl:call-template name="make_header">
       <xsl:with-param name="title" select="@title"/>
-      <xsl:with-param name="id"    select="@id"/>
+      <xsl:with-param name="id"    select="$ID"/>
       <xsl:with-param name="level" select="$level"/>
     </xsl:call-template>
   </xsl:template>
