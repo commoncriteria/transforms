@@ -86,6 +86,12 @@
     <xsl:for-each select="//htm:p[not(node())]">
       <xsl:message>* Warning: Detected an empty _p_ element.<xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
+
+
+    <xsl:if test="count(//cc:tech-terms)!=1">
+      <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> tech-term sections in this PP. There should be exactly 1 "tech-term" section.
+      </xsl:message>
+    </xsl:if>
    </xsl:template>
 
 
