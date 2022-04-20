@@ -23,8 +23,6 @@
       <ref name="packages"/>
       <ref name="modules"/>
       <ref name="PreferencesEtc"/>
-      <ref name="Introduction"/>
-      <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
