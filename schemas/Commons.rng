@@ -859,38 +859,31 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="basic-content-pat">
-    <a:documentation>
-      Content that can go anywhere (Although some items are only suitable for title elements).
-    </a:documentation>
-    <oneOrMore>
-      <choice>
-        <text/>
-        <ref name="depends-pat"/>
-        <ref name="html-element"/>
-        <ref name="testlist"/>
-        <ref name="selectables"/>
-        <ref name="assignable"/>
-        <ref name="xref"/>
+  <define name="endnote">
+    <element name="endnote">
+      <a:documentation>Will define an endnote in the future (but right now it does nothing).</a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+
+  <define name="dwiw">
         <element name="_">
           <a:documentation>A cross-reference to the closest ancestor with an ID. 
             It only makes sense inside management-functions.</a:documentation>
           <empty/>
         </element>
+  </define>
+
+  <define name="snip">
         <element name="snip">
           <a:documentation>Designates that when refering to the parent element use only the
              content wthin this snippet. Currently only makes sense inside a selectable.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
-        <ref name="refinement-type"/>
-        <ref name="ctr"/>
-        <ref name="figure"/>
-	<element name="endnote">
-	  <a:documentation>Will define an endnote in the future (but right now it does nothing).</a:documentation>
-	  <ref name="basic-content-pat"/>
-	</element>
-        <ref name="equation"/>
+  </define>
+
+  <define name="choice">
         <element name="choice">
            <optional><attribute name="prefix">
              <a:documentation>
@@ -908,14 +901,64 @@ Grouping for Security Objective for the Operation Environment entries.
            </attribute></optional>
               <ref name="basic-content-pat"/>
         </element>
+  </define>
+  
+  <define name="no-link">
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
         </element>
-        <ref name="custom-basic-content-pat"/>
+  </define>
+
+  <define name="basic-content-pat">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
+    <oneOrMore>
+      <choice>
+        <text/>
+        <ref name="depends-pat"/>
+        <ref name="html-element"/>
+        <ref name="testlist"/>
+        <ref name="selectables"/>
+        <ref name="assignable"/>
+        <ref name="xref"/>
+	<ref name="dwiw"/>
+	<ref name="snip"/>
+        <ref name="refinement-type"/>
+        <ref name="ctr"/>
+        <ref name="figure"/>
+	<ref name="endnote"/>
+        <ref name="equation"/>
+	<ref name="tech-terms"/>
+	<ref name="usecases"/>
+	<ref name="choice"/>
+	<ref name="no-link"/>
+	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
   </define>
+
+
+  <define name="usecases">
+    <element name="usecases">
+      <a:documentation>
+        Wrapper element for uses cases.
+      </a:documentation>
+      <oneOrMore>
+        <element name="usecase">
+          <a:documentation>
+            A referrable section on how the protection profiled item is used.
+          </a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="description"/>
+          <optional><ref name="config"/></optional>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
 
   <define name="equation">
     <element name="equation">
