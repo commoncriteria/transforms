@@ -48,6 +48,7 @@
           <a:documentation>
 Content that only appears if the optional appendices exist.
           </a:documentation>
+	  <!-- <text/> -->
           <ref name="basic-content-pat"/>
        </element>
     </define>

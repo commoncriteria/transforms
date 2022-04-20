@@ -25,7 +25,6 @@
 -->
 
   <define name="usecases">
-    <ref name="basic-content-pat"/>
     <element name="usecases">
       <a:documentation>
         Wrapper element for uses cases.
@@ -815,38 +814,24 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-
-  <define name="basic-content-pat">
-    <a:documentation>
-      Content that can go anywhere (Although some items are only suitable for title elements).
-    </a:documentation>
-    <oneOrMore>
-      <choice>
-        <text/>
-        <ref name="depends-pat"/>
-        <ref name="html-element"/>
-        <ref name="testlist"/>
-        <ref name="selectables"/>
-        <ref name="assignable"/>
-        <ref name="xref"/>
+  <define name="dwiw">
         <element name="_">
           <a:documentation>A cross-reference to the closest ancestor with an ID. 
             It only makes sense inside management-functions.</a:documentation>
           <empty/>
         </element>
+  </define>
+
+  <define name="snip">
         <element name="snip">
           <a:documentation>Designates that when refering to the parent element use only the
              content wthin this snippet. Currently only makes sense inside a selectable.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
-        <ref name="refinement-type"/>
-        <ref name="ctr"/>
-        <ref name="figure"/>
-	<ref name="endnote"/>
-        <ref name="equation"/>
-	<ref name="tech-terms"/>
-	<ref name="usecases"/>
+  </define>
+
+  <define name="choice">
         <element name="choice">
            <optional><attribute name="prefix">
              <a:documentation>
@@ -864,11 +849,40 @@ Grouping for Security Objective for the Operation Environment entries.
            </attribute></optional>
               <ref name="basic-content-pat"/>
         </element>
+  </define>
+  
+  <define name="no-link">
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
         </element>
-        <ref name="custom-basic-content-pat"/>
+  </define>
+
+  <define name="basic-content-pat">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
+    <oneOrMore>
+      <choice>
+        <text/>
+        <ref name="depends-pat"/>
+        <ref name="html-element"/>
+        <ref name="testlist"/>
+        <ref name="selectables"/>
+        <ref name="assignable"/>
+        <ref name="xref"/>
+	<ref name="dwiw"/>
+	<ref name="snip"/>
+        <ref name="refinement-type"/>
+        <ref name="ctr"/>
+        <ref name="figure"/>
+	<ref name="endnote"/>
+        <ref name="equation"/>
+	<ref name="tech-terms"/>
+	<ref name="usecases"/>
+	<ref name="choice"/>
+	<ref name="no-link"/>
+	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
   </define>
@@ -900,7 +914,7 @@ Grouping for Security Objective for the Operation Environment entries.
        content and not redefine all of basic-content.
        ################################################### -->
   <define name="custom-basic-content-pat">
-    <empty/>
+    <text/>
   </define>
 
 
@@ -1173,7 +1187,7 @@ Modification definition. This text goes in the
 
   <define name="flex-section">
     <a:documentation>
-      A new flexiable section
+      A new flexable section
     </a:documentation>
     <element ns="https://niap-ccevs.org/cc/v1/section">
       <anyName>
@@ -1964,23 +1978,23 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
   <define name="Chapters">
-    <zeroOrMore><ref name="Chapter"/></zeroOrMore>
+    <zeroOrMore><ref name="section"/></zeroOrMore>
   </define>
 
-  <define name="Chapter">
-    <element name="section">
-      <a:documentation>Major grouping for the document.</a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <ref name="boilerplate-no-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="section"/>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
+  <!-- <define name="Chapter"> -->
+  <!--   <element name="section"> -->
+  <!--     <a:documentation>Major grouping for the document.</a:documentation> -->
+  <!--     <ref name="id-attr"/> -->
+  <!--     <ref name="title-attr"/> -->
+  <!--     <ref name="boilerplate-no-attr"/> -->
+  <!--     <oneOrMore> -->
+  <!--       <choice> -->
+  <!--         <ref name="basic-content-pat"/> -->
+  <!--         <ref name="section"/> -->
+  <!--       </choice> -->
+  <!--     </oneOrMore> -->
+  <!--   </element> -->
+  <!-- </define> -->
 
   <define name="RevisionHistory">
     <oneOrMore>
