@@ -2051,22 +2051,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
   <define name="Chapters">
-    <zeroOrMore><ref name="Chapter"/></zeroOrMore>
-  </define>
-
-  <define name="Chapter">
-    <element name="section">
-      <a:documentation>Major grouping for the document.</a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <ref name="boilerplate-no-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="section"/>
-        </choice>
-      </oneOrMore>
-    </element>
+    <zeroOrMore><ref name="section"/></zeroOrMore>
   </define>
 
   <define name="RevisionHistory">
