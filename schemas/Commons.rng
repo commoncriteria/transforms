@@ -859,13 +859,17 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="figure"/>
 	<ref name="endnote"/>
         <ref name="equation"/>
-	<ref name="tech-terms"/>
-	<ref name="usecases"/>
 	<ref name="choice"/>
 	<ref name="no-link"/>
 	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
+  </define>
+
+
+  <define name="custom-basic-content-pat">
+    <!-- This is an empty placeholder that can be extended by RNGs that include this file -->
+    <notAllowed/>
   </define>
 
 

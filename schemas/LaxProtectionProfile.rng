@@ -58,17 +58,21 @@
         </attribute>
       </choice>
     </define>-->
-  </include>
-
     <define name="custom-basic-content-pat">
-       <element name="if-opt-app">
+      <choice>
+	<ref name="tech-terms"/>
+	<ref name="usecases"/>
+	<element name="if-opt-app">
           <a:documentation>
-Content that only appears if the optional appendices exist.
+	    Content that only appears if the optional appendices exist.
           </a:documentation>
 	  <!-- <text/> -->
           <ref name="basic-content-pat"/>
        </element>
+      </choice>
     </define>
+  </include>
+
 
 
   <define name="PreferencesEtc">
