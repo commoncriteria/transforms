@@ -751,7 +751,7 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="origin-pat"/>
+	  <ref name="origin-pat"/>
         </element>
       </oneOrMore>
     </element>
@@ -1346,16 +1346,17 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               <param name="pattern">A\.[A-Z_]+</param>
             </data>
           </attribute>
-          <ref name="origin-pat"/>
+	  <ref name="origin-pat"/>
           <oneOrMore><ref name="objective-refer"/></oneOrMore>
         </element>
       </zeroOrMore>
     </element>
   </define>
 
+
   <define name="origin-pat">
-     <a:documentation>Defined so that Module can overwrite it with a choice </a:documentation>
-     <ref name="description"/>
+    <!-- Separately defined so that it can be overwritten -->
+    <ref name="description"/>
   </define>
   
   <define name="OSPs">
@@ -1372,7 +1373,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                   <param name="pattern">P\.[A-Z_]+</param>
                 </data>
                </attribute>
-                <ref name="origin-pat"/>
+		<ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>

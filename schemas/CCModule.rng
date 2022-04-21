@@ -28,7 +28,7 @@
   </start>
 
 
-  <include href="Commons.rng">
+  <include href="StrictCommons.rng">
     <define name="origin-pat">
       <choice>
         <group>
