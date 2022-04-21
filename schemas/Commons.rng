@@ -915,9 +915,6 @@ Grouping for Security Objective for the Operation Environment entries.
        can redefine this to add their own items to basic
        content and not redefine all of basic-content.
        ################################################### -->
-  <define name="custom-basic-content-pat">
-    <empty/>
-  </define>
 
 
   <define name="ext-comp-def-pat">

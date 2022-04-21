@@ -43,15 +43,6 @@
   
 
   <include href="Commons.rng">
-    <define name="custom-basic-content-pat">
-       <element name="if-opt-app">
-          <a:documentation>
-Content that only appears if the optional appendices exist.
-          </a:documentation>
-	  <!-- <text/> -->
-          <ref name="basic-content-pat"/>
-       </element>
-    </define>
 
    <!--
     <define name="xref-content">
@@ -68,6 +59,16 @@ Content that only appears if the optional appendices exist.
       </choice>
     </define>-->
   </include>
+
+    <define name="custom-basic-content-pat">
+       <element name="if-opt-app">
+          <a:documentation>
+Content that only appears if the optional appendices exist.
+          </a:documentation>
+	  <!-- <text/> -->
+          <ref name="basic-content-pat"/>
+       </element>
+    </define>
 
 
   <define name="PreferencesEtc">

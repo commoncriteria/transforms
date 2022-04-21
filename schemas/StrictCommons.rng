@@ -12,7 +12,12 @@
       Protection Profiles, and Modules.
     </a:documentation>
 
-  <include href="Commons.rng"/>
+  <include href="Commons.rng">
+  </include>
+
+  <define name="custom-basic-content-pat">
+    <empty/>
+  </define>
 
 
    <define name="Introduction">
