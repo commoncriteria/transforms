@@ -1541,8 +1541,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Must match requirements in CC Part 2 (unless it is an _ext requirement).
       </a:documentation>
       <oneOrMore><choice>
-      <!--  <ref name="selectables"/>
-        <ref name="assignable"/> -->
         <ref name="basic-content-pat"/>
         <ref name="management-function-set"/>
       </choice></oneOrMore>
