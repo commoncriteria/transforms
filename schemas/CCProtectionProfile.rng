@@ -44,7 +44,7 @@
 
   
 
-  <include href="Commons.rng">
+  <include href="StrictCommons.rng">
     <define name="custom-basic-content-pat">
        <element name="if-opt-app">
           <a:documentation>
