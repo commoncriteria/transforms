@@ -1736,18 +1736,22 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <a:documentation>
           Modifies the parent element such that it depends on something  else.
         </a:documentation>
-        <ref name="any-attributes"/>
-        <optional>
-          <element name="external-doc">
-            <a:documentation>
-               A _depends_ element with an _external-doc_ element can only depend on selections in that external document
-            </a:documentation>
-            <attribute name="ref">
-               <a:documentation>Points to the id of the external document</a:documentation>
-            </attribute>
-          </element>
-        </optional>
-        <optional><element name="optional"><empty/></element></optional>
+	<choice>
+	  <group>
+            <ref name="any-attributes"/>
+            <optional>
+              <element name="external-doc">
+		<a:documentation>
+		  A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+		</a:documentation>
+		<attribute name="ref">
+		  <a:documentation>Points to the id of the external document</a:documentation>
+		</attribute>
+              </element>
+            </optional>
+	  </group>
+          <element name="optional"><empty/></element>
+	</choice>
       </element>
     </zeroOrMore>
   </define>
