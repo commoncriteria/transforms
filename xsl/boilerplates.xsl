@@ -44,7 +44,8 @@
 </xsl:template>
 	
   <!-- ############## -->
-  <xsl:template  match="/cc:PP[@boilerplate='yes']//*[@title='Conformance Claims']|//sec:Conformance_Claims[not(@boilerplate='no')]"
+  <xsl:template 
+      match="/cc:PP[@boilerplate='yes']//*[@title='Conformance Claims' and not(@boilerplate='no')]|//sec:Conformance_Claims[not(@boilerplate='no')]"
 		mode="hook">
     <dl>
         <dt>Conformance Statement</dt>
@@ -60,30 +61,40 @@
           </ul>
           </p>
           </xsl:when><xsl:otherwise>
-          An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
-              as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 
-              Optional SFRs (dated May 2017).
+	  <htm:p>
+            An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
+            as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 
+            Optional SFRs (dated May 2017).
+	  </htm:p>
+          <xsl:if test="/cc:PP//cc:module">
+	    <htm:p>
+              The following PP-Modules are allowed to be specified in a PP-Configuration with this PP.
+              <htm:ul>
+		<xsl:for-each select="/cc:PP//cc:module">
+                  <htm:li><xsl:apply-templates select="." mode="make_xref"/></htm:li>
+		</xsl:for-each>
+              </htm:ul>
+	  </htm:p>
+            <!-- <dd>One or more of the following modules -->
+            <!-- <xsl:choose> -->
+            <!--   <xsl:when  test="//cc:modules/@required"> must </xsl:when> -->
+            <!--   <xsl:otherwise>can </xsl:otherwise> -->
+            <!-- </xsl:choose> -->
+            <!-- be specified in a PP-Configuration with this PP. -->
+            <!-- <ul> -->
+            <!--   <xsl:for-each select="//cc:modules/cc:module"> -->
+            <!--     <li><xsl:apply-templates select="." mode="make_xref"/></li> -->
+            <!--   </xsl:for-each> -->
+            <!-- </ul> -->
+            <!-- </dd> -->
+          </xsl:if>
+
         </xsl:otherwise></xsl:choose></dd>
         <dt>CC Conformance Claims</dt>
         <dd>This <xsl:call-template name="doctype-short"/> is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria <xsl:call-template name="verrev"/>.</dd>
         <dt>PP Claim </dt>
         <dd>This <xsl:call-template name="doctype-short"/> does not claim conformance to any Protection Profile. </dd>
 
-        <xsl:if test="/cc:PP//cc:module">
-          <dt>Module Claim</dt>
-          <dd>One or more of the following modules
-             <xsl:choose>
-               <xsl:when  test="//cc:modules/@required"> must </xsl:when>
-               <xsl:otherwise>can </xsl:otherwise>
-             </xsl:choose>
-            be specified in a PP-Configuration with this PP.
-            <ul>
-              <xsl:for-each select="//cc:modules/cc:module">
-                <li><xsl:apply-templates select="." mode="make_xref"/></li>
-              </xsl:for-each>
-            </ul>
-          </dd>
-        </xsl:if>
         <dt>Package Claim</dt>
         <dd>This <xsl:call-template name="doctype-short"/><xsl:text> </xsl:text>
             <xsl:choose>
