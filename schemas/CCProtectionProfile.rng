@@ -77,6 +77,7 @@ Content that only appears if the optional appendices exist.
   </define>
   
   <define name="modules">
+    <!-- This thing is an abomination -->
     <optional> <element name="modules"><optional><attribute name="required"/></optional>
     <zeroOrMore>
       <element name="module"><ref name="external-document-pat"/></element>
