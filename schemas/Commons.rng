@@ -995,24 +995,6 @@ Modification definition. This text goes in the
 	      
         <!-- Choice of status -->
         <!-- If the status is objective, it must have a targetdate(?) -->
-        <group>
-          <optional>
-            <attribute name="targetdate">
-              <a:documentation>
-                Target date that the requirements under this component become
-                manandory. It only makes sense for _objective_ components.
-              </a:documentation>
-              <data type="date"/>
-            </attribute>
-          </optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>objective</value>
-          </attribute>
-        </group>
-
 	<ref name="f-comp-sel-based-parts"/>	      
 	      
         <!-- The status could also be optional or nothing (which is indicated here) -->
@@ -1023,6 +1005,7 @@ Modification definition. This text goes in the
             </a:documentation>
             <choice>
               <value>optional</value>
+	      <value>objective</value>
 	      <value>invisible</value>
             </choice>
           </attribute>
@@ -1731,29 +1714,32 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
 
   <define name="depends-pat">
-    <zeroOrMore>
-      <element name="depends">
-        <a:documentation>
-          Modifies the parent element such that it depends on something  else.
-        </a:documentation>
-	<choice>
-	  <group>
-            <ref name="any-attributes"/>
-            <optional>
-              <element name="external-doc">
-		<a:documentation>
-		  A _depends_ element with an _external-doc_ element can only depend on selections in that external document
-		</a:documentation>
-		<attribute name="ref">
-		  <a:documentation>Points to the id of the external document</a:documentation>
-		</attribute>
-              </element>
-            </optional>
-	  </group>
-          <element name="optional"><empty/></element>
-	</choice>
-      </element>
-    </zeroOrMore>
+    <choice>
+      <element name="depends"><element name="objective"><empty/></element></element>
+      <zeroOrMore>
+	<element name="depends">
+          <a:documentation>
+            Modifies the parent element such that it depends on something  else.
+          </a:documentation>
+	  <choice>
+	    <group>
+              <ref name="any-attributes"/>
+              <optional>
+		<element name="external-doc">
+		  <a:documentation>
+		    A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+		  </a:documentation>
+		  <attribute name="ref">
+		    <a:documentation>Points to the id of the external document</a:documentation>
+		  </attribute>
+		</element>
+              </optional>
+	    </group>
+            <element name="optional"><empty/></element>
+	  </choice>
+	</element>
+      </zeroOrMore>
+    </choice>
   </define>
 
   <define name="packages">
