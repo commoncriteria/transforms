@@ -547,18 +547,17 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:choose>
     <xsl:when test="@linebreak='yes' or .//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
-        <li style="{@style}"><xsl:call-template name="handle_sel"/></li>
+        <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
       </xsl:for-each></ul>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:for-each select="cc:selectable"><xsl:call-template name="handle_sel"/></xsl:for-each>
+      <xsl:apply-templates mode="handle_sel"/>
     </xsl:otherwise>
  </xsl:choose>]</xsl:template>
 
- <xsl:template name="handle_sel">
-     
+ <xsl:template mode="handle_sel" match="cc:selectable|cc:not-selectable">
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-    <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
+    <span class="{local-name()}-content" id="{$id}"><xsl:apply-templates/></span><xsl:call-template name="commaifnotlast"/>
  </xsl:template>
 
  <xsl:template match="cc:deprecated">!DEPRECATED!</xsl:template>
@@ -782,7 +781,7 @@ The following sections list Common Criteria and technology terms used in this do
 
    <xsl:template match="cc:selectcol">
     [<b>selection</b>: 
-    <xsl:element name="span"><xsl:attribute name="class">selection-content</xsl:attribute>
+    <xsl:element name="span"><xsl:attribute name="class">selectable-content</xsl:attribute>
        <xsl:if test="@id"><xsl:attribute name="id">
          <xsl:value-of select="@id"/>
        </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>

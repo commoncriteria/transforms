@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar 
-    xmlns:sec="https://niap-ccevs.org/cc/v1/section" 
-    xmlns:h="http://www.w3.org/1999/xhtml" 
     xmlns="http://relaxng.org/ns/structure/1.0"
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
@@ -11,6 +9,14 @@
       This file defines things common to both Strict and Loose types of Functional Packages,
       Protection Profiles, and Modules.
     </a:documentation>
+
+  <define name="selectables">
+    <choice>
+       <ref name="selectables-classic"/>
+       <ref name="selectables-table"/>
+     </choice>
+  </define> 
+
 
   <define name="selectables_classic_content">
      <optional>
@@ -48,13 +54,6 @@
       </element>
     </oneOrMore>
   </define>
-
-  <define name="selectables">
-    <choice>
-       <ref name="selectables-classic"/>
-       <ref name="selectables-table"/>
-     </choice>
-  </define> 
 
   <define name="selectables-table">
      <element name="selectables">
@@ -103,10 +102,14 @@
     </element>
   </define>
 
-
+  <define name="not-selectable">
+    <element name="not-selectable">
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
 
   <define name="selectable-single">
-    <element name="selectable">
+      <element name="selectable">
       <a:documentation>
         Denotes the start of a selectable in a selectables section.
       </a:documentation>
@@ -127,8 +130,10 @@
   </define>
 
   <define name="selectable-group">
+    <zeroOrMore><ref name="not-selectable"/></zeroOrMore>
     <ref name="selectable-single"/>
     <oneOrMore>
+      <zeroOrMore><ref name="not-selectable"/></zeroOrMore>
       <ref name="selectable-single"/>
     </oneOrMore>
   </define>
