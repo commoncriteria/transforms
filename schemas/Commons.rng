@@ -557,20 +557,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       </optional>
     </element>
   </define>
-<!--
-  <define name="figref">
-    <element name="figref">
-      <a:documentation>
-        References a figure
-      </a:documentation>
-      <attribute name="ref-id">
-        <a:documentation>
-          Contains the ID of the figure being referenced.
-        </a:documentation>
-      </attribute>
-    </element>
-  </define>
--->
+
   <define name="selectables_classic_content">
      <optional>
         <attribute name="linebreak">
