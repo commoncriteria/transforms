@@ -742,7 +742,7 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="requires">
     <element name="requires">
-      <ref name="depends-pat"/>
+      <optional><ref name="depends-pat"/></optional>
       <oneOrMore>
 	<element name="n"><text/></element>
       </oneOrMore>
@@ -751,7 +751,7 @@ Grouping for Security Objective for the Operation Environment entries.
   
   <define name="provides">
     <element name="provides">
-      <ref name="depends-pat"/>
+      <optional><ref name="depends-pat"/></optional>
       <oneOrMore>
 	<element name="n"><text/></element>
       </oneOrMore>
