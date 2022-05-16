@@ -663,8 +663,11 @@ Grouping for Security Objective for the Operation Environment entries.
 
   <define name="dwiw">
         <element name="_">
-          <a:documentation>A cross-reference to the closest ancestor with an ID. 
-            It only makes sense inside management-functions.</a:documentation>
+          <a:documentation>
+	    A cross-reference to the closest ancestor with an ID. 
+            It only makes sense inside management-functions.
+	    "Do What I Want"
+	  </a:documentation>
           <empty/>
         </element>
   </define>
@@ -1873,16 +1876,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	section (unless the base redefines it).
       </a:documentation>
       <ref name="basic-content-pat"/>
-<!--
-Base name does't make sense for PPs and not modules. Also it needs to really be embedded in 
-the basic-content.
-      <oneOrMore>
-	<choice>
-	  <ref name="basic-content-pat"/>
-	  <ref name="base-name"/>
-	</choice>
-      </oneOrMore>
--->
     </element>
   </define>
 
