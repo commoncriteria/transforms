@@ -503,7 +503,9 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <element name="int">
       <optional><attribute name="gte"><data type="integer"/> </attribute></optional>
       <optional><attribute name="lte"><data type="integer"/> </attribute></optional>
-      <optional><attribute name="hide"/></optional>
+      <optional><attribute name="hide">
+	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+      </attribute></optional>
     </element>
   </define>
 
@@ -730,11 +732,49 @@ Grouping for Security Objective for the Operation Environment entries.
         <ref name="equation"/>
 	<ref name="choice"/>
 	<ref name="no-link"/>
+	<ref name="provides"/>
+	<ref name="requires"/>
+	<!-- <ref name="selectable-id-group"/> -->
 	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
   </define>
 
+  <define name="requires">
+    <element name="requires">
+      <ref name="depends-pat"/>
+      <oneOrMore>
+	<element name="n"><text/></element>
+      </oneOrMore>
+    </element>
+  </define>
+  
+  <define name="provides">
+    <element name="provides">
+      <ref name="depends-pat"/>
+      <oneOrMore>
+	<element name="n"><text/></element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  
+  <!-- <define name="selectable-ids-group"> -->
+  <!--   <!-\- -->
+  <!-- 	<ids-group> -->
+  <!-- 	<s>abc</s> -->
+  <!-- 	<s>ghi</s> -->
+  <!-- 	... -->
+  <!-- 	</ids-group> -->
+  <!--   -\-> -->
+  <!--   <a:documentation> -->
+  <!--     Allows selectable ids to be grouped. -->
+  <!--   </a:documentation> -->
+  <!--   <element name="ids-group"> -->
+  <!--     <ref name="id-attr"/> -->
+  <!--     <oneOrMore><element name="s"><text/></element></oneOrMore> -->
+  <!--   </element> -->
+  <!-- </define> -->
 
   <define name="custom-basic-content-pat">
     <!-- This is an empty placeholder that can be extended by RNGs that include this file -->
