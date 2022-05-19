@@ -77,13 +77,17 @@ Content that only appears if the optional appendices exist.
   </define>
   
   <define name="modules">
+    <a:documentation> Defines modules that can be used with the Protection Profile.</a:documentation>
     <!-- This thing is an abomination -->
-    <optional> <element name="modules"><optional><attribute name="required"/></optional>
-    <zeroOrMore>
-      <element name="module"><ref name="external-document-pat"/></element>
-    </zeroOrMore>
-   </element></optional>
+    <optional> <element name="modules">
+      <!-- The following will have to be redone -->
+      <optional><attribute name="required"/></optional>
+      <zeroOrMore>
+	<element name="module"><ref name="external-document-pat"/></element>
+      </zeroOrMore>
+    </element></optional>
   </define>
+  
   <define name="SecurityRequirementsChapter">
     <choice>
       <element name="section">

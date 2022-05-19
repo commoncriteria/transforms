@@ -1671,19 +1671,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         ]]>
       </a:documentation>
       <ref name="external-document-pat"/>
-      <ref name="depends-pat"/>
     </element>
   </define>
 
  
   <define name="external-document-pat">
     <ref name="id-attr"/>
-
     <choice>
       <ref name="recognized-xml"/>
       <ref name="non-native-doc"/>
     </choice>
     <element name="url"><text/></element>
+    <ref name="depends-pat"/>
   </define>
 
   <define name="recognized-xml">
