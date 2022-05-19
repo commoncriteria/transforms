@@ -43,12 +43,11 @@
           <xsl:call-template name="genPath"/>
        </xsl:message>
     </xsl:for-each>
-    <!-- Removed this check for now. Too many false positives. -->
-    <!-- <xsl:for-each select="//cc:title//cc:depends[not(parent::htm:tr)]|//cc:note//cc:depends"> -->
-    <!--    <xsl:message>* Warning: Potentially illegal 'depends' element. -->
-    <!--       <xsl:call-template name="genPath"/> -->
-    <!--    </xsl:message> -->
-    <!-- </xsl:for-each> -->
+    <xsl:for-each select="//cc:title//cc:depends[not(parent::htm:tr)]|//cc:note//cc:depends">
+       <xsl:message>* Warning: Potentially illegal 'depends' element.
+          <xsl:call-template name="genPath"/>
+       </xsl:message>
+    </xsl:for-each>
     <xsl:for-each select="//@id">
        <xsl:variable name="id" select="."/>
        <xsl:if test="count(//*[@id=$id])>1">
