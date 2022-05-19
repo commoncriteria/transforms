@@ -23,8 +23,6 @@
       <ref name="packages"/>
       <ref name="modules"/>
       <ref name="PreferencesEtc"/>
-      <ref name="Introduction"/>
-      <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
@@ -44,15 +42,7 @@
 
   
 
-  <include href="StrictCommons.rng">
-    <define name="custom-basic-content-pat">
-       <element name="if-opt-app">
-          <a:documentation>
-Content that only appears if the optional appendices exist.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-       </element>
-    </define>
+  <include href="Commons.rng">
 
    <!--
     <define name="xref-content">
@@ -68,7 +58,21 @@ Content that only appears if the optional appendices exist.
         </attribute>
       </choice>
     </define>-->
+    <define name="custom-basic-content-pat">
+      <choice>
+	<ref name="tech-terms"/>
+	<ref name="usecases"/>
+	<element name="if-opt-app">
+          <a:documentation>
+	    Content that only appears if the optional appendices exist.
+          </a:documentation>
+	  <!-- <text/> -->
+          <ref name="basic-content-pat"/>
+       </element>
+      </choice>
+    </define>
   </include>
+
 
 
   <define name="PreferencesEtc">
@@ -77,17 +81,12 @@ Content that only appears if the optional appendices exist.
   </define>
   
   <define name="modules">
-    <a:documentation> Defines modules that can be used with the Protection Profile.</a:documentation>
-    <!-- This thing is an abomination -->
-    <optional> <element name="modules">
-      <!-- The following will have to be redone -->
-      <optional><attribute name="required"/></optional>
-      <zeroOrMore>
-	<element name="module"><ref name="external-document-pat"/></element>
-      </zeroOrMore>
-    </element></optional>
+    <optional> <element name="modules"><optional><attribute name="required"/></optional>
+    <zeroOrMore>
+      <element name="module"><ref name="external-document-pat"/></element>
+    </zeroOrMore>
+   </element></optional>
   </define>
-  
   <define name="SecurityRequirementsChapter">
     <choice>
       <element name="section">

@@ -171,7 +171,18 @@
     </xsl:choose>
   </xsl:template>
 
+  <x:template name="get-endnote-label">
+    <x:number count="//cc:endnote" level="any"/>
+  </x:template>
 
+
+  <x:template match="cc:endnote">
+    <!-- <x:variable name="label"><x:call-template name="get-endnote-label"/></x:variable> -->
+    <!-- <a class="endnoteref" href="#_endnote_{$label}"><sup><x:value-of select="$label"/></sup></a> -->
+  </x:template>
+
+  <x:template match="cc:endnote" mode="revealendnote">
+  </x:template>
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -283,12 +294,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+
   <xsl:template mode="make_header" match="cc:section">
     <xsl:param name="level"><xsl:call-template name="compute-level"/></xsl:param>
+    <xsl:variable name="ID"><xsl:value-of select="@id"/><!--
+    --><xsl:if test="not(@id)">_sec_<xsl:number count="//cc:section" level="any"/></xsl:if><!--
+    --></xsl:variable>
 
     <xsl:call-template name="make_header">
       <xsl:with-param name="title" select="@title"/>
-      <xsl:with-param name="id"    select="@id"/>
+      <xsl:with-param name="id"    select="$ID"/>
       <xsl:with-param name="level" select="$level"/>
     </xsl:call-template>
   </xsl:template>
@@ -532,18 +547,17 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:choose>
     <xsl:when test="@linebreak='yes' or .//cc:selectables">
       <ul><xsl:for-each select="cc:selectable">
-        <li style="{@style}"><xsl:call-template name="handle_sel"/></li>
+        <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
       </xsl:for-each></ul>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:for-each select="cc:selectable"><xsl:call-template name="handle_sel"/></xsl:for-each>
+      <xsl:apply-templates mode="handle_sel"/>
     </xsl:otherwise>
  </xsl:choose>]</xsl:template>
 
- <xsl:template name="handle_sel">
-     
+ <xsl:template mode="handle_sel" match="cc:selectable|cc:not-selectable">
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-    <i id="{$id}"><xsl:apply-templates/></i><xsl:call-template name="commaifnotlast"/>
+    <span class="{local-name()}-content" id="{$id}"><xsl:apply-templates/></span><xsl:call-template name="commaifnotlast"/>
  </xsl:template>
 
  <xsl:template match="cc:deprecated">!DEPRECATED!</xsl:template>
@@ -767,7 +781,7 @@ The following sections list Common Criteria and technology terms used in this do
 
    <xsl:template match="cc:selectcol">
     [<b>selection</b>: 
-    <xsl:element name="span"><xsl:attribute name="class">selection-content</xsl:attribute>
+    <xsl:element name="span"><xsl:attribute name="class">selectable-content</xsl:attribute>
        <xsl:if test="@id"><xsl:attribute name="id">
          <xsl:value-of select="@id"/>
        </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
@@ -937,7 +951,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="processing-instruction()"/>
 
   <!-- Consume all of the following -->
-  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id|cc:class-description"/>
+  <xsl:template match="cc:audit-event|cc:depends|cc:ref-id|cc:class-description|cc:provides|cc:requires"/>
 
   <!--
       Recursively copy and unwrap unmatched things (elements, attributes, text)

@@ -6,12 +6,12 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     ns="https://niap-ccevs.org/cc/v1" 
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-
+  
     <a:documentation>
-      This file defines things common to Functional Packages, 
+      This file defines things common to both Strict and Loose types of Functional Packages,
       Protection Profiles, and Modules.
     </a:documentation>
-<!--
+<!--o
   <define name="audit-event">
     <a:documentation></a:documentation>
     <element name="audit-event">
@@ -23,77 +23,7 @@
     </element>
   </define>
 -->
-   <define name="Introduction">
-     <choice>
-       <element name="section">
-         <attribute name="title"><value>Introduction</value></attribute>
-         <attribute name="id"/>
-        <ref name="introduction-content"/>
-      </element>   
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName>
-          <except>
-            <nsName ns="https://niap-ccevs.org/cc/v1"/>
-            <nsName ns="http://www.w3.org/1999/xhtml"/>
-          </except>
-        </anyName>
-        <attribute name="title"><value>Introduction</value></attribute>
-        <ref name="introduction-content"/>
-      </element>
-      <element name="sec:Introduction">
-        <ref name="introduction-content"/>
-      </element>
-    </choice>
-  </define>
-
-  <define name="introduction-content">
-        <ref name="boilerplate-no-attr"/>
-        <ref name="section"/>
-        <ref name="tech-terms"/>
-        <zeroOrMore> <ref name="section"/> </zeroOrMore>
-        <optional> <ref name="usecases-section"/></optional>
-        <zeroOrMore> <ref name="section"/> </zeroOrMore>
-  </define>
-
- <define name="usecases-section">
-   <choice>
-     <element name="section">
-       <attribute name="title"/>
-       <optional><attribute name="id"/></optional>
-        <ref name="usecases-section-content"/>
-      </element>   
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName>
-          <except>
-            <nsName ns="https://niap-ccevs.org/cc/v1"/>
-            <nsName ns="http://www.w3.org/1999/xhtml"/>
-          </except>
-        </anyName>
-        <optional><attribute name="title"/></optional>
-        <ref name="usecases-section-content"/>
-      </element>
-    </choice>
-  </define>
-
-  <define name="usecases-section-content">
-    <ref name="basic-content-pat"/>
-    <element name="usecases">
-      <a:documentation>
-        Wrapper element for uses cases.
-      </a:documentation>
-      <oneOrMore>
-        <element name="usecase">
-          <a:documentation>
-            A referrable section on how the protection profiled item is used.
-          </a:documentation>
-          <ref name="id-attr"/>
-          <ref name="title-attr"/>
-          <ref name="description"/>
-          <optional><ref name="config"/></optional>
-        </element>
-      </oneOrMore>
-    </element>
-  </define>
+ <include href="Selection.rng"/>
  
  <define name="project-notes">
     <optional><element name="project-notes">
@@ -573,7 +503,9 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <element name="int">
       <optional><attribute name="gte"><data type="integer"/> </attribute></optional>
       <optional><attribute name="lte"><data type="integer"/> </attribute></optional>
-      <optional><attribute name="hide"/></optional>
+      <optional><attribute name="hide">
+	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+      </attribute></optional>
     </element>
   </define>
 
@@ -627,141 +559,6 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
         <attribute name="max-width"/>
       </optional>
     </element>
-  </define>
-<!--
-  <define name="figref">
-    <element name="figref">
-      <a:documentation>
-        References a figure
-      </a:documentation>
-      <attribute name="ref-id">
-        <a:documentation>
-          Contains the ID of the figure being referenced.
-        </a:documentation>
-      </attribute>
-    </element>
-  </define>
--->
-  <define name="selectables_classic_content">
-     <optional>
-        <attribute name="linebreak">
-          <a:documentation>
-            Indicates that new lines should be appended to every selectable.
-          </a:documentation>
-          <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <ref name="selectable-group"/>
-  </define>
-
-  <define name="selectables_table_content">
-    <element name="tabularize">
-      <optional><attribute name="id"/></optional>
-      <optional><attribute name="title"/></optional>
-<!--      <element name="keycol"><attribute name="assign"/><text/></element>  -->
-      <oneOrMore><choice>
-	<element name="reqtext"><text/></element>
-	<element name="assigncol"><text/></element>
-        <element name="selectcol"><ref name="basic-content-pat"/></element>
-	<element name="textcol"><text/></element>
-      </choice></oneOrMore>
-    </element>
-    <oneOrMore>
-      <element name="selectable">
-	<optional><attribute name="id"/></optional>
-<!--	<element name="key"><text/></element>  -->
-	<oneOrMore>
-	  <element name="col">
-	    <ref name="basic-content-pat"/>
-	  </element>
-	</oneOrMore>
-      </element>
-    </oneOrMore>
-  </define>
-
-  <define name="selectables">
-    <choice>
-       <ref name="selectables-classic"/>
-       <ref name="selectables-table"/>
-     </choice>
-  </define> 
-
-  <define name="selectables-table">
-     <element name="selectables">
-       <element name="tabularize">
-          <attribute name="id"/>
-          <attribute name="title"/>
-<!--          <element name="keycol"><text/></element> -->
-          <oneOrMore> <choice>
-              <element name="reqtext"><text/></element>
-              <element name="assigncol"><text/></element>
-<!--              <element name="keycol"><text/></element>  -->
-              <element name="selectcol"><ref name="basic-content-pat"/></element>
-              <element name="textcol"><text/></element>
-          </choice></oneOrMore>
-        </element>
-      <oneOrMore>
-        <element name="selectable">
-            <attribute name="id"/>
-             <optional><element name="deprecated"><empty/></element></optional>
-<!--            <element name="key"><text/></element>  -->
-            <oneOrMore>
-              <element name="col"><ref name="basic-content-pat"/></element>
-            </oneOrMore>
-        </element>
-      </oneOrMore>
-     </element>
-  </define>
-
-  <define name="selectables-classic">
-    <element name="selectables">
-      <a:documentation>
-        A grouping of selectable elements.
-      </a:documentation>
-      <optional>
-        <attribute name="onlyone">
-          <a:documentation>
-            Designates that at only one item may be selected.
-          </a:documentation>
-          <choice><value>yes</value></choice>
-        </attribute>
-      </optional>
-      <choice>
-	<ref name="selectables_classic_content"/>
-	<ref name="selectables_table_content"/>
-      </choice>
-    </element>
-  </define>
-
-
-
-  <define name="selectable-single">
-    <element name="selectable">
-      <a:documentation>
-        Denotes the start of a selectable in a selectables section.
-      </a:documentation>
-      <optional>
-        <attribute name="style">
-          <a:documentation>
-          Style attributes that are passsed on to the *li* element.
-          </a:documentation>
-         </attribute>
-      </optional>
-      <optional>
-        <attribute name="exclusive"><choice><value>yes</value></choice></attribute>
-      </optional>
-      <optional> <ref name="id-attr"/> </optional>
-      <optional><element name="deprecated"><empty/></element></optional>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-
-
-  <define name="selectable-group">
-    <ref name="selectable-single"/>
-    <oneOrMore>
-      <ref name="selectable-single"/>
-    </oneOrMore>
   </define>
 
   <define name="objective-refer">
@@ -822,7 +619,7 @@ Grouping for Security Objective for the Operation Environment entries.
             </data>
           </attribute>
           <optional><ref name="id-attr"/></optional>
-          <ref name="origin-pat"/>
+	  <ref name="origin-pat"/>
         </element>
       </oneOrMore>
     </element>
@@ -859,34 +656,34 @@ Grouping for Security Objective for the Operation Environment entries.
     </element>
   </define>
 
-  <define name="basic-content-pat">
-    <a:documentation>
-      Content that can go anywhere (Although some items are only suitable for title elements).
-    </a:documentation>
-    <oneOrMore>
-      <choice>
-        <text/>
-        <ref name="depends-pat"/>
-        <ref name="html-element"/>
-        <ref name="testlist"/>
-        <ref name="selectables"/>
-        <ref name="assignable"/>
-        <ref name="xref"/>
+  <define name="endnote">
+    <element name="endnote">
+      <a:documentation>Will define an endnote in the future (but right now it does nothing).</a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+
+  <define name="dwiw">
         <element name="_">
-          <a:documentation>A cross-reference to the closest ancestor with an ID. 
-            It only makes sense inside management-functions.</a:documentation>
+          <a:documentation>
+	    A cross-reference to the closest ancestor with an ID. 
+            It only makes sense inside management-functions.
+	    "Do What I Want"
+	  </a:documentation>
           <empty/>
         </element>
+  </define>
+
+  <define name="snip">
         <element name="snip">
           <a:documentation>Designates that when refering to the parent element use only the
              content wthin this snippet. Currently only makes sense inside a selectable.
           </a:documentation>
           <ref name="basic-content-pat"/>
         </element>
-        <ref name="refinement-type"/>
-        <ref name="ctr"/>
-        <ref name="figure"/>
-        <ref name="equation"/>
+  </define>
+
+  <define name="choice">
         <element name="choice">
            <optional><attribute name="prefix">
              <a:documentation>
@@ -904,14 +701,106 @@ Grouping for Security Objective for the Operation Environment entries.
            </attribute></optional>
               <ref name="basic-content-pat"/>
         </element>
+  </define>
+  
+  <define name="no-link">
         <element name="no-link">
            <a:documentation>Stops automatic abbreviation, component, and element identification in the children.</a:documentation>
             <ref name="basic-content-pat"/>
         </element>
-        <ref name="custom-basic-content-pat"/>
+  </define>
+
+  <define name="basic-content-pat">
+    <a:documentation>
+      Content that can go anywhere (Although some items are only suitable for title elements).
+    </a:documentation>
+    <oneOrMore>
+      <choice>
+        <text/>
+        <ref name="depends-pat"/>
+        <ref name="html-element"/>
+        <ref name="testlist"/>
+        <ref name="selectables"/>
+        <ref name="assignable"/>
+        <ref name="xref"/>
+	<ref name="dwiw"/>
+	<ref name="snip"/>
+        <ref name="refinement-type"/>
+        <ref name="ctr"/>
+        <ref name="figure"/>
+	<ref name="endnote"/>
+        <ref name="equation"/>
+	<ref name="choice"/>
+	<ref name="no-link"/>
+	<ref name="provides"/>
+	<ref name="requires"/>
+	<!-- <ref name="selectable-id-group"/> -->
+	<ref name="custom-basic-content-pat"/>
       </choice>
     </oneOrMore>
   </define>
+
+  <define name="requires">
+    <element name="requires">
+      <optional><ref name="depends-pat"/></optional>
+      <oneOrMore>
+	<element name="n"><text/></element>
+      </oneOrMore>
+    </element>
+  </define>
+  
+  <define name="provides">
+    <element name="provides">
+      <optional><ref name="depends-pat"/></optional>
+      <oneOrMore>
+	<element name="n"><text/></element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  
+  <!-- <define name="selectable-ids-group"> -->
+  <!--   <!-\- -->
+  <!-- 	<ids-group> -->
+  <!-- 	<s>abc</s> -->
+  <!-- 	<s>ghi</s> -->
+  <!-- 	... -->
+  <!-- 	</ids-group> -->
+  <!--   -\-> -->
+  <!--   <a:documentation> -->
+  <!--     Allows selectable ids to be grouped. -->
+  <!--   </a:documentation> -->
+  <!--   <element name="ids-group"> -->
+  <!--     <ref name="id-attr"/> -->
+  <!--     <oneOrMore><element name="s"><text/></element></oneOrMore> -->
+  <!--   </element> -->
+  <!-- </define> -->
+
+  <define name="custom-basic-content-pat">
+    <!-- This is an empty placeholder that can be extended by RNGs that include this file -->
+    <notAllowed/>
+  </define>
+
+
+  <define name="usecases">
+    <element name="usecases">
+      <a:documentation>
+        Wrapper element for uses cases.
+      </a:documentation>
+      <oneOrMore>
+        <element name="usecase">
+          <a:documentation>
+            A referrable section on how the protection profiled item is used.
+          </a:documentation>
+          <ref name="id-attr"/>
+          <ref name="title-attr"/>
+          <ref name="description"/>
+          <optional><ref name="config"/></optional>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
 
   <define name="equation">
     <element name="equation">
@@ -939,9 +828,6 @@ Grouping for Security Objective for the Operation Environment entries.
        can redefine this to add their own items to basic
        content and not redefine all of basic-content.
        ################################################### -->
-  <define name="custom-basic-content-pat">
-    <empty/>
-  </define>
 
 
   <define name="ext-comp-def-pat">
@@ -1018,24 +904,6 @@ Modification definition. This text goes in the
 	      
         <!-- Choice of status -->
         <!-- If the status is objective, it must have a targetdate(?) -->
-        <group>
-          <optional>
-            <attribute name="targetdate">
-              <a:documentation>
-                Target date that the requirements under this component become
-                manandory. It only makes sense for _objective_ components.
-              </a:documentation>
-              <data type="date"/>
-            </attribute>
-          </optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <value>objective</value>
-          </attribute>
-        </group>
-
 	<ref name="f-comp-sel-based-parts"/>	      
 	      
         <!-- The status could also be optional or nothing (which is indicated here) -->
@@ -1046,6 +914,7 @@ Modification definition. This text goes in the
             </a:documentation>
             <choice>
               <value>optional</value>
+	      <value>objective</value>
 	      <value>invisible</value>
             </choice>
           </attribute>
@@ -1054,6 +923,8 @@ Modification definition. This text goes in the
           </zeroOrMore>
         </optional>
       </choice>
+
+
 <!--      <ref name="depends-pat"/>   -->
 	    <optional><ref name="importable-pat"/></optional>
 	    <optional><ref name="exportable-pat"/></optional>
@@ -1231,9 +1102,11 @@ Modification definition. This text goes in the
 Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
 The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
-	<optional><attribute name="level"><choice>
-			<value>component</value>
-			<value>element</value>
+	<optional><attribute name="level">
+	  <a:documentation>aactivity elements without a level attribute are treated as component level activities.</a:documentation>
+	  <choice>
+	    <value>component</value>
+	    <value>element</value>
 	</choice></attribute></optional>
 	<ref name="alsos"/>
       <ref name="basic-content-pat"/>
@@ -1365,16 +1238,17 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               <param name="pattern">A\.[A-Z_]+</param>
             </data>
           </attribute>
-          <ref name="origin-pat"/>
+	  <ref name="origin-pat"/>
           <oneOrMore><ref name="objective-refer"/></oneOrMore>
         </element>
       </zeroOrMore>
     </element>
   </define>
 
+
   <define name="origin-pat">
-     <a:documentation>Defined so that Module can overwrite it with a choice </a:documentation>
-     <ref name="description"/>
+    <!-- Separately defined so that it can be overwritten -->
+    <ref name="description"/>
   </define>
   
   <define name="OSPs">
@@ -1391,7 +1265,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                   <param name="pattern">P\.[A-Z_]+</param>
                 </data>
                </attribute>
-                <ref name="origin-pat"/>
+		<ref name="origin-pat"/>
           <oneOrMore>
             <ref name="objective-refer"/>
           </oneOrMore>
@@ -1749,25 +1623,32 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
 
   <define name="depends-pat">
-    <zeroOrMore>
-      <element name="depends">
-        <a:documentation>
-          Modifies the parent element such that it depends on something  else.
-        </a:documentation>
-        <ref name="any-attributes"/>
-        <optional>
-          <element name="external-doc">
-            <a:documentation>
-               A _depends_ element with an _external-doc_ element can only depend on selections in that external document
-            </a:documentation>
-            <attribute name="ref">
-               <a:documentation>Points to the id of the external document</a:documentation>
-            </attribute>
-          </element>
-        </optional>
-        <optional><element name="optional"><empty/></element></optional>
-      </element>
-    </zeroOrMore>
+    <choice>
+      <element name="depends"><element name="objective"><empty/></element></element>
+      <zeroOrMore>
+	<element name="depends">
+          <a:documentation>
+            Modifies the parent element such that it depends on something  else.
+          </a:documentation>
+	  <choice>
+	    <group>
+              <ref name="any-attributes"/>
+              <optional>
+		<element name="external-doc">
+		  <a:documentation>
+		    A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+		  </a:documentation>
+		  <attribute name="ref">
+		    <a:documentation>Points to the id of the external document</a:documentation>
+		  </attribute>
+		</element>
+              </optional>
+	    </group>
+            <element name="optional"><empty/></element>
+	  </choice>
+	</element>
+      </zeroOrMore>
+    </choice>
   </define>
 
   <define name="packages">
@@ -1790,19 +1671,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         ]]>
       </a:documentation>
       <ref name="external-document-pat"/>
-      <ref name="depends-pat"/>
     </element>
   </define>
 
  
   <define name="external-document-pat">
     <ref name="id-attr"/>
-
     <choice>
       <ref name="recognized-xml"/>
       <ref name="non-native-doc"/>
     </choice>
     <element name="url"><text/></element>
+    <ref name="depends-pat"/>
   </define>
 
   <define name="recognized-xml">
@@ -2000,22 +1880,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
   <define name="Chapters">
-    <zeroOrMore><ref name="Chapter"/></zeroOrMore>
-  </define>
-
-  <define name="Chapter">
-    <element name="section">
-      <a:documentation>Major grouping for the document.</a:documentation>
-      <ref name="id-attr"/>
-      <ref name="title-attr"/>
-      <ref name="boilerplate-no-attr"/>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <ref name="section"/>
-        </choice>
-      </oneOrMore>
-    </element>
+    <zeroOrMore><ref name="section"/></zeroOrMore>
   </define>
 
   <define name="RevisionHistory">
@@ -2050,16 +1915,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	section (unless the base redefines it).
       </a:documentation>
       <ref name="basic-content-pat"/>
-<!--
-Base name does't make sense for PPs and not modules. Also it needs to really be embedded in 
-the basic-content.
-      <oneOrMore>
-	<choice>
-	  <ref name="basic-content-pat"/>
-	  <ref name="base-name"/>
-	</choice>
-      </oneOrMore>
--->
     </element>
   </define>
 

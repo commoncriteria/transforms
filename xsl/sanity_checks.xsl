@@ -11,8 +11,19 @@
         Template for universal sanity checks.
       ##############################################-->
   <xsl:template name="sanity-checks">
+    <!--                                          if it has an aactivity or a sibling has a non-element-specific aactivity -->
+    <xsl:for-each select="//h:s//cc:assignable|//h:s//cc:selectables">
+      <xsl:message>* Error: Found a "<xsl:value-of select="local-name()"/>" element that is buried until stricken text:
+        <xsl:call-template name="genPath"/>
+      </xsl:message>
+    </xsl:for-each>
+    <xsl:for-each select="//cc:f-element[not(.//cc:aactivity or ..//cc:aactivity[not(@level='element' or parent::cc:management-function)])]">
+      <xsl:message>* Error: F-Element <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
+        <xsl:call-template name="genPath"/>
+      </xsl:message>
+    </xsl:for-each>
     <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
-      <xsl:message>*Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
+      <xsl:message>* Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
@@ -75,8 +86,17 @@
     <xsl:for-each select="//htm:p[not(node())]">
       <xsl:message>* Warning: Detected an empty _p_ element.<xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
-   </xsl:template>
 
+    <xsl:if test="count(//cc:tech-terms)!=1">
+      <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> tech-term sections in this PP. There should be exactly 1 "tech-term" section.
+      </xsl:message>
+    </xsl:if>
+    <xsl:if test="count(//sec:Conformance_Claims|//*[@title='Conformance Claims'])!=1">
+      <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> Conformance Claims sections in this PP. There should be exactly 1 "Confromance Claims" section.
+      </xsl:message>
+    </xsl:if>
+  </xsl:template>
+  
 
 
   <xsl:template match="/">

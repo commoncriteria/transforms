@@ -28,7 +28,7 @@
   </start>
 
 
-  <include href="Commons.rng">
+  <include href="StrictCommons.rng">
     <define name="origin-pat">
       <choice>
         <group>
@@ -96,7 +96,7 @@
       <optional>
          <ref name="description"/>
       </optional>
-      <ref name="mod-sar-content"/>
+      <optional><ref name="mod-sar-content"/></optional>
     </element>
   </define>
 	
@@ -130,7 +130,7 @@
       <a:documentation>
 	Objective SFRs. These apply to all configurations regardless of base PPs.
       </a:documentation>
-      <ref name="sfr_content-pat"/>
+      <optional><ref name="sfr_content-pat"/></optional>
       <!-- <ref name="f-components-pat"/> -->
     </element>
   </define>
@@ -141,7 +141,7 @@
 	Implementation-dependent SFRs. These may or may not apply to all configurations regardless of base PPs.
 	(See VVOIP for an example of how painful this will be to implement.
       </a:documentation>
-      <ref name="sfr_content-pat"/>
+      <optional><ref name="sfr_content-pat"/></optional>
       <!-- <ref name="f-components-pat"/> -->
     </element>
   </define>
@@ -152,7 +152,7 @@
       <a:documentation>
 	Optional SFRs. These could apply to all configurations regardless of base PPs.
       </a:documentation>
-      <ref name="sfr_content-pat"/>
+      <optional><ref name="sfr_content-pat"/></optional>
     </element>
   </define>
 
@@ -161,7 +161,7 @@
       <a:documentation>
 	Selection-based SFRs. These can apply to any configuration regardless of base PPs.
       </a:documentation>
-      <ref name="sfr_content-pat"/>
+      <optional><ref name="sfr_content-pat"/></optional>
       <!-- <ref name="f-components-pat"/> -->
       <!--
 	   This is probably the right way to do it, but
@@ -351,6 +351,8 @@ Specifies a component under Security Functional Requirements section..
                <value>true</value>
             </attribute></optional>
             <ref name="f-comp-content-pat"/>
+	<ref name="depends-pat"/>
+	<optional><ref name="note"/></optional>
             <ref name="consistency-rationale"/>
             <ref name="ext-comp-extra-pat"/>
             <ref name="f-elements-pat"/>
