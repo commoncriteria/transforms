@@ -139,9 +139,16 @@ DIFF_DIR ?= diff-archive
 #- $1 Is the first HTML file to diff
 #- $2 Is the first HTML file to diff
 #- $3 Is the output file (txt)
-DIFF_EXE ?= diff -W 180 -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
+DIFF_EXE ?=\
+	[ -d "$(OUT)/images" ] || mkdir "$(OUT)/images";  \
+	cp -u -r $(DAISY_DIR)/js $(DAISY_DIR)/css $(OUT); \
+	cp -u $(DAISY_DIR)/images/* $(OUT)/images;        \
+	java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
 
-# DIFF_EXE ?= java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
+# The following line works if daisydiff does not.
+#DIFF_EXE ?= diff -W 180 -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
+
+# The following works for most 
 
 #- Points to the User.make need for diffing so that it can be
 #- copied to those projects when they are automatically downloaded
