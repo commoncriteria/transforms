@@ -144,10 +144,11 @@ DIFF_EXE ?=\
 	cp -u -r $(DAISY_DIR)/js $(DAISY_DIR)/css $(OUT); \
 	cp -u $(DAISY_DIR)/images/* $(OUT)/images;        \
 	java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
+DIFF_EXT= "html"
 
 # The following line works if daisydiff does not.
 #DIFF_EXE ?= diff -W 180 -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
-
+#DIFF_EXT = txt
 # The following works for most 
 
 #- Points to the User.make need for diffing so that it can be
@@ -303,7 +304,7 @@ diff: $(PP_RELEASE_HTML)
 	   done;\
            for old in `find "$(DIFF_DIR)" -type f -name '*.url'`; do\
 	     base=$${old%.url};\
-	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.txt);\
+	     $(call DIFF_EXE,<(wget -O-  `cat $$old`),$(PP_RELEASE_HTML),$(OUT)/diff-$${base##*/}.$(DIFF_EXT));\
 	   done;\
 	fi
 	for aa in $(DIFF_TAGS); do\
@@ -320,7 +321,7 @@ diff: $(PP_RELEASE_HTML)
 		cd $$orig;\
 		pwd;\
 		ls $$OLD $(PP_RELEASE_HTML);\
-		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.txt) || true;\
+		$(call DIFF_EXE,$$OLD,$(PP_RELEASE_HTML),$(OUT)/diff-$${aa}.$(DIFF_EXT)) || true;\
         done
 
 # Following was attempted to removed garbage collection limit exception (But then it fails
