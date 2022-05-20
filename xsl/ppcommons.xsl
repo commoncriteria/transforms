@@ -240,7 +240,7 @@ The following sections list Common Criteria and technology terms used in this do
     <h3 id="cc-terms" class="indexable" data-level="{$num+1}">Common Criteria Terms</h3>
     <table>
       <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
-      <xsl:for-each select="document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
+      <xsl:for-each select="//cc:cc-terms/cc:term[text()]|document('boilerplates.xml')//cc:cc-terms/cc:term[text()]">
         <xsl:sort select="translate(@full, $upper, $lower)"/>
         <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
           <xsl:call-template name="glossary-entry"/>
@@ -1081,7 +1081,7 @@ The following sections list Common Criteria and technology terms used in this do
       </tr>
       <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
 
-      <xsl:for-each select="//cc:tech-terms//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
+      <xsl:for-each select="//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
         <xsl:sort select="@abbr"/>
 
         <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">

@@ -43,6 +43,7 @@
   <define name="introduction-content">
         <ref name="boilerplate-no-attr"/>
         <ref name="section"/>
+	<ref name="cc-terms"/>
         <ref name="tech-terms"/>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
         <optional> <ref name="usecases-section"/></optional>

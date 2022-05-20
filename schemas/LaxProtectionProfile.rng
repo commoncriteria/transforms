@@ -60,6 +60,7 @@
     </define>-->
     <define name="custom-basic-content-pat">
       <choice>
+	<ref name="cc-terms"/>
 	<ref name="tech-terms"/>
 	<ref name="usecases"/>
 	<element name="if-opt-app">

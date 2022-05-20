@@ -270,6 +270,16 @@
     </element>
   </define>
 
+  <define name="cc-terms">
+    <optional><element name="cc-terms">
+      <a:documentation>
+	Section that defines both technical terms and acronyms.
+	If it's only an acronym make sure the text content is empty.
+      </a:documentation>
+      <ref name="terms-pat"/>
+    </element></optional>
+  </define>
+  
   <define name="tech-terms">
       <element name="tech-terms">
         <a:documentation>
@@ -292,16 +302,21 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
             </data>
           </element>
         </optional>
-        <zeroOrMore>
-          <element name="term">
-            <attribute name="full"/>
-            <optional><attribute name="abbr"/></optional>
-			<optional><attribute name="plural"/></optional>
-            <ref name="basic-content-pat"/>
-          </element>
-        </zeroOrMore>
+	<ref name="terms-pat"/>
       </element>
   </define>
+
+  <define name="terms-pat">
+    <zeroOrMore>
+      <element name="term">
+        <attribute name="full"/>
+        <optional><attribute name="abbr"/></optional>
+	<optional><attribute name="plural"/></optional>
+        <ref name="basic-content-pat"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  
   <define name="xref">
     <element name="xref">
      <a:documentation>
