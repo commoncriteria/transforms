@@ -551,13 +551,16 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:for-each></ul>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:apply-templates mode="handle_sel"/>
+      <xsl:for-each select="cc:selectable|cc:not-selectable">
+	<xsl:apply-templates mode="handle_sel" select="."/><xsl:call-template name="commaifnotlast"/>
+	<xsl:text> </xsl:text>
+      </xsl:for-each>
     </xsl:otherwise>
  </xsl:choose>]</xsl:template>
 
  <xsl:template mode="handle_sel" match="cc:selectable|cc:not-selectable">
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
-    <span class="{local-name()}-content" id="{$id}"><xsl:apply-templates/></span><xsl:call-template name="commaifnotlast"/>
+    <span class="{local-name()}-content" id="{$id}"><xsl:apply-templates/></span>
  </xsl:template>
 
  <xsl:template match="cc:deprecated">!DEPRECATED!</xsl:template>
