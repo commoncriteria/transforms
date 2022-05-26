@@ -357,7 +357,7 @@
       </xsl:if>
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
-          <b><i>This is a selection-based component. Its inclusion depends upon selection frommm
+          <b><i>This is a selection-based component. Its inclusion depends upon selection from
           <xsl:for-each select="//cc:f-element[.//cc:selectable[@id=current()/cc:depends/@*]]">
               <xsl:apply-templates select="." mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
