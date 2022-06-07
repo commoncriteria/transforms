@@ -830,19 +830,6 @@ Grouping for Security Objective for the Operation Environment entries.
   </define>
 
 	
-  <define name="audit-events">
-    <element name="audit-events">
-      <attribute name="table"/>
-      <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
-    </element>
-  </define>
-
-  <!-- ###################################################
-       This is here so that other schemas that import this 
-       can redefine this to add their own items to basic
-       content and not redefine all of basic-content.
-       ################################################### -->
 
 
   <define name="ext-comp-def-pat">
