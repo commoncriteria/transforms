@@ -435,6 +435,10 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <element name="audit-table">
       <attribute name="table" />
       <optional>
+	<a:documentation>Used to explicitly set the table title</a:documentation>
+	<attribute name="title"/>
+      </optional>
+      <optional>
         <attribute name="sel-by-sfr">
            <choice>
               <value>false</value>
