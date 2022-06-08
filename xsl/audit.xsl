@@ -90,14 +90,17 @@
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:param name="thistable" select="@table"/>
-    <xsl:variable name="nicename" select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/>
+    <xsl:variable name="nicename"><xsl:choose>
+      <xsl:when test="@title"><xsl:value-of select="@title"/></xsl:when>
+      <xsl:otherwise>Auditable Events for <xsl:value-of select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/> Requirements</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     <table class="" border="1">
       <!--      <xsl:if test="not(node())">-->
       <caption><xsl:call-template name="ctr-xsl">
         <xsl:with-param name="ctr-type" select="'Table'"/>
 	<xsl:with-param name="id" select="concat('t-audit-',$thistable)"/>
-      </xsl:call-template>: Auditable Events for <xsl:value-of select="$nicename"/> Requirements</caption>
+      </xsl:call-template>: <xsl:value-of select="$nicename"/></caption>
       <!--      </xsl:if>-->
       <!--<xsl:apply-templates/>-->
       <tr><th>Requirement</th>
@@ -130,7 +133,7 @@
   </xsl:template>
 
   <xsl:template match="cc:audit-event[not (cc:audit-event-descr)]" mode="kg-intable">
-    <tr><td>No events specified.</td><td>N/A</td></tr>
+    <tr><td>No events specified</td><td>N/A</td></tr>
   </xsl:template>
   
   <xsl:template match="cc:audit-event[cc:audit-event-descr]" mode="kg-intable">
@@ -138,7 +141,7 @@
       <td><xsl:choose>
 	<!-- When audit events are individually selectable -->
         <xsl:when test="@type='optional'">
-	   <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>].</b> 
+	   <b>[selection: </b><i> <xsl:apply-templates select="cc:audit-event-descr"/>, None</i><b>]</b> 
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="cc:audit-event-descr"/>
@@ -149,18 +152,39 @@
   </xsl:template>
 
   <!-- The following templates are for the 'additional information' cell in the audit table. -->
-  <xsl:template match="cc:audit-event[cc:audit-event-info[@type='optional']]" mode="audit-add-info">
-    <b>[selection: </b>  <i><xsl:apply-templates select="cc:audit-event-info"/> , None</i><b>].</b>
-  </xsl:template>
-  
-  <xsl:template match="cc:audit-event[cc:audit-event-info]" mode="audit-add-info">
+  <xsl:template match="cc:audit-event[count(cc:audit-event-info)=1]" mode="audit-add-info">
     <xsl:apply-templates select="cc:audit-event-info"/>
   </xsl:template>
+
+  <!-- The following templates are for the 'additional information' cell in the audit table. -->
+  <xsl:template match="cc:audit-event[count(cc:audit-event-info)>1]" mode="audit-add-info">
+    <ul>
+      <xsl:for-each select="cc:audit-event-info">
+	<li><xsl:apply-templates select="."/></li>
+      </xsl:for-each>
+    </ul>
+  </xsl:template>
+
+  <!-- <xsl:template match="cc:audit-event[cc:audit-event-info[@type='optional']]" mode="audit-add-info"> -->
+  <!--   <b>[selection: </b>  <i><xsl:apply-templates select="cc:audit-event-info"/>, No additional information</i><b>]</b> -->
+  <!-- </xsl:template> -->
+  
+  <!-- <xsl:template match="cc:audit-event[cc:audit-event-info[not(@type='optional')]]" mode="audit-add-info"> -->
+  <!--   <xsl:apply-templates select="cc:audit-event-info"/> -->
+  <!-- </xsl:template> -->
   
   <xsl:template match="cc:audit-event[not(cc:audit-event-info)]" mode="audit-add-info">
     No additional information
   </xsl:template>
-    
+
+  <xsl:template match="cc:audit-event-info[@type='optional']">
+    <b>[selection: </b>  <i><xsl:apply-templates/>, No additional information</i><b>]</b>
+  </xsl:template>
+
+  <xsl:template match="cc:audit-event-info[not(@type='optional')]">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
    
   <!-- ############### -->
   <!--                 -->
