@@ -1010,7 +1010,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="head">
-      <head>
+    <head>
+      <meta content="text/html;charset=utf-8" http-equiv="Content-Type"></meta>
+	<meta content="utf-8" http-equiv="encoding"></meta>
 	<title><xsl:value-of select="$title"/></title>
         <xsl:call-template name="pp_js"/>
         <style type="text/css">
