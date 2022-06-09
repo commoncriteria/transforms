@@ -43,32 +43,32 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <xsl:template match="cc:audit-events[cc:depends]">
-      <div class="dependent"> The following audit events are included if:
-         <ul> <xsl:for-each select="cc:depends">
-            <li>
-            <xsl:if test="@on='selection'">
-              <xsl:for-each select="cc:ref-id">  
-                <xsl:variable name="uid" select="text()"/>
-                "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>"
-              </xsl:for-each>
-               is selected from 
-              <xsl:variable name="uid" select="cc:ref-id[1]/text()"/>
-              <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
-            </xsl:if> 
-            <xsl:if test="@on='implements'">
-              the TOE implements 
-              <xsl:for-each select="cc:ref-id">
-                 <xsl:variable name="ref-id" select="text()"/>
-                 <xsl:if test="position()!=1">, </xsl:if>
-                 "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>"
-              </xsl:for-each>
-            </xsl:if>
-            </li>
-        </xsl:for-each> </ul><br/>
-        <xsl:call-template name="audit-events"/>
-      </div>        
-  </xsl:template>
+  <!--  <xsl:template match="cc:audit-events[cc:depends]"> -->
+  <!--     <div class="dependent"> The following audit events are included if: -->
+  <!--        <ul> <xsl:for-each select="cc:depends"> -->
+  <!--           <li> -->
+  <!--           <xsl:if test="@on='selection'"> -->
+  <!--             <xsl:for-each select="cc:ref-id">   -->
+  <!--               <xsl:variable name="uid" select="text()"/> -->
+  <!--               "<xsl:apply-templates select="//cc:selectable[@id=$uid]"/>" -->
+  <!--             </xsl:for-each> -->
+  <!--              is selected from  -->
+  <!--             <xsl:variable name="uid" select="cc:ref-id[1]/text()"/> -->
+  <!--             <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> -->
+  <!--           </xsl:if>  -->
+  <!--           <xsl:if test="@on='implements'"> -->
+  <!--             the TOE implements  -->
+  <!--             <xsl:for-each select="cc:ref-id"> -->
+  <!--                <xsl:variable name="ref-id" select="text()"/> -->
+  <!--                <xsl:if test="position()!=1">, </xsl:if> -->
+  <!--                "<xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/>" -->
+  <!--             </xsl:for-each> -->
+  <!--           </xsl:if> -->
+  <!--           </li> -->
+  <!--       </xsl:for-each> </ul><br/> -->
+  <!--       <xsl:call-template name="audit-events"/> -->
+  <!--     </div>         -->
+  <!-- </xsl:template> -->
 
   <xsl:template match="/cc:PP//cc:f-component|/cc:Package//cc:f-component" mode="compute-fcomp-status">
       <xsl:if test="not(@status)">mandatory</xsl:if><xsl:value-of select="@status"/>
@@ -106,7 +106,7 @@
       <tr><th>Requirement</th>
       <th>Auditable Events</th>
       <th>Additional Audit Record Contents</th></tr>
-      <xsl:for-each select="//cc:f-component[cc:audit-event]">
+      <xsl:for-each select="//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]">
 	<!-- <xsl:for-each select="//cc:f-component[cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]]"> -->
 	<!-- <xsl:variable name="fcomp" select="."/> -->
 	<xsl:variable name="fcompstatus"><xsl:apply-templates select="." mode="compute-fcomp-status"/></xsl:variable>
@@ -129,9 +129,68 @@
   	  <xsl:apply-templates select="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]" mode="kg-intable"/>
 	</xsl:if>
       </xsl:for-each>
+      <!-- Goes through each external document -->
+      <xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
+	<tr><td colspan="3">
+	  From <xsl:apply-templates select="." mode="make_xref"/>
+	</td></tr>
+
+	<xsl:variable name="listy"><xsl:for-each select="//cc:audit-event[@table=$thistable and parent::cc:external-doc/@ref=current()/@id]/@ref-cc-id"><xsl:value-of select="."/>,</xsl:for-each>
+	</xsl:variable>
+	<xsl:call-template name="external-gatherer">
+	  <xsl:with-param name="listy" select="$listy"/>
+	  <xsl:with-param name="table" select="$thistable"/>
+	  <xsl:with-param name="ext_id" select="@id"/>
+	</xsl:call-template>
+      </xsl:for-each>
+      
     </table>
   </xsl:template>
 
+  <xsl:template name="external-gatherer">
+    <xsl:param name="listy"/>
+    <xsl:param name="table"/>
+    <xsl:param name="ext_id"/>
+
+
+    <xsl:if test="string-length($listy)>0">
+      <xsl:variable name="ccid"       select="substring-before($listy, ',')"/>
+      <xsl:variable name="restoflist" select="substring-after($listy,',')"/>
+      <xsl:variable name="needle"     select="concat(',',$ccid,',')"/>
+      <xsl:variable name="haystack"   select="concat(',',$restoflist)"/>
+      <xsl:if test="not(contains($haystack,$needle))">
+	<xsl:call-template name="make-external-audit-events-rows">
+	  <xsl:with-param name="table" select="$table"/>
+	  <xsl:with-param name="ccid" select="$ccid"/>
+	  <xsl:with-param name="ext_id" select="$ext_id"/>
+	</xsl:call-template>
+      </xsl:if>
+      <xsl:call-template name="external-gatherer">
+	<xsl:with-param name="listy"  select="$restoflist"/>
+	<xsl:with-param name="table"  select="$table"/>
+	<xsl:with-param name="ext_id" select="$ext_id"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+	
+  <xsl:template name="make-external-audit-events-rows">
+    <xsl:param name="table"/>
+    <xsl:param name="ccid"/>
+    <xsl:param name="ext_id"/>
+
+    <xsl:variable name="rowspan"
+		  select="count(//cc:external-doc[@ref=$ext_id]/cc:audit-event[@ref-cc-id=$ccid and @table=$table])+1"/>
+    
+    <tr>
+      <td rowspan="{$rowspan}"><xsl:value-of select="$ccid"/></td><td style="display:none"/>
+    </tr>
+    
+    <xsl:for-each select="//cc:external-doc[@ref=$ext_id]/cc:audit-event[@ref-cc-id=$ccid and @table=$table]">
+      <xsl:apply-templates select="." mode="kg-intable"/>
+    </xsl:for-each>
+    
+  </xsl:template>
+  
   <xsl:template match="cc:audit-event[not (cc:audit-event-descr)]" mode="kg-intable">
     <tr><td>No events specified</td><td>N/A</td></tr>
   </xsl:template>
@@ -189,28 +248,28 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <xsl:template match="cc:audit-events" name="audit-events">
-    <xsl:variable name="table" select="@table"/>
-    <xsl:apply-templates/>
-    <table class="" border="1">
-    <tr><th>Requirement</th>
-        <th>Auditable Events</th>
-        <th>Additional Audit Record Contents</th></tr>
-    <xsl:for-each select="//cc:f-component">
-      <tr>
-         <td><xsl:apply-templates select="." mode="getId"/></td>
-         <xsl:choose>
-            <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])">
-              <td>No events specified.</td><td>N/A</td>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table]" mode="intable"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </tr>
-    </xsl:for-each>
-    </table>
-  </xsl:template>
+  <!--  <xsl:template match="cc:audit-events" name="audit-events"> -->
+  <!--   <xsl:variable name="table" select="@table"/> -->
+  <!--   <xsl:apply-templates/> -->
+  <!--   <table class="" border="1"> -->
+  <!--   <tr><th>Requirement</th> -->
+  <!--       <th>Auditable Events</th> -->
+  <!--       <th>Additional Audit Record Contents</th></tr> -->
+  <!--   <xsl:for-each select="//cc:f-component"> -->
+  <!--     <tr> -->
+  <!--        <td><xsl:apply-templates select="." mode="getId"/></td> -->
+  <!--        <xsl:choose> -->
+  <!--           <xsl:when test="not(cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table])"> -->
+  <!--             <td>No events specified.</td><td>N/A</td> -->
+  <!--           </xsl:when> -->
+  <!--           <xsl:otherwise> -->
+  <!--             <xsl:apply-templates select="cc:audit-event[cc:table/@known=$table]|cc:audit-event[cc:table/@other=$table]" mode="intable"/> -->
+  <!--           </xsl:otherwise> -->
+  <!--        </xsl:choose> -->
+  <!--     </tr> -->
+  <!--   </xsl:for-each> -->
+  <!--   </table> -->
+  <!-- </xsl:template> -->
 
   <!-- ############### -->
   <!--                 -->
