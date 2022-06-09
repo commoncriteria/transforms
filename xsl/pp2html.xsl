@@ -336,11 +336,16 @@
   </xsl:template>
 
 
+  <!-- ########################################
+       Consume invisible f-component
+       ######################################## -->
+  <xsl:template match="cc:f-component[@status='invisible']"/>
+  
   <!-- ######################################## 
          This template handles f-components for PPs
          and packages when not appendisizing (i.e. NOT RELEASE)
        ######################################## -->
-  <xsl:template match="cc:f-component[not(/cc:Module)]">
+  <xsl:template match="cc:f-component[not(/cc:Module or @status='invisible')]">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
