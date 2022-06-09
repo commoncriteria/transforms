@@ -46,12 +46,16 @@
 
   <include href="StrictCommons.rng">
     <define name="custom-basic-content-pat">
-       <element name="if-opt-app">
+      <choice>
+	<element name="if-opt-app">
           <a:documentation>
-Content that only appears if the optional appendices exist.
+	    Content that only appears if the optional appendices exist.
           </a:documentation>
           <ref name="basic-content-pat"/>
-       </element>
+	</element>
+	<ref name="external-doc"/>
+      </choice>
+      
     </define>
 
    <!--

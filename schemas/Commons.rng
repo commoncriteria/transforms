@@ -350,6 +350,21 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     <empty/>
   </define>
 
+
+  <define name="external-doc">
+    <element name="external-doc">
+      <a:documentation>
+	Groups audit 
+      </a:documentation>
+      <attribute name="ref">
+	<a:documentation>Points to the id of the external document</a:documentation>
+      </attribute>
+      <oneOrMore>
+	<ref name="audit-events-pat"/>
+      </oneOrMore>
+    </element>
+  </define>
+  
   <define name="audit-events-pat">
     <zeroOrMore>
       <element name="audit-event">
@@ -358,7 +373,12 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
               Normal means that the content of the audit-event-descr tag literally represents an audit event.
               Optional means that the content of the audit-event-descr tag should be treated as a selection with one other 
               option as "None." 
-          </a:documentation>
+        </a:documentation>
+	<optional>
+	  <attribute name="ref-cc-id">
+	    <a:documentation>This is only used for audit events add to external documents right now</a:documentation>
+	  </attribute>
+	</optional>
           <optional>
               <attribute name="type">
                   <choice>
@@ -370,7 +390,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
          <a:documentation>
               The "table" attribute identifies the audit table to which the current audit event belongs.
               The default value is the value of the status attribute of the enclosing f-component (mandatory,
-              optional, sel-based, or objective). If specified, the value must match the name of a table defined in a
+              optional, sel-based, or objective). If specified, the value must match the name of a talbe defined in a
               audit-table tag.
           </a:documentation>
           <optional>
@@ -1404,6 +1424,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    	        <ref name="ext-comp-def-pat"/>
 	      </choice>
       </oneOrMore>
+      <ref name="basic-content-pat"/>
   </define>
  
   <define name="f-comp-content-pat">
