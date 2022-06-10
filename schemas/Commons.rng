@@ -325,30 +325,30 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
        <choice>
          <ref name="to-attr"/>
          <attribute name="g">
-           <!-- <choice> -->
-           <!--   <value>glossary</value> -->
-           <!--   <value>CC</value> -->
-           <!--   <value>t-audit-mandatory</value> -->
-           <!--   <value>t-audit-optional</value> -->
-           <!--   <value>t-audit-objective</value> -->
-           <!--   <value>t-audit-sel-based</value> -->
-           <!--   <value>t-audit-impl-dep</value> -->
-           <!--   <value>optional-reqs</value> -->
-           <!--   <value>objective-reqs</value> -->
-           <!--   <value>feat-based-reqs</value> -->
-           <!--   <value>sel-based-reqs</value> -->
-           <!--   <value>use-case-appendix</value> -->
-           <!--   <ref name="gen-values"/> -->
-           <!--  </choice> -->
+           <choice>
+             <value>glossary</value>
+             <value>CC</value>
+             <value>t-audit-mandatory</value>
+             <value>t-audit-optional</value>
+             <value>t-audit-objective</value>
+             <value>t-audit-sel-based</value>
+             <value>t-audit-impl-dep</value>
+             <value>optional-reqs</value>
+             <value>objective-reqs</value>
+             <value>feat-based-reqs</value>
+             <value>sel-based-reqs</value>
+             <value>use-case-appendix</value>
+             <ref name="gen-values"/>
+            </choice>
          </attribute>
        </choice>
     </element>
   </define>
 
-  <!-- <define name="gen-values"> -->
-  <!--   <a:documentation> This field is extendable for </a:documentation> -->
-  <!--   <empty/> -->
-  <!-- </define> -->
+  <define name="gen-values">
+    <a:documentation> This field is extendable for other PP documents.</a:documentation>
+    <notAllowed/>
+  </define>
 
 
   <define name="external-doc">
@@ -453,7 +453,8 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
 	
  <define name="audit-table-pat">
     <element name="audit-table">
-      <attribute name="table" />
+      <attribute name="table"/>
+      <ref name="id-attr"/>
       <optional>
 	<a:documentation>Used to explicitly set the table title</a:documentation>
 	<attribute name="title"/>
