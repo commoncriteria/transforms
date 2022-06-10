@@ -90,6 +90,8 @@
   <!-- ############### -->
   <xsl:template match="cc:audit-table" name="audit-table">
     <xsl:param name="thistable" select="@table"/>
+
+
     <xsl:variable name="nicename"><xsl:choose>
       <xsl:when test="@title"><xsl:value-of select="@title"/></xsl:when>
       <xsl:otherwise>Auditable Events for <xsl:value-of select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/> Requirements</xsl:otherwise>
@@ -99,7 +101,7 @@
       <!--      <xsl:if test="not(node())">-->
       <caption><xsl:call-template name="ctr-xsl">
         <xsl:with-param name="ctr-type" select="'Table'"/>
-	<xsl:with-param name="id" select="concat('t-audit-',$thistable)"/>
+	<xsl:with-param name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise><xsl:value-of select="concat('t-audit-',$thistable)"/></xsl:otherwise></xsl:choose></xsl:with-param>
       </xsl:call-template>: <xsl:value-of select="$nicename"/></caption>
       <!--      </xsl:if>-->
       <!--<xsl:apply-templates/>-->
