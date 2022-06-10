@@ -13,7 +13,7 @@
   <xsl:template name="sanity-checks">
     <!--                                          if it has an aactivity or a sibling has a non-element-specific aactivity -->
     <xsl:for-each select="//h:s//cc:assignable|//h:s//cc:selectables">
-      <xsl:message>* Error: Found a "<xsl:value-of select="local-name()"/>" element that is buried until stricken text:
+      <xsl:message>* Error: Found a "<xsl:value-of select="local-name()"/>" element that is buried under stricken text:
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
