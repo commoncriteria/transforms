@@ -1035,6 +1035,9 @@ Modification definition. This text goes in the
             <a:documentation>
               Denotes a single test.
             </a:documentation>
+	    <optional><element name="applies-if">
+	      <ref name="and-pat"/>
+	    </element></optional>
              <oneOrMore>
               <choice>
                 <ref name="basic-content-pat"/>

@@ -413,7 +413,8 @@ The following sections list Common Criteria and technology terms used in this do
     <li>
       <b>Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
             select="count(preceding-sibling::cc:test) + 1"/>.</xsl:for-each><xsl:value-of
-          select="count(preceding-sibling::cc:test) + 1"/>: </b>
+            select="count(preceding-sibling::cc:test) + 1"/>
+      <xsl:if test="cc:applies-if or cc:depends">[conditional]</xsl:if>: </b>
       <xsl:apply-templates/>
     </li>
   </xsl:template>
