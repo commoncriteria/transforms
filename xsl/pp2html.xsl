@@ -708,7 +708,7 @@
            </xsl:element>
            
 	    <xsl:choose>
-	      <xsl:when test="//*[cc:fcomponent/@status=$type]//cc:audit-event">
+	      <xsl:when test="//*[cc:f-component/@status=$type]//cc:audit-event">
 		<xsl:if test="/cc:Package">
 		  <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
 		</xsl:if>
