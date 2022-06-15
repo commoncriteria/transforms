@@ -18,7 +18,7 @@
       </xsl:message>
     </xsl:for-each>
     <xsl:for-each select="//cc:f-element[not(.//cc:aactivity or ..//cc:aactivity[not(@level='element' or parent::cc:management-function)])]">
-      <xsl:message>* Error: F-Element <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
+      <xsl:message>* Error: F-Element <xsl:apply-templates select="." mode="getId"/> <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
