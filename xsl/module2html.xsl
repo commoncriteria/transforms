@@ -96,7 +96,10 @@
   <!--      -->
   <!-- ############### -->
   <xsl:template match="/cc:Module//*[@title='Security Requirements']|/cc:Module//sec:Security_Requirements">
-    <h1 id="{@id}" class="indexable" data-level="1">Security Requirements</h1>
+    <xsl:variable name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise>Security_Requirements</xsl:otherwise></xsl:choose></xsl:variable>
+
+    
+    <h1 id="{$id}" class="indexable" data-level="1">Security Requirements</h1>
     <xsl:call-template name="secrectext"/>
     <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>

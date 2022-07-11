@@ -121,7 +121,8 @@
       </xsl:call-template>
     assignment</a>
  </xsl:template>
- 
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -170,7 +171,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:ctr|cc:figure|cc:equation" mode="make_xref">
+  <xsl:template match="cc:ctr|cc:figure|cc:equation|cc:audit-table" mode="make_xref">
     <xsl:param name="eprefix"/> <!-- explicit prefix -->
     <xsl:param name="has-eprefix"/>
 
@@ -178,6 +179,7 @@
       <xsl:with-param name="prefix"><xsl:choose>
         <xsl:when test="$has-eprefix='y'"><xsl:value-of select="$eprefix"/></xsl:when>
         <xsl:when test="local-name()='equation'">Eq. </xsl:when>
+	<xsl:when test="local-name()='audit-table'">Table </xsl:when>
         <xsl:otherwise><xsl:apply-templates select="." mode="getPre"/></xsl:otherwise>
       </xsl:choose></xsl:with-param>
       <xsl:with-param name="id" select="@id"/>

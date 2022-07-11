@@ -336,11 +336,16 @@
   </xsl:template>
 
 
+  <!-- ########################################
+       Consume invisible f-component
+       ######################################## -->
+  <xsl:template match="cc:f-component[@status='invisible']"/>
+  
   <!-- ######################################## 
          This template handles f-components for PPs
          and packages when not appendisizing (i.e. NOT RELEASE)
        ######################################## -->
-  <xsl:template match="cc:f-component[not(/cc:Module)]">
+  <xsl:template match="cc:f-component[not(/cc:Module or @status='invisible')]">
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
     <div class="comp" id="{$full_id}">
@@ -384,8 +389,9 @@
                 Its inclusion in depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends/@*">
-                    <xsl:variable name="ref-id" select="text()"/>
-                      <li><a href="#{@ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+                    <xsl:variable name="ref-id" select="."/>
+		    <xsl:message>Looking for <xsl:value-of select="$ref-id"/></xsl:message>
+                      <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A: Implementation-based Requirements.
@@ -704,7 +710,7 @@
            </xsl:element>
            
 	    <xsl:choose>
-	      <xsl:when test="//*[cc:fcomponent/@status=$type]//cc:audit-event">
+	      <xsl:when test="//*[cc:f-component/@status=$type]//cc:audit-event">
 		<xsl:if test="/cc:Package">
 		  <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:audit-table-explainer"/>
 		</xsl:if>

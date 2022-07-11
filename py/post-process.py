@@ -369,7 +369,7 @@ class State:
                 brokeRef.text = ""
             try:
                 # Append ref text.
-                brokeRef.text = (brokeRef.text + target.text).strip()
+                brokeRef.text = (brokeRef.text + getalltext(target)).strip()
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
@@ -434,7 +434,10 @@ def getalltext(elem):
     if elem.text:
         ret = elem.text
     for child in elem:
-        ret = ret+getalltext(child)+child.tail
+        ret = ret+getalltext(child)
+        if child.tail is not None:
+            ret = ret +child.tail
+    return ret
 
 
 def safe_get_attribute(element, attribute, default=""):

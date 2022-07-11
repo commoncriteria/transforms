@@ -14,7 +14,10 @@
 	<!-- very important, for special characters and umlauts iso8859-1-->
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-	<xsl:template match="/cc:PP">
+	<xsl:variable name="doctype"><xsl:value-of select="local-name(/cc:*)"/></xsl:variable>
+
+	<!-- <xsl:template match="/cc:PP"> -->
+	<xsl:template match="/">
 	    <!-- Start with !doctype preamble for valid (X)HTML document. -->
 	    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;&#xa;</xsl:text>
 		<html xmlns="http://www.w3.org/1999/xhtml">
@@ -190,11 +193,29 @@
 						<td>Assurance Activity</td>
 					</thead>
 
-					<xsl:apply-templates select="//cc:f-element"/>
+					<xsl:apply-templates select="/cc:PP//cc:f-element"/>
+					<xsl:apply-templates select="//cc:man-sfrs//cc:f-element"/>
+					<xsl:if test="//cc:modified-sfrs//cc:f-element"><tr><td colspan="3">Modified SFRs</td></tr></xsl:if>
+					<xsl:apply-templates select=".//cc:modified-sfrs//cc:f-element"/>
+					<xsl:if test="//cc:opt-sfrs//cc:f-element"><tr><td colspan="3">Optional SFRs</td></tr></xsl:if>
+					<xsl:apply-templates select=".//cc:opt-sfrs//cc:f-element"/>
+					<xsl:if test="//cc:sel-sfrs//cc:f-element"><tr><td colspan="3">Selection-based SFRs</td></tr></xsl:if>
+					<xsl:apply-templates select=".//cc:sel-sfrs//cc:f-element"/>
+					<xsl:if test="//cc:obj-sfrs//cc:f-element"><tr><td colspan="3">Objective SFRs</td></tr></xsl:if>
+					<xsl:apply-templates select=".//cc:obj-sfrs//cc:f-element"/>
+					<xsl:if test="//cc:impl-dep-sfrs//cc:f-element"><tr><td colspan="3">Implementation Dependent SFRs</td></tr></xsl:if>
+					<xsl:apply-templates select=".//cc:imp-dep-sfrs//cc:f-element"/>
+
+					
+					<xsl:for-each select="//cc:base-pp[.//f-element]">
+					  <tr><td colspan="3"><xsl:value-of select="@id"/></td></tr>
+					  <xsl:if test="cc:modified-sfrs//cc:f-element"><tr><td colspan="3">Modified SFRs</td></tr></xsl:if>
+					  <xsl:apply-templates select=".//cc:modified-sfrs//cc:f-element"/>
+					  <xsl:if test="cc:additional-sfrs//cc:f-element"><tr><td colspan="3">Additional SFRs</td></tr></xsl:if>
+					  <xsl:apply-templates select=".//cc:additional-sfrs//cc:f-element"/>
+					</xsl:for-each>
 				</table>
-
 				<div class="tabletitle"> Security Assurance Requirements </div>
-
 				<table>
 					<thead>
 						<td>ID</td>
@@ -212,7 +233,7 @@
 
 
 	<xsl:template match="cc:f-element | cc:a-element">
-	  <xsl:variable name="reqid" select="translate(@id,$lower,$upper)"/>
+	  <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 	  <xsl:variable name="componentid" select="translate(../@id,$lower,$upper)"/>
 	  <tr>
 	    <td id="{$reqid}">

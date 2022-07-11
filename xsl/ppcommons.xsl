@@ -369,7 +369,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:xref[@g]">
      <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
-      <xsl:with-param name="prefix" select="'Section '"/>
+      <xsl:with-param name="prefix" select="@pre"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -413,7 +413,8 @@ The following sections list Common Criteria and technology terms used in this do
     <li>
       <b>Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
             select="count(preceding-sibling::cc:test) + 1"/>.</xsl:for-each><xsl:value-of
-          select="count(preceding-sibling::cc:test) + 1"/>: </b>
+            select="count(preceding-sibling::cc:test) + 1"/>
+      <xsl:if test="cc:applies-if or cc:depends">[conditional]</xsl:if>: </b>
       <xsl:apply-templates/>
     </li>
   </xsl:template>
@@ -1010,7 +1011,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="head">
-      <head>
+    <head>
+      <meta content="text/html;charset=utf-8" http-equiv="Content-Type"></meta>
+	<meta content="utf-8" http-equiv="encoding"></meta>
 	<title><xsl:value-of select="$title"/></title>
         <xsl:call-template name="pp_js"/>
         <style type="text/css">
