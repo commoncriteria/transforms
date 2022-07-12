@@ -274,6 +274,7 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -681,7 +682,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:value-of select="//cc:PPTitle"/>
   </xsl:template>
 
-
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -689,6 +690,16 @@ The following sections list Common Criteria and technology terms used in this do
     PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="/cc:Module/@target-products"/></xsl:call-template>
   </xsl:template>
 
+  
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="/cc:Module" mode="get_product">
+    herehrere
+    <xsl:value-of select="@target_product"/>
+  </xsl:template>
+
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
