@@ -33,7 +33,10 @@
 
   <xsl:variable name="title"><xsl:choose>
       <xsl:when test="//cc:PPTitle"><xsl:value-of select="//cc:PPTitle"/></xsl:when>
-      <xsl:otherwise>PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="/cc:*/@target-products"/></xsl:call-template></xsl:otherwise>
+      <xsl:otherwise>PP-Module for <!--
+      --><xsl:call-template name="cap_first_letters">
+      <xsl:with-param name="val"><x:apply-templates mode="get_product_plural" select="/cc:Module"/></xsl:with-param>
+      </xsl:call-template></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
   <!--##############################################
@@ -687,18 +690,17 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="/cc:Module" mode="get_title">
-    PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val" select="/cc:Module/@target-products"/></xsl:call-template>
+    PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
+    <x:apply-templates mode="get_product_plural" select="/cc:Module"/></xsl:with-param></xsl:call-template>
   </xsl:template>
 
   
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="/cc:Module" mode="get_product">
-    herehrere
-    <xsl:value-of select="@target_product"/>
-  </xsl:template>
-
+  <xsl:template match="/cc:Module" mode="get_product"><xsl:value-of select="@target-product"/></xsl:template>
+  <xsl:template match="/cc:Module[@target-products]" mode="get_product_plural"><xsl:value-of select="@target-product"/></xsl:template>
+  <xsl:template match="/cc:Module[not(@target-products)]" mode="get_product_plural"><xsl:apply-templates mode="get_product" select="."/>s</xsl:template>
   
   <!-- ############### -->
   <!--                 -->

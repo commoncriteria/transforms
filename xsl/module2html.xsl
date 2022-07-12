@@ -180,7 +180,7 @@
       <xsl:apply-templates select="./cc:con-req"/>
       This PP-Module identifies several SFRs from the
       <xsl:apply-templates mode="short" select="."/> that are needed to support
-      <xsl:value-of select="/cc:Module/@target-products"/> functionality.
+      <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/> functionality.
       This is considered to be consistent because the functionality provided by the
       <xsl:apply-templates mode="short" select="."/> is being used for its intended purpose.
       <xsl:choose>
@@ -191,11 +191,12 @@
             as well as new SFRs 
           </xsl:if>
           that are used entirely to provide functionality for
-          <xsl:value-of select="/cc:Module/@target-products"/>.
+	  <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>
         </xsl:when>
         <xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
             The PP-Module identifies new SFRs that are used entirely to provide
-            functionality for <xsl:value-of select="/cc:Module/@target-products"/>.
+            functionality for
+ 	    <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
         </xsl:when>
         <xsl:otherwise/>
       </xsl:choose>

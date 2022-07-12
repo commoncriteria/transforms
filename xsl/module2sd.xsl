@@ -384,7 +384,8 @@ guidance, and testing.</p>
     <h2 id="scope" class="indexable" data-level="1">Technology Area and Scope of Supporting Document</h2>
     <p>The scope of the <x:apply-templates select="/cc:*" mode="get_title"/> is
     to describe the security functionality of 
-      <x:value-of select="/cc:*/@target-products"/> products in terms of 
+    <x:apply-templates mode="get_product_plural" select="/cc:Module"/>
+    products in terms of 
     [CC] and to define functional and assurance requirements for them.
 
     <x:if test="//cc:base-pp">
@@ -396,7 +397,10 @@ guidance, and testing.</p>
 	</ul>
     <br/>
     This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for :
-    <ul><li><x:value-of select="concat(/cc:*/@target-products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
+    <x:variable name="products"><x:apply-templates mode="get_product_plural" select="/cc:Module"/></x:variable>
+
+    
+    <ul><li><x:value-of select="concat($products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
     As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activities to the Base-PP(s) it modifies.
     </x:if>
     </p>
@@ -475,12 +479,14 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
       </table>
       </p>
       <p><b>General Purpose:</b><br/>
-      The purpose of this SD is to define evaluation methods for the functional behavior of 
-      <x:value-of select="/cc:*/@target-products"/>  products.
+      The purpose of this SD is to define evaluation methods for the functional behavior of
+      <x:apply-templates mode="get_product" select="/cc:Module"/>      
+      products.
       </p>
       <p><b>Acknowledgments:</b><br/>
       This SD was developed with support from NIAP 
-      <x:value-of select="/cc:*/@target-products"/> Technical Community members, with representatives from industry, government 
+      <x:apply-templates mode="get_product_plural" select="/cc:Module"/>
+      Technical Community members, with representatives from industry, government 
       agencies, Common Criteria Test Laboratories, and members of academia.
       </p>
     </div>
