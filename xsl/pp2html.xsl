@@ -369,9 +369,11 @@
           </xsl:for-each>
 	  <!-- This is a little broken -->
 	  <xsl:for-each select="cc:depends[cc:external-doc]">
-                <xsl:variable name="doc_id" select="//cc:*[@id=current()/../cc:external-doc/@ref]/@id"/>
+                <xsl:variable name="doc_id" select="cc:external-doc/@ref"/>
                 <xsl:variable name="path" select="concat($work-dir,'/',$doc_id,'.xml')"/>
-                <xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/> from 
+
+		
+		<xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/> from 
                 <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template>
 	  </xsl:for-each>
 
