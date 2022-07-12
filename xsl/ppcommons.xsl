@@ -1101,7 +1101,7 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:variable name="ignore_list" select="concat(',',//cc:suppress,',')"/>
 
       <xsl:for-each select="//cc:term[@abbr]|document('boilerplates.xml')//cc:cc-terms/cc:term[@abbr]">
-        <xsl:sort select="@abbr"/>
+        <xsl:sort select="translate(@abbr,$lower, $upper)"/>
 
         <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
         <tr>
