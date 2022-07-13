@@ -180,7 +180,7 @@
       <xsl:apply-templates select="./cc:con-req"/>
       This PP-Module identifies several SFRs from the
       <xsl:apply-templates mode="short" select="."/> that are needed to support
-      <xsl:value-of select="/cc:Module/@target-products"/> functionality.
+      <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/> functionality.
       This is considered to be consistent because the functionality provided by the
       <xsl:apply-templates mode="short" select="."/> is being used for its intended purpose.
       <xsl:choose>
@@ -191,11 +191,12 @@
             as well as new SFRs 
           </xsl:if>
           that are used entirely to provide functionality for
-          <xsl:value-of select="/cc:Module/@target-products"/>.
+	  <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>
         </xsl:when>
         <xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
             The PP-Module identifies new SFRs that are used entirely to provide
-            functionality for <xsl:value-of select="/cc:Module/@target-products"/>.
+            functionality for
+ 	    <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
         </xsl:when>
         <xsl:otherwise/>
       </xsl:choose>
@@ -332,8 +333,9 @@
        Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
-      In a PP-Configuration that includes <xsl:apply-templates mode="short" select="."/>,
-      the TOE is expected to rely on some of the security functions implemented by the <xsl:value-of select="@product"/>
+      In a PP-Configuration that includes the <xsl:apply-templates mode="short" select="."/>,
+      the TOE is expected to rely on some of the security functions implemented by the
+      <xsl:apply-templates mode="get_product" select="/"/>
       as a whole and evaluated against the  <xsl:apply-templates mode="short" select="."/>.
       The following sections describe any modifications that the ST author must make to the SFRs
       defined in the <xsl:apply-templates mode="short" select="."/> in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.

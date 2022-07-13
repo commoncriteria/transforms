@@ -24,23 +24,24 @@ Contains transforms for extended component definitions
 
 	All extended components specified in the <xsl:call-template name="doctype-short"/> are listed in this table:
 
-<table>
-	<caption><b><xsl:call-template name="ctr-xsl">
+<table class="sort_kids_">
+  <caption data-sortkey="#0"><b><xsl:call-template name="ctr-xsl">
           <xsl:with-param name="ctr-type">Table</xsl:with-param>
           <xsl:with-param name="id" select="t-ext-comp_map"/>
 	 </xsl:call-template>: Extended Component Definitions</b></caption>
-  <tr>
+  <tr data-sortkey="#1">
     <th>Functional Class</th><th>Functional Components</th> </tr>
 <!-- section is compatible with the new section styles b/c the new section style is not allowed to 
      for sections that directly contain f-components and a-components -->
 <xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//*[cc:ext-comp-def]"/></xsl:call-template>
 </table>
     <h2 id="ext-comp-defs-bg" class="indexable" data-level="2">Extended Component Definitions</h2>
-
+    <span class="sort_kids_">
     <xsl:call-template name="RecursiveGrouping">
       <xsl:with-param name="list" select="//*[cc:ext-comp-def]"/>
       <xsl:with-param name="fake_mode" select="'sections'"/>
     </xsl:call-template>
+    </span>
 <!--
     <xsl:variable name="alltitles"><xsl:for-each select="//*[./cc:ext-comp-def]/@title"><xsl:sort/><xsl:value-of select="."/>@@</xsl:for-each></xsl:variable>
     
@@ -78,8 +79,10 @@ Contains transforms for extended component definitions
   <xsl:template name="handle_ext_comp_def">
     <xsl:param name="title"/>
 
-      <xsl:variable name="classtitle" select="substring-before(substring-after($title, 'Class: '), '(')"/>
+      <!-- <xsl:variable name="classtitle" select="substring-before(substring-after($title, 'Class: '), '(')"/> -->
       <xsl:variable name="classid" select="substring-after(substring-before($title, ')'), '(')"/>
+
+      <span data-sortkey="{$title}">
       
       <h3 id="ext-comp-{$classid}" class="indexable" data-level="3">
         <xsl:value-of select="$title"/>
@@ -184,7 +187,8 @@ Contains transforms for extended component definitions
 	 </div>
       </xsl:for-each>
       </div>
-    </xsl:for-each> <!-- f-component loop -->
+    </xsl:for-each>
+  </span>
   </xsl:template>
   
   <!-- ####################### -->
@@ -201,7 +205,7 @@ Contains transforms for extended component definitions
 
   <xsl:choose><xsl:when test="$fake_mode='table'">
   <!-- Do some work for the group -->
-  <tr> <td><xsl:value-of select="$group-identifier"/></td>
+  <tr data-sortkey="{$group-identifier}"> <td><xsl:value-of select="$group-identifier"/></td>
        <td>
          <xsl:for-each select="//*[@title=$group-identifier]/cc:ext-comp-def"><xsl:sort select="@fam-id"/>
            <xsl:value-of select="translate(@fam-id,lower,upper)"/><xsl:text> </xsl:text><xsl:value-of select="@title"/><br/>

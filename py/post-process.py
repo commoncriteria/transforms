@@ -74,7 +74,8 @@ class State:
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
         self.is_handling_first_abbrs = handle_abbrs  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
-        
+
+        self.sort_it_out() 
         self.fix_indices()
         self.fix_index_refs()
         self.fix_counters()
@@ -84,6 +85,7 @@ class State:
         self.build_termtable()
         self.fix_refs_to_main_doc()
 
+        
     def set_handle_first_abbrs(self, dfa):
         self.is_handling_first_abbrs = dfa
         return self
@@ -128,7 +130,16 @@ class State:
                     if not term == wrappable:
                         self.add_to_regex(wrappable)
                         self.plural_to_abbr[wrappable] = term
-                    
+
+    # https://stackoverflow.com/questions/46760856/using-python-to-sort-child-nodes-in-elementtree 
+    def sort_children_by(parent, attr):
+        sorted(parent, key=lambda child: child.get(attr))
+
+    def sort_it_out(self):
+        for sortable in self.getElementsByClass("sort_kids_"):
+            sortable[:] = sorted(sortable, key=lambda child: child.get("data-sortkey"))
+
+            #            sort_children_by(sortable, "data-sortkey")
 
     def build_comp_regex(self):
         comps = self.getElementsByClass('reqid') +\
