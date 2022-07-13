@@ -188,7 +188,7 @@ DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
 DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
            python3 $(TRANS)/py/post-process.py\
 	   $(HANDLE_ABBRS)                    \
-           <($(XSL_EXE) $(4) $(2) $(1))\=$(3) \
+           <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) \
            <($(XSL_EXE)      $(5) $(1))\=$(6) 
 
 #- Arg 1 is input file
@@ -260,6 +260,7 @@ pp:$(PP_HTML)
 
 module-target:
 #       Download all remote base-pps
+	echo "$(WARN_PATH) Here"
 	$(call DOIT_SD,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM),$(TRANS)/xsl/module2sd.xsl,$(SD_HTML))
 	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML), )
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
