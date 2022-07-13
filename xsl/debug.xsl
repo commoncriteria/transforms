@@ -33,16 +33,14 @@
 
   <xsl:template name="genPath">
     <xsl:param name="prevPath" select="''"/>
-    <xsl:variable name="currPath" select="concat('/',name(),'[',
-      count(preceding-sibling::*[name() = name(current())])+1,']','|',substring(text(),0,10),'|',$prevPath)"/>
+    <xsl:variable name="currPath" select="concat('/',name(),'[',count(preceding-sibling::*[name() = name(current())])+1,']','&quot;',substring(normalize-space(text()),0,10),'&quot;',$prevPath)"/>
+    
     <xsl:for-each select="parent::*">
       <xsl:call-template name="genPath">
         <xsl:with-param name="prevPath" select="$currPath"/>
       </xsl:call-template>
     </xsl:for-each>
-    <xsl:if test="not(parent::*)">
-      <xsl:value-of select="$currPath"/>      
-    </xsl:if>
+    <xsl:if test="not(parent::*)"><xsl:value-of select="$currPath"/></xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

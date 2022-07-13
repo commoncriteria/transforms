@@ -92,7 +92,7 @@
       </xsl:message>
     </xsl:if>
     <xsl:if test="count(//sec:Conformance_Claims|//*[@title='Conformance Claims'])!=1">
-      <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> Conformance Claims sections in this PP. There should be exactly 1 "Confromance Claims" section.
+      <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> Conformance Claims sections in this PP. There should be exactly 1 "Conformance Claims" section.
       </xsl:message>
     </xsl:if>
   </xsl:template>
