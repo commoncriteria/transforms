@@ -55,7 +55,6 @@
   <xsl:template match="cc:module[not(@name)]" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
-        PP-Module for 
         <xsl:value-of select="document($path)/cc:Module/@name"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
