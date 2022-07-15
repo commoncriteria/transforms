@@ -921,15 +921,15 @@ The following sections list Common Criteria and technology terms used in this do
       <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/>
       <ul> <xsl:for-each select="cc:depends"><li>
          <xsl:variable name="uid" select="@*[1]"/>
-         <xsl:choose><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
-           <xsl:for-each select="@*">  
-              <xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>,
-           </xsl:for-each>
-           is selected from 
-           <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
-         </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
-           <xsl:for-each select="@*">
-             <xsl:if test="position()!=1">/</xsl:if>
+         <xsl:choose>
+	   <xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
+             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
+             </xsl:for-each>
+             is selected from 
+             <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+           </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
+             <xsl:for-each select="@*">
+               <xsl:if test="position()!=1">/</xsl:if>
              <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
            </xsl:for-each> TOEs 
          </xsl:when><xsl:otherwise>
