@@ -95,7 +95,8 @@
   <xsl:template match="*" mode="handle-ancestors">
     <xsl:message>Definitely shouldn't be here</xsl:message>
   </xsl:template>
-    
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -152,6 +153,7 @@
       <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
     </xsl:if>
   </xsl:template>
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -193,12 +195,20 @@
        <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
        <xsl:with-param name="not" select="'1'"/>
     </xsl:apply-templates>
-    <div class="uc_not">Choose something other than: 
-      <xsl:for-each select="cc:ref-id">
+    <xsl:if test="$ref-id=//cc:module/@id">
+      <div class="uc,not,module">Exclude the 
+      <xsl:apply-templates select="//cc:module[@id=$ref-id]" mode="make_xref"/> module from the ST
+      </div>
+    </xsl:if>
+    <xsl:if test="cc:ref-id/text()=//cc:selectable/@id">
+      <div class="uc_not">Choose something other than: 
+      <xsl:for-each select="cc:ref-id[text()=//cc:selectable/@id]">
+	<!-- Not sure why this is a for -->
         <xsl:variable name="ref" select="text()"/>
         <div class="uc_not_sel">* <xsl:apply-templates select="//cc:selectable[@id=$ref]" mode="make_xref"/></div>
       </xsl:for-each>
-    </div>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 
@@ -261,7 +271,10 @@
   
  <xsl:template match="cc:ref-id" mode="use-case">
    <xsl:variable name="ref-id-txt" select="text()"/>
-    <xsl:choose>
+   <xsl:choose>
+      <xsl:when test="//cc:module[@id=$ref-id-txt]">
+	<div class="uc,module"> Include the <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="make_xref"/> module in the ST </div>
+      </xsl:when>
       <xsl:when test="//cc:selectable[@id=$ref-id-txt]">
         <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="handle-ancestors">
           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
