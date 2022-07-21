@@ -53,9 +53,14 @@
   </xsl:template>
 
   <xsl:template match="cc:module[not(@name)]" mode="make_xref">
-      <a href="{cc:url/text()}">
-        <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
-        <xsl:value-of select="document($path)/cc:Module/@name"/>,
+    <xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
+    <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
+    <xsl:variable name="name" select="document($path)/cc:Module/@name"/>
+
+    <!-- cc:url/text() -->
+    <a href="{$url}">
+	<xsl:if test="not(starts-with($name,'PP-Module for '))">PP-Module for </xsl:if>
+        <xsl:value-of select="$name"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
