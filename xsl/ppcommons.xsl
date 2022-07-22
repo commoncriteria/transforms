@@ -425,7 +425,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
     
     <li id="{$id}">
-      <b><xsl:apply-templates mode="make_xref" select="."><xsl:with-param name="class" select="'hide'"/></xsl:apply-templates>
+      <b><xsl:apply-templates mode="make_xref" select="."><xsl:with-param name="class" select="'definition'"/></xsl:apply-templates>
       
       <xsl:if test="cc:applies-if or cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>: </b>
       <xsl:apply-templates/>

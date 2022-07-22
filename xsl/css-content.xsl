@@ -68,7 +68,11 @@
        max-width: 15px;
     }
 
-
+    a.definition{
+      color: inherit;
+      text-decoration: inherit;
+    }
+      
     a {
       text-decoration: none;
       word-wrap: break-word;
