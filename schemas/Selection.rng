@@ -125,6 +125,12 @@
       </optional>
       <optional> <ref name="id-attr"/> </optional>
       <optional><element name="deprecated"><empty/></element></optional>
+      <optional><element name="readable">
+	<a:documentation>
+	  If this element is defined, when referencing the selection this text will be shown.
+	</a:documentation>
+	<text/>
+      </element></optional>
       <ref name="basic-content-pat"/>
     </element>
   </define>

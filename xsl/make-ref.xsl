@@ -142,6 +142,19 @@
     <a href="#{$target}" class="dynref">Section </a>
   </xsl:template>
 
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
+  <xsl:template match="cc:test" mode="make_xref">
+    <xsl:param name="class" select="''"/>
+    <xsl:variable name="target"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+    
+    <a href="#{$target}" class="{$class}">Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
+      select="count(preceding-sibling::cc:test) + 1"/>.</xsl:for-each><xsl:value-of
+      select="count(preceding-sibling::cc:test) + 1"/></a>
+  </xsl:template>
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->

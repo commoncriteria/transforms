@@ -1035,6 +1035,7 @@ Modification definition. This text goes in the
             <a:documentation>
               Denotes a single test.
             </a:documentation>
+	    <optional><ref name="id-attr"/></optional>
 	    <optional><element name="applies-if">
 	      <ref name="and-pat"/>
 	    </element></optional>
@@ -1614,7 +1615,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       Pattern for the id attribute
     </a:documentation>
     <attribute name="id">
-      <a:documentation>A document-wide unique string.</a:documentation>
+      <a:documentation>A document-wide unique string. Do not start with an underscore('_').</a:documentation>
       <data type="NCName"/>
     </attribute>
   </define>
