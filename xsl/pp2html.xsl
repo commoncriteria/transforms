@@ -363,7 +363,7 @@
       <xsl:if test="@status='sel-based'">
         <div class="statustag">
           <b><i>This is a selection-based component. Its inclusion depends upon selection from
-          <xsl:for-each select="//cc:f-element[.//cc:selectable[@id=current()/cc:depends/@*]]">
+          <xsl:for-each select="//cc:f-element[.//cc:selectable[@id=current()/cc:depends[not(cc:external-doc)]/@*]]">
               <xsl:apply-templates select="." mode="getId"/>
               <xsl:call-template name="commaifnotlast"/>
           </xsl:for-each>
@@ -372,13 +372,12 @@
                 <xsl:variable name="doc_id" select="cc:external-doc/@ref"/>
                 <xsl:variable name="path" select="concat($work-dir,'/',$doc_id,'.xml')"/>
 
-		
-		<xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/> from 
-                <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template>
-	  </xsl:for-each>
-
-
-	  .
+		<xsl:for-each select="@*">
+		  <xsl:variable name="refId" select="."/>
+		  <xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/><xsl:call-template name="commaifnotlast"/>
+		</xsl:for-each>
+		  from 
+                <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template></xsl:for-each>.
           <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
           </i></b>
         </div>
