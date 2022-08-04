@@ -359,9 +359,9 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <attribute name="ref">
 	<a:documentation>Points to the id of the external document</a:documentation>
       </attribute>
-      <oneOrMore>
-	<ref name="audit-events-pat"/>
-      </oneOrMore>
+      <!-- <oneOrMore> -->
+      <!-- 	<ref name="audit-events-pat"/> -->
+      <!-- </oneOrMore> -->
     </element>
   </define>
   
@@ -1771,7 +1771,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
        <ref name="ref-id"/>
        <element name="doc">
          <attribute name="ref"/>
-         <ref name="ref-id"/>
+         <oneOrMore> <ref name="ref-id"/> </oneOrMore>
        </element>
      </choice></oneOrMore>
   </define>
@@ -1837,9 +1837,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 -->
 
   <define name="rule-body">
-   <choice>
-        <ref name="or"/>
-	<ref name="if-then-expr"/>
+    <choice>
+      <oneOrMore><choice><ref name="not"/><ref name="ref-ids-pat"/></choice></oneOrMore>
+      <ref name="or"/>
+      <ref name="if-then-expr"/>
     </choice>
   </define>
 	

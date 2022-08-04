@@ -99,9 +99,7 @@
          Rule #<xsl:number count="cc:rule" level="any"/>
        </h2>
        <div>  <xsl:apply-templates select="cc:description"/></div>
-       <xsl:apply-templates select="cc:or" mode="use-case"/>
-       <xsl:apply-templates select="cc:if"/>
-       <xsl:apply-templates select="cc:then"/>
+       <xsl:apply-templates select="cc:*" mode="use-case"/>
      </xsl:for-each>
   </xsl:template>
 
@@ -121,7 +119,7 @@
   <!--   </table> -->
   <!-- </xsl:template> -->
 
-  <xsl:template match="cc:if">
+  <xsl:template match="cc:if" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
       <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">IF</td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
@@ -130,7 +128,7 @@
     </table>
   </xsl:template>
 	
-  <xsl:template match="cc:then">
+  <xsl:template match="cc:then" mode="use-case">
     <table class="uc_table_or" style="border: 1px solid black">
       <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">THEN</td><td style="display:none"></td></tr>
       <xsl:for-each select="cc:*">
