@@ -10,7 +10,12 @@
    <!--##############################################
         Template for universal sanity checks.
       ##############################################-->
-  <xsl:template name="sanity-checks">
+   <xsl:template name="sanity-checks">
+     <xsl:for-each select="//cc:raw-url">
+       <xsl:if test="contains(text(), '/master/')">
+	 <xsl:message>* Warning: A raw-url is referencing a master branch when it should be referencing a released branch: <xsl:value-of select="text()"/></xsl:message>
+       </xsl:if>
+     </xsl:for-each>
     <!--                                          if it has an aactivity or a sibling has a non-element-specific aactivity -->
     <xsl:for-each select="//h:s//cc:assignable|//h:s//cc:selectables">
       <xsl:message>* Error: Found a "<xsl:value-of select="local-name()"/>" element that is buried under stricken text:
