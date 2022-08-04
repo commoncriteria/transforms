@@ -776,6 +776,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="requires"/>
 	<!-- <ref name="selectable-id-group"/> -->
 	<ref name="custom-basic-content-pat"/>
+	<ref name="rules"/>
       </choice>
     </oneOrMore>
   </define>
@@ -1002,16 +1003,21 @@ Modification definition. This text goes in the
 	  <optional><element name="ext-comp-def-title"><ref name="f-element-title"/></element></optional>
       <optional><ref name="note"/></optional>
       <zeroOrMore><ref name="aactivity"/></zeroOrMore>
-      <zeroOrMore>
+      <optional><ref name="rules"/></optional>
+    </element>
+  </define>
+
+  <define name="rules">
+      <oneOrMore>
         <element name="rule">
           <ref name="id-attr"/>
           <optional><ref name="description"/></optional>
           <ref name="rule-body"/>
         </element>
-      </zeroOrMore>
-    </element>
+      </oneOrMore>
   </define>
 
+  
 <define name="test-obj-evi-pat">
     <optional> <element name="test-obj">
        <a:documentation>Describes the goal of the test </a:documentation>
