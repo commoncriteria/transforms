@@ -46,7 +46,7 @@
  <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
-  <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
+ <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="local-name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>
@@ -56,7 +56,7 @@
       <xsl:otherwise><xsl:value-of select="../@cc-id"/></xsl:otherwise>
     </xsl:choose></xsl:variable>
     <xsl:value-of select="translate($baseID, $lower, $upper)"/>
-    <xsl:if test="name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
+    <xsl:if test="local-name()='f-element'">.<xsl:value-of select="count(preceding-sibling::cc:f-element)+1"/></xsl:if>
     <xsl:if test="not($iter='')">/<xsl:value-of select="$iter"/></xsl:if>
   </xsl:template>
 
