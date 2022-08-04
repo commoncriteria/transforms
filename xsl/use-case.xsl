@@ -105,12 +105,11 @@
     <xsl:param name="not"/>
 
     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
-    
+    <!-- if the anscestor is in a PP-->
     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
       <div class="uc_inc_fcomp">
       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.</div>
     </xsl:if>
-    
     <!-- If the ancestor is an f-element and the previous one doesn't have the same f-element -->
     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
       <div class="uc_from_fel">
