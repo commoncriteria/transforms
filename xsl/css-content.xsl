@@ -368,7 +368,7 @@
               margin-left:0%;
               margin-top:1em;
           }
-          .comment-aa{
+          .comment{
               background-color:beige;
               color:green;
           }
