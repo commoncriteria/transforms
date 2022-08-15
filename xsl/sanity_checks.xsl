@@ -32,6 +32,9 @@
         <xsl:call-template name="genPath"/>
       </xsl:message>
     </xsl:for-each>
+    <xsl:if test="//cc:comment">
+      <xsl:message>* Warning: This document still has at least one comment.</xsl:message>
+    </xsl:if>
     <xsl:for-each select="//cc:depends/@*[not(../cc:external-doc)]">
        <xsl:if test="not(//*[@id=current()])">
         <xsl:message>* Error: Detected dangling id-reference to <xsl:value-of select="current()"/> from attribute

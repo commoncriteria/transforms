@@ -1016,6 +1016,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template match="cc:comment">
     <xsl:variable name="id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
     <span style="{@style}" class="comment {@class}" id="{$id}">
       <xsl:apply-templates/>
     </span>
