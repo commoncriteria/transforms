@@ -92,7 +92,7 @@
   <xsl:template match="cc:test[@id]" mode="getId">
     <xsl:value-of select="@id"/>
   </xsl:template> 
-  <xsl:template match="cc:text" mode="getId"><!--
+  <xsl:template match="cc:test[not(@id)]" mode="getId"><!--
 -->_t_<xsl:number count="//cc:test" level="any"/>
   </xsl:template> 
 
@@ -418,6 +418,7 @@ The following sections list Common Criteria and technology terms used in this do
     </ul>
   </xsl:template>
 
+  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -1006,28 +1007,35 @@ The following sections list Common Criteria and technology terms used in this do
       </xsl:message>
     </xsl:if>
   </xsl:template>a-->
+  <xsl:template match="cc:inline-comment" mode="getId">
+     <xsl:choose><xsl:when test="@id"></xsl:when><xsl:otherwise>Comment-<xsl:number count="//cc:inline-coment" level="any"/>-</xsl:otherwise></xsl:choose>
+  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:inline-comment">
-    <xsl:choose>
-      <xsl:when test="@linebreak='yes'">
-        <xsl:element name="div">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:element name="span">
-          <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color"
-            /></xsl:attribute>
-          <xsl:value-of select="text()"/>
-        </xsl:element>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+    <span style="{@style}" class="inline-comment {@class}" id="{$id}">
+      <xsl:apply-templates/>
+    </span>
   </xsl:template>
+
+    <!-- <xsl:choose> -->
+    <!--   <xsl:when test="@linebreak='yes'"> -->
+    <!--     <xsl:element name="div"> -->
+    <!--       <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color" -->
+    <!--         /></xsl:attribute> -->
+    <!--     </xsl:element> -->
+    <!--   </xsl:when> -->
+    <!--   <xsl:otherwise> -->
+    <!--     <xsl:element name="span"> -->
+    <!--       <xsl:attribute name="style">background-color: beige; color:<xsl:value-of select="@color" -->
+    <!--         /></xsl:attribute> -->
+    <!--       <xsl:value-of select="text()"/> -->
+    <!--     </xsl:element> -->
+    <!--   </xsl:otherwise> -->
+    <!-- </xsl:choose> -->
 
   <!-- ############### -->
   <!--                 -->
@@ -1049,6 +1057,16 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="body-begin">
+    <xsl:if test="//cc:inline-comment">
+      <div id="_commmentbox">
+	<xsl:for-each select="//cc:inline-comment">
+	  <xsl:variable name="id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+	  <a href="#{$id}">Comment: <xsl:value-of select="$id"/></a><br/>
+	</xsl:for-each>
+      </div>
+    </xsl:if>
+      
+    
     <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
     <noscript>
       <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
