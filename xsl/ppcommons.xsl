@@ -1000,23 +1000,23 @@ The following sections list Common Criteria and technology terms used in this do
   <!--
       Templates associated with debugging follow.
   -->
-<!--  <xsl:template match="cc:inline-comment[@level='critical']">
+<!--  <xsl:template match="cc:comment[@level='critical']">
     <xsl:if test="$release!='draft'">
       <xsl:message terminate="yes"> Must fix elements must be fixed before a release version can be
         generated: <xsl:value-of select="text()"/>
       </xsl:message>
     </xsl:if>
   </xsl:template>a-->
-  <xsl:template match="cc:inline-comment" mode="getId">
+  <xsl:template match="cc:comment" mode="getId">
      <xsl:choose><xsl:when test="@id"></xsl:when><xsl:otherwise>Comment-<xsl:number count="//cc:inline-coment" level="any"/>-</xsl:otherwise></xsl:choose>
   </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:inline-comment">
+  <xsl:template match="cc:comment">
     <xsl:variable name="id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-    <span style="{@style}" class="inline-comment {@class}" id="{$id}">
+    <span style="{@style}" class="comment {@class}" id="{$id}">
       <xsl:apply-templates/>
     </span>
   </xsl:template>
@@ -1057,9 +1057,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="body-begin">
-    <xsl:if test="//cc:inline-comment">
-      <div id="_commmentbox">
-	<xsl:for-each select="//cc:inline-comment">
+    <xsl:if test="//cc:comment">
+      <div id="commmentbox-">
+	<xsl:for-each select="//cc:comment">
 	  <xsl:variable name="id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 	  <a href="#{$id}">Comment: <xsl:value-of select="$id"/></a><br/>
 	</xsl:for-each>
