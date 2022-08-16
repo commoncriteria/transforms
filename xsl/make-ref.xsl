@@ -24,9 +24,11 @@
   <!-- ############### -->
   <xsl:template name="selectable-nolink">
       <xsl:choose>
-        <xsl:when test="cc:readable"><xsl:apply-templates select="cc:readable"/></xsl:when>
+        <xsl:when test="cc:readable">
+	  <xsl:apply-templates select="cc:readable/node()"/>
+	</xsl:when>
 <!--- We want snips in our selectable, but not snips that are descendants of subselectabls -->
-        <xsl:when test=".//cc:snip">
+        <xsl:when test="./cc:snip">
           <xsl:apply-templates select="descendant::cc:snip[1]"/>
           </xsl:when> 
         <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
