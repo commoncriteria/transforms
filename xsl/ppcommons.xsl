@@ -413,9 +413,10 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:testlist">
-    <ul>
+    <span class="testlist-"><ul>
       <xsl:apply-templates/>
     </ul>
+    </span>
   </xsl:template>
 
   

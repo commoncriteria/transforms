@@ -152,7 +152,7 @@
     <xsl:param name="class" select="''"/>
     <xsl:variable name="target"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
     
-    <a href="#{$target}" class="{$class}">Test <xsl:for-each select="ancestor::cc:test"><xsl:value-of
+    <a href="#{$target}" class="{$class}">Test <xsl:number count="//cc:testlist" level="any"/>.<xsl:for-each select="ancestor::cc:test"><xsl:value-of
       select="count(preceding-sibling::cc:test) + 1"/>.</xsl:for-each><xsl:value-of
       select="count(preceding-sibling::cc:test) + 1"/></a>
   </xsl:template>
