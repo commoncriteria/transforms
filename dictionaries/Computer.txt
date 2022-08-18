@@ -16,7 +16,8 @@ LDAP
 evaluator
 evaluators
 UI
-whitelist
+allowlist
+allowlisting
 adware
 untrusted
 datagram
