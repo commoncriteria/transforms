@@ -56,7 +56,7 @@ BASE ?= $(shell echo "$${PWD$H*/}")
 PP_XML ?= $(IN)/$(BASE).xml
 
 #- Folder containing TDs
-TD_DIR = TDs
+TD_DIR = input/tds
 TDs = $(shell [ ! -d $(TD_DIR) ] || find $(TD_DIR) -name '*.xml' -type f)
 
 
@@ -156,6 +156,8 @@ DIFF_EXT= "html"
 #- for diffing 
 DIFF_USER_MAKE ?= 
 
+#- Path to output of effective xml file
+EFF_XML= $(OUT)/effective.xml
 
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
@@ -194,7 +196,6 @@ DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
 #- Arg 1 is input file
 #- Arg 2 is File/Pattern to be spellchecked
 #- Arg 3 is output
-
 SPELLCHECKER?=bash -c "hunspell -l -H -p <(python3 $(TRANS)/py/get_spell_allowlist.py $1; cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $2 | sort -u >$3"
 
 
@@ -219,7 +220,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr spellcheck-release linkcheck pp help release clean diff little-diff listing #effective
+.PHONY: default meta-info all spellcheck spellcheck-esr spellcheck-release linkcheck pp help release clean diff little-diff listing quickclean #effective
 
 
 #---
@@ -350,6 +351,10 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
 
+$(EFF_XML): $(PP_XML) $(TDs)
+	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) > $(EFF_XML)
+
+
 # Target to build the effective
 # effective: $(PP_EFFECTIVE)
 # $(PP_EFFECTIVE): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML) $(TDs)
@@ -399,6 +404,10 @@ validate:
 #- Builds quick help
 help:
 	grep -A 1 '^#-' -r $(TRANS)/*.make --include='*.make' -h
+
+#- Removes the output HTML files
+quickclean:
+	rm -f $(OUT)/*.html
 
 #- Build to clean the system
 clean:
