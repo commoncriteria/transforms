@@ -71,7 +71,7 @@
 		  </attribute>
 		  <choice>
 		    <group>
-		      <optional><attribute name="reuse-id"/></optional>
+		      <!-- <optional><attribute name="reuse-id"/></optional> -->
 		      <ref name="anything"/>
 		    </group>
 		    <attribute name="reuse-ref">
@@ -120,11 +120,11 @@
     <zeroOrMore>
       <choice>
 	<text/>
-	<attribute>
-	  <anyName/>
-	</attribute>
 	<element>
 	  <anyName/>
+	  <zeroOrMore>
+	    <attribute><anyName/></attribute>
+	  </zeroOrMore>
 	  <ref name="anything"/>
 	</element>
       </choice>
