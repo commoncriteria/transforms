@@ -1009,7 +1009,7 @@ The following sections list Common Criteria and technology terms used in this do
     </xsl:if>
   </xsl:template>a-->
   <xsl:template match="cc:comment" mode="getId">
-     <xsl:choose><xsl:when test="@id"></xsl:when><xsl:otherwise>Comment-<xsl:number count="//cc:inline-coment" level="any"/>-</xsl:otherwise></xsl:choose>
+     <xsl:choose><xsl:when test="@id"></xsl:when><xsl:otherwise>Comment-<xsl:number count="//cc:comment" level="any"/>-</xsl:otherwise></xsl:choose>
   </xsl:template>
 
   <!-- ############### -->
