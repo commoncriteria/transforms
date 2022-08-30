@@ -157,7 +157,7 @@ DIFF_EXT= "html"
 DIFF_USER_MAKE ?= 
 
 #- Path to output of effective xml file
-EFF_XML= $(OUT)/effective.xml
+EFF_XML ?= $(OUT)/effective.xml
 
 #- Your xsl transformer.
 #- It should be at least XSL level-1 compliant.
@@ -351,8 +351,9 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
 
-$(EFF_XML): $(PP_XML) $(TDs)
-	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) > $(EFF_XML)
+#$(EFF_XML): $(PP_XML) $(TDs)
+effective:
+	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
 
 
 # Target to build the effective
