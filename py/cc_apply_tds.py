@@ -11,6 +11,9 @@ def get_num(fullpath):
     path = pathlib.Path(fullpath)
     return int( path.stem )
 
+def log(msg):
+    sys.stderr.write(msg)
+    sys.stderr.write("\n")
 
 
 if __name__ == "__main__":
@@ -31,11 +34,13 @@ if __name__ == "__main__":
         for replace in replaces:
             for xpath_spec in replace.findall(".//cc:xpath-specified", ns):
                 xpath = "."+ xpath_spec.attrib["xpath"]
-                replaced = root.find(xpath)
+                replaced = root.find(xpath, ns)
                 if replaced is None:
+                    log("Cannot find node")
                     continue
                 parent = parent_map[replaced]
                 if parent is None:
+                    log("Cannot find parent")
                     continue
                 kid_cache = []
                 for kid in list(parent):
