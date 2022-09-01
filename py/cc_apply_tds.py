@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 import sys
+import pathlib
 import xml.etree.ElementTree as ET
 
 ns = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
+
+def get_num(fullpath):
+    path = pathlib.Path(fullpath)
+    return int( path.stem )
+
 
 
 if __name__ == "__main__":
@@ -17,7 +23,9 @@ if __name__ == "__main__":
 
 
     # Need to sort
-    for aa in sys.argv[2:]:
+    tds = sys.argv[2:]
+    tds.sort(key=get_num)
+    for aa in tds:
         td = ET.parse(aa).getroot()
         replaces = td.findall(".//cc:replace", ns)
         for replace in replaces:
