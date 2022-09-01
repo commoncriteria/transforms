@@ -353,6 +353,7 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 
 #$(EFF_XML): $(PP_XML) $(TDs)
 effective:
+	echo "Writing to $$EFF_XML"
 	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
 
 
