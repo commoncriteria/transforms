@@ -9,6 +9,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 import os
 import pathlib
+import tempfile
 
 def warn(msg):
     log(2, msg)
@@ -45,6 +46,15 @@ def download_url(url, path):
                   ' Downloading ' + url + ' to ' + fpath, file=sys.stderr)
             urllib.request.urlretrieve(url, fpath)
 
+def get_effective_doc(url, branch, fpath):
+    workdir = tempfile.TemporaryDirectory()
+    abspath = os.path.abspath(fpath)
+    os.system("cd "+workdir.name +
+              " && git clone --branch " + branch + " --recursive " + url +
+              " && cd *"
+              " && EFF_XML=\"" + abspath + "\"  make effective")
+
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -68,16 +78,18 @@ if __name__ == "__main__":
         if "name" in pkg.attrib:
             continue
         filename = pkg.attrib["id"] + ".xml"
-        url = "".join(pkg.find("./cc:raw-url", ns).text.split())
-
-        root = os.path.expanduser(dir)
+        url = "".join(pkg.find("./cc:git/cc:url", ns).text.split())
+        branch = pkg.find("./cc:git/cc:branch", ns).text
+        rootdir = os.path.expanduser(dir)
         if not filename:
             filename = os.path.basename(url)
-        fpath = os.path.join(root, filename)
-        os.makedirs(root, exist_ok=True)
+        fpath = os.path.join(rootdir, filename)
+        os.makedirs(rootdir, exist_ok=True)
         f_info = pathlib.Path(fpath)
+        
         if not f_info.exists():
-            download_url(url, fpath)
+            get_effective_doc(url, branch, fpath)
+#            download_url(url, fpath)
         #
 #        open( str(ctr)+".xml", 'wb').write( requests.get( url ) )
 
