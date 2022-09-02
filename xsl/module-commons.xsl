@@ -12,7 +12,7 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:raw-url]" mode="short">
+  <xsl:template match="cc:base-pp[cc:git]" mode="short">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 
     <xsl:value-of select="document($path)/cc:PP/@short"/><!--
@@ -26,7 +26,7 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:raw-url]" mode="expanded">
+  <xsl:template match="cc:base-pp[cc:git]" mode="expanded">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 
     <xsl:if test="document($path)/cc:PP/cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>

@@ -71,7 +71,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp[cc:raw-url]|cc:include-pkg[cc:raw-url]" mode="make_xref">
+  <xsl:template match="cc:base-pp[cc:git]|cc:include-pkg[cc:git]" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,

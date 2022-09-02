@@ -229,7 +229,7 @@
 
   
   <!-- ############### -->
-  <xsl:template match="cc:include-pkg[cc:raw-url]" mode="show">
+  <xsl:template match="cc:include-pkg[cc:git]" mode="show">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
     <a href="{@url}">
        <xsl:value-of select="document($path)//cc:PPTitle"/>, 
