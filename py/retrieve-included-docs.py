@@ -50,7 +50,7 @@ def get_effective_doc(url, branch, fpath):
     workdir = tempfile.TemporaryDirectory()
     abspath = os.path.abspath(fpath)
     os.system("cd "+workdir.name +
-              " && git clone --branch " + branch + " --recursive " + url +
+              " && git clone --depth 1 --branch " + branch + " --recursive " + url +
               " && cd *"
               " && EFF_XML=\"" + abspath + "\"  make effective")
 
