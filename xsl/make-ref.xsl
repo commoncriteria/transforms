@@ -175,8 +175,15 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  <xsl:template match="cc:usecase" mode="make_xref">
+    <a href="#{@id}" class="dynref"></a>
+  </xsl:template>
+
+  <!-- ############### -->
+  <!--                 -->
+  <!-- ############### -->
   <xsl:template match="cc:*" mode="make_xref">
-    <xsl:message>Unable to make an xref for <xsl:value-of select="name()"/> <xsl:call-template name="genPath"/></xsl:message>
+    <xsl:message>Unable to make an xref for |<xsl:value-of select="name()"/>| <xsl:call-template name="genPath"/></xsl:message>
   </xsl:template>
 
   
