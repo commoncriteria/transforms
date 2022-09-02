@@ -103,6 +103,10 @@
       <xsl:message>* Warning: Detected <xsl:value-of select="count(//cc:tech-terms)"/> Conformance Claims sections in this PP. There should be exactly 1 "Conformance Claims" section.
       </xsl:message>
     </xsl:if>
+    <xsl:if test="/cc:Module//cc:usecase/cc:config and not(//cc:*[@title='Use Case Templates'])">
+      <xsl:message>* Warning: Specifying a 'config' in a 'usecase' in a module requires a 'Use Case Templates' appendix
+      </xsl:message>
+    </xsl:if>
   </xsl:template>
   
 
