@@ -74,7 +74,9 @@ class State:
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
         self.is_handling_first_abbrs = handle_abbrs  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
+        self.test_number_stack = [0]
 
+        self.fix_test_numbers(root)
         self.sort_it_out() 
         self.fix_indices()
         self.fix_index_refs()
@@ -84,6 +86,22 @@ class State:
         self.build_comp_regex()
         self.build_termtable()
         self.fix_refs_to_main_doc()
+
+    def fix_test_numbers(self, elem):
+        if "class" in elem.attrib and "test-" in elem.attrib["class"]:
+            new_num=self.test_number_stack.pop() + 1
+            self.test_number_stack.append(new_num)
+            test_label = "Test "+".".join(map(str, self.test_number_stack))
+            elem[0].text = test_label
+            self.test_number_stack.append(0)
+            
+
+        for kid in elem:
+            self.fix_test_numbers(kid)
+
+        if "class" in elem.attrib and "test-" in elem.attrib["class"]:
+            self.test_number_stack.pop()
+
 
         
     def set_handle_first_abbrs(self, dfa):
@@ -275,8 +293,8 @@ class State:
         else:
             self.used_abbrs.add(target)
             return True
-        
-    
+
+       
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
         tagr = elem.tag.split('}')
@@ -293,6 +311,10 @@ class State:
         for attrname in elem.attrib:
             ret = ret + " " + attrname + "=" + quoteattr(elem.attrib[attrname])
         ret = ret+">"
+            
+            
+
+        
         if elem.text:
             ret += self.handle_text(elem, elem.text)
         for child in elem:
