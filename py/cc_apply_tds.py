@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 xpath = "."+ xpath_spec.attrib["xpath"]
                 replaced = root.find(xpath, ns)
                 if replaced is None:
-                    log("Cannot find node")
+                    log("Cannot find node:" + xpath)
                     continue
                 parent = parent_map[replaced]
                 if parent is None:
