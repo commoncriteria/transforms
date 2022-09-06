@@ -938,30 +938,33 @@ Modification definition. This text goes in the
         Specifies a component under Security Functional Requirements section..
       </a:document>
       <ref name="f-comp-content-pat"/>
-      <choice>
+      <!-- <choice> -->
 	      
-        <!-- Choice of status -->
-        <!-- If the status is objective, it must have a targetdate(?) -->
-	<ref name="f-comp-sel-based-parts"/>	      
+      <!--   <!-\- Choice of status -\-> -->
+      <!--   <!-\- If the status is objective, it must have a targetdate(?) -\-> -->
+      <!-- 	<ref name="f-comp-sel-based-parts"/>	       -->
 	      
-        <!-- The status could also be optional or nothing (which is indicated here) -->
-        <optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <choice>
-              <value>optional</value>
-	      <value>objective</value>
-	      <value>invisible</value>
-            </choice>
-          </attribute>
-          <zeroOrMore>
-            <ref name="depends-pat"/>
-          </zeroOrMore>
-        </optional>
-      </choice>
+      <!--   <!-\- The status could also be optional or nothing (which is indicated here) -\-> -->
+      <!--   <optional> -->
+      <!--     <attribute name="status"> -->
+      <!--       <a:documentation> -->
+      <!--         Denotes the status of a requirement. -->
+      <!--       </a:documentation> -->
+      <!--       <choice> -->
+      <!--         <value>optional</value> -->
+      <!-- 	      <value>objective</value> -->
+      <!-- 	      <value>invisible</value> -->
+      <!--       </choice> -->
+      <!--     </attribute> -->
+      <!--     <zeroOrMore> -->
+      <!--       <ref name="depends-pat"/> -->
+      <!--     </zeroOrMore> -->
+      <!--   </optional> -->
+      <!-- </choice> -->
 
+      <zeroOrMore>
+        <ref name="depends-pat"/>
+      </zeroOrMore>
 
 <!--      <ref name="depends-pat"/>   -->
 	    <optional><ref name="importable-pat"/></optional>
@@ -1671,32 +1674,28 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
 
   <define name="depends-pat">
-    <choice>
-      <element name="depends"><element name="objective"><empty/></element></element>
-      <zeroOrMore>
+    <zeroOrMore>
+      <choice>
+	<element name="depends"><element name="objective"><empty/></element></element>
+	<element name="depends"><element name="optional"><empty/></element></element>
 	<element name="depends">
           <a:documentation>
             Modifies the parent element such that it depends on something  else.
           </a:documentation>
-	  <choice>
-	    <group>
-              <ref name="any-attributes"/>
-              <optional>
-		<element name="external-doc">
-		  <a:documentation>
-		    A _depends_ element with an _external-doc_ element can only depend on selections in that external document
-		  </a:documentation>
-		  <attribute name="ref">
-		    <a:documentation>Points to the id of the external document</a:documentation>
-		  </attribute>
+          <ref name="any-attributes"/>
+          <optional>
+	    <element name="external-doc">
+	      <a:documentation>
+		A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+	      </a:documentation>
+	      <attribute name="ref">
+		<a:documentation>Points to the id of the external document</a:documentation>
+	      </attribute>
 		</element>
-              </optional>
-	    </group>
-            <element name="optional"><empty/></element>
-	  </choice>
+          </optional>
 	</element>
-      </zeroOrMore>
-    </choice>
+      </choice>
+    </zeroOrMore>
   </define>
 
   <define name="packages">
@@ -1747,6 +1746,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="non-native-doc">
+    <element name="noxml">
      <attribute name="version">
       <a:documentation>
 	Version number of the included document
@@ -1774,7 +1774,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	  Short name of the base PP.
 	</a:documentation>
       </attribute>
-
+    </element>
   </define> 
 
   <define name="implements-or-selection-pat">
