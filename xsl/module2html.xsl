@@ -96,7 +96,11 @@
   <!--      -->
   <!-- ############### -->
   <xsl:template match="/cc:Module//*[@title='Security Requirements']|/cc:Module//sec:Security_Requirements">
-    <xsl:variable name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise>Security_Requirements</xsl:otherwise></xsl:choose></xsl:variable>
+    <xsl:variable name="id"><xsl:choose>
+      <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+      <xsl:when test="namespace-uri()='https://niap-ccevs.org/cc/v1/section'"><xsl:value-of select="local-name()"/></xsl:when>
+      <xsl:otherwise>Security_Requirements</xsl:otherwise>
+    </xsl:choose></xsl:variable>
 
     
     <h1 id="{$id}" class="indexable" data-level="1">Security Requirements</h1>
@@ -481,6 +485,15 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     <xsl:apply-templates select="//cc:sel-sfrs" mode="app-sfr-sec"/> 
   </xsl:template>
 
+
+  <xsl:template match="cc:appendix[@title='Use Case Templates' and not(@id)]">
+    <xsl:call-template name="use-case-appendix"/>
+  </xsl:template>
+
+  <xsl:template match="cc:appendix[@title='Use Case Templates' and @id]">
+    <xsl:call-template name="use-case-appendix"><xsl:with-param name="appid" select="@id"/></xsl:call-template>
+  </xsl:template>
+		
   <!-- ############### -->
   <!--      -->
   <!-- ############### -->

@@ -31,8 +31,11 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="use-case-appendix">
+    <xsl:param name="appid" select="use-case-appendix"/>
+
+
     <xsl:if test="//cc:usecase/cc:config">
-      <h1 id="use-case-appendix" class="indexable" data-level="A">Use Case Templates</h1>
+      <h1 id="{$appid}" class="indexable" data-level="A">Use Case Templates</h1>
       <xsl:for-each select="//cc:usecase">
         <h2 id="appendix-{@id}" class="indexable" data-level="2"><xsl:value-of select="@title"/></h2>
 	<xsl:choose><xsl:when test="cc:config">
