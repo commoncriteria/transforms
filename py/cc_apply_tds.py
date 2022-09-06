@@ -23,6 +23,9 @@ if __name__ == "__main__":
     doc = ET.parse(sys.argv[1])
     root = doc.getroot()
     parent_map = {c: p for p in root.iter() for c in p}
+    ET.register_namespace('',"https://niap-ccevs.org/cc/v1")
+    ET.register_namespace('sec',"https://niap-ccevs.org/cc/v1/section")
+    ET.register_namespace('h', "http://www.w3.org/1999/xhtml")
 
 
     # Need to sort
