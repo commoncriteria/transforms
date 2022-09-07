@@ -149,12 +149,10 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:test" mode="make_xref">
-    <xsl:param name="class" select="''"/>
+    <xsl:param name="class" select="'dynref'"/>
     <xsl:variable name="target"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
     
-    <a href="#{$target}" class="{$class}">Test <xsl:apply-templates select="ancestor::cc:testlist[1]" mode="testnumberer"/>.<xsl:value-of select="count(preceding-sibling::cc:test) + 1"/>
-
-    </a>
+    <a href="#{$target}" class="{$class}"></a>
   </xsl:template>
   <!-- <xsl:number count="//cc:testlist" level="any"/>.<xsl:for-each select="ancestor::cc:test"><xsl:value-of -->
   <!--       select="count(preceding-sibling::cc:test) + 1"/>.</xsl:for-each><xsl:value-of -->
