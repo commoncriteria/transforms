@@ -103,9 +103,9 @@
                <xsl:when test="//cc:include-pkg">is  
                   <xsl:for-each select="//cc:include-pkg">
                       <xsl:if test="position()=last()"> and </xsl:if>
-                      <xsl:apply-templates select="." mode="show"/>
-                      <xsl:if test="count(//cc:include-pkg)>2 and not(position()=last())">, </xsl:if>
-                  </xsl:for-each>
+                      <xsl:apply-templates select="." mode="show"/><!--
+                      --><xsl:if test="count(//cc:include-pkg)>2 and not(position()=last())">, </xsl:if><!--
+		  --></xsl:for-each>
                </xsl:when>
                <xsl:otherwise> does not claim conformance to any packages</xsl:otherwise> 
             </xsl:choose>.</dd>

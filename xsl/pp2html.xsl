@@ -224,8 +224,7 @@
        <xsl:value-of select="@name"/>
        <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
        Package, version <xsl:value-of select="@version"/>
-    </xsl:element> Conformant
-  </xsl:template>
+    </xsl:element> Conformant</xsl:template>
 
   
   <!-- ############### -->
@@ -234,8 +233,7 @@
     <a href="{@url}">
        <xsl:value-of select="document($path)//cc:PPTitle"/>, 
        version <xsl:value-of select="document($path)//cc:PPVersion"/>
-    </a> Conformant
-  </xsl:template>
+    </a> Conformant</xsl:template>
 
   <!-- ############### -->
   <!--                 -->
