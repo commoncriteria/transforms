@@ -385,7 +385,6 @@
                 <ul>
                   <xsl:for-each select="cc:depends/@*">
                     <xsl:variable name="ref-id" select="."/>
-		    <xsl:message>Looking for <xsl:value-of select="$ref-id"/></xsl:message>
                       <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
