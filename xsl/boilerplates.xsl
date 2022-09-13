@@ -19,7 +19,7 @@
 	standalone SFRs because it would increase the time, cost, and complexity of evaluation.
 	This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
 	<p>This information benefits systems engineering activities which call for inclusion of particular
-	security controls. Evaluation against the PP provides evidence that these controls are present 
+	security controls. Evaluation against the <xsl:call-template name="doctype-short"/> provides evidence that these controls are present 
 	and have been evaluated.</p>
 </xsl:template>
 
@@ -31,8 +31,11 @@
 
 
   <xsl:template name="doctype-short" match="cc:doctype-short">
-    <!-- <xsl:value-of select="local-name(/cc:*)"/> -->
-    <xsl:value-of select="$doctype"/>
+	<xsl:choose>
+		<xsl:when test="$doctype='Package'">PP-Package</xsl:when>
+                <xsl:when test="$doctype='Module'">PP-Module</xsl:when>
+		<xsl:otherwise>PP</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template name="doctype-long"  match="cc:doctype-long">
