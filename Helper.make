@@ -125,7 +125,7 @@ HANDLE_ABBRS ?=
 VALIDATOR ?=java -jar $(JING_JAR) "$(1)" "$(2)" >$3
 
 #- Points to the daisydiff jar file
-DAISY_DIR ?= ExecuteDaisy
+DAISY_DIR ?= ExecuteDaisy-master
 
 #- Git tags that the current release should be diffed against
 DIFF_TAGS?=
