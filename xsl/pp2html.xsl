@@ -224,8 +224,7 @@
        <xsl:value-of select="@name"/>
        <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
        Package, version <xsl:value-of select="@version"/>
-    </xsl:element> Conformant
-  </xsl:template>
+    </xsl:element> Conformant</xsl:template>
 
   
   <!-- ############### -->
@@ -234,8 +233,7 @@
     <a href="{@url}">
        <xsl:value-of select="document($path)//cc:PPTitle"/>, 
        version <xsl:value-of select="document($path)//cc:PPVersion"/>
-    </a> Conformant
-  </xsl:template>
+    </a> Conformant</xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -387,7 +385,6 @@
                 <ul>
                   <xsl:for-each select="cc:depends/@*">
                     <xsl:variable name="ref-id" select="."/>
-		    <xsl:message>Looking for <xsl:value-of select="$ref-id"/></xsl:message>
                       <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
