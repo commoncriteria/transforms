@@ -107,8 +107,13 @@
       <xsl:message>* Warning: Specifying a 'config' in a 'usecase' in a module requires a 'Use Case Templates' appendix
       </xsl:message>
     </xsl:if>
+
+    <xsl:if test="//cc:rule and not(//cc:appendix[@title='Validation Guidelines'])">
+      <xsl:message>* Rules without a 'Validation Guidelines' appendix has been detected.</xsl:message>
+  </xsl:if>
+
+    
   </xsl:template>
-  
 
 
   <xsl:template match="/">

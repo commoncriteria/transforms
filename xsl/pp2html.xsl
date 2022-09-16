@@ -85,9 +85,19 @@
     <xsl:apply-templates select="cc:appendix[cc:after_bib]"/>
   </xsl:template>
   
-  <xsl:template match="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]">
+  <!-- <xsl:template match="//cc:rule[not(preceding::cc:rule or ancestor::cc:rule)]"> -->
+  <xsl:template match="cc:appendix[@title='Validation Guidelines' and @id]">
+    <xsl:call-template name="rules-appendix"><xsl:with-param name="id" select="@id"/></xsl:call-template>
+  </xsl:template>
+  <xsl:template match="cc:appendix[@title='Validation Guidelines' and not(@id)]">
+    <xsl:call-template name="rules-appendix"/>
+  </xsl:template>
+
+  <xsl:template name="rules-appendix">
+    <xsl:param name="id" select="'appendix-rules'"/>
+
 <!--  <xsl:template name="rules-appendix"><xsl:if test="//cc:rule">-->
-     <h1 id="appendix-rules" class="indexable" data-level="A">Validation Guidelines</h1>
+     <h1 id="{$id}" class="indexable" data-level="A">Validation Guidelines</h1>
      	This appendix contains "rules" specified by the PP Authors that indicate whether certain selections
 	  require the making of other selections in order for a Security Target to be valid. For example, selecting 
 	  "HMAC-SHA-3-384" as a supported keyed-hash algorithm would require that "SHA-3-384" be selected
