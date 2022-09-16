@@ -203,7 +203,7 @@
       </div>
     </xsl:if>
     <xsl:if test="cc:ref-id/text()=//cc:selectable/@id">
-      <div class="uc_not">Choose something other than: 
+      <div class="uc_not">Do not choose:
       <xsl:for-each select="cc:ref-id[text()=//cc:selectable/@id]">
 	<!-- Not sure why this is a for -->
         <xsl:variable name="ref" select="text()"/>
