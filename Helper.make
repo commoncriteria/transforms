@@ -144,7 +144,7 @@ DIFF_EXE ?=\
 	cp -u -r $(DAISY_DIR)/js $(DAISY_DIR)/css $(OUT); \
 	cp -u $(DAISY_DIR)/images/* $(OUT)/images;        \
 	java -jar $(DAISY_DIR)/*.jar "$(1)" "$(2)"  "--file=$(3)"
-DIFF_EXT= "html"
+DIFF_EXT ?= "html"
 
 # The following line works if daisydiff does not.
 #DIFF_EXE ?= diff -W 180 -y <(pandoc -f HTML -t markdown "$1") <(pandoc -f HTML -t markdown "$2") >$3
