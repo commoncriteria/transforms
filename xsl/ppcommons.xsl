@@ -921,7 +921,9 @@ The following sections list Common Criteria and technology terms used in this do
 
   <xsl:template name="depends-explainer">
     <xsl:param name="words" select="'The following content should be included if:'"/>
+
     <xsl:choose>
+      <!-- When it depends on a choice -->
       <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
          <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
          <xsl:for-each select="cc:depends/@*">
@@ -930,11 +932,21 @@ The following sections list Common Criteria and technology terms used in this do
             <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
          </xsl:for-each>
       </xsl:when>
-      <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/>
+      <!--If we're not looking at a row. Not sure where @hide comes from -->
+      <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
+      <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
       <ul> <xsl:for-each select="cc:depends"><li>
-         <xsl:variable name="uid" select="@*[1]"/>
+        <xsl:variable name="uid" select="@*[1]"/>
          <xsl:choose>
-	   <xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
+	   <xsl:when test="cc:external-doc">
+	     <xsl:variable name="ref" select="cc:external-doc/@ref"/>
+	     <xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
+
+             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
+             </xsl:for-each>
+             is selected from 
+             <xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
+	   </xsl:when><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
              <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
              </xsl:for-each>
              is selected from 
@@ -943,7 +955,7 @@ The following sections list Common Criteria and technology terms used in this do
              <xsl:for-each select="@*">
                <xsl:if test="position()!=1">/</xsl:if>
              <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
-           </xsl:for-each> TOEs 
+             </xsl:for-each> TOEs
          </xsl:when><xsl:otherwise>
            the TOE implements 
            <xsl:for-each select="@*">
