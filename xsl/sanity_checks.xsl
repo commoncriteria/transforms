@@ -110,7 +110,12 @@
 
     <xsl:if test="//cc:rule and not(//cc:appendix[@title='Validation Guidelines'])">
       <xsl:message>* Rules without a 'Validation Guidelines' appendix has been detected.</xsl:message>
-  </xsl:if>
+    </xsl:if>
+
+
+    <xsl:for-each select="//cc:replace[not(ancestor::cc:modified-sfrs)]">
+      <xsl:message>* Warning: Detected a _replace_ element outside a modified-sfrs section. <xsl:call-template name="genPath"/> </xsl:message>
+    </xsl:for-each>
 
     
   </xsl:template>

@@ -493,7 +493,30 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <xsl:template match="cc:appendix[@title='Use Case Templates' and @id]">
     <xsl:call-template name="use-case-appendix"><xsl:with-param name="appid" select="@id"/></xsl:call-template>
   </xsl:template>
-		
+
+  <!-- ############### -->
+  <!-- Handles replace elements     -->
+  <!-- ############### -->
+
+  <xsl:template match="cc:modified-sfrs//cc:replace[cc:suppress-text]"/>
+
+  <xsl:template match="cc:modified-sfrs//cc:replace[not(cc:suppress-text)]">
+    <xsl:choose>
+      <xsl:when test="cc:depends[not(@*)]">
+	When the TOE conforms to this PP-Module, this SFR is mandatory
+      </xsl:when>
+      <xsl:when test="cc:depends[@*]">
+	When the TOE conforms to this PP-Module, the triggers for inclusion of this SFR have changed to the following:
+	<xsl:call-template name="handle_thing_with_depends"/>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <xsl:template match="cc:replace[not(ancestor::cc:modified-sfrs)]"/>
+
+
+  
   <!-- ############### -->
   <!--      -->
   <!-- ############### -->

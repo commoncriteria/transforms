@@ -523,6 +523,9 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
 	<x:value-of select="@name"/>
       </h4>
+      <x:if test="ancestor::cc:modified-sfrs and not(.//cc:aactivity)">
+	There is no change to the Base-PP EAs for this SFR when this PP-Module is claimed.
+      </x:if>
       <x:apply-templates select="." mode="handle-activities"/>
      </div>
    </x:template>
