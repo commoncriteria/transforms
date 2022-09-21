@@ -105,7 +105,7 @@
 <h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
 		   </audit-table-explainer>   
        </mt>
-       <mt tp='feat-based' nice='Implementation-dependent'>
+       <mt tp='feat-based' nice='Implementation-based'>
 	   <audit-table-explainer><h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p></audit-table-explainer>   
 	   </mt>
        <mt tp='sel-based'  nice='Selection-based'>
@@ -137,7 +137,7 @@
     Vendors planning on having evaluations performed against future products are encouraged
     to plan for these objective requirements to be met. <br/><br/>
 -->
-    <impl-dep-sfrs level="2" name="Implementation-dependent"/>
+    <impl-dep-sfrs level="2" name="Implementation-based"/>
 <!--:
     This section contains requirements that depend on the TOE implementing certain product features or use cases.
 -->	
