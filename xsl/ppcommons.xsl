@@ -803,7 +803,7 @@ The following sections list Common Criteria and technology terms used in this do
     <span class="assignable-content"><xsl:apply-templates/></span>]
   </xsl:template>
 
-
+  
 
 
   <xsl:template match="cc:reqtext"><xsl:apply-templates/></xsl:template>
@@ -822,6 +822,10 @@ The following sections list Common Criteria and technology terms used in this do
        <xsl:if test="@id"><xsl:attribute name="id">
          <xsl:value-of select="@id"/>
        </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+
+  <xsl:template match="cc:description">
+    <span class="description"><xsl:apply-templates/></span>
+  </xsl:template>
   
   <xsl:template match="cc:reqtext">
     <xsl:apply-templates/>
