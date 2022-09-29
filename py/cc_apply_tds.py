@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import pathlib
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
+import lxml.etree as ET
 
 default_ns = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
@@ -9,7 +10,11 @@ default_ns = {'cc': "https://niap-ccevs.org/cc/v1",
 
 def get_num(fullpath):
     path = pathlib.Path(fullpath)
-    return int( path.stem )
+    try:
+        return int( path.stem )
+    except ValueError:
+        return sys.maxsize
+#        return 99999
 
 def log(msg):
     sys.stderr.write(msg)
@@ -23,7 +28,7 @@ if __name__ == "__main__":
     doc = ET.parse(sys.argv[1])
     root = doc.getroot()
     parent_map = {c: p for p in root.iter() for c in p}
-    ET.register_namespace('',"https://niap-ccevs.org/cc/v1")
+    ET.register_namespace('cc',"https://niap-ccevs.org/cc/v1")
     ET.register_namespace('sec',"https://niap-ccevs.org/cc/v1/section")
     ET.register_namespace('h', "http://www.w3.org/1999/xhtml")
 
@@ -43,11 +48,13 @@ if __name__ == "__main__":
         for replace in replaces:
             for xpath_spec in replace.findall(".//cc:xpath-specified", ns):
                 xpath = "."+ xpath_spec.attrib["xpath"]
-                replaced = root.find(xpath, ns)
-                if replaced is None:
-                    log("Cannot find node:" + xpath)
+                replaced = root.xpath(xpath, namespaces=ns)
+                #                replaced = root.find(xpath, ns)
+                if not len(replaced)==1:
+                    log("Found "+ str(len(replaced))+ " nodes using:::"  + xpath + "::: Expected 1")
                     continue
-                parent = parent_map[replaced]
+
+                parent = parent_map[replaced[0]]
                 if parent is None:
                     log("Cannot find parent")
                     continue
