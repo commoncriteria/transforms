@@ -48,19 +48,20 @@ if __name__ == "__main__":
         for replace in replaces:
             for xpath_spec in replace.findall(".//cc:xpath-specified", ns):
                 xpath = "."+ xpath_spec.attrib["xpath"]
-                replaced = root.xpath(xpath, namespaces=ns)
+                matches = root.xpath(xpath, namespaces=ns)
                 #                replaced = root.find(xpath, ns)
-                if not len(replaced)==1:
+                if not len(matches)==1:
                     log("Found "+ str(len(replaced))+ " nodes using:::"  + xpath + "::: Expected 1")
                     continue
-
-                parent = parent_map[replaced[0]]
+                replaced = matches[0]
+                parent = parent_map[replaced]
                 if parent is None:
                     log("Cannot find parent")
                     continue
                 kid_cache = []
                 for kid in list(parent):
                     if kid == replaced:
+                        log("Adding: " )
                         for newkids in list(xpath_spec):
                             kid_cache.append(newkids)
                     else:
