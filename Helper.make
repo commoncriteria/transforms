@@ -25,7 +25,7 @@
 # located at ~/commoncriteria/User.make
 
 # If we don't specify it, make will default to the less featureful bourne shell
-SHELL=/bin/bash
+SHELL:=/bin/bash
 
 #---
 #- Hooks
