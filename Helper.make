@@ -220,7 +220,7 @@ META_TXT ?= $(OUT)/meta-info.txt
 
 # .PHONY ensures that this target is built no matter what
 # even if there exists a file named default
-.PHONY: default meta-info all spellcheck spellcheck-esr spellcheck-release linkcheck pp help release clean diff little-diff listing quickclean #effective
+.PHONY: default meta-info all spellcheck spellcheck-esr spellcheck-release linkcheck pp help release clean diff little-diff listing quickclean effective
 
 
 #---
@@ -352,10 +352,10 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	$(BUILD_SD)
 
 #$(EFF_XML): $(PP_XML) $(TDs)
+#- Target to make the effective PP (with TDs applied)
 effective:
-	echo "Writing to $$EFF_XML"
 	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
-
+#	$(call VALIDATOR,$(RNG_FILE),$(EFF_XML),&1)
 
 # Target to build the effective
 # effective: $(PP_EFFECTIVE)
