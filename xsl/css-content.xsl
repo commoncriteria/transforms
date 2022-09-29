@@ -257,7 +257,11 @@
   		padding: 5px;
 	}
 
-   
+   <!-- This is a description after an f-component -->
+    .comp .description{
+        padding-bottom: 20px;
+        display: block;
+    }    
    
    <!-- Include some custom css as defined by in the source PP -->
     <xsl:value-of select="//cc:extra-css"/>
