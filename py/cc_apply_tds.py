@@ -21,20 +21,14 @@ def log(msg):
     sys.stderr.write("\n")
 
 
-if __name__ == "__main__":
-    if len(sys.argv)==1:
-        print("Usage: <input-file> [<td1> [<td2> ...]]")
-        sys.exit(0)
-    doc = ET.parse(sys.argv[1])
+def apply_tds(main_path, tds):
+    doc = ET.parse(main_path)
     root = doc.getroot()
     parent_map = {c: p for p in root.iter() for c in p}
     ET.register_namespace('cc',"https://niap-ccevs.org/cc/v1")
     ET.register_namespace('sec',"https://niap-ccevs.org/cc/v1/section")
     ET.register_namespace('h', "http://www.w3.org/1999/xhtml")
-
-
     # Need to sort
-    tds = sys.argv[2:]
     tds.sort(key=get_num)
     for td_path in tds:
         log("Parsing: "+td_path)
@@ -70,3 +64,11 @@ if __name__ == "__main__":
                 for kid in kid_cache:
                     parent.append(kid)
     print(ET.tostring(root, encoding='unicode', method='xml'))
+
+    
+if __name__ == "__main__":
+    if len(sys.argv)==1:
+        print("Usage: <input-file> [<td1> [<td2> ...]]")
+        sys.exit(0)
+
+    apply_tds(sys.argv[1], sys.argv[2:])
