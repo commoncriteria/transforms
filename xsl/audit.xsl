@@ -116,11 +116,16 @@
 			select="1+count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
 	  <xsl:variable name="myid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
           <tr data-sortkey="{$myid}">
-            <td rowspan="{$rowspan}">
+            <td style="background-color:white;"  rowspan="{$rowspan}">
 	      <xsl:value-of select="$myid"/>
 	    </td>      <!-- SFR name -->
 	    <td style="display:none"></td>
+	    <!-- <td>fake</td> -->
 	  </tr>
+	  <!-- Fake row so that the CSS color alternator doesn't get thrown off-->
+	  <tr style="display:none;" data-sortkey="{$myid}#"><td/></tr>
+
+
 
           <!-- The audit event is included in this table only if
                  - The audit event's expressed table attribute matches this table
@@ -130,6 +135,12 @@
   	    <xsl:apply-templates select="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]" mode="kg-intable">
 	      <xsl:with-param name="sortkey" select="$myid"/>
 	    </xsl:apply-templates>
+
+	    <xsl:variable name="subrow" select="count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
+	    
+
+
+	    
 	</xsl:if>
       </xsl:for-each>
       <!-- Goes through each external document -->
