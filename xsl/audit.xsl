@@ -115,8 +115,8 @@
 	  <xsl:variable name="rowspan"
 			select="1+count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
 	  <xsl:variable name="myid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-          <tr>
-            <td rowspan="{$rowspan}" data-sortkey="{$myid}">
+          <tr data-sortkey="{$myid}">
+            <td rowspan="{$rowspan}">
 	      <xsl:value-of select="$myid"/>
 	    </td>      <!-- SFR name -->
 	    <td style="display:none"></td>
