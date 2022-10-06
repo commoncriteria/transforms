@@ -97,17 +97,16 @@
       <xsl:otherwise>Auditable Events for <xsl:value-of select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/> Requirements</xsl:otherwise>
     </xsl:choose></xsl:variable>
 
-    <table class="" border="1">
+    <table class="sort_kids_" border="1">
       <!--      <xsl:if test="not(node())">-->
-      <caption><xsl:call-template name="ctr-xsl">
+      <caption data-sortkey="#0"><xsl:call-template name="ctr-xsl">
         <xsl:with-param name="ctr-type" select="'Table'"/>
 	<xsl:with-param name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise><xsl:value-of select="concat('t-audit-',$thistable)"/></xsl:otherwise></xsl:choose></xsl:with-param>
       </xsl:call-template>: <xsl:value-of select="$nicename"/></caption>
       <!--      </xsl:if>-->
       <!--<xsl:apply-templates/>-->
-      <tr><th>Requirement</th>
-      <th>Auditable Events</th>
-      <th>Additional Audit Record Contents</th></tr>
+      <tr data-sortkey="#1">
+      <th>Requirement</th><th>Auditable Events</th><th>Additional Audit Record Contents</th></tr>
       <xsl:for-each select="//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]">
 	<!-- <xsl:for-each select="//cc:f-component[cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]]"> -->
 	<!-- <xsl:variable name="fcomp" select="."/> -->
@@ -115,10 +114,10 @@
 	<xsl:if test="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]">
 	  <xsl:variable name="rowspan"
 			select="1+count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
-
+	  <xsl:variable name="myid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
           <tr>
-            <td rowspan="{$rowspan}">
-	      <xsl:apply-templates select="." mode="getId"/>
+            <td rowspan="{$rowspan}" data-sortkey="{$myid}">
+	      <xsl:value-of select="$myid"/>
 	    </td>      <!-- SFR name -->
 	    <td style="display:none"></td>
 	  </tr>
@@ -128,7 +127,9 @@
                  - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
                  - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
             <!-- <xsl:if test="(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))"> -->
-  	  <xsl:apply-templates select="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]" mode="kg-intable"/>
+  	    <xsl:apply-templates select="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]" mode="kg-intable">
+	      <xsl:with-param name="sortkey" select="$myid"/>
+	    </xsl:apply-templates>
 	</xsl:if>
       </xsl:for-each>
       <!-- Goes through each external document -->
@@ -183,22 +184,29 @@
     <xsl:variable name="rowspan"
 		  select="count(//cc:external-doc[@ref=$ext_id]/cc:audit-event[@ref-cc-id=$ccid and @table=$table])+1"/>
     
-    <tr>
+    <tr data-sortkey="{$ccid}">
       <td rowspan="{$rowspan}"><xsl:value-of select="$ccid"/></td><td style="display:none"/>
     </tr>
     
     <xsl:for-each select="//cc:external-doc[@ref=$ext_id]/cc:audit-event[@ref-cc-id=$ccid and @table=$table]">
-      <xsl:apply-templates select="." mode="kg-intable"/>
+      <xsl:apply-templates select="." mode="kg-intable">
+	<xsl:with-param name="sortkey" select="$ccid"/>
+      </xsl:apply-templates>
     </xsl:for-each>
     
   </xsl:template>
   
   <xsl:template match="cc:audit-event[not (cc:audit-event-descr)]" mode="kg-intable">
-    <tr><td>No events specified</td><td>N/A</td></tr>
+    <xsl:param name="sortkey"/>
+    
+    <tr data-sortkey="{$sortkey}.1"><td>No events specified</td><td>N/A</td></tr>
   </xsl:template>
   
   <xsl:template match="cc:audit-event[cc:audit-event-descr]" mode="kg-intable">
-    <tr>
+    <xsl:param name="sortkey"/>
+    <xsl:variable name="mysortkey" select="concat($sortkey,'.',count(./preceding-sibling::*))"/>
+    
+    <tr data-sortkey="{$mysortkey}">
       <td><xsl:choose>
 	<!-- When audit events are individually selectable -->
         <xsl:when test="@type='optional'">
