@@ -117,6 +117,14 @@
       <xsl:message>* Warning: Detected a _replace_ element outside a modified-sfrs section. <xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
 
+    <xsl:for-each select="/cc:Module//cc:obj-sfrs//cc:f-component[not(cc:depends/cc:objective)]">
+      <xsl:message>* Warning: <xsl:value-of select="@cc-id"/> in obj-sfrs section is missing a _depends_/_objective_ sub tree (We're transitioning to using depends and not sections). <xsl:call-template name="genPath"/> </xsl:message>
+    </xsl:for-each>
+
+    <xsl:for-each select="/cc:Module//cc:opt-sfrs//cc:f-component[not(cc:depends/cc:optional)]">
+      <xsl:message>* Warning: <xsl:value-of select="@cc-id"/> in opt-sfrs section is missing a _depends_/_optional_ sub tree (We're transitioning to using depends and not sections). <xsl:call-template name="genPath"/> </xsl:message>
+    </xsl:for-each>
+    
     
   </xsl:template>
 
