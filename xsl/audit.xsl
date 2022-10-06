@@ -120,7 +120,12 @@
 	      <xsl:value-of select="$myid"/>
 	    </td>      <!-- SFR name -->
 	    <td style="display:none"></td>
+	    <!-- <td>fake</td> -->
 	  </tr>
+	  <!-- Fake row so that the CSS color alternator doesn't get thrown off-->
+	  <tr style="display:none;" data-sortkey="{$myid}#"><td/></tr>
+
+
 
           <!-- The audit event is included in this table only if
                  - The audit event's expressed table attribute matches this table

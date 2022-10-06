@@ -71,4 +71,9 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="cc:mod-sars">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  
 </xsl:stylesheet>
