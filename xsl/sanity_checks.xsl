@@ -117,7 +117,7 @@
       <xsl:message>* Warning: Detected a _replace_ element outside a modified-sfrs section. <xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
 
-    <xsl:for-each select="/cc:Module//cc:impl-dep-sfrs//cc:f-component[not(cc:depends)]">
+    <xsl:for-each select="/cc:Module//cc:impl-dep-sfrs//cc:f-component[not(cc:depends/@*)]">
       <xsl:message>* Warning: <xsl:value-of select="@cc-id"/> in impl-dep-sfrs section is missing a _depends_ element. <xsl:call-template name="genPath"/> </xsl:message>
     </xsl:for-each>
 
