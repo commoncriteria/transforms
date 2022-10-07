@@ -70,18 +70,19 @@
 	  </xsl:message>
         </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//@ref-id">
+    <xsl:for-each select="//@ref-id[not(ancestor::c:con-mod)]">
+      
 	<xsl:variable name="refid" select="."/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>* Error: Detected dangling <xsl:value-of select="concat(name(),' to ',$refid)"/> 
-         for a <xsl:value-of select="name()"/>.
+         for a <xsl:value-of select="name()"/>
 	  <xsl:call-template name="genPath"/>	
          </xsl:message>
         </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//cc:con-mod/@ref">
       <xsl:variable name="refid" select="."/>
-      <xsl:if test="not(//cc:f-component/@id=$refid or //cc:*/@name=$refid)">
+      <xsl:if test="not(//cc:f-component/@cc-id=$refid or //cc:*/@name=$refid)">
 	<xsl:message>* Error: Detected dangling ref to '<xsl:value-of select="$refid"/>'
         for a <xsl:value-of select="name()"/>.
 	<xsl:call-template name="genPath"/>
