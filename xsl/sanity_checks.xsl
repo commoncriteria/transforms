@@ -23,9 +23,12 @@
       </xsl:message>
     </xsl:for-each>
     <xsl:for-each select="//cc:f-element[not(.//cc:aactivity or ..//cc:aactivity[not(@level='element' or parent::cc:management-function)])]">
-      <xsl:message>* Error: F-Element <xsl:apply-templates select="." mode="getId"/> <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
+      <xsl:if test="not(../@status='invisible')">
+
+	<xsl:message>* Error: <xsl:value-of select="local-name()"/><xsl:text> </xsl:text><xsl:apply-templates select="." mode="getId"/>  appears not to have an associated evaluation activity.:
         <xsl:call-template name="genPath"/>
-      </xsl:message>
+	</xsl:message>
+      </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
       <xsl:message>* Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
