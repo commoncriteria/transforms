@@ -207,13 +207,12 @@ guidance, and testing.</p>
 
    <h2 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h2>  
      <x:choose>
-      <x:when test="//cc:obj-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='objective']">
-        <x:for-each select="//cc:obj-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='objective']/..">
+      <x:when test="//cc:f-component/cc:depends/cc:objective">
+        <x:for-each select="//cc:section[cc:f-component/cc:depends/cc:objective]">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
-          <x:apply-templates select="cc:f-component[@status='objective' and /cc:PP]"/>
-          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+          <x:apply-templates select="cc:f-component[cc:depends/cc:objective]"/>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>

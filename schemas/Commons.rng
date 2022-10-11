@@ -938,29 +938,11 @@ Modification definition. This text goes in the
         Specifies a component under Security Functional Requirements section..
       </a:document>
       <ref name="f-comp-content-pat"/>
-      <choice>
-	      
-        <!-- Choice of status -->
-        <!-- If the status is objective, it must have a targetdate(?) -->
-	<ref name="f-comp-sel-based-parts"/>	      
-	      
+      <optional><element name="invisible"><empty/></element></optional>
         <!-- The status could also be optional or nothing (which is indicated here) -->
-        <optional>
-          <attribute name="status">
-            <a:documentation>
-              Denotes the status of a requirement.
-            </a:documentation>
-            <choice>
-              <value>optional</value>
-	      <value>objective</value>
-	      <value>invisible</value>
-            </choice>
-          </attribute>
-          <zeroOrMore>
-            <ref name="depends-pat"/>
-          </zeroOrMore>
-        </optional>
-      </choice>
+        <zeroOrMore>
+          <ref name="depends-pat"/>
+        </zeroOrMore>
 
 
 <!--      <ref name="depends-pat"/>   -->
@@ -975,20 +957,6 @@ Modification definition. This text goes in the
     </element>
   </define> 
 
-  <define name="f-comp-sel-based-parts">
-    <!-- If the status is selection-based, it must have dependencies -->
-    <group>
-      <attribute name="status">
-        <a:documentation>
-          Denotes the status of a requirement.
-        </a:documentation>
-        <choice><value>sel-based</value><value>feat-based</value></choice>
-      </attribute>
-      <oneOrMore>
-        <ref name="depends-pat"/>
-      </oneOrMore>
-    </group>
-  </define>
   
   <define name="f-elements-pat">
     <zeroOrMore>
