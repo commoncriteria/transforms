@@ -244,7 +244,7 @@
 	<tr>
 	  <th colspan="2"> Optional SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]"/>
+	    <xsl:with-param name="f-comps" select="//cc:f-component[cc:depends[1]/cc:optional]"/>
 	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Optional requirements.
@@ -254,7 +254,7 @@
 	<tr>
 	  <th colspan="2"> Objective SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]"/>
+	    <xsl:with-param name="f-comps" select="//cc:f-component[cc:depends[1]/cc:objective]"/>
 	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Objective requirements.
@@ -264,7 +264,7 @@
 	<tr>
 	  <th colspan="2"> Implementation-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
+	    <xsl:with-param name="f-comps" select="//cc:f-component[cc:depends[1]/@*=//cc:feature/@id]"/>
 	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Implementation-based requirements.
@@ -274,8 +274,9 @@
 	<tr>
 	  <th colspan="2"> Selection-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
-	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	    <xsl:with-param name="f-comps" select="//cc:f-component[cc:depends[1]/@*=//cc:selectables/@id]"/>
+
+	    <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Selection-based requirements.
 	    </xsl:with-param>
@@ -333,6 +334,7 @@
   <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="secreq-{@id}" class="indexable" data-level="2">
+      <xsl:message>uuu <xsl:apply-templates mode="short" select="."/> <xsl:value-of select="cc:git/cc:url/text()"/></xsl:message>
       <xsl:apply-templates mode="short" select="."/>
        Security Functional Requirements Direction
     </h2>
@@ -345,33 +347,46 @@
       defined in the <xsl:apply-templates mode="short" select="."/> in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.
     </xsl:if>
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
-
+    <xsl:variable name="b_id" select="@id"/>
+    <xsl:variable name="doc" select="concat($work-dir,'/',@id,'.xml')"/>
 
     <h3 id="modsfr-{@id}" class="indexable" data-level="3"> Modified SFRs </h3>
-    <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
+
+    <xsl:choose><xsl:when test="//cc:f-component[cc:depends/@*=current()/@id and (document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]">
       The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
-    <xsl:apply-templates select="cc:modified-sfrs"/>
+      <xsl:for-each select="//cc:section[cc:f-component[cc:depends/@*=current()/@id and (document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]]|//sec:*[cc:f-component[cc:depends/@*=current()/@id and (document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]]">
+	<xsl:apply-templates select="."/>
+      </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
       This PP-Module does not modify any SFRs defined by the <xsl:apply-templates mode="short" select="."/>.
     </xsl:otherwise>
     </xsl:choose>
+
+
+    
+    <!-- <xsl:for-each select="//cc:f-component[cc:depends/@*=current()/@id and (document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]"> -->
+    <!--   aaa -->
+    <!--   <xsl:apply-templates select="."/> -->
+    <!-- </xsl:for-each> -->
+
+    
+
     <!--
 	 If we have only one base PP, we should hide this section (so says NIAP).
-	 In that case there shouldn't be any additional-sfrs (but for some
-	 reason we're allowing it).
     -->
-
-    <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
-    <h3 id="addsfr-{@id}" class="indexable" data-level="3"> Additional SFRs</h3>
-    <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
+    <!-- TODO: Create a warning when there are additional SFRs, but only 1 base -->
+    <xsl:if test="count(//cc:base-pp)>1">
+      <h3 id="addsfr-{@id}" class="indexable" data-level="3"> Additional SFRs</h3>
+    <xsl:choose><xsl:when test="//cc:f-component[cc:depends/@*=current()/@id and not(document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]">
       This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
-      <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
 This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
-    </xsl:otherwise>
-    </xsl:choose>
+    </xsl:otherwise></xsl:choose>
+      <xsl:for-each select="//cc:section[cc:f-component[cc:depends/@*=current()/@id and not(document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]]|//sec:*[cc:f-component[cc:depends/@*=current()/@id and not(document($doc)//cc:f-component/@cc-id=@cc-id or current()/cc:modified-sfrs/@*=@cc-id)]]">
+	<xsl:apply-templates select="."/>
+      </xsl:for-each>
     </xsl:if>
   </xsl:template>
 
@@ -474,9 +489,9 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- ############### -->
   <xsl:template name="opt-sfrs">
     <h1 id="opt-sfrs" class="indexable" data-level="A">Optional SFRs</h1>
-    <xsl:apply-templates select="//cc:opt-sfrs" mode="app-sfr-sec"/>
-    <xsl:apply-templates select="//cc:obj-sfrs" mode="app-sfr-sec"/>
-    <xsl:apply-templates select="//cc:impl-dep-sfrs" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:f-component[cc:depends[1]/cc:optional]//cc:opt-sfrs" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:f-component[cc:depends[1]/cc:objective]" mode="app-sfr-sec"/>
+    <xsl:apply-templates select="//cc:f-component[cc:depends[1]/@*=//cc:feature/@id]" mode="app-sfr-sec"/>
   </xsl:template>
   <!-- ############### -->
   <!--      -->

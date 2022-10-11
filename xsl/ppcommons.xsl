@@ -710,9 +710,9 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="/cc:Module" mode="get_product"><xsl:value-of select="@target-product"/></xsl:template>
-  <xsl:template match="/cc:Module[@target-products]" mode="get_product_plural"><xsl:value-of select="@target-product"/></xsl:template>
-  <xsl:template match="/cc:Module[not(@target-products)]" mode="get_product_plural"><xsl:apply-templates mode="get_product" select="."/>s</xsl:template>
+  <xsl:template match="/cc:*" mode="get_product"><xsl:value-of select="@target-product"/></xsl:template>
+  <xsl:template match="/cc:*[@target-products]" mode="get_product_plural"><xsl:value-of select="@target-product"/></xsl:template>
+  <xsl:template match="/cc:*[not(@target-products)]" mode="get_product_plural"><xsl:apply-templates mode="get_product" select="."/>s</xsl:template>
   
   <!-- ############### -->
   <!--                 -->

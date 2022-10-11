@@ -69,43 +69,36 @@
         </zeroOrMore>
       </element>
     </define>
-    <define name="f-comp-sel-based-parts">
-    <group>
-      <oneOrMore>
-        <ref name="depends-pat"/>
-      </oneOrMore>
-    </group>
-    </define>
  
  
  </include>
 
 
 
-  <define name="man-sfrs">
-    <element name="man-sfrs">
-      <a:documentation>
-	Mandatory SFRs. These apply to all configurations regardless of base PPs.
-      </a:documentation>
-      <optional>
-         <ref name="description"/>
-      </optional>
-      <ref name="sfr_content-pat"/>
-    </element>
-  </define>
+  <!-- <define name="man-sfrs"> -->
+  <!--   <element name="man-sfrs"> -->
+  <!--     <a:documentation> -->
+  <!-- 	Mandatory SFRs. These apply to all configurations regardless of base PPs. -->
+  <!--     </a:documentation> -->
+  <!--     <optional> -->
+  <!--        <ref name="description"/> -->
+  <!--     </optional> -->
+  <!--     <ref name="sfr_content-pat"/> -->
+  <!--   </element> -->
+  <!-- </define> -->
 	
-  <define name="mod-sars">
-    <element name="mod-sars">
-      <a:documentation>
-	SARs. This section is usually either absent from Modules, or is just an explanation of why there are no SARs.
-	But it is theorietically possible that a Module introduce additional SARs, I suppose.
-      </a:documentation>
-      <optional>
-         <ref name="description"/>
-      </optional>
-      <optional><ref name="mod-sar-content"/></optional>
-    </element>
-  </define>
+  <!-- <define name="mod-sars"> -->
+  <!--   <element name="mod-sars"> -->
+  <!--     <a:documentation> -->
+  <!-- 	SARs. This section is usually either absent from Modules, or is just an explanation of why there are no SARs. -->
+  <!-- 	But it is theorietically possible that a Module introduce additional SARs, I suppose. -->
+  <!--     </a:documentation> -->
+  <!--     <optional> -->
+  <!--        <ref name="description"/> -->
+  <!--     </optional> -->
+  <!--     <optional><ref name="mod-sar-content"/></optional> -->
+  <!--   </element> -->
+  <!-- </define> -->
 	
 <define name="mod-sar-content">
     <ref name="basic-content-pat"/>
@@ -274,18 +267,18 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
         </element>
       </optional>
 
-      <element name="modified-sfrs">
-	<a:documentation>
-	  SFRs that modify SFRs from the base PP.
-	</a:documentation>
-	<ref name="base-specific-sfrs"/>
-      </element>
-      <element name="additional-sfrs">
-	<a:documentation>
-	  SFRs that are added specifically for configurations that use this base PP.
-	</a:documentation>
-	<ref name="base-specific-sfrs"/>
-      </element>
+      <!-- <element name="modified-sfrs"> -->
+      <!-- 	<a:documentation> -->
+      <!-- 	  SFRs that modify SFRs from the base PP. -->
+      <!-- 	</a:documentation> -->
+      <!-- 	<ref name="base-specific-sfrs"/> -->
+      <!-- </element> -->
+      <!-- <element name="additional-sfrs"> -->
+      <!-- 	<a:documentation> -->
+      <!-- 	  SFRs that are added specifically for configurations that use this base PP. -->
+      <!-- 	</a:documentation> -->
+      <!-- 	<ref name="base-specific-sfrs"/> -->
+      <!-- </element> -->
       <element name="con-toe">
 	<a:documentation>
 	  Consistency argument for why this module does not violate the TOE of the base PP.
@@ -456,12 +449,18 @@ The name or cc-id of the aspect that is being overwritten by the content of this
       <oneOrMore>
 	<ref name="base-pp"/>
       </oneOrMore>
-      <ref name="man-sfrs"/>
-      <optional><ref name="mod-sars"/></optional>
-      <ref name="opt-sfrs"/>
-      <ref name="sel-sfrs"/>
-      <ref name="obj-sfrs"/>
-      <ref name="impl-dep-sfrs"/>
+
+      <element name="sfrs">
+	<ref name="sfr_content-pat"/>
+      </element>
+
+      
+      <!-- <ref name="man-sfrs"/> -->
+      <!-- <optional><ref name="mod-sars"/></optional> -->
+      <!-- <ref name="opt-sfrs"/> -->
+      <!-- <ref name="sel-sfrs"/> -->
+      <!-- <ref name="obj-sfrs"/> -->
+      <!-- <ref name="impl-dep-sfrs"/> -->
   </define>
 
 

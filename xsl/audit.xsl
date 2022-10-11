@@ -75,12 +75,12 @@
   </xsl:template>
  
   <xsl:template match="/cc:Module//cc:f-component" mode="compute-fcomp-status"><xsl:choose>
-    <xsl:when test="ancestor::cc:sel-sfrs">sel-based</xsl:when>
-    <xsl:when test="ancestor::cc:opt-sfrs">optional</xsl:when>
-    <xsl:when test="ancestor::cc:obj-sfrs">objective</xsl:when>
-    <xsl:when test="ancestor::cc:man-sfrs">mandatory</xsl:when>
-    <xsl:when test="ancestor::cc:base-pp">base-based</xsl:when>
-    <xsl:when test="ancestor::cc:impl-dep-sfrs">feat-based</xsl:when>
+    <xsl:when test="//cc:selectable[@id=cc:depends[1]/@*]">sel-based</xsl:when>
+    <xsl:when test="cc:depends[1]/cc:optional">optional</xsl:when>
+    <xsl:when test="cc:depends[1]/cc:objective">objective</xsl:when>
+    <xsl:when test="not(cc:depends)">mandatory</xsl:when>
+    <xsl:when test="//cc:base-pp[@id=cc:depends[1]/@*]">base-based</xsl:when>
+    <xsl:when test="//cc:feature[@id=cc:depends[1]/@*]">feat-based</xsl:when>
     <xsl:otherwise><xsl:message>Detected unknown status of f-compoenent in mandatory <xsl:apply-templates mode="getId" select="."/></xsl:message></xsl:otherwise>
   </xsl:choose></xsl:template>
 
@@ -115,8 +115,8 @@
 	  <xsl:variable name="rowspan"
 			select="1+count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
 	  <xsl:variable name="myid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-          <tr>
-            <td rowspan="{$rowspan}" data-sortkey="{$myid}">
+          <tr data-sortkey="{$myid}">
+            <td rowspan="{$rowspan}">
 	      <xsl:value-of select="$myid"/>
 	    </td>      <!-- SFR name -->
 	    <td style="display:none"></td>

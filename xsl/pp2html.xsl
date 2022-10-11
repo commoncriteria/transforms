@@ -443,7 +443,7 @@
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
-      <xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
+      <xsl:if test="cc:depends/cc:objective and @targetdate">
         <div class="statustag">
           <i><b>
               This objective component is scheduled to be mandatory for
@@ -452,7 +452,7 @@
           </b></i>
           </div>
       </xsl:if>
-      <xsl:if test="@status='optional' or ancestor::cc:opt-sfrs">
+      <xsl:if test="cc:depends/cc:optional">
           <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
             <div class="statustag">
               <b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
@@ -474,7 +474,7 @@
              </div>
            </xsl:if>
         </xsl:if>
-      <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
+      <xsl:if test="//cc:selectable[@id=cc:depends/@*]">
         <div class="statustag">
 	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
           <b><i>The inclusion of this selection-based component depends upon selection in

@@ -12,12 +12,12 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:git]" mode="short">
+<xsl:template match="cc:base-pp[cc:git]" mode="short">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 
     <xsl:value-of select="document($path)/cc:PP/@short"/><!--
     --><xsl:if test="not(document($path)/cc:PP/@short)"><!--
-      --><xsl:apply-templates mode="get_product_plural" select="/cc:*"/><!--
+      --><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:*"/><!--
     --></xsl:if><xsl:choose>
        <xsl:when test="document($path)/cc:PP/cc:cPP">c</xsl:when>
        <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
