@@ -14,7 +14,7 @@
       <a:documentation>
 	Root element for a Protection Profile Module.
       </a:documentation>
-      <ref name="module-attributes-pat"/>
+      <ref name="doc-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
       <ref name="packages"/>
       <ref name="Introduction"/>
@@ -73,17 +73,6 @@
  
  </include>
 
-  <define name="module-attributes-pat">
-    <attribute name="name"></attribute>
-    <attribute name="target-product"></attribute>
-    <optional><attribute name="target-products">
-      <a:documentation>
-	Attribute that defines the plural version of products.
-	If not specified the framework adds an 's' to the target-product attribute. This is for cases like 'ox' and 'oxen'.
-      </a:documentation>
-    </attribute></optional>
-    <ref name="boilerplate-pat"/>
-  </define>
 
 
   <!-- <define name="man-sfrs"> -->
@@ -389,13 +378,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
   </define>
 
 
-  <define name="boilerplate-pat">
-    <optional>
-      <attribute name="boilerplate">
-	<value>yes</value>
-      </attribute>
-    </optional>
-  </define>
 
 
 

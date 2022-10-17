@@ -24,6 +24,27 @@
   </define>
 -->
  <include href="Selection.rng"/>
+
+ <define name="doc-attributes-pat">
+    <attribute name="name"></attribute>
+    <attribute name="target-product"></attribute>
+    <optional><attribute name="short"/></optional>
+    <optional><attribute name="target-products">
+      <a:documentation>
+	Attribute that defines the plural version of products.
+	If not specified the framework adds an 's' to the target-product attribute. This is for cases like 'ox' and 'oxen'.
+      </a:documentation>
+    </attribute></optional>
+    <ref name="boilerplate-pat"/>
+  </define>
+
+  <define name="boilerplate-pat">
+    <optional>
+      <attribute name="boilerplate">
+	<value>yes</value>
+      </attribute>
+    </optional>
+  </define>
  
  <define name="project-notes">
     <optional><element name="project-notes">
