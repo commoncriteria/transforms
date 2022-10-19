@@ -1747,6 +1747,33 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	   
   </define>
 
+
+  <define name="pp-attributes">
+    <attribute name="target-product">
+     <a:documentation>Product class (singular) targetted by this document.</a:documentation>
+    </attribute>
+    <optional><attribute name="target-products">
+      <a:documentation>
+	Attribute that defines the plural version of products.
+	If not specified the framework adds an 's' to the target-product attribute. This is for cases like 'ox' and 'oxen'.
+      </a:documentation>
+    </attribute></optional>
+    
+    <optional>
+      <attribute name="boilerplate">
+      <a:documentation>
+        Indicates that this document shall use boilerplate sections.
+      </a:documentation>
+      <value>yes</value></attribute>
+    </optional>
+    <optional>
+      <attribute name="short"/> 
+    </optional>
+
+  </define>
+
+
+  
   <define name="non-native-doc">
      <attribute name="version">
       <a:documentation>

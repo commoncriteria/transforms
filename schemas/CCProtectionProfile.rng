@@ -421,23 +421,6 @@
     </optional>
   </define>
   
-  <define name="pp-attributes">
-    <attribute name="target-products">
-     <a:documentation>The class of products targetted by this document.</a:documentation>
-    </attribute>
-    
-    <optional>
-      <attribute name="boilerplate">
-      <a:documentation>
-        Indicates that this document shall use boilerplate sections.
-      </a:documentation>
-      <value>yes</value></attribute>
-    </optional>
-    <optional>
-      <attribute name="short"/> 
-    </optional>
-
-  </define>
     
    <define name="pp-preferences-pat">
     <element name="pp-preferences">
