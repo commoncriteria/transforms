@@ -85,7 +85,7 @@
     </xsl:for-each>
     <xsl:for-each select="//cc:con-mod/@ref">
       <xsl:variable name="refid" select="."/>
-      <xsl:if test="not(//cc:f-component/@cc-id=$refid or //cc:*/@name=$refid)">
+      <xsl:if test="not(//cc:f-component/@cc-id=$refid or //cc:*/@name=$refid or //cc:f-component/@id=$refid)">
 	<xsl:message>* Error: Detected dangling ref to '<xsl:value-of select="$refid"/>'
         for a <xsl:value-of select="name()"/>.
 	<xsl:call-template name="genPath"/>
