@@ -6,7 +6,7 @@ import lxml.etree as ET
 import argparse
 import css_content
 
-default_ns = {'cc': "https://niap-ccevs.org/cc/v1",
+NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
@@ -14,65 +14,12 @@ def log(msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
-
-def get_num(fullpath):
-    path = pathlib.Path(fullpath)
-    try:
-        return int( path.stem )
-    except ValueError:
-        return sys.maxsize
-#        return 99999
-
-
-def apply_tds(main_path, tds):
-    parent_map = {c: p for p in root.iter() for c in p}
-    ET.register_namespace('cc',"https://niap-ccevs.org/cc/v1")
-    ET.register_namespace('sec',"https://niap-ccevs.org/cc/v1/section")
-    ET.register_namespace('h', "http://www.w3.org/1999/xhtml")
-    # Need to sort
-    tds.sort(key=get_num)
-    for td_path in tds:
-        log("Parsing: "+td_path)
-        td = ET.parse(td_path).getroot()
-        ns_el = td.find(".//cc:xpath_namespaces",default_ns)
-        if ns_el is None:
-            ns = default_ns
-        else:
-            ns =ns_el.attrib 
-        replaces = td.findall(".//cc:replace", default_ns)
-        for replace in replaces:
-            for xpath_spec in replace.findall(".//cc:xpath-specified", ns):
-                xpath = "."+ xpath_spec.attrib["xpath"]
-                matches = root.xpath(xpath, namespaces=ns)
-                #                replaced = root.find(xpath, ns)
-                if not len(matches)==1:
-                    log("Found "+ str(len(replaced))+ " nodes using:::"  + xpath + "::: Expected 1")
-                    continue
-                replaced = matches[0]
-                parent = parent_map[replaced]
-                if parent is None:
-                    log("Cannot find parent")
-                    continue
-                kid_cache = []
-                for kid in list(parent):
-                    if kid == replaced:
-                        log("Adding: " )
-                        for newkids in list(xpath_spec):
-                            kid_cache.append(newkids)
-                    else:
-                        kid_cache.append(kid)
-                    parent.remove(kid)
-                for kid in kid_cache:
-                    parent.append(kid)
-    print(ET.tostring(root, encoding='unicode', method='xml'))
-
 def make_attr_safe(attr):
     ret = attr.replace('&', '&amp;')
     return ret.replace('"', '&quot;')
 
 def localtag(tag):
     return  tag.split("}")[1]
-
     
 class PP:
     def __init__(self, root, workdir, output, boilerplate):
@@ -82,7 +29,7 @@ class PP:
         self.globaltags = {}
         self.ids = {}
         self.boilerplate = ET.parse(boilerplate).getroot()
-        for external in root.findall(".//cc:*[cc:git]", default_ns):
+        for external in root.findall(".//cc:*[cc:git]", NS):
             id = external.attrib["id"]
             self.edocs[id]=ET.parse(workdir+"/"+external.attrib["id"]+".xml").getroot()
             
@@ -101,108 +48,109 @@ class PP:
             self.out.write(str)
 
     def rf(self, findexp):
-        return self.root.find( "."+findexp, default_ns)
+        return self.root.find( "."+findexp, NS)
     
     def rfa(self, findexp):
-        return self.root.findall( "."+findexp, default_ns)
+        return self.root.findall( "."+findexp, NS)
 
     def rx(self, xpath):
-        return self.root.xpath(xpath , namespaces=default_ns)
+        return self.root.xpath(xpath , namespaces=NS)
     
     def fx_init_js(self):
-        self.ol("// <![CDATA[")
-        self.ol("// Called on page load to parse URL parameters and perform actions on them.")
-        self.ol("function init(){")
-        self.ol("    if(getQueryVariable(\"expand\") == \"on\"){")
-        self.ol("      expand();")
-        self.ol("    }")
-        self.ol("    var aa;")
-        self.ol("    var brk_els = document.getElementsByClassName(\"dyn-abbr\");")
-        self.ol("    //")
-        self.ol("    for(aa=0; aa!=brk_els.length; aa++){")
-        self.ol("        var abbr = brk_els[aa].firstElementChild.getAttribute(\"href\").substring(1);")
-        self.ol("        var el = document.getElementById(\"long_\"+abbr)")
-        self.ol("        if (el==null) {")
-        self.ol("             console.log(\"Could not find 'long_abbr_'\"+abbr);")
-        self.ol("             continue;")
-        self.ol("        }")
-        self.ol("        var abbr_def = el.textContent;")
-        self.ol("        brk_els[aa].setAttribute(\"title\", abbr_def);")
-        self.ol("    }")
-        self.ol("}")
-        self.ol("// ]]>")
+        self.ol("""// <![CDATA[
+        // Called on page load to parse URL parameters and perform actions on them.
+        function init(){
+            if(getQueryVariable("expand") == "on"){
+              expand();
+            }
+            var aa;
+            var brk_els = document.getElementsByClassName("dyn-abbr");
+            //
+            for(aa=0; aa!=brk_els.length; aa++){
+                var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
+                var el = document.getElementById("long_"+abbr)
+                if (el==null) {
+                     console.log("Could not find 'long_abbr_'"+abbr);
+                     continue;
+                }
+                var abbr_def = el.textContent;
+                brk_els[aa].setAttribute("title", abbr_def);
+            }
+        }
+        // ]]>""")
 
 
     def fx_pp_js(self):
-        self.ol("	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML' type=\"text/javascript\"></script>")
-        self.ol("        <script type=\"text/x-mathjax-config\">")
-        self.ol("            MathJax.Hub.Config({")
-        self.ol("            extensions: [\"tex2jax.js\"],")
-        self.ol("            jax: [\"input/TeX\", \"output/HTML-CSS\"],")
-        self.ol("            showMathMenu: false,")
-        self.ol("            tex2jax: {")
-        self.ol("              inlineMath: [ ['$','$'], [\"\\(\",\"\\)\"] ],")
-        self.ol("              displayMath: [ ['$$','$$'], [\"\\[\",\"\\]\"] ],")
-        self.ol("              processEscapes: true")
-        self.ol("            },")
-        self.ol("            styles: {")
-        self.ol("")
-        self.ol("                \".MathJax_Display\": {")
-        self.ol("                \"text-align\": \"left !important\",")
-        self.ol("                margin:       \"0em 0em !important\"")
-        self.ol("            }}")
-        self.ol("            });")
-        self.ol("        </script>")
-        self.ol("        <script type=\"text/javascript\">")
+        self.ol("""<script 
+ src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+ type="text/javascript"></script>
+                <script type="text/x-mathjax-config">
+                    MathJax.Hub.Config({
+                    extensions: ["tex2jax.js"],
+                    jax: ["input/TeX", "output/HTML-CSS"],
+                    showMathMenu: false,
+                    tex2jax: {
+                      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                      processEscapes: true
+                    },
+                    styles: {
+        
+                        ".MathJax_Display": {
+                        "text-align": "left !important",
+                        margin:       "0em 0em !important"
+                    }}
+                    });
+                </script>
+                <script type="text/javascript">
+""")
         self.fx_init_js()
-        self.ol("// <![CDATA[")
-        self.ol("const AMPERSAND=String.fromCharCode(38);")
-        self.ol("")
-        self.ol("// Pass a URL variable to this function and it will return its value")
-        self.ol("function getQueryVariable(variable)")
-        self.ol("{")
-        self.ol("    var query = window.location.search.substring(1);")
-        self.ol("    var vars = query.split(AMPERSAND);")
-        self.ol("    for (var i=0;i!=vars.length;i++) {")
-        self.ol("        var pair = vars[i].split(\"=\");")
-        self.ol("        if(pair[0] == variable){return pair[1];}")
-        self.ol("    }")
-        self.ol("    return(false);")
-        self.ol("}")
-        self.ol("")
-        self.ol("")
-        self.ol("//    Expands all evaluation activities")
-        self.ol("function expand(){")
-        self.ol("    var ap = document.getElementsByClassName('activity_pane');")
-        self.ol("    for (var ii = 0; ii!=ap.length; ii++) {")
-        self.ol("        ap[ii].classList.remove('hide');")
-        self.ol("    }")
-        self.ol("}")
-        self.ol("")
-        self.ol("// Function to expand and contract a given div")
-        self.ol("function toggle(descendent) {")
-        self.ol("    var cl = descendent.parentNode.parentNode.classList;")
-        self.ol("    if (cl.contains('hide')){")
-        self.ol("      cl.remove('hide');")
-        self.ol("    }")
-        self.ol("    else{")
-        self.ol("      cl.add('hide');")
-        self.ol("    }")
-        self.ol("}")
-        self.ol("")
-        self.ol("// Expands targets if they are hidden")
-        self.ol("function showTarget(id){")
-        self.ol("    var element = document.getElementById(id);")
-        self.ol("    while (element != document.body.rootNode ){")
-        self.ol("	element.classList.remove(\"hide\");")
-        self.ol("	element = element.parentElement;")
-        self.ol("    }")
-        self.ol("}")
-        self.ol("")
-        self.ol("")
-        self.ol("// ]]></xsl:text>")
-        self.ol("        </script>")
-
+        self.ol("""// <![CDATA[
+        const AMPERSAND=String.fromCharCode(38);
+        
+        // Pass a URL variable to this function and it will return its value
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split(AMPERSAND);
+            for (var i=0;i!=vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+        
+        
+        //    Expands all evaluation activities
+        function expand(){
+            var ap = document.getElementsByClassName('activity_pane');
+            for (var ii = 0; ii!=ap.length; ii++) {
+                ap[ii].classList.remove('hide');
+            }
+        }
+        
+        // Function to expand and contract a given div
+        function toggle(descendent) {
+            var cl = descendent.parentNode.parentNode.classList;
+            if (cl.contains('hide')){
+              cl.remove('hide');
+            }
+            else{
+              cl.add('hide');
+            }
+        }
+        
+        // Expands targets if they are hidden
+        function showTarget(id){
+            var element = document.getElementById(id);
+            while (element != document.body.rootNode ){
+        	element.classList.remove("hide");
+        	element = element.parentElement;
+            }
+        }
+        // ]]>
+                </script>
+""")
 
 
         
@@ -232,7 +180,7 @@ class PP:
         
         self.ol("	</style>")
         self.ol("      </head>")
-        self.ol("<body onLoad=\"init()\">")
+        self.ol("<body onload=\"init()\">")
         self.fx_body_begin()
         self.apply_templates([self.root])
         self.ol("      </body>")
@@ -249,7 +197,18 @@ class PP:
             self.ol("         <a href=\"#"+id+"\">Comment: "+id+"</a><br/>")
         self.ol("     </div>")
 
-
+    def fcomp_cc_id(self, node, suffix=""):
+        ret = node.attrib["cc-id"].upper() + suffix
+        if "iteration" in node.attrib:
+            ret += "/"+node.attrib["iteration"]
+        return ret
+        
+        
+    def element_cc_id(self, node):
+        fcomp = node.find("..")
+        indexstr = str(fcomp.index(node))
+        return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
+        
     def getId(self, node):
         if "id" in node.attrib:
             return node.attrib["id"]
@@ -285,7 +244,7 @@ class PP:
             self.handle_content(node)
 
     def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node):
-        defs = node.findall("cc:*[cc:description]", default_ns)
+        defs = node.findall("cc:*[cc:description]", NS)
         if defs is not None:
             self.ol("<dl>")
             for defined in defs:
@@ -295,8 +254,8 @@ class PP:
                 self.o(name)
                 self.ol("</dt>")
                 self.o("<dd>")
-                self.apply_templates(defined.find("./cc:description",default_ns))
-                self.apply_templates(defined.find("./cc:appnote",default_ns))
+                self.apply_templates(defined.find("./cc:description",NS))
+                self.apply_templates(defined.find("./cc:appnote",NS))
                 self.ol("</dd>")
             self.ol("</dl>")
         else:
@@ -322,6 +281,23 @@ class PP:
         nodes = self.root.findall(".//"+fulltag)
         self.globaltags[fulltag] = nodes
         return nodes
+    
+    def get_section_base_id(self, node):
+        if node.tag == "{https://niap-ccevs.org/cc/v1}section":
+            if "id" in node.attrib:
+                return node.attrib["id"]
+            osecs = self.get_list_of(node.tag)
+            id="sec_"+str(osces.index(node))+"-"
+            return id
+        else:
+            return node.tag.split("}")[1]
+
+        
+    def get_section_title(self, node):
+        if "title" in node.attrib:
+            return node.attrib["title"]
+        return node.tag.split("}")[1].replace("_", " ")
+                
     
     def template_oldsection(self, node):
         if "id" in node.attrib:
@@ -352,7 +328,7 @@ class PP:
             ignores = ","+suppress_el.text+","
         terms=[]
         termdic={}
-        for termdef in self.rx(".//cc:cc-terms/cc:term[text()]")+self.boilerplate.xpath(".//cc:cc-terms/cc:term[text()]", namespaces=default_ns):
+        for termdef in self.rx(".//cc:cc-terms/cc:term[text()]")+self.boilerplate.xpath(".//cc:cc-terms/cc:term[text()]", namespaces=NS):
             term = termdef.attrib["full"]
             if (","+ term +",") in ignores:
                 continue
@@ -416,13 +392,13 @@ class PP:
     def template_usecases(self, node):
         self.ol("    <dl>")
         ctr = 1
-        for usecase in node.findall("cc:usecase", default_ns):
+        for usecase in node.findall("cc:usecase", NS):
             id = usecase.attrib["id"]
             self.o("        <dt id=\""+id+"\"> [USE CASE "+str(ctr)+"] ")
             self.o(usecase.attrib["title"])
             self.o("</dt>\n        <dd>")
-            self.apply_templates(node.findall("./cc:description",default_ns))
-            config = node.find("./cc:config", default_ns)
+            self.apply_templates(node.findall("./cc:description",NS))
+            config = node.find("./cc:config", NS)
             if config is not None:
                 self.ol("          <p> For changes to included SFRs, selections, and assignments required for this use case, see <a href=\"#appendix-"+id+"\" class=\"dynref\"></a>.")
                 self.ol("          </p>")
@@ -446,18 +422,20 @@ class PP:
 
     def is_modified(self, sfr, declared, broot):
         cc_id = sfr.attrib["cc-id"]
-        xpathstr=""
+        xp_iter=""
         if "iteration" in sfr.attrib:
             iteration=sfr.attrib["iteration"]
             if (cc_id+"/"+iteration) in declared:
                 return True
-            xpathstr = " and @iteration='"+iteration+"'"
+            xp_iter = " and @iteration='"+iteration+"'"
         else:
             if cc_id in declared:
                 return True
         if broot is not None:
-            orig = broot.xpath("//cc:f-component[@cc-id='"+cc_id+"'"+xpathstr + "]", namespaces=default_ns)
-            return orig is not None
+            xpath = "//cc:f-component[@cc-id='"+cc_id+"'"+xp_iter + "]"
+            orig = broot.xpath(xpath, namespaces=NS)
+            ret = len(orig) > 0
+            return ret
         return False
 
 
@@ -466,7 +444,36 @@ class PP:
         if not modsfrs:
             return []
         return modsfrs.text.split(" ")
-                    
+
+
+    def template_felement(self, node):
+        self.ol("<div class=\"element\">")
+        reqid = self.element_cc_id(node)
+#       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+        self.ol("<div class=\"reqid\" id=\""+reqid+"\">")
+        self.ol("  <a href=\"#"+reqid+"\" class=\"abbr\">" + reqid +"</a>")
+        self.ol("</div>")
+        self.ol("<div class=\"reqdesc\">")
+        title=node.find("cc:title", NS)
+        self.handle_content(title)
+        # apply_templates_single(title)
+        rulez = self.rx("//cc:rule[.//cc:ref-id/text()=current()//@id]")
+        notes = node.findall("cc:note" , NS)
+        if len(rulez)+len(notes) > 0:
+            self.ol("<br/><span class=\"note-header\">Application Note: </span>")
+            for note in notes:
+                self.handle_content(note)
+#         <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
+# 	  <xsl:if test="not(cc:note)">
+# 	  </xsl:if>
+#           <div class="validationguidelines_label">Validation Guidelines:</div>
+# <!--          <p/>Selections in this requirement involve the following rule(s):<br/> -->
+#           <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
+# 	</xsl:if>
+        self.ol("  </div>")
+        self.ol("</div>")
+        
+    
     def template_basepp(self, node):
         id = node.attrib["id"]
         if id in self.edocs:
@@ -474,11 +481,12 @@ class PP:
             short = self.get_short(broot)
         else:
             raise Exception("Can't do this basepp")
+        log("Looking at: "+broot.xpath("//cc:PPTitle",namespaces=NS)[0].text)
         self.ol("<h2 id=\""+"secreq-"+id+" class=\"indexable\" data-level=\"2\">")
         self.o(short)
-        self.ol("Security Functional Requirements Direction")
+        self.ol(" Security Functional Requirements Direction")
         self.ol("</h2>")
-        if not self.apply_templates_single(node.find("cc:sec-func-req-dir", default_ns)):
+        if not self.apply_templates_single(node.find("cc:sec-func-req-dir", NS)):
             self.ol("In a PP-Configuration that includes the ")
             self.o(short)
             self.ol(",the TOE is expected to rely on some of the security functions implemented by the")
@@ -490,8 +498,8 @@ class PP:
 
             #     <xsl:variable name="b_id" select="@id"/>
         #     <xsl:variable name="doc" select="concat($work-dir,'/',@id,'.xml')"/>
+        
 
-        self.ol("<h3 id=\"modsfr-"+"@id"+"\" class=\"indexable\" data-level=\"3\"> Modified SFRs </h3>")
         basedep_sfrs = self.rx("//cc:f-component[cc:depends/@*='"+id+"']")
         declared_modified = self.get_declared_modified_sfrs(node)
         add_sfrs=[]
@@ -501,52 +509,115 @@ class PP:
                 mod_sfrs.append(bsfr)
             else:
                 add_sfrs.append(bsfr)
-
         mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
         add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
-        if len(mod_sfrs)>0:
-            self.ol("The SFRs listed in this section are defined in the "+short+" and relevant to the secure operation of the TOE.")
-            if len(mod_sfrs)==0:
-                self.ol("This PP-Module does not modify any SFRs defined by the " + short  + ".")
-            else:
-                self.handle_sparse_sfrs( mod_sfrs)
+
+        self.ol("<h3 id=\"modsfr-"+"@id"+"\" class=\"indexable\" data-level=\"3\"> Modified SFRs </h3>")
+        self.ol("The SFRs listed in this section are defined in the "+short+
+                " and relevant to the secure operation of the TOE.")
+        if len(mod_sfrs)==0:
+            self.ol("This PP-Module does not modify any SFRs defined by the " + short  + ".")
+        else:
+            self.handle_sparse_sfrs( mod_sfrs)
                 
         if len(self.rfa("//cc:base-pp"))>1:
             self.ol("<h3 id=\"addsfr-"+id+"\" class=\"indexable\" data-level=\"3\"> Additional SFRs</h3>")
-            if len(add_sfrs)>1:
+            if len(add_sfrs)>0:
                 self.ol("This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-                self.apply_templates(add_sfrs)
+                self.handle_sparse_sfrs(add_sfrs)
             else:
                 self.ol("This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
 
 
-    def do_section(self, sec):
-        tag = sec.tag
-        if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            id = localtag(tag)
-            if "title" in sec.attrib:
-                title=sec.attrib["title"]
-            else:
-                title = id.replace("_", " ")
-                # TODO: Put base below
-            self.ol("<h4 id='"+id+"'>"+title+"</h4>")
-        else:
-            self.o("<h4")
-            if "id" in sec.attrib:
-                self.o(" id=\"")
-                self.o(sec.attrib["id"])
-                self.o("\"")
-            self.o(">")
-            self.o(sec.attrib["title"])
-            self.ol("</h4>")
+    def get_meaningful_ancestor(self, refid):
+        ret = self.rx("//cc:f-element[.//@id='"+refid+"']")
+        if len(ret) == 1:
+            return ret
+        ret = self.rf("//cc:feature[@id='"+refid+"']")
+        if ret is not None:
+            return ret
+        ret = self.rx("//cc:choice[.//@id='"+refid+"']")
+        if len(ret) == 1:
+            return ret
+        raise Exception("Could not find meaningful ancestor for: '" + refid+"'")
+                
 
+    def handle_fcomponent(self, node):
+        formal = self.fcomp_cc_id(node)
+        self.ol("<div class=\"comp\" id=\""+formal+"\">")
+        self.ol("<h4>"+ formal + " "+ node.attrib["name"]+"</h4>")
+        status=""
+        objective = False
+        optional = False
+        # Meaningful ancestor is the key
+        selecteds = []
+
+        if node.find("cc:depends/cc:objective", NS):
+            objective = True
+        else:
+            if node.find("cc:depends/cc:optional", NS):
+                optional = True
+            for dep in node.findall("cc:depends", NS):
+                edoc = dep.find("cc:external-doc", NS)
+                if edoc is not None:
+                    self.rf("//cc:*[@id='"+edoc.attrib["ref"]+"']")
+                    raise Exception("Can't handle yet")
+                else:
+                    for attr in dep.attrib:
+                        if self.rf("//cc:base[@id='"+dep.attrib[attr]+"']") is None:
+                            continue
+                        meananc = self.get_meaningful_ancestor(dep.attrib[attr])
+                        selecteds[meananc] = dep.attrib[attr]
+                    
+        self.ol("<div class=\"statustag\"><i><b>"+status+"</b></i></div>")
+  #     <xsl:if test="@status='sel-based'">
+  #       <div class="statustag">
+  #         <b><i>This is a selection-based component. Its inclusion depends upon selection from
+  #         <xsl:call-template name="handle_thing_with_depends"/>
+  #         </i></b>
+  #       </div>
+  #     </xsl:if>
+  #     <xsl:if test="@status='feat-based'">
+  #       <div class="statustag">
+  #         <i><b>This is an implementation-based component.
+  #               Its inclusion in depends on whether the TOE implements one or more of the following features:
+  #               <ul>
+  #                 <xsl:for-each select="cc:depends/@*">
+  #                   <xsl:variable name="ref-id" select="."/>
+  #                     <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
+  #                 </xsl:for-each>
+  #               </ul>
+  #               as described in Appendix A: Implementation-based Requirements.
+  #              <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
+  #       </b></i>
+  #       </div>
+  #     </xsl:if>
+  #     <xsl:if test="@status='optional'">
+  #       <div class="statustag">
+  #         <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
+  #       </div>
+  #     </xsl:if>
+  #    <xsl:apply-templates/>
+  #       <xsl:call-template name="f-comp-activities"/>
+  #   </div>
+  # </xsl:template>
+        self.apply_templates(node.findall(".//cc:f-element", NS))
+        self.ol("</div>")
+    
     def handle_sparse_sfrs(self, sfrs):
-        prevsec = None
+        titles={}
         for sfr in sfrs:
-            currsec = sfr.find("..")
-            if prevsec != currsec:
-                prevsec = currsec
-                self.do_section(prevsec)
+            sec = sfr.find("..")
+            title = self.get_section_title(sec)
+            id = self.get_section_base_id(sec)
+            if title not in titles:
+                titles[title]=1
+                log("Title is |"+title+"|")
+                self.ol("<h4 id='"+id+"'>"+title+"</h4>")
+            else:
+                log("Not in")
+            log("!!!!! "+ title)
+            self.handle_fcomponent(sfr)
 
                 
         
@@ -582,6 +653,16 @@ class PP:
             self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}base-pp":
             self.template_basepp(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}sfrs":
+            pass
+        elif tag=="{https://niap-ccevs.org/cc/v1}f-component":
+            pass
+        elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
+            self.template_felement(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}title":
+            self.apply_templates(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
+            log("Skipping:" + tag)
         else:
             raise Exception("Can't handle: " + node.tag)
         # log("Ending: "+str(node))
@@ -592,7 +673,7 @@ class PP:
         
 
     def make_xref_edoc(self, node):
-        url=node.find("cc:url", default_ns).text
+        url=node.find("cc:url", NS).text
         self.o("<a href=\""+make_attr_safe(url)+"\">")        
         if "name" in node.attrib:
             self.o(node.attrib["name"])
@@ -600,26 +681,26 @@ class PP:
             self.o(node.attrib["version"])
         else:
             root = self.edocs[node.attrib["id"]]
-            modrot = root.find(".//cc:Module", default_ns)
+            modrot = root.find(".//cc:Module", NS)
             if modrot is not None:
                 name = modrot.attrib["name"]
                 if not name.startswith("PP-Module for"):
                     name = "PP-Module for " + name
             else:
-                modrot = root.find(".//cc:PPTitle", default_ns)
+                modrot = root.find(".//cc:PPTitle", NS)
                 if modrot is not None:
                     name = modrot.text
                 else:
                     raise Exception("Somethign else " + str(node)   )
             self.o(name)
             self.o(", version ")
-            self.o(root.find(".//cc:PPVersion", default_ns).text)
+            self.o(root.find(".//cc:PPVersion", NS).text)
         self.ol("</a>")
 
     def make_xref_bibentry(self, node):
         id =  node.attrib["id"]
         self.o("<a href=\"#"+id+"\">[")
-        self.o(node.find("./cc:tag", default_ns).text)
+        self.o(node.find("./cc:tag", NS).text)
         self.ol("]</a>")
 
         
