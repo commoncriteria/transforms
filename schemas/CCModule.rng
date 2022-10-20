@@ -14,7 +14,8 @@
       <a:documentation>
 	Root element for a Protection Profile Module.
       </a:documentation>
-      <ref name="doc-attributes-pat"/>
+      <attribute name="name"/>
+      <ref name="pp-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
       <ref name="packages"/>
       <ref name="Introduction"/>
