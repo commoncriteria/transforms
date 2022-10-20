@@ -1748,7 +1748,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
 
-  <define name="pp-attributes">
+  <define name="pp-attributes-pat">
     <attribute name="target-product">
      <a:documentation>Product class (singular) targetted by this document.</a:documentation>
     </attribute>

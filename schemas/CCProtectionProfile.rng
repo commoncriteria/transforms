@@ -13,7 +13,7 @@
   <start>
     <element name="PP">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <ref name="pp-attributes"/>
+      <ref name="pp-attributes-pat"/>
       <ref name="cPP-flag"/>
       <ref name="project-notes"/>
       <ref name="PPReference"/>
