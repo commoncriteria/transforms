@@ -73,7 +73,7 @@
 	  </xsl:message>
         </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//@ref-id[not(ancestor::c:con-mod)]">
+    <xsl:for-each select="//@ref-id[not(ancestor::cc:con-mod)]">
       
 	<xsl:variable name="refid" select="."/>
         <xsl:if test="not(//cc:*[@id=$refid])">
