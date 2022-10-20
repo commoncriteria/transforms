@@ -338,7 +338,8 @@ class PP:
         terms.sort()
         for term in terms:
             self.template_glossary_entry(termdic[term])
-
+        self.ol("    </table>")
+        self.ol("    </div>")
             # self.ol("          terms.append(uppered)\"")
         
           # <xsl:for-each select="|">
@@ -482,7 +483,7 @@ class PP:
         else:
             raise Exception("Can't do this basepp")
         log("Looking at: "+broot.xpath("//cc:PPTitle",namespaces=NS)[0].text)
-        self.ol("<h2 id=\""+"secreq-"+id+" class=\"indexable\" data-level=\"2\">")
+        self.ol("<h2 id=\""+"secreq-"+id+"\" class=\"indexable\" data-level=\"2\">")
         self.o(short)
         self.ol(" Security Functional Requirements Direction")
         self.ol("</h2>")
@@ -616,7 +617,6 @@ class PP:
                 self.ol("<h4 id='"+id+"'>"+title+"</h4>")
             else:
                 log("Not in")
-            log("!!!!! "+ title)
             self.handle_fcomponent(sfr)
 
                 
@@ -626,7 +626,6 @@ class PP:
             return False
         tag = node.tag
         if not isinstance(tag,str):
-            log("Handingling something weird")
             return False
         # log("Starting: " + str(node))
         if tag == "{https://niap-ccevs.org/cc/v1}Module":
@@ -754,7 +753,7 @@ class PP:
 def make_mod(path):
     print("Making mod: "+path)
     doc = ET.parse(path)
-    pp = PP( doc.getroot(), "../../output", "/tmp/abc.html", "/home/kevin/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml" )
+    pp = PP( doc.getroot(), "../../output", "/tmp/abc.xml", "/home/kevin/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml" )
     pp.to_html()
     
     
