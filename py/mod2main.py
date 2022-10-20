@@ -10,6 +10,8 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
+
+
 def log(msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
@@ -20,7 +22,13 @@ def make_attr_safe(attr):
 
 def localtag(tag):
     return  tag.split("}")[1]
-    
+
+def get_attr_or(node, attr, default=""):
+    if attr in node.attrib:
+        return node.attrib[attr]
+    return default
+
+
 class PP:
     def __init__(self, root, workdir, output, boilerplate):
         self.root = root
@@ -157,7 +165,7 @@ class PP:
     def title(self):
         node = self.rf("//cc:PPTitle")
         if node is not None:
-            return node.text()
+            return node.text
         if "target-products" in self.root.attrib:
             return "PP-Module for " + self.root.attrib["target-products"]
         else:
@@ -186,17 +194,57 @@ class PP:
         self.ol("      </body>")
         self.ol("    </html>")
 
+    def title(self):
+        return self.root.attrib["name"]
+    
     def fx_body_begin(self):
         comments_els = self.rfa("//cc:comment")
-        if not comments_els:
-            return
-        ctr=0
-        self.ol("     <div id=\"commmentbox-\">")
-        for comment_el in comment_els:
-            id=self.getId(comment_el)
-            self.ol("         <a href=\"#"+id+"\">Comment: "+id+"</a><br/>")
-        self.ol("     </div>")
+        if comments_els:
+            ctr=0
+            self.ol("     <div id=\"commmentbox-\">")
+            for comment_el in comment_els:
+                id=self.getId(comment_el)
+                self.ol("         <a href=\"#"+id+"\">Comment: "+id+"</a><br/>")
+            self.ol("     </div>")
+        self.o("   <h1 class=\"title\" style=\"page-break-before:auto;\">")
+        self.o(self.title())
+        self.o("</h1>")
+        self.ol("   <noscript>")
+        self.ol("     <h1 style=\"text-align:center; border-style: dashed; border-width: medium; border-color: red;\"")
+        self.ol("         >This page is best viewed with JavaScript enabled!</h1>")
+        self.ol("   </noscript>")
+        self.ol("   <div class=\"center\">")
+        self.ol("     <img src=\"images/niaplogo.png\" alt=\"NIAP Logo\"/> <br/>")
+# Might think about getting rid of this and just making it part of the foreword
+        self.ol("     Version: "+self.rf("//cc:ReferenceTable/cc:PPVersion").text+"<br/>")
+        self.ol("     "+self.rf("//cc:ReferenceTable/cc:PPPubDate").text+"<br/>")
+        self.ol("     <b>"+self.rf("//cc:PPAuthor").text+"</b><br/>")
+        self.ol("   </div>")
+  #   self.apply-templates select="//cc:foreword"/>
 
+  #   <h2 style="page-break-before:always;">Revision History</h2>
+  #   <table>
+  #    <tr class="header">
+  #      <th>Version</th>
+  #      <th>Date</th>
+  #      <th>Comment</th>
+  #    </tr>
+  #    <xsl:for-each select="//cc:RevisionHistory/cc:entry">
+  #      <tr>
+  #        <td> <xsl:value-of select="cc:version"/> </td>
+  #        <td> <xsl:value-of select="cc:date"/> </td>
+  #        <td> self.apply-templates select="cc:subject"/> </td>
+  #      </tr><xsl:text>&#xa;</xsl:text>
+  #    </xsl:for-each>
+  #   </table>
+  #   <h2>Contents</h2>
+  #   <div class="toc" id="toc"/>
+  # </xsl:template>
+  #       print("Yes")
+            
+
+
+        
     def fcomp_cc_id(self, node, suffix=""):
         ret = node.attrib["cc-id"].upper() + suffix
         if "iteration" in node.attrib:
@@ -281,13 +329,16 @@ class PP:
         nodes = self.root.findall(".//"+fulltag)
         self.globaltags[fulltag] = nodes
         return nodes
+
+    def get_global_index(self, node):
+        allof = self.get_list_of(node.tag)
+        return allof.index(node)
     
     def get_section_base_id(self, node):
         if node.tag == "{https://niap-ccevs.org/cc/v1}section":
             if "id" in node.attrib:
                 return node.attrib["id"]
-            osecs = self.get_list_of(node.tag)
-            id="sec_"+str(osces.index(node))+"-"
+            id="sec_"+str(get_global_index(node))+"-"
             return id
         else:
             return node.tag.split("}")[1]
@@ -303,8 +354,7 @@ class PP:
         if "id" in node.attrib:
             id=node.attrib["id"]
         else:
-            osecs = self.get_list_of(node.tag)
-            id="sec_"+str(osces.index(node))+"-"
+            id="sec_"+str(get_global_index(node))+"-"
         self.handle_section(node,node.attrib["title"],id)
         
     def template_newsection(self, node):
@@ -315,20 +365,10 @@ class PP:
             title=id.replace("_", " ")
         self.handle_section(node, title, id)
 
-    def template_tech_terms(self, node):
-        self.ol("    <div class=\"no-link\">")
-        self.ol("    <h2 id='glossary' class='indexable' data-level='2'>Terms</h2>")
-        self.ol("The following sections list Common Criteria and technology terms used in this document.")
-        self.ol("    <h3 id=\"cc-terms\" class=\"indexable\" data-level=\"3\">Common Criteria Terms</h3>")
-        self.ol("    <table>")
-        ignores=""
-        suppress_el = self.rf("//cc:suppress")
-        
-        if suppress_el is not None:
-            ignores = ","+suppress_el.text+","
+    def make_term_table(self, term_els, ignores=""):
         terms=[]
         termdic={}
-        for termdef in self.rx(".//cc:cc-terms/cc:term[text()]")+self.boilerplate.xpath(".//cc:cc-terms/cc:term[text()]", namespaces=NS):
+        for termdef in term_els:
             term = termdef.attrib["full"]
             if (","+ term +",") in ignores:
                 continue
@@ -338,26 +378,27 @@ class PP:
         terms.sort()
         for term in terms:
             self.template_glossary_entry(termdic[term])
+
+        
+    def template_tech_terms(self, node):
+        self.ol("    <div class=\"no-link\">")
+        self.ol("    <h2 id='glossary' class='indexable' data-level='2'>Terms</h2>")
+        self.ol("The following sections list Common Criteria and technology terms used in this document.")
+        self.ol("    <h3 id=\"cc-terms\" class=\"indexable\" data-level=\"3\">Common Criteria Terms</h3>")
+        self.ol("    <table>")
+        igs=""
+        suppress_el = self.rf("//cc:suppress")
+        if suppress_el is not None:
+            igs = ","+suppress_el.text+","
+        fromdoc = self.rx(".//cc:cc-terms/cc:term[text()]")
+        builtin=self.boilerplate.xpath(".//cc:cc-terms/cc:term[text()]", namespaces=NS)
+        self.make_term_table(fromdoc+builtin, ignores=igs)
+        self.ol("    </table>")
+        self.ol("    <h3 id=\"tech-terms\" class=\"indexable\" data-level=\"3\">Technical Terms</h3>")
+        self.ol("    <table style=\"width: 100%\">")
+        self.make_term_table(node.xpath(".//cc:term[text()]", namespaces=NS))
         self.ol("    </table>")
         self.ol("    </div>")
-            # self.ol("          terms.append(uppered)\"")
-        
-          # <xsl:for-each select="|">
-          #   <xsl:sort select="translate(@full, $upper, $lower)"/>
-          #   <xsl:if test="not(contains($ignore_list, concat(',',@full,',')))">
-          #     <xsl:call-template name="glossary-entry"/>
-          #   </xsl:if>
-          # </xsl:for-each>
-      # self.ol("    </table>")
-      # self.ol("    <h3 id=\"tech-terms\" class=\"indexable\" data-level=\"3\">Technical Terms</h3>")
-      # self.ol("    <table style=\"width: 100%\">")
-      # # <xsl:for-each select="cc:term[text()]">
-      # #   <xsl:sort select="@full"/>
-      # #   <xsl:call-template name="glossary-entry"/>
-      # # </xsl:for-each>
-      # self.ol("    </table>")
-      # self.ol("    </div>")
-      # self.ol("  </xsl:template>")
         
     def template_glossary_entry(self, node):
         full = node.attrib["full"]
@@ -530,7 +571,7 @@ class PP:
                 self.ol("This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
 
 
-    def get_meaningful_ancestor(self, refid):
+    def get_meaningful_ancestor(self, refid, buckets):
         ret = self.rx("//cc:f-element[.//@id='"+refid+"']")
         if len(ret) == 1:
             return ret
@@ -551,27 +592,40 @@ class PP:
         objective = False
         optional = False
         # Meaningful ancestor is the key
-        selecteds = []
+        selecteds = {}
 
         if node.find("cc:depends/cc:objective", NS):
             objective = True
         else:
-            if node.find("cc:depends/cc:optional", NS):
-                optional = True
             for dep in node.findall("cc:depends", NS):
+                if dep.find("cc:optional", NS):
+                    optional = True
+                    pass
                 edoc = dep.find("cc:external-doc", NS)
                 if edoc is not None:
                     self.rf("//cc:*[@id='"+edoc.attrib["ref"]+"']")
                     raise Exception("Can't handle yet")
                 else:
-                    for attr in dep.attrib:
-                        if self.rf("//cc:base[@id='"+dep.attrib[attr]+"']") is None:
+                    buckets=[{},{},{}]
+                    for attrname in dep.attrib:
+                        attr = dep.attrib[attrname]
+                        if self.rf("//cc:base[@id='"+attr+"']") is None:
                             continue
-                        meananc = self.get_meaningful_ancestor(dep.attrib[attr])
-                        selecteds[meananc] = dep.attrib[attr]
-                    
-        self.ol("<div class=\"statustag\"><i><b>"+status+"</b></i></div>")
-  #     <xsl:if test="@status='sel-based'">
+                        meananc = self.get_meaningful_ancestor(attr)
+                        if meananc in selecteds:
+                            selecteds[meananc].append(attr)
+                        else:
+                            selecteds[meananc] = [].append(attr)
+            for meananc in selecteds:
+                log("Doing something: "+ meananc.tag)
+            if optional:
+                status += "<p>This component may also be included in the ST as if optional.</p>"
+        if len(status) > 0:
+            self.ol("<div class=\"statustag\"><i><b>"+status+"</b></i></div>")
+
+
+
+   #     <xsl:if test="@status='sel-based'">
   #       <div class="statustag">
   #         <b><i>This is a selection-based component. Its inclusion depends upon selection from
   #         <xsl:call-template name="handle_thing_with_depends"/>
@@ -593,11 +647,6 @@ class PP:
   #       </b></i>
   #       </div>
   #     </xsl:if>
-  #     <xsl:if test="@status='optional'">
-  #       <div class="statustag">
-  #         <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
-  #       </div>
-  #     </xsl:if>
   #    <xsl:apply-templates/>
   #       <xsl:call-template name="f-comp-activities"/>
   #   </div>
@@ -613,10 +662,7 @@ class PP:
             id = self.get_section_base_id(sec)
             if title not in titles:
                 titles[title]=1
-                log("Title is |"+title+"|")
                 self.ol("<h4 id='"+id+"'>"+title+"</h4>")
-            else:
-                log("Not in")
             self.handle_fcomponent(sfr)
 
                 
@@ -661,12 +707,75 @@ class PP:
         elif tag=="{https://niap-ccevs.org/cc/v1}title":
             self.apply_templates(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
-            log("Skipping:" + tag)
+            self.template_management_function_set(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}manager":
+            self.o("<td>")
+            self.handle_content(node)
+            self.o("</td>")
+        elif tag=="{https://niap-ccevs.org/cc/v1}text":
+            self.handle_content(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
+            log("Not handling " + tag)
+        elif tag=="{https://niap-ccevs.org/cc/v1}assignable":
+            log("Not handling " + tag)
         else:
             raise Exception("Can't handle: " + node.tag)
         # log("Ending: "+str(node))
         return True
 
+            
+    def template_management_function_set(self, node):
+        self.ol("<table class=\"mfs\" style=\"width: 100%;\">")
+        self.ol("<tr class=\"header\">")
+        self.ol("<td>#</td><td>Management Function</td>")
+        managers = node.findall("./cc:manager", NS)
+        self.apply_templates(managers)
+        self.ol("</tr>")
+        ctr=0
+        prefix = get_attr_or(node, "ctr-prefix")
+        deffy  = node.attrib["default"]
+        for mf in node.findall("./cc:management-function", NS):
+            ctr+=1
+            self.make_mf_row(mf, prefix+str(ctr), managers, deffy)
+        self.ol("</table>")
+
+    def get_mf_id(self, node):
+        if "id" in node.attrib:
+            return node.attrib["id"]
+        return "_mf_"+str(self.get_global_index(node))
+
+    def make_mf_val(self, tag, node):
+        if tag == "O":
+            self.o("<div>O<span class=\"tooltiptext\">Optional</span></div>")
+        elif tag =="M":
+            self.o("<div>M<span class=\"tooltiptext\">Mandatory</span></div>")
+        elif tag == "NA":
+            self.o("<div>-<span class=\"tooltiptext\">N/A</span></div>")
+        else:
+            self.handle_content(node)
+
+    
+    def make_mf_row(self, mf, prefix, managers, defval):
+        mf_num = str(self.get_global_index(mf))
+        mf_id = self.get_mf_id(mf)
+        self.ol("   <tr id=\"{$mf_id}\">")
+        self.o("     <td>"+prefix+"</td>")
+        self.ol("<td style=\"text-align:left\">")
+        self.apply_templates_single(mf.find("cc:text",NS))
+        self.ol("</td>")
+        for manager in managers:
+            cid=manager.attrib["cid"]
+            tagnode=mf.find("*[@ref='"+cid+"']")
+            if tagnode == None:
+                val=defval
+            else:
+                val= localtag(tagnode.tag)
+            self.ol("         <td>")
+            self.make_mf_val(val, tagnode)
+            self.ol("         </td>")
+        self.ol("   </tr>")
+
+    
     def make_xref_section(self, node, id):
         self.ol("<a href=\"#{"+id+"}\" class=\"dynref\">Section </a>")
         
@@ -715,40 +824,6 @@ class PP:
 
             
         
-  #   <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
-  #   <noscript>
-  #     <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
-  #         >This page is best viewed with JavaScript enabled!</h1>
-  #   </noscript>
-  #   <div class="center">
-  #     <img src="images/niaplogo.png" alt="NIAP Logo"/> <br/>
-  #       <!-- Might think about getting rid of this and just making it part of the foreword -->
-  #     Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
-  #     <xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
-  #     <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
-  #   </div>
-  #   self.apply-templates select="//cc:foreword"/>
-
-  #   <h2 style="page-break-before:always;">Revision History</h2>
-  #   <table>
-  #    <tr class="header">
-  #      <th>Version</th>
-  #      <th>Date</th>
-  #      <th>Comment</th>
-  #    </tr>
-  #    <xsl:for-each select="//cc:RevisionHistory/cc:entry">
-  #      <tr>
-  #        <td> <xsl:value-of select="cc:version"/> </td>
-  #        <td> <xsl:value-of select="cc:date"/> </td>
-  #        <td> self.apply-templates select="cc:subject"/> </td>
-  #      </tr><xsl:text>&#xa;</xsl:text>
-  #    </xsl:for-each>
-  #   </table>
-  #   <h2>Contents</h2>
-  #   <div class="toc" id="toc"/>
-  # </xsl:template>
-  #       print("Yes")
-            
     
 def make_mod(path):
     print("Making mod: "+path)
