@@ -6,6 +6,9 @@ import lxml.etree as ET
 import argparse
 import css_content
 
+
+import boilerplater
+
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
@@ -23,11 +26,15 @@ def make_attr_safe(attr):
 def localtag(tag):
     return  tag.split("}")[1]
 
-def get_attr_or(node, attr, default=""):
+def get_attr_or(node, attr, default="", prefix="", suffix=""):
     if attr in node.attrib:
-        return node.attrib[attr]
+        return prefix+node.attrib[attr]
     return default
 
+def is_attr(node, attr, val):
+    if attr not in node.attrib:
+        return False
+    return node.attrib[attr] == val
 
 class PP:
     def __init__(self, root, workdir, output, boilerplate):
@@ -284,12 +291,12 @@ class PP:
             self.o(child.tail)
 
             
-    def handle_section(self, node, title, id, is_recur = True):
+    def handle_section(self, node, title, id):
         self.o("<h5 id=\""+id+"\">")
         self.o(title)
         self.ol("</h5>")
-        if is_recur:
-            self.handle_content(node)
+        boilerplater.handle_section_boilerplate(title, node)
+        self.handle_content(node)
 
     def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node):
         defs = node.findall("cc:*[cc:description]", NS)
@@ -333,6 +340,11 @@ class PP:
     def get_global_index(self, node):
         allof = self.get_list_of(node.tag)
         return allof.index(node)
+
+    def get_id(self, node):
+        if "id" in node.attrib:
+            return node.attrib["id"]
+        return localtag(node.tag)+"_"+str(self.get_global_index(node))+"-"
     
     def get_section_base_id(self, node):
         if node.tag == "{https://niap-ccevs.org/cc/v1}section":
@@ -715,14 +727,83 @@ class PP:
         elif tag=="{https://niap-ccevs.org/cc/v1}text":
             self.handle_content(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
-            log("Not handling " + tag)
+            self.template_selectables(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}assignable":
-            log("Not handling " + tag)
+            self.template_assignable(node)
         else:
             raise Exception("Can't handle: " + node.tag)
         # log("Ending: "+str(node))
         return True
 
+    def template_assignable(self, node):
+        id=self.get_id(node)
+        self.o("[<b>assignment</b>: <span class=\"assignable-content\" id=\""+id+"\">")
+        self.handle_content(node)
+        self.o("</span>]")
+     # <xsl:element name="span"><xsl:attribute name="class">assignable-content</xsl:attribute>
+     #   <xsl:if test="@id"><xsl:attribute name="id">
+     #     <xsl:value-of select="@id"/>
+     #   </xsl:attribute></xsl:if><xsl:apply-templates/></xsl:element>]</xsl:template>
+  # <xsl:template match="cc:int[@hide]" priority="1"/>
+
+  # <xsl:template match="cc:int[@lte and @gte]">
+  #      between <xsl:value-of select="concat(@gte,' and ',@lte)"/>, inclusive
+  # </xsl:template>
+
+  # <xsl:template match="cc:int[@gte and not(@lte)]">
+  #      greater than or equal to <xsl:value-of select="@gte"/>
+  # </xsl:template>
+
+  # <xsl:template match="cc:int[@lte and not(@gte)]">
+  #      less than or equal to <xsl:value-of select="@lte"/>
+  # </xsl:template>
+
+    
+    def template_selectables(self, node):
+        self.o("[<b>selection</b>")
+        if is_attr(node, "onlyone", "yes"):
+            self.o("<b>, choose one of</b>")
+        self.o(": ")
+        sli=""
+        eli=""
+        eul=""
+        sep=","
+        lagsep=""
+
+        if is_attr(node, "linebreak", "yes") or node.find(".//cc:selectables", NS) is not None:
+            self.ol("<ul>")
+            sep=""
+            eul="</ul>"            
+            sli="<li"+get_attr_or(node, "style", prefix=" style=\"",suffix="\"")+">"
+            eli="</li>"
+
+        # Add the comma thing
+        for selectable in node.findall("./cc:selectable",NS):
+            self.o(lagsep)
+            self.o(sli)
+            id = self.get_id(selectable)
+            self.o("<span class=\"selectable-content\" id=\""+id+"\">")
+            self.handle_content(selectable)
+            self.o("</span>")
+            self.ol(eli)
+            lagsep=sep
+            
+ #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
+ #                   </xsl:for-each></ul>
+ #    </xsl:when>
+ #    <xsl:otherwise>
+ #      <xsl:for-each select="cc:selectable|cc:not-selectable">
+ #        <xsl:apply-templates mode="handle_sel" select="."/><xsl:call-template name="commaifnotlast"/>
+ #        <xsl:text> </xsl:text>
+ #      </xsl:for-each>
+ #    </xsl:otherwise>
+ # </xsl:choose>]</xsl:template>
+
+ # <xsl:template mode="handle_sel" match="cc:selectable|cc:not-selectable">
+ #    <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+ #    <span class="{local-name()}-content" id="{$id}"><xsl:apply-templates/></span>
+ # </xsl:template>
+        
             
     def template_management_function_set(self, node):
         self.ol("<table class=\"mfs\" style=\"width: 100%;\">")
