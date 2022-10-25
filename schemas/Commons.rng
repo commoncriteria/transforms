@@ -563,16 +563,16 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <optional><attribute name="lt"><data type="double"/> </attribute></optional>
       <optional><attribute name="lte"><data type="double"/> </attribute></optional>
       <optional><attribute name="hide">
-	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+	<a:documentation>This attribute suppresses the text generated when using any of the restricting attributes. Its value doesn't matter.</a:documentation>
       </attribute></optional>
     </element>
   </define>
 
     <define name="regex">
     <element name="regex">
-      <optional><attribute name="expr"/></optional>
+      <attribute name="expr"/>
       <optional><attribute name="hide">
-	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+	<a:documentation>This attribute suppresses the text generated when using the expr attributes. Its value doesn't matter.</a:documentation>
       </attribute></optional>
     </element>
   </define>
