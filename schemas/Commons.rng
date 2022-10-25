@@ -535,7 +535,14 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       <optional><ref name="id-attr"/></optional>
       <!-- <ref name="basic-content-pat"/> -->
       <text/>
-      <optional><ref name="int"/><optional><text/></optional></optional>
+      <optional>
+	<choice>
+	  <ref name="int"/>
+	  <ref name="real"/>
+	  <ref name="regex"/>
+	</choice>
+	<optional><text/></optional>
+      </optional>
     </element>
   </define>
 
@@ -549,6 +556,30 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
     </element>
   </define>
 
+  <define name="real">
+    <element name="real">
+      <optional><attribute name="gt"><data type="double"/> </attribute></optional>
+      <optional><attribute name="gte"><data type="double"/> </attribute></optional>
+      <optional><attribute name="lt"><data type="double"/> </attribute></optional>
+      <optional><attribute name="lte"><data type="double"/> </attribute></optional>
+      <optional><attribute name="hide">
+	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+      </attribute></optional>
+    </element>
+  </define>
+
+    <define name="regex">
+    <element name="regex">
+      <optional><attribute name="expr"/></optional>
+      <optional><attribute name="hide">
+	<a:documentation>This attribute suppresses the text generated when using the 'gte' or 'lte' attributes. Its value doesn't matter.</a:documentation>
+      </attribute></optional>
+    </element>
+  </define>
+
+  
+
+  
   <define name="ctr">
     <element name="ctr">
       
