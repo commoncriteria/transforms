@@ -1,22 +1,33 @@
-def handle_section_boilerplate(name, node):
+NS = {'cc': "https://niap-ccevs.org/cc/v1",
+      'sec': "https://niap-ccevs.org/cc/v1/section",
+      'htm': "http://www.w3.org/1999/xhtml"}
+
+def handle_section_boilerplate(name, node, root):
     if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
         return
+    ret=""
     if name=="Conformance Claims":
-        return """
+        ret="""
     <dl>
         <dt>Conformance Statement</dt>
-        <dd><xsl:choose><xsl:when test="//cc:Module">
+        <dd>
+"""
+
+        
+    if root.find("//cc:Module"):
+        ret="""
           <p>This PP-Module inherits exact conformance as required from the specified
           Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-based
           SFRs, and Optional SFRs (dated May 2017).</p>
           <p>The following PPs and PP-Modules are allowed to be specified in a 
             PP-Configuration with this PP-Module. <ul>
-            <xsl:for-each select="//cc:base-pp">
-              <li><xsl:apply-templates select="." mode="make_xref"/></li>
-            </xsl:for-each>
-          </ul>
-          </p>
-          </xsl:when><xsl:otherwise>
+"""
+        
+        for base in root.findall("//cc:base-pp", NS):
+            ret+="<li>"+make_xref(<xsl:apply-templates select="." mode="make_xref"/>+"</li>"
+            ret+="</ul>\n</p>"
+
+            </xsl:when><xsl:otherwise>
 	  <htm:p>
             An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
             as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 

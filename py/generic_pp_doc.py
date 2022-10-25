@@ -169,7 +169,7 @@ class generic_pp_doc(object):
             ctr=0
             self.ol("     <div id=\"commmentbox-\">")
             for comment_el in comment_els:
-                id=self.getId(comment_el)
+                id=self.derive_id(comment_el)
                 self.ol("         <a href=\"#"+id+"\">Comment: "+id+"</a><br/>")
             self.ol("     </div>")
         self.o("   <h1 class=\"title\" style=\"page-break-before:auto;\">")
@@ -186,27 +186,29 @@ class generic_pp_doc(object):
         self.ol("     "+self.rf("//cc:ReferenceTable/cc:PPPubDate").text+"<br/>")
         self.ol("     <b>"+self.rf("//cc:PPAuthor").text+"</b><br/>")
         self.ol("   </div>")
-  #   self.apply-templates select="//cc:foreword"/>
-
-  #   <h2 style="page-break-before:always;">Revision History</h2>
-  #   <table>
-  #    <tr class="header">
-  #      <th>Version</th>
-  #      <th>Date</th>
-  #      <th>Comment</th>
-  #    </tr>
-  #    <xsl:for-each select="//cc:RevisionHistory/cc:entry">
-  #      <tr>
-  #        <td> <xsl:value-of select="cc:version"/> </td>
-  #        <td> <xsl:value-of select="cc:date"/> </td>
-  #        <td> self.apply-templates select="cc:subject"/> </td>
-  #      </tr><xsl:text>&#xa;</xsl:text>
-  #    </xsl:for-each>
-  #   </table>
-  #   <h2>Contents</h2>
-  #   <div class="toc" id="toc"/>
-  # </xsl:template>
-  #       print("Yes")
+        self.apply_templates(self.rfa("//cc:foreword"))
+        self.ol("<h2 style=\"page-break-before:always;\">Revision History</h2>")
+        self.ol("<table>")
+        self.ol("<tr class=\"header\">")
+        self.ol("<th>Version</th>")
+        self.ol("<th>Date</th>")
+        self.ol("<th>Comment</th>")
+        self.ol("</tr>")
+        for entry in self.rfa("//cc:RevisionHistory/cc:entry"):
+            self.ol("<tr>")
+            self.o("<td>")
+            self.handle_content(entry.find("cc:version",NS))
+            self.o("</td>")
+            self.o("<td>")
+            self.handle_content(entry.find("cc:date",NS))
+            self.o("</td>")
+            self.o("<td>")
+            self.handle_content(entry.find("cc:subject",NS))
+            self.o("</td>")
+            self.ol("</tr>")
+        self.ol("</table>")
+        self.ol("<h2>Contents</h2>")
+        self.ol("<div class=\"toc\" id=\"toc\"/>")
             
 
 
@@ -223,10 +225,6 @@ class generic_pp_doc(object):
         indexstr = str(fcomp.index(node))
         return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
         
-    def getId(self, node):
-        if "id" in node.attrib:
-            return node.attrib["id"]
-
     def template_module(self, node):
         self.apply_templates(self.rx("//*[@title='Introduction']|sec:Introduction"))
         self.apply_templates(self.rx("//*[@title='Conformance Claims']|sec:Conformance_Claims"))
@@ -254,12 +252,115 @@ class generic_pp_doc(object):
         self.o("<h5 id=\""+id+"\">")
         self.o(title)
         self.ol("</h5>")
-        handle_section_hook(title, node)
+        self.handle_section_hook(title, node)
         self.handle_content(node)
+
+    def handle_section_hook(self, title, node):
+        if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
+            return
+        if title=="Conformance Claims":
+            self.handle_conformance_claims(node)
+        elif title=="Implicity Satisfied Requirements":
+            self.handle_implicitly_satisfied_requirements()
+        elif title=="Security Objectives Rationale":
+            self.handle_security_objectives_rationale(node)
+        elif title=="Security Objectives for the Operational Environment":
+            self.handle_security_objectives_operational_environment()
+        else:
+            self.handle_other_hooks(title, node)
+
+    def handle_security_objectives_operational_environment(self):
+        soes=self.rfa("cc:SOEs")
+        if len(soes)>0:
+            self.ol("Something")
+            self.ol("""The OE of the TOE implements technical and procedural measures 
+to assist the TOE in correctly providing its security functionality
+(which is defined by the security objectives for the TOE).
+The security objectives for the OE consist of a set of statements
+describing the goals that the OE should achieve.
+This section defines the security objectives that are to be
+addressed by the IT domain or by non-technical or procedural means.
+The assumptions identified in Section 3 are incorporated as
+security objectives for the environment.
+""")
+        else:
+            self.ol("This PP-Module does not define any objectives for the OE.")
+        
+    def create_ctr(self, ctrtype, id):
+        self.ol("<span class=\"ctr\" data-myid=\""+id+"\" data-counter-type=\"ct-"+ctrtype+"\" id=\""+id+"\">")
+        self.o(ctrtype + " ")
+        self.ol("<span  class=\"counter\">"+id+"/></span>")
+        self.ol("</span>")
+        
+            
+            
+    def handle_security_objectives_rationale(self, node):
+        self.o("""<h2 class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+This section describes how the assumptions, threats, and organizational 
+security policies map to the security objectives.
+<table>
+<caption>""")
+        self.create_ctr("Table","t-sec-obj-rat");
+        self.ol(": Security Objectives Rationale</caption>")
+        self.ol("""<tr class="header">
+        <td>Threat, Assumption, or OSP</td>
+        <td>Security Objectives</td>
+        <td>Rationale</td>
+      </tr>""")
+        objrefers=self.rx("//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer")
+        firstcol=""
+        for objrefer in objrefers:
+            parent = objrefer.find("..")
+            pname = parent.attrib["name"]
+            self.o("<tr")
+            if pname != firstcol:
+                firstcol=pname
+                numkids = len(parent.findall("cc:objective-refer", NS))
+                self.o(" class=\"major-row\">")
+                pname_wrap = pp_util.make_wrappable(pname)
+                pp_util.log("Things: " + str(len(pname_wrap)))
+                self.o("<td rowspan=\""+str(numkids)+"\">")
+                self.o(pname_wrap)
+                self.o("</td")
+            self.o("><td>")
+            self.o(pp_util.make_wrappable(objrefer.attrib["ref"]))
+            self.o("</td><td>")
+            self.handle_content(objrefer.find("cc:rationale",NS))
+            self.ol("</td></tr>")
+        self.ol("</table>")
+    #         <xsl:if test="not(name(preceding-sibling::cc:*[1])='objective-refer')">
+    #         <xsl:attribute name="class">major-row</xsl:attribute>
+    #         <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
+    #         <td rowspan="{$rowspan}">
+    #           <xsl:call-template name="underscore_breaker">
+    #     	<xsl:with-param name="valu"><xsl:apply-templates select=".." mode="get-representation"/></xsl:with-param></xsl:call-template>
+    #         </td>
+    #       </xsl:if>
+    #       <td>
+    #         <xsl:call-template name="underscore_breaker">
+    #           <xsl:with-param name="valu" select="@ref"/>
+    #         </xsl:call-template>
+    #     </td>
+    #       <td><xsl:apply-templates select="cc:rationale"/></td>
+    #     </tr>
+    #   </xsl:for-each>
+    # </table>
+
+        
+    def handle_implicitly_satisfied_requirements(self):
+       self.ol("<p>This appendix lists requirements that should be considered satisfied by products")
+       self.ol("successfully evaluated against this "+self.doctype_short()+". These requirements are not featured")
+       self.ol("explicitly as SFRs and should not be included in the ST. They are not included as ")
+       self.ol("standalone SFRs because it would increase the time, cost, and complexity of evaluation.")
+       self.ol("This approach is permitted by <a href=\"#bibCC\">[CC]</a> Part 1, 8.2 Dependencies between components.</p>")
+       self.ol("<p>This information benefits systems engineering activities which call for inclusion of particular")
+       self.ol("security controls. Evaluation against the "+self.doctype_short()+" provides evidence that these controls are present ")
+       self.ol("and have been evaluated.</p>")
+       
         
     def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node):
         defs = node.findall("cc:*[cc:description]", NS)
-        if defs is not None:
+        if len(defs)>0:
             self.ol("<dl>")
             for defined in defs:
                 classtype=pp_util.localtag(defined.tag)
@@ -268,8 +369,8 @@ class generic_pp_doc(object):
                 self.o(name)
                 self.ol("</dt>")
                 self.o("<dd>")
-                self.apply_templates(defined.find("./cc:description",NS))
-                self.apply_templates(defined.find("./cc:appnote",NS))
+                self.apply_templates(defined.findall("./cc:description",NS))
+                self.apply_templates(defined.findall("./cc:appnote",NS))
                 self.ol("</dd>")
             self.ol("</dl>")
         else:
@@ -300,7 +401,7 @@ class generic_pp_doc(object):
         allof = self.get_list_of(node.tag)
         return allof.index(node)
 
-    def get_id(self, node):
+    def derive_id(self, node):
         if "id" in node.attrib:
             return node.attrib["id"]
         return pp_util.localtag(node.tag)+"_"+str(self.get_global_index(node))+"-"
@@ -410,7 +511,7 @@ class generic_pp_doc(object):
             self.o("        <dt id=\""+id+"\"> [USE CASE "+str(ctr)+"] ")
             self.o(usecase.attrib["title"])
             self.o("</dt>\n        <dd>")
-            self.apply_templates(node.findall("./cc:description",NS))
+            self.apply_templates(usecase.findall("./cc:description",NS))
             config = node.find("./cc:config", NS)
             if config is not None:
                 self.ol("          <p> For changes to included SFRs, selections, and assignments required for this use case, see <a href=\"#appendix-"+id+"\" class=\"dynref\"></a>.")
@@ -683,7 +784,8 @@ class generic_pp_doc(object):
             self.o("<td>")
             self.handle_content(node)
             self.o("</td>")
-        elif tag=="{https://niap-ccevs.org/cc/v1}text":
+        elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
+             tag=="{https://niap-ccevs.org/cc/v1}description":
             self.handle_content(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
             self.template_selectables(node)
@@ -715,7 +817,7 @@ class generic_pp_doc(object):
 
         
     def template_assignable(self, node):
-        id=self.get_id(node)
+        id=self.derive_id(node)
         self.o("[<b>assignment</b>: <span class=\"assignable-content\" id=\""+id+"\">")
         self.handle_content(node)
         self.o("</span>]")
@@ -744,7 +846,7 @@ class generic_pp_doc(object):
         for selectable in node.findall("./cc:selectable",NS):
             self.o(lagsep)
             self.o(sli)
-            id = self.get_id(selectable)
+            id = self.derive_id(selectable)
             self.o("<span class=\"selectable-content\" id=\""+id+"\">")
             self.handle_content(selectable)
             self.o("</span>")
@@ -865,3 +967,23 @@ class generic_pp_doc(object):
             self.make_xref_bibentry(node)
         else:
             raise Exception("Cannot handle: " + node.tag)
+
+
+    def show_package(self, node):
+        self.o("<a href=\""+node.attrib["url"]+"\">")
+        if "name" in node.attrib:
+            self.o(node.attrib["name"])
+            self.o(pp_util.get_attr_or(node, "short", prefix="(", suffix=")"))
+            version = node.attrib["version"]            
+        else:
+            proot = self.edocs[node.attrib["id"]]
+            self.o(proot.find(".//cc:PPTitle",NS).text)
+            version=proot.find(".//cc:PPVersion",NS).text
+        self.o("Package, version ")
+        self.o(version)
+        self.o("</a> Conformant")
+
+        
+    def ccver(self):
+        return "Version 3.1, Revision 5"
+        

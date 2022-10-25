@@ -21,3 +21,6 @@ def is_attr(node, attr, val):
         return False
     return node.attrib[attr] == val
 
+def make_wrappable(text):
+#    return text.replace("_", "_|")
+    return text.replace("_", "_\u200b")
