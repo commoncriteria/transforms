@@ -15,11 +15,11 @@ def make_mod(path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
     boilerplate = ET.parse("/home/kevin/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml")
-    print("Tag is "+doc.tag)
+    # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
         pp = pp_module.ppmod( doc, "../../output", "/tmp/abc.xml", boilerplate )
     else:
-        log("FFFF")
+        raise Exception("Unhandled")
     pp.to_html()
     
     

@@ -225,21 +225,6 @@ class generic_pp_doc(object):
         indexstr = str(fcomp.index(node))
         return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
         
-    def template_module(self, node):
-        self.apply_templates(self.rx("//*[@title='Introduction']|sec:Introduction"))
-        self.apply_templates(self.rx("//*[@title='Conformance Claims']|sec:Conformance_Claims"))
-        self.apply_templates(self.rx("//*[@title='Security Problem Description']|sec:Security_Problem_Description"))
-        self.apply_templates(self.rx("//*[@title='Security Objectives']|sec:Security_Objectives"))
-        self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"))
-        # <xsl:call-template name="mod-obj-req-map"/>
-        # <xsl:call-template name="mod-sars"/>
-        # <xsl:call-template name="consistency-rationale"/>
-        # <xsl:call-template name="opt-sfrs"/>
-        # <xsl:call-template name="sel-sfrs"/>
-        # <xsl:call-template name="ext-comp-defs"/>
-        # self.apply-templates select="//cc:appendix"/>
-        # <xsl:call-template name="acronyms"/>
-        # <xsl:call-template name="bibliography"/>
 
     def handle_content(self, node):
         self.o(node.text)
@@ -258,6 +243,9 @@ class generic_pp_doc(object):
     def handle_section_hook(self, title, node):
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return
+        self.handle_section_hook_base(title, node)
+
+    def handle_section_hook_base(self, title, node):
         if title=="Conformance Claims":
             self.handle_conformance_claims(node)
         elif title=="Implicity Satisfied Requirements":
@@ -266,8 +254,6 @@ class generic_pp_doc(object):
             self.handle_security_objectives_rationale(node)
         elif title=="Security Objectives for the Operational Environment":
             self.handle_security_objectives_operational_environment()
-        else:
-            self.handle_other_hooks(title, node)
 
     def handle_security_objectives_operational_environment(self):
         soes=self.rfa("cc:SOEs")
@@ -289,8 +275,25 @@ security objectives for the environment.
     def create_ctr(self, ctrtype, id):
         self.ol("<span class=\"ctr\" data-myid=\""+id+"\" data-counter-type=\"ct-"+ctrtype+"\" id=\""+id+"\">")
         self.o(ctrtype + " ")
-        self.ol("<span  class=\"counter\">"+id+"/></span>")
+        self.ol("<span  class=\"counter\">"+id+"</span>")
         self.ol("</span>")
+        
+    def create_bibliography(self):
+        self.ol("        <h1 id=\"appendix-bibliography\" class=\"indexable\" data-level=\"A\">Bibliography</h1>")
+        self.ol("<table>")
+        self.ol("<tr class=\"header\"> <th>Identifier</th> <th>Title</th> </tr>")
+        # <xsl:apply-templates mode="hook" select="."/>
+        entries = (self.rfa("//cc:bibliography/cc:entry") +
+                   self.boilerplate.xpath("//*[@id='cc-docs']/cc:entry",namespaces=NS))
+        entries.sort(key=lambda x: pp_util.flatten(x.find("cc:description", NS)))
+        for entry in entries:
+            pp_util.log("Entry : "+pp_util.flatten(entry.find("cc:description", NS)))
+            self.ol("<tr>")
+            self.o("<td><span id=\""+self.derive_id(entry)+"\">["+entry.find("cc:tag", NS).text+"]</span></td>\n<td>")
+            self.handle_content(entry.find("cc:description",NS))
+            self.ol("</td>")
+            self.ol("</tr>")
+        self.ol("</table>")
         
             
             
@@ -318,7 +321,6 @@ security policies map to the security objectives.
                 numkids = len(parent.findall("cc:objective-refer", NS))
                 self.o(" class=\"major-row\">")
                 pname_wrap = pp_util.make_wrappable(pname)
-                pp_util.log("Things: " + str(len(pname_wrap)))
                 self.o("<td rowspan=\""+str(numkids)+"\">")
                 self.o(pname_wrap)
                 self.o("</td")
@@ -553,12 +555,6 @@ security policies map to the security objectives.
         return False
 
 
-    def get_declared_modified_sfrs(self, base):
-        modsfrs =  base.find(".//mod-sfrs")
-        if not modsfrs:
-            return []
-        return modsfrs.text.split(" ")
-
 
     def template_felement(self, node):
         self.ol("<div class=\"element\">")
@@ -588,73 +584,14 @@ security policies map to the security objectives.
         self.ol("</div>")
         
     
-    def template_basepp(self, node):
-        id = node.attrib["id"]
-        if id in self.edocs:
-            broot = self.edocs[id]
-            short = self.get_short(broot)
-        else:
-            raise Exception("Can't do this basepp")
-        pp_util.log("Looking at: "+broot.xpath("//cc:PPTitle",namespaces=NS)[0].text)
-        self.ol("<h2 id=\""+"secreq-"+id+"\" class=\"indexable\" data-level=\"2\">")
-        self.o(short)
-        self.ol(" Security Functional Requirements Direction")
-        self.ol("</h2>")
-        if not self.apply_templates_single(node.find("cc:sec-func-req-dir", NS)):
-            self.ol("In a PP-Configuration that includes the ")
-            self.o(short)
-            self.ol(",the TOE is expected to rely on some of the security functions implemented by the")
-            self.get_product(self.root)
-            self.ol("as a whole and evaluated against the  " + short + ".")
-            self.ol("The following sections describe any modifications that the ST author must make to the SFRs")
-            self.ol("defined in the "+short+ "in addition to what is mandated by <a class=\"dynref\" href=\"#man-sfrs\">Section </a>.")
 
 
-            #     <xsl:variable name="b_id" select="@id"/>
-        #     <xsl:variable name="doc" select="concat($work-dir,'/',@id,'.xml')"/>
-        
-
-        basedep_sfrs = self.rx("//cc:f-component[cc:depends/@*='"+id+"']")
-        declared_modified = self.get_declared_modified_sfrs(node)
-        add_sfrs=[]
-        mod_sfrs=[]
-        for bsfr in basedep_sfrs:
-            if self.is_modified(bsfr, declared_modified, broot):
-                mod_sfrs.append(bsfr)
-            else:
-                add_sfrs.append(bsfr)
-        mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
-        add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
-
-        self.ol("<h3 id=\"modsfr-"+"@id"+"\" class=\"indexable\" data-level=\"3\"> Modified SFRs </h3>")
-        self.ol("The SFRs listed in this section are defined in the "+short+
-                " and relevant to the secure operation of the TOE.")
-        if len(mod_sfrs)==0:
-            self.ol("This PP-Module does not modify any SFRs defined by the " + short  + ".")
-        else:
-            self.handle_sparse_sfrs( mod_sfrs)
-                
-        if len(self.rfa("//cc:base-pp"))>1:
-            self.ol("<h3 id=\"addsfr-"+id+"\" class=\"indexable\" data-level=\"3\"> Additional SFRs</h3>")
-            if len(add_sfrs)>0:
-                self.ol("This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-                self.handle_sparse_sfrs(add_sfrs)
-            else:
-                self.ol("This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-
-
-    def get_meaningful_ancestor(self, refid, buckets):
-        ret = self.rx("//cc:f-element[.//@id='"+refid+"']")
-        if len(ret) == 1:
-            return ret
-        ret = self.rf("//cc:feature[@id='"+refid+"']")
-        if ret is not None:
-            return ret
-        ret = self.rx("//cc:choice[.//@id='"+refid+"']")
-        if len(ret) == 1:
-            return ret
-        raise Exception("Could not find meaningful ancestor for: '" + refid+"'")
-                
+    def get_meaningful_ancestor(self, refid):
+        ret = self.rx("//cc:f-element[.//@id='"+refid+"']|//cc:choice[.//@id='"+refid+"']|//cc:feature[.//@id='"+refid+"']")
+        pp_util.log("Got: "+str(len(ret)) + " for " + refid)
+        if len(ret) != 1:
+            raise Exception("Should only be one thing")
+        return ret[0]
 
     def handle_fcomponent(self, node):
         formal = self.fcomp_cc_id(node)
@@ -678,16 +615,18 @@ security policies map to the security objectives.
                     self.rf("//cc:*[@id='"+edoc.attrib["ref"]+"']")
                     raise Exception("Can't handle yet")
                 else:
-                    buckets=[{},{},{}]
+                    buckets={"f-element":{},"feature":{},"choice":{} }
                     for attrname in dep.attrib:
                         attr = dep.attrib[attrname]
-                        if self.rf("//cc:base[@id='"+attr+"']") is None:
+                        if self.is_base(attr):
                             continue
                         meananc = self.get_meaningful_ancestor(attr)
-                        if meananc in selecteds:
-                            selecteds[meananc].append(attr)
-                        else:
-                            selecteds[meananc] = [].append(attr)
+                        ltag = pp_util.localtag(meananc.tag)
+                        log("stroign off something")
+                        # if meananc in selecteds:
+                        #     selecteds[meananc].append(attr)
+                        # else:
+                        #     selecteds[meananc] = [].append(attr)
             for meananc in selecteds:
                 pp_util.log("Doing something: "+ meananc.tag)
             if optional:
@@ -740,22 +679,20 @@ security policies map to the security objectives.
                 
         
     def apply_templates_single(self, node):
-        if node is None:
+        if node is None or not isinstance(node.tag,str):
             return False
+        return self.apply_template_to_element(node)
+
+    def apply_template_to_element(self, node):
         tag = node.tag
-        if not isinstance(tag,str):
-            return False
         # pp_util.log("Starting: " + str(node))
-        if tag == "{https://niap-ccevs.org/cc/v1}Module":
-            self.template_module(node)
-        elif tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
+        if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.template_newsection(node)
         elif tag == "{https://niap-ccevs.org/cc/v1}section":
             self.template_oldsection(node)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
             self.template_html(node)
         elif tag == "{https://niap-ccevs.org/cc/v1}xref":
-            pp_util.log(str(node))
             self.template_xref(node)
         elif tag == "{https://niap-ccevs.org/cc/v1}tech-terms":
             self.template_tech_terms(node)
@@ -768,11 +705,12 @@ security policies map to the security objectives.
              or tag=="{https://niap-ccevs.org/cc/v1}SOs"\
              or tag=="{https://niap-ccevs.org/cc/v1}SOEs":
             self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node)
-        elif tag=="{https://niap-ccevs.org/cc/v1}base-pp":
-            self.template_basepp(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}sfrs":
-            pass
-        elif tag=="{https://niap-ccevs.org/cc/v1}f-component":
+            self.template_sfrs(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}f-component" or\
+             tag=="{https://niap-ccevs.org/cc/v1}ext-comp-def" or\
+             tag=="{https://niap-ccevs.org/cc/v1}base-pp":
+
             pass
         elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
             self.template_felement(node)
@@ -780,10 +718,16 @@ security policies map to the security objectives.
             self.apply_templates(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
             self.template_management_function_set(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}ctr":
+            self.template_ctr(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}no-link":
+            self.ol("<span class=\"no-link\">")
+            self.handle_content(node)
+            self.ol("</span>")
         elif tag=="{https://niap-ccevs.org/cc/v1}manager":
             self.o("<td>")
             self.handle_content(node)
-            self.o("</td>")
+            self.ol("</td>")
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
              tag=="{https://niap-ccevs.org/cc/v1}description":
             self.handle_content(node)
@@ -798,6 +742,29 @@ security policies map to the security objectives.
         # pp_util.log("Ending: "+str(node))
         return True
 
+
+    def get_pre(self, el):
+        if "pre" in el.attrib:
+            return el.attrib["pre"]
+        if el.tag == "{https://niap-ccevs.org/cc/v1}figure":
+            return "Figure "
+        return pp_util.get_attr_or(el, "ctr-type", default="Table ")
+        
+                             
+    
+    def template_ctr(self, node):
+        pre = pp_util.get_attr_or(node, "pre")
+        ctrtype = pp_util.get_attr_or(node, "ctr-type", default=pre)
+        id = self.derive_id(node)
+
+        self.ol("<span class=\"ctr\" data-myid=\""+id+"\" data-counter-type=\"ct-"+ctrtype+"\" id=\""+id+"\">")
+        self.ol(self.get_pre(node))
+        self.ol("      <span class=\"counter\">"+id+"</span>")
+        self.handle_content(node)
+        self.ol("    </span>")
+
+
+        
     def template_int(self, node):
         if not pp_util.is_attr(node, "hide", "no"):
             return
@@ -852,7 +819,7 @@ security policies map to the security objectives.
             self.o("</span>")
             self.ol(eli)
             lagsep=sep
-            
+        self.o("]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
  #    </xsl:when>
@@ -968,7 +935,12 @@ security policies map to the security objectives.
         else:
             raise Exception("Cannot handle: " + node.tag)
 
-
+    def is_base(self, attr):
+        b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
+        if b_el is not None:
+            raise Exception("Should not have a base")
+        return False
+        
     def show_package(self, node):
         self.o("<a href=\""+node.attrib["url"]+"\">")
         if "name" in node.attrib:
@@ -983,7 +955,4 @@ security policies map to the security objectives.
         self.o(version)
         self.o("</a> Conformant")
 
-        
-    def ccver(self):
-        return "Version 3.1, Revision 5"
         

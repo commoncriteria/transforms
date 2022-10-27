@@ -24,3 +24,18 @@ def is_attr(node, attr, val):
 def make_wrappable(text):
 #    return text.replace("_", "_|")
     return text.replace("_", "_\u200b")
+
+def NoneStr(text):
+    if text is None:
+        return ""
+    return text
+
+def flatten(el):
+    ret = NoneStr(el.text)
+    for subel in el:
+        ret += flatten(subel)
+        ret += NoneStr(subel.tail)
+    return " ".join(ret.split())
+        
+def ccver():
+    return "Version 3.1, Revision 5"
