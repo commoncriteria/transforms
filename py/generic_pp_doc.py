@@ -1,22 +1,58 @@
 import lxml.etree as ET
 import css_content
 import pp_util
-
+import edoc
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
+
+
+        
 class generic_pp_doc(object):
     def __init__(self, root, workdir, output, boilerplate):
         self.root = root
-        self.edocs = {}
         self.out = open(output, "w+")
         self.globaltags = {}
         self.ids = {}
         self.boilerplate = boilerplate
+        self.edocs = {}
         for external in root.findall(".//cc:*[cc:git]", NS):
-            id = external.attrib["id"]
-            self.edocs[id]=ET.parse(workdir+"/"+external.attrib["id"]+".xml").getroot()
+            self.edocs[external.attrib["id"]] = edoc.Edoc(external, workdir)
+        self.sel_sfrs = {}
+        self.opt_sfrs = {}
+        self.obj_sfrs = {}
+        self.impl_sfrs = {}
+        self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
+
+        for man_sfr in self.man_sfrs:
+            pp_util.log("Man SFR: " + man_sfr.attrib["cc-id"])
+        
+        dep_sfrs = self.rx("//cc:f-component[cc:depends]")
+        for sfr in dep_sfrs:
+            # We're just looking at the first one
+            for depends in sfr.findall("cc:depends[1]", NS):
+                if depends.find("cc:optional", NS) is not None:
+                    self.opt_sfrs[sfr]=1
+                elif depends.find("cc:objective", NS) is not None:
+                    self.obj_sfrs[sfr]=1
+                elif depends.find("cc:external-doc", NS) is not None:
+                    self.sel_sfrs[sfr]=1
+                else:
+                    for attr in depends.attrib:
+                        el = self.rf("//*[@id=\""+depends.attrib[attr]+"\"]")
+                        if el is None:
+                            raise Exception("Cannot find dependee for " + depends.attrib[attr])
+                        elif el.tag == "{https://niap-ccevs.org/cc/v1}selectable":
+                            self.sel_sfrs[sfr]=1
+                        elif el.tag == "{https://niap-ccevs.org/cc/v1}feature":
+                            self.impl_sfrs[sfr]=1
+                        else:
+                            self.handle_unknown_depends(sfr, depends.attrib[attr])
+
+    def handle_unknown_depends(self, sfr, attr):
+        raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
+
             
     def to_html(self):
         self.start()
@@ -220,13 +256,15 @@ class generic_pp_doc(object):
         return ret
         
         
-    def element_cc_id(self, node):
-        fcomp = node.find("..")
-        indexstr = str(fcomp.index(node))
-        return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
+    # def element_cc_id(self, node):
+    #     fcomp = node.find("..")
+    #     indexstr = str(fcomp.index(node))
+    #     return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
         
 
     def handle_content(self, node):
+        if node is None:
+            return
         self.o(node.text)
         for child in node:
             self.apply_templates_single(child)
@@ -254,7 +292,27 @@ class generic_pp_doc(object):
             self.handle_security_objectives_rationale(node)
         elif title=="Security Objectives for the Operational Environment":
             self.handle_security_objectives_operational_environment()
+        elif title=="Optional Requirements":
+            self.handle_optional_requirements()
+        elif title=="Selection-based Requirements":
+            self.handle_selection_based_requirements(node)
 
+    def opt_app(self,level,word,sfrs):
+        self.ol("<h"+level+" id='"+word.replace(" ","-")+"-' class='indexable' data-level='"+level+"'>"+word+"</h"+level+">")
+        if len(sfrs)==0:
+            self.ol("This PP-Module does not define any "+word+" SFRs.")
+        else:
+            self.handle_sparse_sfrs(sfrs)
+
+    def handle_optional_requirements(self):
+        self.opt_app("2", "Strictly Optional", self.opt_sfrs)
+        self.opt_app("2", "Objective", self.opt_sfrs)
+        self.opt_app("2", "Strictly Optional", self.opt_sfrs)
+
+    def handle_selection_based_requirements(self, node):
+        self.opt_app("1", "Selection-based", self.sel_sfrs)
+
+            
     def handle_security_objectives_operational_environment(self):
         soes=self.rfa("cc:SOEs")
         if len(soes)>0:
@@ -295,6 +353,34 @@ security objectives for the environment.
             self.ol("</tr>")
         self.ol("</table>")
         
+    def create_acronym_listing(self):
+        self.ol("<h1 id=\"acronyms\" class=\"indexable\" data-level=\"A\">Acronyms</h1>")
+        self.ol("<table>")
+        self.ol("<tr class=\"header\"><th>Acronym</th><th>Meaning</th></tr>")
+        suppress_el=self.rf("//cc:suppress")
+        if suppress_el is None:
+            suppress_list=[]
+        else:
+            suppress_list=suppress.text.split(",")
+        term_els=self.rfa("//cc:term[@abbr]")+self.boilerplate.findall("//cc:cc-terms/cc:term[@abbr]", NS)
+        term_els.sort(key=lambda t_el:t_el.attrib["full"].upper())
+        for term_el in term_els:
+            full=term_el.attrib["full"]
+            abbr=term_el.attrib["abbr"]            
+            if full in suppress_list:
+                continue
+            self.ol("<tr>")
+            self.o("<td><span class=\"term\" id=\"abbr_"+abbr+"\"")
+            self.o(pp_util.get_attr_or(term_el, "plural", post=lambda x:" plural=\""+x+"\""))
+            self.o(pp_util.get_attr_or(term_el, "lower",  post=lambda x:" lower=\""+x+"\""))
+            self.o(">")
+            self.o(abbr)
+            self.ol("</span></td>")
+            self.o("<td><span id=\"long_abbr_")
+            self.o(abbr)
+            self.ol("\">"+full+"</span></td></tr>\n")
+        self.ol("</table>")
+
             
             
     def handle_security_objectives_rationale(self, node):
@@ -386,7 +472,7 @@ security policies map to the security objectives.
         refs = self.rx(".//cc:*[@id='"+to+"']|.//sec:*[local-name()='"+to+"']")
         if len(refs)==0:
             pp_util.log("Failed to find a reference to "+to)
-            self.ol("<a href=\"#{@to}\" class=\"dynref\" data-format=\"{@format}\"></a>")
+            self.ol("<a href=\"#{@to}\" class=\"dynref\" data-post=\"{@format}\"></a>")
             return
         elif len(refs)>1:
             pp_util.log("Found multipled targets for "+ to)
@@ -523,42 +609,23 @@ security policies map to the security objectives.
             ctr += 1
         self.ol("    </dl>")
 
-    def get_plural(self, node):
-        if "target-products" in node.attrib:
-            return node.attrib["target-products"]
-        return node.attrib["target-product"]+"s"
+    # def get_plural(self, node):
+    #     if "target-products" in node.attrib:
+    #         return node.attrib["target-products"]
+    #     return node.attrib["target-product"]+"s"
 
-    def get_short(self, node):
-        if "short" in node.attrib:
-            return node.attrib["short"]
-        return self.get_plural(node)
-
-    def get_product(self, node):
-        return node.attrib["target-product"]
-
-    def is_modified(self, sfr, declared, broot):
-        cc_id = sfr.attrib["cc-id"]
-        xp_iter=""
-        if "iteration" in sfr.attrib:
-            iteration=sfr.attrib["iteration"]
-            if (cc_id+"/"+iteration) in declared:
-                return True
-            xp_iter = " and @iteration='"+iteration+"'"
-        else:
-            if cc_id in declared:
-                return True
-        if broot is not None:
-            xpath = "//cc:f-component[@cc-id='"+cc_id+"'"+xp_iter + "]"
-            orig = broot.xpath(xpath, namespaces=NS)
-            ret = len(orig) > 0
-            return ret
-        return False
+    # def get_short(self, node):
+    #     if "short" in node.attrib:
+    #         return node.attrib["short"]
+    #     return self.get_plural(node)
 
 
 
-    def template_felement(self, node):
+
+    def handle_felement(self, node, reqid):
         self.ol("<div class=\"element\">")
-        reqid = self.element_cc_id(node)
+        
+        # reqid = self.element_cc_id(node)
 #       <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
         self.ol("<div class=\"reqid\" id=\""+reqid+"\">")
         self.ol("  <a href=\"#"+reqid+"\" class=\"abbr\">" + reqid +"</a>")
@@ -662,7 +729,11 @@ security policies map to the security objectives.
   #       <xsl:call-template name="f-comp-activities"/>
   #   </div>
   # </xsl:template>
-        self.apply_templates(node.findall(".//cc:f-element", NS))
+        ctr=0
+        for f_el in node.findall(".//cc:f-element", NS):
+            ctr+=1
+            reqid=self.fcomp_cc_id(node, "."+str(ctr))
+            self.handle_felement(f_el, reqid)
         self.ol("</div>")
     
     def handle_sparse_sfrs(self, sfrs):
@@ -690,6 +761,8 @@ security policies map to the security objectives.
             self.template_newsection(node)
         elif tag == "{https://niap-ccevs.org/cc/v1}section":
             self.template_oldsection(node)
+        elif tag == "{https://niap-ccevs.org/cc/v1}appendix":
+            self.template_appendix(node)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
             self.template_html(node)
         elif tag == "{https://niap-ccevs.org/cc/v1}xref":
@@ -737,6 +810,8 @@ security policies map to the security objectives.
             self.template_assignable(node)
         elif tag=="{https://niap-ccevs.org/cc/v1}int":
             self.template_int(node)
+        elif tag=="{https://niap-ccevs.org/cc/v1}_":
+            self.o(self.shortcut)
         else:
             raise Exception("Can't handle: " + node.tag)
         # pp_util.log("Ending: "+str(node))
@@ -789,6 +864,15 @@ security policies map to the security objectives.
         self.handle_content(node)
         self.o("</span>]")
 
+    def template_appendix(self, node):
+        id=self.derive_id(node)
+        title=node.attrib["title"]
+        self.ol("        <h1 id=\""+id+"\" class=\"indexable\" data-level=\"A\">"+title+"</h1>")
+        if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
+            return
+        self.handle_section_hook_base(title, node)
+        self.handle_content(node)
+
 
     
     def template_selectables(self, node):
@@ -806,7 +890,7 @@ security policies map to the security objectives.
             self.ol("<ul>")
             sep=""
             eul="</ul>"            
-            sli="<li"+pp_util.get_attr_or(node, "style", prefix=" style=\"",suffix="\"")+">"
+            sli="<li"+pp_util.get_attr_or(node, "style", post=lambda a:" style=\""+a+"\"")+">"
             eli="</li>"
 
         # Add the comma thing
@@ -888,35 +972,11 @@ security policies map to the security objectives.
             self.ol("         </td>")
         self.ol("   </tr>")
 
-    
+    def set_underscore(self, val):
+        self.shortcut = val
+        
     def make_xref_section(self, node, id):
         self.ol("<a href=\"#{"+id+"}\" class=\"dynref\">Section </a>")
-        
-
-    def make_xref_edoc(self, node):
-        url=node.find("cc:url", NS).text
-        self.o("<a href=\""+pp_util.make_attr_safe(url)+"\">")        
-        if "name" in node.attrib:
-            self.o(node.attrib["name"])
-            self.o(" version ")
-            self.o(node.attrib["version"])
-        else:
-            root = self.edocs[node.attrib["id"]]
-            modrot = root.find(".//cc:Module", NS)
-            if modrot is not None:
-                name = modrot.attrib["name"]
-                if not name.startswith("PP-Module for"):
-                    name = "PP-Module for " + name
-            else:
-                modrot = root.find(".//cc:PPTitle", NS)
-                if modrot is not None:
-                    name = modrot.text
-                else:
-                    raise Exception("Somethign else " + str(node)   )
-            self.o(name)
-            self.o(", version ")
-            self.o(root.find(".//cc:PPVersion", NS).text)
-        self.ol("</a>")
 
     def make_xref_bibentry(self, node):
         id =  node.attrib["id"]
@@ -929,7 +989,7 @@ security policies map to the security objectives.
         if node.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.make_xref_section(node, pp_util.localtag(node.tag))
         elif node.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
-            self.make_xref_edoc(node)
+            self.o(self.edocs[node.attrib["id"]].make_xref_edoc())
         elif node.tag == "{https://niap-ccevs.org/cc/v1}entry":
             self.make_xref_bibentry(node)
         else:
@@ -941,18 +1001,18 @@ security policies map to the security objectives.
             raise Exception("Should not have a base")
         return False
         
-    def show_package(self, node):
-        self.o("<a href=\""+node.attrib["url"]+"\">")
-        if "name" in node.attrib:
-            self.o(node.attrib["name"])
-            self.o(pp_util.get_attr_or(node, "short", prefix="(", suffix=")"))
-            version = node.attrib["version"]            
-        else:
-            proot = self.edocs[node.attrib["id"]]
-            self.o(proot.find(".//cc:PPTitle",NS).text)
-            version=proot.find(".//cc:PPVersion",NS).text
-        self.o("Package, version ")
-        self.o(version)
-        self.o("</a> Conformant")
+    # def show_package(self, node):
+    #     self.o("<a href=\""+node.attrib["url"]+"\">")
+    #     if "name" in node.attrib:
+    #         self.o(node.attrib["name"])
+    #         self.o(pp_util.get_attr_or(node, "short", post=lambda x:"("+x+")"))
+    #         version = node.attrib["version"]            
+    #     else:
+    #         proot = self.edocs[node.attrib["id"]]
+    #         self.o(proot.find(".//cc:PPTitle",NS).text)
+    #         version=proot.find(".//cc:PPVersion",NS).text
+    #     self.o("Package, version ")
+    #     self.o(version)
+    #     self.o("</a> Conformant")
 
         

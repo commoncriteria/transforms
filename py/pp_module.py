@@ -1,9 +1,21 @@
 import generic_pp_doc
 import pp_util
+from generic_pp_doc import NS
+
 
 class ppmod(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, output, boilerplate):
         super().__init__(root, workdir, output, boilerplate)
+
+    def handle_unknown_depends(self, sfr, attrval):
+        if self.rf("//cc:base-pp[@id='"+attrval+"']") is not None:
+            # This seems to be handled already in the Edoc initialization
+            base = self.edocs[attrval]
+            base.add_base_dependent_sfr(sfr)
+        else:
+            raise Exception("Dont know how to handle: "+ sfr["cc-id"])
+
+
         
     def title(self):
         node = self.rf("//cc:PPTitle")
@@ -14,6 +26,27 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         else:
             return "PP-Module for " + self.root.attrib["target-product"] + "s"
 
+    def requirement_consistency_rationale_section(self, reqs, nonmsg, edoc=None):
+        if len(reqs)==0:
+            self.ol("<tr><td colspan=\"2\" style=\"text-align:center\">")
+            self.ol(nonmsg)
+            self.ol("</td></tr>")
+            return
+        for req in reqs:
+            self.ol("<tr>")
+            self.o("<td>"+self.fcomp_cc_id(req)+"</td>")
+            self.o("<td>")
+            id=pp_util.get_attr_or(req, "id")
+            conmods=[]
+            if edoc is not None:
+                conmods = edoc.node.xpath("cc:con-mod[@ref='"+id+"']", namespaces=NS)
+            for conmod in conmods:
+                self.handle_content(conmod)
+            if len(conmods)==0:
+                self.handle_content(req.find("cc:consistency-rationale", generic_pp_doc.NS))
+            self.ol("</td></tr>")
+
+    
     def template_sfrs(self, node):
         self.ol("<h2 class=\"indexable\" data-level=\"2\">Security Functional Requirements</h2>")
         self.ol("The Security Functional Requirements included in this section")
@@ -32,11 +65,10 @@ class ppmod(generic_pp_doc.generic_pp_doc):
 
 
 
-        man_fcomps = self.rx("//cc:f-component[not(cc:depends)]")
-        if len(man_fcomps)>0:
+        if len(self.man_sfrs)>0:
             self.ol("The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module.")
             self.ol("These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
-            self.handle_sparse_sfrs(man_fcomps)
+            self.handle_sparse_sfrs(self.man_sfrs)
         else:
             self.ol("This PP-Module does not define any mandatory SFRs.")
 
@@ -53,11 +85,6 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         return "PP-Module"
 
 
-    def get_declared_modified_sfrs(self, base):
-        modsfrs =  base.find(".//mod-sfrs")
-        if not modsfrs:
-            return []
-        return modsfrs.text.split(" ")
 
 
     def is_base(self, attr):
@@ -70,15 +97,12 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             return True
         else:
             return False
+
         
-    
     def handle_basepp(self, node):
         id = node.attrib["id"]
-        if id in self.edocs:
-            broot = self.edocs[id]
-            short = self.get_short(broot)
-        else:
-            raise Exception("Can't do this basepp")
+        base=self.edocs[id]
+        short=base.short
         self.ol("<h2 id=\""+"secreq-"+id+"\" class=\"indexable\" data-level=\"2\">")
         self.o(short)
         self.ol(" Security Functional Requirements Direction")
@@ -87,44 +111,26 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.ol("In a PP-Configuration that includes the ")
             self.o(short)
             self.ol(",the TOE is expected to rely on some of the security functions implemented by the")
-            self.get_product(self.root)
+            self.ol(base.product)
             self.ol("as a whole and evaluated against the  " + short + ".")
             self.ol("The following sections describe any modifications that the ST author must make to the SFRs")
             self.ol("defined in the "+short+ "in addition to what is mandated by <a class=\"dynref\" href=\"#man-sfrs\">Section </a>.")
-
-
-            #     <xsl:variable name="b_id" select="@id"/>
-        #     <xsl:variable name="doc" select="concat($work-dir,'/',@id,'.xml')"/>
-        
-
-        basedep_sfrs = self.rx("//cc:f-component[cc:depends/@*='"+id+"']")
-        declared_modified = self.get_declared_modified_sfrs(node)
-        add_sfrs=[]
-        mod_sfrs=[]
-        for bsfr in basedep_sfrs:
-            if self.is_modified(bsfr, declared_modified, broot):
-                mod_sfrs.append(bsfr)
-            else:
-                add_sfrs.append(bsfr)
-        mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
-        add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
-
-        self.ol("<h3 id=\"modsfr-"+"@id"+"\" class=\"indexable\" data-level=\"3\"> Modified SFRs </h3>")
+        self.ol("<h3 id=\"modsfr-"+id+"\" class=\"indexable\" data-level=\"3\"> Modified SFRs </h3>")
         self.ol("The SFRs listed in this section are defined in the "+short+
                 " and relevant to the secure operation of the TOE.")
-        if len(mod_sfrs)==0:
+        if len(base.mod_sfrs)==0:
             self.ol("This PP-Module does not modify any SFRs defined by the " + short  + ".")
         else:
-            self.handle_sparse_sfrs( mod_sfrs)
+            self.handle_sparse_sfrs(base.mod_sfrs)
                 
         if len(self.rfa("//cc:base-pp"))>1:
             self.ol("<h3 id=\"addsfr-"+id+"\" class=\"indexable\" data-level=\"3\"> Additional SFRs</h3>")
-            if len(add_sfrs)>0:
+            if len(base.add_sfrs)>0:
                 self.ol("This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-                self.handle_sparse_sfrs(add_sfrs)
+                self.handle_sparse_sfrs(base.add_sfrs)
             else:
                 self.ol("This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-        return add_sfrs + mod_sfrs
+        return base.add_sfrs + base.mod_sfrs
     
     def handle_conformance_claims(self, node):
         self.o("""
@@ -162,7 +168,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 lagsep=","
                 if ctr==2 :
                     lagsep="and"
-                self.show_package(pk)
+                self.make_xref_edoc(pk)
             self.o("conformant")
         self.ol(".</dd>")
         self.ol("</dl>")
@@ -202,8 +208,124 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.ol("</td></tr>")
         self.ol("</table>")
 
-        
-        
+    def handle_consistency_row(self, base, thing):
+        name=thing.attrib["name"]
+        self.ol("<tr>")
+        self.ol("  <td>"+name+"</td>")
+        self.ol("  <td>")
+        mod=base.find("cc:con-mod[@ref='"+name+"']", generic_pp_doc.NS)
+        if mod is None:
+            mod=thing.find("cc:consistency-rationale",generic_pp_doc.NS)
+        self.handle_content(mod)
+        self.ol("  </td>")
+        self.ol("</tr>")
+
+    def handle_consistency_rows(self, base, rows):
+        for row in rows:
+            self.handle_consistency_row(base, row)
+            
+    def consistency_rationale(self):
+        self.ol("<h1 id=\"mod-conrat\" class=\"indexable\" data-level=\"1\">Consistency Rationale</h1>")
+        bases = self.rfa("//cc:base-pp")
+        for base in bases:
+            id   = base.attrib["id"]
+            edoc = self.edocs[id]
+            self.set_underscore(edoc.short)
+            self.o("<h2 id=\"conrat-"+id+"\" class=\"indexable\" data-level=\"2\">")
+            self.o(edoc.short)
+            self.ol("</h2>")
+            self.ol("    <h3 id=\"contoe-"+id+"-\" class=\"indexable\" data-level=\"3\">")
+            self.ol("Consistency of TOE Type")
+            self.ol("</h3>")
+            self.handle_content(base.find("cc:con-toe",generic_pp_doc.NS))
+            self.ol("    <h3 id=\"consecprob-"+id+"-\" class=\"indexable\" data-level=\"3\">")
+            self.ol("Consistency of Security Problem Definition")
+            self.ol("</h3>")
+            self.handle_content(base.find("cc:con-sec-prob",generic_pp_doc.NS))
+            self.ol("<table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>")
+            things = self.rx("//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]")
+            self.handle_consistency_rows(base, things)
+            self.ol("</table>")
+
+            self.ol("<h3 id=\"conobj-"+id+"\" class=\"indexable\" data-level=\"3\">")
+            self.ol("Consistency of Objectives")
+            self.ol("</h3>")
+            self.ol("<p>")
+            self.handle_content(base.find("./cc:con-obj",generic_pp_doc.NS))
+            sos_des = self.rfa("//cc:SO[cc:description]")
+            self.ol("</p>")
+            if len(sos_des):
+                self.ol("The objectives for the TOEs are consistent with the ")
+                self.o(edoc.make_xref_edoc())
+                self.ol(" based on the following rationale:")
+                self.ol("<table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>")
+                self.handle_consistency_rows(base, sos_des)
+                self.ol("</table>")
+            self.handle_content(base.find("./cc:con-op-en", generic_pp_doc.NS))
+            soes = self.rfa("//cc:SOE")
+            if len(soes)>0:
+                self.ol("<p>The objectives for the TOE's OE are consistent with the ")
+                self.o(edoc.make_xref_edoc())
+                self.ol("based on the following rationale:</p>")
+                self.ol("<table><tr><th>PP-Module OE Objective</th><th>Consistency Rationale</th></tr>")
+                self.handle_consistency_rows(base,soes)
+                self.ol("</table>")
+            self.ol("<h3 id=\"conreq-"+id+"\" class=\"indexable\" data-level=\"3\">")
+            self.ol("Consistency of Requirements")
+            self.ol("</h3>")
+            self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS))
+            self.ol("This PP-Module identifies several SFRs from the")
+            self.o(edoc.make_xref_edoc())
+            self.o(" that are needed to support ")
+            self.o(self.root.attrib["target-product"])
+            self.ol(" functionality.")
+            self.ol("This is considered to be consistent because the functionality provided by the")
+            self.o(edoc.make_xref_edoc())
+            self.ol(" is being used for its intended purpose.")
+            if len(edoc.mod_sfrs)>0:
+                self.ol("The PP-Module also identifies a number of modified SFRs from the")
+                self.o(edoc.make_xref_edoc())
+                if len(edoc.add_sfrs)>0:
+                    self.ol("as well as new SFRs ")
+                self.ol("that are used entirely to provide functionality for")
+                self.ol(edoc.get_products()+".")
+            elif len(edoc.add_sfrs)>0:
+                self.ol("The PP-Module identifies new SFRs that are used entirely to provide")
+                self.ol("functionality for")
+                self.ol(edoc.get_products()+".")
+            self.ol("The rationale for why this does not conflict with the claims")
+            self.o("defined by the")
+            self.ol(edoc.short+" are as follows:")
+            self.ol("<table>")
+            self.ol("<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>")
+            self.ol("<tr><th colspan=\"2\"> Modified SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(edoc.mod_sfrs, 
+               "This PP-Module does not modify any requirements when the "+\
+                                                           edoc.short + " is the base.",edoc=edoc)
+
+            self.ol("<tr><th colspan=\"2\"> Additional SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(edoc.add_sfrs, 
+               "This PP-Module does not levy any addition requirements when the "+\
+                                                           edoc.short + " is the base.",edoc=edoc)
+            self.ol("<tr><th colspan=\"2\"> Mandatory SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(self.man_sfrs, 
+                                                           "This PP-Module does not define any Mandatory requirements.")
+
+
+            self.ol("<tr><th colspan=\"2\">Optional SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(self.opt_sfrs, 
+                                                           "This PP-Module does not define any Strictly Optional requirements.")
+            self.ol("<tr><th colspan=\"2\">Objective SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(self.obj_sfrs, 
+                                                           "This PP-Module does not define any Objective requirements.")
+            self.ol("<tr><th colspan=\"2\">Implementation-based SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(self.impl_sfrs, 
+                                                           "This PP-Module does not define any Implementation-based requirements.")
+            self.ol("<tr><th colspan=\"2\">Selection-based SFRs</th></tr>")
+            self.requirement_consistency_rationale_section(self.sel_sfrs, 
+                                                           "This PP-Module does not define any Selection-based requirements.")
+            self.ol("</table>")
+
 
         
     def template_module(self, node):
@@ -213,13 +335,12 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.apply_templates(self.rx("//*[@title='Security Objectives']|sec:Security_Objectives"))
         self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"))
         self.objectives_to_requirements()
-        # <xsl:call-template name="mod-sars"/>
-        # <xsl:call-template name="consistency-rationale"/>
+        self.consistency_rationale()
         # <xsl:call-template name="opt-sfrs"/>
         # <xsl:call-template name="sel-sfrs"/>
         # <xsl:call-template name="ext-comp-defs"/>
-        # self.apply-templates select="//cc:appendix"/>
-        # <xsl:call-template name="acronyms"/>
+        self.apply_templates(self.rfa("//cc:appendix"))
+        self.create_acronym_listing()
         self.create_bibliography()
 
     

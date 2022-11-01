@@ -1,5 +1,9 @@
 import sys
 
+NS = {'cc': "https://niap-ccevs.org/cc/v1",
+      'sec': "https://niap-ccevs.org/cc/v1/section",
+      'htm': "http://www.w3.org/1999/xhtml"}
+
 def log(msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
@@ -11,9 +15,9 @@ def make_attr_safe(attr):
 def localtag(tag):
     return  tag.split("}")[1]
 
-def get_attr_or(node, attr, default="", prefix="", suffix=""):
+def get_attr_or(node, attr, default="", post=lambda x:x):
     if attr in node.attrib:
-        return prefix+node.attrib[attr]
+        return post(node.attrib[attr])
     return default
 
 def is_attr(node, attr, val):
