@@ -43,3 +43,94 @@ def flatten(el):
         
 def ccver():
     return "Version 3.1, Revision 5"
+
+def get_js():
+    return ("""<script 
+ src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+ type="text/javascript"></script>
+                <script type="text/x-mathjax-config">
+                    MathJax.Hub.Config({
+                    extensions: ["tex2jax.js"],
+                    jax: ["input/TeX", "output/HTML-CSS"],
+                    showMathMenu: false,
+                    tex2jax: {
+                      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                      processEscapes: true
+                    },
+                    styles: {
+        
+                        ".MathJax_Display": {
+                        "text-align": "left !important",
+                        margin:       "0em 0em !important"
+                    }}
+                    });
+                </script>
+                <script type="text/javascript">
+        // <![CDATA[
+        // Called on page load to parse URL parameters and perform actions on them.
+        function init(){
+            if(getQueryVariable("expand") == "on"){
+              expand();
+            }
+            var aa;
+            var brk_els = document.getElementsByClassName("dyn-abbr");
+            //
+            for(aa=0; aa!=brk_els.length; aa++){
+                var abbr = brk_els[aa].firstElementChild.getAttribute("href").substring(1);
+                var el = document.getElementById("long_"+abbr)
+                if (el==null) {
+                     console.log("Could not find 'long_abbr_'"+abbr);
+                     continue;
+                }
+                var abbr_def = el.textContent;
+                brk_els[aa].setAttribute("title", abbr_def);
+            }
+        }
+        // ]]>
+                // <![CDATA[
+        const AMPERSAND=String.fromCharCode(38);
+        
+        // Pass a URL variable to this function and it will return its value
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split(AMPERSAND);
+            for (var i=0;i!=vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
+        
+        
+        //    Expands all evaluation activities
+        function expand(){
+            var ap = document.getElementsByClassName('activity_pane');
+            for (var ii = 0; ii!=ap.length; ii++) {
+                ap[ii].classList.remove('hide');
+            }
+        }
+        
+        // Function to expand and contract a given div
+        function toggle(descendent) {
+            var cl = descendent.parentNode.parentNode.classList;
+            if (cl.contains('hide')){
+              cl.remove('hide');
+            }
+            else{
+              cl.add('hide');
+            }
+        }
+        
+        // Expands targets if they are hidden
+        function showTarget(id){
+            var element = document.getElementById(id);
+            while (element != document.body.rootNode ){
+        	element.classList.remove("hide");
+        	element = element.parentElement;
+            }
+        }
+        // ]]>
+                </script>
+""")

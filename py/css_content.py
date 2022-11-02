@@ -1,5 +1,5 @@
 def fx_common_css(doc):
-     doc.ol("""#toc a{
+     return """#toc a{
         display: block;
     }
 
@@ -254,13 +254,13 @@ def fx_common_css(doc):
         padding-bottom: 20px;
         display: block;
     } 
-""")
-     
+"""
+
 
       
 def fx_pp_css(doc):
-      fx_common_css(doc)
-      doc.ol("""          .figure{
+      ret = fx_common_css(doc)
+      ret +="""          .figure{
               font-weight:bold;
           }
           h1{
@@ -530,4 +530,5 @@ def fx_pp_css(doc):
 	            img[src="images/collapsed.png"] { display:none;}
 
           }
-      """)
+      """
+      return ret

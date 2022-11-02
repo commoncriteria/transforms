@@ -17,10 +17,13 @@ def make_mod(path):
     boilerplate = ET.parse("/home/kevin/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml")
     # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
-        pp = pp_module.ppmod( doc, "../../output", "/tmp/abc.xml", boilerplate )
+        pp = pp_module.ppmod( doc, "../../output", boilerplate )
     else:
         raise Exception("Unhandled")
-    pp.to_html()
+
+    out = open("/tmp/abc.xml", "w+")
+    out.write(pp.to_html())
+    out.close()
     
     
 if __name__ == "__main__":
