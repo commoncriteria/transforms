@@ -297,17 +297,30 @@ class generic_pp_doc(object):
             ret +="<div>"+self.handle_content(famBi)
             sfrs = self.fams_to_sfrs[famId]
             sfrs.sort(key=lambda fcom: make_sort_key_stringnum(fcom.attrib["cc-id"]))
+            ret+="<h4>Component Leveling</h4>"
             ret+="<svg xmlns='http://www.w3.org/2000/svg' style='max-height: "+str(20*len(sfrs)+10)+"px;'>"
             ret+= drawbox(20*math.floor(len(sfrs)/2), famId, 0)
             ctr=0
+            complevel_text=""
+            sfr_mng_aud_text=""
             for sfr in sfrs:
-                text = self.fcomp_cc_id(sfr).split(".")[1]
+                cc_id = self.fcomp_cc_id(sfr)
+                text = cc_id.split(".")[1]
                 ret+=drawbox(ctr*20, text, 20*math.floor(len(sfrs)/2), xbase=230 )
                 ctr+=1
+                complevel_text+="<p>"+cc_id+", " + sfr.attrib["name"]+", "+self.handle_content(sfr.find("cc:comp-lev",NS))+"</p>\n"
+                sfr_mng_aud_text+=self.get_mng_aud(sfr, cc_id)
             ret+="</svg>"
+            ret+=complevel_text
+            ret+=sfr_mng_aud_text
             ret+="</div>"
-            ret +="<h4>Component Leveling</h4>"
+        else:
+            ret+=self.handle_content(famnode.find("cc:mod-def",NS))
 
+
+        ret+="</div>"
+        ret+="</span>"
+        return ret
 
 
 #           <xsl:variable name="dcount"
@@ -344,53 +357,33 @@ class generic_pp_doc(object):
 #              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
 #          </p>
 #       </xsl:for-each>
-	    
-#       <!-- Individual Management, Audit, and Component definitions -->
-#       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
-#          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-#          <h4>Management: <xsl:value-of select="$upId"/></h4>
-#          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
-#             <xsl:apply-templates select="cc:management" mode="reveal"/>
-#          </p>
-
-#          <h4>Audit: <xsl:value-of select="$upId"/></h4>
-#          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
-#             <xsl:apply-templates select="cc:audit" mode="reveal"/>
-#          </p>
-#          <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
-#          <div style="margin-left: 1em;">
-#          <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
-#             <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
-#          </p>
-#          <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
-#             <xsl:apply-templates select="cc:dependencies" mode="reveal"/>
-#          </p>
-
-#          <xsl:for-each select="cc:f-element">
-#             <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-#             <h4  id="ext-comp-{$reqid}" >
-#               <xsl:value-of select="translate($reqid, $lower,$upper)"/>
-#             </h4>
-#                  <xsl:choose>
-#                     <xsl:when test="cc:ext-comp-def-title">
-#                        <xsl:apply-templates select="cc:ext-comp-def-title/cc:title"/>
-#                     </xsl:when>
-#                     <xsl:when test="document('SFRs.xml')//cc:sfr[@cc-id=$reqid]">
-#                        <xsl:apply-templates select="document('SFRs.xml')//cc:sfr[@cc-id=$reqid]/cc:title"/>
-#                     </xsl:when>
-#                     <xsl:otherwise>
-#                       <xsl:if test="cc:title//@id">
-# <xsl:message>* Warning: Since <xsl:value-of select="$reqid"/> has an 'id' attribute in a descendant node in the title, you probably need to define an alternative 'ext-comp-def-title'.
-#                        </xsl:message></xsl:if>
-#                        <xsl:apply-templates select="cc:title"/>
-#                     </xsl:otherwise>
-#                 </xsl:choose>
-#          </xsl:for-each>
-# 	 </div>
-#       </xsl:for-each>
-#     </xsl:for-each>
+    def get_mng_aud(self, sfr, cc_id):
+        ret="<h4>Management: "+cc_id+"</h4>\n<p>"
+        ret+=self.handle_content(sfr.find("cc:management",NS),
+                                 defcon="There are no management functions foreseen.")
+        ret+="</p>\n<h4>Audit: "+cc_id+"</h4>\n<p>"
+        ret+=self.handle_content(sfr.find("cc:audit",NS),
+                                 defcon="There are no audit events foreseen.")
+        ret+="</p><h4>"+cc_id+" "+sfr.attrib["name"]+"</h4>\n"
+        ret+="<div style=\"margin-left: 1em;\">"
+        ret+="<p>Hierarchical to: "+self.handle_content(sfr.find("cc:heirarchical-to",NS), defcon="No other components.")
+        ret+="</p>\n<p>Dependencies to: "+self.handle_content(sfr.find("cc:dependencies",NS), defcon="No dependencies.")
+        ret+="</p>"
         ret+="</div>"
-        ret+="</span>"
+        ctr=1
+        for fel in sfr.findall("cc:f-element", NS):
+            fel_id = self.fcomp_cc_id(sfr, suffix="."+str(ctr))
+            ret+="<h4 id='ext-comp-"+fel_id+"-'>"+fel_id+"</h4>"
+            ecd_title = fel.find("cc:ext-comp-def-title",NS)
+            if ecd_title is not None:
+                ret+=self.apply_templates(ecd_title)
+            else:
+                title=fel.find("cc:title",NS)
+                if title is None:
+                    raise Exception("Can't find title")
+                words=self.handle_content(title)
+                ret+=words
+            ctr+=1
         return ret
 
             
@@ -519,23 +512,6 @@ security policies map to the security objectives.
             ret+="</td></tr>\n"
         ret+="</table>\n"
         return ret
-    #         <xsl:if test="not(name(preceding-sibling::cc:*[1])='objective-refer')">
-    #         <xsl:attribute name="class">major-row</xsl:attribute>
-    #         <xsl:variable name="rowspan" select="count(../cc:objective-refer)"/>
-    #         <td rowspan="{$rowspan}">
-    #           <xsl:call-template name="underscore_breaker">
-    #     	<xsl:with-param name="valu"><xsl:apply-templates select=".." mode="get-representation"/></xsl:with-param></xsl:call-template>
-    #         </td>
-    #       </xsl:if>
-    #       <td>
-    #         <xsl:call-template name="underscore_breaker">
-    #           <xsl:with-param name="valu" select="@ref"/>
-    #         </xsl:call-template>
-    #     </td>
-    #       <td><xsl:apply-templates select="cc:rationale"/></td>
-    #     </tr>
-    #   </xsl:for-each>
-    # </table>
 
         
     def handle_implicitly_satisfied_requirements(self):
