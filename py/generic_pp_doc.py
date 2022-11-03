@@ -2,6 +2,7 @@ import lxml.etree as ET
 import css_content
 import pp_util
 from pp_util import log
+import math
 import edoc
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
@@ -28,7 +29,10 @@ def drawbox(ybase,boxtext,ymid, xbase=0):
     ret+=boxtext
     ret+="</text>\n<rect x='"+str(xbase+2)+"' y='"+str(ybase+11)+"' width='"+str(width)+"' height='16' fill='none' stroke='black'/>"
     if xbase>0:
-        ret+="<line x1='152' y1='"+str(ymid+17)+"' x2='"+str(xbase+1)+"' y2='"+str(ybase+17)+"' stroke='back'/>"
+        ret+="<line x1='152' y1='"+str(ymid+17)+"' x2='"+str(xbase+1)+"' y2='"+str(ybase+17)+"' stroke='black'/>"
+    
+
+        
     return ret
 
 
@@ -49,15 +53,15 @@ class generic_pp_doc(object):
         
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
         for sfr in self.man_sfrs:
-            self.register_sfr_with_fam(sfr)
+            self.maybe_register_sfr_with_fam(sfr)
             
         dep_sfrs = self.rx("//cc:f-component[cc:depends]")
         for sfr in dep_sfrs:
-            should_register = sfr.find("cc:comp-lev",NS) is not None
+            should_register = True
             # We're just looking at the first one
             depends=sfr.find("cc:depends[1]", NS)
             if depends.find("cc:optional", NS) is not None:
-                self.register_sfr_with_fam(sfr)
+                self.opt_sfrs[sfr]=1
             elif depends.find("cc:objective", NS) is not None:
                 self.obj_sfrs[sfr]=1
             elif depends.find("cc:external-doc", NS) is not None:
@@ -77,7 +81,7 @@ class generic_pp_doc(object):
                         should_register=False
                     break
             if should_register:
-                self.register_sfr_with_fam(sfr)
+                self.maybe_register_sfr_with_fam(sfr)
                         
 
     def handle_unknown_depends(self, sfr, attr):
@@ -95,7 +99,9 @@ class generic_pp_doc(object):
     def rx(self, xpath):
         return self.root.xpath(xpath , namespaces=NS)
 
-    def register_sfr_with_fam(self, sfr):
+    def maybe_register_sfr_with_fam(self, sfr):
+        if sfr.find("cc:comp-lev",NS) is None:
+            return
         if sfr.find("cc:notnew", NS) is not None:
             return
         fam = sfr.attrib["cc-id"].split(".")[0]
@@ -292,12 +298,11 @@ class generic_pp_doc(object):
             sfrs = self.fams_to_sfrs[famId]
             sfrs.sort(key=lambda fcom: make_sort_key_stringnum(fcom.attrib["cc-id"]))
             ret+="<svg xmlns='http://www.w3.org/2000/svg' style='max-height: "+str(20*len(sfrs)+10)+"px;'>"
-            ret+= drawbox(20*len(sfrs)/2, famId, 0)
+            ret+= drawbox(20*math.floor(len(sfrs)/2), famId, 0)
             ctr=0
             for sfr in sfrs:
-                text = self.fcomp_cc_id(sfr).split(".")[1]+\
-                    pp_util.get_attr_or(sfr, "iteration", post=lambda x:"/"+x)
-                ret+=drawbox((ctr-1)*20, text, 20*(len(sfrs)/2), xbase=230 )
+                text = self.fcomp_cc_id(sfr).split(".")[1]
+                ret+=drawbox(ctr*20, text, 20*math.floor(len(sfrs)/2), xbase=230 )
                 ctr+=1
             ret+="</svg>"
             ret+="</div>"
