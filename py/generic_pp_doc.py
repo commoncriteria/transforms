@@ -1,4 +1,6 @@
 import lxml.etree as ET
+from lxml.builder import E
+from lxml.builder import ElementMaker
 import css_content
 import pp_util
 from pp_util import log
@@ -8,6 +10,11 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
+# SVG_NS="http://www.w3.org/2000/svg"
+# SVG="{%s}"%SVG_NS
+# OUT_NSMAP={None: SVG_NS}
+SVG_E=ElementMaker(namespace="http://www.w3.org/2000/svg")
+    
 def strnull(thing):
     if thing is None:
         return ""
@@ -18,22 +25,27 @@ def make_sort_key_stringnum(s):
     spl=s.split(".")
     return spl[0]+"."+spl[1].rjust(3)
 
+def stringify(root):
+    return ET.tostring(root, pretty_print=True, encoding='UTF-8').decode('utf-8')
+
+defargs={'fill':'black',
+         'font-size':'15'}
+boxargs={'height':'16','fill':'none','stroke':'black'}
 
 
-def drawbox(ybase,boxtext,ymid, xbase=0):
+def drawbox(parent, ybase,boxtext,ymid, xbase=0):
     if xbase==0:
         width=150
     else:
         width=len(boxtext)*12
-    ret="<text x='"+str(xbase+4)+"' fill='black' font-size='15' y='"+str(ybase+24)+"'>"
-    ret+=boxtext
-    ret+="</text>\n<rect x='"+str(xbase+2)+"' y='"+str(ybase+11)+"' width='"+str(width)+"' height='16' fill='none' stroke='black'/>"
-    if xbase>0:
-        ret+="<line x1='152' y1='"+str(ymid+17)+"' x2='"+str(xbase+1)+"' y2='"+str(ybase+17)+"' stroke='black'/>"
-    
 
-        
-    return ret
+    txt_el = SVG_E.text(boxtext, **defargs, x=str(xbase+4),y=str(ybase+24))
+    parent.append(txt_el)
+    rec_el = SVG_E.rect(**boxargs, x=str(xbase+2),y=str(ybase+11),width=str(width))
+    parent.append(rec_el)
+    if xbase>0:
+        ln_el=SVG_E.line(x1='152',y1=str(ymid+17),x2=str(xbase+1),y2=str(ybase+17), stroke='black')
+        parent.append(ln_el)
 
 
 class generic_pp_doc(object):
@@ -298,19 +310,21 @@ class generic_pp_doc(object):
             sfrs = self.fams_to_sfrs[famId]
             sfrs.sort(key=lambda fcom: make_sort_key_stringnum(fcom.attrib["cc-id"]))
             ret+="<h4>Component Leveling</h4>"
-            ret+="<svg xmlns='http://www.w3.org/2000/svg' style='max-height: "+str(20*len(sfrs)+10)+"px;'>"
-            ret+= drawbox(20*math.floor(len(sfrs)/2), famId, 0)
+
+
+            svg_el=SVG_E.svg(style="max-height: "+str(20*len(sfrs)+10)+"px;")
+            drawbox(svg_el, 20*math.floor(len(sfrs)/2), famId, 0)
             ctr=0
             complevel_text=""
             sfr_mng_aud_text=""
             for sfr in sfrs:
                 cc_id = self.fcomp_cc_id(sfr)
                 text = cc_id.split(".")[1]
-                ret+=drawbox(ctr*20, text, 20*math.floor(len(sfrs)/2), xbase=230 )
+                drawbox(svg_el, ctr*20, text, 20*math.floor(len(sfrs)/2), xbase=230 )
                 ctr+=1
                 complevel_text+="<p>"+cc_id+", " + sfr.attrib["name"]+", "+self.handle_content(sfr.find("cc:comp-lev",NS))+"</p>\n"
                 sfr_mng_aud_text+=self.get_mng_aud(sfr, cc_id)
-            ret+="</svg>"
+            ret+=stringify(svg_el)
             ret+=complevel_text
             ret+=sfr_mng_aud_text
             ret+="</div>"
