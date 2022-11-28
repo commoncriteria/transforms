@@ -14,15 +14,15 @@ import pp_util
 def make_mod(path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
-    boilerplate = ET.parse("/home/kevin/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml")
+    boilerplate = ET.parse("/home/kg/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml")
     # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
         pp = pp_module.ppmod( doc, "../../output", boilerplate )
     else:
         raise Exception("Unhandled")
-
+    html_doc = pp.to_html()
     out = open("/tmp/abc.xml", "w+")
-    out.write(pp.to_html())
+    out.write("<!DOCTYPE html>\n"+ET.tostring(html_doc, pretty_print=True).decode())
     out.close()
     
     

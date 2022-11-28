@@ -14,7 +14,8 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
 # SVG="{%s}"%SVG_NS
 # OUT_NSMAP={None: SVG_NS}
 SVG_E=ElementMaker(namespace="http://www.w3.org/2000/svg")
-    
+HTM_E=ElementMaker()
+
 def strnull(thing):
     if thing is None:
         return ""
@@ -25,6 +26,12 @@ def make_sort_key_stringnum(s):
     spl=s.split(".")
     return spl[0]+"."+spl[1].rjust(3)
 
+def stringify_kids(parent):
+    ret = ""
+    for kid in parent:
+        ret+=ET.tostring(kid, pretty_print=True, encoding='UTF-8').decode('utf-8')
+    return ret
+    
 def stringify(root):
     return ET.tostring(root, pretty_print=True, encoding='UTF-8').decode('utf-8')
 
@@ -62,7 +69,6 @@ class generic_pp_doc(object):
         self.obj_sfrs = {}
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
-        
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
@@ -122,73 +128,70 @@ class generic_pp_doc(object):
         self.fams_to_sfrs[fam].append(sfr)
     
     def start(self):
-        ret="<!DOCTYPE html>\n"
-        ret=""
-        ret+="<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"
-        ret+="    <head>\n"
-        ret+="      <meta content=\"text/html;charset=utf-8\" http-equiv=\"Content-Type\"></meta>\n"
-        ret+="	<meta content=\"utf-8\" http-equiv=\"encoding\"></meta>\n"
-        ret+="	<title>"+self.title()+"</title>\n"
-        ret+=pp_util.get_js()
-        ret+="        <style type=\"text/css\">\n"
-        ret+=css_content.fx_pp_css(self)
+        head = HTM_E.head(
+                HTM_E.meta({"content":"text/html;charset=utf-8", "http-equiv":"Content-Type"}),
+                HTM_E.meta({"content":"utf-8","http-equiv":"encoding"}),
+                HTM_E.title(self.title())
+        )
+        ret = HTM_E.html(head)
+        pp_util.add_js(head)
+        css_text = css_content.fx_pp_css(self)
         extra_css = self.rf("//cc:extra-css")
         if extra_css is not None:
-            ret+=extra_css.text+"\n"
-        
-        ret+="	</style>\n"
-        ret+="      </head>\n"
-        ret+="<body onload=\"init()\">\n"
-        ret += self.fx_body_begin()
-        ret += self.apply_templates([self.root])
-        ret+="      </body>\n"
-        ret+="    </html>\n"
+            css_text=extra_css.text+"\n"
+        style=HTM_E.style({"type":"text/css"},css_text)
+        head.append(style)
+        body=HTM_E.body({"onload":"init()"})
+        ret.append(body)
+        self.fx_body_begin(body)
+#        self.apply_templates([self.root])
         return ret
 
     def title(self):
         return self.root.attrib["name"]
-    
-    def fx_body_begin(self):
-        ret=""
-        comments_els = self.rfa("//cc:comment")
-        if comments_els:
-            ctr=0
-            ret+="     <div id=\"commmentbox-\">\n"
-            for comment_el in comment_els:
-                id=self.derive_id(comment_el)
-                ret+="         <a href=\"#"+id+"\">Comment: "+id+"</a><br/>\n"
-            ret+="     </div>\n"
-        ret+="   <h1 class=\"title\" style=\"page-break-before:auto;\">"
-        ret+=self.title()
-        ret+="</h1>"
-        ret+="   <noscript>\n"
-        ret+="     <h1 style=\"text-align:center; border-style: dashed; border-width: medium; border-color: red;\"\n"
-        ret+="         >This page is best viewed with JavaScript enabled!</h1>\n"
-        ret+="   </noscript>\n"
-        ret+="   <div class=\"center\">\n"
-        ret+="     <img src=\"images/niaplogo.png\" alt=\"NIAP Logo\"/> <br/>\n"
-# Might think about getting rid of this and just making it part of the foreword
-        ret+="     Version: "+self.rf("//cc:ReferenceTable/cc:PPVersion").text+"<br/>\n"
-        ret+="     "+self.rf("//cc:ReferenceTable/cc:PPPubDate").text+"<br/>\n"
-        ret+="     <b>"+self.rf("//cc:PPAuthor").text+"</b><br/>\n"
-        ret+="   </div>\n"
-        self.apply_templates(self.rfa("//cc:foreword"))
-        ret+="<h2 style=\"page-break-before:always;\">Revision History</h2>\n"
-        ret+="<table>\n"
-        ret+="<tr class=\"header\"><th>Version</th><th>Date</th><th>Comment</th></tr>"
-        for entry in self.rfa("//cc:RevisionHistory/cc:entry"):
-            ret+="<tr><td>"
-            ret+=self.handle_content(entry.find("cc:version",NS))
-            ret+="</td><td>"
-            ret+=self.handle_content(entry.find("cc:date",NS))
-            ret+="</td><td>"
-            ret+=self.handle_content(entry.find("cc:subject",NS))
-            ret+="</td></tr>\n"
-        ret+="</table>\n"
-        ret+="<h2>Contents</h2>\n"
-        ret+="<div class=\"toc\" id=\"toc\"/>\n"
-        return ret
 
+    def handle_comments(self, body):
+        comments_els = self.rfa("//cc:comment")
+        if not comments_els:
+            return
+        div=HTM_E.div({"id":"commentbox-"})
+        ctr=0
+        for comment_el in comment_els:
+            id=self.derive_id(comment_el)
+            div.append(HTM_E.a({"href":"#"+id},"Comment: " + id))
+            div.append(HTM_E.br())
+        return ret
+    
+    def fx_body_begin(self, body):
+        self.handle_comments(body)
+        body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
+        body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
+        body.append(HTM_E.div({"class":"center"},
+                              HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
+                              "Version: "+self.rf("//cc:ReferenceTable/cc:PPVersion").text,
+                              HTM_E.br(),
+                              "     "+self.rf("//cc:ReferenceTable/cc:PPPubDate").text,
+                              HTM_E.br(),
+                              HTM_E.b(self.rf("//cc:PPAuthor").text),
+                              HTM_E.br()))
+        self.apply_templates(self.rfa("//cc:foreword"), body)
+        rev_his = HTM_E.h2({"style":"page-break-before:always;"},"Revision History")
+        body.append(rev_his)
+        table = HTM_E.table(HTM_E.tr({"class":"header"},
+                                     HTM_E.th("Version"),
+                                     HTM_E.th("Date"),
+                                     HTM_E.th("Comment")))
+        for entry in self.rfa("//cc:RevisionHistory/cc:entry"):
+            tr=HTM_E.tr()
+            for abc in ["version", "date", "subject"]:
+                td = HTM_E.td()
+                self.handle_content(entry.find("cc:"+abc,NS), td)
+                tr.append(td)
+            table.append(tr)
+        body.append(table)
+        body.append(HTM_E.h2("Contents"))
+        body.append(HTM_E.div({"class":"toc","id":"toc"}))
+        return 
 
         
     def fcomp_cc_id(self, node, suffix=""):
@@ -204,14 +207,17 @@ class generic_pp_doc(object):
     #     return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
     
 
-    def handle_content(self, node, defcon=""):
+    def handle_content(self, node, parent,defcon=""):
         if node is None:
-            return defcon
-        ret=strnull(node.text)
+            parent.append(defcon)
+            return
+        if (len(parent)>0):
+            parent[-1].tail =node.text
+        else:
+            parent.text = node.text
         for child in node:
-            ret+=self.apply_templates_single(child)
-            ret+=strnull(child.tail)
-        return ret
+            self.apply_templates_single(child,parent)
+            parent.append(strnull(child.tail))
             
     def handle_section(self, node, title, id):
         ret="<h5 id=\""+id+"\">"
@@ -681,12 +687,12 @@ security policies map to the security objectives.
         return ret
         
         
-    def apply_templates(self, nodelist):
+    def apply_templates(self, nodelist, parent):
         ret=""
         if nodelist is None:
             return ""
         for node in nodelist:
-            ret += self.apply_templates_single(node)
+            ret += self.apply_templates_single(node, parent)
         return ret
 
 
@@ -786,70 +792,70 @@ security policies map to the security objectives.
         return ret
                 
         
-    def apply_templates_single(self, node):
+    def apply_templates_single(self, node, parent):
         if node is None or not isinstance(node.tag,str):
             return ""
-        return self.apply_template_to_element(node)
+        return self.apply_template_to_element(node, parent)
 
-    def apply_template_to_element(self, node):
+    def apply_template_to_element(self, node, parent):
         tag = node.tag
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            return self.template_newsection(node)
+            return self.template_newsection(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}section":
-            return self.template_oldsection(node)
+            return self.template_oldsection(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}appendix":
-            return self.template_appendix(node)
+            return self.template_appendix(node, parent)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
-            return self.template_html(node)
+            return self.template_html(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}xref":
-            return self.template_xref(node)
+            return self.template_xref(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}tech-terms":
-            return self.template_tech_terms(node)
+            return self.template_tech_terms(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}usecases":
-            return self.template_usecases(node)
+            return self.template_usecases(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}assumptions"\
              or tag=="{https://niap-ccevs.org/cc/v1}cclaims"\
              or tag=="{https://niap-ccevs.org/cc/v1}threats"\
              or tag=="{https://niap-ccevs.org/cc/v1}OSPs"\
              or tag=="{https://niap-ccevs.org/cc/v1}SOs"\
              or tag=="{https://niap-ccevs.org/cc/v1}SOEs":
-            return self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node)
+            return self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}sfrs":
-            return self.template_sfrs(node)
+            return self.template_sfrs(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}f-component" or\
              tag=="{https://niap-ccevs.org/cc/v1}ext-comp-def" or\
              tag=="{https://niap-ccevs.org/cc/v1}base-pp":
             return ""
         elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
-            return self.template_felement(node)
+            return self.template_felement(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}title": 
-            return self.apply_templates(node)
+            return self.apply_templates(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
-            return self.template_management_function_set(node)
+            return self.template_management_function_set(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}ctr":
-            return self.template_ctr(node)
+            return self.template_ctr(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}no-link":
             ret="<span class=\"no-link\">\n"
-            ret+=self.handle_content(node)
+            ret+=self.handle_content(node, parent)
             ret+="</span>\n"
             return ret            
         elif tag=="{https://niap-ccevs.org/cc/v1}manager":
             ret="<td>"
-            ret+=self.handle_content(node)
+            ret+=self.handle_content(node, parent)
             ret+="</td>\n"
             return ret
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
              tag=="{https://niap-ccevs.org/cc/v1}description":
-            ret = self.handle_content(node)
+            ret = self.handle_content(node, parent)
             if ret is None:
                 pp_util.log("Problem with description")
             return ret
         elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
-            return self.template_selectables(node)
+            return self.template_selectables(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}assignable":
-            return self.template_assignable(node)
+            return self.template_assignable(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}int":
-            return self.template_int(node)
+            return self.template_int(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}_":
             return self.shortcut
         else:
@@ -871,7 +877,7 @@ security policies map to the security objectives.
         ret="<span class=\"ctr\" data-myid=\""+id+"\" data-counter-type=\"ct-"+ctrtype+"\" id=\""+id+"\">\n"
         ret+=self.get_pre(node)
         ret+="      <span class=\"counter\">"+id+"</span>\n"
-        ret+=self.handle_content(node)
+        ret+=self.handle_content(node, parent)
         ret+="    </span>\n"
         return ret
         
@@ -893,7 +899,7 @@ security policies map to the security objectives.
     def template_assignable(self, node):
         id=self.derive_id(node)
         ret="[<b>assignment</b>: <span class=\"assignable-content\" id=\""+id+"\">"
-        ret+=self.handle_content(node)
+        ret+=self.handle_content(node, parent)
         ret+="</span>]"
         return ret
 
@@ -904,7 +910,7 @@ security policies map to the security objectives.
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return ret
         ret+=self.handle_section_hook_base(title, node)
-        ret+=self.handle_content(node)
+        ret+=self.handle_content(node, parent)
         return ret
     
     def template_selectables(self, node):
@@ -983,7 +989,7 @@ security policies map to the security objectives.
         elif tag == "NA":
             return "<div>-<span class=\"tooltiptext\">N/A</span></div>"
         else:
-            return self.handle_content(node)
+            return self.handle_content(node, parent)
     
     def make_mf_row(self, mf, prefix, managers, defval):
         mf_num = str(self.get_global_index(mf))
@@ -1012,12 +1018,10 @@ security policies map to the security objectives.
     def make_xref_section(self, node, id):
         return "<a href=\"#{"+id+"}\" class=\"dynref\">Section </a>\n"
 
-    def make_xref_bibentry(self, node):
-        id =  node.attrib["id"]
-        ret="<a href=\"#"+id+"\">["
-        ret+=node.find("./cc:tag", NS).text
-        ret+="]</a>\n"
-        return ret
+    def make_xref_bibentry(self, parent, node):
+        txt = "["+node.find("./cc:tag", NS).text+"]"
+        anchor="#"+node.attrib["id"]
+        parent.append(E.a(txt, href=anchor))
         
     def make_xref(self, node):
         if node.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
@@ -1025,7 +1029,9 @@ security policies map to the security objectives.
         elif node.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
             return self.edocs[node.attrib["id"]].make_xref_edoc()
         elif node.tag == "{https://niap-ccevs.org/cc/v1}entry":
-            return self.make_xref_bibentry(node)
+            parent = E.parent()
+            self.make_xref_bibentry(parent, node)            
+            return stringify_kids(parent)
         else:
             raise Exception("Cannot handle: " + node.tag)
 

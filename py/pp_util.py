@@ -1,4 +1,5 @@
 import sys
+from lxml.builder import ElementMaker
 
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
@@ -44,12 +45,14 @@ def flatten(el):
 def ccver():
     return "Version 3.1, Revision 5"
 
-def get_js():
-    return ("""<script 
- src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
- type="text/javascript"></script>
-                <script type="text/x-mathjax-config">
-                    MathJax.Hub.Config({
+def add_js(parent):
+    E=ElementMaker()
+    parent.append( E.script(
+        {"src":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
+         "type":"text/javascript"})
+    )
+    parent.append(E.script({"type":"text/x-matjax-config"},
+                           """MathJax.Hub.Config({
                     extensions: ["tex2jax.js"],
                     jax: ["input/TeX", "output/HTML-CSS"],
                     showMathMenu: false,
@@ -64,11 +67,10 @@ def get_js():
                         "text-align": "left !important",
                         margin:       "0em 0em !important"
                     }}
-                    });
-                </script>
-                <script type="text/javascript">
-        // <![CDATA[
-        // Called on page load to parse URL parameters and perform actions on them.
+                    });"""))
+    parent.append(
+        E.script({"type":"text/javascript"},
+"""// Called on page load to parse URL parameters and perform actions on them.
         function init(){
             if(getQueryVariable("expand") == "on"){
               expand();
@@ -87,8 +89,6 @@ def get_js():
                 brk_els[aa].setAttribute("title", abbr_def);
             }
         }
-        // ]]>
-                // <![CDATA[
         const AMPERSAND=String.fromCharCode(38);
         
         // Pass a URL variable to this function and it will return its value
@@ -131,6 +131,5 @@ def get_js():
         	element = element.parentElement;
             }
         }
-        // ]]>
-                </script>
-""")
+"""))
+    return 
