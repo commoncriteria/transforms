@@ -1,5 +1,33 @@
+
 import sys
 from lxml.builder import ElementMaker
+
+
+
+HTM_E=ElementMaker()
+
+def get_HTM_E():
+    return HTM_E
+
+def adopt(parent, child):
+    parent.append(child)
+    return child
+
+def append_text(node, text):
+    if text == None:
+        return
+    if len(node)==0:
+        if node.text == None:
+            node.text = text
+        else:
+            node.text += text
+    else:
+        if node[-1].tail == None:
+            node[-1].tail = text
+        else:
+            node[-1].tail += text
+
+
 
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
@@ -16,10 +44,16 @@ def make_attr_safe(attr):
 def localtag(tag):
     return  tag.split("}")[1]
 
-def get_attr_or(node, attr, default="", post=lambda x:x):
+def get_attr_or(node, attr, default=""):
     if attr in node.attrib:
-        return post(node.attrib[attr])
+        return node.attrib[attr]
     return default
+
+def maybe_add_attr(attrs, node, attr, default=None):
+    if attr in node.attrib:
+        attrs[attr]=node.attrib[attr]
+    elif default is not None:
+        attrs[attr]=default
 
 def is_attr(node, attr, val):
     if attr not in node.attrib:

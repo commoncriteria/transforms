@@ -2,6 +2,11 @@ import lxml.etree as ET
 import pp_util
 from pp_util import NS
 
+from lxml.builder import ElementMaker
+HTM_E=pp_util.get_HTM_E()
+
+adopt=pp_util.adopt
+
 # Represents external documents. Both those defined by XML and those defined just with the
 # tag
 class Edoc:
@@ -44,14 +49,11 @@ class Edoc:
         self.mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
-        
-        
-
-    def make_xref_edoc(self):
+    def make_xref_edoc(self, parent):
         node=self.node
         ret=""
         url=node.find("cc:url", NS).text
-        ret+="<a href=\""+pp_util.make_attr_safe(url)+"\">"
+        node = HTM_E.a({"href":url})
         if "name" in node.attrib:
             ret+=node.attrib["name"]
             ret+=" version "
@@ -69,8 +71,8 @@ class Edoc:
                 else:
                     raise Exception("Somethign else " + str(node)   )
             ret+=name+", version "+self.root.find(".//cc:PPVersion", NS).text
-        ret+="</a>"
-        return ret
+        node.text = ret
+        parent.append(node)
         
     def is_modified(self, sfr, broot):
         cc_id = sfr.attrib["cc-id"]
