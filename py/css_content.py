@@ -11,11 +11,6 @@ def fx_common_css(doc):
         color:black;
     }
 
-    <!-- h1{ -->
-    <!--    width: 100%; -->
-    <!--    border-bottom-style: solid; -->
-    <!--    border-bottom-color: black; -->
-    <!-- } -->
     body{
        max-width: 900px;
        margin: auto;
@@ -249,7 +244,6 @@ def fx_common_css(doc):
   		padding: 5px;
 	}
 
-   <!-- This is a description after an f-component -->
     .comp .description{
         padding-bottom: 20px;
         display: block;
