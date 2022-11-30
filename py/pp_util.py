@@ -85,14 +85,14 @@ def add_js(parent):
         {"src":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
          "type":"text/javascript"})
     )
-    parent.append(E.script({"type":"text/x-matjax-config"},
+    parent.append(E.script({"type":"text/x-mathjax-config"},
                            """MathJax.Hub.Config({
                     extensions: ["tex2jax.js"],
                     jax: ["input/TeX", "output/HTML-CSS"],
                     showMathMenu: false,
                     tex2jax: {
-                      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                      inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                      displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ],
                       processEscapes: true
                     },
                     styles: {
