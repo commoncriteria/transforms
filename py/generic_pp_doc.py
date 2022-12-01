@@ -59,15 +59,18 @@ class generic_pp_doc(object):
         self.globaltags = {}
         self.ids = {}
         self.boilerplate = boilerplate
-        self.edocs = {}
-        for external in root.findall(".//cc:*[cc:git]", NS):
-            self.edocs[external.attrib["id"]] = edoc.Edoc(external, workdir)
+        self.edocs = self.make_edocs(workdir)
         self.sel_sfrs = {}
         self.opt_sfrs = {}
         self.obj_sfrs = {}
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
+        self.categorize_sfrs()
+        self.outline = [0]
+
+        
+    def categorize_sfrs(self):
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
             
@@ -98,8 +101,14 @@ class generic_pp_doc(object):
                     break
             if should_register:
                 self.maybe_register_sfr_with_fam(sfr)
-                        
-
+        
+        
+    def make_edocs(self, workdir):
+        ret = {}
+        for external in self.root.findall(".//cc:*[cc:git]", NS):
+            ret[external.attrib["id"]] = edoc.Edoc(external, workdir)
+        return ret
+    
     def handle_unknown_depends(self, sfr, attr):
         raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
             
@@ -124,7 +133,20 @@ class generic_pp_doc(object):
         if fam not in self.fams_to_sfrs:
             self.fams_to_sfrs[fam]=[]
         self.fams_to_sfrs[fam].append(sfr)
+
+    def sec(self, *args):
+        ret = HTM_E.h2(*args)
+        ret.tag="h"+str(len(self.outline))
+        self.outline[-1]=self.outline[-1]+1
+        prefix=".".join(map(str, self.outline))
+        self.outline.append(0)
+        ret.text = prefix+" "+ret.text
+        print("Start section: " + ret.tag + "-" + ret.text)
+        return ret
     
+    def end_section(self):
+        self.outline.pop()
+        
     def start(self):
         head = HTM_E.head(
                 HTM_E.meta({"content":"text/html;charset=utf-8", "http-equiv":"Content-Type"}),
@@ -215,11 +237,12 @@ class generic_pp_doc(object):
             apptxt(parent,child.tail)
             
     def handle_section(self, node, title, id, parent):
-        title_el = HTM_E.h2({"id":id}, title)
+
+        title_el = self.sec({"id":id, "class":"indexable"},title)
         parent.append(title_el)
         self.handle_section_hook(title, node, parent)
-        print("Handling "+title)
         self.handle_content(node, parent)
+        self.end_section()
 
     def handle_section_hook(self, title, node, parent):
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
@@ -243,7 +266,7 @@ class generic_pp_doc(object):
     def handle_ext_comp_defs(self ,par):
         if self.rf("//cc:ext-comp-def") is None:
             return ""
-        par.append(HTM_E.h1({"id":"ext-comp-defs","class":"indexable","data-level":"A"},"Extended Component Definitions"))
+        par.append(self.sec({"id":"ext-comp-defs","class":"indexable","data-level":"A"},"Extended Component Definitions"))
         apptxt(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
         par.append(HTM_E.h2({"id":"ext-comp-defs-bg-","class":"indexable","data-level":"2"},"Extended Components Table"))
         apptxt(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
@@ -537,6 +560,9 @@ security policies map to the security objectives.""")
             to=node.attrib["to"]
         else:
             to=node.attrib["g"]
+            if to=='CC':
+                parent.append(HTM_E.a({'href':'#bibCC'},"[CC]"))
+                return
         if "format" in node.attrib:
             attrs["data-post"]=node.attrib["format"]
         refs = self.rx(".//cc:*[@id='"+to+"']|.//sec:*[local-name()='"+to+"']")
@@ -629,14 +655,14 @@ security policies map to the security objectives.""")
         tr = HTM_E.tr()
         parent.append(tr)
         id=full.replace(" ", "_")
-        text = "        <td><div id=\""+id+"\">"+full
-        
+        td = adopt(tr, HTM_E.td())
+        div = adopt(td, HTM_E.div({"id":id}))
+        apptxt(div, full)
         if "abbr" in node.attrib:
-            text+=" ("+node.attrib["abbr"]+")"
-        tr.append(HTM_E.td(HTM_E.div({"id":id}, text)))
-        deftd = HTM_E.td()
+            apptxt(div, " ("+node.attrib["abbr"]+")")
+        deftd = adopt(tr, HTM_E.td())
         self.handle_content(node, deftd)
-        tr.append(deftd)
+
 
       
     def template_html(self, node ,parent):
@@ -753,7 +779,6 @@ security policies map to the security objectives.""")
         elif tag == "{https://niap-ccevs.org/cc/v1}appendix":
             return self.template_appendix(node, parent)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
-            print("Handling " + tag)
             return self.template_html(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}xref":
             return self.template_xref(node, parent)
@@ -791,8 +816,7 @@ security policies map to the security objectives.""")
             return
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
              tag=="{https://niap-ccevs.org/cc/v1}description":
-            if self.handle_content(node, parent) is None:
-                pp_util.log("Problem with description")
+            self.handle_content(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
             self.template_selectables(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}assignable":
