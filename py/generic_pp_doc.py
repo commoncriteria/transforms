@@ -13,17 +13,38 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
 # SVG_NS="http://www.w3.org/2000/svg"
 # SVG="{%s}"%SVG_NS
 # OUT_NSMAP={None: SVG_NS}
-SVG_E=ElementMaker(namespace="http://www.w3.org/2000/svg")
+#SVG_E=ElementMaker(namespace="http://www.w3.org/2000/svg")
+NBSP=str(chr(0xA0))
+SVG_E=ElementMaker()
 HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 
 apptxt=pp_util.append_text
 
-def strnull(thing):
-    if thing is None:
-        return ""
-    else:
-        return thing
+        
+
+
+A_UPPERCASE = ord('A')
+ALPHABET_SIZE = 26
+
+def _decompose(number):
+    """Generate digits from `number` in base alphabet, least significants
+    bits first.
+
+    Since A is 1 rather than 0 in base alphabet, we are dealing with
+    `number - 1` at each iteration to be able to extract the proper digits.
+    """
+    while number:
+        number, remainder = divmod(number-1, ALPHABET_SIZE)
+        yield remainder
+
+
+def base_10_to_alphabet(number):
+    """Convert a decimal number to its base alphabet representation"""
+    return ''.join(
+            chr(A_UPPERCASE + part)
+            for part in _decompose(number+1)
+    )[::-1]
 
 def make_sort_key_stringnum(s):
     spl=s.split(".")
@@ -35,7 +56,7 @@ def make_sort_key_stringnum(s):
 
 defargs={'fill':'black',
          'font-size':'15'}
-boxargs={'height':'16','fill':'none','stroke':'black'}
+boxargs={'height':'17','fill':'none','stroke':'black'}
 
 
 def drawbox(parent, ybase,boxtext,ymid, xbase=0):
@@ -46,7 +67,7 @@ def drawbox(parent, ybase,boxtext,ymid, xbase=0):
 
     txt_el = SVG_E.text(boxtext, **defargs, x=str(xbase+4),y=str(ybase+24))
     parent.append(txt_el)
-    rec_el = SVG_E.rect(**boxargs, x=str(xbase+2),y=str(ybase+11),width=str(width))
+    rec_el = SVG_E.rect(**boxargs, x=str(xbase+2),y=str(ybase+10),width=str(width))
     parent.append(rec_el)
     if xbase>0:
         ln_el=SVG_E.line(x1='152',y1=str(ymid+17),x2=str(xbase+1),y2=str(ybase+17), stroke='black')
@@ -68,7 +89,7 @@ class generic_pp_doc(object):
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
         self.categorize_sfrs()
         self.outline = [0]
-
+        self.is_appendix = False
         
     def categorize_sfrs(self):
         for sfr in self.man_sfrs:
@@ -135,17 +156,40 @@ class generic_pp_doc(object):
         self.fams_to_sfrs[fam].append(sfr)
 
     def sec(self, *args):
+        # h2 doesn't matter as the tag is changed
         ret = HTM_E.h2(*args)
-        ret.tag="h"+str(len(self.outline))
+        depth = len(self.outline)
+        ret.tag="h"+str(depth)
+
+            
         self.outline[-1]=self.outline[-1]+1
-        prefix=".".join(map(str, self.outline))
+        if self.is_appendix:
+            prefix=base_10_to_alphabet(self.outline[0])
+            if len(self.outline)==1:
+                prefix="Appendix " + prefix + " - " + NBSP
+            else:
+                prefix+="."+ ".".join(map(str, self.outline[1:]))
+        else:
+            prefix=".".join(map(str, self.outline))
+
+        if "id" not in ret.attrib:
+            ret.attrib["id"]="sec_"+prefix.replace(" ","_")+"-"
+            
         self.outline.append(0)
+        toc_entry=""
+        for aa in range(depth):
+            toc_entry += NBSP+ NBSP
+        toc_entry +=  prefix + NBSP+ NBSP + NBSP + ret.text        
         ret.text = prefix+" "+ret.text
-        print("Start section: " + ret.tag + "-" + ret.text)
+
+        self.toc.append(HTM_E.a({"href":"#"+ret.attrib["id"]}, toc_entry))
         return ret
     
     def end_section(self):
-        self.outline.pop()
+        if len(self.outline)==0:
+            print("Poping from zero.")
+        else:
+            self.outline.pop()
         
     def start(self):
         head = HTM_E.head(
@@ -210,7 +254,7 @@ class generic_pp_doc(object):
             table.append(tr)
         body.append(table)
         body.append(HTM_E.h2("Contents"))
-        body.append(HTM_E.div({"class":"toc","id":"toc"}))
+        self.toc = adopt(body, (HTM_E.div({"class":"toc","id":"toc"})))
         return 
 
         
@@ -238,12 +282,16 @@ class generic_pp_doc(object):
             
     def handle_section(self, node, title, id, parent):
 
-        title_el = self.sec({"id":id, "class":"indexable"},title)
+        title_el = self.sec({"id":id},title)
         parent.append(title_el)
         self.handle_section_hook(title, node, parent)
         self.handle_content(node, parent)
+        self.handle_post_section_hook(title, node, parent)
         self.end_section()
 
+    def handle_post_section_hook(self, title, node, parent):
+        pass
+        
     def handle_section_hook(self, title, node, parent):
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return 
@@ -266,15 +314,16 @@ class generic_pp_doc(object):
     def handle_ext_comp_defs(self ,par):
         if self.rf("//cc:ext-comp-def") is None:
             return ""
-        par.append(self.sec({"id":"ext-comp-defs","class":"indexable","data-level":"A"},"Extended Component Definitions"))
+        par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
         apptxt(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
-        par.append(HTM_E.h2({"id":"ext-comp-defs-bg-","class":"indexable","data-level":"2"},"Extended Components Table"))
+        par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
         apptxt(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
         table = adopt(par, HTM_E.table({"class":"sort_kids_"}))
         caption = adopt(table, HTM_E.captions({"data-sortkey":"#0"}))
         b_el = adopt(caption, HTM_E.b())
         self.create_ctr("Table","t-ext-comp_map", b_el)
+        
         apptxt(b_el, ": Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
                               HTM_E.th("Functional Class"),
@@ -292,30 +341,22 @@ class generic_pp_doc(object):
             for ecd in ecds:
                 table.append(HTM_E.tr( HTM_E.td(ecd.attrib["fam-id"]+ " - " + ecd.attrib["title"])))
                 # ret+="<tr><td>"+ecd.attrib["fam-id"] + " - " + ecd.attrib["title"]+"</td></tr>\n"
-                self.handle_ecd(ecd, sec.attrib["title"], defsec)
-        par.append(HTM_E.h2({"id":"ext-comp-defs-bg","class":"indexable","data-level":"2"}, "Extended Component Definitions"))
+        self.end_section()
+        par.append(self.sec({"id":"ext-comp-defs-bg"}, "Extended Component Definitions"))
+        for sec in ecdsecs:
+            ecds=sec.findall("cc:ext-comp-def", NS)
+            classid = sec.attrib["title"].split(")")[0].split("(")[1]
+            span=adopt(par, HTM_E.span({"data-sortkey":sec.attrib["title"]}))
+            span.append(self.sec({"id":"ext-comp-"+classid},sec.attrib["title"]))
+            for ecd in ecds:
+                self.handle_ecd(ecd, classid, span)
+            self.end_section()
         par.append(HTM_E.span({"class":"sort_kids_"}))
-        par.append(defsec)
-
-        #         <xsl:call-template name="RecursiveGrouping"><xsl:with-param name="list" select="//*[cc:ext-comp-def]"/></xsl:call-template>
-        #         ret+="</table>\n"
-
-        #         <xsl:call-template name="RecursiveGrouping">
-        #       <xsl:with-param name="list" select="//*[cc:ext-comp-def]"/>
-        #       <xsl:with-param name="fake_mode" select="'sections'"/>
-        #     </xsl:call-template>
-        # <!--
-        #     <xsl:variable name="alltitles"><xsl:for-each select="//*[./cc:ext-comp-def]/@title"><xsl:sort/><xsl:value-of select="."/>@@</xsl:for-each></xsl:variable>
-
-        #     <xsl:call-template name="extcompdef_no_repeats">
-        #       <xsl:with-param name="titles" select="$alltitles"/>
-        #     </xsl:call-template> -->
-
-    def handle_ecd(self, famnode, title, par):
-        famId = famnode.attrib["fam-id"].lower()
-        classid = title.split(")")[0].split("(")[1]
-        span=adopt(par, HTM_E.span({"data-sortkey":title}))
-        span.append(HTM_E.h3({"id":"ext-comp-"+classid,"class":"indexable","data-level":"3"},title))
+        self.end_section()
+        
+    def handle_ecd(self, famnode, classid, span):
+        famId = famnode.attrib["fam-id"]
+        span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
         desc = famnode.find("cc:class-description",NS)
         self.handle_content(desc, span, defcon="This "+self.doctype() +\
                             " defines the following extended components as part of the "+\
@@ -326,7 +367,7 @@ class generic_pp_doc(object):
             div.append(HTM_E.h4("Family Behavior"))
             div_fam = adopt(div, HTM_E.div())
             self.handle_content(famBi, div_fam)
-            sfrs = self.fams_to_sfrs[famId]
+            sfrs = self.fams_to_sfrs[famId.lower()]
             sfrs.sort(key=lambda fcom: make_sort_key_stringnum(fcom.attrib["cc-id"]))
             div_fam.append(HTM_E.h4("Component Leveling"))
             svg_el=SVG_E.svg(style="max-height: "+str(20*len(sfrs)+10)+"px;")
@@ -347,6 +388,8 @@ class generic_pp_doc(object):
             div_fam.append(sfr_mng_aud_text)
         else:
             self.handle_content(famnode.find("cc:mod-def",NS), div)
+        self.end_section()
+        
 
 
 
@@ -413,20 +456,27 @@ class generic_pp_doc(object):
                     raise Exception("Can't find title")
                 self.handle_content(title, par)
             ctr+=1
+
+    def start_appendixes(self):
+        self.outline[0]=-1
+        self.is_appendix = True
+
             
     def opt_app(self,level,word,sfrs, par, suffix=""):
-        par.append(HTM_E.h4({"id":word.replace(" ","-")+"-","class":"indexable","data-level":"level"},word+" Requirements"))
+        par.append(self.sec({"id":word.replace(" ","-")+"-"},word+" Requirements"))
         if len(sfrs)==0:
             apptxt(par, "This PP-Module does not define any "+word+" SFRs.\n")
         else:
             self.handle_sparse_sfrs(sfrs, par)
+        self.end_section()
 
 
     def handle_optional_requirements(self, par):
-        par.append(HTM_E.h1({"id":"optional-appendix-","class":"indexable", "data-level":"1"},"Optional SFRs"))
+        par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
         self.opt_app("2", "Strictly Optional", self.opt_sfrs, par)
         self.opt_app("2", "Objective", self.obj_sfrs, par)
         self.opt_app("2", "Implementation-based", self.impl_sfrs, par)
+        self.end_section()
 
     def handle_selection_based_requirements(self, node, par):
         return self.opt_app("1", "Selection-based", self.sel_sfrs, par)
@@ -458,7 +508,7 @@ security objectives for the environment.
                                         ))
         
     def create_bibliography(self, par):
-        par.append(HTM_E.h1({"id":"appendix-bibliography","class":"indexable","data-level":"A"},"Bibliography"))
+        par.append(HTM_E.h1({"id":"appendix-bibliography"},"Bibliography"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Identifier"),HTM_E.th("Title")))
         entries = (self.rfa("//cc:bibliography/cc:entry") +
@@ -471,7 +521,7 @@ security objectives for the environment.
             self.handle_content(entry.find("cc:description",NS), td)
         
     def create_acronym_listing(self, par):
-        par.append(HTM_E.h1({"id":"acronyms","class":"indexable","data-level":"A"},"Acronyms"))
+        par.append(HTM_E.h1({"id":"acronyms"},"Acronyms"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Acronym"), HTM_E.th("Meaning")))
         suppress_el=self.rf("//cc:suppress")
@@ -496,8 +546,6 @@ security objectives for the environment.
             
             
     def handle_security_objectives_rationale(self, node, parent):
-        parent.append(HTM_E.h2({"class":"indexable h2","data-level":"2"},
-                               "Security Objectives Rationale"))
         apptxt(parent, """This section describes how the assumptions, threats, and organizational 
 security policies map to the security objectives.""")
         table = adopt(parent, HTM_E.table())
@@ -633,9 +681,9 @@ security policies map to the security objectives.""")
     def template_tech_terms(self, node, parent):
         divy = HTM_E.div({"class":"no-link"})
         parent.append(divy)
-        divy.append(HTM_E.h2({"id":"glossary", "class":"indexable", "data-level":"2"}, "Terms"))
+        divy.append(self.sec({"id":"glossary"}, "Terms"))
         apptxt(divy,"The following sections list Common Criteria and technology terms used in this document.")
-        divy.append(HTM_E.h3({"id":"cc-terms","class":"indexable","data-level":"3"},"Common Criteria Terms"))
+        divy.append(self.sec({"id":"cc-terms"},"Common Criteria Terms"))
         tabley = HTM_E.table()
         divy.append(tabley)
         igs=""
@@ -645,10 +693,13 @@ security policies map to the security objectives.""")
         fromdoc = self.rx(".//cc:cc-terms/cc:term[text()]")
         builtin=self.boilerplate.xpath(".//cc:cc-terms/cc:term[text()]", namespaces=NS)
         self.make_term_table(fromdoc+builtin, tabley, ignores=igs,)
-        divy.append(HTM_E.h3({"id":"tech-terms","class":"indexable","data-level":"3"},"Technical Terms"))
+        self.end_section()
+        divy.append(self.sec({"id":"tech-terms"},"Technical Terms"))
         tabley = HTM_E.table({"style":"width: 100%"})
         divy.append(tabley)
         self.make_term_table(node.xpath(".//cc:term[text()]", namespaces=NS), tabley)
+        self.end_section()
+        self.end_section()
         
     def template_glossary_entry(self, node, parent):
         full = node.attrib["full"]
@@ -757,10 +808,15 @@ security policies map to the security objectives.""")
             title = self.get_section_title(sec)
             id = self.get_section_base_id(sec)
             if title not in titles:
+                if len(titles)>0:
+                    self.end_section()
                 titles[title]=1
-                par.append(HTM_E.h4({"id":id}, title))
+                par.append(self.sec({"id":id}, title))
             self.handle_fcomponent(sfr, par)
+        if len(titles)>0:
+            self.end_section()
 
+# WE HAVE TO CLOSE THESE SECTIONS            
                 
         
     def apply_templates_single(self, node, parent):
@@ -875,7 +931,7 @@ security policies map to the security objectives.""")
     def template_appendix(self, node, parent):
         id=self.derive_id(node)
         title=node.attrib["title"]
-        parent.append(HTM_E.h1({"id":id, "class":"indexable", "data-level":"A"},title))
+        parent.append(HTM_E.h1({"id":id},title))
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return
         self.handle_section_hook_base(title, node, parent)

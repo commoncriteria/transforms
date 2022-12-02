@@ -7,6 +7,7 @@ HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 apptext=pp_util.append_text
 
+
 class ppmod(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, boilerplate):
         super().__init__(root, workdir, boilerplate)
@@ -30,8 +31,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         else:
             return "PP-Module for " + self.root.attrib["target-product"] + "s"
 
-    def requirement_consistency_rationale_section(self, reqs, nonmsg, par, edoc=None):
-
+    def requirement_consistency_rationale_section(self, reqs, nonmsg_end, par, edoc=None):
+        nonmsg = "This PP-Module does not "+nonmsg_end
         if len(reqs)==0:
             par.append(HTM_E.tr(HTM_E.td({"colspan":"2", "style":"text-align:center"},nonmsg)))
             return
@@ -49,21 +50,23 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 self.handle_content(req.find("cc:consistency-rationale", generic_pp_doc.NS), td)
     
     def template_sfrs(self, node ,par):
-        par.append(HTM_E.h2({"class":"indexable","data-level":"2"},"Security Functional Requirements"))
-        apptext(par, """The Security Functional Requirements included in this section
-are derived from Part 2 of the Common Criteria for Information
-Technology Security Evaluation """+pp_util.ccver()+", with additional extended functional components.")
+#         par.append(self.sec({"class":"indexable","data-level":"2"},"Security Functional Requirements"))
+#         apptext(par, """The Security Functional Requirements included in this section
+# are derived from Part 2 of the Common Criteria for Information
+# Technology Security Evaluation """+pp_util.ccver()+", with additional extended functional components.")
         # self.handle_content(node)
         bases = self.rfa("//cc:base-pp")
         for base in bases:
             self.handle_basepp(base ,par)
-        par.append(HTM_E.h2({"id":"man-sfrs","class":"indexable","data-level":"2"},"TOE Security Functional Requirements"))
+        par.append(self.sec({"id":"man-sfrs"},"TOE Security Functional Requirements"))
         if len(self.man_sfrs)>0:
             apptext(par,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
                              "These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
             self.handle_sparse_sfrs(self.man_sfrs, par)
         else:
-            apptext(par,"This PP-Module does not define any mandatory SFRs.")
+            apptext(par," This PP-Module does not define any mandatory SFRs.")
+        self.end_section()
+
             
     def apply_template_to_element(self, node, parent):
         if node.tag == "{https://niap-ccevs.org/cc/v1}Module":
@@ -91,34 +94,35 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
         id = node.attrib["id"]
         base=self.edocs[id]
         short=base.short
-        par.append(HTM_E.h2({"id":"secreq-"+id,
-                             "class":"indexable",
-                             "data-level":"2"},short+" Security Functional Requirements Direction"))
+        par.append(self.sec({"id":"secreq-"+id},short+" Security Functional Requirements Direction"))
         if not self.apply_templates_single(node.find("cc:sec-func-req-dir", generic_pp_doc.NS), par):
             apptext(par,"In a PP-Configuration that includes the ")
             apptext(par,short)
             apptext(par,",the TOE is expected to rely on some of the security functions implemented by the")
             apptext(par,base.product)
             apptext(par,"as a whole and evaluated against the  " + short + ".")
-            apptext(par,"The following sections describe any modifications that the ST author must make to the SFRs")
-            apptext(par,"defined in the "+short+ "in addition to what is mandated by ")
+            apptext(par," The following sections describe any modifications that the ST author must make to the SFRs")
+            apptext(par," defined in the "+short+" in addition to what is mandated by ")
             par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"Section "))
             apptext(par,".")
-            par.append(HTM_E.h3({"id":"modsfr-"+id,"class":"indexable","data-level":"3"},"Modified SFRs"))
-        apptext(par,"The SFRs listed in this section are defined in the "+short +\
-            " and are relevant to the secure operation of the TOE.")
-        if len(base.mod_sfrs)==0:
-            apptext(par,"This PP-Module does not modify any SFRs defined by the " + short  + ".")
-        else:
-            self.handle_sparse_sfrs(base.mod_sfrs ,par)
+            par.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
+            apptext(par,"The SFRs listed in this section are defined in the "+short +\
+                    " and are relevant to the secure operation of the TOE.")
+            if len(base.mod_sfrs)==0:
+                apptext(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
+            else:
+                self.handle_sparse_sfrs(base.mod_sfrs ,par)
+            self.end_section()
                 
         if len(self.rfa("//cc:base-pp"))>1:
-            par.append(HTM_E.h3({"id":"addsfr-"+id,"class":"indexable","data-level":"3"},"Additional SFRs"))
+            par.append(self.sec({"id":"addsfr-"+id},"Additional SFRs"))
             if len(base.add_sfrs)>0:
                 apptext(par,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
                 self.handle_sparse_sfrs(base.add_sfrs, par)
             else:
                 apptext(par,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
+            self.end_section()
+        self.end_section()
     
     def handle_conformance_claims(self, node, parent):
         dl=HTM_E.dl()
@@ -165,7 +169,7 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
         addr_bys = self.rx("//cc:SO/cc:addressed-by")
         if len(addr_bys)==0:
             return
-        par.append(HTM_E.h2({"id":"obj-req-map-","class":"indexable","data-level":"2"}, "TOE Security Functional Requirements Rationale"))
+        par.append(self.sec({"id":"obj-req-map-"}, "TOE Security Functional Requirements Rationale"))
         par.append(HTM_E.p("""The following rationale provides justification for each 
  security objective for the TOE, showing that the SFRs are suitable to meet and
  achieve the security objectives:"""))
@@ -190,6 +194,7 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
             td = adopt(tr, HTM_E.td())
             rational=addr_by.xpath("following-sibling::cc:rationale[1]",namespaces=generic_pp_doc.NS)
             self.handle_content(rational[0], td)
+        self.end_section()
 
     def handle_consistency_row(self, base, thing, par):
         name=thing.attrib["name"]
@@ -204,109 +209,130 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
     def handle_consistency_rows(self, base, rows, par):
         for row in rows:
             self.handle_consistency_row(base, row, par)
-            
+
+    def consistency_of_toe_type(self, par, base, id):
+        par.append(self.sec({"id":"contoe-"+id+"-"}, "Consistency of TOE Type"))
+        self.handle_content(base.find("cc:con-toe",generic_pp_doc.NS), par)
+        self.end_section()
+
+    def consistency_of_security_problem_def(self, par, base, id):
+        par.append(self.sec({"id":"consecprob-"+id+"-"},
+                            "Consistency of Security Problem Definition"))
+        self.handle_content(base.find("cc:con-sec-prob",generic_pp_doc.NS), par)
+        table = adopt(par, HTM_E.table())
+        table.append(HTM_E.tr( HTM_E.th("PP-Module Threat, Assumption, OSP"),
+                               HTM_E.th("Consistency Rationale")))
+        things = self.rx("//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]")
+        self.handle_consistency_rows(base, things, table)
+        self.end_section()
+
+
+    def consistency_of_requirements(self, par, base, id, edoc):
+        par.append(self.sec({"id":"conreq-"+id}, 
+                            "Consistency of Requirements"))
+        self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), par)
+        apptext(par,"This PP-Module identifies several SFRs from the")
+        edoc.make_xref_edoc(par)
+        apptext(par," that are needed to support "+self.root.attrib["target-product"])
+        apptext(par," functionality.")
+        apptext(par," This is considered to be consistent because the functionality provided by the")
+        edoc.make_xref_edoc(par)
+        apptext(par," is being used for its intended purpose.")
+        if len(edoc.mod_sfrs)>0:
+            apptext(par," The PP-Module also identifies a number of modified SFRs from the")
+            edoc.make_xref_edoc(par)
+            if len(edoc.add_sfrs)>0:
+                apptext(par,"as well as new SFRs ")
+            apptext(par,"that are used entirely to provide functionality for "+edoc.get_products())
+        elif len(edoc.add_sfrs)>0:
+            apptext(par," The PP-Module identifies new SFRs that are used entirely to provide")
+            apptext(par," functionality for "+  edoc.get_products() + ".")
+        apptext(par," The rationale for why this does not conflict with the claims")
+        apptext(par," defined by the "+ edoc.short+" are as follows:")
+        table = adopt(par, HTM_E.table())
+        table.append(HTM_E.tr(HTM_E.th("PP-Module Requirement"),
+                              HTM_E.th("Consistency Rationale")))
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Modified SFRs")))
+        self.requirement_consistency_rationale_section(
+            edoc.mod_sfrs, 
+            "modify any requirements when the "+\
+            edoc.short + " is the base.",table, edoc=edoc)
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Additional SFRs")))
+        self.requirement_consistency_rationale_section(
+            edoc.add_sfrs, 
+            "levy any addition requirements when the "+\
+            edoc.short + " is the base.", table, edoc=edoc)
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Mandatory SFRs")))
+        self.requirement_consistency_rationale_section(
+            self.man_sfrs, 
+            "define any Mandatory requirements.",
+            table
+        )
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Optional SFRs")))
+        self.requirement_consistency_rationale_section(
+            self.opt_sfrs, 
+            "define any Strictly Optional requirements.",
+            table)
+
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Objective SFRs")))
+        self.requirement_consistency_rationale_section(
+            self.obj_sfrs, 
+            "define any Objective requirements.",
+            table)
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Implementation-based SFRs")))
+        self.requirement_consistency_rationale_section(
+            self.impl_sfrs, 
+            "define any Implementation-based requirements.",
+            table)
+        table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Selection-based SFRs")))
+        self.requirement_consistency_rationale_section(
+            self.sel_sfrs, 
+            "define any Implementation-based requirements.",
+            table)
+        self.end_section()
+
+
+    def consistency_of_objectives(self, par, base, id, edoc):
+        par.append(self.sec({"id":"conobj-"+id}, "Consistency of Objectives"))
+        p_el = adopt(par, HTM_E.p())
+        self.handle_content(base.find("./cc:con-obj",generic_pp_doc.NS), p_el)
+        sos_des = self.rfa("//cc:SO[cc:description]")
+        if len(sos_des):
+            apptext(p_el, "The objectives for the TOEs are consistent with the ")
+            edoc.make_xref_edoc(p_el)
+            apptext(p_el, " based on the following rationale:")
+            table=adopt(par, HTM_E.table())
+            table.append(HTM_E.tr(HTM_E.th("PP-Module TOE Objective"), HTM_E.th("Consistency Rationale")))
+            self.handle_consistency_rows(base, sos_des, table)
+        self.handle_content(base.find("./cc:con-op-en", generic_pp_doc.NS), par)
+        soes = self.rfa("//cc:SOE")
+        if len(soes)>0:
+            p_el = adopt(par, HTM_E.p("The objectives for the TOE's OE are consistent with the "))
+            edoc.make_xref_edoc(p_el)
+            apptext(p_el, " based on the following rationale:")
+            table = adopt(par, HTM_E.table())
+            table.append(HTM_E.tr(HTM_E.th("PP-Module OE Objective"), HTM_E.th("Consistency Rationale")))
+            self.handle_consistency_rows(base,soes, table)
+        self.end_section()
+
+        
+    def base_consistency_rationale(self, par, base):
+        id   = base.attrib["id"]
+        edoc = self.edocs[id]
+        self.set_underscore(edoc.short)
+        par.append(self.sec({"id":"conrat-"+id}, edoc.short))
+        self.consistency_of_toe_type(par, base, id)
+        self.consistency_of_security_problem_def(par, base, id)
+        self.consistency_of_objectives(par,base,id, edoc)
+        self.consistency_of_requirements(par,base,id, edoc)
+        self.end_section()
+
     def consistency_rationale(self, par):
-        par.append(
-            HTM_E.h1({"id":"mod-conrat","class":"indexable","data-level":"1"},"Consistency Rationale"))
+        par.append(self.sec({"id":"mod-conrat"},"Consistency Rationale"))
         bases = self.rfa("//cc:base-pp")
         for base in bases:
-            id   = base.attrib["id"]
-            edoc = self.edocs[id]
-            self.set_underscore(edoc.short)
-            par.append(HTM_E.h2({"id":"conrat-"+id,"class":"indexable","data-level":"2"}, edoc.short))
-            par.append(HTM_E.h3({"id":"contoe-"+id+"-","class":"indexable","data-level":"3"}, "Consistency of TOE Type"))
-
-            self.handle_content(base.find("cc:con-toe",generic_pp_doc.NS), par)
-            par.append(HTM_E.h3({"id":"consecprob-"+id+"-","class":"indexable","data-level":"3"},
-                                "Consistency of Security Problem Definition"))
-            self.handle_content(base.find("cc:con-sec-prob",generic_pp_doc.NS), par)
-            table = adopt(par, HTM_E.table())
-            table.append(HTM_E.tr( HTM_E.th("PP-Module Threat, Assumption, OSP"),
-                                   HTM_E.th("Consistency Rationale")))
-            things = self.rx("//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]")
-            self.handle_consistency_rows(base, things, table)
-            par.append(HTM_E.h3({"id":"conobj-"+id, "class":"indexable","data-level":"3"}, "Consistency of Objectives"))
-            p_el = adopt(par, HTM_E.p())
-            self.handle_content(base.find("./cc:con-obj",generic_pp_doc.NS), p_el)
-            sos_des = self.rfa("//cc:SO[cc:description]")
-            if len(sos_des):
-                apptext(p_el, "The objectives for the TOEs are consistent with the ")
-                edoc.make_xref_edoc(p_el)
-                apptext(p_el, " based on the following rationale:")
-                table=adopt(par, HTM_E.table())
-                table.append(HTM_E.tr(HTM_E.th("PP-Module TOE Objective"), HTM_E.th("Consistency Rationale")))
-                self.handle_consistency_rows(base, sos_des, table)
-            self.handle_content(base.find("./cc:con-op-en", generic_pp_doc.NS), par)
-            soes = self.rfa("//cc:SOE")
-            if len(soes)>0:
-                p_el = adopt(par, HTM_E.p("The objectives for the TOE's OE are consistent with the "))
-                edoc.make_xref_edoc(p_el)
-                apptext(p_el, " based on the following rationale:")
-                table = adopt(par, HTM_E.table())
-                table.append(HTM_E.tr(HTM_E.th("PP-Module OE Objective"), HTM_E.th("Consistency Rationale")))
-
-                self.handle_consistency_rows(base,soes, table)
-            par.append(HTM_E.h3({"id":"conreq-"+id, "class":"indexable","data-level":"3"}, 
-                                "Consistency of Requirements"))
-            self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), par)
-            apptext(par,"This PP-Module identifies several SFRs from the")
-            edoc.make_xref_edoc(par)
-            apptext(par," that are needed to support "+self.root.attrib["target-product"])
-            apptext(par," functionality.")
-            apptext(par,"This is considered to be consistent because the functionality provided by the")
-            edoc.make_xref_edoc(par)
-            apptext(par," is being used for its intended purpose.")
-            if len(edoc.mod_sfrs)>0:
-                apptext(par,"The PP-Module also identifies a number of modified SFRs from the")
-                edoc.make_xref_edoc(par)
-                if len(edoc.add_sfrs)>0:
-                    apptext(par,"as well as new SFRs ")
-                apptext(par,"that are used entirely to provide functionality for "+edoc.get_products())
-            elif len(edoc.add_sfrs)>0:
-                apptext(par,"The PP-Module identifies new SFRs that are used entirely to provide")
-                apptext(par," functionality for "+  edoc.get_products() + ".")
-            apptext(par,"The rationale for why this does not conflict with the claims")
-            apptext(par,"defined by the "+ edoc.short+" are as follows:")
-            table = adopt(par, HTM_E.table())
-            table.append(HTM_E.tr(HTM_E.th("PP-Module Requirement"),
-                                  HTM_E.th("Consistency Rationale")))
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Modified SFRs")))
-            self.requirement_consistency_rationale_section(
-                edoc.mod_sfrs, 
-                "This PP-Module does not modify any requirements when the "+\
-                edoc.short + " is the base.",table, edoc=edoc)
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Additional SFRs")))
-            self.requirement_consistency_rationale_section(
-                edoc.add_sfrs, 
-                "This PP-Module does not levy any addition requirements when the "+\
-                edoc.short + " is the base.", table, edoc=edoc)
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Mandatory SFRs")))
-            self.requirement_consistency_rationale_section(
-                self.man_sfrs, 
-                "This PP-Module does not define any Mandatory requirements.",
-                table
-            )
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Optional SFRs")))
-            self.requirement_consistency_rationale_section(
-                self.opt_sfrs, 
-                "This PP-Module does not define any Strictly Optional requirements.",
-                table)
-
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Objective SFRs")))
-            self.requirement_consistency_rationale_section(
-                self.obj_sfrs, 
-                "This PP-Module does not define any Objective requirements.",
-                table)
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Implementation-based SFRs")))
-            self.requirement_consistency_rationale_section(
-                self.impl_sfrs, 
-                "This PP-Module does not define any Implementation-based requirements.",
-                table)
-            table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Selection-based SFRs")))
-            self.requirement_consistency_rationale_section(
-                self.sel_sfrs, 
-                "This PP-Module does not define any Implementation-based requirements.",
-                table)
+            self.base_consistency_rationale(par, base)
+        self.end_section()
 
 
         
@@ -316,11 +342,11 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
         self.apply_templates(self.rx("//*[@title='Security Problem Description']|sec:Security_Problem_Description"),parent)
         self.apply_templates(self.rx("//*[@title='Security Objectives']|sec:Security_Objectives"),parent)
         self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"),parent)
-        self.objectives_to_requirements(parent)
         self.consistency_rationale(parent)
-        self.handle_ext_comp_defs(parent)
+        self.start_appendixes()
         self.handle_optional_requirements(parent)
         self.handle_selection_based_requirements(node, parent)
+        self.handle_ext_comp_defs(parent)
         self.apply_templates(self.rfa("//cc:appendix"), parent)
         self.create_acronym_listing(parent)
         self.create_bibliography(parent)
@@ -334,5 +360,11 @@ Technology Security Evaluation """+pp_util.ccver()+", with additional extended f
         else:
             return super().handle_section_hook_base(title,node ,parent)
 
-            
+    def handle_post_section_hook(self, title, node, parent):
+        if title=="Security Requirements":
+            self.objectives_to_requirements(parent)
+        else:
+            return super().handle_section_hook_base(title,node ,parent)
+
+        
             
