@@ -5,7 +5,6 @@ from generic_pp_doc import NS
 HTM_E=pp_util.get_HTM_E()
 
 adopt=pp_util.adopt
-apptext=pp_util.append_text
 
 
 class ppmod(generic_pp_doc.generic_pp_doc):
@@ -51,7 +50,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     
     def template_sfrs(self, node ,par):
 #         par.append(self.sec({"class":"indexable","data-level":"2"},"Security Functional Requirements"))
-#         apptext(par, """The Security Functional Requirements included in this section
+#         self.add_text(par, """The Security Functional Requirements included in this section
 # are derived from Part 2 of the Common Criteria for Information
 # Technology Security Evaluation """+pp_util.ccver()+", with additional extended functional components.")
         # self.handle_content(node)
@@ -60,11 +59,11 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.handle_basepp(base ,par)
         par.append(self.sec({"id":"man-sfrs"},"TOE Security Functional Requirements"))
         if len(self.man_sfrs)>0:
-            apptext(par,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
+            self.add_text(par,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
                              "These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
             self.handle_sparse_sfrs(self.man_sfrs, par)
         else:
-            apptext(par," This PP-Module does not define any mandatory SFRs.")
+            self.add_text(par," This PP-Module does not define any mandatory SFRs.")
         self.end_section()
 
             
@@ -96,20 +95,20 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         short=base.short
         par.append(self.sec({"id":"secreq-"+id},short+" Security Functional Requirements Direction"))
         if not self.apply_templates_single(node.find("cc:sec-func-req-dir", generic_pp_doc.NS), par):
-            apptext(par,"In a PP-Configuration that includes the ")
-            apptext(par,short)
-            apptext(par,",the TOE is expected to rely on some of the security functions implemented by the")
-            apptext(par,base.product)
-            apptext(par,"as a whole and evaluated against the  " + short + ".")
-            apptext(par," The following sections describe any modifications that the ST author must make to the SFRs")
-            apptext(par," defined in the "+short+" in addition to what is mandated by ")
+            self.add_text(par,"In a PP-Configuration that includes the ")
+            self.add_text(par,short)
+            self.add_text(par,",the TOE is expected to rely on some of the security functions implemented by the")
+            self.add_text(par,base.product)
+            self.add_text(par,"as a whole and evaluated against the  " + short + ".")
+            self.add_text(par," The following sections describe any modifications that the ST author must make to the SFRs")
+            self.add_text(par," defined in the "+short+" in addition to what is mandated by ")
             par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"Section "))
-            apptext(par,".")
+            self.add_text(par,".")
             par.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
-            apptext(par,"The SFRs listed in this section are defined in the "+short +\
+            self.add_text(par,"The SFRs listed in this section are defined in the "+short +\
                     " and are relevant to the secure operation of the TOE.")
             if len(base.mod_sfrs)==0:
-                apptext(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
+                self.add_text(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
             else:
                 self.handle_sparse_sfrs(base.mod_sfrs ,par)
             self.end_section()
@@ -117,10 +116,10 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(self.rfa("//cc:base-pp"))>1:
             par.append(self.sec({"id":"addsfr-"+id},"Additional SFRs"))
             if len(base.add_sfrs)>0:
-                apptext(par,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
+                self.add_text(par,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
                 self.handle_sparse_sfrs(base.add_sfrs, par)
             else:
-                apptext(par,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
+                self.add_text(par,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
             self.end_section()
         self.end_section()
     
@@ -150,18 +149,18 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         pks = self.rfa("//cc:include-pkg")
         ctr=len(pks)
         if ctr == 0:
-            apptext(dd, "does not claim conformance to any packages")
+            self.add_text(dd, "does not claim conformance to any packages")
         else:
             lagsep=""
             for pk in pks:
                 ctr=ctr-1
-                apptext(dd, lagsep)
+                self.add_text(dd, lagsep)
                 lagsep=","
                 if ctr==2 :
                     lagsep="and"
                 self.make_xref_edoc(pk, dd)
-            apptext("conformant")
-        apptext(dd,".")
+            self.add_text("conformant")
+        self.add_text(dd,".")
 
 
   # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
@@ -176,7 +175,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         table=adopt(par,HTM_E.table())
         caption=adopt(par,HTM_E.caption())
         self.create_ctr("Table", "t-obj-map", caption)
-        apptext(caption, ": SFR Rationale")
+        self.add_text(caption, ": SFR Rationale")
         table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
         prev_parent = None
         for addr_by in addr_bys:
@@ -231,24 +230,24 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         par.append(self.sec({"id":"conreq-"+id}, 
                             "Consistency of Requirements"))
         self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), par)
-        apptext(par,"This PP-Module identifies several SFRs from the")
+        self.add_text(par,"This PP-Module identifies several SFRs from the")
         edoc.make_xref_edoc(par)
-        apptext(par," that are needed to support "+self.root.attrib["target-product"])
-        apptext(par," functionality.")
-        apptext(par," This is considered to be consistent because the functionality provided by the")
+        self.add_text(par," that are needed to support "+self.root.attrib["target-product"])
+        self.add_text(par," functionality.")
+        self.add_text(par," This is considered to be consistent because the functionality provided by the")
         edoc.make_xref_edoc(par)
-        apptext(par," is being used for its intended purpose.")
+        self.add_text(par," is being used for its intended purpose.")
         if len(edoc.mod_sfrs)>0:
-            apptext(par," The PP-Module also identifies a number of modified SFRs from the")
+            self.add_text(par," The PP-Module also identifies a number of modified SFRs from the")
             edoc.make_xref_edoc(par)
             if len(edoc.add_sfrs)>0:
-                apptext(par,"as well as new SFRs ")
-            apptext(par,"that are used entirely to provide functionality for "+edoc.get_products())
+                self.add_text(par,"as well as new SFRs ")
+            self.add_text(par,"that are used entirely to provide functionality for "+edoc.get_products())
         elif len(edoc.add_sfrs)>0:
-            apptext(par," The PP-Module identifies new SFRs that are used entirely to provide")
-            apptext(par," functionality for "+  edoc.get_products() + ".")
-        apptext(par," The rationale for why this does not conflict with the claims")
-        apptext(par," defined by the "+ edoc.short+" are as follows:")
+            self.add_text(par," The PP-Module identifies new SFRs that are used entirely to provide")
+            self.add_text(par," functionality for "+  edoc.get_products() + ".")
+        self.add_text(par," The rationale for why this does not conflict with the claims")
+        self.add_text(par," defined by the "+ edoc.short+" are as follows:")
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("PP-Module Requirement"),
                               HTM_E.th("Consistency Rationale")))
@@ -298,9 +297,9 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.handle_content(base.find("./cc:con-obj",generic_pp_doc.NS), p_el)
         sos_des = self.rfa("//cc:SO[cc:description]")
         if len(sos_des):
-            apptext(p_el, "The objectives for the TOEs are consistent with the ")
+            self.add_text(p_el, "The objectives for the TOEs are consistent with the ")
             edoc.make_xref_edoc(p_el)
-            apptext(p_el, " based on the following rationale:")
+            self.add_text(p_el, " based on the following rationale:")
             table=adopt(par, HTM_E.table())
             table.append(HTM_E.tr(HTM_E.th("PP-Module TOE Objective"), HTM_E.th("Consistency Rationale")))
             self.handle_consistency_rows(base, sos_des, table)
@@ -309,7 +308,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(soes)>0:
             p_el = adopt(par, HTM_E.p("The objectives for the TOE's OE are consistent with the "))
             edoc.make_xref_edoc(p_el)
-            apptext(p_el, " based on the following rationale:")
+            self.add_text(p_el, " based on the following rationale:")
             table = adopt(par, HTM_E.table())
             table.append(HTM_E.tr(HTM_E.th("PP-Module OE Objective"), HTM_E.th("Consistency Rationale")))
             self.handle_consistency_rows(base,soes, table)

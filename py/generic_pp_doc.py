@@ -6,6 +6,7 @@ import pp_util
 from pp_util import log
 import math
 import edoc
+import re
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
@@ -19,7 +20,6 @@ SVG_E=ElementMaker()
 HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 
-apptxt=pp_util.append_text
 
         
 
@@ -50,6 +50,8 @@ def make_sort_key_stringnum(s):
     spl=s.split(".")
     return spl[0]+"."+spl[1].rjust(3)
 
+def backslashify(phrase):
+    return re.sub("([_.^()-])", r"\\\1", phrase)
     
 # def stringify(root):
 #     return ET.tostring(root, pretty_print=True, encoding='UTF-8').decode('utf-8')
@@ -87,9 +89,29 @@ class generic_pp_doc(object):
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
+
         self.categorize_sfrs()
         self.outline = [0]
         self.is_appendix = False
+        self.abbrs = {}                       # Full set of abbreviaiotns
+        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
+        self.used_abbrs = set()               # Set of abbreviations that we've seen
+        self.discoverables_to_ids = {}        # List of terms we're looking for
+        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
+        self.test_number_stack = [0]
+        self.register_abbrs()
+
+    def register_abbrs(self):
+        for term in self.root.findall(".//cc:term[@abbr]", NS):
+            abbr = term.attrib["abbr"]
+            self.register_keyterm(abbr, "long_abbr_"+abbr)
+
+    def register_keyterm(self, word, id):
+        if len(word) > 1 and not(word.startswith(".")):
+            self.discoverables_to_ids[word]=id
+
+    def add_text(self, node, text):
+        pp_util.append_text(node,text)
         
     def categorize_sfrs(self):
         for sfr in self.man_sfrs:
@@ -132,10 +154,69 @@ class generic_pp_doc(object):
     
     def handle_unknown_depends(self, sfr, attr):
         raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
-            
-    def to_html(self):
-        return self.start()
 
+
+    def is_non_xrefable_section(self, node):
+
+        if node.tag == "a"    or node.tag == "abbr"    or\
+           node.tag == "dt"   or node.tag == "no-link" or\
+           node.tag == "h1"   or node.tag == "h2"      or\
+           node.tag == "h3"   or node.tag == "h4"      or\
+           node.tag == "head" or node.tag == "script"  or\
+           node.tag == "svg":
+            return True
+        if "class" in node.attrib and node.attrib["class"]:
+            classes = node.attrib["class"].split(" ")
+            if "term" in classes:
+                return True
+        return False
+
+
+    def xrefs_in_text(self, node, content, regex, insertspot=0):
+        if content is None or self.is_non_xrefable_section(node):
+            return content
+        matches = regex.finditer(content)
+        origtext = content
+        try:
+            match=next(matches)
+        except:
+            return content
+        ret = origtext[:match.start()]
+        last=match.end()
+        matchtext = match.group()
+        id = self.discoverables_to_ids[matchtext]
+        prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
+        newnodes=[prevnode]
+        for match in matches:
+            prevnode.tail = origtext[last:match.start()]
+            id = self.discoverables_to_ids[match.group()]
+            prevnode = HTM_E.a({"href":"#"+id}, match.group())
+            newnodes.append(prevnode)
+        prevnode.tail = origtext[match.end():]
+        for newkids in newnodes:
+            node.insert(insertspot, newkids)
+            insertspot+=1
+        return ret
+            
+    def add_xrefs_recur(self, node, regex):
+        origchildren = node.iterchildren()
+        node.text = self.xrefs_in_text(node, node.text, regex)
+        for child in origchildren:
+            self.add_xrefs_recur(child, regex)
+            insertspot=node.index(child)+1
+            node.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
+        
+    def add_xrefs(self, node):
+        keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
+        regex_str = "(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        regex = re.compile(regex_str)
+        self.add_xrefs_recur(node, regex)        
+    
+    def to_html(self):
+        doc = self.start()
+        self.add_xrefs(doc)
+        return doc
+    
     def rf(self, findexp):
         return self.root.find( "."+findexp, NS)
     
@@ -273,12 +354,12 @@ class generic_pp_doc(object):
                 
     def handle_content(self, node, parent,defcon=""):
         if node is None:
-            apptxt(parent, defcon)
+            self.add_text(parent, defcon)
             return
-        apptxt(parent, node.text)
+        self.add_text(parent, node.text)
         for child in node:
             self.apply_templates_single(child,parent)
-            apptxt(parent,child.tail)
+            self.add_text(parent,child.tail)
             
     def handle_section(self, node, title, id, parent):
 
@@ -315,16 +396,16 @@ class generic_pp_doc(object):
         if self.rf("//cc:ext-comp-def") is None:
             return ""
         par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
-        apptxt(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
+        self.add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
-        apptxt(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
+        self.add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
         table = adopt(par, HTM_E.table({"class":"sort_kids_"}))
         caption = adopt(table, HTM_E.captions({"data-sortkey":"#0"}))
         b_el = adopt(caption, HTM_E.b())
         self.create_ctr("Table","t-ext-comp_map", b_el)
         
-        apptxt(b_el, ": Extended Component Definitions")
+        self.add_text(b_el, ": Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
                               HTM_E.th("Functional Class"),
                               HTM_E.th("Functional Components")))
@@ -465,7 +546,7 @@ class generic_pp_doc(object):
     def opt_app(self,level,word,sfrs, par, suffix=""):
         par.append(self.sec({"id":word.replace(" ","-")+"-"},word+" Requirements"))
         if len(sfrs)==0:
-            apptxt(par, "This PP-Module does not define any "+word+" SFRs.\n")
+            self.add_text(par, "This PP-Module does not define any "+word+" SFRs.\n")
         else:
             self.handle_sparse_sfrs(sfrs, par)
         self.end_section()
@@ -485,7 +566,7 @@ class generic_pp_doc(object):
     def handle_security_objectives_operational_environment(self, parent):
         soes=self.rfa("cc:SOEs")
         if len(soes)>0:
-            apptxt(parent,"""The OE of the TOE implements technical and procedural measure
+            self.add_text(parent,"""The OE of the TOE implements technical and procedural measure
 to assist the TOE in correctly providing its security functionality
 (which is defined by the security objectives for the TOE).
 The security objectives for the OE consist of a set of statements
@@ -496,7 +577,7 @@ The assumptions identified in Section 3 are incorporated as
 security objectives for the environment.
 """)
         else:
-            apptxt(parent, "This PP-Module does not define any objectives for the OE.")
+            self.add_text(parent, "This PP-Module does not define any objectives for the OE.")
 
         
     def create_ctr(self, ctrtype, id ,parent):
@@ -517,7 +598,8 @@ security objectives for the environment.
         for entry in entries:
             pp_util.log("Entry : "+pp_util.flatten(entry.find("cc:description", NS)))
             tr = adopt(table, HTM_E.tr())
-            td = adopt(tr, HTM_E.td( HTM_E.span({"id":self.derive_id(entry)},"["+entry.find("cc:tag", NS).text+"]")))
+            tr.append(HTM_E.td( HTM_E.span({"id":self.derive_id(entry)},"["+entry.find("cc:tag", NS).text+"]")))
+            td = adopt(tr, HTM_E.td())
             self.handle_content(entry.find("cc:description",NS), td)
         
     def create_acronym_listing(self, par):
@@ -539,19 +621,19 @@ security objectives for the environment.
             tr = adopt(table, HTM_E.tr())
 
             attrs = {"class":"term", "id":"abbr_"+abbr}
-            pp_util.maybe_add_attr(attrs, term_el, "plural")
-            pp_util.maybe_add_attr(attrs, term_el, "lower")
+            # pp_util.maybe_add_attr(attrs, term_el, "plural")
+            # pp_util.maybe_add_attr(attrs, term_el, "lower")
             tr.append(HTM_E.td(HTM_E.span(attrs, abbr)))
-            tr.append(HTM_E.td(HTM_E.span({"id":"long_abbr_abbr"}, full)))
+            tr.append(HTM_E.td(HTM_E.span({"id":"long_abbr_"+abbr}, full)))
             
             
     def handle_security_objectives_rationale(self, node, parent):
-        apptxt(parent, """This section describes how the assumptions, threats, and organizational 
+        self.add_text(parent, """This section describes how the assumptions, threats, and organizational 
 security policies map to the security objectives.""")
         table = adopt(parent, HTM_E.table())
         caption = adopt(table, HTM_E.caption())
         self.create_ctr("Table","t-sec-obj-rat", caption);
-        apptxt(caption, ": Security Objectives Rationale")
+        self.add_text(caption, ": Security Objectives Rationale")
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("Threat, Assumption, or OSP"))
         tr.append(HTM_E.td("Security Objectives"))
@@ -599,7 +681,7 @@ security policies map to the security objectives.""")
                 self.apply_templates(defined.findall("./cc:description",NS), dd)
                 self.apply_templates(defined.findall("./cc:appnote",NS), dd)
         else:
-            apptxt(parent, "This document does not define any additional " + pp_util.localtag(node.tag))
+            self.add_text(parent, "This document does not define any additional " + pp_util.localtag(node.tag))
             
         
     def template_xref(self, node, parent):
@@ -682,7 +764,7 @@ security policies map to the security objectives.""")
         divy = HTM_E.div({"class":"no-link"})
         parent.append(divy)
         divy.append(self.sec({"id":"glossary"}, "Terms"))
-        apptxt(divy,"The following sections list Common Criteria and technology terms used in this document.")
+        self.add_text(divy,"The following sections list Common Criteria and technology terms used in this document.")
         divy.append(self.sec({"id":"cc-terms"},"Common Criteria Terms"))
         tabley = HTM_E.table()
         divy.append(tabley)
@@ -706,11 +788,13 @@ security policies map to the security objectives.""")
         tr = HTM_E.tr()
         parent.append(tr)
         id=full.replace(" ", "_")
+
+        
         td = adopt(tr, HTM_E.td())
         div = adopt(td, HTM_E.div({"id":id}))
-        apptxt(div, full)
+        self.add_text(div, full)
         if "abbr" in node.attrib:
-            apptxt(div, " ("+node.attrib["abbr"]+")")
+            self.add_text(div, " ("+node.attrib["abbr"]+")")
         deftd = adopt(tr, HTM_E.td())
         self.handle_content(node, deftd)
 
@@ -899,7 +983,7 @@ security policies map to the security objectives.""")
 
         span = adopt(par, HTM_E.span({"class":"ctr","data-myid":id,"data-counter-type":"ct-"+ctrtype,
                                       "id":id}))
-        apptxt(span,self.get_pre(node))
+        self.add_text(span,self.get_pre(node))
         span.append(HTM_E.span({"class":"counter"}, id))
         self.handle_content(node, span)
 
@@ -921,12 +1005,12 @@ security policies map to the security objectives.""")
 
     def template_assignable(self, node, par):
         id=self.derive_id(node)
-        apptxt(par,"[")
+        self.add_text(par,"[")
         par.append(HTM_E.b("assignment"))
-        apptxt(par,": ")
+        self.add_text(par,": ")
         span=adopt(par, HTM_E.span({"class":"assignable-content","id":id}))
         self.handle_content(node, span)
-        apptxt(par,"]")
+        self.add_text(par,"]")
 
     def template_appendix(self, node, parent):
         id=self.derive_id(node)
@@ -939,11 +1023,11 @@ security policies map to the security objectives.""")
 
     
     def template_selectables(self, node, par):
-        apptxt(par,"[")
+        self.add_text(par,"[")
         par.append(HTM_E.b("selection"))
         if pp_util.is_attr(node, "onlyone", "yes"):
             par.append(HTM_E.b(", choose one of"))
-        apptxt(par, ": ")
+        self.add_text(par, ": ")
         sep=", "
         extraclass=""
         if pp_util.is_attr(node, "linebreak", "yes") \
@@ -957,9 +1041,9 @@ security policies map to the security objectives.""")
             id = self.derive_id(selectable)
             span = adopt(par,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
             self.handle_content(selectable, span)
-            apptxt(par,lagsep)
+            self.add_text(par,lagsep)
             lagsep=sep
-        apptxt(par,"]")
+        self.add_text(par,"]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
  #    </xsl:when>

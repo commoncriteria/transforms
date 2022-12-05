@@ -31,27 +31,27 @@ def log(level, msg):
     sys.stderr.write("\n")
 
 
-A_UPPERCASE = ord('A')
-ALPHABET_SIZE = 26
+# A_UPPERCASE = ord('A')
+# ALPHABET_SIZE = 26
 
-def _decompose(number):
-    """Generate digits from `number` in base alphabet, least significants
-    bits first.
+# def _decompose(number):
+#     """Generate digits from `number` in base alphabet, least significants
+#     bits first.
 
-    Since A is 1 rather than 0 in base alphabet, we are dealing with
-    `number - 1` at each iteration to be able to extract the proper digits.
-    """
-    while number:
-        number, remainder = divmod(number-1, ALPHABET_SIZE)
-        yield remainder
+#     Since A is 1 rather than 0 in base alphabet, we are dealing with
+#     `number - 1` at each iteration to be able to extract the proper digits.
+#     """
+#     while number:
+#         number, remainder = divmod(number-1, ALPHABET_SIZE)
+#         yield remainder
 
 
-def base_10_to_alphabet(number):
-    """Convert a decimal number to its base alphabet representation"""
-    return ''.join(
-            chr(A_UPPERCASE + part)
-            for part in _decompose(number+1)
-    )[::-1]
+# def base_10_to_alphabet(number):
+#     """Convert a decimal number to its base alphabet representation"""
+#     return ''.join(
+#             chr(A_UPPERCASE + part)
+#             for part in _decompose(number+1)
+#     )[::-1]
 
 # Does not do spaces which should be handled later
 def backslashify(phrase):
@@ -77,8 +77,8 @@ class State:
         self.test_number_stack = [0]
 
         self.fix_test_numbers(root)
-        self.sort_it_out() 
-        self.fix_indices()
+        # self.sort_it_out() 
+        # self.fix_indices()
         self.fix_index_refs()
         self.fix_counters()
         self.fix_tooltips()
@@ -111,10 +111,10 @@ class State:
     def write_out(self, outfile):
         if sys.version_info >= (3, 0):
             with open(outfile, "w+", encoding="utf-8") as outstream:
-                outstream.write(state.to_html())
+                outstream.write(self.to_html())
         else:
             with open(outfile, "w+") as outstream:
-                outstream.write(state.to_html().encode('utf-8'))
+                outstream.write(self.to_html().encode('utf-8'))
 
     def create_classmapping(self):
         self.classmap = {}
@@ -185,6 +185,7 @@ class State:
             #         self.add_to_regex(alias)
             # Endif
             self.add_to_regex(term.text)
+            print("Looking for " + term.text)
             longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
             self.abbrs[term.text] = longname.text
             if self.is_handling_first_abbrs:
@@ -330,7 +331,7 @@ class State:
 #    Have 'class' attribute with value is 'ctr'
 #    Have 'data-counter-type' attribute with value of counter-type
 #    Have a subelement with the 'class' attribute equal to counter (which is where the index is put)
-#    Have 'data-myid' attribute 
+#    Have a 'id' attribute 
 #
 # Counter References:
 #    Have 'class' attribute with value equal to the thing their referencing plus the string '-ref'
@@ -347,7 +348,7 @@ class State:
             # Find the subelement with the class attribute equal to 'counter'
             # And set it's value to the counter's value.
             countable.find("*[@class='counter']").text = count_str
-            self.fix_this_counter_refs(countable.attrib["data-myid"], count_str)
+            self.fix_this_counter_refs(countable.attrib["id"], count_str)
 
     def fix_this_counter_refs(self, ctr_id, count_str):
         refclass = ctr_id + "-ref"
@@ -359,7 +360,7 @@ class State:
             return
         for countable in self.main_doc.getElementsByClass('ctr'):
             new_text = countable.find("*[@class='counter']").text + " in the main document"
-            ctr_id = countable.attrib['data-myid']
+            ctr_id = countable.attrib['id']
             for ref in self.getElementsByClass(ctr_id+'-ref'):
                 ref.tag = "span"
                 sub_field = ref.find("*[@class='counter']") 
@@ -383,7 +384,7 @@ class State:
     def fix_index_refs(self):
         for brokeRef in self.getElementsByClass("dynref"):
             linkend = brokeRef.attrib["href"][1:]
-            target = root.find(".//*[@id='"+linkend+"']")
+            target = self.root.find(".//*[@id='"+linkend+"']")
             if target is None:
                 if hasattr(self, "main_doc") and self.main_doc != None:
                     target = self.main_doc.root.find(".//*[@id='"+linkend+"']")
@@ -406,57 +407,57 @@ class State:
             except AttributeError:
                 warn("Failed to find an element with the id of '"+linkend+"'")
 
-    def fix_indices(self):
-        toc = self.root.find(".//*[@id='toc']")                       # Find the table of contents
-        inums = [0, 0, 0, 0, 0, 0]                                    # Initialize the index number generator
-        is_alpha = False                                              # Initialize the is_alpha switch
-        eles = self.root.findall(".//*[@data-level]")                 # Gather all elements with a data-level
-        base = -1
-        for aa in range(len(eles)):                                   # Go through the elemeents
-            level = eles[aa].attrib["data-level"]
-            if level == 'A' and not is_alpha:                         # If this is the first time we see an appendix
-                inums = [-1, 0, 0, 0, 0]
-                is_alpha = True
-            if level == 'A':                                          # Turn it into an index
-                level = 0
-            else:
-                level = int(level)
-                if base == -1:
-                    base = level
-                level = level-base
-            while level > len(inums):                                 # If we have to pad out
-                inums.append(0)
-            if level+1 < len(inums):                                  # If we go up one set
-                inums[level+1] = 0
-            inums[level] += 1
-            if is_alpha and level == 0:
-                prefix = "Appendix " + base_10_to_alphabet(inums[0]) + " - "
-            elif is_alpha:
-                prefix = base_10_to_alphabet(inums[0])
-            else:
-                prefix = str(inums[0])
-            spacer = ""
-            for bb in range(1, level+1):
-                prefix = prefix + "." + str(inums[bb])
-                spacer = spacer + "&nbps;"
+    # def fix_indices(self):
+    #     toc = self.root.find(".//*[@id='toc']")                       # Find the table of contents
+    #     inums = [0, 0, 0, 0, 0, 0]                                    # Initialize the index number generator
+    #     is_alpha = False                                              # Initialize the is_alpha switch
+    #     eles = self.root.findall(".//*[@data-level]")                 # Gather all elements with a data-level
+    #     base = -1
+    #     for aa in range(len(eles)):                                   # Go through the elemeents
+    #         level = eles[aa].attrib["data-level"]
+    #         if level == 'A' and not is_alpha:                         # If this is the first time we see an appendix
+    #             inums = [-1, 0, 0, 0, 0]
+    #             is_alpha = True
+    #         if level == 'A':                                          # Turn it into an index
+    #             level = 0
+    #         else:
+    #             level = int(level)
+    #             if base == -1:
+    #                 base = level
+    #             level = level-base
+    #         while level > len(inums):                                 # If we have to pad out
+    #             inums.append(0)
+    #         if level+1 < len(inums):                                  # If we go up one set
+    #             inums[level+1] = 0
+    #         inums[level] += 1
+    #         if is_alpha and level == 0:
+    #             prefix = "Appendix " + base_10_to_alphabet(inums[0]) + " - "
+    #         elif is_alpha:
+    #             prefix = base_10_to_alphabet(inums[0])
+    #         else:
+    #             prefix = str(inums[0])
+    #         spacer = ""
+    #         for bb in range(1, level+1):
+    #             prefix = prefix + "." + str(inums[bb])
+    #             spacer = spacer + "&nbps;"
 
 
-            spany = ET.Element("span")                                # Fix inline index number
-            spany.text = eles[aa].text
+    #         spany = ET.Element("span")                                # Fix inline index number
+    #         spany.text = eles[aa].text
 
-            if eles[aa].text:
-                eles[aa].text = prefix + " " + eles[aa].text
-            else:
-                eles[aa].text = prefix
-            entry = ET.Element("a")
-            # Why would an ID have to be escaped?
-            # entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
-            entry.attrib['href'] = '#'+eles[aa].attrib['id']
-            entry.attrib['style'] = 'text-indent:'+str(level*10) + 'px'
+    #         if eles[aa].text:
+    #             eles[aa].text = prefix + " " + eles[aa].text
+    #         else:
+    #             eles[aa].text = prefix
+    #         entry = ET.Element("a")
+    #         # Why would an ID have to be escaped?
+    #         # entry.attrib['href'] = '#'+escape(eles[aa].attrib['id'])
+    #         entry.attrib['href'] = '#'+eles[aa].attrib['id']
+    #         entry.attrib['style'] = 'text-indent:'+str(level*10) + 'px'
 
-            entry.text = prefix
-            entry.append(spany)
-            toc.append(entry)
+    #         entry.text = prefix
+    #         entry.append(spany)
+    #         toc.append(entry)
 
     def handle_element(self, elem):
         pass

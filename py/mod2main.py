@@ -6,7 +6,6 @@ import lxml.etree as ET
 import argparse
 import pp_module
 import pp_util
-import post_process
 
             
         
@@ -21,6 +20,7 @@ def make_mod(path):
     else:
         raise Exception("Unhandled")
     html_doc = pp.to_html()
+    
     out = open("/tmp/abc.xml", "w+")
     out.write("<!DOCTYPE html>\n"+ET.tostring(html_doc, pretty_print=True).decode())
     out.close()
