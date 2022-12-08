@@ -295,6 +295,23 @@ class generic_pp_doc(object):
     def title(self):
         return self.root.attrib["name"]
 
+    def handle_figure(self, el, par):
+        id=el.attrib["id"]
+        div=adopt(par, HTM_E.div({"class":"figure","id":"figure-"+id}))
+        attrs={"id":id, "src":el.attrib["entity"]}
+        div.append(HTM_E.img(attrs))
+        div.append(HTM_E.br())
+        self.create_ctr("figure", 
+
+        <xsl:call-template name="make_ctr">
+        <xsl:with-param name="id" select="@id"/>
+        <xsl:with-param name="type" select="'ct-figure'"/>
+        <xsl:with-param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:with-param>
+      </xsl:call-template>:
+         self.append_text(el.attrib["title"])
+
+
+    
     def handle_comments(self, body):
         comments_els = self.rfa("//cc:comment")
         if not comments_els:
@@ -582,7 +599,6 @@ security objectives for the environment.
         
     def create_ctr(self, ctrtype, id ,parent):
         span = adopt(parent, HTM_E.span({"class":"ctr",
-                                         "data-myid":id,
                                          "data-counter-type":"ct-"+ctrtype,
                                          "id":id}, ctrtype,
                                         HTM_E.span({"class":"counter"},id)
@@ -937,14 +953,15 @@ security policies map to the security objectives.""")
             return self.template_sfrs(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}f-component" or\
              tag=="{https://niap-ccevs.org/cc/v1}ext-comp-def" or\
-             tag=="{https://niap-ccevs.org/cc/v1}base-pp":
-            return ""
+             tag=="{https://niap-ccevs.org/cc/v1}base-pp" or\
+             tag=="{https://niap-ccevs.org/cc/v1}depends":
+            return 
         elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
-            return self.template_felement(node, parent)
+            self.template_felement(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}title": 
-            return self.apply_templates(node, parent)
+            self.apply_templates(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
-            return self.template_management_function_set(node, parent)
+            self.template_management_function_set(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}ctr":
             self.template_ctr(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}no-link":
@@ -953,7 +970,8 @@ security policies map to the security objectives.""")
         elif tag=="{https://niap-ccevs.org/cc/v1}manager":
             td = adopt(parent, HTM_E.td())
             self.handle_content(node, td)
-            return
+        elif tag=="{https://niap-ccevs.org/cc/v1}figure":
+            self.handle_figure(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
              tag=="{https://niap-ccevs.org/cc/v1}description":
             self.handle_content(node, parent)

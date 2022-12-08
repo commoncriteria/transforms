@@ -1,5 +1,6 @@
 import generic_pp_doc
 import pp_util
+import edoc
 from generic_pp_doc import NS
 
 HTM_E=pp_util.get_HTM_E()
@@ -19,7 +20,13 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         else:
             raise Exception("Dont know how to handle: "+ sfr["cc-id"])
 
-
+    def make_edocs(self, workdir):
+        ret = super().make_edocs(workdir)
+        nonxmldocs = self.rfa("//cc:base-pp[@name]")
+        for doc in nonxmldocs:
+            print("Adding " + doc.attrib["id"])
+            ret[doc.attrib["id"]] = edoc.Edoc(doc, workdir)
+        return ret
         
     def title(self):
         node = self.rf("//cc:PPTitle")
