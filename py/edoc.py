@@ -6,14 +6,15 @@ from lxml.builder import ElementMaker
 HTM_E=pp_util.get_HTM_E()
 
 adopt=pp_util.adopt
-
+append_text=pp_util.append_text
 # Represents external documents. Both those defined by XML and those defined just with the
 # tag
 class Edoc:
 #            basedep_sfrs = self.rx("//cc:f-component[cc:depends/@*='"+id+"']")
 
     def __init__(self, node, workdir):
-        self.node = node
+        self.orig = node
+        print("Node is " + node.tag)
         self.root = None
         # Should this be a dictionary?
         self.decl_modsfrs={}
@@ -50,14 +51,13 @@ class Edoc:
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
     def make_xref_edoc(self, parent):
-        node=self.node
-        ret=""
-        url=node.find("cc:url", NS).text
+        url=self.orig.find("cc:url", NS).text
         node = HTM_E.a({"href":url})
-        if "name" in node.attrib:
-            ret+=node.attrib["name"]
-            ret+=" version "
-            ret+=node.attrib["version"]
+        print("Node tag: " + node.tag)
+        if "name" in self.orig.attrib:
+            ret =self.orig.attrib["name"]
+            ret+=", version"
+            ret+=self.orig.attrib["version"]
         else:
             modrot = self.root.find(".//cc:Module", NS)
             if modrot is not None:
@@ -70,7 +70,7 @@ class Edoc:
                     name = modrot.text
                 else:
                     raise Exception("Somethign else " + str(node)   )
-            ret+=name+", version "+self.root.find(".//cc:PPVersion", NS).text
+            ret=name+", version "+self.root.find(".//cc:PPVersion", NS).text
         node.text = ret
         parent.append(node)
         

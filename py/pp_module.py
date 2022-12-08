@@ -24,7 +24,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         ret = super().make_edocs(workdir)
         nonxmldocs = self.rfa("//cc:base-pp[@name]")
         for doc in nonxmldocs:
-            print("Adding " + doc.attrib["id"])
+            print("Adding " + doc.attrib["id"] + " as " + doc.tag)
             ret[doc.attrib["id"]] = edoc.Edoc(doc, workdir)
         return ret
         

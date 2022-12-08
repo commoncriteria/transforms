@@ -335,18 +335,12 @@ class generic_pp_doc(object):
 
     def handle_figure(self, el, par):
         id=el.attrib["id"]
-        div=adopt(par, HTM_E.div({"class":"figure","id":"figure-"+id}))
-        attrs={"id":id, "src":el.attrib["entity"]}
+        div=adopt(par, HTM_E.div({"class":"figure","id":"div_fig_"+id}))
+        attrs={"id":"fig_"+id, "src":el.attrib["entity"]}
         div.append(HTM_E.img(attrs))
         div.append(HTM_E.br())
-        self.create_ctr("figure", 
-
-        <xsl:call-template name="make_ctr">
-        <xsl:with-param name="id" select="@id"/>
-        <xsl:with-param name="type" select="'ct-figure'"/>
-        <xsl:with-param name="prefix"><xsl:apply-templates select="." mode="getPre"/></xsl:with-param>
-      </xsl:call-template>:
-         self.append_text(el.attrib["title"])
+        self.create_ctr("figure", id, div, "Figure ")
+        self.add_text(div, el.attrib["title"])
 
 
     
@@ -410,14 +404,17 @@ class generic_pp_doc(object):
     def handle_content(self, node, parent,defcon=""):
         if node is None:
             self.add_text(parent, defcon)
-            return
+            return False
+        if node.text is None and len(node)==0:
+            return False
         self.add_text(parent, node.text)
         for child in node:
             self.apply_templates_single(child,parent)
             self.add_text(parent,child.tail)
+        return True
             
     def handle_section(self, node, title, id, parent):
-
+        print("Handling section: "+ title)
         title_el = self.sec({"id":id},title)
         parent.append(title_el)
         self.handle_section_hook(title, node, parent)
@@ -761,7 +758,7 @@ security policies map to the security objectives.""")
             return 
         elif len(refs)>1:
             pp_util.log("Found multipled targets for "+ to)
-        self.make_xref(refs[0], parent)
+        self.make_xref(refs[0], parent, node)
 
     def get_list_of(self, fulltag):
         if fulltag in self.globaltags:
@@ -973,6 +970,7 @@ security policies map to the security objectives.""")
 
     def apply_template_to_element(self, node, parent):
         tag = node.tag
+        print("Applying: " + tag)
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.template_newsection(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}section":
@@ -1015,7 +1013,6 @@ security policies map to the security objectives.""")
         elif tag=="{https://niap-ccevs.org/cc/v1}manager":
             td = adopt(parent, HTM_E.td())
             self.handle_content(node, td)
-
         elif tag=="{https://niap-ccevs.org/cc/v1}figure":
             self.handle_figure(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
@@ -1030,7 +1027,7 @@ security policies map to the security objectives.""")
         elif tag=="{https://niap-ccevs.org/cc/v1}_":
             self.make_xref(self.shortcut, parent)
         else:
-            raise Exception("Can't handle: " + node.tag)
+            raise Exception("Can't handle: " + node.tag + ": " +node.text)
 
 
     def get_pre(self, el):
@@ -1182,6 +1179,11 @@ security policies map to the security objectives.""")
 
     def make_xref_mf(self, id, parent):
         parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
+
+    def make_xref_generic(self, target, parent, ref, deftext=""):
+        a_el=adopt(parent, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
+        if not self.handle_content(ref, a_el):
+            self.add_text(a_el, deftext)
         
     def make_xref_section(self, id, parent):
         parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
@@ -1191,21 +1193,25 @@ security policies map to the security objectives.""")
         anchor="#"+node.attrib["id"]
         parent.append(E.a(txt, href=anchor))
         
-    def make_xref(self, node, parent):
-        if node.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            self.make_xref_section(node, pp_util.localtag(node.tag), parent)
-        elif node.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
-            self.edocs[node.attrib["id"]].make_xref_edoc(parent)
-        elif node.tag == "{https://niap-ccevs.org/cc/v1}entry":
-            self.make_xref_bibentry(node, parent)
-        elif node.tag == "{https://niap-ccevs.org/cc/v1}management-function":
-            self.make_xref_mf(self.derive_id(node), parent)
-            # findex = str(self.get_global_index(node))
-            # id=self.derive_id(node)
+    def make_xref(self, target, parent, ref=None):
+        if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
+            self.make_xref_section(target, pp_util.localtag(target.tag), parent)
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
+            theid= target.attrib["id"]
+            print("The id is " + theid)
+            self.edocs[theid].make_xref_edoc(parent)
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}entry":
+            self.make_xref_bibentry(target, parent)
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}management-function":
+            self.make_xref_mf(self.derive_id(target), parent)
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}figure":
+            self.make_xref_generic(target, parent, ref, "figure")
+            # findex = str(self.get_global_index(target))
+            # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
-            # # self.handle_content(node,parent)
+            # # self.handle_content(target,parent)
         else:
-            raise Exception("Cannot handle: " + node.tag)
+            raise Exception("Cannot handle: " + target.tag + " " + target.ext)
 
     def is_base(self, attr):
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
