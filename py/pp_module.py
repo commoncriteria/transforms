@@ -102,7 +102,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.add_text(par,"as a whole and evaluated against the  " + short + ".")
             self.add_text(par," The following sections describe any modifications that the ST author must make to the SFRs")
             self.add_text(par," defined in the "+short+" in addition to what is mandated by ")
-            par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"Section "))
+            par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"section "))
             self.add_text(par,".")
             par.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
             self.add_text(par,"The SFRs listed in this section are defined in the "+short +\
@@ -173,8 +173,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
  security objective for the TOE, showing that the SFRs are suitable to meet and
  achieve the security objectives:"""))
         table=adopt(par,HTM_E.table())
-        caption=adopt(par,HTM_E.caption())
-        self.create_ctr("Table", "t-obj-map", caption)
+        caption=adopt(table,HTM_E.caption())
+        self.create_ctr("Table", "t-obj-map", caption, "Table ")
         self.add_text(caption, ": SFR Rationale")
         table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
         prev_parent = None
@@ -318,7 +318,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     def base_consistency_rationale(self, par, base):
         id   = base.attrib["id"]
         edoc = self.edocs[id]
-        self.set_underscore(edoc.short)
+        self.set_shortcut(edoc.node)
         par.append(self.sec({"id":"conrat-"+id}, edoc.short))
         self.consistency_of_toe_type(par, base, id)
         self.consistency_of_security_problem_def(par, base, id)
@@ -333,8 +333,6 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.base_consistency_rationale(par, base)
         self.end_section()
 
-
-        
     def template_module(self, node, parent):
         self.apply_templates(self.rx("//*[@title='Introduction']|sec:Introduction"),parent)
         self.apply_templates(self.rx("//*[@title='Conformance Claims']|sec:Conformance_Claims"),parent)
@@ -352,10 +350,12 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     
     def doctype(self):
         return "PP-Module"
-        
+
     def handle_section_hook_base(self, title, node, parent):
         if title=="Security Functional Requirements":
             return template_sfrs(self,node, parent)
+        elif title=="Organizational Security Policies":
+            parent.append(HTM_E.p("An organization deploying the TOE is expected to satisfy the organizational security policy listed below in addition to all organizational security policies defined by the claimed Base-PP."))
         else:
             return super().handle_section_hook_base(title,node ,parent)
 
@@ -363,7 +363,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if title=="Security Requirements":
             self.objectives_to_requirements(parent)
         else:
-            return super().handle_section_hook_base(title,node ,parent)
+            return super().handle_post_section_hook(title,node ,parent)
 
         
             

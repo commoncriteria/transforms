@@ -52,9 +52,9 @@ def make_sort_key_stringnum(s):
 
 def backslashify(phrase):
     return re.sub("([_.^()-])", r"\\\1", phrase)
-    
-# def stringify(root):
-#     return ET.tostring(root, pretty_print=True, encoding='UTF-8').decode('utf-8')
+
+def def_attr(id):
+    return {"id":id, "class":"def_", "href":"#"+id}
 
 defargs={'fill':'black',
          'font-size':'15'}
@@ -94,18 +94,39 @@ class generic_pp_doc(object):
         self.outline = [0]
         self.is_appendix = False
         self.abbrs = {}                       # Full set of abbreviaiotns
-        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
-        self.used_abbrs = set()               # Set of abbreviations that we've seen
+#        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
+#        self.used_abbrs = set()               # Set of abbreviations that we've seen
+#        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
         self.discoverables_to_ids = {}        # List of terms we're looking for
-        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
-        self.test_number_stack = [0]
+#        self.test_number_stack = [0]
+        self.register_sfrs()
         self.register_abbrs()
+        self.counters={}
 
+    def get_next_counter(self, ctr_type):
+        if ctr_type in self.counters:
+            self.counters[ctr_type]+=1
+            return self.counters[ctr_type]
+        else:
+            self.counters[ctr_type]=1
+            return 1
+        
+    def register_sfrs(self):
+        for fcomp in self.root.findall(".//cc:f-component", NS):
+            id = self.fcomp_cc_id(fcomp)
+            self.register_keyterm(id.upper(),id)
+
+    def get_all_abbr_els(self):
+        return self.rfa("//cc:term[@abbr]")+\
+            self.boilerplate.findall("//cc:cc-terms/cc:term[@abbr]", NS)
+    
     def register_abbrs(self):
-        for term in self.root.findall(".//cc:term[@abbr]", NS):
+        for term in self.get_all_abbr_els():
             abbr = term.attrib["abbr"]
             self.register_keyterm(abbr, "long_abbr_"+abbr)
-
+            if "plural" in term.attrib:
+                self.register_keyterm(term.attrib["plural"], "long_abbr_"+abbr)
+            
     def register_keyterm(self, word, id):
         if len(word) > 1 and not(word.startswith(".")):
             self.discoverables_to_ids[word]=id
@@ -188,7 +209,9 @@ class generic_pp_doc(object):
         prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
         newnodes=[prevnode]
         for match in matches:
+            print("JJJJJ: " + ret)
             prevnode.tail = origtext[last:match.start()]
+            last = match.end()
             id = self.discoverables_to_ids[match.group()]
             prevnode = HTM_E.a({"href":"#"+id}, match.group())
             newnodes.append(prevnode)
@@ -204,17 +227,34 @@ class generic_pp_doc(object):
         for child in origchildren:
             self.add_xrefs_recur(child, regex)
             insertspot=node.index(child)+1
-            node.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
+            child.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
         
-    def add_xrefs(self, node):
+    def add_discoverable_xrefs(self, node):
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
         regex_str = "(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        print("Regex_str are : " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
-    
+
+    def fix_numbered_xrefs(self, doc):
+        dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
+        for dynref in dynrefs:
+            refid = dynref.attrib["href"][1:]
+            reffed = doc.find(".//*[@id='"+refid+"']")
+            if reffed is None:
+                print("Could not find dynamic reference: " + refid)
+                continue
+            label_node = reffed.find("./*[@class='dynid_']")
+            if label_node is None:
+                text = reffed.text
+            else:
+                text = label_node.text
+            pp_util.append_text(dynref, " "+text)
+        
     def to_html(self):
         doc = self.start()
-        self.add_xrefs(doc)
+        self.fix_numbered_xrefs(doc)
+        self.add_discoverable_xrefs(doc)
         return doc
     
     def rf(self, findexp):
@@ -240,9 +280,7 @@ class generic_pp_doc(object):
         # h2 doesn't matter as the tag is changed
         ret = HTM_E.h2(*args)
         depth = len(self.outline)
-        ret.tag="h"+str(depth)
-
-            
+        ret.tag="h"+str(depth)                       
         self.outline[-1]=self.outline[-1]+1
         if self.is_appendix:
             prefix=base_10_to_alphabet(self.outline[0])
@@ -390,8 +428,7 @@ class generic_pp_doc(object):
     
     def doctype(self):
         return "PP"
-    
-            
+
     def handle_ext_comp_defs(self ,par):
         if self.rf("//cc:ext-comp-def") is None:
             return ""
@@ -403,7 +440,7 @@ class generic_pp_doc(object):
         table = adopt(par, HTM_E.table({"class":"sort_kids_"}))
         caption = adopt(table, HTM_E.captions({"data-sortkey":"#0"}))
         b_el = adopt(caption, HTM_E.b())
-        self.create_ctr("Table","t-ext-comp_map", b_el)
+        self.create_ctr("Table","t-ext-comp_map-", b_el, "Table ")
         
         self.add_text(b_el, ": Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
@@ -434,14 +471,16 @@ class generic_pp_doc(object):
             self.end_section()
         par.append(HTM_E.span({"class":"sort_kids_"}))
         self.end_section()
+        self.end_section()
         
     def handle_ecd(self, famnode, classid, span):
         famId = famnode.attrib["fam-id"]
-        span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
         desc = famnode.find("cc:class-description",NS)
         self.handle_content(desc, span, defcon="This "+self.doctype() +\
                             " defines the following extended components as part of the "+\
                             classid + " class originally defined by CC Part 2:" )
+        span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
+
         div = adopt(span, HTM_E.div({"style":"margin-left: 1em;"}))
         famBi = famnode.find("cc:fam-behavior",NS)
         if famBi is not None:
@@ -518,7 +557,7 @@ class generic_pp_doc(object):
         p_el = adopt(par, HTM_E.p())
         self.handle_content(sfr.find("cc:audit",NS),p_el,
                             defcon="There are no audit events foreseen.")
-        par.append(HTM_E.h4(cc_id+" "+sfr.attrib["name"]+": "+cc_id))
+        par.append(HTM_E.h4(cc_id+" "+sfr.attrib["name"]))
         div = adopt(par, HTM_E.div({"style":"margin-left: 1em;"}))
         p_el = adopt(div, HTM_E.p("Hierarchical to: "))
         self.handle_content(sfr.find("cc:heirarchical-to",NS), p_el, defcon="No other components.")
@@ -580,13 +619,16 @@ security objectives for the environment.
             self.add_text(parent, "This PP-Module does not define any objectives for the OE.")
 
         
-    def create_ctr(self, ctrtype, id ,parent):
-        span = adopt(parent, HTM_E.span({"class":"ctr",
-                                         "data-myid":id,
+    def create_ctr(self, ctrtype, id ,parent, prefix, child=None):
+        ctrcount = str(self.get_next_counter(ctrtype))
+        span = HTM_E.span({"class":"ctr",
                                          "data-counter-type":"ct-"+ctrtype,
-                                         "id":id}, ctrtype,
-                                        HTM_E.span({"class":"counter"},id)
-                                        ))
+                                         "id":id}, prefix,
+                                        HTM_E.span({"class":"counter"},ctrcount)
+                                        )
+        parent.append(span)
+        self.handle_content(child, span)
+
         
     def create_bibliography(self, par):
         par.append(HTM_E.h1({"id":"appendix-bibliography"},"Bibliography"))
@@ -611,7 +653,7 @@ security objectives for the environment.
             suppress_list=[]
         else:
             suppress_list=suppress.text.split(",")
-        term_els=self.rfa("//cc:term[@abbr]")+self.boilerplate.findall("//cc:cc-terms/cc:term[@abbr]", NS)
+        term_els = self.get_all_abbr_els()
         term_els.sort(key=lambda t_el:t_el.attrib["full"].upper())
         for term_el in term_els:
             full=term_el.attrib["full"]
@@ -632,7 +674,7 @@ security objectives for the environment.
 security policies map to the security objectives.""")
         table = adopt(parent, HTM_E.table())
         caption = adopt(table, HTM_E.caption())
-        self.create_ctr("Table","t-sec-obj-rat", caption);
+        self.create_ctr("Table","t-sec-obj-rat-", caption, "Table ")
         self.add_text(caption, ": Security Objectives Rationale")
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("Threat, Assumption, or OSP"))
@@ -711,9 +753,10 @@ security policies map to the security objectives.""")
         self.globaltags[fulltag] = nodes
         return nodes
 
+    
     def get_global_index(self, node):
         allof = self.get_list_of(node.tag)
-        return allof.index(node)
+        return allof.index(node)+1
 
     def derive_id(self, node):
         if "id" in node.attrib:
@@ -788,8 +831,6 @@ security policies map to the security objectives.""")
         tr = HTM_E.tr()
         parent.append(tr)
         id=full.replace(" ", "_")
-
-        
         td = adopt(tr, HTM_E.td())
         div = adopt(td, HTM_E.div({"id":id}))
         self.add_text(div, full)
@@ -856,13 +897,16 @@ security policies map to the security objectives.""")
             div_reqdesc.append(HTM_E.span({"class":"note-header"},"Application Note: "))
             for note in notes:
                 self.handle_content(note, div_reqdesc)
-#         <xsl:if test="//cc:rule[.//cc:ref-id/text()=current()//@id]">
-# 	  <xsl:if test="not(cc:note)">
-# 	  </xsl:if>
-#           <div class="validationguidelines_label">Validation Guidelines:</div>
-# <!--          <p/>Selections in this requirement involve the following rule(s):<br/> -->
-#           <xsl:apply-templates select="//cc:rule[.//cc:ref-id/text()=current()//@id]" mode="use-case"/>
-# 	</xsl:if>
+            mfs = node.findall(".//cc:management-function[cc:app-note]",NS)
+            #mfs = node.findall(".//cc:management-function",NS)
+            if len(mfs)==0:
+                return
+            adopt(div_reqdesc,HTM_E.div({"id":"mf-spec-notes"},"Function-specific Application Notes"))
+            for mf in mfs:
+                self.set_shortcut(mf)
+                note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
+                self.make_xref(mf, note_head)
+                self.handle_content(mf.find("cc:app-note", NS), div_reqdesc)
     
     def get_meaningful_ancestor(self, refid):
         ret = self.rx("//cc:f-element[.//@id='"+refid+"']|//cc:choice[.//@id='"+refid+"']|//cc:feature[.//@id='"+refid+"']")
@@ -913,38 +957,38 @@ security policies map to the security objectives.""")
     def apply_template_to_element(self, node, parent):
         tag = node.tag
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            return self.template_newsection(node, parent)
+            self.template_newsection(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}section":
-            return self.template_oldsection(node, parent)
+            self.template_oldsection(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}appendix":
-            return self.template_appendix(node, parent)
+            self.template_oldsection(node, parent)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
-            return self.template_html(node, parent)
+            self.template_html(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}xref":
-            return self.template_xref(node, parent)
+            self.template_xref(node, parent)
         elif tag == "{https://niap-ccevs.org/cc/v1}tech-terms":
-            return self.template_tech_terms(node, parent)
+            self.template_tech_terms(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}usecases":
-            return self.template_usecases(node, parent)
+            self.template_usecases(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}assumptions"\
              or tag=="{https://niap-ccevs.org/cc/v1}cclaims"\
              or tag=="{https://niap-ccevs.org/cc/v1}threats"\
              or tag=="{https://niap-ccevs.org/cc/v1}OSPs"\
              or tag=="{https://niap-ccevs.org/cc/v1}SOs"\
              or tag=="{https://niap-ccevs.org/cc/v1}SOEs":
-            return self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
+            self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}sfrs":
-            return self.template_sfrs(node, parent)
+            self.template_sfrs(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}f-component" or\
              tag=="{https://niap-ccevs.org/cc/v1}ext-comp-def" or\
              tag=="{https://niap-ccevs.org/cc/v1}base-pp":
-            return ""
+            pass
         elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
-            return self.template_felement(node, parent)
+            self.template_felement(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}title": 
-            return self.apply_templates(node, parent)
+            self.apply_templates(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
-            return self.template_management_function_set(node, parent)
+            self.template_management_function_set(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}ctr":
             self.template_ctr(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}no-link":
@@ -953,7 +997,6 @@ security policies map to the security objectives.""")
         elif tag=="{https://niap-ccevs.org/cc/v1}manager":
             td = adopt(parent, HTM_E.td())
             self.handle_content(node, td)
-            return
         elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
              tag=="{https://niap-ccevs.org/cc/v1}description":
             self.handle_content(node, parent)
@@ -964,7 +1007,7 @@ security policies map to the security objectives.""")
         elif tag=="{https://niap-ccevs.org/cc/v1}int":
             self.template_int(node, parent)
         elif tag=="{https://niap-ccevs.org/cc/v1}_":
-            self.shortcut
+            self.make_xref(self.shortcut, parent)
         else:
             raise Exception("Can't handle: " + node.tag)
 
@@ -977,15 +1020,19 @@ security policies map to the security objectives.""")
         return pp_util.get_attr_or(el, "ctr-type", default="Table ")
     
     def template_ctr(self, node, par):
-        pre = pp_util.get_attr_or(node, "pre")
-        ctrtype = pp_util.get_attr_or(node, "ctr-type", default=pre)
+        ctrtype = node.attrib["ctr-type"]
+        prefix=ctrtype+" "
+        if "pre" in node.attrib:
+            prefix=node.attrib["pre"]
         id = self.derive_id(node)
+        self.create_ctr(ctrtype, id, par, prefix, child=node)
 
-        span = adopt(par, HTM_E.span({"class":"ctr","data-myid":id,"data-counter-type":"ct-"+ctrtype,
-                                      "id":id}))
-        self.add_text(span,self.get_pre(node))
-        span.append(HTM_E.span({"class":"counter"}, id))
-        self.handle_content(node, span)
+        # count = str(self.get_next_counter(ctrtype))
+        # span = adopt(par, HTM_E.span({"class":"ctr","data-counter-type":"ct-"+ctrtype,
+        #                               "id":id}, ))
+        # self.add_text(span,self.get_pre(node))
+        # span.append(HTM_E.span({"class":"counter"}, id))
+        # self.handle_content(node, span)
 
         
     def template_int(self, node):
@@ -1012,14 +1059,14 @@ security policies map to the security objectives.""")
         self.handle_content(node, span)
         self.add_text(par,"]")
 
-    def template_appendix(self, node, parent):
-        id=self.derive_id(node)
-        title=node.attrib["title"]
-        parent.append(HTM_E.h1({"id":id},title))
-        if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
-            return
-        self.handle_section_hook_base(title, node, parent)
-        self.handle_content(node, parent)
+    # def template_appendix(self, node, parent):
+    #     id=self.derive_id(node)
+    #     title=node.attrib["title"]
+    #     parent.append(HTM_E.h1({"id":id},title))
+    #     if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
+    #         return
+    #     self.handle_section_hook_base(title, node, parent)
+    #     self.handle_content(node, parent)
 
     
     def template_selectables(self, node, par):
@@ -1039,10 +1086,10 @@ security policies map to the security objectives.""")
         lagsep=None
         for selectable in node.findall("./cc:selectable",NS):
             id = self.derive_id(selectable)
-            span = adopt(par,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
-            self.handle_content(selectable, span)
             self.add_text(par,lagsep)
             lagsep=sep
+            span = adopt(par,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
+            self.handle_content(selectable, span)
         self.add_text(par,"]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
@@ -1075,11 +1122,10 @@ security policies map to the security objectives.""")
             ctr+=1
             self.make_mf_row(mf, prefix+str(ctr), managers, deffy, table)
 
-
-    def get_mf_id(self, node):
-        if "id" in node.attrib:
-            return node.attrib["id"]
-        return "_mf_"+str(self.get_global_index(node))
+    # def get_mf_id(self, node):
+    #     if "id" in node.attrib:
+    #         return node.attrib["id"]
+    #     return "_mf_"+str(self.get_global_index(node))
 
     def make_mf_val(self, tag, node, par):
         attrs = {"class":"tooltiptext"}
@@ -1091,12 +1137,13 @@ security policies map to the security objectives.""")
             par.append(HTM_E.div("-",HTM_E.span(attrs,"N/A")))
         else:
             self.handle_content(node, par)
-    
+
+            
     def make_mf_row(self, mf, prefix, managers, defval, par):
         mf_num = str(self.get_global_index(mf))
-        mf_id = self.get_mf_id(mf)
-        tr = adopt(par, HTM_E.tr({"id":mf_id}))
-        tr.append(HTM_E.td(prefix))
+        mf_id = self.derive_id(mf)
+        tr = adopt(par, HTM_E.tr())
+        tr.append(HTM_E.td(HTM_E.a(def_attr(mf_id),prefix)))
         td=adopt(tr, HTM_E.td({"style":"text-align:left"}))
         self.apply_templates_single(mf.find("cc:text",NS), td)
         for manager in managers:
@@ -1109,11 +1156,14 @@ security policies map to the security objectives.""")
             td=adopt(tr, HTM_E.td())
             self.make_mf_val(val, tagnode,td)
     
-    def set_underscore(self, val):
-        self.shortcut = val
+    def set_shortcut(self, node):
+        self.shortcut = node
+
+    def make_xref_mf(self, id, parent):
+        parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
         
-    def make_xref_section(self, node, id):
-        return "<a href=\"#{"+id+"}\" class=\"dynref\">Section </a>\n"
+    def make_xref_section(self, id, parent):
+        parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
     def make_xref_bibentry(self, node, parent):
         txt = "["+node.find("./cc:tag", NS).text+"]"
@@ -1127,7 +1177,12 @@ security policies map to the security objectives.""")
             self.edocs[node.attrib["id"]].make_xref_edoc(parent)
         elif node.tag == "{https://niap-ccevs.org/cc/v1}entry":
             self.make_xref_bibentry(node, parent)
-            # self.handle_content(node,parent)
+        elif node.tag == "{https://niap-ccevs.org/cc/v1}management-function":
+            self.make_xref_mf(self.derive_id(node), parent)
+            # findex = str(self.get_global_index(node))
+            # id=self.derive_id(node)
+            # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
+            # # self.handle_content(node,parent)
         else:
             raise Exception("Cannot handle: " + node.tag)
 
