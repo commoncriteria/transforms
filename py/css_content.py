@@ -55,11 +55,14 @@ def fx_common_css(doc):
        max-width: 15px;
     }
 
-    a.definition{
+    a.def_{
       color: inherit;
       text-decoration: inherit;
     }
-      
+    a.def_:hover{
+      color:blue;
+    } 
+
     a {
       text-decoration: none;
       word-wrap: break-word;
