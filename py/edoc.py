@@ -14,7 +14,6 @@ class Edoc:
 
     def __init__(self, node, workdir):
         self.orig = node
-        print("Node is " + node.tag)
         self.root = None
         # Should this be a dictionary?
         self.decl_modsfrs={}
@@ -34,6 +33,9 @@ class Edoc:
         self.add_sfrs=[]
         self.are_sfrs_sorted = False
 
+    def get_orig_node(self):
+        return self.orig
+        
     def get_product(self):
         return self.product
     

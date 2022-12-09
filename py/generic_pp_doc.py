@@ -7,6 +7,8 @@ from pp_util import log
 import math
 import edoc
 import re
+
+CC="{https://niap-ccevs.org/cc/v1}"
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
@@ -26,6 +28,24 @@ adopt=pp_util.adopt
 
 A_UPPERCASE = ord('A')
 ALPHABET_SIZE = 26
+
+def add_grouping_row(table, text, size):
+    rowspan=size+2
+    # Add two blank rows, so that it doesn't screw up the alternating coloring
+    attrs={"rowspan":str(rowspan)}
+    table.append(HTM_E.tr({"class":"major-row"}, HTM_E.td(attrs, text), blank_cell))
+    table.append(HTM_E.tr(blank_cell))
+
+def blank_cell():
+    return HTM_E.td({"style":"display:none;"})
+
+def add_to_map_to_map(mappy, key, attr):
+    if key not in mappy:
+        minor = {}
+    else:
+        minor=mappy[key]
+    minor[attr]=1
+    mappy[key]=minor
 
 def _decompose(number):
     """Generate digits from `number` in base alphabet, least significants
@@ -184,7 +204,7 @@ class generic_pp_doc(object):
            node.tag == "h1"   or node.tag == "h2"      or\
            node.tag == "h3"   or node.tag == "h4"      or\
            node.tag == "head" or node.tag == "script"  or\
-           node.tag == "svg":
+           node.tag == "svg"  : 
             return True
         if "class" in node.attrib and node.attrib["class"]:
             classes = node.attrib["class"].split(" ")
@@ -194,7 +214,7 @@ class generic_pp_doc(object):
 
 
     def xrefs_in_text(self, node, content, regex, insertspot=0):
-        if content is None or self.is_non_xrefable_section(node):
+        if regex is None or content is None:
             return content
         matches = regex.finditer(content)
         origtext = content
@@ -209,7 +229,6 @@ class generic_pp_doc(object):
         prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
         newnodes=[prevnode]
         for match in matches:
-            print("JJJJJ: " + ret)
             prevnode.tail = origtext[last:match.start()]
             last = match.end()
             id = self.discoverables_to_ids[match.group()]
@@ -222,6 +241,8 @@ class generic_pp_doc(object):
         return ret
             
     def add_xrefs_recur(self, node, regex):
+        if self.is_non_xrefable_section(node):
+            return
         origchildren = node.iterchildren()
         node.text = self.xrefs_in_text(node, node.text, regex)
         for child in origchildren:
@@ -232,7 +253,6 @@ class generic_pp_doc(object):
     def add_discoverable_xrefs(self, node):
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
         regex_str = "(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
-        print("Regex_str are : " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
 
@@ -443,11 +463,43 @@ class generic_pp_doc(object):
     def doctype(self):
         return "PP"
 
-    def handle_ext_comp_defs(self ,par):
-        if self.rf("//cc:ext-comp-def") is None:
-            return ""
-        par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
-        self.add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
+
+    def get_all_dependencies(self, node):
+        choices={}
+        selections={}
+        features={}
+        externals={}
+        bases={}
+        for depends in node.findall("./cc:depends", NS):
+            if depends.attrib is None:
+                continue
+            doc=None
+            for external in depends.findall("./cc:external-doc", NS):
+                doc=external.attrib["ref"]
+            for attr in depends.attrib:
+                theid = depends.attrib[attr]
+                # ret[doc+depends.attrib[attr]]=1
+                if doc is not None:
+                    add_to_map_to_map(externals, doc, theid)
+                else:
+                    ided = self.rf("//cc:*[@id='"+theid+"']")
+                    if ided is None:
+                        print("Failed to find an item with the following id:\""+theid+"\".")
+                    else:
+                        if ided.getparent().getparent().tag == CC+"choice":
+                            choices[theid]=1
+                        elif ided.tag==CC+"base-pp":
+                            bases[theid]=1
+                        elif ided.tag==CC+"selectable":
+                            selections[theid]=1
+                        elif ided.tag==CC+"feature":
+                            features[1]=1
+                        else:
+                            print("Failed to sort the dependee:\""+theid+"\".")
+        return [choices, selections, features, externals, bases]
+
+    
+    def make_ecd_table(self, par, ecdsecs):
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
         self.add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
@@ -455,7 +507,6 @@ class generic_pp_doc(object):
         caption = adopt(table, HTM_E.captions({"data-sortkey":"#0"}))
         b_el = adopt(caption, HTM_E.b())
         self.create_ctr("Table","t-ext-comp_map-", b_el, "Table ")
-        
         self.add_text(b_el, ": Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
                               HTM_E.th("Functional Class"),
@@ -463,27 +514,46 @@ class generic_pp_doc(object):
         
         # <!-- section is compatible with the new section styles b/c the new section style is not allowed to 
         #      for sections that directly contain f-components and a-components -->
-        ecdsecs = self.rx("//*[cc:ext-comp-def]")
-        ecdsecs.sort(key=lambda sec: sec.attrib["title"])
         defsec = HTM_E.div()
+        last=""
         for sec in ecdsecs:
-            ecds=sec.findall("cc:ext-comp-def", NS)
-            table.append(HTM_E.tr(HTM_E.td({"rowspan":str(len(ecds)+1)}, sec.attrib["title"]), HTM_E.td({"style":"display:none;"})))
-            # ret+="<tr><td rowspan='"+str(len(ecds)+1)+"'>" + sec.attrib["title"] + "</td><td style='display:none;'/></tr>\n"
+            title = sec.attrib["title"]
+            if title == last:
+                continue
+            last = title
+            # Old style and new style both need to use @title b/c the presence of parenthesis
+            ecds=self.rx("//*[@title='"+title+"']/cc:ext-comp-def")
+            add_grouping_row(table, title, len(ecds))
             for ecd in ecds:
                 table.append(HTM_E.tr( HTM_E.td(ecd.attrib["fam-id"]+ " - " + ecd.attrib["title"])))
-                # ret+="<tr><td>"+ecd.attrib["fam-id"] + " - " + ecd.attrib["title"]+"</td></tr>\n"
         self.end_section()
+
+    
+    
+    def handle_ext_comp_defs(self ,par):
+        if self.rf("//cc:ext-comp-def") is None:
+            return ""
+        par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
+        self.add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
+
+        ecdsecs = self.rx("//*[cc:ext-comp-def]")
+        ecdsecs.sort(key=lambda sec: sec.attrib["title"])
+        self.make_ecd_table(par, ecdsecs)
+        
         par.append(self.sec({"id":"ext-comp-defs-bg"}, "Extended Component Definitions"))
+        last = ""
         for sec in ecdsecs:
-            ecds=sec.findall("cc:ext-comp-def", NS)
+            title = sec.attrib["title"]
+            if title == last:
+                continue
+            last = title
+            ecds=self.rx("//*[@title='"+title+"']/cc:ext-comp-def")
             classid = sec.attrib["title"].split(")")[0].split("(")[1]
             span=adopt(par, HTM_E.span({"data-sortkey":sec.attrib["title"]}))
             span.append(self.sec({"id":"ext-comp-"+classid},sec.attrib["title"]))
             for ecd in ecds:
                 self.handle_ecd(ecd, classid, span)
             self.end_section()
-        par.append(HTM_E.span({"class":"sort_kids_"}))
         self.end_section()
         self.end_section()
         
@@ -495,7 +565,8 @@ class generic_pp_doc(object):
                             classid + " class originally defined by CC Part 2:" )
         span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
 
-        div = adopt(span, HTM_E.div({"style":"margin-left: 1em;"}))
+        div = adopt(span, HTM_E.div())
+        # div = adopt(span, HTM_E.div({"style":"margin-left: 1em;"}))
         famBi = famnode.find("cc:fam-behavior",NS)
         if famBi is not None:
             div.append(HTM_E.h4("Family Behavior"))
@@ -856,11 +927,92 @@ security policies map to the security objectives.""")
 
       
     def template_html(self, node ,parent):
+        depends = node.findall("cc:depends", NS)
+        if len(depends)>0:
+            parent = adopt(parent, HTM_E.div({"class":"dependent"}))
+            self.depends_explainer(parent, node)
         tag = pp_util.localtag(node.tag)
         html_el = ET.Element(tag, node.attrib)
         parent.append(html_el)
         self.handle_content(node, html_el)
 
+
+    def depends_explainer(self,parent, node,
+                          words="The following content should be included if:"):
+        depends_ids = self.get_all_dependencies(node)
+        choices=depends_ids[0]
+        selections=depends_ids[1]
+        features=depends_ids[2]
+        externals=depends_ids[3]
+        bases=depends_ids[4]
+        self.add_text(parent, words)
+        if len(choices)>0:
+            parent.append(HTM_E.div("choices are made"))
+        if len(externals)>0:
+            parent.append(HTM_E.div("selections are are made in base"))
+        if len(selections)>0:
+            parent.append(HTM_E.div("selections are made"))
+        if len(features)>0:
+            parent.append(HTM_E.div("features are made"))
+        if len(bases)>0:
+            baselist = ""
+            for base in bases:
+                print("HEREHRERHE)")
+                basenode = self.rf("//cc:*[@id='"+base+"']")
+                self.make_xref(basenode, parent)
+            parent.append(HTM_E.div("is a base. "))            
+
+
+        
+        
+ #    <xsl:choose>
+ #      <!-- When it depends on a choice -->
+ #      <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
+ #         <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
+ #         <xsl:for-each select="cc:depends/@*">
+ #            <xsl:if test="position()!=1">,</xsl:if>
+            
+ #            <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
+ #         </xsl:for-each>
+ #      </xsl:when>
+ #      <!--If we're not looking at a row. Not sure where @hide comes from -->
+ #      <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
+ #      <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
+ #      <ul> <xsl:for-each select="cc:depends"><li>
+ #        <xsl:variable name="uid" select="@*[1]"/>
+ #         <xsl:choose>
+ #           <xsl:when test="cc:external-doc">
+ #             <xsl:variable name="ref" select="cc:external-doc/@ref"/>
+ #             <xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
+
+ #             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
+ #             </xsl:for-each>
+ #             is selected from 
+ #             <xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
+ #           </xsl:when><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
+ #             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
+ #             </xsl:for-each>
+ #             is selected from 
+ #             <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+ #           </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
+ #             <xsl:for-each select="@*">
+ #               <xsl:if test="position()!=1">/</xsl:if>
+ #             <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
+ #             </xsl:for-each> TOEs
+ #         </xsl:when><xsl:otherwise>
+ #           the TOE implements 
+ #           <xsl:for-each select="@*">
+ #             <xsl:if test="position()!=1">, </xsl:if>
+ #             "<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
+ #           </xsl:for-each>
+ #         </xsl:otherwise></xsl:choose>
+ #              <!-- This is a module piece... -->
+ #      </li></xsl:for-each> </ul>
+ #      </xsl:when></xsl:choose>
+ # </xsl:template>
+
+
+        
     def apply_templates(self, nodelist, parent):
         if nodelist is None:
             return
@@ -1206,12 +1358,14 @@ security policies map to the security objectives.""")
             self.make_xref_mf(self.derive_id(target), parent)
         elif target.tag == "{https://niap-ccevs.org/cc/v1}figure":
             self.make_xref_generic(target, parent, ref, "figure")
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}ctr":
+            self.make_xref_generic(target, parent, ref, "figure")
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
             # # self.handle_content(target,parent)
         else:
-            raise Exception("Cannot handle: " + target.tag + " " + target.ext)
+            raise Exception("Cannot handle: " + target.tag + " " + target.text)
 
     def is_base(self, attr):
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")

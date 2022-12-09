@@ -49,7 +49,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             id=pp_util.get_attr_or(req, "id")
             conmods=[]
             if edoc is not None:
-                conmods = edoc.node.xpath("cc:con-mod[@ref='"+id+"']", namespaces=NS)
+                edoc_node = edoc.get_orig_node()
+                conmods = edoc_node.xpath("cc:con-mod[@ref='"+id+"']", namespaces=NS)
             for conmod in conmods:
                 self.handle_content(conmod, td)
             if len(conmods)==0:
@@ -77,6 +78,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     def apply_template_to_element(self, node, parent):
         if node.tag == "{https://niap-ccevs.org/cc/v1}Module":
             return self.template_module(node, parent)
+        elif node.tag == "{https://niap-ccevs.org/cc/v1}sec-func-req-dir":
+            self.handle_content(node, parent)
         else:
             return super().apply_template_to_element(node, parent)
 
@@ -111,14 +114,15 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.add_text(par," defined in the "+short+" in addition to what is mandated by ")
             par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"section "))
             self.add_text(par,".")
-            par.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
-            self.add_text(par,"The SFRs listed in this section are defined in the "+short +\
-                    " and are relevant to the secure operation of the TOE.")
-            if len(base.mod_sfrs)==0:
-                self.add_text(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
-            else:
-                self.handle_sparse_sfrs(base.mod_sfrs ,par)
-            self.end_section()
+            
+        par.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
+        self.add_text(par,"The SFRs listed in this section are defined in the "+short +\
+                " and are relevant to the secure operation of the TOE.")
+        if len(base.mod_sfrs)==0:
+            self.add_text(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
+        else:
+            self.handle_sparse_sfrs(base.mod_sfrs ,par)
+        self.end_section()
                 
         if len(self.rfa("//cc:base-pp"))>1:
             par.append(self.sec({"id":"addsfr-"+id},"Additional SFRs"))
@@ -325,7 +329,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     def base_consistency_rationale(self, par, base):
         id   = base.attrib["id"]
         edoc = self.edocs[id]
-        self.set_shortcut(edoc.node)
+        self.set_shortcut(edoc.get_orig_node())
         par.append(self.sec({"id":"conrat-"+id}, edoc.short))
         self.consistency_of_toe_type(par, base, id)
         self.consistency_of_security_problem_def(par, base, id)
