@@ -367,6 +367,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             return template_sfrs(self,node, parent)
         elif title=="Organizational Security Policies":
             parent.append(HTM_E.p("An organization deploying the TOE is expected to satisfy the organizational security policy listed below in addition to all organizational security policies defined by the claimed Base-PP."))
+        elif title=="Security Requirements":
+            parent.append(generic_pp_doc.get_convention_explainer())
         else:
             return super().handle_section_hook_base(title,node ,parent)
 

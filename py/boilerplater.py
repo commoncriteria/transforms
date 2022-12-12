@@ -13,7 +13,6 @@ def handle_section_boilerplate(name, node, root):
         <dd>
 """
 
-        
     if root.find("//cc:Module"):
         ret="""
           <p>This PP-Module inherits exact conformance as required from the specified

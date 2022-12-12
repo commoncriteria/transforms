@@ -71,7 +71,7 @@ def make_sort_key_stringnum(s):
     return spl[0]+"."+spl[1].rjust(3)
 
 def backslashify(phrase):
-    return re.sub("([_.^()-])", r"\\\1", phrase)
+    return re.sub("([][_.^()-/])", r"\\\1", phrase)
 
 def def_attr(id):
     return {"id":id, "class":"def_", "href":"#"+id}
@@ -96,6 +96,17 @@ def drawbox(parent, ybase,boxtext,ymid, xbase=0):
         parent.append(ln_el)
 
 
+def get_convention_explainer():
+    return HTM_E.div(
+    "The following conventions are used for the completion of operations:",
+        HTM_E.ul(HTM_E.li(HTM_E.b("Refinement")," operation (denoted by ", HTM_E.b("bold text")," or ", HTM_E.strike("strikethrough text"), "): Is used to add details to a requirement (including replacing an assignment with a more restrictive selection) or to remove part of the requirement that is made irrelevant through the completion of another operation, and thus further restricts a requirement."),
+             HTM_E.li(HTM_E.b("Selection"),"(denoted by ", HTM_E.i("italicized text"),"): Is used to select one or more options provided by the [CC] in stating a requirement."),
+             HTM_E.li(HTM_E.b("Assignment")," operation (denoted by ", HTM_E.i("italicized text"),"): Is used to assign a specific value to an unspecified parameter, such as the length of a password. Showing the value in square brackets indicates assignment."),
+             HTM_E.li(HTM_E.b("Iteration")," operation: Is indicated by appending the SFR name with a slash and unique identifier suggesting the purpose of the operation, e.g. \"/EXAMPLE1.\"")
+     )
+    )
+        
+
 class generic_pp_doc(object):
     def __init__(self, root, workdir, boilerplate):
         self.root = root
@@ -109,6 +120,7 @@ class generic_pp_doc(object):
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
+        self.are_sfrs_mingled = False
 
         self.categorize_sfrs()
         self.outline = [0]
@@ -252,7 +264,13 @@ class generic_pp_doc(object):
         
     def add_discoverable_xrefs(self, node):
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
-        regex_str = "(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        bracketed=set()
+        for key in keys:
+            if key[0]=='[':
+                keys.remove(key)
+                bracketed.add(key)
+        regex_str = "("+"|".join(map(backslashify,bracketed))+")|(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        print("Regex string is " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
 
@@ -407,6 +425,11 @@ class generic_pp_doc(object):
         self.toc = adopt(body, (HTM_E.div({"class":"toc","id":"toc"})))
         return 
 
+    def fel_cc_id(self, node):
+        fcomp = node.xpath("ancestor::cc:f-component", namespaces=NS)[0]
+        index = fcomp.findall("cc:f-element",NS).index(node)+1
+        return self.fcomp_cc_id(fcomp, suffix="."+str(index))
+        
         
     def fcomp_cc_id(self, node, suffix=""):
         ret = node.attrib["cc-id"].upper() + suffix
@@ -459,6 +482,9 @@ class generic_pp_doc(object):
             self.handle_security_objectives_rationale(node, parent)
         elif title=="Security Objectives for the Operational Environment":
             self.handle_security_objectives_operational_environment(parent)
+        elif title=="Assumptions":
+            self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the PP-Module can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
+
     
     def doctype(self):
         return "PP"
@@ -723,9 +749,13 @@ security objectives for the environment.
                    self.boilerplate.xpath("//*[@id='cc-docs']/cc:entry",namespaces=NS))
         entries.sort(key=lambda x: pp_util.flatten(x.find("cc:description", NS)))
         for entry in entries:
-            pp_util.log("Entry : "+pp_util.flatten(entry.find("cc:description", NS)))
+            keyterm= "["+entry.find("cc:tag", NS).text+"]"
+            entry_id = self.derive_id(entry)            
+            self.register_keyterm(keyterm, entry_id)
+            
             tr = adopt(table, HTM_E.tr())
-            tr.append(HTM_E.td( HTM_E.span({"id":self.derive_id(entry)},"["+entry.find("cc:tag", NS).text+"]")))
+            tr.append(HTM_E.td( HTM_E.span({"id":entry_id},keyterm)))
+
             td = adopt(tr, HTM_E.td())
             self.handle_content(entry.find("cc:description",NS), td)
         
@@ -1080,15 +1110,55 @@ security policies map to the security objectives.""")
             raise Exception("Should only be one thing")
         return ret[0]
 
+
+    def get_fcomp_status_mingled(self, node):
+        ret=""
+        if node in self.sel_sfrs:
+            ret="This is a selection-based component. Its inclusion depends upon selection from:"
+            for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
+                fcomp = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']") 
+                if len(fcomp)>0:
+                    ret+=" " + self.fel_cc_id(fcomp[0])
+            if node.find("cc:depends/cc:optional",NS) is not None:
+                ret += "This component may also be optionally be included in the ST as if optional."
+        elif node in self.obj_sfrs:
+            ret="This is an objective component."
+        elif node in self.opt_sfrs:
+            ret="This is an optional component."
+        return ret
+
+
+    def get_fcomp_status_isolated(self, node):
+        ret=""
+        if node in self.sel_sfrs:
+            ret="The inclusion of this selection-based component depends upon selection from:"
+            for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
+                fels = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']")
+                if len(fels)==1:
+                    ret+=" " + self.fel_cc_id(fels[0])
+                else:
+                    print("WARNING: Failed to find exactly one element that contains a selectable with the id: "+dependsId)
+            ret+="."
+            if node.find("cc:depends/cc:optional",NS) is not None:
+                ret += "This component may also be optionally be included in the ST as if optional."
+        return ret
+
+
+    
+    def get_fcomp_status(self, node):
+        if self.are_sfrs_mingled:
+            return self.get_fcomp_status_mingled(node)
+        else:
+            return self.get_fcomp_status_isolated(node)
+        
+    
     def handle_fcomponent(self, node, par):
         formal = self.fcomp_cc_id(node)
         div = adopt(par, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
-        status=""
-        objective = False
-        optional = False
-        # Meaningful ancestor is the key
-        selecteds = {}
+        statustext=self.get_fcomp_status(node)
+        if not statustext=="":
+            div.append(HTM_E.div({"class":"statustag"}, statustext))
         ctr=0
         for f_el in node.findall(".//cc:f-element", NS):
             ctr+=1
@@ -1388,3 +1458,6 @@ security policies map to the security objectives.""")
     #     ret+="</a> Conformant"
 
         
+
+
+    
