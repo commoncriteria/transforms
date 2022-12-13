@@ -220,6 +220,20 @@ guidance, and testing.</p>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
+     </x:choose>
+     
+   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Implementation-based SFRs</h2>  
+     <x:choose>
+      <x:when test="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='feat-based']">
+        <x:for-each select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='feat-based']/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[not(@status='invisible')][@status='feat-based' and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible') and /cc:Module]"/>
+        </x:for-each>
+      </x:when>
+      <x:otherwise>The PP-Module does not define any implementation-based requirements.</x:otherwise>
     </x:choose>
 
 
