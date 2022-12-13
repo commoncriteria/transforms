@@ -76,8 +76,11 @@ if __name__ == "__main__":
     for pkg in root.findall(".//cc:include-pkg", ns)+\
                root.findall(".//cc:base-pp", ns)+\
                root.findall(".//cc:module", ns):
-        if "name" in pkg.attrib:
+        if pkg.find("cc:product_class",ns) is not None:
+            print("Continuing")
             continue
+        else:
+            print("Blah:" + pkg.attrib["id"])
         filename = pkg.attrib["id"] + ".xml"
         url = "".join(pkg.find("./cc:git/cc:url", ns).text.split())
         branch = pkg.find("./cc:git/cc:branch", ns).text
