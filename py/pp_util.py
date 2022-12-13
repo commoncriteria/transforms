@@ -4,7 +4,9 @@ from lxml.builder import ElementMaker
 
 
 
-HTM_E=ElementMaker()
+HTM_E=ElementMaker(namespace=None,
+                   nsmap={None: "http://www.w3.org/1999/xhtml"})
+
 
 def get_HTM_E():
     return HTM_E

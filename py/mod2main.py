@@ -8,12 +8,23 @@ import pp_module
 import pp_util
 
             
-        
+def write_out_doc(doc, place):
+    out = open(place, "w+")
+    result = ET.tostring(doc,
+                        xml_declaration=True,
+                        doctype='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
+                        encoding='utf-8',
+                        standalone=False,
+                        with_tail=False,
+                        method='xml',
+                        pretty_print=True)
+    out.write(result.decode())
+    out.close()
     
 def make_mod(path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
-    boilerplate = ET.parse("/home/kg/commoncriteria/bluetooth/transforms/xsl/boilerplates.xml")
+    boilerplate = ET.parse("../xsl/boilerplates.xml")
     # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
         pp = pp_module.ppmod( doc, "../../output", boilerplate )
@@ -21,10 +32,9 @@ def make_mod(path):
         raise Exception("Unhandled")
     html_doc = pp.to_html()
     
-    out = open("/tmp/abc.xml", "w+")
-    out.write("<!DOCTYPE html>\n"+ET.tostring(html_doc, pretty_print=True).decode())
-    out.close()
-    
+    write_out_doc(html_doc, "/tmp/abc.html")
+    sd = pp.to_sd()
+    write_out_doc(sd, "/tmp/abc-sd.html")
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert an XML Protection Profile Definition to a readable HTML document')
