@@ -14,9 +14,8 @@
       <a:documentation>
 	Root element for a Protection Profile Module.
       </a:documentation>
-      <attribute name="name"/>
       <ref name="pp-attributes-pat"/>
-      <ref name="PPRefAndRevision"/>
+      <ref name="RevisionHistory"/>
       <ref name="packages"/>
       <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
@@ -27,6 +26,7 @@
       <ref name="bibliography"/>
     </element>
   </start>
+
 
 
   <include href="StrictCommons.rng">
@@ -382,41 +382,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 
 
 
-  <define name="PPRefAndRevision">
-    <element name="PPReference">
-      <a:documentation>
-      </a:documentation>
-      <element name="ReferenceTable">
-	<a:documentation>
-	</a:documentation>
-        <element name="PPVersion">
-	  <a:documentation>
-	  </a:documentation>
-          <data type="token">
-             <param name="pattern">[0-9]+\.[0-9](-Draft)?</param>
-           </data>
-          <!-- <data type="decimal"/> -->
-        </element>
-        <element name="PPAuthor">
-	  <a:documentation>
-	  </a:documentation>
-          <text/>
-        </element>
-        <element name="PPPubDate">
-	  <a:documentation>
-	    Date of publication for this PP.
-	  </a:documentation>
-          <data type="date"/>
-        </element>
-        <element name="Keywords">
-	  <a:documentation>
-	  </a:documentation>
-          <text/>
-        </element>
-      </element>
-    </element>
-    <ref name="RevisionHistory"/>
-  </define>
 
 
 

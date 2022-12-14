@@ -368,7 +368,7 @@ class generic_pp_doc(object):
         )
         ret = HTM_E.html(head)
         pp_util.add_js(head)
-        css_text = css_content.fx_pp_css(self)
+        css_text = css_content.fx_pp_css()
         extra_css = self.rf("//cc:extra-css")
         if extra_css is not None:
             css_text=extra_css.text+"\n"

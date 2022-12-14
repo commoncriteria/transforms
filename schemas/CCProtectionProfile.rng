@@ -451,48 +451,4 @@
   </define> 
 
  
-  <define name="PPReference">
-      <element name="PPReference">
-        <a:documentation>
-          A wrapper element for document meta-data.
-        </a:documentation>
-
-        <element name="ReferenceTable">
-          <a:documentation>
-            A second wrapper element for document meta-data.
-          </a:documentation>
-          <element name="PPTitle">
-            <a:documentation>Title of this document</a:documentation>
-            <text/>
-          </element>
-          <element name="PPVersion">
-            <a:documentation>
-
-Version of Common Criteria this document follows.
-It should be the version listed in the CCPart1/2/3 files consulted.
-
-            </a:documentation>
-            <data type="NMTOKEN"/>
-          </element>
-          <element name="PPAuthor">
-            <a:documentation>
-              Organization that developed this PP (e.g. National Information Assurance Partnership)
-            </a:documentation>
-            <text/>
-          </element>
-          <element name="PPPubDate">
-            <a:documentation>
-              Date of publication for this PP.
-            </a:documentation>
-            <data type="date"/>
-          </element>
-          <element name="Keywords">
-            <a:documentation>
-              NOT USED. A list of keywords associated with this document.
-            </a:documentation>
-            <text/>
-          </element>
-        </element>
-      </element>
-  </define> 
 </grammar>

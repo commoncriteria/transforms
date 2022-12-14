@@ -1,4 +1,4 @@
-def fx_common_css(doc):
+def fx_common_css():
      return """#toc a{
         display: block;
     }
@@ -255,8 +255,8 @@ def fx_common_css(doc):
 
 
       
-def fx_pp_css(doc):
-      ret = fx_common_css(doc)
+def fx_pp_css():
+      ret = fx_common_css()
       ret +="""          .figure{
               font-weight:bold;
           }

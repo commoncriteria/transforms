@@ -1,6 +1,7 @@
 import generic_pp_doc
 import pp_util
 import edoc
+import css_content
 from generic_pp_doc import NS
 
 HTM_E=pp_util.get_HTM_E()
@@ -55,7 +56,55 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 self.handle_content(conmod, td)
             if len(conmods)==0:
                 self.handle_content(req.find("cc:consistency-rationale", generic_pp_doc.NS), td)
+
+
+    def to_sd(self):
+        body=HTM_E.body()
+        ret=HTM_E.html(
+            HTM_E.head(
+                HTM_E.title("Supporting Document"+self.title()),
+                HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
+            ),body)
+        self.meta_data(body)
+        
+        
+        return ret
+
+
+    def meta_data(self, parent):
+        div = HTM_E.div(
+            {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
+            HTM_E.h1({"class":"title","style":"page-break-before:auto;"},"Supporting Document",HTM_E.br(), "Mandatory Technical Document"),
+            HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP"}),
+            HTM_E.hr({"width":"50%"}),
+            HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
+        self.add_text(div, self.title())
+        div.append(HTM_E.br())
+        parent.append(div)
+      #   append_text("Version: "+<x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      # <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      # <b><x:value-of select="//cc:PPAuthor"/></b>
+      # </div>
+        
+
     
+    # <html xmlns="http://www.w3.org/1999/xhtml">
+    #   <x:call-template name="module-head"/>
+    #   <body>
+    #     <x:call-template name="meta-data"/>
+    #     <x:call-template name="foreward"/>
+    #     <x:call-template name="toc"/>
+    #     <x:call-template name="intro"/>
+    #     <x:call-template name="sfrs"/>
+    #     <x:apply-templates select="/cc:*" mode="sars"/>
+    #     <x:call-template name="sup-info"/>
+    #     <x:call-template name="references"/>
+    #   </body>
+    # </html>
+
+        
+
+                
     def template_sfrs(self, node ,par):
 #         par.append(self.sec({"class":"indexable","data-level":"2"},"Security Functional Requirements"))
 #         self.add_text(par, """The Security Functional Requirements included in this section
