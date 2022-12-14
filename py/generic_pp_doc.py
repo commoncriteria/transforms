@@ -126,11 +126,12 @@ class generic_pp_doc(object):
         self.outline = [0]
         self.is_appendix = False
         self.abbrs = {}                       # Full set of abbreviaiotns
-#        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
-#        self.used_abbrs = set()               # Set of abbreviations that we've seen
-#        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
+        #        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
+        #        self.used_abbrs = set()               # Set of abbreviations that we've seen
+        #        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
         self.discoverables_to_ids = {}        # List of terms we're looking for
-#        self.test_number_stack = [0]
+        #        self.test_number_stack = [0]
+        self.register_threats_assumptions_objectives_policies()
         self.register_sfrs()
         self.register_abbrs()
         self.counters={}
@@ -147,11 +148,20 @@ class generic_pp_doc(object):
         for fcomp in self.root.findall(".//cc:f-component", NS):
             id = self.fcomp_cc_id(fcomp)
             self.register_keyterm(id.upper(),id)
-
+            for fel in fcomp.findall(".//cc:f-element", NS):
+                felid=self.fel_cc_id(fel)
+                self.register_keyterm(felid.upper(), felid)
+                
     def get_all_abbr_els(self):
         return self.rfa("//cc:term[@abbr]")+\
             self.boilerplate.findall("//cc:cc-terms/cc:term[@abbr]", NS)
-    
+
+    def register_threats_assumptions_objectives_policies(self):
+        for aa in self.rfa("//cc:threat")+self.rfa("//cc:assumption")+self.rfa("//cc:SO")+self.rfa("//cc:SOE")+self.rfa("//cc:OSP"):
+            if aa.find("cc:description", NS) is not None:
+                ccname = aa.attrib["name"]
+                self.register_keyterm(ccname, ccname)
+                
     def register_abbrs(self):
         for term in self.get_all_abbr_els():
             abbr = term.attrib["abbr"]
@@ -216,7 +226,7 @@ class generic_pp_doc(object):
            node.tag == "h1"   or node.tag == "h2"      or\
            node.tag == "h3"   or node.tag == "h4"      or\
            node.tag == "head" or node.tag == "script"  or\
-           node.tag == "svg"  : 
+           node.tag == "svg"  or node.tag == "th": 
             return True
         if "class" in node.attrib and node.attrib["class"]:
             classes = node.attrib["class"].split(" ")
@@ -278,6 +288,7 @@ class generic_pp_doc(object):
         dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
         for dynref in dynrefs:
             refid = dynref.attrib["href"][1:]
+            print("Looking for " + refid)
             reffed = doc.find(".//*[@id='"+refid+"']")
             if reffed is None:
                 print("Could not find dynamic reference: " + refid)
@@ -287,6 +298,7 @@ class generic_pp_doc(object):
                 text = reffed.text
             else:
                 text = label_node.text
+            print("Doing the thing: "+text + " yyy: " +text.split(" ")[-1])
             pp_util.append_text(dynref, " "+text)
         
     def to_html(self):
@@ -529,11 +541,11 @@ class generic_pp_doc(object):
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
         self.add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
+        # b_el = adopt(par, HTM_E.div({"class":"table_caption"}))
         table = adopt(par, HTM_E.table({"class":"sort_kids_"}))
-        caption = adopt(table, HTM_E.captions({"data-sortkey":"#0"}))
-        b_el = adopt(caption, HTM_E.b())
-        self.create_ctr("Table","t-ext-comp_map-", b_el, "Table ")
-        self.add_text(b_el, ": Extended Component Definitions")
+        caption = adopt(table, HTM_E.caption())
+        self.create_ctr("Table","t-ext-comp_map-", caption, "Table ")
+        self.add_text(caption, "Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
                               HTM_E.th("Functional Class"),
                               HTM_E.th("Functional Components")))
@@ -730,15 +742,17 @@ security objectives for the environment.
             self.add_text(parent, "This PP-Module does not define any objectives for the OE.")
 
         
-    def create_ctr(self, ctrtype, id ,parent, prefix, child=None):
+    def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
         ctrcount = str(self.get_next_counter(ctrtype))
+        print("Counter count is: " + ctrcount)
         span = HTM_E.span({"class":"ctr",
                            "data-counter-type":"ct-"+ctrtype,
                            "id":id}, prefix,
-                          HTM_E.span({"class":"counter"},ctrcount)
+                          HTM_E.span({"class":"counter"},ctrcount+sep)
                           )
         parent.append(span)
         self.handle_content(child, span)
+        
 
         
     def create_bibliography(self, par):
@@ -790,7 +804,7 @@ security policies map to the security objectives.""")
         table = adopt(parent, HTM_E.table())
         caption = adopt(table, HTM_E.caption())
         self.create_ctr("Table","t-sec-obj-rat-", caption, "Table ")
-        self.add_text(caption, ": Security Objectives Rationale")
+        self.add_text(caption, "Security Objectives Rationale")
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("Threat, Assumption, or OSP"))
         tr.append(HTM_E.td("Security Objectives"))
