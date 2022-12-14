@@ -19,13 +19,13 @@
 
 
   <define name="selectables_classic_content">
-     <optional>
-        <attribute name="linebreak">
-          <a:documentation>
-            Indicates that new lines should be appended to every selectable.
-          </a:documentation>
-          <choice><value>yes</value></choice>
-        </attribute>
+    <optional><element name="itemize"><empty/></element>
+        <!-- <attribute name="linebreak"> -->
+        <!--   <a:documentation> -->
+        <!--     Indicates that new lines should be appended to every selectable. -->
+        <!--   </a:documentation> -->
+        <!--   <choice><value>yes</value></choice> -->
+        <!-- </attribute> -->
       </optional>
       <ref name="selectable-group"/>
   </define>

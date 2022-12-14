@@ -1674,29 +1674,27 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="depends-pat">
     <choice>
-      <element name="depends"><element name="objective"><empty/></element></element>
+      <element name="objective"><empty/></element>
       <zeroOrMore>
-	<element name="depends">
-          <a:documentation>
-            Modifies the parent element such that it depends on something  else.
-          </a:documentation>
-	  <choice>
-	    <group>
-              <ref name="any-attributes"/>
-              <optional>
-		<element name="external-doc">
-		  <a:documentation>
-		    A _depends_ element with an _external-doc_ element can only depend on selections in that external document
-		  </a:documentation>
-		  <attribute name="ref">
-		    <a:documentation>Points to the id of the external document</a:documentation>
-		  </attribute>
-		</element>
-              </optional>
-	    </group>
-            <element name="optional"><empty/></element>
-	  </choice>
-	</element>
+	<choice>
+	  <element name="optional"><empty/></element>
+	  <element name="depends">
+            <a:documentation>
+              Modifies the parent element such that it depends on something  else.
+            </a:documentation>
+            <ref name="any-attributes"/>
+            <optional>
+	      <element name="external-doc">
+		<a:documentation>
+		  A _depends_ element with an _external-doc_ element can only depend on selections in that external document
+		</a:documentation>
+		<attribute name="ref">
+		  <a:documentation>Points to the id of the external document</a:documentation>
+		</attribute>
+	      </element>
+            </optional>
+	  </element>
+	</choice>
       </zeroOrMore>
     </choice>
   </define>
