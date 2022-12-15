@@ -28,15 +28,20 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             print("Adding " + doc.attrib["id"] + " as " + doc.tag)
             ret[doc.attrib["id"]] = edoc.Edoc(doc, workdir)
         return ret
-        
-    def title(self):
-        node = self.rf("//cc:PPTitle")
-        if node is not None:
-            return node.text
-        if "target-products" in self.root.attrib:
-            return "PP-Module for " + self.root.attrib["target-products"]
-        else:
-            return "PP-Module for " + self.root.attrib["target-product"] + "s"
+
+    def derive_plural(self):
+        plural = self.rf("/cc:plural")
+        if plural is not None:
+            return plural.text
+        orig = self.rf("/cc:product_class")
+        return orig.text+"s"
+    
+    def derive_title(self):
+        name = self.rf("/cc:name")
+        if name is not None:
+            return name.text
+        plural = self.derive_plural()
+        return "PP-Module for "+plural
 
     def requirement_consistency_rationale_section(self, reqs, nonmsg_end, par, edoc=None):
         nonmsg = "This PP-Module does not "+nonmsg_end
@@ -292,7 +297,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), par)
         self.add_text(par,"This PP-Module identifies several SFRs from the")
         edoc.make_xref_edoc(par)
-        self.add_text(par," that are needed to support "+self.root.attrib["target-product"])
+        self.add_text(par," that are needed to support "+self.rf("product_class").text)
         self.add_text(par," functionality.")
         self.add_text(par," This is considered to be consistent because the functionality provided by the")
         edoc.make_xref_edoc(par)

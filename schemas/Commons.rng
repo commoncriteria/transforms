@@ -42,7 +42,7 @@
    <optional><element name="plural">
       <a:documentation>
 	Element that defines the plural version of products.
-	If not specified the framework adds an 's' to the target-product element. This is for cases like 'ox' and 'oxen'.
+	If not specified the framework adds an 's' to the product_class element. This is for cases like 'ox' and 'oxen'.
       </a:documentation>
       <text/>      
    </element></optional>

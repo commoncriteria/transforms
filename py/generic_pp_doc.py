@@ -179,17 +179,18 @@ class generic_pp_doc(object):
     def categorize_sfrs(self):
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
-            
+
+
+        for sfr in self.rx("//cc:f-component[cc:objective]"):
+            self.obj_sfrs[sfr]=1
+        for sfr in self.rx("//cc:f-component[cc:optional and not(cc:depends)]"):
+            self.opt_sfrs[sfr]=1
         dep_sfrs = self.rx("//cc:f-component[cc:depends]")
         for sfr in dep_sfrs:
             should_register = True
             # We're just looking at the first one
             depends=sfr.find("cc:depends[1]", NS)
-            if depends.find("cc:optional", NS) is not None:
-                self.opt_sfrs[sfr]=1
-            elif depends.find("cc:objective", NS) is not None:
-                self.obj_sfrs[sfr]=1
-            elif depends.find("cc:external-doc", NS) is not None:
+            if depends.find("cc:external-doc", NS) is not None:
                 self.sel_sfrs[sfr]=1
             else:
                 for attr in depends.attrib:
@@ -211,7 +212,8 @@ class generic_pp_doc(object):
         
     def make_edocs(self, workdir):
         ret = {}
-        for external in self.root.findall(".//cc:*[cc:git]", NS):
+        # for external in self.root.findall(".//cc:*[cc:git]", NS):
+        for external in self.rfa("//cc:include-pkg")+self.rfa("//cc:base-pp"):
             ret[external.attrib["id"]] = edoc.Edoc(external, workdir)
         return ret
     
@@ -381,7 +383,7 @@ class generic_pp_doc(object):
         return ret
 
     def title(self):
-        return self.root.attrib["name"]
+        return edoc.derive_title(self.root, self.doctype())
 
     def handle_figure(self, el, par):
         id=el.attrib["id"]
@@ -405,18 +407,28 @@ class generic_pp_doc(object):
             div.append(HTM_E.a({"href":"#"+id},"Comment: " + id))
             div.append(HTM_E.br())
         return ret
-    
+
+    def derive_author(self):
+        auth_el = self.root.find("cc:author",NS)
+        if auth_el is  None:
+            return "National Information Assurance Partnership"
+        return auth_el.text
+        
     def fx_body_begin(self, body):
         self.handle_comments(body)
         body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
         body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
+        version_date = edoc.derive_version_and_date(self.root)
+        print(version_date)
+        print("Version date:"+version_date[0])
+              
         body.append(HTM_E.div({"class":"center"},
                               HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
-                              "Version: "+self.rf("//cc:ReferenceTable/cc:PPVersion").text,
+                              "Version: "+version_date[0],
                               HTM_E.br(),
-                              "     "+self.rf("//cc:ReferenceTable/cc:PPPubDate").text,
+                              "     "+version_date[1],
                               HTM_E.br(),
-                              HTM_E.b(self.rf("//cc:PPAuthor").text),
+                              HTM_E.b(self.derive_author()),
                               HTM_E.br()))
         self.apply_templates(self.rfa("//cc:foreword"), body)
         rev_his = HTM_E.h2({"style":"page-break-before:always;"},"Revision History")
@@ -499,8 +511,10 @@ class generic_pp_doc(object):
 
     
     def doctype(self):
-        return "PP"
+        return "Protection Profile"
 
+    def doctype_short(self):
+        return "PP"
 
     def get_all_dependencies(self, node):
         choices={}
@@ -633,44 +647,6 @@ class generic_pp_doc(object):
             self.handle_content(famnode.find("cc:mod-def",NS), div)
         self.end_section()
         
-
-
-
-
-#           <xsl:variable name="dcount"
-#             select="count(//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)])"/>
-#           <svg xmlns="http://www.w3.org/2000/svg" style="{concat('max-height: ', 20*$dcount+10, 'px;')}">
-#               <xsl:call-template name="drawbox">
-#                 <xsl:with-param name="ybase" select="20*floor($dcount div 2)"/>
-#                 <xsl:with-param name="boxtext" select="@fam-id"/>
-#               </xsl:call-template>
-#               <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId)and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
-#                 <xsl:variable name="box_text"><!--
-#                   --><xsl:value-of select="substring-after(@cc-id, '.')"/><!--
-#                   --><xsl:if test="@iteration">/<xsl:value-of select="@iteration"/></xsl:if></xsl:variable>
-#                 <xsl:call-template name="drawbox">
-#                   <xsl:with-param name="ybase" select="( position() - 1)* 20"/>
-#                   <xsl:with-param name="boxtext" select="$box_text"/>
-#                   <xsl:with-param name="xbase" select="230"/>
-#                   <xsl:with-param name="ymid" select="20*floor($dcount div 2)"/>
-#                 </xsl:call-template>
-#               </xsl:for-each>
-#           </svg>
-# <!--          </xsl:element> -->
-#         </xsl:when>
-#         <xsl:otherwise>
-#           <xsl:apply-templates select="cc:mod-def"/>
-#         </xsl:otherwise>
-#       </xsl:choose>
-
-# 	<!-- All Component descriptions --> 
-#       <xsl:for-each select="//cc:f-component[starts-with(@cc-id, $famId) and not(@notnew)][not(ancestor::cc:modified-sfrs) and (cc:comp-lev)]">
-#          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-#          <p><xsl:value-of select="$upId"/>,
-#              <xsl:value-of select="@name"/>,
-#              <xsl:apply-templates select="cc:comp-lev" mode="reveal"/>
-#          </p>
-#       </xsl:for-each>
     def get_mng_aud(self, sfr, cc_id, par):
         par.append(HTM_E.h4("Management: "+cc_id))
         p_el = adopt(par, HTM_E.p())

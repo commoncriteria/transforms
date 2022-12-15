@@ -26,9 +26,9 @@ class Edoc:
                 for decl_modsfr in modsfrs_el.text.split(" "):
                     self.decl_modsfrs[decl_modsfr]=1
         print("Nodewithinfo is " + str(nodewithinfo))
-        self.short = Edoc.get_short(nodewithinfo)
-        self.product = Edoc.derive_product(nodewithinfo)
-        self.products = Edoc.derive_products(nodewithinfo)
+        # self.short = Edoc.get_short(nodewithinfo)
+        # self.product = derive_product(nodewithinfo)
+        # self.products = derive_products(nodewithinfo)
         self.mod_sfrs=[]
         self.add_sfrs=[]
         self.are_sfrs_sorted = False
@@ -37,10 +37,17 @@ class Edoc:
         return self.orig
         
     def get_product(self):
-        return self.product
+        if root is not None:
+            return derive_product(root)
+        else:
+            return derive_product(orig)
     
     def get_products(self):
-        return self.product
+        if root is not None:
+            return derive_products(root)
+        else:
+            return derive_products(orig)
+
         
     def add_base_dependent_sfr(self,bsfr):
         if self.is_modified(bsfr, self.root):
@@ -54,27 +61,33 @@ class Edoc:
 
     def make_xref_edoc(self, parent):
         url=self.orig.find("cc:url", NS).text
-        node = HTM_E.a({"href":url})
-        print("Node tag: " + node.tag)
-        if "name" in self.orig.attrib:
-            ret =self.orig.attrib["name"]
-            ret+=", version"
-            ret+=self.orig.attrib["version"]
+        print("Orig is :"+self.orig.attrib["id"])
+        if self.root is None:
+            parent.append(HTM_E.a({"href":url}, derive_short(self.orig)))
         else:
-            modrot = self.root.find(".//cc:Module", NS)
-            if modrot is not None:
-                name = modrot.attrib["name"]
-                if not name.startswith("PP-Module for"):
-                    name = "PP-Module for " + name
-            else:
-                modrot = self.root.find(".//cc:PPTitle", NS)
-                if modrot is not None:
-                    name = modrot.text
-                else:
-                    raise Exception("Somethign else " + str(node)   )
-            ret=name+", version "+self.root.find(".//cc:PPVersion", NS).text
-        node.text = ret
-        parent.append(node)
+            parent.append(HTM_E.a({"href":url}, derive_short(self.root)))
+
+        # if root
+        # print("Node tag: " + node.tag)
+        # if "name" in self.orig.attrib:
+        #     ret =self.orig.attrib["name"]
+        #     ret+=", version"
+        #     ret+=self.orig.attrib["version"]
+        # else:
+        #     modrot = self.root.find(".//cc:Module", NS)
+        #     if modrot is not None:
+        #         name = modrot.attrib["name"]
+        #         if not name.startswith("PP-Module for"):
+        #             name = "PP-Module for " + name
+        #     else:
+        #         modrot = self.root.find(".//cc:PPTitle", NS)
+        #         if modrot is not None:
+        #             name = modrot.text
+        #         else:
+        #             raise Exception("Somethign else " + str(node)   )
+        #     ret=name+", version "+self.root.find(".//cc:PPVersion", NS).text
+        # node.text = ret
+        # parent.append(node)
         
     def is_modified(self, sfr, broot):
         cc_id = sfr.attrib["cc-id"]
@@ -94,19 +107,55 @@ class Edoc:
             return ret
         return False
 
-    def derive_product(node):
-        return node.attrib["target-product"]
-    
-    def derive_products(node):
-        if "target-products" in node.attrib:
-            return node.attrib["target-products"]
-        return node.attrib["target-product"]+"s"
-        
-    def get_short(node):
-        if "short" in node.attrib:
-            ret = node.attrib["short"]
-            if node.find("cc:cPP", NS):
-                return ret+"cPP"
-            return ret+" PP"
-        return node.attrib["target-product"]+" PP"
+def derive_product(node):
+    print("Tag: " + node.tag)
+    return node.find("cc:product_class", NS).text
 
+    
+def derive_products(node):
+    plural=node.find("cc:plural", NS)
+    if plural is not None:
+        return plural.text
+    return derive_product(node).text+"s"
+
+def derive_version_and_date(node):
+    ver=node.find("cc:version", NS)
+    if ver is not None:
+        return [ver.text]
+    biggest=0.0
+    date=""
+    for entry in node.findall("cc:RevisionHistory/cc:entry",NS):
+        ver = entry.find("cc:version", NS)
+        try:
+            ver_float = float(ver.text)
+            if biggest<ver_float:
+                date=entry.find("cc:date",NS).text
+                biggest=ver_float
+        except ValueError:
+            return [ver.text, entry.find("cc:date",NS).text]
+    print("Returning: ")
+    print("Biggest:"+str(biggest))
+    print("Date: " + date)
+    ret=[]
+    ret.append(str(biggest))
+    ret.append(date)
+    return ret
+
+def is_cpp(node):
+    return node.find("cc:cPP", NS) is not None
+
+def derive_title(node, doctype):
+    title = node.find("cc:title", NS)
+    if title is not None:
+        return title
+    return derive_product(node) + " " + doctype
+
+def derive_short(node):
+    short = node.find("cc:short", NS)
+    if short is not None:
+        return short.text
+    name = derive_products(node)
+    sep = " "
+    if is_cpp(node):
+        sep="c"
+    return name+sep+"PP"
