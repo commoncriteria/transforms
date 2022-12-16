@@ -5,7 +5,9 @@ import pathlib
 import lxml.etree as ET
 import argparse
 import pp_module
+import pp_doc
 import pp_util
+import generic_pp_doc
 import os
             
 def write_out_doc(doc, place):
@@ -24,12 +26,12 @@ def write_out_doc(doc, place):
 def make_mod(path, pp_path, sd_path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
-    boilerplate = ET.parse("../xsl/boilerplates.xml")
+    boilerplate = ET.parse("transforms/xsl/boilerplates.xml")
     # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
-        pp = pp_module.ppmod( doc, "../../output", boilerplate )
+        pp = pp_module.ppmod( doc, "output", boilerplate )
     elif doc.tag == "{https://niap-ccevs.org/cc/v1}PP":
-        pp = generic_pp_doc.ppmod( doc, "../../output", boilerplate )
+        pp = pp_doc.pp_doc( doc, "output", boilerplate )
     else:
         raise Exception("Unhandled")
     html_doc = pp.to_html()

@@ -25,16 +25,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         ret = super().make_edocs(workdir)
         nonxmldocs = self.rfa("//cc:base-pp[@name]")
         for doc in nonxmldocs:
-            print("Adding " + doc.attrib["id"] + " as " + doc.tag)
             ret[doc.attrib["id"]] = edoc.Edoc(doc, workdir)
         return ret
-
-    def derive_plural(self):
-        plural = self.rf("/cc:plural")
-        if plural is not None:
-            return plural.text
-        orig = self.rf("/cc:product_class")
-        return orig.text+"s"
     
     def derive_title(self):
         name = self.rf("/cc:name")

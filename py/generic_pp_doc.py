@@ -136,6 +136,10 @@ class generic_pp_doc(object):
         self.register_abbrs()
         self.counters={}
 
+
+    def derive_plural(self):
+        return edoc.derive_products(self.root)
+        
     def get_next_counter(self, ctr_type):
         if ctr_type in self.counters:
             self.counters[ctr_type]+=1
@@ -507,7 +511,7 @@ class generic_pp_doc(object):
         elif title=="Security Objectives for the Operational Environment":
             self.handle_security_objectives_operational_environment(parent)
         elif title=="Assumptions":
-            self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the PP-Module can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
+            self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
 
     
     def doctype(self):
@@ -684,7 +688,7 @@ class generic_pp_doc(object):
     def opt_app(self,level,word,sfrs, par, suffix=""):
         par.append(self.sec({"id":word.replace(" ","-")+"-"},word+" Requirements"))
         if len(sfrs)==0:
-            self.add_text(par, "This PP-Module does not define any "+word+" SFRs.\n")
+            self.add_text(par, "This "+self.doctype_short()+" does not define any "+word+" SFRs.\n")
         else:
             self.handle_sparse_sfrs(sfrs, par)
         self.end_section()
@@ -1396,7 +1400,7 @@ security policies map to the security objectives.""")
         a_el=adopt(parent, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
         if not self.handle_content(ref, a_el):
             self.add_text(a_el, deftext)
-        
+
     def make_xref_section(self, id, parent):
         parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
@@ -1410,7 +1414,6 @@ security policies map to the security objectives.""")
             self.make_xref_section(target, pp_util.localtag(target.tag), parent)
         elif target.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
             theid= target.attrib["id"]
-            print("The id is " + theid)
             self.edocs[theid].make_xref_edoc(parent)
         elif target.tag == "{https://niap-ccevs.org/cc/v1}entry":
             self.make_xref_bibentry(target, parent)
@@ -1420,6 +1423,8 @@ security policies map to the security objectives.""")
             self.make_xref_generic(target, parent, ref, "figure")
         elif target.tag == "{https://niap-ccevs.org/cc/v1}ctr":
             self.make_xref_generic(target, parent, ref, "figure")
+        elif target.tag == "{https://niap-ccevs.org/cc/v1}appendix":
+            self.make_xref_generic(target, parent, ref, "Appendix")
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
