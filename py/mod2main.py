@@ -6,7 +6,7 @@ import lxml.etree as ET
 import argparse
 import pp_module
 import pp_util
-
+import os
             
 def write_out_doc(doc, place):
     out = open(place, "w+")
@@ -21,20 +21,26 @@ def write_out_doc(doc, place):
     out.write(result.decode())
     out.close()
     
-def make_mod(path):
+def make_mod(path, pp_path, sd_path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
     boilerplate = ET.parse("../xsl/boilerplates.xml")
     # print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
         pp = pp_module.ppmod( doc, "../../output", boilerplate )
+    elif doc.tag == "{https://niap-ccevs.org/cc/v1}PP":
+        pp = generic_pp_doc.ppmod( doc, "../../output", boilerplate )
     else:
         raise Exception("Unhandled")
     html_doc = pp.to_html()
     
-    write_out_doc(html_doc, "/tmp/abc.html")
+    write_out_doc(html_doc, pp_path)
     sd = pp.to_sd()
-    write_out_doc(sd, "/tmp/abc-sd.html")
+    write_out_doc(sd, sd_path)
+
+
+
+    
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert an XML Protection Profile Definition to a readable HTML document')
@@ -43,11 +49,30 @@ if __name__ == "__main__":
     # parser.add_argument('--sum', dest='accumulate', action='store_const',
     #                     const=sum, default=max,
     #                     help='sum the integers (default: find the max)')
-    parser.add_argument('-w', nargs="?")
-    parser.add_argument('output-file', nargs="?", help="Path to output file")
-    parser.add_argument('input-file' , help="Path to the XML definition")
-    args = parser.parse_args()
-    make_mod(vars(args)["input-file"])
-    print(str(args))
+    proj=os.path.basename(os.getcwd())    
+    print("Project is: " + proj)
+    if len(sys.argv) > 1:
+        inpath=sys.argv[1]
+    else:
+        inpath=os.path.join("input", proj+".xml")
 
+    if len(sys.argv) > 2:
+        mainpath=sys.argv[2]
+    else:
+        mainpath=os.path.join("output", proj+".html")
+
+    if len(sys.argv) > 3:
+        sdpath=sys.argv[3]
+    else:
+        sdpath=os.path.join("output", proj+"-sd.html")
+
+    make_mod(inpath, mainpath, sdpath)
+    
+    # parser.add_argument('-w', nargs="?")
+    # parser.add_argument('-s', help="Path to sd file", required=False)
+    # parser.add_argument('-r', help="Path to pp file", required=False)
+    # parser.add_argument('-i', help="Path to the XML definition")
+    # args = vars(parser.parse_args())
+    # make_mod(args["input-file"], args["o"], args["s"])
+    # print(str(args))
     # print(args.accumulate(args.integers))
