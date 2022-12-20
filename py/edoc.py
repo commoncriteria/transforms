@@ -116,7 +116,7 @@ def derive_products(node):
     plural=node.find("cc:plural", NS)
     if plural is not None:
         return plural.text
-    return derive_product(node).text+"s"
+    return derive_product(node)+"s"
 
 def derive_version_and_date(node):
     ver=node.find("cc:version", NS)
