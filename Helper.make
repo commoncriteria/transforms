@@ -60,20 +60,20 @@ TD_DIR = input/tds
 TDs = $(shell [ ! -d $(TD_DIR) ] || find $(TD_DIR) -name '*.xml' -type f)
 
 
-#- XSL that creates regular HTML document
-PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
+# #- XSL that creates regular HTML document
+# PP2HTML_XSL ?= $(TRANS)/xsl/pp2html.xsl
 
-#- XSL that creates the tabularized HTML document
-PP2TABLE_XSL ?= $(TRANS)/xsl/pp2table.xsl
+# #- XSL that creates the tabularized HTML document
+# PP2TABLE_XSL ?= $(TRANS)/xsl/pp2table.xsl
 
-#- XSL that creates the tabularized HTML document with just the requirements
-PP2SIMPLIFIED_XSL ?= $(TRANS)/xsl/pp2simplified.xsl
+# #- XSL that creates the tabularized HTML document with just the requirements
+# PP2SIMPLIFIED_XSL ?= $(TRANS)/xsl/pp2simplified.xsl
 
-#- XSL containing templates common to the other transforms
-PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
+# #- XSL containing templates common to the other transforms
+# PPCOMMONS_XSL ?= $(TRANS)/xsl/ppcommons.xsl
 
-#- XSL that creates an SD-ish document from the PP_XML 
-SD_XSL ?= $(TRANS)/xsl/module2sd.xsl
+# #- XSL that creates an SD-ish document from the PP_XML 
+# SD_XSL ?= $(TRANS)/xsl/module2sd.xsl
 
 #- Path to input XML document for the esr
 ESR_XML ?= $(IN)/esr.xml
@@ -81,17 +81,17 @@ ESR_XML ?= $(IN)/esr.xml
 #- Output of the SD Document
 SD_HTML ?= $(OUT)/$(BASE)-sd.html
 
-#- Path where tabularized html document
-TABLE ?= $(OUT)/$(BASE)-table.html
-
-#- Path where tabularized html document with just the requirements
-SIMPLIFIED ?= $(OUT)/$(BASE)-table-reqs.html
-
 #- Path where the basic report is written
 PP_HTML ?= $(OUT)/$(BASE).html
 
 #- Path where the ESR is written
 ESR_HTML ?= $(OUT)/$(BASE)-esr.html
+
+# #- Path where tabularized html document
+# TABLE ?= $(OUT)/$(BASE)-table.html
+
+# #- Path where tabularized html document with just the requirements
+# SIMPLIFIED ?= $(OUT)/$(BASE)-table-reqs.html
 
 #- Path where the release report is written
 PP_RELEASE_HTML ?= $(OUT)/$(BASE)-release.html
@@ -166,35 +166,35 @@ EFF_HTML ?= $(OUT)/effective.html
 #- It should be at least XSL level-1 compliant.
 #- It should be able to handle commands of the form
 #- $XSL_EXE [--string-param <param-name> <param-value>]* -o <output> <xsl-file> <input>
-XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
-# Jing does not work for some reason.
+# XSL_EXE ?= xsltproc --stringparam debug '$(DEBUG)'
+# # Jing does not work for some reason.
 
-#- Does the XSL
-#- Arg 1 is input file
-#- Arg 2 is XSL file
-#- Arg 3 is output file
-#- Arg 4 is parameter value pairs
-DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
+# #- Does the XSL
+# #- Arg 1 is input file
+# #- Arg 2 is XSL file
+# #- Arg 3 is output file
+# #- Arg 4 is parameter value pairs
+# DOXSL ?= $(XSL_EXE)  $(4) -o $(3)  $(2) $(1)
 
-#- Transforms with XML and calls post-process.py
-#- Arg 1 is input file
-#- Arg 2 is XSL file
-#- Arg 3 is output file
-#- Arg 4 is parameter value pairs
-DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
-	python3 $(TRANS)/py/post-process.py\
-        $(HANDLE_ABBRS) <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) 
+# #- Transforms with XML and calls post-process.py
+# #- Arg 1 is input file
+# #- Arg 2 is XSL file
+# #- Arg 3 is output file
+# #- Arg 4 is parameter value pairs
+# DOIT ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
+#         # python3 $(TRANS)/py/post-process.py\
+#         # $(HANDLE_ABBRS) <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) 
 
-#- Transforms with XML and calls post-process.py
-#- Arg 1 is input file
-#- Arg 2 is XSL file
-#- Arg 3 is output file
-#- Arg 4 is parameter value pairs
-DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
-           python3 $(TRANS)/py/post-process.py\
-	   $(HANDLE_ABBRS)                    \
-           <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) \
-           <($(XSL_EXE)      $(5) $(1))\=$(6) 
+# #- Transforms with XML and calls post-process.py
+# #- Arg 1 is input file
+# #- Arg 2 is XSL file
+# #- Arg 3 is output file
+# #- Arg 4 is parameter value pairs
+# DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
+#            python3 $(TRANS)/py/post-process.py\
+# 	   $(HANDLE_ABBRS)                    \
+#            <($(XSL_EXE) $(4) $(2) $(1) 2>$(WARN_PATH))\=$(3) \
+#            <($(XSL_EXE)      $(5) $(1))\=$(6) 
 
 #- Arg 1 is input file
 #- Arg 2 is File/Pattern to be spellchecked
@@ -202,10 +202,10 @@ DOIT_SD ?= python3 $(TRANS)/py/retrieve-included-docs.py $1 $(OUT) &&\
 SPELLCHECKER?=bash -c "hunspell -l -H -p <(python3 $(TRANS)/py/get_spell_allowlist.py $1; cat $(TRANS)/dictionaries/*.txt; tr -d '\015' <$(PROJDICTIONARY)) $2 | sort -u >$3"
 
 
-FNL_PARM ?=--stringparam release final
+# FNL_PARM ?=--stringparam release final
 
-#- Appendicize parameter
-APP_PARM ?=--stringparam appendicize on
+# #- Appendicize parameter
+# APP_PARM ?=--stringparam appendicize on
 
 #- A temporary directory argument
 TMP?=/tmp
@@ -230,6 +230,8 @@ META_TXT ?= $(OUT)/meta-info.txt
 #- Builds normal PP outputs (not modules)
 #---
 default:  $(PP_HTML) $(PP_RELEASE_HTML) meta-info
+	python3 $(TRANS)/py/retrieve-included-docs.py $(PP_XML) output && python3 $(TRANS)/py/mod2main.py $(PP_XML)
+
 
 #- Builds all outputs
 all: $(TABLE) $(SIMPLIFIED) $(PP_HTML) $(ESR_HTML) $(PP_RELEASE_HTML)
