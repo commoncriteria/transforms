@@ -137,44 +137,6 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.end_section()
         self.end_section()
     
-    def handle_conformance_claims(self, node, parent):
-        dl=HTM_E.dl()
-        parent.append(dl)
-        dl.append(HTM_E.dt("Conformance Statement"))
-        dd = HTM_E.dd()
-        dl.append(dd)
-        dd.append(HTM_E.p("""This PP-Module inherits exact conformance as required from the specified
-          Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-based
-          SFRs, and Optional SFRs (dated May 2017)."""))
-        dd.append(HTM_E.p("""The following PPs and PP-Modules are allowed to be specified in a 
-            PP-Configuration with this PP-Module."""))
-        ul=adopt(dd, HTM_E.ul())
-        bases = self.rfa("//cc:base-pp")
-        for base in bases:
-            li=adopt(ul, HTM_E.li())
-            self.make_xref(base,li)
-        dl.append(HTM_E.dt("CC Conformance Claims"))
-        dl.append(HTM_E.dd("This PP-Module is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria "+pp_util.ccver()+"."))
-        dl.append(HTM_E.dt("PP Claim"))
-        dl.append(HTM_E.dd("This PP-Module does not claim conformance to any Protection Profile."))
-        dl.append(HTM_E.dt("Package Claim"))
-        dd = adopt(dl, HTM_E.dd())
-        dd.text="This PP-Module "
-        pks = self.rfa("//cc:include-pkg")
-        ctr=len(pks)
-        if ctr == 0:
-            self.add_text(dd, "does not claim conformance to any packages")
-        else:
-            lagsep=""
-            for pk in pks:
-                ctr=ctr-1
-                self.add_text(dd, lagsep)
-                lagsep=","
-                if ctr==2 :
-                    lagsep="and"
-                self.make_xref_edoc(pk, dd)
-            self.add_text("conformant")
-        self.add_text(dd,".")
 
 
   # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">

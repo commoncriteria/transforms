@@ -146,8 +146,6 @@ def is_cpp(node):
 
 def derive_title(node, doctype):
     title = node.find("cc:title", NS)
-    print("Namespace is " + str(NS))
-    print("Node is "+ node.tag + " " + node[0].tag)
     if title is not None:
         return title.text
     return doctype + " for " + derive_products(node) 

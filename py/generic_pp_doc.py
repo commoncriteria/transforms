@@ -546,6 +546,50 @@ class generic_pp_doc(object):
             return 
         self.handle_section_hook_base(title, node, parent)
 
+    def handle_conformance_claims(self, node, parent):
+        dl=HTM_E.dl()
+        parent.append(dl)
+        dl.append(HTM_E.dt("Conformance Statement"))
+        dd = HTM_E.dd()
+        dl.append(dd)
+
+        bases = self.rfa("//cc:base-pp")
+        if len(bases)>0:
+            dd.append(HTM_E.p("This "+self.doctype()+" inherits exact conformance as required "+\
+                              "from the specified Base-PP and as defined in the CC and CEM "+\
+                              "addenda for Exact Conformance, Selection-based "+
+                              "SFRs, and Optional SFRs (dated May 2017)."))
+            dd.append(HTM_E.p("The following PPs and PP-Modules are allowed to be specified in a "+\
+            "PP-Configuration with this "+self.doctype()+"."))
+            ul=adopt(dd, HTM_E.ul())
+            for base in bases:
+                li=adopt(ul, HTM_E.li())
+                self.make_xref(base,li)
+        dl.append(HTM_E.dt("CC Conformance Claims"))
+        dl.append(HTM_E.dd("This "+self.doctype()+" is conformant to Parts 2 (extended) and 3 (conformant) of Common Criteria "+pp_util.ccver()+"."))
+        dl.append(HTM_E.dt("PP Claim"))
+        dl.append(HTM_E.dd("This "+self.doctype()+" does not claim conformance to any Protection Profile."))
+        dl.append(HTM_E.dt("Package Claim"))
+        dd = adopt(dl, HTM_E.dd())
+        dd.text="This "+self.doctype()+" "
+        pks = self.rfa("//cc:include-pkg")
+        ctr=len(pks)
+        if ctr == 0:
+            self.add_text(dd, "does not claim conformance to any packages")
+        else:
+            lagsep=""
+            for pk in pks:
+                ctr=ctr-1
+                self.add_text(dd, lagsep)
+                lagsep=","
+                if ctr==2 :
+                    lagsep="and"
+                self.make_xref_edoc(pk, dd)
+            self.add_text("conformant")
+        self.add_text(dd,".")
+
+
+        
     def handle_section_hook_base(self, title, node, parent):
         if title=="Conformance Claims":
             self.handle_conformance_claims(node, parent)
@@ -758,7 +802,7 @@ The assumptions identified in Section 3 are incorporated as
 security objectives for the environment.
 """)
         else:
-            self.add_text(parent, "This PP-Module does not define any objectives for the OE.")
+            self.add_text(parent, "This "+self.doctype()+" does not define any objectives for the OE.")
 
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
