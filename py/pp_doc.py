@@ -48,5 +48,9 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.create_acronym_listing(parent)
         self.create_bibliography(parent)
     
+    def doctype(self):
+        return "Protection Profile"
 
-        
+    def doctype_short(self):
+        return "PP"
+

@@ -7,6 +7,7 @@ import argparse
 import pp_module
 import pp_doc
 import pp_util
+import pp_package
 import generic_pp_doc
 import os
             
@@ -32,6 +33,8 @@ def make_mod(path, pp_path, sd_path):
         pp = pp_module.ppmod( doc, "output", boilerplate )
     elif doc.tag == "{https://niap-ccevs.org/cc/v1}PP":
         pp = pp_doc.pp_doc( doc, "output", boilerplate )
+    elif doc.tag == "{https://niap-ccevs.org/cc/v1}Package":
+        pp = pp_package.pp_package(doc, "output", boilerplate)
     else:
         raise Exception("Unhandled")
     html_doc = pp.to_html()
@@ -61,7 +64,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         mainpath=sys.argv[2]
     else:
-        mainpath=os.path.join("output", proj+".html")
+        mainpath=os.path.join("output", proj+"-release.html")
 
     if len(sys.argv) > 3:
         sdpath=sys.argv[3]

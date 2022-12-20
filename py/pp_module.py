@@ -28,12 +28,12 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             ret[doc.attrib["id"]] = edoc.Edoc(doc, workdir)
         return ret
     
-    def derive_title(self):
-        name = self.rf("/cc:name")
-        if name is not None:
-            return name.text
-        plural = self.derive_plural()
-        return "PP-Module for "+plural
+    # def derive_title(self):
+    #     name = self.rf("/cc:name")
+    #     if name is not None:
+    #         return name.text
+    #     plural = self.derive_plural()
+    #     return "PP-Module for "+plural
 
     def requirement_consistency_rationale_section(self, reqs, nonmsg_end, par, edoc=None):
         nonmsg = "This PP-Module does not "+nonmsg_end
@@ -53,7 +53,6 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 self.handle_content(conmod, td)
             if len(conmods)==0:
                 self.handle_content(req.find("cc:consistency-rationale", generic_pp_doc.NS), td)
-
 
 
 

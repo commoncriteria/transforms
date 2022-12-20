@@ -14,9 +14,8 @@
   <start>
     <element name="Package">
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
-      <ref name="pp-attributes"/>
+      <ref name="pp-attributes-pat"/>
       <ref name="project-notes"/>
-      <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
       <ref name="PreferencesEtc"/>
@@ -153,11 +152,11 @@
     </optional>
   </define>
   
-  <define name="pp-attributes">
-      <attribute name="name">
-        <a:documentation> The title of this document.</a:documentation>
-      </attribute>
-  </define>
+  <!-- <define name="pp-attributes"> -->
+  <!--     <attribute name="name"> -->
+  <!--       <a:documentation> The title of this document.</a:documentation> -->
+  <!--     </attribute> -->
+  <!-- </define> -->
     
    <define name="pp-preferences-pat">
     <element name="pp-preferences">
