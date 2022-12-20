@@ -49,6 +49,7 @@ def download_url(url, path):
 def get_effective_doc(url, branch, fpath):
     workdir = tempfile.TemporaryDirectory()
     abspath = os.path.abspath(fpath)
+    print("Making to "+ str(abspath))
     commands = ("cd "+workdir.name +
                 " && git clone --depth 1 --branch " + branch + " --recursive " + url +
                 " && cd * && " +
@@ -90,7 +91,7 @@ if __name__ == "__main__":
         fpath = os.path.join(rootdir, filename)
         os.makedirs(rootdir, exist_ok=True)
         f_info = pathlib.Path(fpath)
-        
+        print("Lloing for "+ str(f_info))
         if not f_info.exists():
             get_effective_doc(url, branch, fpath)
 #            download_url(url, fpath)

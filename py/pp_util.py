@@ -7,6 +7,15 @@ from lxml.builder import ElementMaker
 HTM_E=ElementMaker(namespace=None,
                    nsmap={None: "http://www.w3.org/1999/xhtml"})
 
+def debug_node(node):
+    tag=node.tag
+    if tag is None:
+        tag = "~null~"
+    text = node.text
+    if text is None:
+        text = "~null~"
+    return "Node: <"+tag+">"+text+"<...>"
+        
 
 def get_HTM_E():
     return HTM_E

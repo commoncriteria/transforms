@@ -201,9 +201,9 @@ class generic_pp_doc(object):
                     el = self.rf("//*[@id=\""+depends.attrib[attr]+"\"]")
                     if el is None:
                         raise Exception("Cannot find dependee for " + depends.attrib[attr])
-                    elif el.tag == "{https://niap-ccevs.org/cc/v1}selectable":
+                    elif el.tag == CC+"selectable":
                         self.sel_sfrs[sfr]=1
-                    elif el.tag == "{https://niap-ccevs.org/cc/v1}feature":
+                    elif el.tag == CC+"feature":
                         self.impl_sfrs[sfr]=1
                     else:
                         # This really only handles modified.
@@ -331,7 +331,6 @@ class generic_pp_doc(object):
         if len(bracketed)>0:
             biblio_part = "("+"|".join(map(backslashify,bracketed))+")|"
         regex_str = biblio_part+"(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
-        print("Regex string is " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
 
@@ -835,16 +834,65 @@ security objectives for the environment.
 
             td = adopt(tr, HTM_E.td())
             self.handle_content(entry.find("cc:description",NS), td)
+
+
+    def to_sd(self):
+        body=HTM_E.body()
+        ret=HTM_E.html(
+            HTM_E.head(
+                HTM_E.title("Supporting Document"+self.title()),
+                HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
+            ),body)
+        self.meta_data(body)
         
+        
+        return ret
+
+
+
+    def meta_data(self, parent):
+        div = HTM_E.div(
+            {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
+            HTM_E.h1({"class":"title","style":"page-break-before:auto;"},"Supporting Document",HTM_E.br(), "Mandatory Technical Document"),
+            HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP"}),
+            HTM_E.hr({"width":"50%"}),
+            HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
+        self.add_text(div, self.title())
+        div.append(HTM_E.br())
+        parent.append(div)
+      #   append_text("Version: "+<x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      # <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      # <b><x:value-of select="//cc:PPAuthor"/></b>
+      # </div>
+        
+
+    
+    # <html xmlns="http://www.w3.org/1999/xhtml">
+    #   <x:call-template name="module-head"/>
+    #   <body>
+    #     <x:call-template name="meta-data"/>
+    #     <x:call-template name="foreward"/>
+    #     <x:call-template name="toc"/>
+    #     <x:call-template name="intro"/>
+    #     <x:call-template name="sfrs"/>
+    #     <x:apply-templates select="/cc:*" mode="sars"/>
+    #     <x:call-template name="sup-info"/>
+    #     <x:call-template name="references"/>
+    #   </body>
+    # </html>
+
+
+    
+            
     def create_acronym_listing(self, par):
         par.append(HTM_E.h1({"id":"acronyms"},"Acronyms"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Acronym"), HTM_E.th("Meaning")))
         suppress_el=self.rf("//cc:suppress")
-        if suppress_el is None:
+        if suppress_el is None or suppress_el.text is None:
             suppress_list=[]
         else:
-            suppress_list=suppress.text.split(",")
+            suppress_list=suppress_el.text.split(",")
         term_els = self.get_all_abbr_els()
         term_els.sort(key=lambda t_el:t_el.attrib["full"].upper())
         for term_el in term_els:
@@ -956,7 +1004,7 @@ security policies map to the security objectives.""")
         return pp_util.localtag(node.tag)+"_"+str(self.get_global_index(node))+"-"
     
     def get_section_base_id(self, node):
-        if node.tag == "{https://niap-ccevs.org/cc/v1}section":
+        if node.tag == CC+"section":
             if "id" in node.attrib:
                 return node.attrib["id"]
             id="sec_"+str(get_global_index(node))+"-"
@@ -1064,7 +1112,6 @@ security policies map to the security objectives.""")
         if len(bases)>0:
             baselist = ""
             for base in bases:
-                print("HEREHRERHE)")
                 basenode = self.rf("//cc:*[@id='"+base+"']")
                 self.make_xref(basenode, parent)
             parent.append(HTM_E.div("is a base. "))            
@@ -1163,7 +1210,8 @@ security policies map to the security objectives.""")
         title=node.find("cc:title", NS)
         self.handle_content(title, div_reqdesc)
         # apply_templates_single(title)
-        rulez = self.rx("//cc:rule[.//cc:ref-id/text()=current()//@id]")
+#        rulez = self.rx("//cc:rule[.//cc:ref-id/text()=current()//@id]")
+        rulez = self.rx("//cc:rule[.//cc:ref-id/text()='"+reqid+"']")
         notes = node.findall("cc:note" , NS)
         if len(rulez)+len(notes) > 0:
             div_reqdesc.append(HTM_E.br())
@@ -1272,67 +1320,188 @@ security policies map to the security objectives.""")
         print("Applying: " + tag)
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.template_newsection(node, parent)
-        elif tag == "{https://niap-ccevs.org/cc/v1}section":
+        elif tag == CC+"section":
             self.template_oldsection(node, parent)
-        elif tag == "{https://niap-ccevs.org/cc/v1}appendix":
+        elif tag == CC+"appendix":
             self.template_oldsection(node, parent)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
             self.template_html(node, parent)
-        elif tag == "{https://niap-ccevs.org/cc/v1}xref":
+        elif tag == CC+"xref":
             self.template_xref(node, parent)
-        elif tag == "{https://niap-ccevs.org/cc/v1}tech-terms":
+        elif tag == CC+"tech-terms":
             self.template_tech_terms(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}usecases":
+        elif tag==CC+"usecases":
             self.template_usecases(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}assumptions"\
-             or tag=="{https://niap-ccevs.org/cc/v1}cclaims"\
-             or tag=="{https://niap-ccevs.org/cc/v1}threats"\
-             or tag=="{https://niap-ccevs.org/cc/v1}OSPs"\
-             or tag=="{https://niap-ccevs.org/cc/v1}SOs"\
-             or tag=="{https://niap-ccevs.org/cc/v1}SOEs":
+        elif tag==CC+"assumptions"\
+             or tag==CC+"cclaims"\
+             or tag==CC+"threats"\
+             or tag==CC+"OSPs"\
+             or tag==CC+"SOs"\
+             or tag==CC+"SOEs":
             self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}sfrs":
+        elif tag==CC+"sfrs":
             self.template_sfrs(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}f-component" or\
-             tag=="{https://niap-ccevs.org/cc/v1}ext-comp-def" or\
-             tag=="{https://niap-ccevs.org/cc/v1}base-pp" or\
-             tag=="{https://niap-ccevs.org/cc/v1}depends":
+        elif tag==CC+"f-component" or\
+             tag==CC+"ext-comp-def" or\
+             tag==CC+"base-pp" or\
+             tag==CC+"depends":
             return 
-        elif tag=="{https://niap-ccevs.org/cc/v1}f-element":
+        elif tag==CC+"f-element":
             self.template_felement(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}title": 
+        elif tag==CC+"title": 
             self.apply_templates(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}management-function-set":
+        elif tag==CC+"management-function-set":
             self.template_management_function_set(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}ctr":
+        elif tag==CC+"ctr":
             self.template_ctr(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}no-link":
+        elif tag==CC+"no-link":
             span=adopt(parent, HTM_E.span({"class":"no-link"}))
             self.handle_content(node, parent, span)
-        elif tag=="{https://niap-ccevs.org/cc/v1}manager":
+        elif tag==CC+"manager":
             td = adopt(parent, HTM_E.td())
             self.handle_content(node, td)
-        elif tag=="{https://niap-ccevs.org/cc/v1}figure":
+        elif tag==CC+"figure":
             self.handle_figure(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}text" or\
-             tag=="{https://niap-ccevs.org/cc/v1}description":
+        elif tag==CC+"text" or\
+             tag==CC+"description":
             self.handle_content(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}selectables":
+        elif tag==CC+"audit-table":
+            self.template_audit_table(node, parent)
+        elif tag==CC+"selectables":
             self.template_selectables(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}assignable":
+        elif tag==CC+"assignable":
             self.template_assignable(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}int":
+        elif tag==CC+"int":
             self.template_int(node, parent)
-        elif tag=="{https://niap-ccevs.org/cc/v1}_":
+        elif tag==CC+"_":
             self.make_xref(self.shortcut, parent)
+        elif tag==CC+"refinement":
+            span = adopt(parent, HTM_E.span({"class":"refinement"}))
+            self.handle_content(node, span)
+        elif tag == CC+"a-component":
+            print("Not doing a-compoents")
+        elif tag == CC+"consistency_rationale":
+            print("Not doing a-compoents")
         else:
-            raise Exception("Can't handle: " + node.tag + ": " +node.text)
+            raise Exception("Can't handle: " + pp_util.debug_node(node))
 
 
+  # <xsl:template match="cc:audit-table" name="audit-table">
+  #   <xsl:param name="thistable" select="@table"/>
+
+
+  #   <xsl:variable name="nicename"><xsl:choose>
+  #     <xsl:when test="@title"><xsl:value-of select="@title"/></xsl:when>
+  #     <xsl:otherwise>Auditable Events for <xsl:value-of select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/> Requirements</xsl:otherwise>
+  #   </xsl:choose></xsl:variable>
+  #   <table class="sort_kids_" border="1">
+  #     <!--      <xsl:if test="not(node())">-->
+  #     <caption data-sortkey="#0"><xsl:call-template name="ctr-xsl">
+  #       <xsl:with-param name="ctr-type" select="'Table'"/>
+  #       <xsl:with-param name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise><xsl:value-of select="concat('t-audit-',$thistable)"/></xsl:otherwise></xsl:choose></xsl:with-param>
+  #     </xsl:call-template>: <xsl:value-of select="$nicename"/></caption>
+  #     <!--      </xsl:if>-->
+  #     <!--<xsl:apply-templates/>-->
+  #     <tr data-sortkey="#1">
+  #     <th>Requirement</th><th>Auditable Events</th><th>Additional Audit Record Contents</th></tr>
+  #     <xsl:for-each select="//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]">
+  
+    def template_audit_table(self, node, par, thistable=None):
+
+        if thistable is None and "table" in node.attrib:
+            thistable=node.attrib["table"]
+
+        div=HTM_E.div()
+        explainer="The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met."
+        if thistable=="mandatory":
+            sfrs = self.man_sfrs
+            explainer = "The auditable events in the table below must be included in a Security Target."
+            title="Mandatory"
+        elif thistable=="optional":
+            sfrs = self.opt_sfrs
+            title="Strictly Optional"
+        elif thistable=="objective":
+            sfrs = self.obj_sfrs
+            title="Objective"
+        elif thistable=="feat-based":
+            sfrs = self.imp_sfrs
+            title="Implementation-based"
+        elif thistable=="sel-based":
+            sfrs = self.sel_sfrs
+            title="Selection-based"
+        else:
+            raise Exception("Can't handle audit table for: " + thistable)
+        div.append(HTM_E.p(explainer))
+        have_events=False
+        title="Auditable Events for "+ title + " Requirements"
+        table=adopt(div, HTM_E.table({"border":"1"}))
+        caption = adopt(table, HTM_E.caption())
+        self.create_ctr("Table", thistable, caption, "Table ")
+        pp_util.append_text(caption, title)
+        tr = HTM_E.tr(HTM_E.th("Requirement"),HTM_E.th("Auditable Events"),HTM_E.th("Additional Audit Record Contents"))
+        table.append(tr)
+        for fcomp in sfrs:
+            events = fcomp.xpath(".//cc:audit-event[not(@table) or @table='"+thistable+"']", namespaces=NS)
+            add_grouping_row(table, self.fcomp_cc_id(fcomp), len(events))
+            for event in events:
+                row = adopt(table, HTM_E.tr())
+                desc = adopt(row, HTM_E.td())
+                self.handle_content(event.find("cc:audit-event-descr",NS), desc)
+                extra= adopt(row, HTM_E.td())
+                self.handle_content(event.find("cc:audit-event-info",NS), extra)
+                have_events=True
+        if have_events:
+            par.append(div)
+        # for fcomp in self.rx("//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]"):
+  #       <xsl:variable name="fcompstatus"><xsl:apply-templates select="." mode="compute-fcomp-status"/></xsl:variable>
+  #       <xsl:if test="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]">
+  #         <xsl:variable name="rowspan"
+  #       		select="1+count(cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))])"/>
+  #         <xsl:variable name="myid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+  #         <tr data-sortkey="{$myid}">
+  #           <td rowspan="{$rowspan}">
+  #             <xsl:value-of select="$myid"/>
+  #           </td>      <!-- SFR name -->
+  #           <td style="display:none"></td>
+  #           <!-- <td>fake</td> -->
+  #         </tr>
+  #         <!-- Fake row so that the CSS color alternator doesn't get thrown off-->
+  #         <!-- The audit event is included in this table only if
+  #                - The audit event's expressed table attribute matches this table
+  #                - Or the table attribute is not expressed and the audit event's default audit attribute matches this table.
+  #                - The default table for an audit event is the same as the status attribute of the enclosing f-component.  -->
+  #           <!-- <xsl:if test="(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))"> -->
+  # 	    <xsl:apply-templates select="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]" mode="kg-intable">
+  #             <xsl:with-param name="sortkey" select="$myid"/>
+  #           </xsl:apply-templates>
+  #       </xsl:if>
+  #     </xsl:for-each>
+
+  #  NOT DOING THIS THIS
+  #     <!-- Goes through each external document -->
+  #     <xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
+  #       <tr><td colspan="3">
+  #         From <xsl:apply-templates select="." mode="make_xref"/>
+  #       </td></tr>
+
+  #       <xsl:variable name="listy"><xsl:for-each select="//cc:audit-event[@table=$thistable and parent::cc:external-doc/@ref=current()/@id]/@ref-cc-id"><xsl:value-of select="."/>,</xsl:for-each>
+  #       </xsl:variable>
+  #       <xsl:call-template name="external-gatherer">
+  #         <xsl:with-param name="listy" select="$listy"/>
+  #         <xsl:with-param name="table" select="$thistable"/>
+  #         <xsl:with-param name="ext_id" select="@id"/>
+  #       </xsl:call-template>
+  #     </xsl:for-each>
+      
+  #   </table>
+  # </xsl:template>
+
+
+        
     def get_pre(self, el):
         if "pre" in el.attrib:
             return el.attrib["pre"]
-        if el.tag == "{https://niap-ccevs.org/cc/v1}figure":
+        if el.tag == CC+"figure":
             return "Figure "
         return pp_util.get_attr_or(el, "ctr-type", default="Table ")
     
@@ -1495,18 +1664,18 @@ security policies map to the security objectives.""")
     def make_xref(self, target, parent, ref=None):
         if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.make_xref_section(target, pp_util.localtag(target.tag), parent)
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}base-pp":
+        elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
             self.edocs[theid].make_xref_edoc(parent)
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}entry":
+        elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, parent)
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}management-function":
+        elif target.tag == CC+"management-function":
             self.make_xref_mf(self.derive_id(target), parent)
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}figure":
+        elif target.tag == CC+"figure":
             self.make_xref_generic(target, parent, ref, "figure")
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}ctr":
+        elif target.tag == CC+"ctr":
             self.make_xref_generic(target, parent, ref, "figure")
-        elif target.tag == "{https://niap-ccevs.org/cc/v1}appendix":
+        elif target.tag == CC+"appendix":
             self.make_xref_generic(target, parent, ref, "Appendix")
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
