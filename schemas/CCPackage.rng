@@ -16,7 +16,6 @@
       <a:documentation>Root element for Protection Profile XML document</a:documentation>
       <ref name="pp-attributes-pat"/>
       <ref name="project-notes"/>
-      <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
       <ref name="PreferencesEtc"/>
