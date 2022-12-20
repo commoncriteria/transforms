@@ -36,7 +36,7 @@
  <define name="doc-attributes-pat">
    <interleave>
    <element name="product_class"><text/></element>
-   <optional><element name="name"><text/></element></optional>
+   <optional><element name="title"><text/></element></optional>
    <optional><element name="author"><text/></element></optional>
    <optional><element name="short"><text/></element></optional>
    <optional><element name="plural">

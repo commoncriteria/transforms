@@ -64,7 +64,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         mainpath=sys.argv[2]
     else:
-        mainpath=os.path.join("output", proj+".html")
+        mainpath=os.path.join("output", proj+"-release.html")
 
     if len(sys.argv) > 3:
         sdpath=sys.argv[3]

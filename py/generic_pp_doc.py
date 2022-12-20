@@ -253,6 +253,7 @@ class generic_pp_doc(object):
         ret = origtext[:match.start()]
         last=match.end()
         matchtext = match.group()
+        print("Matched '"+matchtext+"'")
         id = self.discoverables_to_ids[matchtext]
         prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
         newnodes=[prevnode]
@@ -277,7 +278,48 @@ class generic_pp_doc(object):
             self.add_xrefs_recur(child, regex)
             insertspot=node.index(child)+1
             child.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
-        
+
+    def to_sd(self):
+        body=HTM_E.body()
+        ret=HTM_E.html(
+            HTM_E.head(
+                HTM_E.title("Supporting Document"+self.title()),
+                HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
+            ),body)
+        self.meta_data(body)
+        return ret
+
+    def meta_data(self, parent):
+        div = HTM_E.div(
+            {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
+            HTM_E.h1({"class":"title","style":"page-break-before:auto;"},"Supporting Document",HTM_E.br(), "Mandatory Technical Document"),
+            HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP"}),
+            HTM_E.hr({"width":"50%"}),
+            HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
+        self.add_text(div, self.title())
+        div.append(HTM_E.br())
+        parent.append(div)
+      #   append_text("Version: "+<x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
+      # <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+      # <b><x:value-of select="//cc:PPAuthor"/></b>
+      # </div>
+    
+    # <html xmlns="http://www.w3.org/1999/xhtml">
+    #   <x:call-template name="module-head"/>
+    #   <body>
+    #     <x:call-template name="meta-data"/>
+    #     <x:call-template name="foreward"/>
+    #     <x:call-template name="toc"/>
+    #     <x:call-template name="intro"/>
+    #     <x:call-template name="sfrs"/>
+    #     <x:apply-templates select="/cc:*" mode="sars"/>
+    #     <x:call-template name="sup-info"/>
+    #     <x:call-template name="references"/>
+    #   </body>
+    # </html>
+
+
+            
     def add_discoverable_xrefs(self, node):
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
         bracketed=set()
@@ -285,7 +327,10 @@ class generic_pp_doc(object):
             if key[0]=='[':
                 keys.remove(key)
                 bracketed.add(key)
-        regex_str = "("+"|".join(map(backslashify,bracketed))+")|(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        biblio_part=""
+        if len(bracketed)>0:
+            biblio_part = "("+"|".join(map(backslashify,bracketed))+")|"
+        regex_str = biblio_part+"(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
         print("Regex string is " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
@@ -514,12 +559,6 @@ class generic_pp_doc(object):
             self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
 
     
-    def doctype(self):
-        return "Protection Profile"
-
-    def doctype_short(self):
-        return "PP"
-
     def get_all_dependencies(self, node):
         choices={}
         selections={}

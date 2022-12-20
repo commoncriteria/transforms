@@ -18,3 +18,9 @@ class pp_package(generic_pp_doc.generic_pp_doc):
         
     def template_package(self, node, parent):
         pass
+
+    def doctype(self):
+        return "Functional Package"
+
+    def doctype_short(self):
+        return "FP"
