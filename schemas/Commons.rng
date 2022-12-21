@@ -412,14 +412,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
 	    <a:documentation>This is only used for audit events add to external documents right now</a:documentation>
 	  </attribute>
 	</optional>
-          <optional>
-              <attribute name="type">
-                  <choice>
-                      <value>normal</value>
-                      <value>optional</value>
-                  </choice>
-              </attribute>
-          </optional>
+	<ref name="optional-tag"/>
          <a:documentation>
               The "table" attribute identifies the audit table to which the current audit event belongs.
               The default value is the value of the status attribute of the enclosing f-component (mandatory,
@@ -472,14 +465,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
           audit event should be displayed in the same row of the audit table. 
       </a:documentation>
       <element name="audit-event-info">
-          <optional>
-              <attribute name="type">
-                  <choice>
-                      <value>normal</value>
-                      <value>optional</value>
-                  </choice>
-              </attribute>
-          </optional>
+	<ref name="optional-tag"/>
          <ref name="basic-content-pat"/>   <!-- formerly <text/> -->
       </element>
     </define>	
@@ -1671,13 +1657,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
+  <define name="optional-tag">
+    <optional><element name="optional"><empty/></element></optional>
+  </define>
 
   <define name="depends-pat">
     <choice>
       <element name="objective"><empty/></element>
-      <zeroOrMore>
-	<choice>
-	  <element name="optional"><empty/></element>
+      <group>
+	<zeroOrMore>
 	  <element name="depends">
             <a:documentation>
               Modifies the parent element such that it depends on something  else.
@@ -1694,8 +1682,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	      </element>
             </optional>
 	  </element>
-	</choice>
-      </zeroOrMore>
+	</zeroOrMore>
+	<ref name="optional-tag"/>
+      </group>
     </choice>
   </define>
 

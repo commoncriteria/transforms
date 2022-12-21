@@ -96,6 +96,10 @@ def drawbox(parent, ybase,boxtext,ymid, xbase=0):
         parent.append(ln_el)
 
 
+def is_optional(node):
+    return node.find("cc:optional", NS) is not None
+
+        
 def get_convention_explainer():
     return HTM_E.div(
     "The following conventions are used for the completion of operations:",
@@ -183,8 +187,6 @@ class generic_pp_doc(object):
     def categorize_sfrs(self):
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
-
-
         for sfr in self.rx("//cc:f-component[cc:objective]"):
             self.obj_sfrs[sfr]=1
         for sfr in self.rx("//cc:f-component[cc:optional and not(cc:depends)]"):
@@ -253,7 +255,6 @@ class generic_pp_doc(object):
         ret = origtext[:match.start()]
         last=match.end()
         matchtext = match.group()
-        print("Matched '"+matchtext+"'")
         id = self.discoverables_to_ids[matchtext]
         prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
         newnodes=[prevnode]
@@ -549,9 +550,9 @@ class generic_pp_doc(object):
         dl=HTM_E.dl()
         parent.append(dl)
         dl.append(HTM_E.dt("Conformance Statement"))
-        dd = HTM_E.dd()
-        dl.append(dd)
-
+        self.handle_conformance_statement(dl)
+        # dd = HTM_E.dd()
+        # dl.append(dd)
         bases = self.rfa("//cc:base-pp")
         if len(bases)>0:
             dd.append(HTM_E.p("This "+self.doctype()+" inherits exact conformance as required "+\
@@ -1244,7 +1245,7 @@ security policies map to the security objectives.""")
                 fcomp = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']") 
                 if len(fcomp)>0:
                     ret+=" " + self.fel_cc_id(fcomp[0])
-            if node.find("cc:depends/cc:optional",NS) is not None:
+            if is_optional(node):
                 ret += "This component may also be optionally be included in the ST as if optional."
         elif node in self.obj_sfrs:
             ret="This is an objective component."
@@ -1264,7 +1265,7 @@ security policies map to the security objectives.""")
                 else:
                     print("WARNING: Failed to find exactly one element that contains a selectable with the id: "+dependsId)
             ret+="."
-            if node.find("cc:depends/cc:optional",NS) is not None:
+            if is_optional(node):
                 ret += "This component may also be optionally be included in the ST as if optional."
         return ret
 
@@ -1315,6 +1316,7 @@ security policies map to the security objectives.""")
         self.apply_template_to_element(node, parent)
         return True
 
+    
     def apply_template_to_element(self, node, parent):
         tag = node.tag
         print("Applying: " + tag)
@@ -1344,7 +1346,7 @@ security policies map to the security objectives.""")
         elif tag==CC+"f-component" or\
              tag==CC+"ext-comp-def" or\
              tag==CC+"base-pp" or\
-             tag==CC+"depends":
+             tag==CC+"depends" or tag==CC+"optional":
             return 
         elif tag==CC+"f-element":
             self.template_felement(node, parent)
@@ -1446,12 +1448,34 @@ security policies map to the security objectives.""")
             for event in events:
                 row = adopt(table, HTM_E.tr())
                 desc = adopt(row, HTM_E.td())
-                self.handle_content(event.find("cc:audit-event-descr",NS), desc)
+                desc_in = event.find("cc:audit-event-descr",NS)
+                self.template_maybe_optional_audit(desc_in, desc, decider=event)
                 extra= adopt(row, HTM_E.td())
-                self.handle_content(event.find("cc:audit-event-info",NS), extra)
+                info_in = event.findall("cc:audit-event-info",NS)
+                if len(info_in)==1:
+                    self.template_maybe_optional_audit(info_in[0], extra, nowords="No additional information")
+                elif len(info_in)>1:
+                    ul=adopt(extra, HTM_E.ul())
+                    for single_info in info_in:
+                        self.template_maybe_optional_audit(single_info, adopt(ul, HTM_E.li()), nowords="No additional information")
                 have_events=True
         if have_events:
             par.append(div)
+
+
+    def template_maybe_optional_audit(self, nodein, out, decider=None, nowords="None"):
+        if decider==None:
+            decider=nodein
+        if is_optional(decider):
+            out.append(HTM_E.b("[selection"))
+            self.add_text(out, ": ")
+            self.handle_content(nodein, out)
+            self.add_text(out, ", "+nowords)
+            out.append(HTM_E.b("]"))
+        else:
+            self.handle_content(nodein, out)
+            
+            
         # for fcomp in self.rx("//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]"):
   #       <xsl:variable name="fcompstatus"><xsl:apply-templates select="." mode="compute-fcomp-status"/></xsl:variable>
   #       <xsl:if test="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]">
@@ -1554,16 +1578,15 @@ security policies map to the security objectives.""")
     #     self.handle_section_hook_base(title, node, parent)
     #     self.handle_content(node, parent)
 
-    
     def template_selectables(self, node, par):
         self.add_text(par,"[")
         par.append(HTM_E.b("selection"))
-        if pp_util.is_attr(node, "onlyone", "yes"):
+        if node.find("cc:onlyone", NS) is not None:
             par.append(HTM_E.b(", choose one of"))
         self.add_text(par, ": ")
         sep=", "
         extraclass=""
-        if pp_util.is_attr(node, "linebreak", "yes") \
+        if node.find("cc:bulletize", NS) is not None \
            or node.find(".//cc:selectables", NS) is not None:
             sep=None
             extraclass=" linebreak-sel"
