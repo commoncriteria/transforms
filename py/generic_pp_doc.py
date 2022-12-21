@@ -13,6 +13,9 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
+DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD"}
+TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
+
 # SVG_NS="http://www.w3.org/2000/svg"
 # SVG="{%s}"%SVG_NS
 # OUT_NSMAP={None: SVG_NS}
@@ -22,8 +25,13 @@ SVG_E=ElementMaker()
 HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 
-
-        
+def attrs(clazz,id=None):
+    ret={}
+    if clazz is not None:
+        ret["class"]=clazz
+    if id is not None:
+        ret["id"]=id
+    return ret
 
 
 A_UPPERCASE = ord('A')
@@ -95,6 +103,11 @@ def drawbox(parent, ybase,boxtext,ymid, xbase=0):
         ln_el=SVG_E.line(x1='152',y1=str(ymid+17),x2=str(xbase+1),y2=str(ybase+17), stroke='black')
         parent.append(ln_el)
 
+def is_empty(node):
+    if node.text is not None and node.text != "":
+        return False
+    return len(node)==0
+        
 
 def is_optional(node):
     return node.find("cc:optional", NS) is not None
@@ -111,6 +124,14 @@ def get_convention_explainer():
     )
         
 
+def convert_none_text_to_emptys(node):
+    if node.tag is None or pp_util.localtag(node.tag) == "br":
+        return
+    if node.text is None:
+        node.text=""
+    for child in node:
+        convert_none_text_to_emptys(child)
+
 class generic_pp_doc(object):
     def __init__(self, root, workdir, boilerplate):
         self.root = root
@@ -123,6 +144,7 @@ class generic_pp_doc(object):
         self.obj_sfrs = {}
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
+        self.test_titles={}
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
         self.are_sfrs_mingled = False
 
@@ -356,6 +378,7 @@ class generic_pp_doc(object):
         doc = self.start()
         self.fix_numbered_xrefs(doc)
         self.add_discoverable_xrefs(doc)
+        convert_none_text_to_emptys(doc)
         return doc
     
     def rf(self, findexp):
@@ -1290,7 +1313,77 @@ security policies map to the security objectives.""")
             ctr+=1
             reqid=self.fcomp_cc_id(node, "."+str(ctr))
             self.handle_felement(f_el, reqid,div)
+        self.handle_fcomp_activities(node, formal, par)
+
+    def handle_fcomp_activities(self, fcomp, formal, out):
+        div = adopt(out,HTM_E.div(attrs("activity_pane hide"),
+                                  HTM_E.div(attrs("activity_pane_header"),
+                                            HTM_E.a({"onclick":"toggle(this);return false;","href":"#"},
+                                                    HTM_E.span(attrs("activity_pane_label"),"Evaluation Activities"),
+                                                    HTM_E.span(attrs("toggler"))
+                                                    )
+                                            )
+                                  )
+                    )
+        div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
+        comp_acts = fcomp.xpath(".//cc:aactivity[not(@level='element')]", namespaces=NS)
+        self.handle_grouped_activities(formal, comp_acts, div_out)
+        for fel in fcomp.xpath(".//cc:f-element[cc:aactivity/@level='element']", namespaces=NS):
+            # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
+            fel_id = self.fel_cc_id(fel)
+            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[@level='element']", NS), div_out, "element")
         
+    def handle_grouped_activities(self, formal, aacts, out, level="fcomp"):
+        if len(aacts)==0:
+            return
+        general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(level+"-activity-header"),formal)))
+        acts={"TSS":None, "Guidance":None,"Tests":None,"KMD":None}
+        for aact in aacts:
+            self.apply_templates_single(aact, general_div)
+            for act in acts:
+                act_div=HTM_E.div()
+                acts[act]=act_div
+                self.handle_content(aact.find("cc:"+act,NS), act_div)
+        for act in acts:
+            if not is_empty(acts[act]):
+                out.append(HTM_E.div(attrs("eacategory"),act))
+                out.append(acts[act])
+            
+   # <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
+   #      <!-- Display component name -->
+   #      <x:if test=".//cc:aactivity[not(@level='element')]">
+   #        <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
+   #        <x:apply-templates
+   #          select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
+   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
+   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
+   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
+   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
+   #      </x:if>
+   # 	<x:for-each select=".//cc:aactivity[@level='element']">
+   #        <!-- Display the element name -->
+   #        <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
+   #        <x:apply-templates mode="single-cat"/>
+   #      </x:for-each>
+   #      <x:if test=".//cc:management-function/cc:aactivity">
+	  
+   #        <div class="management_function_activities">
+   #          The following EAs correspond to specific management functions.
+   #          <x:for-each select=".//cc:management-function[./cc:aactivity]">
+   #            <div class="management_function_ea">
+   #      	<x:apply-templates select="cc:aactivity" mode="manact"/>
+   #            </div>
+   #          </x:for-each>
+   #        </div>
+   #      </x:if>
+
+   # </x:template>
+
+        
+            
+
+
+            
     def handle_sparse_sfrs(self, sfrs, par):
         titles={}
         for sfr in sfrs:
@@ -1343,11 +1436,10 @@ security policies map to the security objectives.""")
             self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
         elif tag==CC+"sfrs":
             self.template_sfrs(node, parent)
-        elif tag==CC+"f-component" or\
-             tag==CC+"ext-comp-def" or\
-             tag==CC+"base-pp" or\
-             tag==CC+"depends" or tag==CC+"optional":
-            return 
+        elif tag in DONT_PROCESS:
+            return
+        elif tag in TRANSPARENT:
+            self.handle_content(node, parent)
         elif tag==CC+"f-element":
             self.template_felement(node, parent)
         elif tag==CC+"title": 
@@ -1364,9 +1456,6 @@ security policies map to the security objectives.""")
             self.handle_content(node, td)
         elif tag==CC+"figure":
             self.handle_figure(node, parent)
-        elif tag==CC+"text" or\
-             tag==CC+"description":
-            self.handle_content(node, parent)
         elif tag==CC+"audit-table":
             self.template_audit_table(node, parent)
         elif tag==CC+"selectables":
@@ -1380,6 +1469,8 @@ security policies map to the security objectives.""")
         elif tag==CC+"refinement":
             span = adopt(parent, HTM_E.span({"class":"refinement"}))
             self.handle_content(node, span)
+        elif tag==CC+"testlist":
+            self.handle_testlist(node, parent)
         elif tag == CC+"a-component":
             print("Not doing a-compoents")
         elif tag == CC+"consistency_rationale":
@@ -1387,6 +1478,32 @@ security policies map to the security objectives.""")
         else:
             raise Exception("Can't handle: " + pp_util.debug_node(node))
 
+
+    def derive_test_title(self, testnode):
+        print(pp_util.debug_node(testnode))
+        if testnode in self.test_titles:
+            return self.test_titles[testnode]
+        parent=testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
+        ctr=1
+        cc_id=self.fcomp_cc_id(parent)
+        for test in parent.findall(".//cc:test",NS):
+            self.test_titles[test]=cc_id+":"+str(ctr)
+            ctr+=1
+        return self.test_titles[testnode]
+        
+    def handle_testlist(self, testlist, out):
+        ul = adopt(out, HTM_E.ul(attrs("testlist-")))
+        for test in testlist.findall("cc:test", NS):
+            li = adopt(ul, HTM_E.li(attrs("test-")))
+            test_id=self.derive_id(test)
+            title = self.derive_test_title(test)
+            self.register_keyterm(test_id, title)
+            adopt(li, HTM_E.span(attrs(None, test_id), "Test " + title))
+            dependses = test.findall("cc:depends", NS)
+            if len(dependses)>0:
+                self.add_text(li, "[conditional,aaaa]")
+            self.add_text(li, ":")
+            self.handle_content(test, li)
 
   # <xsl:template match="cc:audit-table" name="audit-table">
   #   <xsl:param name="thistable" select="@table"/>

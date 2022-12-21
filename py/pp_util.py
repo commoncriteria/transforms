@@ -58,7 +58,7 @@ def make_attr_safe(attr):
     return ret.replace('"', '&quot;')
 
 def localtag(tag):
-    return  tag.split("}")[1]
+    return  tag.split("}")[-1]
 
 def get_attr_or(node, attr, default=""):
     if attr in node.attrib:
@@ -125,6 +125,11 @@ def add_js(parent):
             if(getQueryVariable("expand") == "on"){
               expand();
             }
+	    if (getQueryVariable("hide_eas")=="on"){
+		hide_eas()
+	    }
+
+
             var aa;
             var brk_els = document.getElementsByClassName("dyn-abbr");
             //
@@ -140,6 +145,17 @@ def add_js(parent):
             }
         }
         const AMPERSAND=String.fromCharCode(38);
+
+
+      function hide_eas(){
+	  console.log("Hello")
+	  els = document.getElementsByClassName("activity_pane");
+          var aa;
+	  for(aa=0; aa!=els.length; aa++){
+	      console.log("AA is " + aa)
+	      els[aa].style.display="none";
+	  }
+        }
         
         // Pass a URL variable to this function and it will return its value
         function getQueryVariable(variable)
