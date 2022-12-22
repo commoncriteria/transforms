@@ -139,37 +139,6 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     
 
 
-  # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
-    def objectives_to_requirements(self, par):
-        addr_bys = self.rx("//cc:SO/cc:addressed-by")
-        if len(addr_bys)==0:
-            return
-        par.append(self.sec({"id":"obj-req-map-"}, "TOE Security Functional Requirements Rationale"))
-        par.append(HTM_E.p("""The following rationale provides justification for each 
- security objective for the TOE, showing that the SFRs are suitable to meet and
- achieve the security objectives:"""))
-        table=adopt(par,HTM_E.table())
-        caption=adopt(table,HTM_E.caption())
-        self.create_ctr("Table", "t-obj-map", caption, "Table ")
-        self.add_text(caption, ": SFR Rationale")
-        table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
-        prev_parent = None
-        for addr_by in addr_bys:
-            curr_parent=addr_by.find("..")
-            if prev_parent!=curr_parent:
-                tr = adopt(table, HTM_E.tr({"class":"major-row"}))
-                rowspan=str(len(curr_parent.findall("cc:addressed-by", generic_pp_doc.NS)))
-                content=pp_util.make_wrappable(curr_parent.attrib["name"])
-                tr.append(HTM_E.td({"rowspan":rowspan}, content))
-                prev_parent=curr_parent
-            else:
-                tr = adopt(table, HTM_E.tr())
-            td = adopt(tr, HTM_E.td())
-            self.handle_content(addr_by, td)
-            td = adopt(tr, HTM_E.td())
-            rational=addr_by.xpath("following-sibling::cc:rationale[1]",namespaces=generic_pp_doc.NS)
-            self.handle_content(rational[0], td)
-        self.end_section()
 
     def handle_consistency_row(self, base, thing, par):
         name=thing.attrib["name"]

@@ -8,10 +8,11 @@ import math
 import edoc
 import re
 
-CC="{https://niap-ccevs.org/cc/v1}"
 NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
+CC="{"+NS['cc']+"}"
+SEC="{"+NS['sec']+"}"
 
 DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
@@ -176,7 +177,7 @@ class generic_pp_doc(object):
     def register_sfrs(self):
         for fcomp in self.root.findall(".//cc:f-component", NS):
             id = self.fcomp_cc_id(fcomp)
-            self.register_keyterm(id.upper(),id)
+            self.register_keyterm(id,id)
             for fel in fcomp.findall(".//cc:f-element", NS):
                 felid=self.fel_cc_id(fel)
                 self.register_keyterm(felid.upper(), felid)
@@ -199,6 +200,7 @@ class generic_pp_doc(object):
                 self.register_keyterm(term.attrib["plural"], "long_abbr_"+abbr)
             
     def register_keyterm(self, word, id):
+        print("Registering " + word + " to "+id)
         if len(word) > 1 and not(word.startswith(".")):
             self.discoverables_to_ids[word]=id
 
@@ -343,6 +345,8 @@ class generic_pp_doc(object):
 
             
     def add_discoverable_xrefs(self, node):
+        if len(self.discoverables_to_ids)==0:
+            return
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
         bracketed=set()
         for key in keys:
@@ -353,6 +357,7 @@ class generic_pp_doc(object):
         if len(bracketed)>0:
             biblio_part = "("+"|".join(map(backslashify,bracketed))+")|"
         regex_str = biblio_part+"(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
+        print("Regex string is: " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
 
@@ -431,7 +436,41 @@ class generic_pp_doc(object):
             print("Poping from zero.")
         else:
             self.outline.pop()
-        
+
+
+  # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
+    def objectives_to_requirements(self, par):
+        addr_bys = self.rx("//cc:SO/cc:addressed-by")
+        if len(addr_bys)==0:
+            return
+        par.append(self.sec({"id":"obj-req-map-"}, "TOE Security Functional Requirements Rationale"))
+        par.append(HTM_E.p("""The following rationale provides justification for each 
+ security objective for the TOE, showing that the SFRs are suitable to meet and
+ achieve the security objectives:"""))
+        table=adopt(par,HTM_E.table())
+        caption=adopt(table,HTM_E.caption())
+        self.create_ctr("Table", "t-obj-map", caption, "Table ")
+        self.add_text(caption, ": SFR Rationale")
+        table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
+        prev_parent = None
+        for addr_by in addr_bys:
+            curr_parent=addr_by.find("..")
+            if prev_parent!=curr_parent:
+                tr = adopt(table, HTM_E.tr({"class":"major-row"}))
+                rowspan=str(len(curr_parent.findall("cc:addressed-by", NS)))
+                content=pp_util.make_wrappable(curr_parent.attrib["name"])
+                tr.append(HTM_E.td({"rowspan":rowspan}, content))
+                prev_parent=curr_parent
+            else:
+                tr = adopt(table, HTM_E.tr())
+            td = adopt(tr, HTM_E.td())
+            self.handle_content(addr_by, td)
+            td = adopt(tr, HTM_E.td())
+            rational=addr_by.xpath("following-sibling::cc:rationale[1]",namespaces=NS)
+            self.handle_content(rational[0], td)
+        self.end_section()
+
+            
     def start(self):
         head = HTM_E.head(
                 HTM_E.meta({"content":"text/html;charset=utf-8", "http-equiv":"Content-Type"}),
@@ -800,7 +839,7 @@ class generic_pp_doc(object):
     def handle_optional_requirements(self, par):
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
         self.sfr_appendix("Strictly Optional",    self.opt_sfrs , "","optional",par)
-        self.sfr_appendix("Objective",            self.obj_sfrs , "","ojective",par)
+        self.sfr_appendix("Objective",            self.obj_sfrs , "","objective",par)
         self.sfr_appendix("Implementation-based", self.impl_sfrs, "","feat-based",par)
         self.end_section()
 
@@ -835,9 +874,10 @@ security objectives for the environment.
 """
     
     def handle_security_objectives_operational_environment(self, parent):
-        soes=self.rfa("cc:SOEs")
+        soes=self.rfa("//cc:SOE")
+        print("We found"+str(len(soes)))
         if len(soes)>0:
-            self.add_text(parent,OE_PREAMBLE)
+            self.add_text(parent,generic_pp_doc.OE_PREAMBLE)
         else:
             self.add_text(parent, "This "+self.doctype()+" does not define any objectives for the OE.")
 
@@ -1036,8 +1076,10 @@ security policies map to the security objectives.""")
         return allof.index(node)+1
 
     def derive_id(self, node):
-        if "id" in node.attrib:
+        if node.attrib is not None and "id" in node.attrib:
             return node.attrib["id"]
+        if node.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
+            return node.tag.split("}")[1]
         return pp_util.localtag(node.tag)+"_"+str(self.get_global_index(node))+"-"
     
     def get_section_base_id(self, node):
@@ -1816,7 +1858,13 @@ security policies map to the security objectives.""")
                 val= pp_util.localtag(tagnode.tag)
             td=adopt(tr, HTM_E.td())
             self.make_mf_val(val, tagnode,td)
-    
+
+    def get_first_section_with_title(self, title):
+        possibles=self.root.xpath("//*[@title='"+title+"']|//sec:"+title.replace(' ','_'), namespaces=NS)
+        if possibles is None or len(possibles)==0:
+            return None
+        return possibles[0]
+            
     def set_shortcut(self, node):
         self.shortcut = node
 
@@ -1838,7 +1886,7 @@ security policies map to the security objectives.""")
         
     def make_xref(self, target, parent, ref=None):
         if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            self.make_xref_section(target, pp_util.localtag(target.tag), parent)
+            self.make_xref_section(pp_util.localtag(target.tag), parent)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
             self.edocs[theid].make_xref_edoc(parent)

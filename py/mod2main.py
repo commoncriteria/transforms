@@ -28,7 +28,7 @@ def make_mod(path, pp_path, sd_path):
     print("Making mod: "+path)
     doc = ET.parse(path).getroot()
     boilerplate = ET.parse("transforms/xsl/boilerplates.xml")
-    # print("Tag is "+doc.tag)
+    print("Tag is "+doc.tag)
     if doc.tag == "{https://niap-ccevs.org/cc/v1}Module":
         pp = pp_module.ppmod( doc, "output", boilerplate )
     elif doc.tag == "{https://niap-ccevs.org/cc/v1}PP":
