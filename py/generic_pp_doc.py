@@ -13,7 +13,7 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': "http://www.w3.org/1999/xhtml"}
 
-DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD"}
+DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
@@ -62,10 +62,9 @@ def _decompose(number):
     Since A is 1 rather than 0 in base alphabet, we are dealing with
     `number - 1` at each iteration to be able to extract the proper digits.
     """
-    while number:
+    while number: 
         number, remainder = divmod(number-1, ALPHABET_SIZE)
         yield remainder
-
 
 def base_10_to_alphabet(number):
     """Convert a decimal number to its base alphabet representation"""
@@ -371,7 +370,6 @@ class generic_pp_doc(object):
                 text = reffed.text
             else:
                 text = label_node.text
-            print("Doing the thing: "+text + " yyy: " +text.split(" ")[-1])
             pp_util.append_text(dynref, " "+text)
         
     def to_html(self):
@@ -491,8 +489,6 @@ class generic_pp_doc(object):
         body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
         body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
         version_date = edoc.derive_version_and_date(self.root)
-        print(version_date)
-        print("Version date:"+version_date[0])
               
         body.append(HTM_E.div({"class":"center"},
                               HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
@@ -553,7 +549,6 @@ class generic_pp_doc(object):
         return True
             
     def handle_section(self, node, title, id, parent):
-        print("Handling section: "+ title)
         title_el = self.sec({"id":id},title)
         parent.append(title_el)
         self.handle_section_hook(title, node, parent)
@@ -849,7 +844,6 @@ security objectives for the environment.
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
         ctrcount = str(self.get_next_counter(ctrtype))
-        print("Counter count is: " + ctrcount)
         span = HTM_E.span({"class":"ctr",
                            "data-counter-type":"ct-"+ctrtype,
                            "id":id}, prefix,
@@ -1498,26 +1492,39 @@ security policies map to the security objectives.""")
             raise Exception("Can't handle: " + pp_util.debug_node(node))
 
 
-    def derive_test_title(self, testnode):
-        print(pp_util.debug_node(testnode))
+    def get_test_title(self, testnode):
         if testnode in self.test_titles:
             return self.test_titles[testnode]
         parent=testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
         ctr=1
         cc_id=self.fcomp_cc_id(parent)
-        for test in parent.findall(".//cc:test",NS):
-            self.test_titles[test]=cc_id+":"+str(ctr)
-            ctr+=1
+        print("Calling it: " + cc_id)
+        self.derive_test_title_recur(parent, cc_id+":Test #", stack=[0])
         return self.test_titles[testnode]
+
+    def derive_test_title_recur(self, node, prefix, stack):
+        print("Stack is: " + str(stack))
+        if node.tag==CC+"test":
+            new_num=stack.pop() + 1
+            stack.append(new_num)
+            test_label = prefix +".".join(map(str, stack))
+            self.test_titles[node] = test_label
+            stack.append(0)
+        for kid in node:
+            self.derive_test_title_recur(kid, prefix, stack)
+        if node.tag==CC+"test":
+            stack.pop()
         
+    
     def handle_testlist(self, testlist, out):
         ul = adopt(out, HTM_E.ul(attrs("testlist-")))
         for test in testlist.findall("cc:test", NS):
             li = adopt(ul, HTM_E.li(attrs("test-")))
             test_id=self.derive_id(test)
-            title = self.derive_test_title(test)
+            title = self.get_test_title(test)
             self.register_keyterm(test_id, title)
-            adopt(li, HTM_E.span(attrs(None, test_id), "Test " + title))
+            atts=attrs("test- def_", test_id)
+            adopt(li, HTM_E.a(atts, title))
             dependses = test.findall("cc:depends", NS)
             if len(dependses)>0:
                 self.add_text(li, "[conditional,aaaa]")
@@ -1587,6 +1594,8 @@ security policies map to the security objectives.""")
         if have_events:
             par.append(div)
 
+
+            
     def make_audit_row_from_event(self, event, table):
         row = adopt(table, HTM_E.tr())
         desc_in = event.find("cc:audit-event-descr",NS)
@@ -1838,7 +1847,7 @@ security policies map to the security objectives.""")
         elif target.tag == CC+"management-function":
             self.make_xref_mf(self.derive_id(target), parent)
         elif target.tag == CC+"test":
-            self.make_xref_generic(target, parent, ref, "Test")
+            self.make_xref_generic(target, parent, ref, "")
         elif target.tag == CC+"figure":
             self.make_xref_generic(target, parent, ref, "figure")
         elif target.tag == CC+"ctr":
