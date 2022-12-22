@@ -1589,12 +1589,12 @@ security policies map to the security objectives.""")
 
     def make_audit_row_from_event(self, event, table):
         row = adopt(table, HTM_E.tr())
-        desc = adopt(row, HTM_E.td())
         desc_in = event.find("cc:audit-event-descr",NS)
         if desc_in is None:
             row.append(HTM_E.td("No events specified"))
             row.append(HTM_E.td("N/A"))
             return
+        desc = adopt(row, HTM_E.td())
         self.template_maybe_optional_audit(desc_in, desc, decider=event)
         extra= adopt(row, HTM_E.td())
         info_in = event.findall("cc:audit-event-info",NS)
@@ -1837,10 +1837,12 @@ security policies map to the security objectives.""")
             self.make_xref_bibentry(target, parent)
         elif target.tag == CC+"management-function":
             self.make_xref_mf(self.derive_id(target), parent)
+        elif target.tag == CC+"test":
+            self.make_xref_generic(target, parent, ref, "Test")
         elif target.tag == CC+"figure":
             self.make_xref_generic(target, parent, ref, "figure")
         elif target.tag == CC+"ctr":
-            self.make_xref_generic(target, parent, ref, "figure")
+            self.make_xref_generic(target, parent, ref, "")
         elif target.tag == CC+"appendix":
             self.make_xref_generic(target, parent, ref, "Appendix")
             # findex = str(self.get_global_index(target))
