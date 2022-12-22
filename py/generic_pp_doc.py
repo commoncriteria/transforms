@@ -791,30 +791,44 @@ class generic_pp_doc(object):
         self.is_appendix = True
 
             
-    def opt_app(self,level,word,sfrs, par, suffix=""):
-        par.append(self.sec({"id":word.replace(" ","-")+"-"},word+" Requirements"))
+    def sfr_appendix(self,title,sfrs, preamble,audittype,par):
+        attrset=attrs(None,title.replace(" ","-")+"-")
+        par.append(self.sec(attrset,title+" Requirements"))
+        self.add_text(par, preamble)
         if len(sfrs)==0:
-            self.add_text(par, "This "+self.doctype_short()+" does not define any "+word+" SFRs.\n")
+            self.add_text(par, "This "+self.doctype_short()+" does not define any "+title+" SFRs.\n")
         else:
+            self.create_audit_table_section(title, audittype, par)
             self.handle_sparse_sfrs(sfrs, par)
         self.end_section()
 
-
     def handle_optional_requirements(self, par):
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
-        self.opt_app("2", "Strictly Optional", self.opt_sfrs, par)
-        self.opt_app("2", "Objective", self.obj_sfrs, par)
-        self.opt_app("2", "Implementation-based", self.impl_sfrs, par)
+        self.sfr_appendix("Strictly Optional",    self.opt_sfrs , "","optional",par)
+        self.sfr_appendix("Objective",            self.obj_sfrs , "","ojective",par)
+        self.sfr_appendix("Implementation-based", self.impl_sfrs, "","feat-based",par)
         self.end_section()
 
+    def create_audit_table_section(self, title, audittable, par):
+        par.append(self.sec("Auditable Events for "+ title + " Requirements"))
+        self.template_audit_table(None, par, audittable)
+        self.end_section()
+        
+    def sel_appendix_preamble(self):
+        DT=self.doctype()
+        return "As indicated in the introduction to this "+DT+\
+            ", the baseline requirements (those that must be performed by the TOE or its "+\
+            "underlying platform) are contained in the body of this "+DT+\
+            ". There are additional requirements based on selections in the body of "+\
+            "the "+DT+": if certain selections are made, then additional "+\
+            "requirements below must be included."
+        
     def handle_selection_based_requirements(self, node, par):
-        return self.opt_app("1", "Selection-based", self.sel_sfrs, par)
+        words=self.sel_appendix_preamble()
+        return self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based", par)
 
-            
-    def handle_security_objectives_operational_environment(self, parent):
-        soes=self.rfa("cc:SOEs")
-        if len(soes)>0:
-            self.add_text(parent,"""The OE of the TOE implements technical and procedural measure
+
+    OE_PREAMBLE="""The OE of the TOE implements technical and procedural measure
 to assist the TOE in correctly providing its security functionality
 (which is defined by the security objectives for the TOE).
 The security objectives for the OE consist of a set of statements
@@ -823,7 +837,12 @@ This section defines the security objectives that are to be
 addressed by the IT domain or by non-technical or procedural means.
 The assumptions identified in Section 3 are incorporated as
 security objectives for the environment.
-""")
+"""
+    
+    def handle_security_objectives_operational_environment(self, parent):
+        soes=self.rfa("cc:SOEs")
+        if len(soes)>0:
+            self.add_text(parent,OE_PREAMBLE)
         else:
             self.add_text(parent, "This "+self.doctype()+" does not define any objectives for the OE.")
 
@@ -1280,7 +1299,7 @@ security policies map to the security objectives.""")
     def get_fcomp_status_isolated(self, node):
         ret=""
         if node in self.sel_sfrs:
-            ret="The inclusion of this selection-based component depends upon selection from:"
+            ret="The inclusion of this selection-based component depends upon selection in:"
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
                 fels = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']")
                 if len(fels)==1:
@@ -1530,7 +1549,6 @@ security policies map to the security objectives.""")
         if thistable is None and "table" in node.attrib:
             thistable=node.attrib["table"]
 
-        div=HTM_E.div()
         explainer="The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met."
         if thistable=="mandatory":
             sfrs = self.man_sfrs
@@ -1550,6 +1568,7 @@ security policies map to the security objectives.""")
             title="Selection-based"
         else:
             raise Exception("Can't handle audit table for: " + thistable)
+        div=HTM_E.div()
         div.append(HTM_E.p(explainer))
         have_events=False
         title="Auditable Events for "+ title + " Requirements"
@@ -1563,23 +1582,30 @@ security policies map to the security objectives.""")
             events = fcomp.xpath(".//cc:audit-event[not(@table) or @table='"+thistable+"']", namespaces=NS)
             add_grouping_row(table, self.fcomp_cc_id(fcomp), len(events))
             for event in events:
-                row = adopt(table, HTM_E.tr())
-                desc = adopt(row, HTM_E.td())
-                desc_in = event.find("cc:audit-event-descr",NS)
-                self.template_maybe_optional_audit(desc_in, desc, decider=event)
-                extra= adopt(row, HTM_E.td())
-                info_in = event.findall("cc:audit-event-info",NS)
-                if len(info_in)==1:
-                    self.template_maybe_optional_audit(info_in[0], extra, nowords="No additional information")
-                elif len(info_in)>1:
-                    ul=adopt(extra, HTM_E.ul())
-                    for single_info in info_in:
-                        self.template_maybe_optional_audit(single_info, adopt(ul, HTM_E.li()), nowords="No additional information")
+                self.make_audit_row_from_event(event, table)
                 have_events=True
         if have_events:
             par.append(div)
 
+    def make_audit_row_from_event(self, event, table):
+        row = adopt(table, HTM_E.tr())
+        desc = adopt(row, HTM_E.td())
+        desc_in = event.find("cc:audit-event-descr",NS)
+        if desc_in is None:
+            row.append(HTM_E.td("No events specified"))
+            row.append(HTM_E.td("N/A"))
+            return
+        self.template_maybe_optional_audit(desc_in, desc, decider=event)
+        extra= adopt(row, HTM_E.td())
+        info_in = event.findall("cc:audit-event-info",NS)
+        if len(info_in)==1:
+            self.template_maybe_optional_audit(info_in[0], extra, nowords="No additional information")
+        elif len(info_in)>1:
+            ul=adopt(extra, HTM_E.ul())
+            for single_info in info_in:
+                self.template_maybe_optional_audit(single_info, adopt(ul, HTM_E.li()), nowords="No additional information")
 
+        
     def template_maybe_optional_audit(self, nodein, out, decider=None, nowords="None"):
         if decider==None:
             decider=nodein

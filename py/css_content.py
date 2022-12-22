@@ -7,8 +7,9 @@ def fx_common_css():
       width: 100%;
     }
 
-    a[id^="ajq_"]{
-        color:black;
+    .linebreak-sel{
+	display: list-item;
+	margin-left: 2em;
     }
 
     body{
