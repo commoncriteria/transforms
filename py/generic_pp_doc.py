@@ -1427,8 +1427,8 @@ security policies map to the security objectives.""")
         return False
 
 
-    def make_aactivity_pane(self, out):
-        return adopt(out,HTM_E.div(attrs("activity_pane hide"),
+    def make_aactivity_pane(self):
+        return HTM_E.div(attrs("activity_pane hide"),
                                   HTM_E.div(attrs("activity_pane_header"),
                                             HTM_E.a({"onclick":"toggle(this);return false;","href":"#"},
                                                     HTM_E.span(attrs("activity_pane_label"),"Evaluation Activities"),
@@ -1436,22 +1436,25 @@ security policies map to the security objectives.""")
                                                     )
                                             )
                                   )
-                    )
 
         
     def handle_fcomp_activities(self, fcomp, formal, out):
-        div = self.make_aactivity_pane(out)
+        div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
         comp_acts = fcomp.xpath(".//cc:aactivity[not(@level='element')]", namespaces=NS)
-        self.handle_grouped_activities(formal, comp_acts, div_out)
+        should_add=self.handle_grouped_activities(formal, comp_acts, div_out)
         for fel in fcomp.xpath(".//cc:*[cc:aactivity/@level='element']", namespaces=NS):
             # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
             fel_id = self.fel_cc_id(fel)
             self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[@level='element']", NS), div_out, "element")
+            should_add=True
+        if should_add:
+            out.append(div)
+            
         
     def handle_grouped_activities(self, formal, aacts, out, level="fcomp"):
         if len(aacts)==0:
-            return
+            return False
         general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(level+"-activity-header"),formal)))
         acts={"TSS":None, "Guidance":None,"Tests":None,"KMD":None}
         for aact in aacts:
@@ -1464,6 +1467,7 @@ security policies map to the security objectives.""")
             if not is_empty(acts[act]):
                 out.append(HTM_E.div(attrs("eacategory"),act))
                 out.append(acts[act])
+        return True
             
    # <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
    #      <!-- Display component name -->
