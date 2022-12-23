@@ -6,6 +6,9 @@ HTM_E=pp_util.get_HTM_E()
 
 adopt=pp_util.adopt
 
+SR_TITLE="Security Requirements"
+SFR_TITLE="Security Functional Requirements"
+SAR_TITLE="Security Assurance Requirements"
 class pp_doc(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, boilerplate):
         super().__init__(root, workdir, boilerplate)
@@ -21,40 +24,65 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         par.append(self.sec({"id":"mod-conrat"},"Consistency Rationale"))
         self.end_section()
 
-
+ 
     def handle_security_requirements(self, par):
-        adopt(par, self.sec("Security Requirements"))
-        
+        attrs=self.conjure_id_attr(SR_TITLE)
+        adopt(par, self.sec(SR_TITLE, attrs))
         div = generic_pp_doc.get_convention_explainer()
         div.text= "This chapter describes the security requirements which have to be fulfilled by the product under evaluation."+\
             "Those requirements comprise functional components from Part 2 and assurance components from Part 3 of [CC]."+div.text
         par.append(div)
-        adopt(par, self.sec("Security Functional Requirements"))
+        attrs=self.conjure_id_attr(SFR_TITLE)
+        adopt(par, self.sec(SFR_TITLE, attrs))
         self.create_audit_table_section("Mandatory", "mandatory", par)
         self.handle_sparse_sfrs(self.man_sfrs, par)
         self.objectives_to_requirements(par)
         self.end_section()
-        adopt(par, self.sec("Security Assurance Requirements"))
+        self.handle_sars(par)
+        self.end_section()
+        
 
-        self.add_text(par, "The Security Objectives for the TOE in ")
+
+    def handle_sars(self, out):
+        attrs=self.conjure_id_attr(SAR_TITLE)
+        adopt(out, self.sec(SAR_TITLE,attrs))
+        par = adopt(out, HTM_E.p("The Security Objectives for the TOE in "))
         secobjs=self.get_first_section_with_title("Security Objectives")
         self.make_xref(secobjs,par)#Secrtion 4
         self.add_text(par," were constructed to address threats identified in ")
         threatsec=self.get_first_section_with_title("Threats")
         self.make_xref(threatsec,par)#Section 3.1
         self.add_text(par, ". The Security Functional Requirements (SFRs) in ")
-        self.make_xref_section("sfrs_", par)#Section 5.1
-        self.add_text(par, """ are a formal instantiation of the Security Objectives. The PP identifies the Security Assurance Requirements (SARs) to frame the extent to which the evaluator assesses the documentation applicable for the evaluation and performs independent testing.
+        self.make_xref_section(self.conjure_id(SFR_TITLE), par)#Section 5.1
+        self.add_text(par, """ are a formal instantiation of the Security Objectives. The PP identifies the Security Assurance Requirements (SARs) to frame the extent to which the evaluator assesses the documentation applicable for the evaluation and performs independent testing.""")
+        par = adopt(out, HTM_E.p("This section lists the set of "+\
+                                 "Security Assurance Requirements (SARs) from Part 3 of the Common "+\
+                                 "Criteria for Information Technology Security Evaluation, Version 3."+\
+                                 "1, Revision 5 that are required in evaluations against this PP. "+\
+                                 "Individual evaluation activities to be performed are specified in "+\
+                                 "both "))
+        self.make_xref_section(self.conjure_id(SFR_TITLE), par)#Section 5.1
+        self.add_text(par,"as well as in this section.")
+        par = adopt(out, HTM_E.p("After the ST has been approved for "+\
+                                 "evaluation, the Information Technology Security Evaluation "+\
+                                 "Facility (ITSEF) will obtain the TOE, supporting environmental IT, "+\
+                                 "and the administrative/user guides for the TOE. The ITSEF is "+\
+                                 "expected to perform actions mandated by the CEM for the ASE and ALC "+\
+                                 "SARs. The ITSEF also performs the evaluation activities contained "+\
+                                 "within "))
+        self.make_xref_section(self.conjure_id(SR_TITLE),par) # Section 5
+        self.add_text(par,", which are intended to be an interpretation of the "+\
+                      "other CEM assurance requirements as they apply to the specific "+\
+                      "technology instantiated in the TOE. The evaluation activities that "+\
+                      "are captured in Section 5 also provide clarification as to what the "+\
+                      "developer needs to provide to demonstrate the TOE is compliant with "+\
+                      "the PP. ")
 
- This section lists the set of Security Assurance Requirements (SARs) from Part 3 of the Common Criteria for Information Technology Security Evaluation, Version 3.1, Revision 5 that are required in evaluations against this PP. Individual evaluation activities to be performed are specified in both Section 5.1 as well as in this section.
-
- After the ST has been approved for evaluation, the Information Technology Security Evaluation Facility (ITSEF) will obtain the TOE, supporting environmental IT, and the administrative/user guides for the TOE. The ITSEF is expected to perform actions mandated by the CEM for the ASE and ALC SARs. The ITSEF also performs the evaluation activities contained within Section 5, which are intended to be an interpretation of the other CEM assurance requirements as they apply to the specific technology instantiated in the TOE. The evaluation activities that are captured in Section 5 also provide clarification as to what the developer needs to provide to demonstrate the TOE is compliant with the PP. 
- """)
-        self.end_section()
+        afrs = self.rx("//cc:a-component")
+        self.handle_sparse_sfrs(afrs, par)
         self.end_section()
         
-
-
+        
 
         
     def template_pp(self, node, parent):
@@ -65,7 +93,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.apply_templates(self.rx("//*[@title='Security Objectives']|sec:Security_Objectives"),parent)
         self.handle_security_requirements(parent)
 #        self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"),parent)
-        self.consistency_rationale(parent)
+#        self.consistency_rationale(parent)
         self.start_appendixes()
         self.handle_optional_requirements(parent)
         self.handle_selection_based_requirements(node, parent)

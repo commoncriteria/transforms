@@ -14,7 +14,7 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
 CC="{"+NS['cc']+"}"
 SEC="{"+NS['sec']+"}"
 
-DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests"}
+DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
@@ -145,7 +145,7 @@ class generic_pp_doc(object):
         self.impl_sfrs = {}
         self.fams_to_sfrs = {}
         self.test_titles={}
-        self.man_sfrs = self.rx("//cc:f-component[not(cc:depends)]")
+        self.man_sfrs = self.rx("//cc:f-component[not(cc:depends or cc:objective or cc:optional)]")
         self.are_sfrs_mingled = False
 
         self.categorize_sfrs()
@@ -200,7 +200,6 @@ class generic_pp_doc(object):
                 self.register_keyterm(term.attrib["plural"], "long_abbr_"+abbr)
             
     def register_keyterm(self, word, id):
-        print("Registering " + word + " to "+id)
         if len(word) > 1 and not(word.startswith(".")):
             self.discoverables_to_ids[word]=id
 
@@ -211,8 +210,10 @@ class generic_pp_doc(object):
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
         for sfr in self.rx("//cc:f-component[cc:objective]"):
+            self.maybe_register_sfr_with_fam(sfr)
             self.obj_sfrs[sfr]=1
         for sfr in self.rx("//cc:f-component[cc:optional and not(cc:depends)]"):
+            self.maybe_register_sfr_with_fam(sfr)
             self.opt_sfrs[sfr]=1
         dep_sfrs = self.rx("//cc:f-component[cc:depends]")
         for sfr in dep_sfrs:
@@ -875,7 +876,6 @@ security objectives for the environment.
     
     def handle_security_objectives_operational_environment(self, parent):
         soes=self.rfa("//cc:SOE")
-        print("We found"+str(len(soes)))
         if len(soes)>0:
             self.add_text(parent,generic_pp_doc.OE_PREAMBLE)
         else:
@@ -1070,11 +1070,22 @@ security policies map to the security objectives.""")
         self.globaltags[fulltag] = nodes
         return nodes
 
+
     
     def get_global_index(self, node):
         allof = self.get_list_of(node.tag)
         return allof.index(node)+1
 
+    def conjure_id(self, base):
+        return base.replace(" ", "_")+"-"
+    
+    def conjure_id_attr(self, base, attrs=None):
+        idval = self.conjure_id(base)
+        if attrs==None:
+            attrs={}
+        attrs["id"]=idval
+        return attrs
+        
     def derive_id(self, node):
         if node.attrib is not None and "id" in node.attrib:
             return node.attrib["id"]
@@ -1294,7 +1305,14 @@ security policies map to the security objectives.""")
         notes = node.findall("cc:note" , NS)
         if len(rulez)+len(notes) > 0:
             div_reqdesc.append(HTM_E.br())
-            div_reqdesc.append(HTM_E.span({"class":"note-header"},"Application Note: "))
+
+            if reqid[-1]=="D":
+                note_title="Developer"
+            elif reqid[-1]=="E":
+                note_title="Evaluator"
+            else:
+                note_title="Application"
+            div_reqdesc.append(HTM_E.span({"class":"note-header"},note_title+" Note: "))
             for note in notes:
                 self.handle_content(note, div_reqdesc)
             mfs = node.findall(".//cc:management-function[cc:app-note]",NS)
@@ -1356,22 +1374,61 @@ security policies map to the security objectives.""")
             return self.get_fcomp_status_isolated(node)
         
     
-    def handle_fcomponent(self, node, par):
+    def handle_component(self, node, par):
         formal = self.fcomp_cc_id(node)
         div = adopt(par, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
         statustext=self.get_fcomp_status(node)
         if not statustext=="":
             div.append(HTM_E.div({"class":"statustag"}, statustext))
-        ctr=0
-        for f_el in node.findall(".//cc:f-element", NS):
-            ctr+=1
-            reqid=self.fcomp_cc_id(node, "."+str(ctr))
-            self.handle_felement(f_el, reqid,div)
+        if node.tag==CC+"f-component":
+            ctr=0
+            for f_el in node.findall(".//cc:f-element", NS):
+                ctr+=1
+                reqid=self.fcomp_cc_id(node, "."+str(ctr))
+                self.handle_felement(f_el, reqid,div)
+        else:
+            self.handle_aelements(node.findall("cc:a-element",NS), formal, par)
         self.handle_fcomp_activities(node, formal, par)
 
-    def handle_fcomp_activities(self, fcomp, formal, out):
-        div = adopt(out,HTM_E.div(attrs("activity_pane hide"),
+
+
+    def handle_aelements(self, els, formal, par):
+        agroups = self.sort_aelements(els)
+        for title in "Developer action", "Content and presentation", "Evaluator action":
+            tipe=title[0:1]
+            if len(agroups[tipe])>0:
+                ctr=1
+                par.append(HTM_E.h4(title+" elements:"))
+                for el in agroups[tipe]:
+                    self.handle_felement(el, formal+"."+str(ctr)+tipe, par)
+                    ctr+=1
+
+    def sort_aelements(self, els):
+        ret={"D":[], "C":[], "E":[]}
+        for el in els:
+            if self.add_based_on_attr(el, ret):
+                continue
+            title=el.find("cc:title",NS).text
+            if title == "The developer shall":
+                ret["D"].append(el)
+            elif title == "The evaluator shall":
+                ret["E"].append(el)
+            else:
+                ret["C"].append(el)
+        return ret
+            
+
+            
+    def add_based_on_attr(self, el, theset):
+        if "type" in el.attrib:
+            theset[el.attrib["type"]].append(el)
+            return True
+        return False
+
+
+    def make_aactivity_pane(self, out):
+        return adopt(out,HTM_E.div(attrs("activity_pane hide"),
                                   HTM_E.div(attrs("activity_pane_header"),
                                             HTM_E.a({"onclick":"toggle(this);return false;","href":"#"},
                                                     HTM_E.span(attrs("activity_pane_label"),"Evaluation Activities"),
@@ -1380,10 +1437,14 @@ security policies map to the security objectives.""")
                                             )
                                   )
                     )
+
+        
+    def handle_fcomp_activities(self, fcomp, formal, out):
+        div = self.make_aactivity_pane(out)
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
         comp_acts = fcomp.xpath(".//cc:aactivity[not(@level='element')]", namespaces=NS)
         self.handle_grouped_activities(formal, comp_acts, div_out)
-        for fel in fcomp.xpath(".//cc:f-element[cc:aactivity/@level='element']", namespaces=NS):
+        for fel in fcomp.xpath(".//cc:*[cc:aactivity/@level='element']", namespaces=NS):
             # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
             fel_id = self.fel_cc_id(fel)
             self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[@level='element']", NS), div_out, "element")
@@ -1450,7 +1511,8 @@ security policies map to the security objectives.""")
                     self.end_section()
                 titles[title]=1
                 par.append(self.sec({"id":id}, title))
-            self.handle_fcomponent(sfr, par)
+                self.handle_content(sec,par)
+            self.handle_component(sfr, par)
         if len(titles)>0:
             self.end_section()
 
@@ -1526,8 +1588,6 @@ security policies map to the security objectives.""")
             self.handle_content(node, span)
         elif tag==CC+"testlist":
             self.handle_testlist(node, parent)
-        elif tag == CC+"a-component":
-            print("Not doing a-compoents")
         elif tag == CC+"consistency_rationale":
             print("Not doing a-compoents")
         else:
@@ -1540,12 +1600,10 @@ security policies map to the security objectives.""")
         parent=testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
         ctr=1
         cc_id=self.fcomp_cc_id(parent)
-        print("Calling it: " + cc_id)
         self.derive_test_title_recur(parent, cc_id+":Test #", stack=[0])
         return self.test_titles[testnode]
 
     def derive_test_title_recur(self, node, prefix, stack):
-        print("Stack is: " + str(stack))
         if node.tag==CC+"test":
             new_num=stack.pop() + 1
             stack.append(new_num)
@@ -1564,7 +1622,7 @@ security policies map to the security objectives.""")
             li = adopt(ul, HTM_E.li(attrs("test-")))
             test_id=self.derive_id(test)
             title = self.get_test_title(test)
-            self.register_keyterm(test_id, title)
+            # self.register_keyterm( title, test_id)
             atts=attrs("test- def_", test_id)
             adopt(li, HTM_E.a(atts, title))
             dependses = test.findall("cc:depends", NS)
