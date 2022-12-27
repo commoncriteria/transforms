@@ -12,6 +12,9 @@ SAR_TITLE="Security Assurance Requirements"
 class pp_doc(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, boilerplate):
         super().__init__(root, workdir, boilerplate)
+        self.modules={}
+        for mod_node in self.rfa("//cc:module"):
+            self.modules[mod_node.attrib["id"]]=edoc.Edoc(mod_node, workdir)
 
     def apply_template_to_element(self, node, parent):
         if node.tag == "{https://niap-ccevs.org/cc/v1}PP":

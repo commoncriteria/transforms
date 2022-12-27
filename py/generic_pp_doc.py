@@ -48,6 +48,9 @@ def add_grouping_row(table, text, size):
 def blank_cell():
     return HTM_E.td({"style":"display:none;"})
 
+def is_comment(node):
+    return not isinstance(node.tag,str)    
+
 def add_to_map_to_map(mappy, key, attr):
     if key not in mappy:
         minor = {}
@@ -138,7 +141,7 @@ class generic_pp_doc(object):
         self.globaltags = {}
         self.ids = {}
         self.boilerplate = boilerplate
-        self.edocs = self.make_edocs(workdir)
+        self.pkgs = self.make_edocs(workdir)
         self.sel_sfrs = {}
         self.opt_sfrs = {}
         self.obj_sfrs = {}
@@ -366,7 +369,7 @@ class generic_pp_doc(object):
         dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
         for dynref in dynrefs:
             refid = dynref.attrib["href"][1:]
-            print("Looking for " + refid)
+            # print("Looking for " + refid)
             reffed = doc.find(".//*[@id='"+refid+"']")
             if reffed is None:
                 print("Could not find dynamic reference: " + refid)
@@ -659,7 +662,8 @@ class generic_pp_doc(object):
             self.handle_security_objectives_operational_environment(parent)
         elif title=="Assumptions":
             self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
-
+        elif title=="Validation Guidelines":
+            self.handle_rules_appendix(parent) 
     
     def get_all_dependencies(self, node):
         choices={}
@@ -1333,54 +1337,53 @@ security policies map to the security objectives.""")
         return ret[0]
 
 
-    def get_fcomp_status_mingled(self, node):
-        ret=""
+    def get_fcomp_status_mingled(self, node, out):
         if node in self.sel_sfrs:
-            ret="This is a selection-based component. Its inclusion depends upon selection from:"
+            self.add_text(out, "This is a selection-based component. Its inclusion depends upon selection from:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
                 fcomp = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']") 
                 if len(fcomp)>0:
-                    ret+=" " + self.fel_cc_id(fcomp[0])
+                    self.add_text(out, " " + self.fel_cc_id(fcomp[0]))
             if is_optional(node):
-                ret += "This component may also be optionally be included in the ST as if optional."
+                self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
         elif node in self.obj_sfrs:
-            ret="This is an objective component."
+            self.add_text(out,"This is an objective component.")
         elif node in self.opt_sfrs:
-            ret="This is an optional component."
-        return ret
+            self.add_text(out, "This is an optional component.")
+        return None
 
 
-    def get_fcomp_status_isolated(self, node):
-        ret=""
+    def get_fcomp_status_isolated(self, node, out):
         if node in self.sel_sfrs:
-            ret="The inclusion of this selection-based component depends upon selection in:"
+            self.add_text(out, "The inclusion of this selection-based component depends upon selection in:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
                 fels = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']")
                 if len(fels)==1:
-                    ret+=" " + self.fel_cc_id(fels[0])
+                    self.add_text(out, " " + self.fel_cc_id(fels[0]))
                 else:
                     print("WARNING: Failed to find exactly one element that contains a selectable with the id: "+dependsId)
-            ret+="."
+            self.add_text(out, ".")
             if is_optional(node):
-                ret += "This component may also be optionally be included in the ST as if optional."
-        return ret
+                self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
+        return None
 
 
     
-    def get_fcomp_status(self, node):
+    def get_fcomp_status(self, node, out):
         if self.are_sfrs_mingled:
-            return self.get_fcomp_status_mingled(node)
+            return self.get_fcomp_status_mingled(node, out)
         else:
-            return self.get_fcomp_status_isolated(node)
+            return self.get_fcomp_status_isolated(node, out)
         
     
     def handle_component(self, node, par):
         formal = self.fcomp_cc_id(node)
         div = adopt(par, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
-        statustext=self.get_fcomp_status(node)
-        if not statustext=="":
-            div.append(HTM_E.div({"class":"statustag"}, statustext))
+        status_el = HTM_E.div({"class":"statustag"})
+        self.get_fcomp_status(node, status_el)
+        if not is_empty(status_el):
+            div.append(status_el)
         if node.tag==CC+"f-component":
             ctr=0
             for f_el in node.findall(".//cc:f-element", NS):
@@ -1945,13 +1948,27 @@ security policies map to the security objectives.""")
         txt = "["+node.find("./cc:tag", NS).text+"]"
         anchor="#"+node.attrib["id"]
         parent.append(E.a(txt, href=anchor))
+
+    def make_xref_selectable(self, target, out, ref):
+        refid = self.derive_id(target)
+        a_out = adopt(out, HTM_E.a({"href":"#"+refid}))
+        readable = target.find("cc:readable", NS)
+        snip = target.find("cc:snip", NS)
+        if readable is not None:
+            self.handle_content(readable, a_out)
+        elif snip is not None:
+            self.handle_content(snip, a_out)
+        else:
+            self.handle_content(target, a_out)
+
+            
         
     def make_xref(self, target, parent, ref=None):
         if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.make_xref_section(pp_util.localtag(target.tag), parent)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
-            self.edocs[theid].make_xref_edoc(parent)
+            self.pkgs[theid].make_xref_edoc(parent)
         elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, parent)
         elif target.tag == CC+"management-function":
@@ -1964,6 +1981,8 @@ security policies map to the security objectives.""")
             self.make_xref_generic(target, parent, ref, "")
         elif target.tag == CC+"appendix":
             self.make_xref_generic(target, parent, ref, "Appendix")
+        elif target.tag == CC+"selectable":
+            self.make_xref_selectable(target, parent, ref)
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
@@ -1984,7 +2003,7 @@ security policies map to the security objectives.""")
     #         ret+=pp_util.get_attr_or(node, "short", post=lambda x:"("+x+")")
     #         version = node.attrib["version"]            
     #     else:
-    #         proot = self.edocs[node.attrib["id"]]
+    #         proot = self.pkgs[node.attrib["id"]]
     #         ret+=proot.find(".//cc:PPTitle",NS).text
     #         version=proot.find(".//cc:PPVersion",NS).text
     #     ret+="Package, version "
@@ -1992,6 +2011,213 @@ security policies map to the security objectives.""")
     #     ret+="</a> Conformant"
 
         
+    def handle_rules_appendix(self, out):
+        rules = self.rfa("//cc:rule")
+        if len(rules)==0:
+            return
+        out.append(HTM_E.p("This appendix contains \"rules\" specified "+
+                            "by the PP Authors that indicate whether certain selections "+
+	                    "require the making of other selections in order for a "+
+                            "Security Target to be valid. For example, selecting "+
+                            "\"HMAC-SHA-3-384\" as a supported keyed-hash "+
+                            "algorithm would require that \"SHA-3-384\" be selected "+
+                            "as a hash algorithm."))
+        out.append(HTM_E.p("This appendix contains only such \"rules\" as have been "+
+                            "defined by the PP Authors, and does not necessarily "+
+	                    "represent all such dependencies in the document."))
+        ctr=1
+        for rule in rules:
+            ruleid = self.derive_id(rule)
+            out.append(HTM_E.h2({"id":ruleid}, "Rule #"+str(ctr)))
+            ctr+=1
+            desc_out = adopt(out, HTM_E.div())
+            self.handle_content(rule.find("cc:description", NS), desc_out)
+            self.apply_use_case_templates(rule, out)
+
+    def apply_use_case_templates(self,nodes, out):
+        for node in nodes:
+            if is_comment(node):
+                pass
+            elif node.tag == CC+"and":
+                self.and_use_case(node, out)
+            elif node.tag == CC+"if":
+                pass
+            elif node.tag == CC+"then":
+                self.then_usecase(node, out)
+            elif node.tag==CC+"description":
+                pass
+            elif node.tag==CC+"ref-id":
+                self.refid_use_case(node, out)
+            elif node.tag==CC+"doc":
+                self.doc_use_case(node, out)
+            else:
+                print("can't handle: "+node.tag + " in use-case.")
+                pass
+
+            
+    def and_use_case(self, and_el, out):
+        for child in and_el:
+            self.apply_use_case_templates(child, out)
+            
+            # <xsl:template match="cc:and" mode="use-case" name="use-case-and">
+            #   <xsl:apply-templates mode="use-case"/>
+            # </xsl:template>
+            
+
+    def or_use_case(self, or_el, out):
+        table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
+        table_out = adopt(out, HTM_E.table(table_attrs,
+                                           HTM_E.tr(
+                                               HTM.td({"class":"or_cell", "rowspan":len(or_el)}, "OR"),
+                                               blank_cell()
+                                           )
+                                           ))
 
 
-    
+
+    def doc_use_case(self, doc_el, out):
+        doc_id = doc_el.attrib["ref"]
+        print("Get_product: " + doc_id)
+        print("Doc is a "+doc_el.tag)
+        target = self.rf("//cc:*[@id='"+doc_id+"']")
+        if target is None:
+            print("Could not find an external document: "+target)
+        div=adopt(out, HTM_E.div({"class":"uc pkg"}, "From the "))
+        if target.tag == CC+"include-pkg":
+            pkgs[doc_id].make_xref_edoc(out)
+        elif target.tag == CC+"module":
+            self.modules[doc_id].make_xref_edoc(out)
+        else:
+            print("Target is " + target.tag)
+
+
+
+
+        # doc = self.pkgs[doc_id]
+        # out.append(HTM_E.div("From " + doc.derive_title()))
+          
+  # <xsl:template match="cc:doc" mode="use-case">
+  #   <xsl:variable name="docpath"><xsl:value-of select="concat($work-dir,'/',@ref)"/>.xml</xsl:variable>
+  #   <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
+  #   <xsl:variable name="name"><xsl:value-of select="document($docpath)//cc:PPTitle"/><xsl:if test="not(document($docpath)//cc:PPTitle)">PP-Module for <xsl:value-of select="document($docpath)/cc:Module/@name"/></xsl:if></xsl:variable>
+
+
+  #   <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="$name"/></a>: </div>
+  #   <xsl:for-each select="cc:ref-id">
+  #     <xsl:call-template name="handle-ref-ext"> 
+  #       <xsl:with-param name="ref-id" select="text()"/>
+  #       <xsl:with-param name="root" select="document($docpath)/cc:*"/>
+  #     </xsl:call-template>
+  #   </xsl:for-each>
+  # </xsl:template>
+
+
+      
+
+    def refid_use_case(self, refid_el, out):
+        refid=refid_el.text
+        target = self.rf("//cc:*[@id='"+refid+"']")
+        if target==None:
+            print("Failed to find "+refid+" in a use case or rule")
+            return 
+        if target.tag == CC+"module":
+            out_div = adopt(out,HTM_E.div({"class":"uc module"},"Include the "))
+            self.make_xref(target, out)
+            self.add_text(out_div, " module in the ST ")
+        elif target.tag == CC+"selectable":
+            out_div = adopt(out,HTM_E.div({"class":"uc module"},"Include "))
+            self.make_xref(target, out)
+            print("HANDLING ANCESTORS")
+            self.add_text(out_div, " selectable in the ST ")
+        elif target.tag == CC+"f-component":
+            out_div = adopt(out,HTM_E.div({"class":"uc fcomp"},"Include "))
+            self.make_xref(target, out)
+            self.add_text(out_div, " in the ST ")
+        elif target.tag == CC+"management-function":
+            print("HANDLING ANCESTORS")
+            out_div = adopt(out,HTM_E.div({"class":"uc mf"},"Include "))
+            self.make_xref(target, out)
+            self.add_text(out_div, " in the ST ")
+        else:
+            raise Exception("Can't handle: " +target.tag + " : " + refid)
+  #           <xsl:template match="cc:ref-id" mode="use-case">
+  #  <xsl:variable name="ref-id-txt" select="text()"/>
+  #  <xsl:choose>
+  #     <xsl:when test="//cc:module[@id=$ref-id-txt]">
+  #       <div class="uc,module"> Include the <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="make_xref"/> module in the ST </div>
+  #     </xsl:when>
+  #     <xsl:when test="//cc:selectable[@id=$ref-id-txt]">
+  #       <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="handle-ancestors">
+  #         <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+  #       </xsl:apply-templates>
+  #     </xsl:when>
+  #     <xsl:when test="//cc:f-component[@id=$ref-id-txt]">
+  #       <div class="uc_inc_fcomp">Include <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="make_xref"/> in the ST </div>
+  #     </xsl:when>
+  #     <xsl:when test="//cc:management-function//@id=$ref-id-txt">
+  #       <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="handle-ancestors">
+  #         <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+  #       </xsl:apply-templates>
+  #       <div class="uc_mf">Include
+  #       <xsl:apply-templates select="//cc:management-function[@id=$ref-id-txt]" mode="make_xref"/>
+  #       in the ST</div>
+  #     </xsl:when>
+  #     <xsl:otherwise>
+  #       <xsl:message> Failed to find <xsl:value-of select="$ref-id-txt"/> in <xsl:call-template name="genPath"/> (use case or rule)</xsl:message>
+  #       <xsl:if test="./@alt">
+  #         <b><i><xsl:value-of select="./@alt"/></i></b>
+  #       </xsl:if>
+  #     </xsl:otherwise>
+  #   </xsl:choose>
+  # </xsl:template>
+
+      
+      # <!--  <xsl:template match="cc:or" mode="rule"> -->
+      # <!--   <table class="uc_table_or" style="border: 1px solid black"> -->
+      # <!--     <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">OR</td><td style="display:none"></td></tr> -->
+      # <!--     <xsl:for-each select="cc:*"> -->
+      # <!--       <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr> -->
+      # <!--     </xsl:for-each> -->
+      # <!--   </table> -->
+      # <!-- </xsl:template> -->
+
+
+    def then_usecase(self, then_el, out):
+        table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
+        if_el = then_el.xpath("preceding-sibling::cc:if[1]", namespaces=NS)
+        if if_el is None:
+            print("Found 'then' without a preceding 'if'")
+            return
+
+        attrs={"style":"width: 99%"}
+        if_td = HTM_E.td(attrs)
+        self.apply_use_case_templates(if_el, if_td)
+        then_td = HTM_E.td(attrs)
+        self.apply_use_case_templates(then_el, then_td)
+        table_out = adopt(out, HTM_E.table(table_attrs,
+                                           HTM_E.tr(
+                                               HTM_E.td({"class":"or_cell", "rowspan":"1"}, "IF"),
+                                               if_td
+                                           ),
+                                           HTM_E.tr(
+                                               HTM_E.td({"class":"or_cell", "rowspan":"1"}, "THEN"),
+                                               then_td
+                                        )))
+         
+  # <xsl:template match="cc:if" mode="use-case">
+  #   <table class="uc_table_or" style="border: 1px solid black">
+  #     <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">IF</td><td style="display:none"></td></tr>
+  #     <xsl:for-each select="cc:*">
+  #       <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+  #     </xsl:for-each>
+  #   </table>
+  # </xsl:template>
+	
+  # <xsl:template match="cc:then" mode="use-case">
+  #   <table class="uc_table_or" style="border: 1px solid black">
+  #     <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">THEN</td><td style="display:none"></td></tr>
+  #     <xsl:for-each select="cc:*">
+  #       <tr><td style="width: 99%"><xsl:apply-templates select="." mode="use-case"/></td></tr>
+  #     </xsl:for-each>
+  #   </table>
+  # </xsl:template>
