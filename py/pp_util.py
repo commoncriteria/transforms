@@ -43,6 +43,13 @@ def append_text(node, text):
         else:
             node[-1].tail += text
 
+    
+def get_meaningful_ancestor(root, refid):
+    ret = root.xpath(".//cc:f-element[.//@id='"+refid+"']|.//cc:choice[.//@id='"+refid+"']|.//cc:feature[.//@id='"+refid+"']", namespaces=NS)
+    if len(ret) != 1:
+        raise Exception("Should only be one thing")
+    return ret[0]
+
 
 
 NS = {'cc': "https://niap-ccevs.org/cc/v1",

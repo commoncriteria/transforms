@@ -3,8 +3,14 @@ import pp_util
 from pp_util import NS
 
 from lxml.builder import ElementMaker
-HTM_E=pp_util.get_HTM_E()
 
+NS = {'cc': "https://niap-ccevs.org/cc/v1",
+      'sec': "https://niap-ccevs.org/cc/v1/section",
+      'htm': "http://www.w3.org/1999/xhtml"}
+CC="{"+NS['cc']+"}"
+SEC="{"+NS['sec']+"}"
+
+HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 append_text=pp_util.append_text
 # Represents external documents. Both those defined by XML and those defined just with the
@@ -61,12 +67,50 @@ class Edoc:
 
     def make_xref_edoc(self, parent):
         url=self.orig.find("cc:url", NS).text
-        print("Orig is :"+self.orig.attrib["id"])
         if self.root is None:
             parent.append(HTM_E.a({"href":url}, derive_short(self.orig)))
         else:
             parent.append(HTM_E.a({"href":url}, derive_short(self.root)))
 
+    def make_xref_selectable(self, sel, out):
+        ancestor = pp_util.get_meaningful_ancestor(self.root, sel.attrib["id"])
+    
+        readable = sel.find("cc:readable", NS)
+        snip = sel.find("cc:snip", NS)
+        if readable is not None:
+            pp_util.append_text(out, readable.text)
+        elif snip is not None:
+            pp_util.append_text(out, snip.text + "...")
+        else:
+            pp_util.append_text(out, sel.text)
+        pp_util.append_text(out, " from ") 
+        self.make_xref_sub("", out, target_el=ancestor)
+
+        
+            
+    def make_xref_sub(self, target_id, out, target_el=None):
+        if target_el == None:
+            target_el = self.root.find(".//cc:*[@id='"+target_id+"']", NS)
+        if target_el is None:
+            print("Could not find: " + target_id  + " from " + self.root.tag)
+            
+        if target_el.tag == CC+"selectable":
+            self.make_xref_selectable(target_el, out)
+        elif target_el.tag == CC+"f-element":
+            fcomp = target_el.xpath("ancestor::*[1]")[0]
+            index= fcomp.xpath("cc:f-element", namespaces=NS).index(target_el)
+            pp_util.append_text(out, fcomp.attrib["cc-id"].upper()+"."+str(index+1))
+            if "iteration" in fcomp.attrib:
+                pp_util.append_text(out, "/"+fcomp.attrib["iteration"])
+            print("Fcomp: " + fcomp.tag)
+        #     raise Exception("Not supported yet")
+        # elif target_el.tag == CC+"management-function":
+        #     raise Exception("Not supported yet")
+        #     # self.make_xref_mf(target_el, out)
+        # elif target_el.tag == CC+"f-component":
+        #     raise Exception("Not supported yet")
+        else:
+            raise Exception("Not supported yet: "+target_el.tag)
         # if root
         # print("Node tag: " + node.tag)
         # if "name" in self.orig.attrib:

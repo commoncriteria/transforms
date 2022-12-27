@@ -8,9 +8,7 @@ import math
 import edoc
 import re
 
-NS = {'cc': "https://niap-ccevs.org/cc/v1",
-      'sec': "https://niap-ccevs.org/cc/v1/section",
-      'htm': "http://www.w3.org/1999/xhtml"}
+NS = edoc.NS
 CC="{"+NS['cc']+"}"
 SEC="{"+NS['sec']+"}"
 
@@ -1329,13 +1327,6 @@ security policies map to the security objectives.""")
                 note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
                 self.make_xref(mf, note_head)
                 self.handle_content(mf.find("cc:app-note", NS), div_reqdesc)
-    
-    def get_meaningful_ancestor(self, refid):
-        ret = self.rx("//cc:f-element[.//@id='"+refid+"']|//cc:choice[.//@id='"+refid+"']|//cc:feature[.//@id='"+refid+"']")
-        if len(ret) != 1:
-            raise Exception("Should only be one thing")
-        return ret[0]
-
 
     def get_fcomp_status_mingled(self, node, out):
         if node in self.sel_sfrs:
@@ -2083,13 +2074,19 @@ security policies map to the security objectives.""")
         if target is None:
             print("Could not find an external document: "+target)
         div=adopt(out, HTM_E.div({"class":"uc pkg"}, "From the "))
+        edoc=None
         if target.tag == CC+"include-pkg":
-            pkgs[doc_id].make_xref_edoc(out)
+            target_edoc = self.pkgs[doc_id]
         elif target.tag == CC+"module":
-            self.modules[doc_id].make_xref_edoc(out)
+            target_edoc= self.modules[doc_id]
         else:
             print("Target is " + target.tag)
-
+        target_edoc.make_xref_edoc(out)
+        self.add_text(out, " include ")
+        for sub in doc_el:
+            target_edoc.make_xref_sub(sub.text, out)
+        self.add_text(out, " in the ST. ")
+            
 
 
 
