@@ -12,7 +12,11 @@ NS = edoc.NS
 CC="{"+NS['cc']+"}"
 SEC="{"+NS['sec']+"}"
 
-DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component"}
+DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"optional",
+              CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component",
+              CC+"f-element", CC+"a-element",CC+"audit-event", CC+"consistency-rationale",
+              CC+"comp-lev", CC+"management", CC+"audit", CC+"dependencies", CC+"objective",
+              CC+"optional", CC+"depends", CC+"ext-comp-def-title"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
@@ -150,7 +154,6 @@ class generic_pp_doc(object):
     def __init__(self, root, workdir, boilerplate):
         self.root = root
         self.globaltags = {}
-        self.ids = {}
         self.boilerplate = boilerplate
         self.pkgs = self.make_edocs(workdir)
         self.sel_sfrs = {}
@@ -161,7 +164,8 @@ class generic_pp_doc(object):
         self.test_titles={}
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends or cc:objective or cc:optional)]")
         self.are_sfrs_mingled = False
-
+        self.node_to_ccid={}
+        
         self.categorize_sfrs()
         self.outline = [0]
         self.is_appendix = False
@@ -206,6 +210,33 @@ class generic_pp_doc(object):
             if aa.find("cc:description", NS) is not None:
                 ccname = aa.attrib["name"]
                 self.register_keyterm(ccname, ccname)
+
+    def get_ccid_for_ccel(self, ccel_el):
+        if ccel_el in self.node_to_ccid:
+            return self.node_to_ccid[ccel_el]
+        component = ccel_el.xpath("ancestor::cc:a-component[1]|ancestor::cc:f-component[1]", namespaces=NS)[0]
+        comp_cc_id = component.attrib["cc-id"].upper()+"."
+        suffix=""
+        if "iteration" in component.attrib:
+            suffix="/"+component.attrib["iteration"]
+        if ccel_el.tag == CC+"f-element":
+            kid_els = component.xpath("cc:f-element", namespaces=NS)
+            ctr=0
+            for kid in kid_els:
+                ctr+=1
+                self.node_to_ccid[kid]=comp_cc_id+str(ctr)+suffix
+        else:
+            aels = component.xpath("cc:a-element", namespaces=NS)
+            d_c_e = self.sort_aelements(aels)
+            for tipe in d_c_e:
+                ctr=0
+                for ael in d_c_e[tipe]:
+                    ctr+=1
+                    self.node_to_ccid[ael]=comp_cc_id+str(ctr)+tipe # No Suffix
+                    print("Added " + self.node_to_ccid[ael])
+
+        return self.node_to_ccid[ccel_el]
+        
                 
     def register_abbrs(self):
         for term in self.get_all_abbr_els():
@@ -590,16 +621,16 @@ class generic_pp_doc(object):
     #     return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
 
                 
-    def handle_content(self, node, parent,defcon=""):
+    def handle_content(self, node, out,defcon=""):
         if node is None:
-            self.add_text(parent, defcon)
+            self.add_text(out, defcon)
             return False
         if node.text is None and len(node)==0:
             return False
-        self.add_text(parent, node.text)
+        self.add_text(out, node.text)
         for child in node:
-            self.apply_templates_single(child,parent)
-            self.add_text(parent,child.tail)
+            self.apply_templates_single(child,out)
+            self.add_text(out,child.tail)
         return True
             
     def handle_section(self, node, title, id, parent):
@@ -826,16 +857,14 @@ class generic_pp_doc(object):
         self.handle_content(sfr.find("cc:dependencies",NS), p_el, defcon="No dependencies.")
         ctr=1
         for fel in sfr.findall("cc:f-element", NS):
-            fel_id = self.fcomp_cc_id(sfr, suffix="."+str(ctr))
+            fel_id = self.get_ccid_for_ccel(fel)
             par.append(HTM_E.h4({"id":"ext-comp-"+fel_id+"-"},fel_id))
-            ecd_title = fel.find("cc:ext-comp-def-title",NS)
-            if ecd_title is not None:
-                self.apply_templates(ecd_title, par)
-            else:
-                title=fel.find("cc:title",NS)
-                if title is None:
+            ecd_title = fel.find("cc:ext-comp-def-title/cc:title",NS)
+            if ecd_title is None:
+                ecd_title=fel.find("cc:title",NS)
+                if ecd_title is None:
                     raise Exception("Can't find title")
-                self.handle_content(title, par)
+            self.handle_content(ecd_title, par)
             ctr+=1
 
     def start_appendixes(self):
@@ -1307,7 +1336,8 @@ security policies map to the security objectives.""")
 
 
 
-    def handle_felement(self, fel_el, formal_id, par):
+    def handle_felement(self, fel_el,  par):
+        formal_id = self.get_ccid_for_ccel(fel_el)
         div_fel=adopt(par, HTM_E.div({"class":"element"}))
         reqid=self.derive_id(fel_el)
         div_fel.append(
@@ -1332,7 +1362,6 @@ security policies map to the security objectives.""")
             for note in notes:
                 self.handle_content(note, div_reqdesc)
             mfs = fel_el.findall(".//cc:management-function[cc:app-note]",NS)
-            #mfs = fel_el.findall(".//cc:management-function",NS)
             if len(mfs)>0:
                 adopt(div_reqdesc,HTM_E.div("Function-specific Application Notes"))
                 for mf in mfs:
@@ -1412,12 +1441,10 @@ security policies map to the security objectives.""")
         self.get_fcomp_status(node, status_el)
         if not is_empty(status_el):
             div.append(status_el)
+        self.handle_content(node, par)
         if node.tag==CC+"f-component":
-            ctr=0
             for f_el in node.findall(".//cc:f-element", NS):
-                ctr+=1
-                reqid=self.fcomp_cc_id(node, "."+str(ctr))
-                self.handle_felement(f_el, reqid,div)
+                self.handle_felement(f_el, div)
         else:
             self.handle_aelements(node.findall("cc:a-element",NS), formal, par)
         self.handle_fcomp_activities(node, formal, par)
@@ -1429,11 +1456,9 @@ security policies map to the security objectives.""")
         for title in "Developer action", "Content and presentation", "Evaluator action":
             tipe=title[0:1]
             if len(agroups[tipe])>0:
-                ctr=1
                 par.append(HTM_E.h4(title+" elements:"))
                 for el in agroups[tipe]:
-                    self.handle_felement(el, formal+"."+str(ctr)+tipe, par)
-                    ctr+=1
+                    self.handle_felement(el, par)
 
     def sort_aelements(self, els):
         ret={"D":[], "C":[], "E":[]}
@@ -1441,9 +1466,10 @@ security policies map to the security objectives.""")
             if self.add_based_on_attr(el, ret):
                 continue
             title=el.find("cc:title",NS).text
-            if title == "The developer shall":
+            if title.startswith("The developer shall"):
                 ret["D"].append(el)
-            elif title == "The evaluator shall":
+                print("Adding to developer")
+            elif title.startswith("The evaluator shall"):
                 ret["E"].append(el)
             else:
                 ret["C"].append(el)
@@ -1499,7 +1525,21 @@ security policies map to the security objectives.""")
                 out.append(HTM_E.div(attrs("eacategory"),act))
                 out.append(acts[act])
         return True
-            
+
+
+    def find_first_section_with_title(self, title):
+        sections = self.find_sections_with_title(title)
+        if len(sections)==0:
+            return None
+        else:
+            return sections[0]
+    
+    def find_sections_with_title(self, title):
+        underscored_title = title.replace(" ", "_")
+        xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
+        return self.rx(xpath)
+
+        
    # <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
    #      <!-- Display component name -->
    #      <x:if test=".//cc:aactivity[not(@level='element')]">
@@ -1592,10 +1632,6 @@ security policies map to the security objectives.""")
             return
         elif tag in TRANSPARENT:
             self.handle_content(node, parent)
-        elif tag==CC+"f-element":
-            self.template_felement(node, parent)
-        elif tag==CC+"title": 
-            self.apply_templates(node, parent)
         elif tag==CC+"management-function-set":
             self.template_management_function_set(node, parent)
         elif tag==CC+"ctr":
@@ -1635,7 +1671,7 @@ security policies map to the security objectives.""")
         parent=testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
         ctr=1
         cc_id=self.fcomp_cc_id(parent)
-        self.derive_test_title_recur(parent, cc_id+":Test #", stack=[0])
+        self.derive_test_title_recur(parent, cc_id+"#", stack=[0])
         return self.test_titles[testnode]
 
     def derive_test_title_recur(self, node, prefix, stack):
@@ -2080,7 +2116,7 @@ security policies map to the security objectives.""")
                 self.doc_use_case(node, out)
             else:
                 print("can't handle: "+node.tag + " in use-case.")
-                pass
+
 
             
     def and_use_case(self, and_el, out):
@@ -2159,7 +2195,7 @@ security policies map to the security objectives.""")
             self.make_xref(target, out)
             self.add_text(out_div, " module in the ST ")
         elif target.tag == CC+"selectable":
-            out_div = adopt(out,HTM_E.div({"class":"uc module"},"Include "))
+            out_div = adopt(out,HTM_E.div({"class":"uc selectable"},"Include "))
             self.make_xref(target, out)
             print("HANDLING ANCESTORS")
             self.add_text(out_div, " selectable in the ST ")
@@ -2224,14 +2260,15 @@ security policies map to the security objectives.""")
             return
 
         attrs={"style":"width: 99%"}
-        if_td = HTM_E.td(attrs)
-        self.apply_use_case_templates(if_el, if_td)
+        if_out = HTM_E.td(attrs)
+        for if_kid in if_el:
+            self.apply_use_case_templates(if_kid, if_out)
         then_td = HTM_E.td(attrs)
         self.apply_use_case_templates(then_el, then_td)
         table_out = adopt(out, HTM_E.table(table_attrs,
                                            HTM_E.tr(
                                                HTM_E.td({"class":"or_cell", "rowspan":"1"}, "IF"),
-                                               if_td
+                                               if_out
                                            ),
                                            HTM_E.tr(
                                                HTM_E.td({"class":"or_cell", "rowspan":"1"}, "THEN"),

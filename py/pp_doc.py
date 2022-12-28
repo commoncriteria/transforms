@@ -80,7 +80,8 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
                       "are captured in Section 5 also provide clarification as to what the "+\
                       "developer needs to provide to demonstrate the TOE is compliant with "+\
                       "the PP. ")
-
+        sar=self.find_first_section_with_title(SAR_TITLE)
+        self.apply_templates(sar.xpath("cc:section[not(.//cc:a-component)]|sec:*[not(.//cc:a-component)]", namespaces=generic_pp_doc.NS), par)
         afrs = self.rx("//cc:a-component")
         self.handle_sparse_sfrs(afrs, par)
         self.end_section()
@@ -89,11 +90,11 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
 
         
     def template_pp(self, node, parent):
-        first_intro=self.rx("//*[@title='Introduction']|sec:Introduction")[0]
+        first_intro=self.find_first_section_with_title("Introduction")
         self.apply_templates_single(first_intro,parent)
-        self.apply_templates(self.rx("//*[@title='Conformance Claims']|sec:Conformance_Claims"),parent)
-        self.apply_templates(self.rx("//*[@title='Security Problem Description']|sec:Security_Problem_Description"),parent)
-        self.apply_templates(self.rx("//*[@title='Security Objectives']|sec:Security_Objectives"),parent)
+        self.apply_templates(self.find_sections_with_title("Conformance Claims"),parent)
+        self.apply_templates(self.find_sections_with_title("Security Problem Description"),parent)
+        self.apply_templates(self.find_sections_with_title("Security Objectives"),parent)
         self.handle_security_requirements(parent)
 #        self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"),parent)
 #        self.consistency_rationale(parent)
