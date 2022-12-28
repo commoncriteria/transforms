@@ -133,6 +133,19 @@ def convert_none_text_to_emptys(node):
     for child in node:
         convert_none_text_to_emptys(child)
 
+
+def harvest_ids(ids, el):
+    if "id" in el.attrib:
+        ids.add(el.attrib["id"])
+    for child in el:
+        harvest_ids(ids, child)
+                
+def does_rule_contain_id(rule, ids):
+    for refid in rule.findall(".//cc:ref-id", NS):
+        if refid.text.strip() in ids:
+            return True
+    return False
+        
 class generic_pp_doc(object):
     def __init__(self, root, workdir, boilerplate):
         self.root = root
@@ -182,6 +195,7 @@ class generic_pp_doc(object):
             for fel in fcomp.findall(".//cc:f-element", NS):
                 felid=self.fel_cc_id(fel)
                 self.register_keyterm(felid.upper(), felid)
+
                 
     def get_all_abbr_els(self):
         return self.rfa("//cc:term[@abbr]")+\
@@ -253,7 +267,6 @@ class generic_pp_doc(object):
 
 
     def is_non_xrefable_section(self, node):
-
         if node.tag == "a"    or node.tag == "abbr"    or\
            node.tag == "dt"   or node.tag == "no-link" or\
            node.tag == "h1"   or node.tag == "h2"      or\
@@ -1294,41 +1307,45 @@ security policies map to the security objectives.""")
 
 
 
-    def handle_felement(self, node, reqid, par):
+    def handle_felement(self, fel_el, formal_id, par):
         div_fel=adopt(par, HTM_E.div({"class":"element"}))
+        reqid=self.derive_id(fel_el)
         div_fel.append(
-            HTM_E.div({"class":"reqid","id":reqid},
-                      HTM_E.a({"href":"#"+reqid,"class":"abbr"}, reqid))
+            HTM_E.div({"class":"formal_id","id":reqid},
+                      HTM_E.a({"href":"#"+formal_id,"class":"abbr"}, formal_id))
         )
         div_reqdesc = adopt(div_fel, HTM_E.div({"class":"reqdesc"}))
-        title=node.find("cc:title", NS)
+        title=fel_el.find("cc:title", NS)
         self.handle_content(title, div_reqdesc)
         # apply_templates_single(title)
-#        rulez = self.rx("//cc:rule[.//cc:ref-id/text()=current()//@id]")
-        rulez = self.rx("//cc:rule[.//cc:ref-id/text()='"+reqid+"']")
-        notes = node.findall("cc:note" , NS)
-        if len(rulez)+len(notes) > 0:
+        notes = fel_el.findall("cc:note" , NS)
+        if len(notes) > 0:
             div_reqdesc.append(HTM_E.br())
-
-            if reqid[-1]=="D":
+            last_char_in_ccid=formal_id.split("/")[0][-1]
+            if last_char_in_ccid=="D":
                 note_title="Developer"
-            elif reqid[-1]=="E":
+            elif last_char_in_ccid=="E":
                 note_title="Evaluator"
             else:
                 note_title="Application"
             div_reqdesc.append(HTM_E.span({"class":"note-header"},note_title+" Note: "))
             for note in notes:
                 self.handle_content(note, div_reqdesc)
-            mfs = node.findall(".//cc:management-function[cc:app-note]",NS)
-            #mfs = node.findall(".//cc:management-function",NS)
-            if len(mfs)==0:
-                return
-            adopt(div_reqdesc,HTM_E.div({"id":"mf-spec-notes"},"Function-specific Application Notes"))
-            for mf in mfs:
-                self.set_shortcut(mf)
-                note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
-                self.make_xref(mf, note_head)
-                self.handle_content(mf.find("cc:app-note", NS), div_reqdesc)
+            mfs = fel_el.findall(".//cc:management-function[cc:app-note]",NS)
+            #mfs = fel_el.findall(".//cc:management-function",NS)
+            if len(mfs)>0:
+                adopt(div_reqdesc,HTM_E.div("Function-specific Application Notes"))
+                for mf in mfs:
+                    self.set_shortcut(mf)
+                    note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
+                    self.make_xref(mf, note_head)
+                    self.handle_content(mf.find("cc:app-note", NS), div_reqdesc)
+
+        rule_out = HTM_E.span()
+        self.add_rules(fel_el, rule_out)
+        if not is_empty(rule_out):
+            div_reqdesc.append(HTM_E.div("Validation Guidelines"))
+            div_reqdesc.append(rule_out)
 
     def get_fcomp_status_mingled(self, node, out):
         if node in self.sel_sfrs:
@@ -1358,16 +1375,34 @@ security policies map to the security objectives.""")
             self.add_text(out, ".")
             if is_optional(node):
                 self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
-        return None
-
 
     
     def get_fcomp_status(self, node, out):
         if self.are_sfrs_mingled:
-            return self.get_fcomp_status_mingled(node, out)
+            self.get_fcomp_status_mingled(node, out)
         else:
-            return self.get_fcomp_status_isolated(node, out)
+            self.get_fcomp_status_isolated(node, out)
+
+    def add_rule_longref(self, rule, out_el, ruleindex=None):
+        out = adopt(out_el, HTM_E.div({"class":"ruleref"}))
+        if ruleindex==None:
+            ruleindex = self.get_rule_index(rule)
+        attrs={"href":"#"+self.derive_id(rule), "class":"ruleref"}
+        out.append(HTM_E.a(attrs,"Rule #"+ruleindex))
+        desc = rule.find("cc:description", NS)
+        if desc is not None:
+            self.add_text(out, ": ")
+            self.handle_content(desc, out)
         
+    def add_rules(self, fel_el, out):
+        ids=set()
+        harvest_ids(ids, fel_el)
+        ctr=0
+        for rule in self.rfa("//cc:rule"):
+            ctr+=1
+            if does_rule_contain_id(rule, ids):
+                self.add_rule_longref(rule, out, ruleindex=str(ctr))
+                
     
     def handle_component(self, node, par):
         formal = self.fcomp_cc_id(node)
