@@ -750,6 +750,10 @@ class generic_pp_doc(object):
             classid = sec.attrib["title"].split(")")[0].split("(")[1]
             span=adopt(par, HTM_E.span({"data-sortkey":sec.attrib["title"]}))
             span.append(self.sec({"id":"ext-comp-"+classid},sec.attrib["title"]))
+            self.add_text(span, "This "+self.doctype() +\
+                          " defines the following extended components as part of the "+\
+                          classid + " class originally defined by CC Part 2:" )
+
             for ecd in ecds:
                 self.handle_ecd(ecd, classid, span)
             self.end_section()
@@ -759,9 +763,7 @@ class generic_pp_doc(object):
     def handle_ecd(self, famnode, classid, span):
         famId = famnode.attrib["fam-id"]
         desc = famnode.find("cc:class-description",NS)
-        self.handle_content(desc, span, defcon="This "+self.doctype() +\
-                            " defines the following extended components as part of the "+\
-                            classid + " class originally defined by CC Part 2:" )
+        self.handle_content(desc, span)
         span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
 
         div = adopt(span, HTM_E.div())
