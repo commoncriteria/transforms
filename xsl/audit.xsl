@@ -139,7 +139,7 @@
       </xsl:for-each>
       <!-- Goes through each external document -->
       <xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
-	<tr><td colspan="3">
+	<tr data-sortkey="{@id}__{@ref}"><td colspan="3">
 	  From <xsl:apply-templates select="." mode="make_xref"/>
 	</td></tr>
 

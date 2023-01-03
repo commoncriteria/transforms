@@ -23,9 +23,12 @@
       </xsl:message>
     </xsl:for-each>
     <xsl:for-each select="//cc:f-element[not(.//cc:aactivity or ..//cc:aactivity[not(@level='element' or parent::cc:management-function)])]">
-      <xsl:message>* Error: F-Element <xsl:apply-templates select="." mode="getId"/> <xsl:value-of select="local-name()"/> appears not to have an associated evaluation activity.:
+      <xsl:if test="not(../@status='invisible')">
+
+	<xsl:message>* Error: <xsl:value-of select="local-name()"/><xsl:text> </xsl:text><xsl:apply-templates select="." mode="getId"/>  appears not to have an associated evaluation activity.:
         <xsl:call-template name="genPath"/>
-      </xsl:message>
+	</xsl:message>
+      </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
       <xsl:message>* Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
@@ -70,18 +73,19 @@
 	  </xsl:message>
         </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//@ref-id">
+    <xsl:for-each select="//@ref-id[not(ancestor::cc:con-mod)]">
+      
 	<xsl:variable name="refid" select="."/>
         <xsl:if test="not(//cc:*[@id=$refid])">
          <xsl:message>* Error: Detected dangling <xsl:value-of select="concat(name(),' to ',$refid)"/> 
-         for a <xsl:value-of select="name()"/>.
+         for a <xsl:value-of select="name()"/>
 	  <xsl:call-template name="genPath"/>	
          </xsl:message>
         </xsl:if>
     </xsl:for-each>
     <xsl:for-each select="//cc:con-mod/@ref">
       <xsl:variable name="refid" select="."/>
-      <xsl:if test="not(//cc:f-component/@id=$refid or //cc:*/@name=$refid)">
+      <xsl:if test="not(//cc:f-component/@cc-id=$refid or //cc:*/@name=$refid or //cc:f-component/@id=$refid)">
 	<xsl:message>* Error: Detected dangling ref to '<xsl:value-of select="$refid"/>'
         for a <xsl:value-of select="name()"/>.
 	<xsl:call-template name="genPath"/>

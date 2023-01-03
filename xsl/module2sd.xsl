@@ -164,13 +164,16 @@ guidance, and testing.</p>
    <x:template name="handle-apply-to-all">
     <h2 class="indexable" data-level="1" id="man-sfrs">TOE SFR Evaluation Activities</h2>
     <x:choose>
-      <x:when test="//cc:man-sfrs//cc:f-component|/cc:PP//cc:f-component[not(@status)]">
-        <x:for-each select="//cc:man-sfrs//cc:f-component/..|/cc:PP//cc:f-component[not(@status)]/..">
+      <x:when test="//cc:man-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[not(@status)]">
+        <x:for-each select="//cc:man-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[not(@status)]/..">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
           <x:apply-templates select="cc:f-component[not(@status) and /cc:PP]"/>
-          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+          <x:for-each select="cc:f-component[/cc:Module and not(@status='invisible')]">
+	    <x:message>For eaching <x:value-of select="concat(@cc-id,' ',@iteration)"/></x:message>
+	  </x:for-each>
+          <x:apply-templates select="cc:f-component[/cc:Module and not(@status='invisible')]"/>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any mandatory requirements 
@@ -179,13 +182,13 @@ guidance, and testing.</p>
 
     <h2 class="indexable" data-level="1" id="opt-sfrs">Evaluation Activities for Optional SFRs</h2>
     <x:choose>
-      <x:when test="//cc:opt-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='optional']">
-        <x:for-each select="//cc:opt-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='optional']/..">
+      <x:when test="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='optional']">
+        <x:for-each select="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='optional']/..">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
           <x:apply-templates select="cc:f-component[@status='optional' and /cc:PP]"/>
-          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible')][/cc:Module]"/>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any optional requirements.</x:otherwise>
@@ -193,13 +196,13 @@ guidance, and testing.</p>
 
     <h2 class="indexable" data-level="1" id="sel-sfrs">Evaluation Activities for Selection-Based SFRs</h2>
      <x:choose>
-      <x:when test="//cc:sel-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='sel-based']">
-        <x:for-each select="//cc:sel-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='sel-based']/..">
+      <x:when test="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='sel-based']">
+        <x:for-each select="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='sel-based']/..">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
           <x:apply-templates select="cc:f-component[@status='sel-based' and /cc:PP]"/>
-          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible')][/cc:Module]"/>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any selection-based requirements.</x:otherwise>
@@ -207,16 +210,30 @@ guidance, and testing.</p>
 
    <h2 class="indexable" data-level="1" id="obj-sfrs">Evaluation Activities for Objective SFRs</h2>  
      <x:choose>
-      <x:when test="//cc:obj-sfrs//cc:f-component|/cc:PP//cc:f-component[@status='objective']">
-        <x:for-each select="//cc:obj-sfrs//cc:f-component/..|/cc:PP//cc:f-component[@status='objective']/..">
+      <x:when test="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='objective']">
+        <x:for-each select="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='objective']/..">
           <x:apply-templates mode="make_header" select=".">
             <x:with-param name="level" select="'2'"/>
           </x:apply-templates>
-          <x:apply-templates select="cc:f-component[@status='objective' and /cc:PP]"/>
-          <x:apply-templates select="cc:f-component[/cc:Module]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible')][@status='objective' and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible') and /cc:Module]"/>
         </x:for-each>
       </x:when>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
+     </x:choose>
+     
+   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Implementation-based SFRs</h2>  
+     <x:choose>
+      <x:when test="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='feat-based']">
+        <x:for-each select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='feat-based']/..">
+          <x:apply-templates mode="make_header" select=".">
+            <x:with-param name="level" select="'2'"/>
+          </x:apply-templates>
+          <x:apply-templates select="cc:f-component[not(@status='invisible')][@status='feat-based' and /cc:PP]"/>
+          <x:apply-templates select="cc:f-component[not(@status='invisible') and /cc:Module]"/>
+        </x:for-each>
+      </x:when>
+      <x:otherwise>The PP-Module does not define any implementation-based requirements.</x:otherwise>
     </x:choose>
 
 
@@ -268,7 +285,7 @@ guidance, and testing.</p>
     <x:param name="title"/>
 
     <x:choose>
-      <x:when test="($none-msg='') and (count($f-comps//cc:f-component)=0)"/>
+      <x:when test="($none-msg='') and (count($f-comps//cc:f-component[not(@status='invisible')])=0)"/>
       <x:otherwise>
         <x:element name="h3">
           <x:attribute name="class">indexable</x:attribute>
@@ -277,7 +294,7 @@ guidance, and testing.</p>
           <x:value-of select="$title"/> SFRs
         </x:element>
         <x:choose>
-          <x:when test="$f-comps//cc:f-component"><x:apply-templates select="$f-comps" mode="sd_sections"/></x:when>
+          <x:when test="$f-comps//cc:f-component[not(@status='invisible')]"><x:apply-templates select="$f-comps" mode="sd_sections"/></x:when>
           <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
         </x:choose>
       </x:otherwise>
@@ -311,7 +328,7 @@ guidance, and testing.</p>
   <!-- ############### -->
   <x:template match="sec:*|cc:section" mode="sd_sections">
     <x:apply-templates select="." mode="make_header"/>
-    <x:apply-templates select="cc:f-component|cc:a-component"/>
+    <x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
   </x:template>
 
 
@@ -517,7 +534,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template match="cc:f-component | cc:a-component">
+   <x:template match="cc:f-component[not(@status='invisible')] | cc:a-component">
     <div class="comp" id="{translate(@id, $lower, $upper)}">
       <h4>
        	<x:apply-templates select="." mode="getId"/><x:text> </x:text>
