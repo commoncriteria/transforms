@@ -1017,11 +1017,11 @@ Modification definition. This text goes in the
 
   
 <define name="test-obj-evi-pat">
-    <optional> <element name="test-obj">
+    <optional> <element name="Objective">
        <a:documentation>Describes the goal of the test </a:documentation>
        <ref name="basic-content-pat"/>
     </element> </optional>
-    <optional> <element name="evidence">
+    <optional> <element name="Evidence">
        <a:documentation>Describes what body of evidence should look like from the lab.</a:documentation>
        <ref name="basic-content-pat"/>
     </element> </optional>

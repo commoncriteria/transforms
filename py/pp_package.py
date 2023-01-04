@@ -74,10 +74,6 @@ class pp_package(generic_pp_doc.generic_pp_doc):
 
 
         
-    def handle_conformance_statement(self, node):
-        node.append(HTM.dd("An ST must claim exact conformance to this Package, as defined in the CC "+
-                           "and CEM addenda for Exact Conformance, Selection-based SFRs, and Optional SFRs (dated May 2017)."))
-        
     def doctype(self):
         return "Functional Package"
 

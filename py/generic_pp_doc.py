@@ -938,6 +938,10 @@ security objectives for the environment.
         parent.append(span)
         self.handle_content(child, span)
         
+    def handle_conformance_statement(self, node):
+        node.append(HTM_E.dd("An ST must claim exact conformance to this "+self.doctype()+", as defined in the CC "+
+                        "and CEM addenda for Exact Conformance, Selection-based SFRs, and Optional SFRs (dated May 2017)."))
+        
 
         
     def create_bibliography(self, par):
@@ -1646,7 +1650,7 @@ security policies map to the security objectives.""")
             self.handle_figure(node, parent)
         elif tag==CC+"audit-table":
             self.template_audit_table(node, parent)
-        elif tag==CC+"selectables":
+        elif tag==CC+"selectables" or tag==CC+"choice":
             self.template_selectables(node, parent)
         elif tag==CC+"assignable":
             self.template_assignable(node, parent)
@@ -1661,6 +1665,21 @@ security policies map to the security objectives.""")
             self.handle_testlist(node, parent)
         elif tag == CC+"consistency_rationale":
             print("Not doing a-compoents")
+        elif tag == CC+"equation":
+            id=self.derive_id(node)
+            eq_out = HTM_E.td("$$")
+            self.handle_content(node, parent)
+            self.add_text(eq_out, "$$")
+            ctr_out = HTM_E.td({"style":"vertical-align: middle; padding-left: 100px"})
+            self.create_ctr("equation", id, parent, "", sep="")
+            parent.append(HTM_E.table(
+                HTM_E.tr(eq_out, ctr_out)
+                ))
+        elif tag == CC+"Objective" or tag == CC+"Evidence":
+            localtag = pp_util.localtag(node.tag)
+            obj_out = adopt(parent, HTM_E.div({"class":"test_"+localtag}))
+            obj_out.append(HTM_E.b(localtag+": "))
+            self.handle_content(node, obj_out)
         else:
             raise Exception("Can't handle: " + pp_util.debug_node(node))
 
@@ -1739,7 +1758,7 @@ security policies map to the security objectives.""")
             sfrs = self.obj_sfrs
             title="Objective"
         elif thistable=="feat-based":
-            sfrs = self.imp_sfrs
+            sfrs = self.impl_sfrs
             title="Implementation-based"
         elif thistable=="sel-based":
             sfrs = self.sel_sfrs
@@ -2030,6 +2049,8 @@ security policies map to the security objectives.""")
     def make_xref(self, target, parent, ref=None):
         if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
             self.make_xref_section(pp_util.localtag(target.tag), parent)
+        elif target.tag == CC+"section":
+            self.make_xref_section(target.attrib["id"], parent)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
             self.pkgs[theid].make_xref_edoc(parent)
@@ -2045,14 +2066,20 @@ security policies map to the security objectives.""")
             self.make_xref_generic(target, parent, ref, "")
         elif target.tag == CC+"appendix":
             self.make_xref_generic(target, parent, ref, "Appendix")
+        elif target.tag == CC+"f-element":
+            ccid=self.get_ccid_for_ccel(target)
+            id=self.derive_id(target)
+            parent.append(HTM_E.a({"href":"#"+id}, ccid))
         elif target.tag == CC+"selectable":
             self.make_xref_selectable(target, parent, ref)
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
             # # self.handle_content(target,parent)
+        elif target.tag == CC+"equation":
+            self.make_xref_generic(target, parent, ref, "equation")
         else:
-            raise Exception("Cannot handle: " + target.tag + " " + target.text)
+            raise Exception("Cannot reference: " + target.tag + " " + target.text)
 
     def is_base(self, attr):
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
