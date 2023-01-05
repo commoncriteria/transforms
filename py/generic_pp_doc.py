@@ -1666,15 +1666,7 @@ security policies map to the security objectives.""")
         elif tag == CC+"consistency_rationale":
             print("Not doing a-compoents")
         elif tag == CC+"equation":
-            id=self.derive_id(node)
-            eq_out = HTM_E.td("$$")
-            self.handle_content(node, parent)
-            self.add_text(eq_out, "$$")
-            ctr_out = HTM_E.td({"style":"vertical-align: middle; padding-left: 100px"})
-            self.create_ctr("equation", id, parent, "", sep="")
-            parent.append(HTM_E.table(
-                HTM_E.tr(eq_out, ctr_out)
-                ))
+            self.handle_equation(node, parent)
         elif tag == CC+"Objective" or tag == CC+"Evidence":
             localtag = pp_util.localtag(node.tag)
             obj_out = adopt(parent, HTM_E.div({"class":"test_"+localtag}))
@@ -1683,6 +1675,18 @@ security policies map to the security objectives.""")
         else:
             raise Exception("Can't handle: " + pp_util.debug_node(node))
 
+
+    def handle_equation(self, node, out):
+        id=self.derive_id(node)
+        eq_out = HTM_E.td("$$")
+        self.handle_content(node, eq_out)
+        self.add_text(eq_out, "$$")
+        ctr_out = HTM_E.td()
+        self.create_ctr("equation", id, ctr_out, "", sep="")
+        out.append(HTM_E.table({"class":"equation_"},
+            HTM_E.tr(eq_out, ctr_out)
+            ))
+        
 
     def get_test_title(self, testnode):
         if testnode in self.test_titles:

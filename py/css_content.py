@@ -194,6 +194,15 @@ def fx_common_css():
        text-indent: 20px;
    }
 
+   table.equation_ tr td:nth-child(1){
+       vertical-align: middle;
+       padding-left: 100px;
+       postion:relative;
+       width: 100%;
+   }
+   table.equation_ tr td:nth-child(2){
+       vertical-align: middle;
+   }
 
    .uc_table_or tr td.or_cell{
       white-space: nowrap;
