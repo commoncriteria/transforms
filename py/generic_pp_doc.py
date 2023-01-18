@@ -17,7 +17,7 @@ DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"o
               CC+"f-element", CC+"a-element",CC+"audit-event", CC+"consistency-rationale",
               CC+"comp-lev", CC+"management", CC+"audit", CC+"dependencies", CC+"objective",
               CC+"optional", CC+"depends", CC+"ext-comp-def-title"}
-TRANSPARENT={CC+"aactivity", CC+"text",CC+"description"}
+TRANSPARENT={CC+"aactivity", CC+"text",CC+"description", CC+"choice"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
 # SVG="{%s}"%SVG_NS
@@ -47,6 +47,10 @@ def add_grouping_row(table, text, size):
     table.append(HTM_E.tr({"class":"major-row"}, HTM_E.td(attrs, text), blank_cell))
     table.append(HTM_E.tr(blank_cell))
 
+def is_in_choice(el):
+    return len(el.xpath("ancestor::cc:choice", namespaces=NS))>0
+    
+    
 def blank_cell():
     return HTM_E.td({"style":"display:none;"})
 
@@ -414,7 +418,6 @@ class generic_pp_doc(object):
         refid=self.derive_id(orig)
         link.attrib["href"]="#"+refid
         reffed = doc.find(".//*[@id='"+refid+"']")
-        print("Looking for "+refid)
         if reffed is None:
             print("Could not find dynamic reference: " + refid)
             return
@@ -465,25 +468,29 @@ class generic_pp_doc(object):
         depth = len(self.outline)
         ret.tag="h"+str(depth)                       
         self.outline[-1]=self.outline[-1]+1
+
+        prefix=""
         if self.is_appendix:
-            prefix=base_10_to_alphabet(self.outline[0])
+            ctr=base_10_to_alphabet(self.outline[0])
             if len(self.outline)==1:
-                prefix="Appendix " + prefix + " - " + NBSP
+                prefix = "Appendix "
+                ctr=ctr + " - " + NBSP
             else:
-                prefix+="."+ ".".join(map(str, self.outline[1:]))
+                ctr+="."+ ".".join(map(str, self.outline[1:]))
         else:
-            prefix=".".join(map(str, self.outline))
+            ctr=".".join(map(str, self.outline))
 
         if "id" not in ret.attrib:
-            ret.attrib["id"]="sec_"+prefix.replace(" ","_")+"-"
+            ret.attrib["id"]="sec_"+ctr.replace(" ","_")+"-"
             
         self.outline.append(0)
         toc_entry=""
         for aa in range(depth):
             toc_entry += NBSP+ NBSP
-        toc_entry +=  prefix + NBSP+ NBSP + NBSP + ret.text        
-        ret.text = prefix+" "+ret.text
-
+        prevtext = ret.text
+        toc_entry +=  prefix + ctr + NBSP+ NBSP + NBSP + prevtext
+        ret.text = prefix
+        adopt(ret, HTM_E.span({"class":"ctr"},ctr)).tail = " " + prevtext
         self.toc.append(HTM_E.a({"href":"#"+ret.attrib["id"]}, toc_entry))
         return ret
     
@@ -943,9 +950,10 @@ security objectives for the environment.
         span = HTM_E.span({"class":"ctr",
                            "data-counter-type":"ct-"+ctrtype,
                            "id":id}, prefix,
-                          HTM_E.span({"class":"counter"},ctrcount+sep)
+                          HTM_E.span({"class":"counter"},ctrcount)
                           )
         parent.append(span)
+        self.add_text(parent, sep)
         self.handle_content(child, span)
         
     def handle_conformance_statement(self, node):
@@ -1136,16 +1144,6 @@ security policies map to the security objectives.""")
         allof = self.get_list_of(node.tag)
         return allof.index(node)+1
 
-    # def conjure_id(self, base):
-    #     return base.replace(" ", "_")+"-"
-    
-    # def conjure_id_attr(self, base, attrs=None):
-    #     idval = self.conjure_id(base)
-    #     if attrs==None:
-    #         attrs={}
-    #     attrs["id"]=idval
-    #     return attrs
-        
     def derive_id(self, node):
         if node.attrib is not None and "id" in node.attrib:
             return node.attrib["id"]
@@ -1153,14 +1151,6 @@ security policies map to the security objectives.""")
             return node.tag.split("}")[1]
         return pp_util.localtag(node.tag)+"_"+str(self.get_global_index(node))+"-"
     
-    def get_section_base_id(self, node):
-        if node.tag == CC+"section":
-            if "id" in node.attrib:
-                return node.attrib["id"]
-            id="sec_"+str(get_global_index(node))+"-"
-            return id
-        else:
-            return node.tag.split("}")[1]
         
     def get_section_title(self, node):
         if "title" in node.attrib:
@@ -1594,7 +1584,7 @@ security policies map to the security objectives.""")
         for sfr in sfrs:
             sec = sfr.find("..")
             title = self.get_section_title(sec)
-            id = self.get_section_base_id(sec)
+            id = self.derive_id(sec)
             if title not in titles:
                 if len(titles)>0:
                     self.end_section()
@@ -1660,7 +1650,7 @@ security policies map to the security objectives.""")
             self.handle_figure(node, parent)
         elif tag==CC+"audit-table":
             self.template_audit_table(node, parent)
-        elif tag==CC+"selectables" or tag==CC+"choice":
+        elif tag==CC+"selectables":
             self.template_selectables(node, parent)
         elif tag==CC+"assignable":
             self.template_assignable(node, parent)
@@ -1684,7 +1674,6 @@ security policies map to the security objectives.""")
             self.handle_content(node, obj_out)
         else:
             raise Exception("Can't handle: " + pp_util.debug_node(node))
-
 
     def handle_equation(self, node, out):
         id=self.derive_id(node)
@@ -1936,11 +1925,13 @@ security policies map to the security objectives.""")
     #     self.handle_content(node, parent)
 
     def template_selectables(self, node, par):
-        self.add_text(par,"[")
-        par.append(HTM_E.b("selection"))
-        if node.find("cc:onlyone", NS) is not None:
-            par.append(HTM_E.b(", choose one of"))
-        self.add_text(par, ": ")
+        if not is_in_choice(node):
+            self.add_text(par,"[")
+            par.append(HTM_E.b("selection"))
+            if node.find("cc:onlyone", NS) is not None:
+                par.append(HTM_E.b(", choose one of"))
+            self.add_text(par, ": ")
+            
         sep=", "
         extraclass=""
         if node.find("cc:bulletize", NS) is not None \
@@ -1950,13 +1941,20 @@ security policies map to the security objectives.""")
 
         # Add the comma thing
         lagsep=None
-        for selectable in node.findall("./cc:selectable",NS):
+        sels = node.findall("./cc:selectable",NS)
+        sels_left = len(sels)
+        for selectable in sels:
+            sels_left = sels_left-1
+            if is_in_choice(node) and sels_left==0 and sep==", ":
+                lagsep=lagsep+"or "
             id = self.derive_id(selectable)
             self.add_text(par,lagsep)
             lagsep=sep
+                
             span = adopt(par,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
             self.handle_content(selectable, span)
-        self.add_text(par,"]")
+        if not is_in_choice(node):
+            self.add_text(par,"]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
  #    </xsl:when>
@@ -2078,7 +2076,7 @@ security policies map to the security objectives.""")
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
             # # self.handle_content(target,parent)
         else:
-            self.broken_refs.add( (target, adopt(parent, HTM_E.a("BrokenRRef")), ref))
+            self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref))
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
         #     self.make_xref_section(pp_util.localtag(target.tag), parent)
         # elif target.tag == CC+"section":
