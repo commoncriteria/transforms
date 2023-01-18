@@ -29,14 +29,19 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
 
  
     def handle_security_requirements(self, par):
-        attrs=self.conjure_id_attr(SR_TITLE)
-        adopt(par, self.sec(SR_TITLE, attrs))
+        firstfcomp=self.rf("//cc:f-component")
+        sr_sec = firstfcomp.xpath("ancestor::*[3]")[0]
+        attrs={"id":self.derive_id(sr_sec)}
+        title=self.get_section_title(sr_sec)
+        adopt(par, self.sec(title, attrs))
         div = generic_pp_doc.get_convention_explainer()
         div.text= "This chapter describes the security requirements which have to be fulfilled by the product under evaluation."+\
             "Those requirements comprise functional components from Part 2 and assurance components from Part 3 of [CC]."+div.text
         par.append(div)
-        attrs=self.conjure_id_attr(SFR_TITLE)
-        adopt(par, self.sec(SFR_TITLE, attrs))
+        sfr_sec = firstfcomp.xpath("ancestor::*[2]")[0]
+        attrs={"id":self.derive_id(sfr_sec)}
+        title=self.get_section_title(sfr_sec)
+        adopt(par, self.sec(title, attrs))
         self.create_audit_table_section("Mandatory", "mandatory", par)
         self.handle_sparse_sfrs(self.man_sfrs, par)
         self.objectives_to_requirements(par)
@@ -47,8 +52,15 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
 
 
     def handle_sars(self, out):
-        attrs=self.conjure_id_attr(SAR_TITLE)
-        adopt(out, self.sec(SAR_TITLE,attrs))
+        firstfcomp=self.rf("//cc:f-component")
+        sfr_sec = firstfcomp.xpath("ancestor::*[2]")[0]
+        sfr_id = self.derive_id(sfr_sec)
+        
+        first_acomp=self.rf("//cc:a-component")
+        sar_sec = first_acomp.xpath("ancestor::*[2]")[0]
+        attrs={"id":self.derive_id(sar_sec)}
+        title=self.get_section_title(sar_sec)
+        adopt(out, self.sec(title,attrs))
         par = adopt(out, HTM_E.p("The Security Objectives for the TOE in "))
         secobjs=self.get_first_section_with_title("Security Objectives")
         self.make_xref(secobjs,par)#Secrtion 4
@@ -56,7 +68,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         threatsec=self.get_first_section_with_title("Threats")
         self.make_xref(threatsec,par)#Section 3.1
         self.add_text(par, ". The Security Functional Requirements (SFRs) in ")
-        self.make_xref_section(self.conjure_id(SFR_TITLE), par)#Section 5.1
+        self.make_xref_section(sfr_id, par)#Section 5.1
         self.add_text(par, """ are a formal instantiation of the Security Objectives. The PP identifies the Security Assurance Requirements (SARs) to frame the extent to which the evaluator assesses the documentation applicable for the evaluation and performs independent testing.""")
         par = adopt(out, HTM_E.p("This section lists the set of "+\
                                  "Security Assurance Requirements (SARs) from Part 3 of the Common "+\
@@ -64,7 +76,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
                                  "1, Revision 5 that are required in evaluations against this PP. "+\
                                  "Individual evaluation activities to be performed are specified in "+\
                                  "both "))
-        self.make_xref_section(self.conjure_id(SFR_TITLE), par)#Section 5.1
+        self.make_xref_section(sfr_id, par)#Section 5.1
         self.add_text(par,"as well as in this section.")
         par = adopt(out, HTM_E.p("After the ST has been approved for "+\
                                  "evaluation, the Information Technology Security Evaluation "+\
@@ -73,7 +85,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
                                  "expected to perform actions mandated by the CEM for the ASE and ALC "+\
                                  "SARs. The ITSEF also performs the evaluation activities contained "+\
                                  "within "))
-        self.make_xref_section(self.conjure_id(SR_TITLE),par) # Section 5
+        self.make_xref_section(sfr_id,par) # Section 5
         self.add_text(par,", which are intended to be an interpretation of the "+\
                       "other CEM assurance requirements as they apply to the specific "+\
                       "technology instantiated in the TOE. The evaluation activities that "+\

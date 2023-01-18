@@ -179,7 +179,7 @@ class generic_pp_doc(object):
         self.register_sfrs()
         self.register_abbrs()
         self.counters={}
-
+        self.broken_refs=set()
 
     def derive_plural(self):
         return edoc.derive_products(self.root)
@@ -403,26 +403,36 @@ class generic_pp_doc(object):
         if len(bracketed)>0:
             biblio_part = "("+"|".join(map(backslashify,bracketed))+")|"
         regex_str = biblio_part+"(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
-        print("Regex string is: " + regex_str)
         regex = re.compile(regex_str)
         self.add_xrefs_recur(node, regex)        
 
     def fix_numbered_xrefs(self, doc):
-        dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
-        for dynref in dynrefs:
-            refid = dynref.attrib["href"][1:]
-            # print("Looking for " + refid)
-            reffed = doc.find(".//*[@id='"+refid+"']")
-            if reffed is None:
-                print("Could not find dynamic reference: " + refid)
-                continue
-            label_node = reffed.find("./*[@class='dynid_']")
-            if label_node is None:
-                text = reffed.text
-            else:
-                text = label_node.text
-            pp_util.append_text(dynref, " "+text)
-        
+        for broken_ref in self.broken_refs:
+            self.fix_xref(doc, broken_ref[0], broken_ref[1], broken_ref[2])
+
+    def fix_xref(self, doc, orig, link, ref):
+        refid=self.derive_id(orig)
+        link.attrib["href"]="#"+refid
+        reffed = doc.find(".//*[@id='"+refid+"']")
+        print("Looking for "+refid)
+        if reffed is None:
+            print("Could not find dynamic reference: " + refid)
+            return
+        # if ref is None:
+        label_node = reffed.find("./*[@class='dynid_']")
+        if label_node is None:
+            text = pp_util.flatten(reffed)
+        else:
+            text = pp_util.flatten(label_node)
+        pp_util.append_text(link, " "+text)
+
+            #     dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
+    #     for dynref in dynrefs:
+    #         refid = dynref.attrib["href"][1:]
+    #         # print("Looking for " + refid)
+
+    # def fix_broken_refs(self, doc):
+            
     def to_html(self):
         doc = self.start()
         self.fix_numbered_xrefs(doc)
@@ -1126,15 +1136,15 @@ security policies map to the security objectives.""")
         allof = self.get_list_of(node.tag)
         return allof.index(node)+1
 
-    def conjure_id(self, base):
-        return base.replace(" ", "_")+"-"
+    # def conjure_id(self, base):
+    #     return base.replace(" ", "_")+"-"
     
-    def conjure_id_attr(self, base, attrs=None):
-        idval = self.conjure_id(base)
-        if attrs==None:
-            attrs={}
-        attrs["id"]=idval
-        return attrs
+    # def conjure_id_attr(self, base, attrs=None):
+    #     idval = self.conjure_id(base)
+    #     if attrs==None:
+    #         attrs={}
+    #     attrs["id"]=idval
+    #     return attrs
         
     def derive_id(self, node):
         if node.attrib is not None and "id" in node.attrib:
@@ -2052,25 +2062,11 @@ security policies map to the security objectives.""")
             
         
     def make_xref(self, target, parent, ref=None):
-        if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            self.make_xref_section(pp_util.localtag(target.tag), parent)
-        elif target.tag == CC+"section":
-            self.make_xref_section(target.attrib["id"], parent)
+        if target.tag == CC+"entry":
+            self.make_xref_bibentry(target, parent)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
             self.pkgs[theid].make_xref_edoc(parent)
-        elif target.tag == CC+"entry":
-            self.make_xref_bibentry(target, parent)
-        elif target.tag == CC+"management-function":
-            self.make_xref_mf(self.derive_id(target), parent)
-        elif target.tag == CC+"test":
-            self.make_xref_generic(target, parent, ref, "")
-        elif target.tag == CC+"figure":
-            self.make_xref_generic(target, parent, ref, "figure")
-        elif target.tag == CC+"ctr":
-            self.make_xref_generic(target, parent, ref, "")
-        elif target.tag == CC+"appendix":
-            self.make_xref_generic(target, parent, ref, "Appendix")
         elif target.tag == CC+"f-element":
             ccid=self.get_ccid_for_ccel(target)
             id=self.derive_id(target)
@@ -2081,10 +2077,26 @@ security policies map to the security objectives.""")
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
             # # self.handle_content(target,parent)
-        elif target.tag == CC+"equation":
-            self.make_xref_generic(target, parent, ref, "equation")
         else:
-            raise Exception("Cannot reference: " + target.tag + " " + target.text)
+            self.broken_refs.add( (target, adopt(parent, HTM_E.a("BrokenRRef")), ref))
+        # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
+        #     self.make_xref_section(pp_util.localtag(target.tag), parent)
+        # elif target.tag == CC+"section":
+        #     self.make_xref_section(target.attrib["id"], parent)
+        # elif target.tag == CC+"management-function":
+        #     self.make_xref_mf(self.derive_id(target), parent)
+        # elif target.tag == CC+"test":
+        #     self.make_xref_generic(target, parent, ref, "")
+        # elif target.tag == CC+"figure":
+        #     self.make_xref_generic(target, parent, ref, "figure")
+        # elif target.tag == CC+"ctr":
+        #     self.make_xref_generic(target, parent, ref, "")
+        # elif target.tag == CC+"appendix":
+        #     self.make_xref_generic(target, parent, ref, "Appendix")
+        # elif target.tag == CC+"equation":
+        #     self.make_xref_generic(target, parent, ref, "equation")
+        # else:
+        #     raise Exception("Cannot reference: " + target.tag + " " + target.text)
 
     def is_base(self, attr):
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
