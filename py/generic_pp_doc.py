@@ -246,8 +246,11 @@ class generic_pp_doc(object):
         for term in self.get_all_abbr_els():
             abbr = term.attrib["abbr"]
             self.register_keyterm(abbr, "long_abbr_"+abbr)
+            self.abbrs[abbr]=term.attrib["full"]
             if "plural" in term.attrib:
-                self.register_keyterm(term.attrib["plural"], "long_abbr_"+abbr)
+                plural=term.attrib["plural"]
+                self.abbrs[plural]=term.attrib["full"]
+                self.register_keyterm(plural, "long_abbr_"+abbr)
             
     def register_keyterm(self, word, id):
         if len(word) > 1 and not(word.startswith(".")):
@@ -315,27 +318,35 @@ class generic_pp_doc(object):
                 return True
         return False
 
-
+    def make_disco_link(self, id, matchtext):
+        attrs={"class":"discovered", "href":"#"+id}
+        if matchtext in self.abbrs:
+            attrs["class"]="discovered abbr"
+            attrs["title"]=self.abbrs[matchtext]
+        return HTM_E.a(attrs, matchtext)
+    
     def xrefs_in_text(self, node, content, regex, insertspot=0):
+        # Returns what should go in the node's text field
         if regex is None or content is None:
             return content
         matches = regex.finditer(content)
-        origtext = content
         try:
             match=next(matches)
         except:
             return content
+        origtext = content
         ret = origtext[:match.start()]
         last=match.end()
         matchtext = match.group()
         id = self.discoverables_to_ids[matchtext]
-        prevnode = HTM_E.a({"href":"#"+id, "class":"discovered"}, matchtext)
+        
+        prevnode = self.make_disco_link(id, matchtext)
         newnodes=[prevnode]
         for match in matches:
             prevnode.tail = origtext[last:match.start()]
             last = match.end()
             id = self.discoverables_to_ids[match.group()]
-            prevnode = HTM_E.a({"href":"#"+id}, match.group())
+            prevnode = self.make_disco_link(id, match.group())
             newnodes.append(prevnode)
         prevnode.tail = origtext[match.end():]
         for newkids in newnodes:

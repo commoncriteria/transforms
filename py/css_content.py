@@ -68,25 +68,24 @@ def fx_common_css():
       text-decoration: none;
       word-wrap: break-word;
     }
+    a.abbr{
+       border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+      text-decoration:none;
+    }
     a.abbr:link{
       color:black;
-      text-decoration:none;
     }
     a.abbr:visited{
       color:black;
-      text-decoration:none;
     }
     a.abbr:hover{
       color:blue;
-      text-decoration:none;
     }
     a.abbr:hover:visited{
       color:purple;
-      text-decoration:none;
     }
     a.abbr:active{
       color:red;
-      text-decoration:none;
     }
     .note-header{
       font-weight: bold;
