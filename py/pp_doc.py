@@ -42,10 +42,8 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         attrs={"id":self.derive_id(sfr_sec)}
         title=self.get_section_title(sfr_sec)
         adopt(par, self.sec(title, attrs))
-
-
-
-        self.create_audit_table_section("Mandatory", "mandatory", par)
+        secs_no_fcomps = sfr_sec.xpath(".//sec:*[not(.//cc:f-component)]|.//cc:section[not(.//cc:f-component)]", namespaces=NS)
+        self.apply_templates(secs_no_fcomps, par)
         self.handle_sparse_sfrs(self.man_sfrs, par)
         self.objectives_to_requirements(par)
         self.end_section()
@@ -117,6 +115,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.handle_optional_requirements(parent)
         self.handle_selection_based_requirements(node, parent)
         self.handle_ext_comp_defs(parent)
+        
         self.apply_templates(self.rfa("//cc:appendix"), parent)
         self.create_acronym_listing(parent)
         self.create_bibliography(parent)

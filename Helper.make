@@ -131,8 +131,8 @@ DAISY_DIR ?= ExecuteDaisy-master
 DIFF_TAGS?=
 
 # This is not really a good way to do this
-# Points to a folder containing files to diff the currently
-# developed 'release' version against
+#- Points to a folder containing files to diff the currently
+#- developed 'release' version against
 DIFF_DIR ?= diff-archive
 
 #- The command to diff HTML files

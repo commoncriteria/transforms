@@ -427,6 +427,7 @@ class generic_pp_doc(object):
 
     def fix_xref(self, doc, orig, link, ref):
         refid=self.derive_id(orig)
+        print("Fixing " + refid)
         link.attrib["href"]="#"+refid
         reffed = doc.find(".//*[@id='"+refid+"']")
         if reffed is None:
@@ -899,6 +900,18 @@ class generic_pp_doc(object):
         self.outline[0]=-1
         self.is_appendix = True
 
+    def implementation_based_section(self, out):
+        attrs={"id":"implementation-based-"}
+        out.append(self.sec(attrs, "Implementation-based Requirements"))
+        features=self.rfa("//cc:feature")
+        for feature in features:
+            out.append(self.sec(feature.attrib["title"]))
+            self.handle_content(feature,out)
+            f_id=feature.attrib["id"]
+            sfrs = self.rx(".//cc:f-component[./cc:depends/@*='"+f_id+"']")
+            self.handle_sparse_sfrs(sfrs, out)
+            self.end_section()
+        self.end_section()
             
     def sfr_appendix(self,title,sfrs, preamble,audittype,par):
         attrset=attrs(None,title.replace(" ","-")+"-")
@@ -915,7 +928,7 @@ class generic_pp_doc(object):
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
         self.sfr_appendix("Strictly Optional",    self.opt_sfrs , "","optional",par)
         self.sfr_appendix("Objective",            self.obj_sfrs , "","objective",par)
-        self.sfr_appendix("Implementation-based", self.impl_sfrs, "","feat-based",par)
+        self.implementation_based_section(par)
         self.end_section()
 
     def create_audit_table_section(self, title, audittable, par):
@@ -1767,9 +1780,9 @@ security policies map to the security objectives.""")
   #     <xsl:for-each select="//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]">
   
     def template_audit_table(self, node, par, thistable=None):
-
         if thistable is None and "table" in node.attrib:
             thistable=node.attrib["table"]
+        
 
         explainer="The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met."
         if thistable=="mandatory":
@@ -1790,13 +1803,18 @@ security policies map to the security objectives.""")
             title="Selection-based"
         else:
             raise Exception("Can't handle audit table for: " + thistable)
+        if node is None:
+            myid="at-"+thistable+"-"
+        else:
+            myid = self.derive_id(node)            
+        
         div=HTM_E.div()
         div.append(HTM_E.p(explainer))
         have_events=False
         title="Auditable Events for "+ title + " Requirements"
         table=adopt(div, HTM_E.table({"border":"1"}))
         caption = adopt(table, HTM_E.caption())
-        self.create_ctr("Table", thistable, caption, "Table ")
+        self.create_ctr("Table", myid, caption, "Table ")
         pp_util.append_text(caption, title)
         tr = HTM_E.tr(HTM_E.th("Requirement"),HTM_E.th("Auditable Events"),HTM_E.th("Additional Audit Record Contents"))
         table.append(tr)
@@ -2083,7 +2101,8 @@ security policies map to the security objectives.""")
         else:
             self.handle_content(target, a_out)
 
-            
+
+    
         
     def make_xref(self, target, parent, ref=None):
         if target.tag == CC+"entry":
@@ -2099,11 +2118,6 @@ security policies map to the security objectives.""")
             self.make_xref_selectable(target, parent, ref)
         elif target.tag == CC+"feature":
             self.make_xref_feature(target, parent, ref)
-        
-            # findex = str(self.get_global_index(target))
-            # id=self.derive_id(target)
-            # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
-            # # self.handle_content(target,parent)
         else:
             self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref))
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
