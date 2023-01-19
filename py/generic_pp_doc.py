@@ -736,11 +736,11 @@ class generic_pp_doc(object):
             self.handle_rules_appendix(parent) 
     
     def get_all_dependencies(self, node):
-        choices={}
-        selections={}
-        features={}
-        externals={}
-        bases={}
+        choices=set()
+        selections=set()
+        features=set()
+        externals=set()
+        bases=set()
         for depends in node.findall("./cc:depends", NS):
             if depends.attrib is None:
                 continue
@@ -758,13 +758,13 @@ class generic_pp_doc(object):
                         print("Failed to find an item with the following id:\""+theid+"\".")
                     else:
                         if ided.getparent().getparent().tag == CC+"choice":
-                            choices[theid]=1
+                            choices.add(theid)
                         elif ided.tag==CC+"base-pp":
-                            bases[theid]=1
+                            bases.add(theid)
                         elif ided.tag==CC+"selectable":
-                            selections[theid]=1
+                            selections.add(theid)
                         elif ided.tag==CC+"feature":
-                            features[1]=1
+                            features.add(theid)
                         else:
                             print("Failed to sort the dependee:\""+theid+"\".")
         return [choices, selections, features, externals, bases]
@@ -1242,7 +1242,13 @@ security policies map to the security objectives.""")
         parent.append(html_el)
         self.handle_content(node, html_el)
 
-
+    def add_refs(self, ref_ids, out):
+        ul_out = adopt(out, HTM_E.ul())
+        for ref_id in ref_ids:
+            print("Ref_id is " + str(ref_id))
+            ref = self.rf("//cc:*[@id='"+ref_id+"']")
+            self.make_xref(ref, adopt(ul_out, HTM_E.li()))
+        
     def depends_explainer(self,parent, node,
                           words="The following content should be included if:"):
         depends_ids = self.get_all_dependencies(node)
@@ -1253,13 +1259,17 @@ security policies map to the security objectives.""")
         bases=depends_ids[4]
         self.add_text(parent, words)
         if len(choices)>0:
+            self.add_refs(choices, parent);
             parent.append(HTM_E.div("choices are made"))
         if len(externals)>0:
+            self.add_refs(externals, parent);
             parent.append(HTM_E.div("selections are are made in base"))
         if len(selections)>0:
+            self.add_refs(selections, parent);
             parent.append(HTM_E.div("selections are made"))
         if len(features)>0:
-            parent.append(HTM_E.div("features are made"))
+            self.add_refs(features, parent);
+            parent.append(HTM_E.div("features are implemented"))
         if len(bases)>0:
             baselist = ""
             for base in bases:
@@ -2056,6 +2066,11 @@ security policies map to the security objectives.""")
         anchor="#"+node.attrib["id"]
         parent.append(E.a(txt, href=anchor))
 
+    def make_xref_feature(self, target, out, ref=None):
+        refid = self.derive_id(target)
+        a_out = adopt(out, HTM_E.a({"href":"#"+refid}, target.attrib["title"]))
+
+        
     def make_xref_selectable(self, target, out, ref):
         refid = self.derive_id(target)
         a_out = adopt(out, HTM_E.a({"href":"#"+refid}))
@@ -2082,6 +2097,9 @@ security policies map to the security objectives.""")
             parent.append(HTM_E.a({"href":"#"+id}, ccid))
         elif target.tag == CC+"selectable":
             self.make_xref_selectable(target, parent, ref)
+        elif target.tag == CC+"feature":
+            self.make_xref_feature(target, parent, ref)
+        
             # findex = str(self.get_global_index(target))
             # id=self.derive_id(target)
             # parent.append(HTM_E.a({"href":"#"+id}, "Function "+findex))
