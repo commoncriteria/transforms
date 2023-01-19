@@ -42,6 +42,9 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         attrs={"id":self.derive_id(sfr_sec)}
         title=self.get_section_title(sfr_sec)
         adopt(par, self.sec(title, attrs))
+
+
+
         self.create_audit_table_section("Mandatory", "mandatory", par)
         self.handle_sparse_sfrs(self.man_sfrs, par)
         self.objectives_to_requirements(par)
