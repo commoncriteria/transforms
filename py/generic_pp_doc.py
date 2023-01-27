@@ -183,8 +183,37 @@ class generic_pp_doc(object):
         self.register_sfrs()
         self.register_abbrs()
         self.counters={}
+        
+        # Keeping: tuple( target_node, output anchor, element , 
         self.broken_refs=set()
 
+
+    def maybe_make_usecase_appendixes(self, out):
+        usecases_with_config = self.rfa("//cc:usecase/cc:config")
+        if len(usecases_with_config)==0:
+            return
+        usecases = self.rfa("//cc:usecase")
+        out.append(self.sec("Use Case Templates", {"id":"Use_Case_Templates-"}))
+        for usecase in usecases:
+            uc_id = usecase.attrib["id"]
+            out.append(self.sec({"id":"app-"+uc_id+"-"}, usecase.attrib["title"]))
+            config_in = usecase.find("./cc:config", NS)
+            if config_in is None:
+                self.add_text(out, "The use case ")
+                self.make_xref(uc_id, out)
+                self.add_text(out," makes no changes to the base requirements.")
+            else:
+                self.add_text(out, "The configuration for ")
+                self.make_xref(uc_id, out)
+                self.add_text(out," modifies the base requirements as follows:")
+                out_div = adopt(out, HTM_E.div())
+                self.apply_use_case_templates(config_in, out_div)
+            self.end_section()
+        self.end_section()
+        
+
+
+        
     def derive_plural(self):
         return edoc.derive_products(self.root)
         
@@ -425,8 +454,8 @@ class generic_pp_doc(object):
         for broken_ref in self.broken_refs:
             self.fix_xref(doc, broken_ref[0], broken_ref[1], broken_ref[2])
 
-    def fix_xref(self, doc, orig, link, ref):
-        refid=self.derive_id(orig)
+    def fix_xref(self, doc, refid, link, ref):
+#        refid=self.derive_id(orig)
         print("Fixing " + refid)
         link.attrib["href"]="#"+refid
         reffed = doc.find(".//*[@id='"+refid+"']")
@@ -439,7 +468,8 @@ class generic_pp_doc(object):
             text = pp_util.flatten(reffed)
         else:
             text = pp_util.flatten(label_node)
-        pp_util.append_text(link, " "+text)
+        pp_util.append_text(link,text)
+#        pp_util.append_text(link, " "+text)
 
             #     dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
     #     for dynref in dynrefs:
@@ -525,7 +555,7 @@ class generic_pp_doc(object):
         table=adopt(par,HTM_E.table())
         caption=adopt(table,HTM_E.caption())
         self.create_ctr("Table", "t-obj-map", caption, "Table ")
-        self.add_text(caption, ": SFR Rationale")
+        self.add_text(caption, "SFR Rationale")
         table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
         prev_parent = None
         for addr_by in addr_bys:
@@ -900,8 +930,8 @@ class generic_pp_doc(object):
         self.outline[0]=-1
         self.is_appendix = True
 
-    def implementation_based_section(self, out):
-        attrs={"id":"implementation-based-"}
+    def implementation_based_section(self, id, out):
+        attrs={"id":id}
         out.append(self.sec(attrs, "Implementation-based Requirements"))
         features=self.rfa("//cc:feature")
         for feature in features:
@@ -912,9 +942,13 @@ class generic_pp_doc(object):
             self.handle_sparse_sfrs(sfrs, out)
             self.end_section()
         self.end_section()
+
+    def add_optional_appendix_explainer(self, par, opt_id, obj_id, imple_id):
+        pass
             
-    def sfr_appendix(self,title,sfrs, preamble,audittype,par):
-        attrset=attrs(None,title.replace(" ","-")+"-")
+    def sfr_appendix(self,title,sfrs,preamble,audittype,idval,par):
+        # attrset=attrs(None,title.replace(" ","-")+"-")
+        attrset={"id":idval}
         par.append(self.sec(attrset,title+" Requirements"))
         self.add_text(par, preamble)
         if len(sfrs)==0:
@@ -926,9 +960,15 @@ class generic_pp_doc(object):
 
     def handle_optional_requirements(self, par):
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
-        self.sfr_appendix("Strictly Optional",    self.opt_sfrs , "","optional",par)
-        self.sfr_appendix("Objective",            self.obj_sfrs , "","objective",par)
-        self.implementation_based_section(par)
+        opt_title = "Strictly Optional"
+        opt_id=opt_title.replace(" ","-")+"-"
+        obj_title = "Objective"
+        obj_id=obj_title.replace(" ","-")+"-"
+        impl_id="implementation-based-"
+        self.add_optional_appendix_explainer(par, opt_id, obj_id, impl_id)
+        self.sfr_appendix(opt_title,    self.opt_sfrs , "","optional", opt_id,par)
+        self.sfr_appendix("Objective",            self.obj_sfrs , "","objective", obj_id, par)
+        self.implementation_based_section(impl_id, par)
         self.end_section()
 
     def create_audit_table_section(self, title, audittable, par):
@@ -947,7 +987,7 @@ class generic_pp_doc(object):
         
     def handle_selection_based_requirements(self, node, par):
         words=self.sel_appendix_preamble()
-        return self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based", par)
+        return self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based","sel-based-", par)
 
 
     OE_PREAMBLE="""The OE of the TOE implements technical and procedural measure
@@ -1488,6 +1528,278 @@ security policies map to the security objectives.""")
         self.handle_fcomp_activities(node, formal, par)
 
 
+
+
+
+# ####################
+# #
+# ################
+#    <xsl:template match="cc:or" mode="use-case">
+#     <table class="uc_table_or" style="border: 1px solid black">
+#       <tr> <td class="or_cell" rowspan="{count(cc:*)+1}">DECISION <xsl:apply-templates select="." mode="or_path"/></td><td style="display:none"></td></tr>
+#       <xsl:for-each select="cc:*">
+# 	<tr><td style="width: 99%">
+# 	  <div class="choicelabel">CHOICE <xsl:apply-templates mode="choice-path" select="."/></div>
+# 	<xsl:apply-templates select="." mode="use-case"/></td></tr>
+#       </xsl:for-each>
+#     </table>
+#   </xsl:template>
+ 
+# ####################
+# #
+# ################
+#   <xsl:template match="cc:config"  mode="choice-path"/>
+#   <xsl:template match="cc:*" mode="choice-path">
+#     <xsl:if test="parent::cc:or"><xsl:apply-templates mode="or_path" select=".."/><xsl:value-of select="count(preceding-sibling::cc:*)+1"/></xsl:if>
+#   </xsl:template>
+
+# ####################
+# #
+# ################
+#   <!-- <xsl:template match="cc:or/cc:*"/> -->
+
+#   <xsl:template match="cc:or" mode="or_path">
+#     <xsl:number count="cc:or" level="any" format="A"/>
+#   </xsl:template>
+
+  
+# ####################
+# #
+# ################
+#   <xsl:template match="*" mode="handle-ancestors">
+#     <xsl:message>Definitely shouldn't be here</xsl:message>
+#   </xsl:template>
+
+
+# ####################
+# #
+# ################
+#   <xsl:template match="cc:*[@id]" mode="handle-ancestors">
+#     <xsl:param name="prev-id"/>
+#     <xsl:param name="not"/>
+
+#     <xsl:variable name="sclass">uc_sel<xsl:if test="ancestor::cc:management-function"> uc_mf</xsl:if></xsl:variable>
+#     <!-- if the anscestor is in a PP-->
+#     <xsl:if test="ancestor::cc:f-component[@status='optional' or @status='objective'] and not(ancestor::cc:f-component//@id=$prev-id)">
+#       <div class="uc_inc_fcomp">
+#       Include <xsl:apply-templates select="ancestor::cc:f-component" mode="make_xref"/> in ST.</div>
+#     </xsl:if>
+#     <!-- If the ancestor is an f-element and the previous one doesn't have the same f-element -->
+#     <xsl:if test="ancestor::cc:f-element and not(ancestor::cc:f-element//@id=$prev-id)">
+#       <div class="uc_from_fel">
+#       From <xsl:apply-templates select="ancestor::cc:f-element" mode="make_xref"/>:</div>
+#     </xsl:if>
+#     <xsl:if test="ancestor::cc:management-function and not(ancestor::cc:management-function//@id=$prev-id)">
+#       <xsl:choose>
+#         <xsl:when test="ancestor::cc:management-function/cc:M">
+#           <div class="uc_mf">From <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>:</div>
+#         </xsl:when>
+#         <xsl:otherwise>
+#           <div class="uc_mf">Include <xsl:apply-templates select="ancestor::cc:management-function" mode="make_xref"/>
+#           in the ST and :</div>
+#         </xsl:otherwise>
+#       </xsl:choose>
+#     </xsl:if>
+#     <xsl:choose>
+#       <xsl:when test="$not='1'">
+#          <xsl:for-each select="ancestor::cc:selectable">
+#           <xsl:if test="not(.//@id=$prev-id)">
+#             <div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
+#           </xsl:if>
+#         </xsl:for-each>
+#       </xsl:when>
+#       <xsl:otherwise>
+#         <xsl:for-each select="ancestor-or-self::cc:selectable">
+#           <xsl:if test="not(.//@id=$prev-id)">
+#             <div class="{$sclass}">* select <xsl:apply-templates select="." mode="make_xref"/></div>
+#           </xsl:if>
+#         </xsl:for-each>
+#       </xsl:otherwise>
+#     </xsl:choose>
+#   </xsl:template>
+
+# ####################
+# #
+# ###################  <xsl:template name="get-prev-id">
+#     <xsl:if test="not(parent::cc:or or preceding-sibling::cc:*[1][self::cc:or])">
+#       <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
+#     </xsl:if>
+#   </xsl:template>
+  
+# ####################
+# #
+# ###################  <xsl:template match="cc:guidance|cc:restrict" mode="use-case">
+#     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
+#     <xsl:variable name="sclass">uc_guide<xsl:if test="//cc:management-function//@id=$ref-id"> uc_mf</xsl:if></xsl:variable>
+
+#     <xsl:choose>
+#       <xsl:when test="//cc:assignable/@id=$ref-id">
+#         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#  	<div class="{$sclass}">* for the <xsl:apply-templates select="//cc:assignable[@id=$ref-id]" mode="make_xref"/>, 
+# 	<xsl:apply-templates/></div>
+#       </xsl:when>
+#       <xsl:otherwise>
+# 	<xsl:message>Can't find assignable with ID of  <xsl:value-of select="$ref-id"/></xsl:message>
+#       </xsl:otherwise>
+#     </xsl:choose>
+#   </xsl:template>
+
+#    <!-- ############### --> 
+#   <!--                 -->
+#   <!-- ############### -->
+#   <xsl:template match="cc:not[cc:ref-id/text()=//cc:threat/@id]" mode="use-case">
+#     <xsl:for-each select="cc:ref-id[text() = //cc:threat/@id]">
+#       <xsl:variable name="theid" select="text()"/>
+#       <xsl:apply-templates mode="make_xref" select="//cc:*[@id=$theid]"/> does not apply in this use case.
+#     </xsl:for-each>
+#   </xsl:template>
+  
+
+# ####################
+# #
+# ###################  <xsl:template match="cc:not" mode="use-case">
+#     <xsl:variable name="ref-id" select="cc:ref-id[1]/text()"/>
+#     <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#        <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#        <xsl:with-param name="not" select="'1'"/>
+#     </xsl:apply-templates>
+#     <xsl:if test="$ref-id=//cc:module/@id">
+#       <div class="uc,not,module">Exclude the 
+#       <xsl:apply-templates select="//cc:module[@id=$ref-id]" mode="make_xref"/> module from the ST
+#       </div>
+#     </xsl:if>
+#     <xsl:if test="cc:ref-id/text()=//cc:selectable/@id">
+#       <div class="uc_not">Do not choose:
+#       <xsl:for-each select="cc:ref-id[text()=//cc:selectable/@id]">
+# 	<!-- Not sure why this is a for -->
+#         <xsl:variable name="ref" select="text()"/>
+#         <div class="uc_not_sel">* <xsl:apply-templates select="//cc:selectable[@id=$ref]" mode="make_xref"/></div>
+#       </xsl:for-each>
+#       </div>
+#     </xsl:if>
+#   </xsl:template>
+
+
+# ####################
+# #
+# ###################  <xsl:template match="cc:doc" mode="use-case">
+#     <xsl:variable name="docpath"><xsl:value-of select="concat($work-dir,'/',@ref)"/>.xml</xsl:variable>
+#     <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
+#     <xsl:variable name="name"><xsl:value-of select="document($docpath)//cc:PPTitle"/><xsl:if test="not(document($docpath)//cc:PPTitle)">PP-Module for <xsl:value-of select="document($docpath)/cc:Module/@name"/></xsl:if></xsl:variable>
+
+
+#     <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="$name"/></a>: </div>
+#     <xsl:for-each select="cc:ref-id">
+#       <xsl:call-template name="handle-ref-ext"> 
+#         <xsl:with-param name="ref-id" select="text()"/>
+#         <xsl:with-param name="root" select="document($docpath)/cc:*"/>
+#       </xsl:call-template>
+#     </xsl:for-each>
+#   </xsl:template>
+
+# ####################
+# #
+# ###################  <xsl:template name="handle-ref-ext">
+#     <xsl:param name="ref-id"/>
+#     <xsl:param name="root"/>
+
+#     <xsl:choose>
+#       <xsl:when test="$root//cc:selectable[@id=$ref-id]">
+#         <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#       </xsl:when>
+#       <xsl:when test="$root//cc:f-component[@id=$ref-id]">
+#         <div class="uc_inc_fcomp">Include <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST </div>
+#       </xsl:when>
+#       <xsl:when test="$root//cc:management-function//@id=$ref-id">
+#         <xsl:apply-templates select="$root//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#         <div class="uc_mf">Include
+#         <xsl:apply-templates select="$root//cc:management-function[@id=$ref-id]" mode="make_xref"/>
+#         in the ST</div>
+#       </xsl:when>
+#       <xsl:otherwise>
+#         <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
+#       </xsl:otherwise>
+#     </xsl:choose>
+#   </xsl:template> 
+  
+# ####################
+# #
+# ###################<!--  <xsl:template match="cc:ref-id" mode="use-case">
+#     <xsl:call-template name="handle-ref">
+#       <xsl:with-param name="ref-id" select="text()"/>
+#     </xsl:call-template>
+#   </xsl:template>  -->
+
+  
+#  <xsl:template match="cc:ref-id" mode="use-case">
+#    <xsl:variable name="ref-id-txt" select="text()"/>
+#    <xsl:choose>
+#       <xsl:when test="//cc:module[@id=$ref-id-txt]">
+# 	<div class="uc,module"> Include the <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="make_xref"/> module in the ST </div>
+#       </xsl:when>
+#       <xsl:when test="//cc:selectable[@id=$ref-id-txt]">
+#         <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#       </xsl:when>
+#       <xsl:when test="//cc:f-component[@id=$ref-id-txt]">
+#         <div class="uc_inc_fcomp">Include <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="make_xref"/> in the ST </div>
+#       </xsl:when>
+#       <xsl:when test="//cc:management-function//@id=$ref-id-txt">
+#         <xsl:apply-templates select="//cc:*[@id=$ref-id-txt]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#         <div class="uc_mf">Include
+#         <xsl:apply-templates select="//cc:management-function[@id=$ref-id-txt]" mode="make_xref"/>
+#         in the ST</div>
+#       </xsl:when>
+#       <xsl:otherwise>
+#         <xsl:message> Failed to find <xsl:value-of select="$ref-id-txt"/> in <xsl:call-template name="genPath"/> (use case or rule)</xsl:message>
+#         <xsl:if test="./@alt">
+#           <b><i><xsl:value-of select="./@alt"/></i></b>
+#         </xsl:if>
+#       </xsl:otherwise>
+#     </xsl:choose>
+#   </xsl:template>
+ 
+  
+  
+# ####################
+# #
+# ###################
+#   <xsl:template name="handle-ref">
+#     <xsl:param name="ref-id" select="text()"/>
+#     <xsl:choose>
+#       <xsl:when test="//cc:selectable[@id=$ref-id]">
+#         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#       </xsl:when>
+#       <xsl:when test="//cc:f-component[@id=$ref-id]">
+#         <div class="uc_inc_fcomp">Include <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="make_xref"/> in the ST </div>
+#       </xsl:when>
+#       <xsl:when test="//cc:management-function//@id=$ref-id">
+#         <xsl:apply-templates select="//cc:*[@id=$ref-id]" mode="handle-ancestors">
+#           <xsl:with-param name="prev-id"><xsl:call-template name="get-prev-id"/></xsl:with-param>
+#         </xsl:apply-templates>
+#         <div class="uc_mf">Include
+#         <xsl:apply-templates select="//cc:management-function[@id=$ref-id]" mode="make_xref"/>
+#         in the ST</div>
+#       </xsl:when>
+#       <xsl:otherwise>
+#         <xsl:message> Failed to find <xsl:value-of select="$ref-id"/> in <xsl:call-template name="genPath"/></xsl:message>
+#       </xsl:otherwise>
+#     </xsl:choose>
+#   </xsl:template> 
+
+
+        
 
     def handle_aelements(self, els, formal, par):
         agroups = self.sort_aelements(els)
@@ -2079,8 +2391,8 @@ security policies map to the security objectives.""")
         if not self.handle_content(ref, a_el):
             self.add_text(a_el, deftext)
 
-    def make_xref_section(self, id, parent):
-        parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
+    # def make_xref_section(self, id, parent):
+    #     parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
     def make_xref_bibentry(self, node, parent):
         txt = "["+node.find("./cc:tag", NS).text+"]"
@@ -2108,7 +2420,9 @@ security policies map to the security objectives.""")
     
         
     def make_xref(self, target, parent, ref=None):
-        if target.tag == CC+"entry":
+        if not hasattr(target, "tag"):
+            self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref) )
+        elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, parent)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
@@ -2122,7 +2436,7 @@ security policies map to the security objectives.""")
         elif target.tag == CC+"feature":
             self.make_xref_feature(target, parent, ref)
         else:
-            self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref))
+            self.broken_refs.add( (self.derive_id(target), adopt(parent, HTM_E.a()), ref) )
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
         #     self.make_xref_section(pp_util.localtag(target.tag), parent)
         # elif target.tag == CC+"section":
@@ -2190,7 +2504,8 @@ security policies map to the security objectives.""")
         for node in nodes:
             if is_comment(node):
                 pass
-            elif node.tag == CC+"and":
+            elif node.tag == CC+"and" or node.tag == CC+"config" or node.tag == CC+"not":
+                print("WUZHERE: " + node.tag)
                 self.and_use_case(node, out)
             elif node.tag == CC+"if":
                 pass
@@ -2199,6 +2514,7 @@ security policies map to the security objectives.""")
             elif node.tag==CC+"description":
                 pass
             elif node.tag==CC+"ref-id":
+                print("WUZHERE: " + node.tag)
                 self.refid_use_case(node, out)
             elif node.tag==CC+"doc":
                 self.doc_use_case(node, out)
@@ -2209,6 +2525,7 @@ security policies map to the security objectives.""")
             
     def and_use_case(self, and_el, out):
         for child in and_el:
+            print("Anding :"+ child.tag)
             self.apply_use_case_templates(child, out)
             
             # <xsl:template match="cc:and" mode="use-case" name="use-case-and">
@@ -2275,26 +2592,33 @@ security policies map to the security objectives.""")
     def refid_use_case(self, refid_el, out):
         refid=refid_el.text
         target = self.rf("//cc:*[@id='"+refid+"']")
+        start="I"
+        print("BLAHBLAHBLAH: ")
+        el_ancestors = refid_el.xpath("ancestor::cc:*", namespaces=NS)
+        for ans in el_ancestors:
+            print("BBB " + ans.tag)
+        if len(refid_el.xpath("ancestor::cc:not", namespaces=NS))==1:
+            start="Do NOT i"
         if target==None:
             print("Failed to find "+refid+" in a use case or rule")
             return 
         if target.tag == CC+"module":
-            out_div = adopt(out,HTM_E.div({"class":"uc module"},"Include the "))
+            out_div = adopt(out,HTM_E.div({"class":"uc module"},start+"nclude the "))
             self.make_xref(target, out)
             self.add_text(out_div, " module in the ST ")
         elif target.tag == CC+"selectable":
-            out_div = adopt(out,HTM_E.div({"class":"uc selectable"},"Include "))
-            self.make_xref(target, out)
+            out_div = adopt(out,HTM_E.div({"class":"uc selectable"},start+"nclude "))
+            self.make_xref(target, out_div)
             print("HANDLING ANCESTORS")
             self.add_text(out_div, " selectable in the ST ")
         elif target.tag == CC+"f-component":
-            out_div = adopt(out,HTM_E.div({"class":"uc fcomp"},"Include "))
-            self.make_xref(target, out)
+            out_div = adopt(out,HTM_E.div({"class":"uc fcomp"},start+"nclude "))
+            self.make_xref(target, out_div)
             self.add_text(out_div, " in the ST ")
         elif target.tag == CC+"management-function":
             print("HANDLING ANCESTORS")
-            out_div = adopt(out,HTM_E.div({"class":"uc mf"},"Include "))
-            self.make_xref(target, out)
+            out_div = adopt(out,HTM_E.div({"class":"uc mf"},start+"nclude "))
+            self.make_xref(target, out_div)
             self.add_text(out_div, " in the ST ")
         else:
             raise Exception("Can't handle: " +target.tag + " : " + refid)
