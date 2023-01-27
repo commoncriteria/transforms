@@ -1557,7 +1557,10 @@ security policies map to the security objectives.""")
             for act in acts:
                 act_div=HTM_E.div()
                 acts[act]=act_div
-                self.handle_content(aact.find("cc:"+act,NS), act_div)
+                act_el = aact.find("cc:"+act,NS)
+                if self.handle_content(act_el, act_div):
+                    out.append(act_div)
+                
         for act in acts:
             if not is_empty(acts[act]):
                 out.append(HTM_E.div(attrs("eacategory"),act))
