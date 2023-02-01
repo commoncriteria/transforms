@@ -92,6 +92,14 @@
 	  <empty/>
 	</element>
       </optional>
+      <optional>
+	<element name="bulletize">
+	  <a:documentation>
+	    Designates that the list should be displayed as bullet.
+	  </a:documentation>
+	  <empty/>
+	</element>
+      </optional>
       <choice>
 	<ref name="selectables_classic_content"/>
 	<ref name="selectables_table_content"/>

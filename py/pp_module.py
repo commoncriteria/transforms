@@ -12,6 +12,7 @@ adopt=pp_util.adopt
 class ppmod(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, boilerplate):
         super().__init__(root, workdir, boilerplate)
+        self.bases = self.make_edocs(workdir)
 
     def handle_unknown_depends(self, sfr, attrval):
         if self.rf("//cc:base-pp[@id='"+attrval+"']") is not None:
@@ -104,8 +105,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         
     def handle_basepp(self, node, par):
         id = node.attrib["id"]
-        base=self.edocs[id]
-        short=base.short
+        base=self.bases[id]
+        short=base.derive_short()
         par.append(self.sec({"id":"secreq-"+id},short+" Security Functional Requirements Direction"))
         if not self.apply_templates_single(node.find("cc:sec-func-req-dir", generic_pp_doc.NS), par):
             self.add_text(par,"In a PP-Configuration that includes the ")
@@ -262,7 +263,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         
     def base_consistency_rationale(self, par, base):
         id   = base.attrib["id"]
-        edoc = self.edocs[id]
+        edoc = self.bases[id]
         self.set_shortcut(edoc.get_orig_node())
         par.append(self.sec({"id":"conrat-"+id}, edoc.short))
         self.consistency_of_toe_type(par, base, id)
@@ -311,6 +312,13 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.objectives_to_requirements(parent)
         else:
             return super().handle_post_section_hook(title,node ,parent)
+
+    def doctype(self):
+        return "Protection Profile Module"
+
+    def doctype_short(self):
+        return "PP-Mod"
+
 
         
             
