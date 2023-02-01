@@ -189,6 +189,7 @@ class generic_pp_doc(object):
         return edoc.derive_products(self.root)
         
     def get_next_counter(self, ctr_type):
+        print("Counter type is " + ctr_type)
         if ctr_type in self.counters:
             self.counters[ctr_type]+=1
             return self.counters[ctr_type]
@@ -977,7 +978,7 @@ security objectives for the environment.
                           HTM_E.span({"class":"counter"},ctrcount)
                           )
         parent.append(span)
-        self.add_text(parent, sep)
+        self.add_text(span, sep)
         self.handle_content(child, span)
         
     def handle_conformance_statement(self, node):
@@ -1100,6 +1101,9 @@ security policies map to the security objectives.""")
                 firstcol=pname
                 numkids = len(parent.findall("cc:objective-refer", NS))
                 pname_wrap = pp_util.make_wrappable(pname)
+                from_el = parent.find("cc:from", NS)
+                if not from_el is None:
+                    pname_wrap+=" (from "+from_el.attrib["base"]+")"
                 tr.append(HTM_E.td({"rowspan":str(numkids)},pname_wrap))
             else:
                 tr = adopt(table,HTM_E.tr())

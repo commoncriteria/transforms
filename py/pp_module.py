@@ -106,13 +106,13 @@ class ppmod(generic_pp_doc.generic_pp_doc):
     def handle_basepp(self, node, par):
         id = node.attrib["id"]
         base=self.bases[id]
-        short=base.derive_short()
+        short=base.short()
         par.append(self.sec({"id":"secreq-"+id},short+" Security Functional Requirements Direction"))
         if not self.apply_templates_single(node.find("cc:sec-func-req-dir", generic_pp_doc.NS), par):
             self.add_text(par,"In a PP-Configuration that includes the ")
             self.add_text(par,short)
             self.add_text(par,",the TOE is expected to rely on some of the security functions implemented by the")
-            self.add_text(par,base.product)
+            self.add_text(par,base.get_product())
             self.add_text(par,"as a whole and evaluated against the  " + short + ".")
             self.add_text(par," The following sections describe any modifications that the ST author must make to the SFRs")
             self.add_text(par," defined in the "+short+" in addition to what is mandated by ")
@@ -178,7 +178,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), par)
         self.add_text(par,"This PP-Module identifies several SFRs from the")
         edoc.make_xref_edoc(par)
-        self.add_text(par," that are needed to support "+self.rf("product_class").text)
+        self.add_text(par," that are needed to support "+self.rf("cc:product_class").text)
         self.add_text(par," functionality.")
         self.add_text(par," This is considered to be consistent because the functionality provided by the")
         edoc.make_xref_edoc(par)
@@ -193,7 +193,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.add_text(par," The PP-Module identifies new SFRs that are used entirely to provide")
             self.add_text(par," functionality for "+  edoc.get_products() + ".")
         self.add_text(par," The rationale for why this does not conflict with the claims")
-        self.add_text(par," defined by the "+ edoc.short+" are as follows:")
+        self.add_text(par," defined by the "+ edoc.short()+" are as follows:")
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("PP-Module Requirement"),
                               HTM_E.th("Consistency Rationale")))
@@ -201,12 +201,12 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.requirement_consistency_rationale_section(
             edoc.mod_sfrs, 
             "modify any requirements when the "+\
-            edoc.short + " is the base.",table, edoc=edoc)
+            edoc.short() + " is the base.",table, edoc=edoc)
         table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Additional SFRs")))
         self.requirement_consistency_rationale_section(
             edoc.add_sfrs, 
             "levy any addition requirements when the "+\
-            edoc.short + " is the base.", table, edoc=edoc)
+            edoc.short() + " is the base.", table, edoc=edoc)
         table.append(HTM_E.tr(HTM_E.th({"colspan":"2"}, "Mandatory SFRs")))
         self.requirement_consistency_rationale_section(
             self.man_sfrs, 

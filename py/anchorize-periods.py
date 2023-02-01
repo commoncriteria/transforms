@@ -12,7 +12,7 @@ period_regex = re.compile("\\.(\\s|$)")
 
 
 def recursive_descent(elem):
-    if elem.tag is None:
+    if elem is None or elem.tag is None:
         return
     elname_nonamespace = elem.tag.split('}')[-1]
     if elname_nonamespace == 'a' or elname_nonamespace == 'abbr':
