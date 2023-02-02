@@ -16,7 +16,7 @@ DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"o
               CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component",
               CC+"f-element", CC+"a-element",CC+"audit-event", CC+"consistency-rationale",
               CC+"comp-lev", CC+"management", CC+"audit", CC+"dependencies", CC+"objective",
-              CC+"optional", CC+"depends", CC+"ext-comp-def-title",CC+"el-level"}
+              CC+"optional", CC+"depends", CC+"ext-comp-def-title",CC+"elev"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description", CC+"choice"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
@@ -1815,12 +1815,12 @@ security policies map to the security objectives.""")
     def handle_fcomp_activities(self, fcomp, formal, out):
         div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
-        comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:el-level)]", namespaces=NS)
+        comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:elev)]", namespaces=NS)
         should_add=self.handle_grouped_activities(formal, comp_acts, div_out)
-        for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:el-level]", namespaces=NS):
+        for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:elev]", namespaces=NS):
             # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
             fel_id = self.fel_cc_id(fel)
-            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[cc:el-level]", NS), div_out, "element")
+            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[cc:elev]", NS), div_out, "element")
             should_add=True
         if should_add:
             out.append(div)
@@ -1971,10 +1971,16 @@ security policies map to the security objectives.""")
     def get_test_title(self, testnode):
         if testnode in self.test_titles:
             return self.test_titles[testnode]
-        parent=testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
+        
+        aa_el = testnode.xpath("ancestor::cc:aactivity", namespaces=NS)[0]
+        if aa_el.find("cc:elev", NS) is None:
+            ance =testnode.xpath("ancestor::cc:f-component", namespaces=NS)[0]
+            cc_id=self.fcomp_cc_id(ance)
+        else:
+            ance =testnode.xpath("ancestor::cc:f-element", namespaces=NS)[0]
+            cc_id=self.fel_cc_id(ance)
         ctr=1
-        cc_id=self.fcomp_cc_id(parent)
-        self.derive_test_title_recur(parent, cc_id+"#", stack=[0])
+        self.derive_test_title_recur(aa_el, cc_id+"#", stack=[0])
         return self.test_titles[testnode]
 
     def derive_test_title_recur(self, node, prefix, stack):
