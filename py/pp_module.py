@@ -113,7 +113,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.add_text(par,short)
             self.add_text(par,",the TOE is expected to rely on some of the security functions implemented by the")
             self.add_text(par,base.get_product())
-            self.add_text(par,"as a whole and evaluated against the  " + short + ".")
+            self.add_text(par," as a whole and evaluated against the  " + short + ".")
             self.add_text(par," The following sections describe any modifications that the ST author must make to the SFRs")
             self.add_text(par," defined in the "+short+" in addition to what is mandated by ")
             par.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"section "))
