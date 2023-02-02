@@ -1137,7 +1137,7 @@ Modification definition. This text goes in the
 Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
 The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </a:documentation>
-      <optional><element name="el-level">
+      <optional><element name="elev">
 	<a:documentation>
 	  Specifies that the aactivities are assocated with
 	  elements rather than components.
