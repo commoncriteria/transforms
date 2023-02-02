@@ -16,7 +16,7 @@ DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"o
               CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component",
               CC+"f-element", CC+"a-element",CC+"audit-event", CC+"consistency-rationale",
               CC+"comp-lev", CC+"management", CC+"audit", CC+"dependencies", CC+"objective",
-              CC+"optional", CC+"depends", CC+"ext-comp-def-title"}
+              CC+"optional", CC+"depends", CC+"ext-comp-def-title",CC+"el-level"}
 TRANSPARENT={CC+"aactivity", CC+"text",CC+"description", CC+"choice"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
@@ -1504,12 +1504,12 @@ security policies map to the security objectives.""")
     def handle_fcomp_activities(self, fcomp, formal, out):
         div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
-        comp_acts = fcomp.xpath(".//cc:aactivity[not(@level='element')]", namespaces=NS)
+        comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:el-level)]", namespaces=NS)
         should_add=self.handle_grouped_activities(formal, comp_acts, div_out)
-        for fel in fcomp.xpath(".//cc:*[cc:aactivity/@level='element']", namespaces=NS):
+        for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:el-level]", namespaces=NS):
             # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
             fel_id = self.fel_cc_id(fel)
-            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[@level='element']", NS), div_out, "element")
+            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[cc:el-level]", NS), div_out, "element")
             should_add=True
         if should_add:
             out.append(div)
