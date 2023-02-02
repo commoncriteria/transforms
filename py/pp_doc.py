@@ -45,6 +45,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         secs_no_fcomps = sfr_sec.xpath(".//sec:*[not(.//cc:f-component)]|.//cc:section[not(.//cc:f-component)]", namespaces=NS)
         self.apply_templates(secs_no_fcomps, par)
         self.handle_sparse_sfrs(self.man_sfrs, par)
+        print("Finished SFRs")
         self.objectives_to_requirements(par)
         self.end_section()
         self.handle_sars(par)

@@ -169,7 +169,7 @@ class generic_pp_doc(object):
         self.man_sfrs = self.rx("//cc:f-component[not(cc:depends or cc:objective or cc:optional)]")
         self.are_sfrs_mingled = False
         self.node_to_ccid={}
-        
+        self.group_audit_map={}
         self.categorize_sfrs()
         self.outline = [0]
         self.is_appendix = False
@@ -259,6 +259,9 @@ class generic_pp_doc(object):
 
     def add_text(self, node, text):
         pp_util.append_text(node,text)
+
+
+
         
     def categorize_sfrs(self):
         for sfr in self.man_sfrs:
@@ -526,7 +529,7 @@ class generic_pp_doc(object):
         table=adopt(par,HTM_E.table())
         caption=adopt(table,HTM_E.caption())
         self.create_ctr("Table", "t-obj-map", caption, "Table ")
-        self.add_text(caption, ": SFR Rationale")
+        self.add_text(caption, "SFR Rationale")
         table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
         prev_parent = None
         for addr_by in addr_bys:
@@ -902,9 +905,12 @@ class generic_pp_doc(object):
         self.is_appendix = True
 
     def implementation_based_section(self, out):
+        features=self.rfa("//cc:feature")
         attrs={"id":"implementation-based-"}
         out.append(self.sec(attrs, "Implementation-based Requirements"))
         features=self.rfa("//cc:feature")
+        if len(features)==0:
+            self.add_text(out, "This "+self.doctype_short()+" does not define any Implementation-based SFRs.\n")
         for feature in features:
             out.append(self.sec(feature.attrib["title"]))
             self.handle_content(feature,out)
@@ -933,6 +939,14 @@ class generic_pp_doc(object):
         self.end_section()
 
     def create_audit_table_section(self, title, audittable, par):
+        title_sfrs = self.get_title_n_sfrs(audittable)
+        title = title_sfrs[0]
+        sfrs  = title_sfrs[1]
+        sfrs_event_map = self.get_sfrs_with_audit_events(sfrs, audittable)
+        if len(sfrs_event_map)==0:
+            return
+
+        
         par.append(self.sec("Auditable Events for "+ title + " Requirements"))
         self.template_audit_table(None, par, audittable)
         self.end_section()
@@ -971,6 +985,7 @@ security objectives for the environment.
 
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
+        print("Creating counter for: " + id)
         ctrcount = str(self.get_next_counter(ctrtype))
         span = HTM_E.span({"class":"ctr",
                            "data-counter-type":"ct-"+ctrtype,
@@ -1159,6 +1174,7 @@ security policies map to the security objectives.""")
             pp_util.log("Found multipled targets for "+ to)
         self.make_xref(refs[0], parent, node)
 
+        
     def get_list_of(self, fulltag):
         if fulltag in self.globaltags:
             return self.globaltags[fulltag]
@@ -1294,57 +1310,6 @@ security policies map to the security objectives.""")
                 self.make_xref(basenode, parent)
             parent.append(HTM_E.div("is a base. "))            
 
-
-        
-        
- #    <xsl:choose>
- #      <!-- When it depends on a choice -->
- #      <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
- #         <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
- #         <xsl:for-each select="cc:depends/@*">
- #            <xsl:if test="position()!=1">,</xsl:if>
-            
- #            <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
- #         </xsl:for-each>
- #      </xsl:when>
- #      <!--If we're not looking at a row. Not sure where @hide comes from -->
- #      <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
- #      <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
- #      <ul> <xsl:for-each select="cc:depends"><li>
- #        <xsl:variable name="uid" select="@*[1]"/>
- #         <xsl:choose>
- #           <xsl:when test="cc:external-doc">
- #             <xsl:variable name="ref" select="cc:external-doc/@ref"/>
- #             <xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
-
- #             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
- #             </xsl:for-each>
- #             is selected from 
- #             <xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
- #           </xsl:when><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
- #             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
- #             </xsl:for-each>
- #             is selected from 
- #             <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
- #           </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
- #             <xsl:for-each select="@*">
- #               <xsl:if test="position()!=1">/</xsl:if>
- #             <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
- #             </xsl:for-each> TOEs
- #         </xsl:when><xsl:otherwise>
- #           the TOE implements 
- #           <xsl:for-each select="@*">
- #             <xsl:if test="position()!=1">, </xsl:if>
- #             "<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
- #           </xsl:for-each>
- #         </xsl:otherwise></xsl:choose>
- #              <!-- This is a module piece... -->
- #      </li></xsl:for-each> </ul>
- #      </xsl:when></xsl:choose>
- # </xsl:template>
-
-
-        
     def apply_templates(self, nodelist, parent):
         if nodelist is None:
             return
@@ -1375,11 +1340,9 @@ security policies map to the security objectives.""")
     #         return node.attrib["short"]
     #     return self.get_plural(node)
 
-
-
-
     def handle_felement(self, fel_el,  par):
         formal_id = self.get_ccid_for_ccel(fel_el)
+        print("Handling f-element: " + formal_id)
         div_fel=adopt(par, HTM_E.div({"class":"element"}))
         reqid=self.derive_id(fel_el)
         div_fel.append(
@@ -1584,42 +1547,6 @@ security policies map to the security objectives.""")
         xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
         return self.rx(xpath)
 
-        
-   # <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
-   #      <!-- Display component name -->
-   #      <x:if test=".//cc:aactivity[not(@level='element')]">
-   #        <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
-   #        <x:apply-templates
-   #          select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
-   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
-   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-   #        <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
-   #      </x:if>
-   # 	<x:for-each select=".//cc:aactivity[@level='element']">
-   #        <!-- Display the element name -->
-   #        <div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
-   #        <x:apply-templates mode="single-cat"/>
-   #      </x:for-each>
-   #      <x:if test=".//cc:management-function/cc:aactivity">
-	  
-   #        <div class="management_function_activities">
-   #          The following EAs correspond to specific management functions.
-   #          <x:for-each select=".//cc:management-function[./cc:aactivity]">
-   #            <div class="management_function_ea">
-   #      	<x:apply-templates select="cc:aactivity" mode="manact"/>
-   #            </div>
-   #          </x:for-each>
-   #        </div>
-   #      </x:if>
-
-   # </x:template>
-
-        
-            
-
-
-            
     def handle_sparse_sfrs(self, sfrs, par):
         titles={}
         for sfr in sfrs:
@@ -1766,50 +1693,36 @@ security policies map to the security objectives.""")
             self.add_text(li, ":")
             self.handle_content(test, li)
 
-  # <xsl:template match="cc:audit-table" name="audit-table">
-  #   <xsl:param name="thistable" select="@table"/>
-
-
-  #   <xsl:variable name="nicename"><xsl:choose>
-  #     <xsl:when test="@title"><xsl:value-of select="@title"/></xsl:when>
-  #     <xsl:otherwise>Auditable Events for <xsl:value-of select="document('boilerplates.xml')//cc:*[@tp=$thistable]/@nice"/> Requirements</xsl:otherwise>
-  #   </xsl:choose></xsl:variable>
-  #   <table class="sort_kids_" border="1">
-  #     <!--      <xsl:if test="not(node())">-->
-  #     <caption data-sortkey="#0"><xsl:call-template name="ctr-xsl">
-  #       <xsl:with-param name="ctr-type" select="'Table'"/>
-  #       <xsl:with-param name="id"><xsl:choose><xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when><xsl:otherwise><xsl:value-of select="concat('t-audit-',$thistable)"/></xsl:otherwise></xsl:choose></xsl:with-param>
-  #     </xsl:call-template>: <xsl:value-of select="$nicename"/></caption>
-  #     <!--      </xsl:if>-->
-  #     <!--<xsl:apply-templates/>-->
-  #     <tr data-sortkey="#1">
-  #     <th>Requirement</th><th>Auditable Events</th><th>Additional Audit Record Contents</th></tr>
-  #     <xsl:for-each select="//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]">
+    def get_title_n_sfrs(self, thistable):
+        if thistable=="mandatory":
+            return ("Mandatory", self.man_sfrs)
+        elif thistable=="optional":
+            return ("Strictly Optional", self.opt_sfrs)
+        elif thistable=="objective":
+            return ("Objective",self.obj_sfrs)
+        elif thistable=="feat-based":
+            return ("Implementation-based",self.impl_sfrs)
+        elif thistable=="sel-based":
+            return ("Selection-based", self.sel_sfrs)
+        else:
+            raise Exception("Can't handle audit table for: " + thistable)
+        
   
     def template_audit_table(self, node, par, thistable=None):
         if thistable is None and "table" in node.attrib:
             thistable=node.attrib["table"]
-        
-
         explainer="The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met."
+
         if thistable=="mandatory":
-            sfrs = self.man_sfrs
             explainer = "The auditable events in the table below must be included in a Security Target."
-            title="Mandatory"
-        elif thistable=="optional":
-            sfrs = self.opt_sfrs
-            title="Strictly Optional"
-        elif thistable=="objective":
-            sfrs = self.obj_sfrs
-            title="Objective"
-        elif thistable=="feat-based":
-            sfrs = self.impl_sfrs
-            title="Implementation-based"
-        elif thistable=="sel-based":
-            sfrs = self.sel_sfrs
-            title="Selection-based"
-        else:
-            raise Exception("Can't handle audit table for: " + thistable)
+        title_sfrs = self.get_title_n_sfrs(thistable)
+        title = title_sfrs[0]
+        sfrs  = title_sfrs[1]
+        
+        sfrs_event_map = self.get_sfrs_with_audit_events(sfrs, thistable)
+
+        if len(sfrs_event_map)==0:
+            return
         if node is None:
             myid="at-"+thistable+"-"
         else:
@@ -1817,7 +1730,6 @@ security policies map to the security objectives.""")
         
         div=HTM_E.div()
         div.append(HTM_E.p(explainer))
-        have_events=False
         title="Auditable Events for "+ title + " Requirements"
         table=adopt(div, HTM_E.table({"border":"1"}))
         caption = adopt(table, HTM_E.caption())
@@ -1825,15 +1737,24 @@ security policies map to the security objectives.""")
         pp_util.append_text(caption, title)
         tr = HTM_E.tr(HTM_E.th("Requirement"),HTM_E.th("Auditable Events"),HTM_E.th("Additional Audit Record Contents"))
         table.append(tr)
-        for fcomp in sfrs:
-            events = fcomp.xpath(".//cc:audit-event[not(@table) or @table='"+thistable+"']", namespaces=NS)
+        # This is not going to handle no SFRs well
+        for fcomp in sfrs_event_map:
+            events = sfrs_event_map[fcomp]
             add_grouping_row(table, self.fcomp_cc_id(fcomp), len(events))
             for event in events:
                 self.make_audit_row_from_event(event, table)
-                have_events=True
-        if have_events:
-            par.append(div)
+        par.append(div)
 
+    # This assumes the group never changes
+    def get_sfrs_with_audit_events(self, sfrs, table):
+        if not table in self.group_audit_map:
+            entry={}
+            for sfr in sfrs:
+                events = sfr.xpath(".//cc:audit-event[not(@table) or @table='"+table+"']", namespaces=NS)
+                if len(events)>0:
+                    entry[sfr]=events
+            self.group_audit_map[table]=entry
+        return self.group_audit_map[table]
 
             
     def make_audit_row_from_event(self, event, table):
