@@ -43,16 +43,16 @@ class Edoc:
         return self.orig
         
     def get_product(self):
-        if root is not None:
-            return derive_product(root)
+        if self.root is not None:
+            return derive_product(self.root)
         else:
-            return derive_product(orig)
+            return derive_product(self.orig)
     
     def get_products(self):
-        if root is not None:
-            return derive_products(root)
+        if self.root is not None:
+            return derive_products(self.root)
         else:
-            return derive_products(orig)
+            return derive_products(self.orig)
 
         
     def add_base_dependent_sfr(self,bsfr):
@@ -65,12 +65,16 @@ class Edoc:
         self.mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
+    def short(self):
+        if self.root is None:
+            return derive_short(self.orig)
+        else:
+            return derive_short(self.root)
+        
+        
     def make_xref_edoc(self, parent):
         url=self.orig.find("cc:url", NS).text
-        if self.root is None:
-            parent.append(HTM_E.a({"href":url}, derive_short(self.orig)))
-        else:
-            parent.append(HTM_E.a({"href":url}, derive_short(self.root)))
+        parent.append(HTM_E.a({"href":url}, self.short()))
 
     def make_xref_selectable(self, sel, out):
         ancestor = pp_util.get_meaningful_ancestor(self.root, sel.attrib["id"])
