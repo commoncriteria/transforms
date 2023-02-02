@@ -1003,7 +1003,7 @@ security objectives for the environment.
 
         
     def create_bibliography(self, par):
-        par.append(HTM_E.h1({"id":"appendix-bibliography"},"Bibliography"))
+        par.append(self.sec({"id":"appendix-bibliography"},"Bibliography"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Identifier"),HTM_E.th("Title")))
         entries = (self.rfa("//cc:bibliography/cc:entry") +
@@ -1019,6 +1019,7 @@ security objectives for the environment.
 
             td = adopt(tr, HTM_E.td())
             self.handle_content(entry.find("cc:description",NS), td)
+        self.end_section()
 
 
     def to_sd(self):
@@ -1070,7 +1071,7 @@ security objectives for the environment.
     
             
     def create_acronym_listing(self, par):
-        par.append(HTM_E.h1({"id":"acronyms"},"Acronyms"))
+        par.append(self.sec({"id":"acronyms"},"Acronyms"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Acronym"), HTM_E.th("Meaning")))
         suppress_el=self.rf("//cc:suppress")
@@ -1092,7 +1093,7 @@ security objectives for the environment.
             # pp_util.maybe_add_attr(attrs, term_el, "lower")
             tr.append(HTM_E.td(HTM_E.span(attrs, abbr)))
             tr.append(HTM_E.td(HTM_E.span({"id":"long_abbr_"+abbr}, full)))
-            
+        self.end_section()
             
     def handle_security_objectives_rationale(self, node, parent):
         self.add_text(parent, """This section describes how the assumptions, threats, and organizational 
