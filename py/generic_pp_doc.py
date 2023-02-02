@@ -1079,7 +1079,7 @@ security objectives for the environment.
         else:
             suppress_list=suppress_el.text.split(",")
         term_els = self.get_all_abbr_els()
-        term_els.sort(key=lambda t_el:t_el.attrib["full"].upper())
+        term_els.sort(key=lambda t_el:t_el.attrib["abbr"].upper())
         for term_el in term_els:
             full=term_el.attrib["full"]
             abbr=term_el.attrib["abbr"]            
