@@ -170,24 +170,44 @@ def derive_version_and_date(node):
     ver=node.find("cc:version", NS)
     if ver is not None:
         return [ver.text]
-    biggest=0.0
+    biggest="-1"
     date=""
     for entry in node.findall("cc:RevisionHistory/cc:entry",NS):
         ver = entry.find("cc:version", NS)
-        try:
-            ver_float = float(ver.text)
-            if biggest<ver_float:
-                date=entry.find("cc:date",NS).text
-                biggest=ver_float
-        except ValueError:
-            return [ver.text, entry.find("cc:date",NS).text]
+        if is_newer(ver.text, biggest):
+            date=entry.find("cc:date",NS).text
+            biggest=ver.text
+        print("Biggest is " + biggest)
     print("Returning: ")
-    print("Biggest:"+str(biggest))
+    print("Biggest:"+biggest)
     print("Date: " + date)
     ret=[]
-    ret.append(str(biggest))
+    ret.append(biggest)
     ret.append(date)
     return ret
+
+def is_newer(ver1, ver2):
+# Returns True if ver1 is newer than ver2
+    if ver2 == "":
+        return False
+    ver1_nums = ver1.split(".")
+    ver2_nums = ver2.split(".")
+    ctr=0
+    for ver2_num_str in ver2_nums:
+        if not ctr<len(ver1_nums):            # If ver1 runs out of numbers
+            return False
+        
+        ver1_num = int(ver1_nums[ctr])
+        ver2_num = int(ver2_num_str)
+        if ver1_num < ver2_num:
+            return False
+        if ver1_num > ver2_num:
+            return True
+        ctr=ctr+1
+    return False
+        
+        
+        
 
 def is_cpp(node):
     return node.find("cc:cPP", NS) is not None
