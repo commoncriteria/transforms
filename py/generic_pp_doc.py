@@ -640,6 +640,7 @@ class generic_pp_doc(object):
               
         body.append(HTM_E.div({"class":"center"},
                               HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
+                              HTM_E.br(),
                               "Version: "+version_date[0],
                               HTM_E.br(),
                               "     "+version_date[1],
