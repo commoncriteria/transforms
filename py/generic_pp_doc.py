@@ -90,6 +90,39 @@ def make_sort_key_stringnum(s):
 def backslashify(phrase):
     return re.sub("([][_.^()-/])", r"\\\1", phrase)
 
+
+def sec_impl(outline, is_appendix, toc, h_el):
+    # h2 doesn't matter as the tag is changed
+    depth = len(outline)
+    h_el.tag="h"+str(depth)
+    outline[-1]=outline[-1]+1
+
+    prefix=""
+    if is_appendix:
+        ctr=base_10_to_alphabet(outline[0])
+        if len(outline)==1:
+            prefix = "Appendix "
+            ctr=ctr + " - " + NBSP
+        else:
+            ctr+="."+ ".".join(map(str, outline[1:]))
+    else:
+        ctr=".".join(map(str, outline))
+
+    if "id" not in h_el.attrib:
+        h_el.attrib["id"]="sec_"+ctr.replace(" ","_")+"-"
+    outline.append(0)
+    toc_entry=""
+    for aa in range(depth):
+        toc_entry += NBSP+ NBSP
+    prevtext = h_el.text
+    toc_entry +=  prefix + ctr + NBSP+ NBSP + NBSP + prevtext
+    h_el.text = prefix
+    adopt(h_el, HTM_E.span({"class":"ctr"},ctr)).tail = " " + prevtext
+    toc.append(HTM_E.a({"href":"#"+h_el.attrib["id"]}, toc_entry))
+    return h_el
+
+
+
 def def_attr(id):
     return {"id":id, "class":"def_", "href":"#"+id}
 
@@ -171,8 +204,6 @@ class generic_pp_doc(object):
         self.node_to_ccid={}
         self.group_audit_map={}
         self.categorize_sfrs()
-        self.outline = [0]
-        self.is_appendix = False
         self.abbrs = {}                       # Full set of abbreviaiotns
         #        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
         #        self.used_abbrs = set()               # Set of abbreviations that we've seen
@@ -397,7 +428,11 @@ class generic_pp_doc(object):
             insertspot=node.index(child)+1
             child.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
 
+
+            
     def to_sd(self):
+        self.outline = [0]
+        self.is_appendix = False
         body=HTM_E.body()
         ret=HTM_E.html(
             HTM_E.head(
@@ -405,8 +440,60 @@ class generic_pp_doc(object):
                 HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
             ),body)
         self.meta_data(body)
+        self.write_forward(body)
+        body.append(HTM_E.h2("Contents"))
+        self.toc = adopt(body, (HTM_E.div({"class":"toc","id":"toc"})))
+        self.sd_intro(body)
+        self.sd_sfrs(body)
         return ret
 
+    def sd_sfrs(self, out):
+        out.append(self.sec({"id":"sfrs-"},"Evaluation Activities for SFRs"))
+        out.append(HTM_E.p("""The EAs presented in this section capture the 
+        actions the evaluator performs 
+        to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
+        ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
+        that are performed in Section XXXX."""))
+        #    <a href="#sar_aas" class="dynref"></a>
+        out.append(HTM_E.p("""Regarding design descriptions (designated 
+        by the subsections labeled TSS, as 
+        well as any required supplementary material that may be treated as proprietary), 
+        the evaluator must ensure there is specific information that satisfies the EA. 
+        For findings regarding the TSS section, the evaluator’s verdicts will be 
+        associated with the CEM workunit ASE_TSS.1-1.
+        Evaluator verdicts associated with the supplementary evidence will also be 
+        associated with ASE_TSS.1-1, 
+        since the requirement to provide such evidence is specified in ASE in the PP."""))
+        out.append(HTM_E.p("""For ensuring the guidance documentation provides 
+        sufficient information for 
+        the administrators/users as it pertains to SFRs, the evaluator’s verdicts will 
+        be associated with CEM workunits ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5."""))
+        out.append(HTM_E.p("""Finally, the subsection labeled Tests is where 
+        the authors have determined 
+        that testing of the product in the context of the associated SFR is necessary.
+        While the evaluator is expected to develop tests, there may be instances where 
+        it is more practical for the developer to construct tests, or where the 
+        developer may have existing tests. 
+        Therefore, it is acceptable for the evaluator to witness developer-generated 
+        tests in lieu of executing the tests. 
+        In this case, the evaluator must ensure the developer’s tests are executing both 
+        in the manner declared by the developer and as mandated by the EA. 
+        The CEM workunits that are associated with the EAs specified in this section 
+        are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7."""))
+        self.sd_handle_bases(out)
+        out.append(self.sec("TOE SFR Evaluation Activities"))
+        if len(self.man_sfrs) == 0:
+            out.append(HTM_E.p("The "+ self.doctype_short + " does not define any mandatory SFRs."))
+        else:
+            self.handle_sparse_sfrs(self.man_sfrs, out, True)
+        
+        self.end_section()
+
+        
+
+    def sd_handle_bases(self, out):
+        return
+    
     def meta_data(self, parent):
         div = HTM_E.div(
             {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
@@ -416,16 +503,101 @@ class generic_pp_doc(object):
             HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
         self.add_text(div, self.title())
         div.append(HTM_E.br())
+        version_date = edoc.derive_version_and_date(self.root)
+        pp_util.append_text(div, "Version: "+version_date[0])
+        div.append(HTM_E.br())
+        pp_util.append_text(div, version_date[1])
+        div.append(HTM_E.br())
+        div.append(HTM_E.b(self.derive_author()))
         parent.append(div)
-      #   append_text("Version: "+<x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
-      # <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
-      # <b><x:value-of select="//cc:PPAuthor"/></b>
-      # </div>
-    
-    # <html xmlns="http://www.w3.org/1999/xhtml">
-    #   <x:call-template name="module-head"/>
-    #   <body>
-    #     <x:call-template name="meta-data"/>
+
+
+    def write_forward(self, out):
+        div = HTM_E.div(attrs("foreword"))
+        div.append(HTM_E.h1({"style":"text-align: center"},"Foreword"))
+        div.append(HTM_E.p("""This is a Supporting Document (SD), intended to complement
+ the Common Criteria version 3 and the associated Common Evaluation Methodology for
+ Information Technology Security Evaluation."""))
+        div.append(HTM_E.p("""SDs may be “Guidance Documents”, that highlight specific approaches
+ and application of the standard to areas where no mutual recognition of
+ its application is required, and as such, are not of normative nature, 
+ or “Mandatory Technical Documents”, whose application is mandatory for evaluations 
+ whose scope is covered by that of the SD.
+ The usage of the latter class is not only mandatory, but certificates
+ issued as a result of their application are recognized under the CCRA."""))
+        div.append(HTM_E.p(HTM_E.b("Technical Editor:"),HTM_E.br(),"National Information Assurance Partnership (NIAP)"))
+        rev_his = HTM_E.div({"style":"page-break-before:always;"},HTM_E.b("Revision History:"))
+        self.write_revision_history(rev_his)
+        div.append(rev_his)
+
+        wurds = "The purpose of this SD is to define evaluation methods for the functional behavior of "+                      edoc.derive_product(self.root)+  " products."                   
+        p_genpurp = HTM_E.p(HTM_E.b("General Purpose:"), HTM_E.br(),wurds)
+        div.append(p_genpurp)
+
+        wurds = "This SD was developed with support from NIAP "+\
+            edoc.derive_products(self.root) +\
+            " Technical Community members, with representatives from "+\
+            "industry, government agencies, Common Criteria Test Laboratories"+\
+            ", and members of academia."
+        p_ack = HTM_E.p(HTM_E.b("Acknowledgments:"), HTM_E.br(), wurds)
+        div.append(p_ack)
+        out.append(div)
+
+
+    def write_base_intro(self, out):
+        return
+
+    def sd_intro(self, out):
+        out.append(self.sec({"id":"introduction-","class":"indexable"},"Introduction"))
+        out.append(self.sec({"id":"scope-","class":"indexable"},"Technology Area and Scope of Supporting Document"))
+        out.append(HTM_E.p("The scope of the "+ self.title() + " is to describe the security functionality of "+
+                           self.derive_plural() + " products in terms of [CC] and to define functional and assurance requirements for them."))
+        self.write_base_intro(out)
+        out.append(HTM_E.p("""Although Evaluation Activities are defined mainly for the evaluators to follow, 
+    in general they also help developers to prepare for evaluation by identifying specific requirements for their TOE.
+    The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security
+    Functional Requirements (SFR), and may identify particular requirements for the content of Security
+    Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly
+    supplementary information (e.g. for entropy analysis or cryptographic key management architecture)."""))
+        self.end_section()
+        out.append(self.sec({"id":"structure-"},"Structure of the Document"))
+
+        out.append(HTM_E.p("""Evaluation Activities can be defined for both SFRs and Security Assurance Requirements (SAR),
+        which are themselves defined in separate sections of the SD."""))
+
+        out.append(HTM_E.p("""If any Evaluation Activity cannot be successfully completed in an evaluation, then
+        the overall verdict for the evaluation is a 'fail'.
+        In rare cases there may be acceptable reasons why an Evaluation Activity
+        may be modified or deemed not applicable for a particular TOE, 
+        but this must be approved by the Certification Body for the evaluation."""))
+
+        out.append(HTM_E.p("""In general, if all Evaluation Activities (for both SFRs and SARs) are successfully
+        completed in an evaluation then it would be expected that the overall verdict for 
+        the evaluation is a ‘pass’.
+        To reach a ‘fail’ verdict when the Evaluation Activities have been successfully 
+        completed would require a specific justification from the evaluator as to why the 
+        Evaluation Activities were not sufficient for that TOE.
+        """))
+        out.append(HTM_E.p("""Similarly, at the more granular level of assurance components, if the Evaluation 
+        Activities for an assurance component and all of its related SFR Evaluation 
+        Activities are successfully completed in an evaluation then it would be expected 
+        that the verdict for the assurance component is a ‘pass’.
+        To reach a ‘fail’ verdict for the assurance component when these Evaluation 
+        Activities have been successfully completed would require a specific justification 
+        from the evaluator as to why the Evaluation Activities were not sufficient for that TOE. 
+        """))
+      
+        self.end_section()
+
+        self.apply_templates(self.rfa("//cc:tech-terms"), out)
+        
+#     <x:apply-templates select="//cc:tech-terms">
+#       <x:with-param name="num" select="1"/>
+#     </x:apply-templates>
+#   </x:template>
+        self.end_section()
+        
+        
     #     <x:call-template name="foreward"/>
     #     <x:call-template name="toc"/>
     #     <x:call-template name="intro"/>
@@ -460,13 +632,12 @@ class generic_pp_doc(object):
 
     def fix_xref(self, doc, refid, link, ref):
 #        refid=self.derive_id(orig)
-        print("Fixing " + refid)
+        # print("Fixing " + refid)
         link.attrib["href"]="#"+refid
         reffed = doc.find(".//*[@id='"+refid+"']")
         if reffed is None:
             print("Could not find dynamic reference: " + refid)
             return
-        # if ref is None:
         label_node = reffed.find("./*[@class='dynid_']")
         if label_node is None:
             text = pp_util.flatten(reffed)
@@ -508,41 +679,16 @@ class generic_pp_doc(object):
             self.fams_to_sfrs[fam]=[]
         self.fams_to_sfrs[fam].append(sfr)
 
-    def sec(self, *args):
-        # h2 doesn't matter as the tag is changed
-        ret = HTM_E.h2(*args)
-        depth = len(self.outline)
-        ret.tag="h"+str(depth)                       
-        self.outline[-1]=self.outline[-1]+1
 
-        prefix=""
-        if self.is_appendix:
-            ctr=base_10_to_alphabet(self.outline[0])
-            if len(self.outline)==1:
-                prefix = "Appendix "
-                ctr=ctr + " - " + NBSP
-            else:
-                ctr+="."+ ".".join(map(str, self.outline[1:]))
-        else:
-            ctr=".".join(map(str, self.outline))
-
-        if "id" not in ret.attrib:
-            ret.attrib["id"]="sec_"+ctr.replace(" ","_")+"-"
-            
-        self.outline.append(0)
-        toc_entry=""
-        for aa in range(depth):
-            toc_entry += NBSP+ NBSP
-        prevtext = ret.text
-        toc_entry +=  prefix + ctr + NBSP+ NBSP + NBSP + prevtext
-        ret.text = prefix
-        adopt(ret, HTM_E.span({"class":"ctr"},ctr)).tail = " " + prevtext
-        self.toc.append(HTM_E.a({"href":"#"+ret.attrib["id"]}, toc_entry))
-        return ret
     
+    def sec(self, *args):
+        return sec_impl(self.outline, self.is_appendix, self.toc, HTM_E.h2(*args))
+
+
+        
     def end_section(self):
         if len(self.outline)==0:
-            print("Poping from zero.")
+            print("Popping from zero.")
         else:
             self.outline.pop()
 
@@ -581,6 +727,8 @@ class generic_pp_doc(object):
 
             
     def start(self):
+        self.outline = [0]
+        self.is_appendix = False
         head = HTM_E.head(
                 HTM_E.meta({"content":"text/html;charset=utf-8", "http-equiv":"Content-Type"}),
                 HTM_E.meta({"content":"utf-8","http-equiv":"encoding"}),
@@ -631,25 +779,23 @@ class generic_pp_doc(object):
         if auth_el is  None:
             return "National Information Assurance Partnership"
         return auth_el.text
-        
-    def fx_body_begin(self, body):
-        self.handle_comments(body)
-        body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
-        body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
+
+
+    def make_logo(self):
         version_date = edoc.derive_version_and_date(self.root)
-              
-        body.append(HTM_E.div({"class":"center"},
-                              HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
-                              HTM_E.br(),
-                              "Version: "+version_date[0],
-                              HTM_E.br(),
-                              "     "+version_date[1],
-                              HTM_E.br(),
-                              HTM_E.b(self.derive_author()),
-                              HTM_E.br()))
-        self.apply_templates(self.rfa("//cc:foreword"), body)
-        rev_his = HTM_E.h2({"style":"page-break-before:always;"},"Revision History")
-        body.append(rev_his)
+        return HTM_E.div({"class":"center"},
+                         HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
+                         HTM_E.br(),
+                         "Version: "+version_date[0],
+                         HTM_E.br(),
+                         "     "+version_date[1],
+                         HTM_E.br(),
+                         HTM_E.b(self.derive_author()),
+                         HTM_E.br())    
+
+
+
+    def write_revision_history(self, body):
         table = HTM_E.table(HTM_E.tr({"class":"header"},
                                      HTM_E.th("Version"),
                                      HTM_E.th("Date"),
@@ -662,6 +808,16 @@ class generic_pp_doc(object):
                 tr.append(td)
             table.append(tr)
         body.append(table)
+    
+    def fx_body_begin(self, body):
+        self.handle_comments(body)
+        body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
+        body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
+              
+        body.append(self.make_logo())
+        self.apply_templates(self.rfa("//cc:foreword"), body)
+        body.append(HTM_E.h2("Revision History"))
+        self.write_revision_history(body)
         body.append(HTM_E.h2("Contents"))
         self.toc = adopt(body, (HTM_E.div({"class":"toc","id":"toc"})))
         return 
@@ -952,17 +1108,23 @@ class generic_pp_doc(object):
 
     def add_optional_appendix_explainer(self, par, opt_id, obj_id, imple_id):
         pass
-            
+
+    def handle_sfr_section(self, sfrs, none_msg, audittype, title, out):
+        if len(sfrs)==0:
+            self.add_text(out, none_msg)
+        else:
+            if audittype is not None:
+                self.create_audit_table_section(title, audittype, out)
+            self.handle_sparse_sfrs(sfrs, out)
+
+    
     def sfr_appendix(self,title,sfrs,preamble,audittype,idval,par):
         # attrset=attrs(None,title.replace(" ","-")+"-")
         attrset={"id":idval}
         par.append(self.sec(attrset,title+" Requirements"))
         self.add_text(par, preamble)
-        if len(sfrs)==0:
-            self.add_text(par, "This "+self.doctype_short()+" does not define any "+title+" SFRs.\n")
-        else:
-            self.create_audit_table_section(title, audittype, par)
-            self.handle_sparse_sfrs(sfrs, par)
+        none_msg = "This "+self.doctype_short()+" does not define any "+title+" SFRs.\n"
+        self.handle_sfr_section(sfrs, none_msg, audittype, title, par)
         self.end_section()
 
     def handle_optional_requirements(self, par):
@@ -1062,53 +1224,6 @@ security objectives for the environment.
         self.end_section()
 
 
-    def to_sd(self):
-        body=HTM_E.body()
-        ret=HTM_E.html(
-            HTM_E.head(
-                HTM_E.title("Supporting Document"+self.title()),
-                HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
-            ),body)
-        self.meta_data(body)
-        
-        
-        return ret
-
-
-
-    def meta_data(self, parent):
-        div = HTM_E.div(
-            {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
-            HTM_E.h1({"class":"title","style":"page-break-before:auto;"},"Supporting Document",HTM_E.br(), "Mandatory Technical Document"),
-            HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP"}),
-            HTM_E.hr({"width":"50%"}),
-            HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
-        self.add_text(div, self.title())
-        div.append(HTM_E.br())
-        parent.append(div)
-      #   append_text("Version: "+<x:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
-      # <x:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
-      # <b><x:value-of select="//cc:PPAuthor"/></b>
-      # </div>
-        
-
-    
-    # <html xmlns="http://www.w3.org/1999/xhtml">
-    #   <x:call-template name="module-head"/>
-    #   <body>
-    #     <x:call-template name="meta-data"/>
-    #     <x:call-template name="foreward"/>
-    #     <x:call-template name="toc"/>
-    #     <x:call-template name="intro"/>
-    #     <x:call-template name="sfrs"/>
-    #     <x:apply-templates select="/cc:*" mode="sars"/>
-    #     <x:call-template name="sup-info"/>
-    #     <x:call-template name="references"/>
-    #   </body>
-    # </html>
-
-
-    
             
     def create_acronym_listing(self, par):
         par.append(self.sec({"id":"acronyms"},"Acronyms"))
@@ -1369,7 +1484,7 @@ security policies map to the security objectives.""")
             self.apply_templates(usecase.findall("./cc:description",NS), dd)
             config = node.find("./cc:config", NS)
             if config is not None:
-                dd.append(HTM.p("For changes to included SFRs, selections, and assignments required for this use case, see", HTM.a({"href":"#appendix-"+id, "class":"dynref"}),"."))
+                dd.append(HTM_E.p("For changes to included SFRs, selections, and assignments required for this use case, see", HTM_E.a({"href":"#appendix-"+id, "class":"dynref"}),"."))
             ctr += 1
     # def get_plural(self, node):
     #     if "target-products" in node.attrib:
@@ -1495,6 +1610,11 @@ security policies map to the security objectives.""")
             self.handle_aelements(node.findall("cc:a-element",NS), formal, par)
         self.handle_fcomp_activities(node, formal, par)
 
+    def sd_handle_component(self, sfr, out):
+        formal = self.fcomp_cc_id(sfr)
+        div = adopt(out, HTM_E.div({"class":"comp", "id":formal}))
+        div.append(HTM_E.h4(formal + " "+ sfr.attrib["name"]))
+        self.write_fcomp_activities_out(sfr, formal, out)
 
 
 
@@ -1816,17 +1936,21 @@ security policies map to the security objectives.""")
     def handle_fcomp_activities(self, fcomp, formal, out):
         div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
-        comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:elev)]", namespaces=NS)
-        should_add=self.handle_grouped_activities(formal, comp_acts, div_out)
-        for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:elev]", namespaces=NS):
-            # div_out.append(HTM_E.div(attrs("element-activity-header"), ))
-            fel_id = self.fel_cc_id(fel)
-            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[cc:elev]", NS), div_out, "element")
-            should_add=True
-        if should_add:
+        if self.write_fcomp_activities_out(fcomp, formal, div_out):
             out.append(div)
             
-        
+            
+    def write_fcomp_activities_out(self,  fcomp, formal, out):
+        comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:elev)]", namespaces=NS)
+        should_add=self.handle_grouped_activities(formal, comp_acts, out)
+        for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:elev]", namespaces=NS):
+            # out.append(HTM_E.div(attrs("element-activity-header"), ))
+            fel_id = self.fel_cc_id(fel)
+            self.handle_grouped_activities(fel_id, fel.findall("cc:aactivity[cc:elev]", NS), out, "element")
+            should_add=True
+        return should_add
+
+            
     def handle_grouped_activities(self, formal, aacts, out, level="fcomp"):
         if len(aacts)==0:
             return False
@@ -1860,7 +1984,7 @@ security policies map to the security objectives.""")
         xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
         return self.rx(xpath)
 
-    def handle_sparse_sfrs(self, sfrs, par):
+    def handle_sparse_sfrs(self, sfrs, par, is_sd=False):
         titles={}
         for sfr in sfrs:
             sec = sfr.find("..")
@@ -1871,13 +1995,15 @@ security policies map to the security objectives.""")
                     self.end_section()
                 titles[title]=1
                 par.append(self.sec({"id":id}, title))
-                self.handle_content(sec,par)
-            self.handle_component(sfr, par)
+                if not is_sd:
+                    self.handle_content(sec,par)
+            if is_sd:
+                self.sd_handle_component(sfr, par)
+            else:
+                self.handle_component(sfr, par)
         if len(titles)>0:
             self.end_section()
-
 # WE HAVE TO CLOSE THESE SECTIONS            
-                
         
     def apply_templates_single(self, node, parent):
         # Returns None if 
@@ -2469,7 +2595,7 @@ security policies map to the security objectives.""")
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         table_out = adopt(out, HTM_E.table(table_attrs,
                                            HTM_E.tr(
-                                               HTM.td({"class":"or_cell", "rowspan":len(or_el)}, "OR"),
+                                               HTM_E.td({"class":"or_cell", "rowspan":len(or_el)}, "OR"),
                                                blank_cell()
                                            )
                                            ))

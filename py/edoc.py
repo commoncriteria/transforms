@@ -20,21 +20,21 @@ class Edoc:
 
     def __init__(self, node, workdir):
         self.orig = node
+        if self.orig.tag==CC+"base-pp":
+            self.doctype = "Protection Profile"
+        else:
+            self.doctype = "PP Package"
         self.root = None
         # Should this be a dictionary?
         self.decl_modsfrs={}
-        nodewithinfo=node
+        self.el_with_meta = node
         if node.find("cc:git", NS) is not None:
             self.root =ET.parse(workdir+"/"+node.attrib["id"]+".xml").getroot()            
-            nodewithinfo=self.root
+            self.el_with_meta=self.root
         else:
             for modsfrs_el in  node.findall(".//mod-sfrs", NS):
                 for decl_modsfr in modsfrs_el.text.split(" "):
                     self.decl_modsfrs[decl_modsfr]=1
-        print("Nodewithinfo is " + str(nodewithinfo))
-        # self.short = Edoc.get_short(nodewithinfo)
-        # self.product = derive_product(nodewithinfo)
-        # self.products = derive_products(nodewithinfo)
         self.mod_sfrs=[]
         self.add_sfrs=[]
         self.are_sfrs_sorted = False
@@ -43,18 +43,11 @@ class Edoc:
         return self.orig
         
     def get_product(self):
-        if self.root is not None:
-            return derive_product(self.root)
-        else:
-            return derive_product(self.orig)
+        return derive_product(self.el_with_meta)
     
     def get_products(self):
-        if self.root is not None:
-            return derive_products(self.root)
-        else:
-            return derive_products(self.orig)
+        return derive_products(self.el_with_meta)
 
-        
     def add_base_dependent_sfr(self,bsfr):
         if self.is_modified(bsfr, self.root):
             self.mod_sfrs.append(bsfr)
@@ -66,15 +59,18 @@ class Edoc:
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
     def short(self):
-        if self.root is None:
-            return derive_short(self.orig)
-        else:
-            return derive_short(self.root)
+        return derive_short(self.el_with_meta)
+
+    def get_title(self):
+        ret=""
+        if self.el_with_meta.find("cc:cPP", NS) is not None:
+            ret="Collaborative "
+        ret+= derive_title(self.el_with_meta, self.doctype)
+        return ret 
         
-        
-    def make_xref_edoc(self, parent):
+    def make_xref_edoc(self, out):
         url=self.orig.find("cc:url", NS).text
-        parent.append(HTM_E.a({"href":url}, self.short()))
+        out.append(HTM_E.a({"href":url}, self.short()))
 
     def make_xref_selectable(self, sel, out):
         ancestor = pp_util.get_meaningful_ancestor(self.root, sel.attrib["id"])
@@ -156,9 +152,7 @@ class Edoc:
         return False
 
 def derive_product(node):
-    print("Tag: " + node.tag)
     return node.find("cc:product_class", NS).text
-
     
 def derive_products(node):
     plural=node.find("cc:plural", NS)
@@ -177,10 +171,6 @@ def derive_version_and_date(node):
         if is_newer(ver.text, biggest):
             date=entry.find("cc:date",NS).text
             biggest=ver.text
-        print("Biggest is " + biggest)
-    print("Returning: ")
-    print("Biggest:"+biggest)
-    print("Date: " + date)
     ret=[]
     ret.append(biggest)
     ret.append(date)

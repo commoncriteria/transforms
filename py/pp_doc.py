@@ -137,8 +137,14 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.add_text(out_p,") are dependent on the TOE implementing a particular function. If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the evaluated configuration. ")
         
     def doctype(self):
-        return "Protection Profile"
+        if self.rf(".//cc:cPP") is None:
+            return "Protection Profile"
+        else:
+            return "Collaborative Protection Profile"
 
     def doctype_short(self):
-        return "PP"
+        if self.rf(".//cc:cPP") is None:
+            return " PP"
+        else:
+            return "cPP"
 

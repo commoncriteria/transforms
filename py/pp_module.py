@@ -56,8 +56,33 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 self.handle_content(req.find("cc:consistency-rationale", generic_pp_doc.NS), td)
 
 
-
-        
+    def sd_handle_bases(self, out):
+        for base_id in self.bases:
+            base = self.bases[base_id]
+            out.append(self.sec(base.get_title()))
+            out.append(HTM_E.p(
+                """The EAs defined in this section are only applicable 
+                in cases where the TOE claims conformance to a PP-Configuration 
+                that includes the """\
+                + base.short()+"."))
+            out.append(self.sec({"id": base_id+"_mod_sfrs-"},"Modified SFRs"))
+            mods = base.mod_sfrs
+            if len(mods) == 0:
+                out.append(HTM_E.p("The PP-Module does not modify any requirements when the "+base.short() + " is the base."))
+            else:
+                self.handle_sparse_sfrs(mods, out, True)
+            self.end_section()
+            out.append(self.sec({"id": base_id+"_add_sfrs-"},"Additional SFRs"))
+            adds = base.add_sfrs
+            if len(adds) == 0:
+                out.append(HTM_E.p("The PP-Module does levy any additional requirements when the "+base.short() + " is the base."))
+            else:
+                self.handle_sparse_sfrs(adds, out, True)
+            
+            self.end_section()
+            self.end_section()
+        self.end_section()
+        return
 
                 
     def template_sfrs(self, node ,par):
@@ -313,6 +338,29 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         else:
             return super().handle_post_section_hook(title,node ,parent)
 
+
+    def write_base_intro(self, out):
+        if len(self.bases)==1:
+            maybe_s = ""
+        else:
+            maybe_s = s
+        wurds= "The PP-Module is intended for use with the following Base-PP"+maybe_s+":"
+        out.append(HTM_E.p(wurds))
+        ul_el = adopt(out, HTM_E.ul())
+        for base_id in self.bases:
+            base = self.bases[base_id]
+            li_el = adopt(ul_el, HTM_E.li())
+            base.make_xref_edoc(li_el)
+        wurds="""This SD is mandatory for evaluations of TOEs that claim conformance to a 
+PP-Configuration that includes the PP-Module for :"""
+        out.append(HTM_E.p(wurds))
+        products = self.derive_plural()
+        version = edoc.derive_version_and_date(self.root)[0]
+        out.append(HTM_E.ul(HTM_E.li(products+", Version "+version)))
+        out.append(HTM_E.p("""As such it defines Evaluation Activities for the functionality described in
+ the PP-Module as well as any impacts to the Evaluation Activities to the Base-PP(s) it modifies."""))
+        return
+        
     def doctype(self):
         return "Protection Profile Module"
 
