@@ -457,7 +457,7 @@ class generic_pp_doc(object):
     def sd_sars(self, out):
         sar_sec_els = self.rx(".//*[@title='Evaluation Activities for SARs']|.//sec:Evaluation_Activites_for_SARs")
         if len(sar_sec_els)==0:
-            out.append(self.sec({"id","eas_for_sars-"}, "Evaluation Activities for SARs"))
+            out.append(self.sec({"id":"eas_for_sars-"}, "Evaluation Activities for SARs"))
             self.end_section()
         elif not is_empty(sar_sec_els[0]):
             raise Exception("Haven't implemented SD with SARs yet.")
