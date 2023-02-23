@@ -78,10 +78,8 @@ class ppmod(generic_pp_doc.generic_pp_doc):
                 out.append(HTM_E.p("The PP-Module does levy any additional requirements when the "+base.short() + " is the base."))
             else:
                 self.handle_sparse_sfrs(adds, out, True)
-            
             self.end_section()
             self.end_section()
-        self.end_section()
         return
 
                 

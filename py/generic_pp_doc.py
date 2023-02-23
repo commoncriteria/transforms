@@ -436,7 +436,7 @@ class generic_pp_doc(object):
         body=HTM_E.body()
         ret=HTM_E.html(
             HTM_E.head(
-                HTM_E.title("Supporting Document"+self.title()),
+                HTM_E.title("Supporting Document "+self.title()),
                 HTM_E.style({"type":"text/css"}, css_content.fx_common_css()),
             ),body)
         self.meta_data(body)
@@ -445,15 +445,32 @@ class generic_pp_doc(object):
         self.toc = adopt(body, (HTM_E.div({"class":"toc","id":"toc"})))
         self.sd_intro(body)
         self.sd_sfrs(body)
+        self.sd_sars(body)
+        body.append(self.sec("Required Supplementary Information"))
+        body.append(HTM_E.p("This Supporting Document has no required supplementary information beyond the ST, operational guidance, and testing."))
+        self.end_section()
+        self.start_appendixes()
+        self.create_bibliography(body)
         return ret
 
+
+    def sd_sars(self, out):
+        sar_sec_els = self.rx(".//*[@title='Evaluation Activities for SARs']|.//sec:Evaluation_Activites_for_SARs")
+        if len(sar_sec_els)==0:
+            out.append(self.sec({"id","eas_for_sars-"}, "Evaluation Activities for SARs"))
+            self.end_section()
+        elif not is_empty(sar_sec_els[0]):
+            raise Exception("Haven't implemented SD with SARs yet.")
+            
     def sd_sfrs(self, out):
         out.append(self.sec({"id":"sfrs-"},"Evaluation Activities for SFRs"))
-        out.append(HTM_E.p("""The EAs presented in this section capture the 
+        out_p = adopt(out, HTM_E.p("""The EAs presented in this section capture the 
         actions the evaluator performs 
         to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
         ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
-        that are performed in Section XXXX."""))
+        that are performed in Section """))
+        self.make_xref("sar_aas-", out)
+        self.add_text(out_p, ".")
         #    <a href="#sar_aas" class="dynref"></a>
         out.append(HTM_E.p("""Regarding design descriptions (designated 
         by the subsections labeled TSS, as 
@@ -481,14 +498,26 @@ class generic_pp_doc(object):
         The CEM workunits that are associated with the EAs specified in this section 
         are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7."""))
         self.sd_handle_bases(out)
-        out.append(self.sec("TOE SFR Evaluation Activities"))
-        if len(self.man_sfrs) == 0:
-            out.append(HTM_E.p("The "+ self.doctype_short + " does not define any mandatory SFRs."))
-        else:
-            self.handle_sparse_sfrs(self.man_sfrs, out, True)
-        
+        none_mesg="The "+ self.doctype_short() + " does not define any mandatory SFRs."
+        self.sd_handle_sfr_type("TOE SFR Evaluation Activities", self.man_sfrs, none_mesg, out)
+        none_mesg="The "+ self.doctype_short() + " does not define any strictly optional SFRs."
+        self.sd_handle_sfr_type("Evaluation Activities for Strictly Optional SFRS", self.opt_sfrs, none_mesg, out)
+        none_mesg="The "+ self.doctype_short() + " does not define any objective SFRs."
+        self.sd_handle_sfr_type("Evaluation Activities for Objective SFRS", self.obj_sfrs, none_mesg, out)
+        none_mesg="The "+ self.doctype_short() + " does not define any implementation-based SFRs."
+        self.sd_handle_sfr_type("Evaluation Activities for Implementation-based SFRS", self.impl_sfrs, none_mesg, out)
+        none_mesg="The "+ self.doctype_short() + " does not define any selection-based SFRs."
+        self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, out)
         self.end_section()
 
+        
+    def sd_handle_sfr_type(self, title, sfrs, none_mesg,out):
+        out.append(self.sec(title))
+        if len(sfrs) == 0:
+            out.append(HTM_E.p(none_mesg))
+        else:
+            self.handle_sparse_sfrs(sfrs, out, True)
+        self.end_section()
         
 
     def sd_handle_bases(self, out):
@@ -1955,7 +1984,7 @@ security policies map to the security objectives.""")
         if len(aacts)==0:
             return False
         general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(level+"-activity-header"),formal)))
-        acts={"TSS":None, "Guidance":None,"Tests":None,"KMD":None}
+        acts={"TSS":None, "Guidance":None,"Tests":None,"KMD":None,"no-tests":None}
         for aact in aacts:
             self.apply_templates_single(aact, general_div)
             for act in acts:
@@ -1967,7 +1996,8 @@ security policies map to the security objectives.""")
                 
         for act in acts:
             if not is_empty(acts[act]):
-                out.append(HTM_E.div(attrs("eacategory"),act))
+                if act != "no-tests":
+                    out.append(HTM_E.div(attrs("eacategory"),act))
                 out.append(acts[act])
         return True
 
@@ -2476,7 +2506,7 @@ security policies map to the security objectives.""")
 
 
     
-        
+    # M
     def make_xref(self, target, parent, ref=None):
         if not hasattr(target, "tag"):
             self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref) )
