@@ -96,7 +96,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(self.man_sfrs)>0:
             self.add_text(par,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
                              "These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
-            self.handle_sparse_sfrs(self.man_sfrs, par, "__man")
+            self.handle_sparse_sfrs(self.man_sfrs, par, "man_sfrs")
         else:
             self.add_text(par," This PP-Module does not define any mandatory SFRs.")
         self.end_section()
@@ -316,7 +316,39 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.apply_templates(self.rfa("//cc:appendix"), parent)
         self.create_acronym_listing(parent)
         self.create_bibliography(parent)
-    
+
+
+    def sd_sars(self, out):
+        out.append(self.sec({"id":"eas_for_sars-"}, "Evaluation Activities for SARs"))
+        pp = adopt(out, HTM_E.p("The PP-Module does not define any SARs beyond those defined within the "))
+        if len(self.bases)==1:
+            for base_id in self.bases:
+                base = self.bases[base_id]
+            self.add_text(pp ,"base ")
+            base.make_xref_edoc(pp)
+            # <x:apply-templates mode="short" select="//cc:base-pp"/>
+            self.add_text(pp," to which it must claim conformance.  ")
+            self.add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
+            self.add_text(pp,"inherently evaluated against this Base-PP as well.  ")
+            self.add_text(pp,"The  ")
+            base.make_xref_edoc(pp)
+            self.add_text(pp," includes a number of Evaluation Activities associated with both SFRs and SARs. ")
+            self.add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
+            self.add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
+            self.add_text(pp,"The evaluation laboratory will evaluate the TOE against the Base-PP ")
+        else:
+            self.add_text(pp,"base-PP to which it must claim conformance. ")
+            self.add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
+            self.add_text(pp,"inherently evaluated against the Base-PP as well. ")
+            self.add_text(pp,"The Base-PP includes a number of Evaluation Activities associated with both SFRs and SARs. ")
+            self.add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
+            self.add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
+            self.add_text(pp,"The evaluation laboratory will evaluate the TOE against the chosen Base-PP ")
+
+        self.add_text(pp,"and supplement that evaluation with the necessary SFRs that are taken from the PP-Module. ")
+        self.end_section()
+        
+        
     def doctype(self):
         return "PP-Module"
 

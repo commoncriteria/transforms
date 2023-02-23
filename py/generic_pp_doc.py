@@ -454,13 +454,20 @@ class generic_pp_doc(object):
         return ret
 
 
-    def sd_sars(self, out):
-        sar_sec_els = self.rx(".//*[@title='Evaluation Activities for SARs']|.//sec:Evaluation_Activites_for_SARs")
-        if len(sar_sec_els)==0:
-            out.append(self.sec({"id":"eas_for_sars-"}, "Evaluation Activities for SARs"))
-            self.end_section()
-        elif not is_empty(sar_sec_els[0]):
-            raise Exception("Haven't implemented SD with SARs yet.")
+
+
+
+
+        # sar_sec_els = self.rx(".//*[@title='Evaluation Activities for SARs']|.//sec:Evaluation_Activites_for_SARs")
+        # if len(sar_sec_els)==0:
+        #     wurds=
+        #     out.append
+            
+        #     """The PP-Module does not define any SARs beyond those defined within the base NDcPP to which it must claim conformance. It is important to note that a TOE that is evaluated against the PP-Module is inherently evaluated against this Base-PP as well. The NDcPP includes a number of Evaluation Activities associated with both SFRs and SARs. Additionally, the PP-Module includes a number of SFR-based Evaluation Activities that similarly refine the SARs of the Base-PPs. The evaluation laboratory will evaluate the TOE against the Base-PP and supplement that evaluation with the necessary SFRs that are taken from the PP-Module."""
+
+            
+        # elif not is_empty(sar_sec_els[0]):
+        #     raise Exception("Haven't implemented SD with SARs yet.")
             
     def sd_sfrs(self, out):
         out.append(self.sec({"id":"sfrs-"},"Evaluation Activities for SFRs"))
@@ -499,15 +506,15 @@ class generic_pp_doc(object):
         are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7."""))
         self.sd_handle_bases(out)
         none_mesg="The "+ self.doctype_short() + " does not define any mandatory SFRs."
-        self.sd_handle_sfr_type("TOE SFR Evaluation Activities", self.man_sfrs, none_mesg, "__man_sfrs", out)
+        self.sd_handle_sfr_type("TOE SFR Evaluation Activities", self.man_sfrs, none_mesg, "man_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any strictly optional SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Strictly Optional SFRS", self.opt_sfrs, none_mesg, "__opt_sfrs", out)
+        self.sd_handle_sfr_type("Evaluation Activities for Strictly Optional SFRS", self.opt_sfrs, none_mesg, "opt_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any objective SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Objective SFRS", self.obj_sfrs, none_mesg, "__obj_sfrs", out)
+        self.sd_handle_sfr_type("Evaluation Activities for Objective SFRS", self.obj_sfrs, none_mesg, "obj_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any implementation-based SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Implementation-based SFRS", self.impl_sfrs, none_mesg, "__impl_sfrs", out)
+        self.sd_handle_sfr_type("Evaluation Activities for Implementation-based SFRS", self.impl_sfrs, none_mesg, "impl_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any selection-based SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, "__sel_sfrs", out)
+        self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, "sel_sfrs", out)
         self.end_section()
 
         # QQQQ
@@ -1131,7 +1138,7 @@ class generic_pp_doc(object):
             self.handle_content(feature,out)
             f_id=feature.attrib["id"]
             sfrs = self.rx(".//cc:f-component[./cc:depends/@*='"+f_id+"']")
-            self.handle_sparse_sfrs(sfrs, out, "__impl_sfrs")
+            self.handle_sparse_sfrs(sfrs, out, "impl_sfrs")
             self.end_section()
         self.end_section()
 
