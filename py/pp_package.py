@@ -57,7 +57,7 @@ class pp_package(generic_pp_doc.generic_pp_doc):
         for aa in sfr_nodes:
             noreqsecs+=aa.xpath("*[not(cc:f-component)]", namespaces=NS)
         self.apply_templates(noreqsecs, out)
-        self.handle_sparse_sfrs(self.man_sfrs, out)
+        self.handle_sparse_sfrs(self.man_sfrs, out, "__man_sfrs")
         
 #         out.append(self.sec("Auditable Events for Mandatory SFRs"))
 #         out.append(HTM.p(\

@@ -70,14 +70,14 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             if len(mods) == 0:
                 out.append(HTM_E.p("The PP-Module does not modify any requirements when the "+base.short() + " is the base."))
             else:
-                self.handle_sparse_sfrs(mods, out, True)
+                self.handle_sparse_sfrs(mods, out, base_id+"__mod_sfrs", True)
             self.end_section()
             out.append(self.sec({"id": base_id+"_add_sfrs-"},"Additional SFRs"))
             adds = base.add_sfrs
             if len(adds) == 0:
                 out.append(HTM_E.p("The PP-Module does levy any additional requirements when the "+base.short() + " is the base."))
             else:
-                self.handle_sparse_sfrs(adds, out, True)
+                self.handle_sparse_sfrs(adds, out, base_id+"__add_sfrs",True)
             self.end_section()
             self.end_section()
         return
@@ -96,7 +96,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(self.man_sfrs)>0:
             self.add_text(par,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
                              "These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
-            self.handle_sparse_sfrs(self.man_sfrs, par)
+            self.handle_sparse_sfrs(self.man_sfrs, par, "__man")
         else:
             self.add_text(par," This PP-Module does not define any mandatory SFRs.")
         self.end_section()
@@ -148,14 +148,14 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(base.mod_sfrs)==0:
             self.add_text(par," This PP-Module does not modify any SFRs defined by the " + short  + ".")
         else:
-            self.handle_sparse_sfrs(base.mod_sfrs ,par)
+            self.handle_sparse_sfrs(base.mod_sfrs ,par, id+"__mod_sfrs")
         self.end_section()
                 
         if len(self.rfa("//cc:base-pp"))>1:
             par.append(self.sec({"id":"addsfr-"+id},"Additional SFRs"))
             if len(base.add_sfrs)>0:
                 self.add_text(par,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
-                self.handle_sparse_sfrs(base.add_sfrs, par)
+                self.handle_sparse_sfrs(base.add_sfrs, par, id+"__add_sfrs")
             else:
                 self.add_text(par,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
             self.end_section()

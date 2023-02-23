@@ -499,24 +499,24 @@ class generic_pp_doc(object):
         are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7."""))
         self.sd_handle_bases(out)
         none_mesg="The "+ self.doctype_short() + " does not define any mandatory SFRs."
-        self.sd_handle_sfr_type("TOE SFR Evaluation Activities", self.man_sfrs, none_mesg, out)
+        self.sd_handle_sfr_type("TOE SFR Evaluation Activities", self.man_sfrs, none_mesg, "__man_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any strictly optional SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Strictly Optional SFRS", self.opt_sfrs, none_mesg, out)
+        self.sd_handle_sfr_type("Evaluation Activities for Strictly Optional SFRS", self.opt_sfrs, none_mesg, "__opt_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any objective SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Objective SFRS", self.obj_sfrs, none_mesg, out)
+        self.sd_handle_sfr_type("Evaluation Activities for Objective SFRS", self.obj_sfrs, none_mesg, "__obj_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any implementation-based SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Implementation-based SFRS", self.impl_sfrs, none_mesg, out)
+        self.sd_handle_sfr_type("Evaluation Activities for Implementation-based SFRS", self.impl_sfrs, none_mesg, "__impl_sfrs", out)
         none_mesg="The "+ self.doctype_short() + " does not define any selection-based SFRs."
-        self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, out)
+        self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, "__sel_sfrs", out)
         self.end_section()
 
-        
-    def sd_handle_sfr_type(self, title, sfrs, none_mesg,out):
+        # QQQQ
+    def sd_handle_sfr_type(self, title, sfrs, none_mesg, sfr_type, out):
         out.append(self.sec(title))
         if len(sfrs) == 0:
             out.append(HTM_E.p(none_mesg))
         else:
-            self.handle_sparse_sfrs(sfrs, out, True)
+            self.handle_sparse_sfrs(sfrs, out, sfr_type, True)
         self.end_section()
         
 
@@ -1131,29 +1131,29 @@ class generic_pp_doc(object):
             self.handle_content(feature,out)
             f_id=feature.attrib["id"]
             sfrs = self.rx(".//cc:f-component[./cc:depends/@*='"+f_id+"']")
-            self.handle_sparse_sfrs(sfrs, out)
+            self.handle_sparse_sfrs(sfrs, out, "__impl_sfrs")
             self.end_section()
         self.end_section()
 
     def add_optional_appendix_explainer(self, par, opt_id, obj_id, imple_id):
         pass
 
-    def handle_sfr_section(self, sfrs, none_msg, audittype, title, out):
+    def handle_sfr_section(self, sfrs, none_msg, audittype, title, out, idval):
         if len(sfrs)==0:
             self.add_text(out, none_msg)
         else:
             if audittype is not None:
                 self.create_audit_table_section(title, audittype, out)
-            self.handle_sparse_sfrs(sfrs, out)
+            self.handle_sparse_sfrs(sfrs, out, idval)
 
-    
+    # QQQQ
     def sfr_appendix(self,title,sfrs,preamble,audittype,idval,par):
         # attrset=attrs(None,title.replace(" ","-")+"-")
         attrset={"id":idval}
         par.append(self.sec(attrset,title+" Requirements"))
         self.add_text(par, preamble)
         none_msg = "This "+self.doctype_short()+" does not define any "+title+" SFRs.\n"
-        self.handle_sfr_section(sfrs, none_msg, audittype, title, par)
+        self.handle_sfr_section(sfrs, none_msg, audittype, title, par, idval)
         self.end_section()
 
     def handle_optional_requirements(self, par):
@@ -2014,12 +2014,23 @@ security policies map to the security objectives.""")
         xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
         return self.rx(xpath)
 
-    def handle_sparse_sfrs(self, sfrs, par, is_sd=False):
+    
+    def handle_sparse_sfrs(self, sfrs, par, sfr_category, is_sd=False):
+        """
+        Converts a group of SFRs to HTML equivalent. Putting section
+        headers in and grouping the SFRs appropriately underthem.
+
+        :param sfrs An iterable group of f-component XML elements
+        :param par The XML output parent
+        :param sfr_category A string reflecting the type of sfrs (e.g. optional, sel-based)
+        :param is_sd Boolean whether it's being called to write to a SD
+        """
+
         titles={}
         for sfr in sfrs:
             sec = sfr.find("..")
             title = self.get_section_title(sec)
-            id = self.derive_id(sec)
+            id = self.derive_id(sec)+"__" + sfr_category
             if title not in titles:
                 if len(titles)>0:
                     self.end_section()
