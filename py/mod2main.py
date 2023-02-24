@@ -4,13 +4,15 @@ import pathlib
 #import xml.etree.ElementTree as ET
 import lxml.etree as ET
 import argparse
+import os
 import pp_module
 import pp_doc
 import pp_util
 import pp_package
 import generic_pp_doc
-import os
-            
+import out_pp_doc
+
+
 def write_out_doc(doc, place):
     out = open(place, "w+")
     result = ET.tostring(doc,
@@ -37,13 +39,18 @@ def make_mod(path, pp_path, sd_path):
         pp = pp_package.pp_package(doc, "output", boilerplate)
     else:
         raise Exception("Unhandled")
+
+    # This is something
+    # newdoc = out_pp_doc.make_main_doc(pp, boilerplate)
+    # write_out_doc(newdoc, pp_path+".html")
+    # return 
+   
     html_doc = pp.to_html()
+
     
     write_out_doc(html_doc, pp_path)
     sd = pp.to_sd()
     write_out_doc(sd, sd_path)
-
-
 
     
     
