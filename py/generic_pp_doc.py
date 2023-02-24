@@ -29,6 +29,13 @@ HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 
 def attrs(clazz,id=None):
+    """
+    Populates new dictionary with class and maybe id attributes
+    
+    :param clazz Value to be associated with 'class'
+    :param id Value to be associated with 'id'
+    :ret Dictionary for element attributes (Element.attrib)
+    """
     ret={}
     if clazz is not None:
         ret["class"]=clazz
@@ -41,23 +48,54 @@ A_UPPERCASE = ord('A')
 ALPHABET_SIZE = 26
 
 def add_grouping_row(table, text, size):
+    """
+    Adds a grouping row, which looks like a column that spans several rows
+
+    :param table Output element 
+    :param text Text to be written out
+    :param size 
+    :ret
+    """
     rowspan=size+2
     # Add two blank rows, so that it doesn't screw up the alternating coloring
     attrs={"rowspan":str(rowspan)}
-    table.append(HTM_E.tr({"class":"major-row"}, HTM_E.td(attrs, text), blank_cell))
-    table.append(HTM_E.tr(blank_cell))
+    table.append(HTM_E.tr({"class":"major-row"}, HTM_E.td(attrs, text), inv_cell))
+    table.append(HTM_E.tr(inv_cell))
 
 def is_in_choice(el):
+    """
+    Figures out whether the element is in a choice element.
+
+    :param el The element in question
+    :ret True if the element has a cc:choice ancestor. False otherwise
+    """
     return len(el.xpath("ancestor::cc:choice", namespaces=NS))>0
     
     
-def blank_cell():
+def inv_cell():
+    """
+    Creates a unseen cell.
+
+    :ret A hidden cell
+    """
     return HTM_E.td({"style":"display:none;"})
 
 def is_comment(node):
+    """
+    Checks if a node is an XML comment (and not an element)
+
+    :param
+    :ret
+    """
     return not isinstance(node.tag,str)    
 
 def add_to_map_to_map(mappy, key, attr):
+    """
+    Adds a 
+    
+    :param
+    :ret
+    """
     if key not in mappy:
         minor = {}
     else:
@@ -77,21 +115,46 @@ def _decompose(number):
         yield remainder
 
 def base_10_to_alphabet(number):
-    """Convert a decimal number to its base alphabet representation"""
+    """Convert a decimal number to its base alphabet representation
+    :param number The number in question
+    :ret A string representing the number
+    """
     return ''.join(
             chr(A_UPPERCASE + part)
             for part in _decompose(number+1)
     )[::-1]
 
 def make_sort_key_stringnum(s):
+    """
+    :param
+    :ret
+    """
     spl=s.split(".")
     return spl[0]+"."+spl[1].rjust(3)
 
 def backslashify(phrase):
+    """
+    Makes a phrase suitable for searching with regular expressions by
+    adding the necessary backslashes.
+
+    :param phrase: The phrase in question
+    :returns: A string that can be searched using regex
+    """
     return re.sub("([][_.^()-/])", r"\\\1", phrase)
 
 
 def sec_impl(outline, is_appendix, toc, h_el):
+    """
+    Calculates a heading for an outline style heading numbering.
+    Adds it to the table of contents.
+
+    :param outline: Stack that records the state of the headings
+    :param is_appendix: Boolean indicating whether this is an appendix
+    :param toc: Output XML element for the table of contents
+    :param h_el: The output element
+    
+    :returns: h_el for convenience
+    """
     # h2 doesn't matter as the tag is changed
     depth = len(outline)
     h_el.tag="h"+str(depth)
@@ -124,6 +187,12 @@ def sec_impl(outline, is_appendix, toc, h_el):
 
 
 def def_attr(id):
+    """
+    Creates attributes for an HTML element that defines something
+
+    :param id: Unique id of node
+    :returns Dictionary of attributes
+    """
     return {"id":id, "class":"def_", "href":"#"+id}
 
 defargs={'fill':'black',
@@ -132,6 +201,15 @@ boxargs={'height':'17','fill':'none','stroke':'black'}
 
 
 def drawbox(parent, ybase,boxtext,ymid, xbase=0):
+    """
+    Creates an SVG rectangle with text
+
+    :param parent: HTML element that should be there parent
+    :param ybase: Y-coordinate that roughly corresponds to the bottom of the box
+    :param boxtext: Text for the box
+    :param ymid: Y-coordinate for the base box
+    :param xbase: X-ccordinate for the base box
+    """
     if xbase==0:
         width=150
     else:
@@ -146,16 +224,32 @@ def drawbox(parent, ybase,boxtext,ymid, xbase=0):
         parent.append(ln_el)
 
 def is_empty(node):
+    """
+    Checks if this node is empty
+
+    :param node: The node in question
+    :returns True if this node has no text and no children.
+    """
     if node.text is not None and node.text != "":
         return False
     return len(node)==0
         
 
 def is_optional(node):
+    """
+    Checks if this Element is considered optional.
+    It's mostly for f-component and audit-event elements.
+
+    :param node: The node in question
+    :ret True if the node has direct child that is 'optional'
+    """
     return node.find("cc:optional", NS) is not None
 
         
 def get_convention_explainer():
+    """
+    :returns a div element containing the convention explainer.
+    """
     return HTM_E.div(
     "The following conventions are used for the completion of operations:",
         HTM_E.ul(HTM_E.li(HTM_E.b("Refinement")," operation (denoted by ", HTM_E.b("bold text")," or ", HTM_E.strike("strikethrough text"), "): Is used to add details to a requirement (including replacing an assignment with a more restrictive selection) or to remove part of the requirement that is made irrelevant through the completion of another operation, and thus further restricts a requirement."),
@@ -167,6 +261,15 @@ def get_convention_explainer():
         
 
 def convert_none_text_to_emptys(node):
+    """
+    This converts elements that have text==None to text=="", so
+    that they will be written out as <span></span> instead of <span/>
+    which browsers have trouble reading. Break elements (<br/>) are 
+    the only elements which should have text==None. It recurs on
+    all child nodes of the given node.
+
+    :param node: The root element of the tree that is to be converted.
+    """
     if node.tag is None or pp_util.localtag(node.tag) == "br":
         return
     if node.text is None:
@@ -176,19 +279,42 @@ def convert_none_text_to_emptys(node):
 
 
 def harvest_ids(ids, el):
+    """
+    Retrieves all the ids from a subtree
+
+    :param ids: A set to which ids should be added
+    :param el: The root element of the subtree
+    """
     if "id" in el.attrib:
         ids.add(el.attrib["id"])
     for child in el:
         harvest_ids(ids, child)
                 
 def does_rule_contain_id(rule, ids):
+    """
+    Figures out whether a rule references any id in ids
+
+    :param rule: The XML element of the rule containing the needles.
+    :param ids: A set of IDs (haystack) to be searched.
+    :returns True if any of the 'ref-id' elements references an
+    id in _ids_
+    """
     for refid in rule.findall(".//cc:ref-id", NS):
         if refid.text.strip() in ids:
             return True
     return False
         
 class generic_pp_doc(object):
+    """
+    Superclass for PP, Module, and Package documents.
+    """
     def __init__(self, root, workdir, boilerplate):
+        """
+        :param
+        :param
+        :ret
+        """
+
         self.root = root
         self.globaltags = {}
         self.boilerplate = boilerplate
@@ -220,6 +346,13 @@ class generic_pp_doc(object):
 
 
     def maybe_make_usecase_appendixes(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         usecases_with_config = self.rfa("//cc:usecase/cc:config")
         if len(usecases_with_config)==0:
             return
@@ -246,9 +379,23 @@ class generic_pp_doc(object):
 
         
     def derive_plural(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return edoc.derive_products(self.root)
         
     def get_next_counter(self, ctr_type):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         print("Counter type is " + ctr_type)
         if ctr_type in self.counters:
             self.counters[ctr_type]+=1
@@ -258,6 +405,13 @@ class generic_pp_doc(object):
             return 1
         
     def register_sfrs(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         for fcomp in self.root.findall(".//cc:f-component", NS):
             id = self.fcomp_cc_id(fcomp)
             self.register_keyterm(id,id)
@@ -267,16 +421,37 @@ class generic_pp_doc(object):
 
                 
     def get_all_abbr_els(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return self.rfa("//cc:term[@abbr]")+\
             self.boilerplate.findall("//cc:cc-terms/cc:term[@abbr]", NS)
 
     def register_threats_assumptions_objectives_policies(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         for aa in self.rfa("//cc:threat")+self.rfa("//cc:assumption")+self.rfa("//cc:SO")+self.rfa("//cc:SOE")+self.rfa("//cc:OSP"):
             if aa.find("cc:description", NS) is not None:
                 ccname = aa.attrib["name"]
                 self.register_keyterm(ccname, ccname)
 
     def get_ccid_for_ccel(self, ccel_el):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if ccel_el in self.node_to_ccid:
             return self.node_to_ccid[ccel_el]
         component = ccel_el.xpath("ancestor::cc:a-component[1]|ancestor::cc:f-component[1]", namespaces=NS)[0]
@@ -304,6 +479,13 @@ class generic_pp_doc(object):
         
                 
     def register_abbrs(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         for term in self.get_all_abbr_els():
             abbr = term.attrib["abbr"]
             self.register_keyterm(abbr, "long_abbr_"+abbr)
@@ -314,16 +496,37 @@ class generic_pp_doc(object):
                 self.register_keyterm(plural, "long_abbr_"+abbr)
             
     def register_keyterm(self, word, id):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if len(word) > 1 and not(word.startswith(".")):
             self.discoverables_to_ids[word]=id
 
     def add_text(self, node, text):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         pp_util.append_text(node,text)
 
 
 
         
     def categorize_sfrs(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         for sfr in self.man_sfrs:
             self.maybe_register_sfr_with_fam(sfr)
         for sfr in self.rx("//cc:f-component[cc:objective]"):
@@ -358,6 +561,13 @@ class generic_pp_doc(object):
         
         
     def make_edocs(self, workdir):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         ret = {}
         # for external in self.root.findall(".//cc:*[cc:git]", NS):
         for external in self.rfa("//cc:include-pkg")+self.rfa("//cc:base-pp"):
@@ -365,10 +575,24 @@ class generic_pp_doc(object):
         return ret
     
     def handle_unknown_depends(self, sfr, attr):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
 
 
     def is_non_xrefable_section(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if node.tag == "a"    or node.tag == "abbr"    or\
            node.tag == "dt"   or node.tag == "no-link" or\
            node.tag == "h1"   or node.tag == "h2"      or\
@@ -383,6 +607,13 @@ class generic_pp_doc(object):
         return False
 
     def make_disco_link(self, id, matchtext):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         attrs={"class":"discovered", "href":"#"+id}
         if matchtext in self.abbrs:
             attrs["class"]="discovered abbr"
@@ -390,6 +621,13 @@ class generic_pp_doc(object):
         return HTM_E.a(attrs, matchtext)
     
     def xrefs_in_text(self, node, content, regex, insertspot=0):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         # Returns what should go in the node's text field
         if regex is None or content is None:
             return content
@@ -419,6 +657,13 @@ class generic_pp_doc(object):
         return ret
             
     def add_xrefs_recur(self, node, regex):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if self.is_non_xrefable_section(node):
             return
         origchildren = node.iterchildren()
@@ -431,6 +676,13 @@ class generic_pp_doc(object):
 
             
     def to_sd(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         self.outline = [0]
         self.is_appendix = False
         body=HTM_E.body()
@@ -451,6 +703,11 @@ class generic_pp_doc(object):
         self.end_section()
         self.start_appendixes()
         self.create_bibliography(body)
+        self.fix_numbered_xrefs(body)
+        self.add_discoverable_xrefs(body)
+        convert_none_text_to_emptys(body)
+
+        
         return ret
 
 
@@ -470,13 +727,20 @@ class generic_pp_doc(object):
         #     raise Exception("Haven't implemented SD with SARs yet.")
             
     def sd_sfrs(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         out.append(self.sec({"id":"sfrs-"},"Evaluation Activities for SFRs"))
         out_p = adopt(out, HTM_E.p("""The EAs presented in this section capture the 
         actions the evaluator performs 
         to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, 
         ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
         that are performed in Section """))
-        self.make_xref("sar_aas-", out)
+        self.make_xref("eas_for_sars-", out_p)
         self.add_text(out_p, ".")
         #    <a href="#sar_aas" class="dynref"></a>
         out.append(HTM_E.p("""Regarding design descriptions (designated 
@@ -519,6 +783,13 @@ class generic_pp_doc(object):
 
         # QQQQ
     def sd_handle_sfr_type(self, title, sfrs, none_mesg, sfr_type, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         out.append(self.sec(title))
         if len(sfrs) == 0:
             out.append(HTM_E.p(none_mesg))
@@ -528,9 +799,23 @@ class generic_pp_doc(object):
         
 
     def sd_handle_bases(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return
     
     def meta_data(self, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         div = HTM_E.div(
             {"style":"text-align: center; margin-left: auto; margin-right: auto;"},
             HTM_E.h1({"class":"title","style":"page-break-before:auto;"},"Supporting Document",HTM_E.br(), "Mandatory Technical Document"),
@@ -549,6 +834,13 @@ class generic_pp_doc(object):
 
 
     def write_forward(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         div = HTM_E.div(attrs("foreword"))
         div.append(HTM_E.h1({"style":"text-align: center"},"Foreword"))
         div.append(HTM_E.p("""This is a Supporting Document (SD), intended to complement
@@ -581,9 +873,23 @@ class generic_pp_doc(object):
 
 
     def write_base_intro(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return
 
     def sd_intro(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         out.append(self.sec({"id":"introduction-","class":"indexable"},"Introduction"))
         out.append(self.sec({"id":"scope-","class":"indexable"},"Technology Area and Scope of Supporting Document"))
         out.append(HTM_E.p("The scope of the "+ self.title() + " is to describe the security functionality of "+
@@ -647,6 +953,13 @@ class generic_pp_doc(object):
 
             
     def add_discoverable_xrefs(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if len(self.discoverables_to_ids)==0:
             return
         keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
@@ -663,10 +976,24 @@ class generic_pp_doc(object):
         self.add_xrefs_recur(node, regex)        
 
     def fix_numbered_xrefs(self, doc):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         for broken_ref in self.broken_refs:
             self.fix_xref(doc, broken_ref[0], broken_ref[1], broken_ref[2])
 
     def fix_xref(self, doc, refid, link, ref):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
 #        refid=self.derive_id(orig)
         # print("Fixing " + refid)
         link.attrib["href"]="#"+refid
@@ -690,6 +1017,13 @@ class generic_pp_doc(object):
     # def fix_broken_refs(self, doc):
             
     def to_html(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         doc = self.start()
         self.fix_numbered_xrefs(doc)
         self.add_discoverable_xrefs(doc)
@@ -697,15 +1031,43 @@ class generic_pp_doc(object):
         return doc
     
     def rf(self, findexp):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return self.root.find( "."+findexp, NS)
     
     def rfa(self, findexp):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return self.root.findall( "."+findexp, NS)
 
     def rx(self, xpath):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return self.root.xpath(xpath , namespaces=NS)
 
     def maybe_register_sfr_with_fam(self, sfr):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if sfr.find("cc:comp-lev",NS) is None:
             return
         if sfr.find("cc:notnew", NS) is not None:
@@ -718,11 +1080,25 @@ class generic_pp_doc(object):
 
     
     def sec(self, *args):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return sec_impl(self.outline, self.is_appendix, self.toc, HTM_E.h2(*args))
 
 
         
     def end_section(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if len(self.outline)==0:
             print("Popping from zero.")
         else:
@@ -731,6 +1107,13 @@ class generic_pp_doc(object):
 
   # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     def objectives_to_requirements(self, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         addr_bys = self.rx("//cc:SO/cc:addressed-by")
         if len(addr_bys)==0:
             return
@@ -763,6 +1146,13 @@ class generic_pp_doc(object):
 
             
     def start(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         self.outline = [0]
         self.is_appendix = False
         head = HTM_E.head(
@@ -785,9 +1175,23 @@ class generic_pp_doc(object):
         return ret
 
     def title(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         return edoc.derive_title(self.root, self.doctype())
 
     def handle_figure(self, el, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         id=el.attrib["id"]
         div=adopt(par, HTM_E.div({"class":"figure","id":"div_fig_"+id}))
         attrs={"id":"fig_"+id, "src":el.attrib["entity"]}
@@ -797,20 +1201,34 @@ class generic_pp_doc(object):
         self.add_text(div, el.attrib["title"])
 
 
-    
-    def handle_comments(self, body):
-        comments_els = self.rfa("//cc:comment")
-        if not comments_els:
-            return
-        div=HTM_E.div({"id":"commentbox-"})
-        ctr=0
-        for comment_el in comment_els:
-            id=self.derive_id(comment_el)
-            div.append(HTM_E.a({"href":"#"+id},"Comment: " + id))
-            div.append(HTM_E.br())
-        return ret
 
+
+    def get_text_or(self, xpath, default=""):
+        """
+        Gets the text at an xpath nodes (concatenated) or
+        what's in the default.
+
+        :param xpath XPath expression from the root
+        :param default String to be returned if the XPath is empty
+        :returns The text of all the nodes found (but not tails) or
+               default if none can be found
+        """
+        els = self.rx(xpath)
+        if len(els)==0:
+            return default
+        ret=""
+        for el in els:
+            ret+=el.text
+        return ret
+    
     def derive_author(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         auth_el = self.root.find("cc:author",NS)
         if auth_el is  None:
             return "National Information Assurance Partnership"
@@ -818,6 +1236,13 @@ class generic_pp_doc(object):
 
 
     def make_logo(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         version_date = edoc.derive_version_and_date(self.root)
         return HTM_E.div({"class":"center"},
                          HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP Logo"}),
@@ -832,6 +1257,13 @@ class generic_pp_doc(object):
 
 
     def write_revision_history(self, body):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         table = HTM_E.table(HTM_E.tr({"class":"header"},
                                      HTM_E.th("Version"),
                                      HTM_E.th("Date"),
@@ -844,8 +1276,37 @@ class generic_pp_doc(object):
                 tr.append(td)
             table.append(tr)
         body.append(table)
-    
+
+
+    def handle_comments(self, body):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
+        comments_els = self.rfa("//cc:comment")
+        if not comments_els:
+            return
+        div=HTM_E.div({"id":"commentbox-"})
+        ctr=0
+        for comment_el in comment_els:
+            id=self.doc.derive_id(comment_el)
+            div.append(HTM_E.a({"href":"#"+id},"Comment: " + id))
+            div.append(HTM_E.br())
+        return ret
+
+
+        
     def fx_body_begin(self, body):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         self.handle_comments(body)
         body.append(HTM_E.h1({"class":"title", "style":"page-break-before:auto;"}, self.title()))
         body.append(HTM_E.noscript(HTM_E.h1, {"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!"))
@@ -859,12 +1320,26 @@ class generic_pp_doc(object):
         return 
 
     def fel_cc_id(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         fcomp = node.xpath("ancestor::cc:f-component", namespaces=NS)[0]
         index = fcomp.findall("cc:f-element",NS).index(node)+1
         return self.fcomp_cc_id(fcomp, suffix="."+str(index))
         
         
     def fcomp_cc_id(self, node, suffix=""):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         ret = node.attrib["cc-id"].upper() + suffix
         if "iteration" in node.attrib:
             ret += "/"+node.attrib["iteration"]
@@ -878,6 +1353,13 @@ class generic_pp_doc(object):
 
                 
     def handle_content(self, node, out,defcon=""):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if node is None:
             self.add_text(out, defcon)
             return False
@@ -890,6 +1372,13 @@ class generic_pp_doc(object):
         return True
             
     def handle_section(self, node, title, id, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         title_el = self.sec({"id":id},title)
         parent.append(title_el)
         self.handle_section_hook(title, node, parent)
@@ -898,14 +1387,35 @@ class generic_pp_doc(object):
         self.end_section()
 
     def handle_post_section_hook(self, title, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         pass
         
     def handle_section_hook(self, title, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return 
         self.handle_section_hook_base(title, node, parent)
 
     def handle_conformance_claims(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         dl=HTM_E.dl()
         parent.append(dl)
         dl.append(HTM_E.dt("Conformance Statement"))
@@ -950,6 +1460,13 @@ class generic_pp_doc(object):
 
         
     def handle_section_hook_base(self, title, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if title=="Conformance Claims":
             self.handle_conformance_claims(node, parent)
         elif title=="Implicity Satisfied Requirements":
@@ -964,6 +1481,13 @@ class generic_pp_doc(object):
             self.handle_rules_appendix(parent) 
     
     def get_all_dependencies(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         choices=set()
         selections=set()
         features=set()
@@ -999,6 +1523,13 @@ class generic_pp_doc(object):
 
     
     def make_ecd_table(self, par, ecdsecs):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
         self.add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
@@ -1014,6 +1545,13 @@ class generic_pp_doc(object):
         # <!-- section is compatible with the new section styles b/c the new section style is not allowed to 
         #      for sections that directly contain f-components and a-components -->
         defsec = HTM_E.div()
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         last=""
         for sec in ecdsecs:
             title = sec.attrib["title"]
@@ -1030,6 +1568,13 @@ class generic_pp_doc(object):
     
     
     def handle_ext_comp_defs(self ,par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if self.rf("//cc:ext-comp-def") is None:
             return ""
         par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
@@ -1061,6 +1606,13 @@ class generic_pp_doc(object):
         self.end_section()
         
     def handle_ecd(self, famnode, classid, span):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         famId = famnode.attrib["fam-id"]
         desc = famnode.find("cc:class-description",NS)
         self.handle_content(desc, span)
@@ -1097,14 +1649,35 @@ class generic_pp_doc(object):
         self.end_section()
         
     def get_mng_aud(self, sfr, cc_id, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(HTM_E.h4("Management: "+cc_id))
         p_el = adopt(par, HTM_E.p())
         self.handle_content(sfr.find("cc:management",NS),p_el,
                             defcon="There are no management functions foreseen.")
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(HTM_E.h4("Audit: "+cc_id))
         p_el = adopt(par, HTM_E.p())
         self.handle_content(sfr.find("cc:audit",NS),p_el,
                             defcon="There are no audit events foreseen.")
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(HTM_E.h4(cc_id+" "+sfr.attrib["name"]))
         div = adopt(par, HTM_E.div({"style":"margin-left: 1em;"}))
         p_el = adopt(div, HTM_E.p("Hierarchical to: "))
@@ -1124,10 +1697,24 @@ class generic_pp_doc(object):
             ctr+=1
 
     def start_appendixes(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         self.outline[0]=-1
         self.is_appendix = True
 
     def implementation_based_section(self, id, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         attrs={"id":id}
         out.append(self.sec(attrs, "Implementation-based Requirements"))
         features=self.rfa("//cc:feature")
@@ -1143,9 +1730,23 @@ class generic_pp_doc(object):
         self.end_section()
 
     def add_optional_appendix_explainer(self, par, opt_id, obj_id, imple_id):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         pass
 
     def handle_sfr_section(self, sfrs, none_msg, audittype, title, out, idval):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if len(sfrs)==0:
             self.add_text(out, none_msg)
         else:
@@ -1155,6 +1756,13 @@ class generic_pp_doc(object):
 
     # QQQQ
     def sfr_appendix(self,title,sfrs,preamble,audittype,idval,par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         # attrset=attrs(None,title.replace(" ","-")+"-")
         attrset={"id":idval}
         par.append(self.sec(attrset,title+" Requirements"))
@@ -1164,6 +1772,13 @@ class generic_pp_doc(object):
         self.end_section()
 
     def handle_optional_requirements(self, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
         opt_title = "Strictly Optional"
         opt_id=opt_title.replace(" ","-")+"-"
@@ -1177,6 +1792,13 @@ class generic_pp_doc(object):
         self.end_section()
 
     def create_audit_table_section(self, title, audittable, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         title_sfrs = self.get_title_n_sfrs(audittable)
         title = title_sfrs[0]
         sfrs  = title_sfrs[1]
@@ -1190,6 +1812,13 @@ class generic_pp_doc(object):
         self.end_section()
         
     def sel_appendix_preamble(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         DT=self.doctype()
         return "As indicated in the introduction to this "+DT+\
             ", the baseline requirements (those that must be performed by the TOE or its "+\
@@ -1199,6 +1828,13 @@ class generic_pp_doc(object):
             "requirements below must be included."
         
     def handle_selection_based_requirements(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         words=self.sel_appendix_preamble()
         return self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based","sel-based-", par)
 
@@ -1215,6 +1851,13 @@ security objectives for the environment.
 """
     
     def handle_security_objectives_operational_environment(self, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         soes=self.rfa("//cc:SOE")
         if len(soes)>0:
             self.add_text(parent,generic_pp_doc.OE_PREAMBLE)
@@ -1223,6 +1866,13 @@ security objectives for the environment.
 
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         print("Creating counter for: " + id)
         ctrcount = str(self.get_next_counter(ctrtype))
         span = HTM_E.span({"class":"ctr",
@@ -1235,12 +1885,26 @@ security objectives for the environment.
         self.handle_content(child, span)
         
     def handle_conformance_statement(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         node.append(HTM_E.dd("An ST must claim exact conformance to this "+self.doctype()+", as defined in the CC "+
                         "and CEM addenda for Exact Conformance, Selection-based SFRs, and Optional SFRs (dated May 2017)."))
         
 
         
     def create_bibliography(self, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(self.sec({"id":"appendix-bibliography"},"Bibliography"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Identifier"),HTM_E.th("Title")))
@@ -1262,6 +1926,13 @@ security objectives for the environment.
 
             
     def create_acronym_listing(self, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         par.append(self.sec({"id":"acronyms"},"Acronyms"))
         table = adopt(par, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Acronym"), HTM_E.th("Meaning")))
@@ -1287,6 +1958,13 @@ security objectives for the environment.
         self.end_section()
             
     def handle_security_objectives_rationale(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         self.add_text(parent, """This section describes how the assumptions, threats, and organizational 
 security policies map to the security objectives.""")
         table = adopt(parent, HTM_E.table())
@@ -1319,19 +1997,34 @@ security policies map to the security objectives.""")
             self.handle_content(objrefer.find("cc:rationale",NS), td)
 
         
-    def handle_implicitly_satisfied_requirements(self):
-       ret="<p>This appendix lists requirements that should be considered satisfied by products\n"
-       ret+="successfully evaluated against this "+self.doctype_short()+". These requirements are not featured\n"
-       ret+="explicitly as SFRs and should not be included in the ST. They are not included as \n"
-       ret+="standalone SFRs because it would increase the time, cost, and complexity of evaluation.\n"
-       ret+="This approach is permitted by <a href=\"#bibCC\">[CC]</a> Part 1, 8.2 Dependencies between components.</p>\n"
-       ret+="<p>This information benefits systems engineering activities which call for inclusion of particular\n"
-       ret+="security controls. Evaluation against the "+self.doctype_short()+" provides evidence that these controls are present \n"
-       ret+="and have been evaluated.</p>\n"
-       return ret
+    def handle_implicitly_satisfied_requirements(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
+        out.append(HTM_E.p("This appendix lists requirements that should be considered satisfied by products\n"+
+                           "successfully evaluated against this "+self.doctype_short()+". These requirements are not featured\n"+
+                           "explicitly as SFRs and should not be included in the ST. They are not included as \n"+
+                           "standalone SFRs because it would increase the time, cost, and complexity of evaluation.\n"+
+                           "This approach is permitted by",
+                           HTM_E.a({"href":"#bibCC"},"[CC]"),
+                           "Part 1, 8.2 Dependencies between components."))
+        out.append(HTM_E.p("This information benefits systems engineering activities which call for inclusion of particular "+
+                           "security controls. Evaluation against the "+self.doctype_short()+" provides evidence that these controls are present "+
+                           "and have been evaluated."))
        
         
     def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         defs = node.findall("cc:*[cc:description]", NS)
         if len(defs)>0:
             dl = adopt(parent, HTM_E.dl())
@@ -1347,6 +2040,13 @@ security policies map to the security objectives.""")
             
         
     def template_xref(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         attrs = {}
         if "to" in node.attrib:
             to=node.attrib["to"]
@@ -1368,6 +2068,13 @@ security policies map to the security objectives.""")
 
         
     def get_list_of(self, fulltag):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if fulltag in self.globaltags:
             return self.globaltags[fulltag]
         nodes = self.root.findall(".//"+fulltag)
@@ -1377,10 +2084,24 @@ security policies map to the security objectives.""")
 
     
     def get_global_index(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         allof = self.get_list_of(node.tag)
         return allof.index(node)+1
 
     def derive_id(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if node.attrib is not None and "id" in node.attrib:
             return node.attrib["id"]
         if node.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
@@ -1389,11 +2110,25 @@ security policies map to the security objectives.""")
     
         
     def get_section_title(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if "title" in node.attrib:
             return node.attrib["title"]
         return node.tag.split("}")[1].replace("_", " ")
     
     def template_oldsection(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         if "id" in node.attrib:
             id=node.attrib["id"]
         else:
@@ -1401,11 +2136,25 @@ security policies map to the security objectives.""")
         return self.handle_section(node,node.attrib["title"],id ,parent)
         
     def template_newsection(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         id = pp_util.localtag(node.tag)
         title = pp_util.get_attr_or(node, "title", id.replace("_", " "))
         return self.handle_section(node, title, id, parent)
 
     def make_term_table(self, term_els, parent, ignores=""):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         terms=[]
         termdic={}
         for termdef in term_els:
@@ -1420,6 +2169,13 @@ security policies map to the security objectives.""")
             self.template_glossary_entry(termdic[term], parent)
         
     def template_tech_terms(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         divy = HTM_E.div({"class":"no-link"})
         parent.append(divy)
         divy.append(self.sec({"id":"glossary"}, "Terms"))
@@ -1443,6 +2199,13 @@ security policies map to the security objectives.""")
         self.end_section()
         
     def template_glossary_entry(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+        
         full = node.attrib["full"]
         tr = HTM_E.tr()
         parent.append(tr)
@@ -1458,6 +2221,13 @@ security policies map to the security objectives.""")
 
       
     def template_html(self, node ,parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+
         depends = node.findall("cc:depends", NS)
         if len(depends)>0:
             parent = adopt(parent, HTM_E.div({"class":"dependent"}))
@@ -1468,6 +2238,13 @@ security policies map to the security objectives.""")
         self.handle_content(node, html_el)
 
     def add_refs(self, ref_ids, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
+
         ul_out = adopt(out, HTM_E.ul())
         for ref_id in ref_ids:
             print("Ref_id is " + str(ref_id))
@@ -1476,6 +2253,12 @@ security policies map to the security objectives.""")
         
     def depends_explainer(self,parent, node,
                           words="The following content should be included if:"):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         depends_ids = self.get_all_dependencies(node)
         choices=depends_ids[0]
         selections=depends_ids[1]
@@ -1503,12 +2286,24 @@ security policies map to the security objectives.""")
             parent.append(HTM_E.div("is a base. "))            
 
     def apply_templates(self, nodelist, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if nodelist is None:
             return
         for node in nodelist:
             self.apply_templates_single(node, parent)
     
     def template_usecases(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         dl=HTM_E.dl()
         parent.append(dl)
         ctr = 1
@@ -1533,6 +2328,12 @@ security policies map to the security objectives.""")
     #     return self.get_plural(node)
 
     def handle_felement(self, fel_el,  par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         formal_id = self.get_ccid_for_ccel(fel_el)
         print("Handling f-element: " + formal_id)
         div_fel=adopt(par, HTM_E.div({"class":"element"}))
@@ -1574,6 +2375,12 @@ security policies map to the security objectives.""")
             div_reqdesc.append(rule_out)
 
     def get_fcomp_status_mingled(self, node, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if node in self.sel_sfrs:
             self.add_text(out, "This is a selection-based component. Its inclusion depends upon selection from:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
@@ -1590,6 +2397,12 @@ security policies map to the security objectives.""")
 
 
     def get_fcomp_status_isolated(self, node, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if node in self.sel_sfrs:
             self.add_text(out, "The inclusion of this selection-based component depends upon selection in:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
@@ -1604,12 +2417,24 @@ security policies map to the security objectives.""")
 
     
     def get_fcomp_status(self, node, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if self.are_sfrs_mingled:
             self.get_fcomp_status_mingled(node, out)
         else:
             self.get_fcomp_status_isolated(node, out)
 
     def add_rule_longref(self, rule, out_el, ruleindex=None):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         out = adopt(out_el, HTM_E.div({"class":"ruleref"}))
         if ruleindex==None:
             ruleindex = self.get_rule_index(rule)
@@ -1621,6 +2446,12 @@ security policies map to the security objectives.""")
             self.handle_content(desc, out)
         
     def add_rules(self, fel_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         ids=set()
         harvest_ids(ids, fel_el)
         ctr=0
@@ -1631,6 +2462,12 @@ security policies map to the security objectives.""")
                 
     
     def handle_component(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         formal = self.fcomp_cc_id(node)
         div = adopt(par, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
@@ -1647,6 +2484,12 @@ security policies map to the security objectives.""")
         self.handle_fcomp_activities(node, formal, par)
 
     def sd_handle_component(self, sfr, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         formal = self.fcomp_cc_id(sfr)
         div = adopt(out, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ sfr.attrib["name"]))
@@ -1926,6 +2769,12 @@ security policies map to the security objectives.""")
         
 
     def handle_aelements(self, els, formal, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         agroups = self.sort_aelements(els)
         for title in "Developer action", "Content and presentation", "Evaluator action":
             tipe=title[0:1]
@@ -1935,6 +2784,12 @@ security policies map to the security objectives.""")
                     self.handle_felement(el, par)
 
     def sort_aelements(self, els):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         ret={"D":[], "C":[], "E":[]}
         for el in els:
             if self.add_based_on_attr(el, ret):
@@ -1952,6 +2807,12 @@ security policies map to the security objectives.""")
 
             
     def add_based_on_attr(self, el, theset):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if "type" in el.attrib:
             theset[el.attrib["type"]].append(el)
             return True
@@ -1959,6 +2820,12 @@ security policies map to the security objectives.""")
 
 
     def make_aactivity_pane(self):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         return HTM_E.div(attrs("activity_pane hide"),
                                   HTM_E.div(attrs("activity_pane_header"),
                                             HTM_E.a({"onclick":"toggle(this);return false;","href":"#"},
@@ -1970,6 +2837,12 @@ security policies map to the security objectives.""")
 
         
     def handle_fcomp_activities(self, fcomp, formal, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
         if self.write_fcomp_activities_out(fcomp, formal, div_out):
@@ -1977,6 +2850,12 @@ security policies map to the security objectives.""")
             
             
     def write_fcomp_activities_out(self,  fcomp, formal, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:elev)]", namespaces=NS)
         should_add=self.handle_grouped_activities(formal, comp_acts, out)
         for fel in fcomp.xpath(".//cc:*[cc:aactivity/cc:elev]", namespaces=NS):
@@ -1988,6 +2867,12 @@ security policies map to the security objectives.""")
 
             
     def handle_grouped_activities(self, formal, aacts, out, level="fcomp"):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if len(aacts)==0:
             return False
         general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(level+"-activity-header"),formal)))
@@ -2010,6 +2895,12 @@ security policies map to the security objectives.""")
 
 
     def find_first_section_with_title(self, title):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         sections = self.find_sections_with_title(title)
         if len(sections)==0:
             return None
@@ -2017,12 +2908,24 @@ security policies map to the security objectives.""")
             return sections[0]
     
     def find_sections_with_title(self, title):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         underscored_title = title.replace(" ", "_")
         xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
         return self.rx(xpath)
 
     
     def handle_sparse_sfrs(self, sfrs, par, sfr_category, is_sd=False):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         """
         Converts a group of SFRs to HTML equivalent. Putting section
         headers in and grouping the SFRs appropriately underthem.
@@ -2054,6 +2957,12 @@ security policies map to the security objectives.""")
 # WE HAVE TO CLOSE THESE SECTIONS            
         
     def apply_templates_single(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         # Returns None if 
         if node is None or not isinstance(node.tag,str):
             return False
@@ -2062,6 +2971,12 @@ security policies map to the security objectives.""")
 
     
     def apply_template_to_element(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         tag = node.tag
         print("Applying: " + tag)
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
@@ -2131,6 +3046,12 @@ security policies map to the security objectives.""")
             raise Exception("Can't handle: " + pp_util.debug_node(node))
 
     def handle_equation(self, node, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         id=self.derive_id(node)
         eq_out = HTM_E.td("$$")
         self.handle_content(node, eq_out)
@@ -2144,6 +3065,12 @@ security policies map to the security objectives.""")
         
 
     def get_test_title(self, testnode):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if testnode in self.test_titles:
             return self.test_titles[testnode]
         
@@ -2159,6 +3086,12 @@ security policies map to the security objectives.""")
         return self.test_titles[testnode]
 
     def derive_test_title_recur(self, node, prefix, stack):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if node.tag==CC+"test":
             new_num=stack.pop() + 1
             stack.append(new_num)
@@ -2172,6 +3105,12 @@ security policies map to the security objectives.""")
         
     
     def handle_testlist(self, testlist, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         ul = adopt(out, HTM_E.ul(attrs("testlist-")))
         for test in testlist.findall("cc:test", NS):
             li = adopt(ul, HTM_E.li(attrs("test-")))
@@ -2187,6 +3126,12 @@ security policies map to the security objectives.""")
             self.handle_content(test, li)
 
     def get_title_n_sfrs(self, thistable):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if thistable=="mandatory":
             return ("Mandatory", self.man_sfrs)
         elif thistable=="optional":
@@ -2202,6 +3147,12 @@ security policies map to the security objectives.""")
         
   
     def template_audit_table(self, node, par, thistable=None):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if thistable is None and "table" in node.attrib:
             thistable=node.attrib["table"]
         explainer="The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met."
@@ -2240,6 +3191,12 @@ security policies map to the security objectives.""")
 
     # This assumes the group never changes
     def get_sfrs_with_audit_events(self, sfrs, table):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if not table in self.group_audit_map:
             entry={}
             for sfr in sfrs:
@@ -2251,6 +3208,12 @@ security policies map to the security objectives.""")
 
             
     def make_audit_row_from_event(self, event, table):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         row = adopt(table, HTM_E.tr())
         desc_in = event.find("cc:audit-event-descr",NS)
         if desc_in is None:
@@ -2270,6 +3233,12 @@ security policies map to the security objectives.""")
 
         
     def template_maybe_optional_audit(self, nodein, out, decider=None, nowords="None"):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if decider==None:
             decider=nodein
         if is_optional(decider):
@@ -2329,6 +3298,12 @@ security policies map to the security objectives.""")
 
         
     def get_pre(self, el):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if "pre" in el.attrib:
             return el.attrib["pre"]
         if el.tag == CC+"figure":
@@ -2336,6 +3311,12 @@ security policies map to the security objectives.""")
         return pp_util.get_attr_or(el, "ctr-type", default="Table ")
     
     def template_ctr(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         ctrtype = node.attrib["ctr-type"]
         prefix=ctrtype+" "
         if "pre" in node.attrib:
@@ -2352,6 +3333,12 @@ security policies map to the security objectives.""")
 
         
     def template_int(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if not pp_util.is_attr(node, "hide", "no"):
             return ""
         if "lte" in node.attrib:
@@ -2367,6 +3354,12 @@ security policies map to the security objectives.""")
         return ret
 
     def template_assignable(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         id=self.derive_id(node)
         self.add_text(par,"[")
         par.append(HTM_E.b("assignment"))
@@ -2385,6 +3378,12 @@ security policies map to the security objectives.""")
     #     self.handle_content(node, parent)
 
     def template_selectables(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if not is_in_choice(node):
             self.add_text(par,"[")
             par.append(HTM_E.b("selection"))
@@ -2433,6 +3432,12 @@ security policies map to the security objectives.""")
         
             
     def template_management_function_set(self, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         table = adopt(par, HTM_E.table({"class":"mfs","style":"width: 100%;"}))
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("#"))
@@ -2452,6 +3457,12 @@ security policies map to the security objectives.""")
     #     return "_mf_"+str(self.get_global_index(node))
 
     def make_mf_val(self, tag, node, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         attrs = {"class":"tooltiptext"}
         if tag == "O":
             par.append(HTM_E.div("O",HTM_E.span(attrs,"Optional")))
@@ -2464,6 +3475,12 @@ security policies map to the security objectives.""")
 
             
     def make_mf_row(self, mf, prefix, managers, defval, par):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         mf_num = str(self.get_global_index(mf))
         mf_id = self.derive_id(mf)
         tr = adopt(par, HTM_E.tr())
@@ -2481,18 +3498,42 @@ security policies map to the security objectives.""")
             self.make_mf_val(val, tagnode,td)
 
     def get_first_section_with_title(self, title):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         possibles=self.root.xpath("//*[@title='"+title+"']|//sec:"+title.replace(' ','_'), namespaces=NS)
         if possibles is None or len(possibles)==0:
             return None
         return possibles[0]
             
     def set_shortcut(self, node):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         self.shortcut = node
 
     def make_xref_mf(self, id, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
 
     def make_xref_generic(self, target, parent, ref, deftext=""):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         a_el=adopt(parent, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
         if not self.handle_content(ref, a_el):
             self.add_text(a_el, deftext)
@@ -2501,16 +3542,34 @@ security policies map to the security objectives.""")
     #     parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
     def make_xref_bibentry(self, node, parent):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         txt = "["+node.find("./cc:tag", NS).text+"]"
         anchor="#"+node.attrib["id"]
         parent.append(E.a(txt, href=anchor))
 
     def make_xref_feature(self, target, out, ref=None):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         refid = self.derive_id(target)
         a_out = adopt(out, HTM_E.a({"href":"#"+refid}, target.attrib["title"]))
 
         
     def make_xref_selectable(self, target, out, ref):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         refid = self.derive_id(target)
         a_out = adopt(out, HTM_E.a({"href":"#"+refid}))
         readable = target.find("cc:readable", NS)
@@ -2526,6 +3585,12 @@ security policies map to the security objectives.""")
     
     # M
     def make_xref(self, target, parent, ref=None):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         if not hasattr(target, "tag"):
             self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref) )
         elif target.tag == CC+"entry":
@@ -2563,6 +3628,12 @@ security policies map to the security objectives.""")
         #     raise Exception("Cannot reference: " + target.tag + " " + target.text)
 
     def is_base(self, attr):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
         if b_el is not None:
             raise Exception("Should not have a base")
@@ -2584,6 +3655,12 @@ security policies map to the security objectives.""")
 
         
     def handle_rules_appendix(self, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         rules = self.rfa("//cc:rule")
         if len(rules)==0:
             return
@@ -2607,6 +3684,12 @@ security policies map to the security objectives.""")
             self.apply_use_case_templates(rule, out)
 
     def apply_use_case_templates(self,nodes, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         for node in nodes:
             if is_comment(node):
                 pass
@@ -2630,6 +3713,12 @@ security policies map to the security objectives.""")
 
             
     def and_use_case(self, and_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         for child in and_el:
             print("Anding :"+ child.tag)
             self.apply_use_case_templates(child, out)
@@ -2640,17 +3729,29 @@ security policies map to the security objectives.""")
             
 
     def or_use_case(self, or_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         table_out = adopt(out, HTM_E.table(table_attrs,
                                            HTM_E.tr(
                                                HTM_E.td({"class":"or_cell", "rowspan":len(or_el)}, "OR"),
-                                               blank_cell()
+                                               inv_cell()
                                            )
                                            ))
 
 
 
     def doc_use_case(self, doc_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         doc_id = doc_el.attrib["ref"]
         print("Get_product: " + doc_id)
         print("Doc is a "+doc_el.tag)
@@ -2696,6 +3797,12 @@ security policies map to the security objectives.""")
       
 
     def refid_use_case(self, refid_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         refid=refid_el.text
         target = self.rf("//cc:*[@id='"+refid+"']")
         start="I"
@@ -2771,6 +3878,12 @@ security policies map to the security objectives.""")
 
 
     def then_usecase(self, then_el, out):
+        """
+        
+        :param
+        :param
+        :returns
+        """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         if_el = then_el.xpath("preceding-sibling::cc:if[1]", namespaces=NS)
         if if_el is None:
