@@ -310,9 +310,11 @@ class generic_pp_doc(object):
     """
     def __init__(self, root, workdir, boilerplate):
         """
-        :param
-        :param
-        :ret
+        Initializes a generic PP document
+        :param  root: Root element of the input document
+        :param  workdir: The working directory
+        :param  boilerplate: The boilerplate object
+        :ret A generic PP document
         """
 
         self.root = root
@@ -347,10 +349,8 @@ class generic_pp_doc(object):
 
     def maybe_make_usecase_appendixes(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Makes a usecase appendix if there exists usecases with rules
+        :param  out: The output HTML where we're writing to
         """
         
         usecases_with_config = self.rfa("//cc:usecase/cc:config")
@@ -380,36 +380,37 @@ class generic_pp_doc(object):
         
     def derive_plural(self):
         """
-        
-        :param
-        :param
-        :returns
+        Derives a term that describes the class of 
+        products (e.g. "operating systems") 
+        that this document applies to.
+
+        :returns A string representing the class of products.
         """
         
         return edoc.derive_products(self.root)
         
     def get_next_counter(self, ctr_type):
         """
+        Gets the numeric value of the next counter.
+        Increments the counter type
         
-        :param
-        :param
-        :returns
+        :param ctr_type: A string that designating
+        this counter's type (e.g. "Figure" or "Table")
+        :returns The number of ctrs of this 
         """
         
-        print("Counter type is " + ctr_type)
         if ctr_type in self.counters:
             self.counters[ctr_type]+=1
             return self.counters[ctr_type]
         else:
             self.counters[ctr_type]=1
             return 1
+
         
     def register_sfrs(self):
         """
-        
-        :param
-        :param
-        :returns
+        Registers the SFRs (components and elements)  with 
+        the XRef discovery mechanism.
         """
         
         for fcomp in self.root.findall(".//cc:f-component", NS):
@@ -422,10 +423,10 @@ class generic_pp_doc(object):
                 
     def get_all_abbr_els(self):
         """
-        
-        :param
-        :param
-        :returns
+        Retrieves all the abbreviations that apply to this document.
+        Both the document itself and the boilerplate.
+
+        :returns A iterable list of XML abbreviations elements.
         """
         
         return self.rfa("//cc:term[@abbr]")+\
@@ -433,23 +434,24 @@ class generic_pp_doc(object):
 
     def register_threats_assumptions_objectives_policies(self):
         """
-        
-        :param
-        :param
-        :returns
+        Registers all the threats, assumptions, objectives, and
+        security policies with the automatic XREF mechanisms.
         """
         
-        for aa in self.rfa("//cc:threat")+self.rfa("//cc:assumption")+self.rfa("//cc:SO")+self.rfa("//cc:SOE")+self.rfa("//cc:OSP"):
+        for aa in self.rfa("//cc:threat")+self.rfa("//cc:assumption")\
+            +self.rfa("//cc:SO")+self.rfa("//cc:SOE")+self.rfa("//cc:OSP"):
             if aa.find("cc:description", NS) is not None:
                 ccname = aa.attrib["name"]
                 self.register_keyterm(ccname, ccname)
 
     def get_ccid_for_ccel(self, ccel_el):
         """
-        
-        :param
-        :param
-        :returns
+        Retries the CC ID for an f-element or a-element.
+        Once the value is calculated, it is stored in the 
+        self.node_to_ccid cache.
+
+        :param  ccel_el: The CC XML f-element in question
+        :returns A string representing the CC ID
         """
         
         if ccel_el in self.node_to_ccid:
@@ -480,10 +482,9 @@ class generic_pp_doc(object):
                 
     def register_abbrs(self):
         """
-        
-        :param
-        :param
-        :returns
+        Registers all the abberviations used in this document
+        both in the user-provided XML and the boilerplate
+        with the automatic cross-referencer.
         """
         
         for term in self.get_all_abbr_els():
@@ -497,10 +498,10 @@ class generic_pp_doc(object):
             
     def register_keyterm(self, word, id):
         """
+        Regisers a keyword with the automatic cross-referencer.
         
-        :param
-        :param
-        :returns
+        :param  word: The string to look for.
+        :param  id: The ID that is the target.
         """
         
         if len(word) > 1 and not(word.startswith(".")):
@@ -508,9 +509,10 @@ class generic_pp_doc(object):
 
     def add_text(self, node, text):
         """
-        
-        :param
-        :param
+        Appends texts to a node.
+
+        :param node: The output XML node in question.
+        :param text: A string to add.
         :returns
         """
         
@@ -521,10 +523,12 @@ class generic_pp_doc(object):
         
     def categorize_sfrs(self):
         """
-        
-        :param
-        :param
-        :returns
+        Initialization function that categorizes the XML document
+        into the different sets: self.obj_sfrs, self.opt_sfrs,
+        self.impl_sfrs, self.sel_sfrs. (Man_sfrs are already set). 
+        If it can't figure out which category (like if it's dependent on a base),
+        it calls self.handle_unknown_depends, which should call the module-specific
+        method.
         """
         
         for sfr in self.man_sfrs:
@@ -562,10 +566,12 @@ class generic_pp_doc(object):
         
     def make_edocs(self, workdir):
         """
+        Makes XML representations of packages and bases (external documents).
         
-        :param
-        :param
-        :returns
+        :param workdir: The directory where the documents should
+        be loacated.
+        :returns A dictionary where IDs are mapped to an XML representation
+        of the external document associated with them.
         """
         
         ret = {}
@@ -576,10 +582,11 @@ class generic_pp_doc(object):
     
     def handle_unknown_depends(self, sfr, attr):
         """
-        
-        :param
-        :param
-        :returns
+        Raises an exception (meant to be overwritten by the module class so that 
+        it can find bases)
+
+        :param  sfr: Doesn't matter
+        :param  attr: Doesn't matter
         """
         
         raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
@@ -587,10 +594,10 @@ class generic_pp_doc(object):
 
     def is_non_xrefable_section(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Decides whether the current node can contain an anchor tag.
+
+        :param node: The HTML node in question.
+        :returns True if we can put an anchor tag. False otherwise.
         """
         
         if node.tag == "a"    or node.tag == "abbr"    or\
@@ -608,10 +615,12 @@ class generic_pp_doc(object):
 
     def make_disco_link(self, id, matchtext):
         """
-        
-        :param
-        :param
-        :returns
+        Makes a XRef link for a discovered keyword.
+        It should looks like ie <a href='#{id}'>${matchtext}</a>.
+
+        :param  id: The ID of the target node 
+        :param  matchtext: The text that should be linked
+        :returns An HTML anchor element.
         """
         
         attrs={"class":"discovered", "href":"#"+id}
@@ -622,13 +631,15 @@ class generic_pp_doc(object):
     
     def xrefs_in_text(self, node, content, regex, insertspot=0):
         """
-        
-        :param
-        :param
-        :returns
+        Discovers keywords in nodes and adds anchors appropriately.
+
+        :param  node: The node in question
+        :param  content: The original text content of the node
+        :param  regex: The regular expression that finds keywords
+        :param  insertspot: Index where new nodes should go.
+        :returns What should go in the node's text field
         """
         
-        # Returns what should go in the node's text field
         if regex is None or content is None:
             return content
         matches = regex.finditer(content)
@@ -658,10 +669,12 @@ class generic_pp_doc(object):
             
     def add_xrefs_recur(self, node, regex):
         """
+        Discovers xrefs in the text of the current node
+        and its descendants.
         
-        :param
-        :param
-        :returns
+        :param  node: The root of the subtree
+        :param  regex: The regular expresssion that finds
+        keywords
         """
         
         if self.is_non_xrefable_section(node):
@@ -677,10 +690,9 @@ class generic_pp_doc(object):
             
     def to_sd(self):
         """
+        Builds the "Supporting Document"
         
-        :param
-        :param
-        :returns
+        :returns: The root node of the SD built.
         """
         
         self.outline = [0]
@@ -728,10 +740,9 @@ class generic_pp_doc(object):
             
     def sd_sfrs(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Builds the SFR section for a supporting document.
+
+        :param out: The parent output node
         """
         
         out.append(self.sec({"id":"sfrs-"},"Evaluation Activities for SFRs"))
@@ -781,15 +792,18 @@ class generic_pp_doc(object):
         self.sd_handle_sfr_type("Evaluation Activities for Selection-based SFRS", self.impl_sfrs, none_mesg, "sel_sfrs", out)
         self.end_section()
 
-        # QQQQ
+
     def sd_handle_sfr_type(self, title, sfrs, none_mesg, sfr_type, out):
         """
+        Adds specific SFR type sections (e.g. "Selection based", "Optional"
         
-        :param
-        :param
-        :returns
+        :param  title: The heading name
+        :param  sfrs: The list of SFRs
+        :param  none_mesg: A message to display if there's none
+        :param  sfr_type: The type of SFR
+        :param  out: The output HTML node
         """
-        
+
         out.append(self.sec(title))
         if len(sfrs) == 0:
             out.append(HTM_E.p(none_mesg))
@@ -800,20 +814,18 @@ class generic_pp_doc(object):
 
     def sd_handle_bases(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Does nothing (Meant to be overwritten by Module class).
+
+        :param  out:
         """
         
         return
     
     def meta_data(self, parent):
         """
-        
-        :param
-        :param
-        :returns
+        Builds the clerical portion of the SD document.
+
+        :param parent: The root of the output HTML node.
         """
         
         div = HTM_E.div(
@@ -835,10 +847,9 @@ class generic_pp_doc(object):
 
     def write_forward(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes the forward for an SD document.
+
+        :param out: HTML node where the document part is written.
         """
         
         div = HTM_E.div(attrs("foreword"))
@@ -874,20 +885,18 @@ class generic_pp_doc(object):
 
     def write_base_intro(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Does nothing (Meant to be overwritten).
+
+        :param  out: -
         """
         
         return
 
     def sd_intro(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes the intro for a Supporting Document.
+
+        :param out: The HTML output node.
         """
         
         out.append(self.sec({"id":"introduction-","class":"indexable"},"Introduction"))
@@ -954,10 +963,10 @@ class generic_pp_doc(object):
             
     def add_discoverable_xrefs(self, node):
         """
+        Starts the process of finding keywords and adds appropriate 
+        hyperlinks to them.
         
-        :param
-        :param
-        :returns
+        :param node: The root HTML node
         """
         
         if len(self.discoverables_to_ids)==0:
@@ -977,10 +986,9 @@ class generic_pp_doc(object):
 
     def fix_numbered_xrefs(self, doc):
         """
-        
-        :param
-        :param
-        :returns
+        Fixes numbered xrefs in a doc
+
+        :param doc: The document in question
         """
         
         for broken_ref in self.broken_refs:
@@ -988,10 +996,13 @@ class generic_pp_doc(object):
 
     def fix_xref(self, doc, refid, link, ref):
         """
-        
-        :param
-        :param
-        :returns
+        Fixes the content of an anchor that points to something else.
+
+        :param  doc: Root node of the HTML document
+        :param  refid: The ID that is the target of the link
+        :param  link: The output link.
+        :param  ref: The input XML node that created the xref.
+        It can be None if it's programmatically generated.
         """
         
 #        refid=self.derive_id(orig)
@@ -1007,21 +1018,12 @@ class generic_pp_doc(object):
         else:
             text = pp_util.flatten(label_node)
         pp_util.append_text(link,text)
-#        pp_util.append_text(link, " "+text)
-
-            #     dynrefs = doc.xpath(".//*[contains(@class,'dynref')]")
-    #     for dynref in dynrefs:
-    #         refid = dynref.attrib["href"][1:]
-    #         # print("Looking for " + refid)
-
-    # def fix_broken_refs(self, doc):
             
     def to_html(self):
         """
-        
-        :param
-        :param
-        :returns
+        Generates the main document from the input XML.
+
+        :returns The root element of the main HTML document
         """
         
         doc = self.start()
@@ -1032,40 +1034,43 @@ class generic_pp_doc(object):
     
     def rf(self, findexp):
         """
+        Performs a _find_ from the root node. 'cc' and 'sec' 
+        should be used as namespace prefixes.
         
-        :param
-        :param
-        :returns
+        :param findexp: A find expression string
+        :returns The results from root.find
         """
         
         return self.root.find( "."+findexp, NS)
     
     def rfa(self, findexp):
         """
+        Performs a _findall_ from the root node. 'cc' and 'sec' 
+        should be used as namespace prefixes.
         
-        :param
-        :param
-        :returns
+        :param findexp: A find expression string
+        :returns The results from root.find
         """
         
         return self.root.findall( "."+findexp, NS)
 
     def rx(self, xpath):
         """
+        Performs an _xpath_ from the root node. 'cc' and 'sec' 
+        should be used as namespace prefixes.
         
-        :param
-        :param
-        :returns
+        :param xpath: An xpath expression string
+        :returns The results from root.xpath
         """
         
         return self.root.xpath(xpath , namespaces=NS)
 
     def maybe_register_sfr_with_fam(self, sfr):
         """
-        
-        :param
-        :param
-        :returns
+        Registers an SFR with a family for the purposes of Extended Component Definitions
+        if the SFR in question has a "comp-lev" child and does not have a 'notnew' child.
+
+        :param sfr: XML f-component element node of the sfr inquestion.
         """
         
         if sfr.find("cc:comp-lev",NS) is None:
@@ -1081,10 +1086,13 @@ class generic_pp_doc(object):
     
     def sec(self, *args):
         """
-        
-        :param
-        :param
-        :returns
+        Creates a section in the numbered heading mode
+
+        :param args: The arguments that will be passed to the 
+        (h2) element constructor. It then is adjusted to reflect
+        the correct level.
+
+        :returns HTML element representing the parent node.
         """
         
         return sec_impl(self.outline, self.is_appendix, self.toc, HTM_E.h2(*args))
@@ -1093,10 +1101,7 @@ class generic_pp_doc(object):
         
     def end_section(self):
         """
-        
-        :param
-        :param
-        :returns
+        Ends the current section. Should be paired with _sec_ function above.
         """
         
         if len(self.outline)==0:
@@ -1108,10 +1113,10 @@ class generic_pp_doc(object):
   # <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     def objectives_to_requirements(self, par):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the "TOE Security Functional Requirements Rationale Section" (if
+        an cc:SO has an 'cc:addressed-by' element.
+
+        :param par: The output HTML node where the section good.
         """
         
         addr_bys = self.rx("//cc:SO/cc:addressed-by")
@@ -1147,10 +1152,9 @@ class generic_pp_doc(object):
             
     def start(self):
         """
-        
-        :param
-        :param
-        :returns
+        Builds an HTML skeleton for the main document.
+
+        :returns The root element for the HTML tree.
         """
         
         self.outline = [0]
@@ -1176,19 +1180,19 @@ class generic_pp_doc(object):
 
     def title(self):
         """
-        
-        :param
-        :param
-        :returns
+        Derives the title for main document.
+
+        :returns A string representing the title
         """
         
         return edoc.derive_title(self.root, self.doctype())
 
     def handle_figure(self, el, par):
         """
-        
-        :param
-        :param
+        Writes out a figure section.
+
+        :param el: The figure XML element
+        :param par: The parent HTML output element.
         :returns
         """
         
@@ -1199,8 +1203,6 @@ class generic_pp_doc(object):
         div.append(HTM_E.br())
         self.create_ctr("figure", id, div, "Figure ")
         self.add_text(div, el.attrib["title"])
-
-
 
 
     def get_text_or(self, xpath, default=""):
@@ -1223,24 +1225,19 @@ class generic_pp_doc(object):
     
     def derive_author(self):
         """
-        
-        :param
-        :param
-        :returns
+        Derives the author of this document.
+
+        :returns The text in the 'cc:author' node or "NIAP".
         """
         
-        auth_el = self.root.find("cc:author",NS)
-        if auth_el is  None:
-            return "National Information Assurance Partnership"
-        return auth_el.text
+        return self.get_text_or( "cc:author", "National Information Assurance Partnership")
 
 
     def make_logo(self):
         """
-        
-        :param
-        :param
-        :returns
+        Makes the logo section
+
+        :returns the root of the subtree created
         """
         
         version_date = edoc.derive_version_and_date(self.root)
@@ -1258,10 +1255,9 @@ class generic_pp_doc(object):
 
     def write_revision_history(self, body):
         """
-        
-        :param
-        :param
-        :returns
+        Writes the revision history section.
+
+        :param body: The place to write the sectionl
         """
         
         table = HTM_E.table(HTM_E.tr({"class":"header"},
@@ -1280,10 +1276,9 @@ class generic_pp_doc(object):
 
     def handle_comments(self, body):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the comments that were put in the document.
+
+        :param body The place to write the comments
         """
         
         comments_els = self.rfa("//cc:comment")
@@ -1295,16 +1290,14 @@ class generic_pp_doc(object):
             id=self.doc.derive_id(comment_el)
             div.append(HTM_E.a({"href":"#"+id},"Comment: " + id))
             div.append(HTM_E.br())
-        return ret
 
 
         
     def fx_body_begin(self, body):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the beginning of the HTML document body
+
+        :param body: The root of the HTML output tree to be written
         """
         
         self.handle_comments(body)
@@ -1321,10 +1314,10 @@ class generic_pp_doc(object):
 
     def fel_cc_id(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Retrieves the cc-id of an f-element
+
+        :param node: The f-element XML element in question
+        :returns a string representing the cc-id
         """
         
         fcomp = node.xpath("ancestor::cc:f-component", namespaces=NS)[0]
@@ -1334,10 +1327,10 @@ class generic_pp_doc(object):
         
     def fcomp_cc_id(self, node, suffix=""):
         """
-        
-        :param
-        :param
-        :returns
+        Retrieves the cc-id of an f-component or f-element.
+
+        :param node: The f-component or f-element XML element in question
+        :returns a string representing the cc-id element.
         """
         
         ret = node.attrib["cc-id"].upper() + suffix
@@ -1345,19 +1338,18 @@ class generic_pp_doc(object):
             ret += "/"+node.attrib["iteration"]
         return ret
         
-        
-    # def element_cc_id(self, node):
-    #     fcomp = node.find("..")
-    #     indexstr = str(fcomp.index(node))
-    #     return self.fcomp_cc_id(fcomp, suffix="."+indexstr)
-
                 
     def handle_content(self, node, out,defcon=""):
         """
+        Writes out the content provided by the XML element in _node_ to the 
+        HTML element pointed to by _out_. If _node_ is empty it adds 
+        the appends the string provided by _defcon_ to the text of _node_.
+
         
-        :param
-        :param
-        :returns
+        :param node: Root XML element of the tree to be written out
+        :param out: Root HTML element of the tree where the content will go
+        :param defcon: Text that is written out if node is None (DEFault CONtent).
+        :returns False if anything (besides _defcon_)was written out
         """
         
         if node is None:
@@ -1373,10 +1365,12 @@ class generic_pp_doc(object):
             
     def handle_section(self, node, title, id, parent):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a section
+
+        :param  node: XML Element representing the section
+        :param  title: The name of the section
+        :param  id: The ID of the section
+        :param  parent: The HTML Element where the output goes
         """
         
         title_el = self.sec({"id":id},title)
@@ -1388,36 +1382,38 @@ class generic_pp_doc(object):
 
     def handle_post_section_hook(self, title, node, parent):
         """
-        
-        :param
-        :param
-        :returns
+        Does nothing (hook to be overwritten).
+
+        :param  title: ignored
+        :param  node: ignored
+        :param  parent: ignored
         """
         
         pass
         
     def handle_section_hook(self, title, node, parent):
         """
-        
-        :param
-        :param
-        :returns
+        Checks whether ignoring boilerplates is on for this section.
+
+        :param  title: Title of the section
+        :param  node: XML node of the input section
+        :param  parent: HTML node where the section is written
         """
         
         if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
             return 
         self.handle_section_hook_base(title, node, parent)
 
-    def handle_conformance_claims(self, node, parent):
+    def handle_conformance_claims(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a conformance claims section
+
+        :param node: ignored
+        :param out: HTML node where the section is written
         """
         
         dl=HTM_E.dl()
-        parent.append(dl)
+        out.append(dl)
         dl.append(HTM_E.dt("Conformance Statement"))
         self.handle_conformance_statement(dl)
         # dd = HTM_E.dd()
@@ -1459,33 +1455,34 @@ class generic_pp_doc(object):
 
 
         
-    def handle_section_hook_base(self, title, node, parent):
+    def handle_section_hook_base(self, title, node, out):
         """
+        Looks for any sections with hooks and adds them
         
-        :param
-        :param
-        :returns
+        :param  title: string representing the title
+        :param  node: XML input node that represents the section
+        :param  out: HTML output node where the content goes
         """
         
         if title=="Conformance Claims":
-            self.handle_conformance_claims(node, parent)
+            self.handle_conformance_claims(node, out)
         elif title=="Implicity Satisfied Requirements":
-            self.handle_implicitly_satisfied_requirements(parent)
+            self.handle_implicitly_satisfied_requirements(out)
         elif title=="Security Objectives Rationale":
-            self.handle_security_objectives_rationale(node, parent)
+            self.handle_security_objectives_rationale(node, out)
         elif title=="Security Objectives for the Operational Environment":
-            self.handle_security_objectives_operational_environment(parent)
+            self.handle_security_objectives_operational_environment(out)
         elif title=="Assumptions":
-            self.add_text(parent, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
+            self.add_text(out, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
         elif title=="Validation Guidelines":
-            self.handle_rules_appendix(parent) 
+            self.handle_rules_appendix(out) 
     
     def get_all_dependencies(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Gets all the dependencies of a node.
+
+        :param node: The element in question. Usually an f-component.
+        :returns An array contain a list of [choices, selections, featuress, externals, bases] which the node depends on.
         """
         
         choices=set()
@@ -1524,10 +1521,10 @@ class generic_pp_doc(object):
     
     def make_ecd_table(self, par, ecdsecs):
         """
+        Writes out an extended components definition section and table.
         
-        :param
-        :param
-        :returns
+        :param  par: HTML element where the section goes
+        :param  ecdsecs: The sections in the ecd table.
         """
         
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
