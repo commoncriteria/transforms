@@ -1,12 +1,15 @@
 import lxml.etree as ET
 from lxml.builder import E
 from lxml.builder import ElementMaker
+import math
+import edoc
+
+# Mine
 import css_content
 import pp_util
 from pp_util import log
-import math
-import edoc
-import re
+import auto_xref
+
 
 NS = edoc.NS
 CC="{"+NS['cc']+"}"
@@ -84,8 +87,8 @@ def is_comment(node):
     """
     Checks if a node is an XML comment (and not an element)
 
-    :param
-    :ret
+    :param node The node in question.
+    :ret True if it not an element
     """
     return not isinstance(node.tag,str)    
 
@@ -106,9 +109,10 @@ def add_to_map_to_map(mappy, key, attr):
 def _decompose(number):
     """Generate digits from `number` in base alphabet, least significants
     bits first.
-
     Since A is 1 rather than 0 in base alphabet, we are dealing with
     `number - 1` at each iteration to be able to extract the proper digits.
+
+    :param number: The number in question
     """
     while number: 
         number, remainder = divmod(number-1, ALPHABET_SIZE)
@@ -116,8 +120,8 @@ def _decompose(number):
 
 def base_10_to_alphabet(number):
     """Convert a decimal number to its base alphabet representation
-    :param number The number in question
-    :ret A string representing the number
+    :param number: The number in question
+    :returns A string representing the number
     """
     return ''.join(
             chr(A_UPPERCASE + part)
@@ -131,17 +135,6 @@ def make_sort_key_stringnum(s):
     """
     spl=s.split(".")
     return spl[0]+"."+spl[1].rjust(3)
-
-def backslashify(phrase):
-    """
-    Makes a phrase suitable for searching with regular expressions by
-    adding the necessary backslashes.
-
-    :param phrase: The phrase in question
-    :returns: A string that can be searched using regex
-    """
-    return re.sub("([][_.^()-/])", r"\\\1", phrase)
-
 
 def sec_impl(outline, is_appendix, toc, h_el):
     """
@@ -318,7 +311,8 @@ class generic_pp_doc(object):
         """
 
         self.root = root
-        self.globaltags = {}
+        # A cache that keeps of list of things that are globally numbered, like 'selectables'
+        self.globaltags = {}                              
         self.boilerplate = boilerplate
         self.pkgs = self.make_edocs(workdir)
         self.sel_sfrs = {}
@@ -333,10 +327,11 @@ class generic_pp_doc(object):
         self.group_audit_map={}
         self.categorize_sfrs()
         self.abbrs = {}                       # Full set of abbreviaiotns
+        self.xreffer = auto_xref.auto_xreffer()
+        
         #        self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
         #        self.used_abbrs = set()               # Set of abbreviations that we've seen
         #        self.full_abbrs = {}                  # Map from full in-text definition to abbreviation
-        self.discoverables_to_ids = {}        # List of terms we're looking for
         #        self.test_number_stack = [0]
         self.register_threats_assumptions_objectives_policies()
         self.register_sfrs()
@@ -406,6 +401,8 @@ class generic_pp_doc(object):
             self.counters[ctr_type]=1
             return 1
 
+    def register_keyterm(self, term, id):
+        self.xreffer.register_keyterm(term, id)
         
     def register_sfrs(self):
         """
@@ -496,17 +493,6 @@ class generic_pp_doc(object):
                 self.abbrs[plural]=term.attrib["full"]
                 self.register_keyterm(plural, "long_abbr_"+abbr)
             
-    def register_keyterm(self, word, id):
-        """
-        Regisers a keyword with the automatic cross-referencer.
-        
-        :param  word: The string to look for.
-        :param  id: The ID that is the target.
-        """
-        
-        if len(word) > 1 and not(word.startswith(".")):
-            self.discoverables_to_ids[word]=id
-
     def add_text(self, node, text):
         """
         Appends texts to a node.
@@ -592,99 +578,6 @@ class generic_pp_doc(object):
         raise Exception("Can't handle this dependent sfr:"+sfr.attrib["cc-id"])
 
 
-    def is_non_xrefable_section(self, node):
-        """
-        Decides whether the current node can contain an anchor tag.
-
-        :param node: The HTML node in question.
-        :returns True if we can put an anchor tag. False otherwise.
-        """
-        
-        if node.tag == "a"    or node.tag == "abbr"    or\
-           node.tag == "dt"   or node.tag == "no-link" or\
-           node.tag == "h1"   or node.tag == "h2"      or\
-           node.tag == "h3"   or node.tag == "h4"      or\
-           node.tag == "head" or node.tag == "script"  or\
-           node.tag == "svg"  or node.tag == "th": 
-            return True
-        if "class" in node.attrib and node.attrib["class"]:
-            classes = node.attrib["class"].split(" ")
-            if "term" in classes:
-                return True
-        return False
-
-    def make_disco_link(self, id, matchtext):
-        """
-        Makes a XRef link for a discovered keyword.
-        It should looks like ie <a href='#{id}'>${matchtext}</a>.
-
-        :param  id: The ID of the target node 
-        :param  matchtext: The text that should be linked
-        :returns An HTML anchor element.
-        """
-        
-        attrs={"class":"discovered", "href":"#"+id}
-        if matchtext in self.abbrs:
-            attrs["class"]="discovered abbr"
-            attrs["title"]=self.abbrs[matchtext]
-        return HTM_E.a(attrs, matchtext)
-    
-    def xrefs_in_text(self, node, content, regex, insertspot=0):
-        """
-        Discovers keywords in nodes and adds anchors appropriately.
-
-        :param  node: The node in question
-        :param  content: The original text content of the node
-        :param  regex: The regular expression that finds keywords
-        :param  insertspot: Index where new nodes should go.
-        :returns What should go in the node's text field
-        """
-        
-        if regex is None or content is None:
-            return content
-        matches = regex.finditer(content)
-        try:
-            match=next(matches)
-        except:
-            return content
-        origtext = content
-        ret = origtext[:match.start()]
-        last=match.end()
-        matchtext = match.group()
-        id = self.discoverables_to_ids[matchtext]
-        
-        prevnode = self.make_disco_link(id, matchtext)
-        newnodes=[prevnode]
-        for match in matches:
-            prevnode.tail = origtext[last:match.start()]
-            last = match.end()
-            id = self.discoverables_to_ids[match.group()]
-            prevnode = self.make_disco_link(id, match.group())
-            newnodes.append(prevnode)
-        prevnode.tail = origtext[match.end():]
-        for newkids in newnodes:
-            node.insert(insertspot, newkids)
-            insertspot+=1
-        return ret
-            
-    def add_xrefs_recur(self, node, regex):
-        """
-        Discovers xrefs in the text of the current node
-        and its descendants.
-        
-        :param  node: The root of the subtree
-        :param  regex: The regular expresssion that finds
-        keywords
-        """
-        
-        if self.is_non_xrefable_section(node):
-            return
-        origchildren = node.iterchildren()
-        node.text = self.xrefs_in_text(node, node.text, regex)
-        for child in origchildren:
-            self.add_xrefs_recur(child, regex)
-            insertspot=node.index(child)+1
-            child.tail = self.xrefs_in_text(node, child.tail, regex, insertspot)
 
 
             
@@ -694,7 +587,7 @@ class generic_pp_doc(object):
         
         :returns: The root node of the SD built.
         """
-        
+        print("Now building supporting document.")
         self.outline = [0]
         self.is_appendix = False
         body=HTM_E.body()
@@ -716,10 +609,8 @@ class generic_pp_doc(object):
         self.start_appendixes()
         self.create_bibliography(body)
         self.fix_numbered_xrefs(body)
-        self.add_discoverable_xrefs(body)
+        self.xreffer.add_discoverable_xrefs(body, self.abbrs)
         convert_none_text_to_emptys(body)
-
-        
         return ret
 
 
@@ -961,28 +852,6 @@ class generic_pp_doc(object):
 
 
             
-    def add_discoverable_xrefs(self, node):
-        """
-        Starts the process of finding keywords and adds appropriate 
-        hyperlinks to them.
-        
-        :param node: The root HTML node
-        """
-        
-        if len(self.discoverables_to_ids)==0:
-            return
-        keys = sorted(self.discoverables_to_ids.keys(), key=len, reverse=True)
-        bracketed=set()
-        for key in keys:
-            if key[0]=='[':
-                keys.remove(key)
-                bracketed.add(key)
-        biblio_part=""
-        if len(bracketed)>0:
-            biblio_part = "("+"|".join(map(backslashify,bracketed))+")|"
-        regex_str = biblio_part+"(?<!-)\\b("+"|".join(map(backslashify, keys))+")\\b"
-        regex = re.compile(regex_str)
-        self.add_xrefs_recur(node, regex)        
 
     def fix_numbered_xrefs(self, doc):
         """
@@ -1005,12 +874,14 @@ class generic_pp_doc(object):
         It can be None if it's programmatically generated.
         """
         
-#        refid=self.derive_id(orig)
-        # print("Fixing " + refid)
         link.attrib["href"]="#"+refid
         reffed = doc.find(".//*[@id='"+refid+"']")
+        # It's possible that this item might
+        # be in the companion document. Like the SD
+        # is pointing back to the main document or
+        # vice-versa.
         if reffed is None:
-            print("Could not find dynamic reference: " + refid)
+            print("Could not find dynamic reference: '" + refid+"'")
             return
         label_node = reffed.find("./*[@class='dynid_']")
         if label_node is None:
@@ -1028,7 +899,7 @@ class generic_pp_doc(object):
         
         doc = self.start()
         self.fix_numbered_xrefs(doc)
-        self.add_discoverable_xrefs(doc)
+        self.xreffer.add_discoverable_xrefs(doc, self.abbrs)
         convert_none_text_to_emptys(doc)
         return doc
     
@@ -1542,13 +1413,6 @@ class generic_pp_doc(object):
         # <!-- section is compatible with the new section styles b/c the new section style is not allowed to 
         #      for sections that directly contain f-components and a-components -->
         defsec = HTM_E.div()
-        """
-        
-        :param
-        :param
-        :returns
-        """
-        
         last=""
         for sec in ecdsecs:
             title = sec.attrib["title"]
@@ -1566,14 +1430,13 @@ class generic_pp_doc(object):
     
     def handle_ext_comp_defs(self ,par):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the extended component definitions Appendix.
+
+        :param par: The element where the definitions are added.
         """
         
         if self.rf("//cc:ext-comp-def") is None:
-            return ""
+            return 
         par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
         self.add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
 
@@ -1597,26 +1460,26 @@ class generic_pp_doc(object):
                           classid + " class originally defined by CC Part 2:" )
 
             for ecd in ecds:
-                self.handle_ecd(ecd, classid, span)
+                self.handle_ecd(ecd, span)
             self.end_section()
         self.end_section()
         self.end_section()
         
-    def handle_ecd(self, famnode, classid, span):
+    def handle_ecd(self, famnode, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out an extended component definition .
+
+        :param  famnode: The ext-comp-def element
+        :param  out: The HTML output node
         """
         
         famId = famnode.attrib["fam-id"]
         desc = famnode.find("cc:class-description",NS)
-        self.handle_content(desc, span)
-        span.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
+        self.handle_content(desc, out)
+        out.append(self.sec({"id":"ecd-"+famId}, famId+" "+famnode.attrib["title"]))
 
-        div = adopt(span, HTM_E.div())
-        # div = adopt(span, HTM_E.div({"style":"margin-left: 1em;"}))
+        div = adopt(out, HTM_E.div())
+        # div = adopt(out, HTM_E.div({"style":"margin-left: 1em;"}))
         famBi = famnode.find("cc:fam-behavior",NS)
         if famBi is not None:
             div.append(HTM_E.h4("Family Behavior"))
@@ -1647,34 +1510,22 @@ class generic_pp_doc(object):
         
     def get_mng_aud(self, sfr, cc_id, par):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the ECD sections for an sfr.
+
+        :param  sfr: The sfr in question
+        :param  cc_id: The CC id of the sfr (convenience)
+        :param  par: The HTML output node
         """
         
         par.append(HTM_E.h4("Management: "+cc_id))
         p_el = adopt(par, HTM_E.p())
         self.handle_content(sfr.find("cc:management",NS),p_el,
                             defcon="There are no management functions foreseen.")
-        """
-        
-        :param
-        :param
-        :returns
-        """
         
         par.append(HTM_E.h4("Audit: "+cc_id))
         p_el = adopt(par, HTM_E.p())
         self.handle_content(sfr.find("cc:audit",NS),p_el,
                             defcon="There are no audit events foreseen.")
-        """
-        
-        :param
-        :param
-        :returns
-        """
-        
         par.append(HTM_E.h4(cc_id+" "+sfr.attrib["name"]))
         div = adopt(par, HTM_E.div({"style":"margin-left: 1em;"}))
         p_el = adopt(div, HTM_E.p("Hierarchical to: "))
@@ -1695,10 +1546,7 @@ class generic_pp_doc(object):
 
     def start_appendixes(self):
         """
-        
-        :param
-        :param
-        :returns
+        Instructs the indexer that appendices have started
         """
         
         self.outline[0]=-1
@@ -1706,10 +1554,10 @@ class generic_pp_doc(object):
 
     def implementation_based_section(self, id, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the Implementation-based section.
+
+        :param  id: The ID of the section
+        :param out: The HTML output node
         """
         
         attrs={"id":id}
@@ -1728,19 +1576,28 @@ class generic_pp_doc(object):
 
     def add_optional_appendix_explainer(self, par, opt_id, obj_id, imple_id):
         """
-        
-        :param
-        :param
-        :returns
+        Hook to add an optional appendix explainer
+        (overwritten by pp_doc class)
+
+        :param  par: Unused
+        :param  opt_id: Unused
+        :param  obj_id: Unused
+        :param  imple_id: Unused
         """
-        
+
         pass
 
     def handle_sfr_section(self, sfrs, none_msg, audittype, title, out, idval):
         """
-        
-        :param
-        :param
+        Writes out one of the main SFR sections
+
+        :param  sfrs: The group of SFRs
+        :param  none_msg: A message if there's no SFRs
+        :param  audittype: The type of audit associated with these
+        :param  title: The title of the section
+        :param  out: HTML output node
+        :param  idval: The prefix ID that should be added to subsections
+                that contain SFRs to prevent collisions.
         :returns
         """
         
@@ -1754,9 +1611,15 @@ class generic_pp_doc(object):
     # QQQQ
     def sfr_appendix(self,title,sfrs,preamble,audittype,idval,par):
         """
-        
-        :param
-        :param
+        Writes out an SFR in appendix form
+
+        :param  title: The title of the section
+        :param  sfrs: The group of SFRs
+        :param  preamble: Any explainer
+        :param  audittype: The type of audit associated with these
+        :param  par: HTML output node
+        :param  idval: The prefix ID that should be added to subsections
+                that contain SFRs to prevent collisions.
         :returns
         """
         
@@ -1770,10 +1633,9 @@ class generic_pp_doc(object):
 
     def handle_optional_requirements(self, par):
         """
-        
-        :param
-        :param
-        :returns
+        Creates an appendix section for optional requirements.
+
+        :param par: HTML output node
         """
         
         par.append(self.sec({"id":"optional-appendix-"},"Optional SFRs"))
@@ -1790,10 +1652,11 @@ class generic_pp_doc(object):
 
     def create_audit_table_section(self, title, audittable, par):
         """
-        
-        :param
-        :param
-        :returns
+        Creates an section which houses an audit table
+
+        :param  title: The name of the type of requirements
+        :param  audittable: The type of audittable table created
+        :param  par: HTML output node
         """
         
         title_sfrs = self.get_title_n_sfrs(audittable)
@@ -1810,10 +1673,9 @@ class generic_pp_doc(object):
         
     def sel_appendix_preamble(self):
         """
-        
-        :param
-        :param
-        :returns
+        Gets the explainer for the selection-based requirements.
+
+        :returns explainer in string form
         """
         
         DT=self.doctype()
@@ -1826,14 +1688,14 @@ class generic_pp_doc(object):
         
     def handle_selection_based_requirements(self, node, par):
         """
-        
-        :param
-        :param
-        :returns
+        Creates an appendix for selection-based requirements
+
+        :param  node: Unused
+        :param  par: The HTML output node
         """
         
         words=self.sel_appendix_preamble()
-        return self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based","sel-based-", par)
+        self.sfr_appendix("Selection-based", self.sel_sfrs, words,"sel-based","sel-based-", par)
 
 
     OE_PREAMBLE="""The OE of the TOE implements technical and procedural measure
@@ -1847,27 +1709,30 @@ The assumptions identified in Section 3 are incorporated as
 security objectives for the environment.
 """
     
-    def handle_security_objectives_operational_environment(self, parent):
+    def handle_security_objectives_operational_environment(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out content concerning security objectives for the operational environment
+
+        :param out: The HTML output node.
         """
         
         soes=self.rfa("//cc:SOE")
         if len(soes)>0:
-            self.add_text(parent,generic_pp_doc.OE_PREAMBLE)
+            self.add_text(out,generic_pp_doc.OE_PREAMBLE)
         else:
-            self.add_text(parent, "This "+self.doctype()+" does not define any objectives for the OE.")
+            self.add_text(out, "This "+self.doctype()+" does not define any objectives for the OE.")
 
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a counter.
+
+        :param  ctrtype: The type of counter
+        :param  id : The ID assocaited with this counter
+        :param parent: The HTML output node
+        :param  prefix: A prefix for this node
+        :param  sep=": ": The separate between prefix
+        :param  child=None: Any other input content to be displayed
         """
         
         print("Creating counter for: " + id)
@@ -1881,12 +1746,11 @@ security objectives for the environment.
         self.add_text(span, sep)
         self.handle_content(child, span)
         
-    def handle_conformance_statement(self, node):
+    def handle_conformance_statement(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the conformance statement
+
+        :param out: The HTML output node.
         """
         
         node.append(HTM_E.dd("An ST must claim exact conformance to this "+self.doctype()+", as defined in the CC "+
@@ -1894,16 +1758,15 @@ security objectives for the environment.
         
 
         
-    def create_bibliography(self, par):
+    def create_bibliography(self, out):
+        """
+        Writes out a bibliography.
+
+        :param out: The HTML output node
         """
         
-        :param
-        :param
-        :returns
-        """
-        
-        par.append(self.sec({"id":"appendix-bibliography"},"Bibliography"))
-        table = adopt(par, HTM_E.table())
+        out.append(self.sec({"id":"appendix-bibliography"},"Bibliography"))
+        table = adopt(out, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Identifier"),HTM_E.th("Title")))
         entries = (self.rfa("//cc:bibliography/cc:entry") +
                    self.boilerplate.xpath("//*[@id='cc-docs']/cc:entry",namespaces=NS))
@@ -1922,16 +1785,15 @@ security objectives for the environment.
 
 
             
-    def create_acronym_listing(self, par):
+    def create_acronym_listing(self, out):
+        """
+        Creates an acronym listing section.
+
+        :param out: HTML output node
         """
         
-        :param
-        :param
-        :returns
-        """
-        
-        par.append(self.sec({"id":"acronyms"},"Acronyms"))
-        table = adopt(par, HTM_E.table())
+        out.append(self.sec({"id":"acronyms"},"Acronyms"))
+        table = adopt(out, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("Acronym"), HTM_E.th("Meaning")))
         suppress_el=self.rf("//cc:suppress")
         if suppress_el is None or suppress_el.text is None:
@@ -1954,17 +1816,17 @@ security objectives for the environment.
             tr.append(HTM_E.td(HTM_E.span({"id":"long_abbr_"+abbr}, full)))
         self.end_section()
             
-    def handle_security_objectives_rationale(self, node, parent):
+    def handle_security_objectives_rationale(self, node, out):
+        """
+        Writes out a section for the Security Objectives Rationale.
+
+        :param node: Unused
+        :param out: The HTML output element
         """
         
-        :param
-        :param
-        :returns
-        """
-        
-        self.add_text(parent, """This section describes how the assumptions, threats, and organizational 
+        self.add_text(out, """This section describes how the assumptions, threats, and organizational 
 security policies map to the security objectives.""")
-        table = adopt(parent, HTM_E.table())
+        table = adopt(out, HTM_E.table())
         caption = adopt(table, HTM_E.caption())
         self.create_ctr("Table","t-sec-obj-rat-", caption, "Table ")
         self.add_text(caption, "Security Objectives Rationale")
@@ -1975,15 +1837,15 @@ security policies map to the security objectives.""")
         objrefers=self.rx("//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer")
         firstcol=""
         for objrefer in objrefers:
-            parent = objrefer.find("..")
-            pname = parent.attrib["name"]
+            out = objrefer.find("..")
+            pname = out.attrib["name"]
             attrs={}
             if pname != firstcol:
                 tr = adopt(table, HTM_E.tr({"class":"major-row"}))
                 firstcol=pname
-                numkids = len(parent.findall("cc:objective-refer", NS))
+                numkids = len(out.findall("cc:objective-refer", NS))
                 pname_wrap = pp_util.make_wrappable(pname)
-                from_el = parent.find("cc:from", NS)
+                from_el = out.find("cc:from", NS)
                 if not from_el is None:
                     pname_wrap+=" (from "+from_el.attrib["base"]+")"
                 tr.append(HTM_E.td({"rowspan":str(numkids)},pname_wrap))
@@ -1996,10 +1858,9 @@ security policies map to the security objectives.""")
         
     def handle_implicitly_satisfied_requirements(self, out):
         """
-        
-        :param
-        :param
-        :returns
+        Creates a section for implicitly satisfied requirements
+
+        :param out: The HTML output node.
         """
         
         out.append(HTM_E.p("This appendix lists requirements that should be considered satisfied by products\n"+
@@ -2014,17 +1875,17 @@ security policies map to the security objectives.""")
                            "and have been evaluated."))
        
         
-    def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node, parent):
+    def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Creates a definition list for assumptions, claims, threats, OSPs, SOs, or SOEs.
+
+        :param node: The parent node of the group.
+        :param out: The HTML output node
         """
         
         defs = node.findall("cc:*[cc:description]", NS)
         if len(defs)>0:
-            dl = adopt(parent, HTM_E.dl())
+            dl = adopt(out, HTM_E.dl())
             for defined in defs:
                 classtype=pp_util.localtag(defined.tag)
                 name= defined.attrib["name"]
@@ -2033,15 +1894,16 @@ security policies map to the security objectives.""")
                 self.apply_templates(defined.findall("./cc:description",NS), dd)
                 self.apply_templates(defined.findall("./cc:appnote",NS), dd)
         else:
-            self.add_text(parent, "This document does not define any additional " + pp_util.localtag(node.tag))
+            self.add_text(out, "This document does not define any additional " + pp_util.localtag(node.tag))
             
         
-    def template_xref(self, node, parent):
+    def template_xref(self, node, out):
         """
-        
-        :param
-        :param
+        Writes out a cross reference.
+
         :returns
+        :param  node:
+        :param  out:
         """
         
         attrs = {}
@@ -2050,26 +1912,26 @@ security policies map to the security objectives.""")
         else:
             to=node.attrib["g"]
             if to=='CC':
-                parent.append(HTM_E.a({'href':'#bibCC'},"[CC]"))
+                out.append(HTM_E.a({'href':'#bibCC'},"[CC]"))
                 return
         if "format" in node.attrib:
             attrs["data-post"]=node.attrib["format"]
         refs = self.rx(".//cc:*[@id='"+to+"']|.//sec:*[local-name()='"+to+"']")
         if len(refs)==0:
             pp_util.log("Failed to find a reference to "+to)
-            parent.append( HTM_E.a(attrs))
+            out.append( HTM_E.a(attrs))
             return 
         elif len(refs)>1:
             pp_util.log("Found multipled targets for "+ to)
-        self.make_xref(refs[0], parent, node)
+        self.make_xref(refs[0], out, node)
 
         
     def get_list_of(self, fulltag):
         """
-        
-        :param
-        :param
-        :returns
+        Gets a list of items in the document that have the tag.
+
+        :param  fulltag: A fulltag, i.e. CC+"selectable"
+        :returns A list of items in the document with that tag
         """
         
         if fulltag in self.globaltags:
@@ -2082,10 +1944,10 @@ security policies map to the security objectives.""")
     
     def get_global_index(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Retrieves the global index of the tag. Like the 5th selectable
+
+        :param: Node the node in question
+        :returns An integer (starting from 1) for the global index of the node.
         """
         
         allof = self.get_list_of(node.tag)
@@ -2093,10 +1955,10 @@ security policies map to the security objectives.""")
 
     def derive_id(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Calculates the ID of a node.
+
+        :param node: The node in question
+        :returns String representing the ID of the node.
         """
         
         if node.attrib is not None and "id" in node.attrib:
@@ -2108,48 +1970,48 @@ security policies map to the security objectives.""")
         
     def get_section_title(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Gets a title of a sec:* or cc:title section.
+ 
+        :param node: The node in question.
+        :returns A string representing the title.
         """
         
         if "title" in node.attrib:
             return node.attrib["title"]
         return node.tag.split("}")[1].replace("_", " ")
     
-    def template_oldsection(self, node, parent):
+    def template_oldsection(self, node, out):
         """
-        
-        :param
-        :param
+        Writes out a section that's in the form of cc:section.
+
+        :param node: The cc:section element
+        :param out: The HTML output section
         :returns
         """
+
+        id = self.derive_id(node)
+        return self.handle_section(node,node.attrib["title"],id ,out)
         
-        if "id" in node.attrib:
-            id=node.attrib["id"]
-        else:
-            id="sec_"+str(get_global_index(node))+"-"
-        return self.handle_section(node,node.attrib["title"],id ,parent)
-        
-    def template_newsection(self, node, parent):
+    def template_newsection(self, node, out):
         """
-        
-        :param
-        :param
+        Writes out a section that's in the form of sec:*
+
+        :param node: The cc:section element
+        :param out: The HTML output section
         :returns
         """
         
         id = pp_util.localtag(node.tag)
         title = pp_util.get_attr_or(node, "title", id.replace("_", " "))
-        return self.handle_section(node, title, id, parent)
+        return self.handle_section(node, title, id, out)
 
-    def make_term_table(self, term_els, parent, ignores=""):
+    def make_term_table(self, term_els, out, ignores=""):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a term table
+
+        :param term_els: The cc:term elements
+        :param out: The HTML output node
+        :param ignores: Comma delimited list of terms to ignore ( must be prefixed and suffixed with commas)
         """
         
         terms=[]
@@ -2163,18 +2025,18 @@ security policies map to the security objectives.""")
             termdic[uppered]=termdef
         terms.sort()
         for term in terms:
-            self.template_glossary_entry(termdic[term], parent)
+            self.template_glossary_entry(termdic[term], out)
         
-    def template_tech_terms(self, node, parent):
+    def template_tech_terms(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the CC and tech terms sections.
+
+        :param node: Link containing the terms.
+        :param out: The output HTML node
         """
         
         divy = HTM_E.div({"class":"no-link"})
-        parent.append(divy)
+        out.append(divy)
         divy.append(self.sec({"id":"glossary"}, "Terms"))
         self.add_text(divy,"The following sections list Common Criteria and technology terms used in this document.")
         divy.append(self.sec({"id":"cc-terms"},"Common Criteria Terms"))
@@ -2195,17 +2057,17 @@ security policies map to the security objectives.""")
         self.end_section()
         self.end_section()
         
-    def template_glossary_entry(self, node, parent):
+    def template_glossary_entry(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out an entry in the the glossary term
+
+        :param node: Term element to be written out
+        :param out: The HTML output node
         """
         
         full = node.attrib["full"]
         tr = HTM_E.tr()
-        parent.append(tr)
+        out.append(tr)
         id=full.replace(" ", "_")
         td = adopt(tr, HTM_E.td())
         div = adopt(td, HTM_E.div({"id":id}))
@@ -2217,29 +2079,29 @@ security policies map to the security objectives.""")
 
 
       
-    def template_html(self, node ,parent):
+    def template_html(self, node ,out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out an HTML element
+
+        :param node: The HTML element to be written out
+        :param out: The HTML graft point
         """
 
         depends = node.findall("cc:depends", NS)
         if len(depends)>0:
-            parent = adopt(parent, HTM_E.div({"class":"dependent"}))
-            self.depends_explainer(parent, node)
+            out = adopt(out, HTM_E.div({"class":"dependent"}))
+            self.depends_explainer(out, node)
         tag = pp_util.localtag(node.tag)
         html_el = ET.Element(tag, node.attrib)
-        parent.append(html_el)
+        out.append(html_el)
         self.handle_content(node, html_el)
 
     def add_refs(self, ref_ids, out):
         """
-        
-        :param
-        :param
-        :returns
+        Adds references for HTML elements that have dependencies.
+
+        :param ref_ids: A list of reference IDs
+        :param out: The HTML output element
         """
 
         ul_out = adopt(out, HTM_E.ul())
@@ -2248,13 +2110,14 @@ security policies map to the security objectives.""")
             ref = self.rf("//cc:*[@id='"+ref_id+"']")
             self.make_xref(ref, adopt(ul_out, HTM_E.li()))
         
-    def depends_explainer(self,parent, node,
+    def depends_explainer(self,out, node,
                           words="The following content should be included if:"):
         """
+        For HTML elements with dependents, it adds the appropriate explainer section
         
-        :param
-        :param
-        :returns
+        :param out: The HTML output node
+        :param node: The HTML element that has the dependencies.
+        :param word: Words that should be issued as part of the explainer.
         """
         depends_ids = self.get_all_dependencies(node)
         choices=depends_ids[0]
@@ -2262,47 +2125,48 @@ security policies map to the security objectives.""")
         features=depends_ids[2]
         externals=depends_ids[3]
         bases=depends_ids[4]
-        self.add_text(parent, words)
+        self.add_text(out, words)
         if len(choices)>0:
-            self.add_refs(choices, parent);
-            parent.append(HTM_E.div("choices are made"))
+            self.add_refs(choices, out);
+            out.append(HTM_E.div("choices are made"))
         if len(externals)>0:
-            self.add_refs(externals, parent);
-            parent.append(HTM_E.div("selections are are made in base"))
+            self.add_refs(externals, out);
+            out.append(HTM_E.div("selections are made in base"))
         if len(selections)>0:
-            self.add_refs(selections, parent);
-            parent.append(HTM_E.div("selections are made"))
+            self.add_refs(selections, out);
+            out.append(HTM_E.div("selections are made"))
         if len(features)>0:
-            self.add_refs(features, parent);
-            parent.append(HTM_E.div("features are implemented"))
+            self.add_refs(features, out);
+            out.append(HTM_E.div("features are implemented"))
         if len(bases)>0:
             baselist = ""
             for base in bases:
                 basenode = self.rf("//cc:*[@id='"+base+"']")
-                self.make_xref(basenode, parent)
-            parent.append(HTM_E.div("is a base. "))            
+                self.make_xref(basenode, out)
+            out.append(HTM_E.div("is a base. "))            
 
-    def apply_templates(self, nodelist, parent):
-        """
+            
+    def apply_templates(self, nodelist, out):
+        """ Applies the python 'templates' (like XSL) to a list of 
+        nodes.
         
-        :param
-        :param
-        :returns
+        :param nodelist: Elements to be written out
+        :param out: The HTML output element
         """
         if nodelist is None:
             return
         for node in nodelist:
-            self.apply_templates_single(node, parent)
+            self.apply_templates_single(node, out)
     
-    def template_usecases(self, node, parent):
+    def template_usecases(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the general, human-language defintion of the usecases.
+
+        :param  node: The element defining the usecases
+        :param  out: The output HTML element
         """
         dl=HTM_E.dl()
-        parent.append(dl)
+        out.append(dl)
         ctr = 1
         for usecase in node.findall("cc:usecase", NS):
             id = usecase.attrib["id"]
@@ -2314,26 +2178,18 @@ security policies map to the security objectives.""")
             if config is not None:
                 dd.append(HTM_E.p("For changes to included SFRs, selections, and assignments required for this use case, see", HTM_E.a({"href":"#appendix-"+id, "class":"dynref"}),"."))
             ctr += 1
-    # def get_plural(self, node):
-    #     if "target-products" in node.attrib:
-    #         return node.attrib["target-products"]
-    #     return node.attrib["target-product"]+"s"
 
-    # def get_short(self, node):
-    #     if "short" in node.attrib:
-    #         return node.attrib["short"]
-    #     return self.get_plural(node)
-
-    def handle_felement(self, fel_el,  par):
+    def handle_felement(self, fel_el,  out):
         """
-        
+        Writes out an f-element
+
         :param
         :param
         :returns
         """
         formal_id = self.get_ccid_for_ccel(fel_el)
         print("Handling f-element: " + formal_id)
-        div_fel=adopt(par, HTM_E.div({"class":"element"}))
+        div_fel=adopt(out, HTM_E.div({"class":"element"}))
         reqid=self.derive_id(fel_el)
         div_fel.append(
             HTM_E.div({"class":"formal_id","id":reqid},
@@ -2373,9 +2229,10 @@ security policies map to the security objectives.""")
 
     def get_fcomp_status_mingled(self, node, out):
         """
-        
-        :param
-        :param
+        Writes out an f-component when they are mingled amongs the other nodes.
+
+        :param node: The f-component element
+        :param out: The output HTML element
         :returns
         """
         if node in self.sel_sfrs:
@@ -2395,9 +2252,11 @@ security policies map to the security objectives.""")
 
     def get_fcomp_status_isolated(self, node, out):
         """
-        
-        :param
-        :param
+        Gets the words for the human language status box of an f-component when they are not
+        intermingled (the release version).
+
+        :param node: The f-component element
+        :param out: The HTML output element
         :returns
         """
         if node in self.sel_sfrs:
@@ -2412,13 +2271,14 @@ security policies map to the security objectives.""")
             if is_optional(node):
                 self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
 
+                
     
     def get_fcomp_status(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes the contents for an f-component element in the status box.
+
+        :param node: The f-component element in question
+        :param out: The HTML output node
         """
         if self.are_sfrs_mingled:
             self.get_fcomp_status_mingled(node, out)
@@ -2427,10 +2287,11 @@ security policies map to the security objectives.""")
 
     def add_rule_longref(self, rule, out_el, ruleindex=None):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a long reference to a rule
+
+        :param  rule: The rule in question
+        :param  out_el: The HTML output node
+        :param  ruleindex: Optional, the index of the rule. Calculated if not given
         """
         out = adopt(out_el, HTM_E.div({"class":"ruleref"}))
         if ruleindex==None:
@@ -2444,10 +2305,10 @@ security policies map to the security objectives.""")
         
     def add_rules(self, fel_el, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the rules that concern this f-element.
+
+        :param fel_el: The element that defines this f-element in question
+        :param out: The HTML output rule
         """
         ids=set()
         harvest_ids(ids, fel_el)
@@ -2458,42 +2319,39 @@ security policies map to the security objectives.""")
                 self.add_rule_longref(rule, out, ruleindex=str(ctr))
                 
     
-    def handle_component(self, node, par):
+    def handle_component(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a component (either a-component or f-component)
+
+        :param node: The component in question
+        :param out: The HTML output node.
         """
         formal = self.fcomp_cc_id(node)
-        div = adopt(par, HTM_E.div({"class":"comp", "id":formal}))
+        div = adopt(out, HTM_E.div({"class":"comp", "id":formal}))
         div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
         status_el = HTM_E.div({"class":"statustag"})
         self.get_fcomp_status(node, status_el)
         if not is_empty(status_el):
             div.append(status_el)
-        self.handle_content(node, par)
+        self.handle_content(node, out)
         if node.tag==CC+"f-component":
             for f_el in node.findall(".//cc:f-element", NS):
                 self.handle_felement(f_el, div)
         else:
-            self.handle_aelements(node.findall("cc:a-element",NS), formal, par)
-        self.handle_fcomp_activities(node, formal, par)
+            self.handle_aelements(node.findall("cc:a-element",NS), out)
+        self.handle_fcomp_activities(node, formal, out)
 
-    def sd_handle_component(self, sfr, out):
+    def sd_handle_component(self, comp, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the component for a supporting document
+
+        :param comp: Either an f-element or a-element element.
+        :param out: The HTML output node
         """
-        formal = self.fcomp_cc_id(sfr)
+        formal = self.fcomp_cc_id(comp)
         div = adopt(out, HTM_E.div({"class":"comp", "id":formal}))
-        div.append(HTM_E.h4(formal + " "+ sfr.attrib["name"]))
-        self.write_fcomp_activities_out(sfr, formal, out)
-
-
-
+        div.append(HTM_E.h4(formal + " "+ comp.attrib["name"]))
+        self.write_fcomp_activities_out(comp, formal, out)
 
 # ####################
 # #
@@ -2514,7 +2372,7 @@ security policies map to the security objectives.""")
 # ################
 #   <xsl:template match="cc:config"  mode="choice-path"/>
 #   <xsl:template match="cc:*" mode="choice-path">
-#     <xsl:if test="parent::cc:or"><xsl:apply-templates mode="or_path" select=".."/><xsl:value-of select="count(preceding-sibling::cc:*)+1"/></xsl:if>
+#     <xsl:if test="out::cc:or"><xsl:apply-templates mode="or_path" select=".."/><xsl:value-of select="count(preceding-sibling::cc:*)+1"/></xsl:if>
 #   </xsl:template>
 
 # ####################
@@ -2585,7 +2443,7 @@ security policies map to the security objectives.""")
 # ####################
 # #
 # ###################  <xsl:template name="get-prev-id">
-#     <xsl:if test="not(parent::cc:or or preceding-sibling::cc:*[1][self::cc:or])">
+#     <xsl:if test="not(out::cc:or or preceding-sibling::cc:*[1][self::cc:or])">
 #       <xsl:value-of select="preceding-sibling::cc:*[1]/descendant-or-self::cc:ref-id"/>
 #     </xsl:if>
 #   </xsl:template>
@@ -2765,27 +2623,31 @@ security policies map to the security objectives.""")
 
         
 
-    def handle_aelements(self, els, formal, par):
+    def handle_aelements(self, els, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a list of cc:a-element elements.
+
+        :param  els: List of elements
+        :param  out: HTML output node
         """
         agroups = self.sort_aelements(els)
         for title in "Developer action", "Content and presentation", "Evaluator action":
             tipe=title[0:1]
             if len(agroups[tipe])>0:
-                par.append(HTM_E.h4(title+" elements:"))
+                out.append(HTM_E.h4(title+" elements:"))
                 for el in agroups[tipe]:
-                    self.handle_felement(el, par)
+                    self.handle_felement(el, out)
 
     def sort_aelements(self, els):
         """
-        
-        :param
-        :param
-        :returns
+        Sorts the a-elements into three bins: Developer, Content and Presentation, and Evaluator.
+        It bases this on whether it has a 'type' attribute or, lacking that, whether the title starts 
+        with 'The developer shall', 'The evaluator shall', or other.
+
+
+        :param els: List of elements
+        :returns A dictionary with keys 'D', 'C', and 'E' that have lists of 
+        Developer, Content and Presentation, and Evaluator a-elements.
         """
         ret={"D":[], "C":[], "E":[]}
         for el in els:
@@ -2805,10 +2667,12 @@ security policies map to the security objectives.""")
             
     def add_based_on_attr(self, el, theset):
         """
-        
-        :param
-        :param
-        :returns
+        Adds an a-element to the appropriate dictionary based on if it
+        has a 'type' attribute.
+
+        :param el: The a-element element.
+        :param theset: A dictionary contain the 'D', 'E', and 'C' bins.
+        :returns True if it has a 'type' attribute, false otherwise
         """
         if "type" in el.attrib:
             theset[el.attrib["type"]].append(el)
@@ -2818,10 +2682,7 @@ security policies map to the security objectives.""")
 
     def make_aactivity_pane(self):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out an activity pane.
         """
         return HTM_E.div(attrs("activity_pane hide"),
                                   HTM_E.div(attrs("activity_pane_header"),
@@ -2835,10 +2696,11 @@ security policies map to the security objectives.""")
         
     def handle_fcomp_activities(self, fcomp, formal, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the f-component activities (plus the div wrapper)
+
+        :param fcomp: The f-component to write out
+        :param formal: The CCid of the f-component
+        :param out: The HTML output element
         """
         div = self.make_aactivity_pane()
         div_out = adopt(div, HTM_E.div(attrs("activity_pane_body")))
@@ -2848,10 +2710,11 @@ security policies map to the security objectives.""")
             
     def write_fcomp_activities_out(self,  fcomp, formal, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out the f-component activities
+
+        :param fcomp: The f-component to write out
+        :param formal: The CCid of the f-component
+        :param out: The HTML output element
         """
         comp_acts = fcomp.xpath(".//cc:aactivity[not(cc:elev)]", namespaces=NS)
         should_add=self.handle_grouped_activities(formal, comp_acts, out)
@@ -2863,16 +2726,20 @@ security policies map to the security objectives.""")
         return should_add
 
             
-    def handle_grouped_activities(self, formal, aacts, out, level="fcomp"):
+    def handle_grouped_activities(self, formal, aacts, out, classprefix="fcomp"):
         """
-        
-        :param
-        :param
-        :returns
+        Handles the activities at the component classprefix. Gathering all the
+        f-component aactivities from the various elements.
+
+        :param  formal: String header
+        :param  aacts: List of the aactivity elements
+        :param  out: the HTML output element
+        :param  classprefix: Prefix that goes in the class attribute 
+
         """
         if len(aacts)==0:
             return False
-        general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(level+"-activity-header"),formal)))
+        general_div=adopt(out, HTM_E.div(HTM_E.div(attrs(classprefix+"-activity-header"),formal)))
         acts={"TSS":None, "Guidance":None,"Tests":None,"KMD":None,"no-tests":None}
         for aact in aacts:
             self.apply_templates_single(aact, general_div)
@@ -2893,10 +2760,10 @@ security policies map to the security objectives.""")
 
     def find_first_section_with_title(self, title):
         """
-        
-        :param
-        :param
-        :returns
+        Finds the first section of the input document with the title.
+
+        :param title: A string of the title
+        :returns A reference to the XML element with the title (or None if none is found)
         """
         sections = self.find_sections_with_title(title)
         if len(sections)==0:
@@ -2906,31 +2773,25 @@ security policies map to the security objectives.""")
     
     def find_sections_with_title(self, title):
         """
+        Finds all sections of the input document with the title.
         
-        :param
-        :param
-        :returns
+        :param title: A string of the title
+        :returns A list of elements from the input document with that title
         """
         underscored_title = title.replace(" ", "_")
         xpath="//*[@title='"+title+"']|sec:"+underscored_title+"[not(@title)]"        
         return self.rx(xpath)
 
     
-    def handle_sparse_sfrs(self, sfrs, par, sfr_category, is_sd=False):
-        """
-        
-        :param
-        :param
-        :returns
-        """
+    def handle_sparse_sfrs(self, sfrs, out, sfr_category, is_sd=False):
         """
         Converts a group of SFRs to HTML equivalent. Putting section
         headers in and grouping the SFRs appropriately underthem.
 
-        :param sfrs An iterable group of f-component XML elements
-        :param par The XML output parent
-        :param sfr_category A string reflecting the type of sfrs (e.g. optional, sel-based)
-        :param is_sd Boolean whether it's being called to write to a SD
+        :param sfrs: An iterable group of f-component XML elements
+        :param out: The XML output out
+        :param sfr_category: A string reflecting the type of sfrs (e.g. optional, sel-based)
+        :param is_sd: Boolean whether it's being called to write to a SD
         """
 
         titles={}
@@ -2942,101 +2803,101 @@ security policies map to the security objectives.""")
                 if len(titles)>0:
                     self.end_section()
                 titles[title]=1
-                par.append(self.sec({"id":id}, title))
+                out.append(self.sec({"id":id}, title))
                 if not is_sd:
-                    self.handle_content(sec,par)
+                    self.handle_content(sec,out)
             if is_sd:
-                self.sd_handle_component(sfr, par)
+                self.sd_handle_component(sfr, out)
             else:
-                self.handle_component(sfr, par)
+                self.handle_component(sfr, out)
         if len(titles)>0:
             self.end_section()
 # WE HAVE TO CLOSE THESE SECTIONS            
         
-    def apply_templates_single(self, node, parent):
+    def apply_templates_single(self, node, out):
         """
+        Converts node to HTML.
         
-        :param
-        :param
-        :returns
+        :param  node: The node to convert to.
+        :param  out: The HTML node to write to
+        :returns False if the node is None or a comment. True otherwise.
         """
-        # Returns None if 
-        if node is None or not isinstance(node.tag,str):
+        if node is None or is_comment(node):
             return False
-        self.apply_template_to_element(node, parent)
+        self.apply_template_to_element(node, out)
         return True
 
     
-    def apply_template_to_element(self, node, parent):
+    def apply_template_to_element(self, node, out):
         """
+        Converts an element to HTML.
         
-        :param
-        :param
-        :returns
+        :param  node: The node to convert to.
+        :param  out: The HTML node to write to
         """
         tag = node.tag
         print("Applying: " + tag)
         if tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-            self.template_newsection(node, parent)
+            self.template_newsection(node, out)
         elif tag == CC+"section":
-            self.template_oldsection(node, parent)
+            self.template_oldsection(node, out)
         elif tag == CC+"appendix":
-            self.template_oldsection(node, parent)
+            self.template_oldsection(node, out)
         elif tag.startswith("{http://www.w3.org/1999/xhtml}"):
-            self.template_html(node, parent)
+            self.template_html(node, out)
         elif tag == CC+"xref":
-            self.template_xref(node, parent)
+            self.template_xref(node, out)
         elif tag == CC+"tech-terms":
-            self.template_tech_terms(node, parent)
+            self.template_tech_terms(node, out)
         elif tag==CC+"usecases":
-            self.template_usecases(node, parent)
+            self.template_usecases(node, out)
         elif tag==CC+"assumptions"\
              or tag==CC+"cclaims"\
              or tag==CC+"threats"\
              or tag==CC+"OSPs"\
              or tag==CC+"SOs"\
              or tag==CC+"SOEs":
-            self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, parent)
+            self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, out)
         elif tag==CC+"sfrs":
-            self.template_sfrs(node, parent)
+            self.template_sfrs(node, out)
         elif tag in DONT_PROCESS:
             return
         elif tag in TRANSPARENT:
-            self.handle_content(node, parent)
+            self.handle_content(node, out)
         elif tag==CC+"management-function-set":
-            self.template_management_function_set(node, parent)
+            self.template_management_function_set(node, out)
         elif tag==CC+"ctr":
-            self.template_ctr(node, parent)
+            self.template_ctr(node, out)
         elif tag==CC+"no-link":
-            span=adopt(parent, HTM_E.span({"class":"no-link"}))
-            self.handle_content(node, parent, span)
+            span=adopt(out, HTM_E.span({"class":"no-link"}))
+            self.handle_content(node, out, span)
         elif tag==CC+"manager":
-            td = adopt(parent, HTM_E.td())
+            td = adopt(out, HTM_E.td())
             self.handle_content(node, td)
         elif tag==CC+"figure":
-            self.handle_figure(node, parent)
+            self.handle_figure(node, out)
         elif tag==CC+"audit-table":
-            self.template_audit_table(node, parent)
+            self.template_audit_table(node, out)
         elif tag==CC+"selectables":
-            self.template_selectables(node, parent)
+            self.template_selectables(node, out)
         elif tag==CC+"assignable":
-            self.template_assignable(node, parent)
+            self.template_assignable(node, out)
         elif tag==CC+"int":
-            self.template_int(node, parent)
+            self.template_int(node, out)
         elif tag==CC+"_":
-            self.make_xref(self.shortcut, parent)
+            self.make_xref(self.shortcut, out)
         elif tag==CC+"refinement":
-            span = adopt(parent, HTM_E.span({"class":"refinement"}))
+            span = adopt(out, HTM_E.span({"class":"refinement"}))
             self.handle_content(node, span)
         elif tag==CC+"testlist":
-            self.handle_testlist(node, parent)
+            self.handle_testlist(node, out)
         elif tag == CC+"consistency_rationale":
             print("Not doing a-compoents")
         elif tag == CC+"equation":
-            self.handle_equation(node, parent)
+            self.handle_equation(node, out)
         elif tag == CC+"Objective" or tag == CC+"Evidence":
             localtag = pp_util.localtag(node.tag)
-            obj_out = adopt(parent, HTM_E.div({"class":"test_"+localtag}))
+            obj_out = adopt(out, HTM_E.div({"class":"test_"+localtag}))
             obj_out.append(HTM_E.b(localtag+": "))
             self.handle_content(node, obj_out)
         else:
@@ -3044,10 +2905,10 @@ security policies map to the security objectives.""")
 
     def handle_equation(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Converts a cc:equation element to HTML.
+
+        :param  node: The cc:equation element
+        :param  out: The HTML node to write to
         """
         id=self.derive_id(node)
         eq_out = HTM_E.td("$$")
@@ -3063,10 +2924,10 @@ security policies map to the security objectives.""")
 
     def get_test_title(self, testnode):
         """
-        
-        :param
-        :param
-        :returns
+        Gets the title of a cc:test element.
+
+        :param testnode: The test element
+        :returns A unique string for this test element.
         """
         if testnode in self.test_titles:
             return self.test_titles[testnode]
@@ -3079,15 +2940,16 @@ security policies map to the security objectives.""")
             ance =testnode.xpath("ancestor::cc:f-element", namespaces=NS)[0]
             cc_id=self.fel_cc_id(ance)
         ctr=1
-        self.derive_test_title_recur(aa_el, cc_id+"#", stack=[0])
+        self.derive_test_title_recur(aa_el, cc_id+"#")
         return self.test_titles[testnode]
 
-    def derive_test_title_recur(self, node, prefix, stack):
+    def derive_test_title_recur(self, node, prefix, stack=[0]):
         """
-        
-        :param
-        :param
-        :returns
+        Assigns titles to all test elements in a subtree.
+
+        :param  node: The root element of the subtree.
+        :param  prefix: The prefix to assign to all nodes in this subtree.
+        :param  stack: An integer array that serves as a stack.
         """
         if node.tag==CC+"test":
             new_num=stack.pop() + 1
@@ -3103,10 +2965,10 @@ security policies map to the security objectives.""")
     
     def handle_testlist(self, testlist, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes out a cc:testlist element to HTML
+
+        :param  testlist: A cctestlist element
+        :param  out: The HTML node to write to
         """
         ul = adopt(out, HTM_E.ul(attrs("testlist-")))
         for test in testlist.findall("cc:test", NS):
@@ -3124,10 +2986,13 @@ security policies map to the security objectives.""")
 
     def get_title_n_sfrs(self, thistable):
         """
+        Gets a tuple that connects the type of table to the formal title name and
+        group of SFRs related to that table.
         
-        :param
-        :param
-        :returns
+        :param thistable: One of 'mandatory', 'optional', 'objective', 'feat-based',
+        'sel-based'.
+        :returns A tuple of nice name and list of SFRs
+        :raises an Exception if thistable is not one of the aforementioned values.
         """
         if thistable=="mandatory":
             return ("Mandatory", self.man_sfrs)
@@ -3143,12 +3008,13 @@ security policies map to the security objectives.""")
             raise Exception("Can't handle audit table for: " + thistable)
         
   
-    def template_audit_table(self, node, par, thistable=None):
+    def template_audit_table(self, node, out, thistable=None):
         """
-        
-        :param
-        :param
-        :returns
+        Creates an auditable section with table.
+        :param  node: The audit-table element if there is one. None if there is not.
+        :param  out: The HTML output node
+        :param  thistable: The type of audit table. If it's None, the method attempts to get it from
+        the _node_ parameter
         """
         if thistable is None and "table" in node.attrib:
             thistable=node.attrib["table"]
@@ -3184,14 +3050,15 @@ security policies map to the security objectives.""")
             add_grouping_row(table, self.fcomp_cc_id(fcomp), len(events))
             for event in events:
                 self.make_audit_row_from_event(event, table)
-        par.append(div)
+        out.append(div)
 
     # This assumes the group never changes
     def get_sfrs_with_audit_events(self, sfrs, table):
         """
-        
-        :param
-        :param
+        Creates a mapping from each of the SFRs given to the appropriate audit events.
+
+        :param  sfrs: Group of SFRs in question.
+        :param  table: The table we're looking for.
         :returns
         """
         if not table in self.group_audit_map:
@@ -3206,10 +3073,10 @@ security policies map to the security objectives.""")
             
     def make_audit_row_from_event(self, event, table):
         """
-        
-        :param
-        :param
-        :returns
+        Makes an audit event row in an audit event table.
+
+        :param event: The cc:audit-event to be written out
+        :param table: The HTML output table element
         """
         row = adopt(table, HTM_E.tr())
         desc_in = event.find("cc:audit-event-descr",NS)
@@ -3231,10 +3098,12 @@ security policies map to the security objectives.""")
         
     def template_maybe_optional_audit(self, nodein, out, decider=None, nowords="None"):
         """
-        
-        :param
-        :param
-        :returns
+        Writes a cell in an audit table.
+
+        :param  nodein: The node to write out
+        :param  out: The HTML output node
+        :param  decider=None: The node that is checked to decide whether this is optional
+        :param  nowords="None": What to write out as the other selection if it's optional.
         """
         if decider==None:
             decider=nodein
@@ -3248,7 +3117,7 @@ security policies map to the security objectives.""")
             self.handle_content(nodein, out)
             
             
-        # for fcomp in self.rx("//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(parent::cc:external-doc)]/@affects]"):
+        # for fcomp in self.rx("//cc:f-component[cc:audit-event]|//cc:f-component[@id=//cc:audit-event[not(out::cc:external-doc)]/@affects]"):
   #       <xsl:variable name="fcompstatus"><xsl:apply-templates select="." mode="compute-fcomp-status"/></xsl:variable>
   #       <xsl:if test="cc:audit-event[(@table=$thistable) or (not(@table) and ($fcompstatus=$thistable))]">
   #         <xsl:variable name="rowspan"
@@ -3280,7 +3149,7 @@ security policies map to the security objectives.""")
   #         From <xsl:apply-templates select="." mode="make_xref"/>
   #       </td></tr>
 
-  #       <xsl:variable name="listy"><xsl:for-each select="//cc:audit-event[@table=$thistable and parent::cc:external-doc/@ref=current()/@id]/@ref-cc-id"><xsl:value-of select="."/>,</xsl:for-each>
+  #       <xsl:variable name="listy"><xsl:for-each select="//cc:audit-event[@table=$thistable and out::cc:external-doc/@ref=current()/@id]/@ref-cc-id"><xsl:value-of select="."/>,</xsl:for-each>
   #       </xsl:variable>
   #       <xsl:call-template name="external-gatherer">
   #         <xsl:with-param name="listy" select="$listy"/>
@@ -3293,13 +3162,13 @@ security policies map to the security objectives.""")
   # </xsl:template>
 
 
-        
+  
     def get_pre(self, el):
         """
-        
-        :param
-        :param
-        :returns
+        Gets the prefix for a counter elment.
+        :param el: The counter element
+
+        :returns The string prefix.
         """
         if "pre" in el.attrib:
             return el.attrib["pre"]
@@ -3307,19 +3176,19 @@ security policies map to the security objectives.""")
             return "Figure "
         return pp_util.get_attr_or(el, "ctr-type", default="Table ")
     
-    def template_ctr(self, node, par):
+    def template_ctr(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Writes counter input elements to HTML
+
+        :param node: The cc:ctr element
+        :param  out: The HTML node to write to
         """
         ctrtype = node.attrib["ctr-type"]
         prefix=ctrtype+" "
         if "pre" in node.attrib:
             prefix=node.attrib["pre"]
         id = self.derive_id(node)
-        self.create_ctr(ctrtype, id, par, prefix, child=node)
+        self.create_ctr(ctrtype, id, out, prefix, child=node)
 
         # count = str(self.get_next_counter(ctrtype))
         # span = adopt(par, HTM_E.span({"class":"ctr","data-counter-type":"ct-"+ctrtype,
@@ -3331,10 +3200,10 @@ security policies map to the security objectives.""")
         
     def template_int(self, node):
         """
-        
-        :param
-        :param
-        :returns
+        Gets the text for an cc:int element.
+
+        :param node: The cc:int element
+        :returns The helpful text for an assignment (or none if hide is yes).
         """
         if not pp_util.is_attr(node, "hide", "no"):
             return ""
@@ -3350,43 +3219,43 @@ security policies map to the security objectives.""")
             ret+=" greater than or equal to " + node.attrib["gte"]
         return ret
 
-    def template_assignable(self, node, par):
+    def template_assignable(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Converts a cc:assignable to HTML
+
+        :param node: The cc:assignable element
+        :param out: The HTML output node
         """
         id=self.derive_id(node)
-        self.add_text(par,"[")
-        par.append(HTM_E.b("assignment"))
-        self.add_text(par,": ")
-        span=adopt(par, HTM_E.span({"class":"assignable-content","id":id}))
+        self.add_text(out,"[")
+        out.append(HTM_E.b("assignment"))
+        self.add_text(out,": ")
+        span=adopt(out, HTM_E.span({"class":"assignable-content","id":id}))
         self.handle_content(node, span)
-        self.add_text(par,"]")
+        self.add_text(out,"]")
 
-    # def template_appendix(self, node, parent):
+    # def template_appendix(self, node, out):
     #     id=self.derive_id(node)
     #     title=node.attrib["title"]
-    #     parent.append(HTM_E.h1({"id":id},title))
+    #     out.append(HTM_E.h1({"id":id},title))
     #     if "boilerplate" in node.attrib and node.attrib["boilerplate"]=="no":
     #         return
-    #     self.handle_section_hook_base(title, node, parent)
-    #     self.handle_content(node, parent)
+    #     self.handle_section_hook_base(title, node, out)
+    #     self.handle_content(node, out)
 
-    def template_selectables(self, node, par):
+    def template_selectables(self, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Converts a selectables element to HTML
+
+        :param  node: The cc:selectables element
+        :param  out: The HTML node to write to
         """
         if not is_in_choice(node):
-            self.add_text(par,"[")
-            par.append(HTM_E.b("selection"))
+            self.add_text(out,"[")
+            out.append(HTM_E.b("selection"))
             if node.find("cc:onlyone", NS) is not None:
-                par.append(HTM_E.b(", choose one of"))
-            self.add_text(par, ": ")
+                out.append(HTM_E.b(", choose one of"))
+            self.add_text(out, ": ")
             
         sep=", "
         extraclass=""
@@ -3404,13 +3273,13 @@ security policies map to the security objectives.""")
             if is_in_choice(node) and sels_left==0 and sep==", ":
                 lagsep=lagsep+"or "
             id = self.derive_id(selectable)
-            self.add_text(par,lagsep)
+            self.add_text(out,lagsep)
             lagsep=sep
                 
-            span = adopt(par,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
+            span = adopt(out,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
             self.handle_content(selectable, span)
         if not is_in_choice(node):
-            self.add_text(par,"]")
+            self.add_text(out,"]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
  #    </xsl:when>
@@ -3428,14 +3297,15 @@ security policies map to the security objectives.""")
  # </xsl:template>
         
             
-    def template_management_function_set(self, node, par):
+    def template_management_function_set(self, node, out):
+        """
+        converts a cc:management_function_set element to HTML
+        
+        :param  node: The cc:management_function_set element
+        :param  out: The HTML node to write to
         """
         
-        :param
-        :param
-        :returns
-        """
-        table = adopt(par, HTM_E.table({"class":"mfs","style":"width: 100%;"}))
+        table = adopt(out, HTM_E.table({"class":"mfs","style":"width: 100%;"}))
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("#"))
         tr.append(HTM_E.td("Management Function"))
@@ -3448,39 +3318,39 @@ security policies map to the security objectives.""")
             ctr+=1
             self.make_mf_row(mf, prefix+str(ctr), managers, deffy, table)
 
-    # def get_mf_id(self, node):
-    #     if "id" in node.attrib:
-    #         return node.attrib["id"]
-    #     return "_mf_"+str(self.get_global_index(node))
 
-    def make_mf_val(self, tag, node, par):
+    def make_mf_val(self, tag, node, out):
         """
-        
-        :param
-        :param
-        :returns
+        Populates a management function cell.
+
+        :param  tag: An 'O', 'M', or 'NA' any other value will cause
+        the node itself to be processed.
+        :param  node: If tag isn't an O,M, or NA, it is converted 
+        to the contents of the cell
+        :param  out: The HTML node to write to
         """
         attrs = {"class":"tooltiptext"}
         if tag == "O":
-            par.append(HTM_E.div("O",HTM_E.span(attrs,"Optional")))
+            out.append(HTM_E.div("O",HTM_E.span(attrs,"Optional")))
         elif tag =="M":
-            par.append(HTM_E.div("M",HTM_E.span(attrs,"Mandatory")))
+            out.append(HTM_E.div("M",HTM_E.span(attrs,"Mandatory")))
         elif tag == "NA":
-            par.append(HTM_E.div("-",HTM_E.span(attrs,"N/A")))
+            out.append(HTM_E.div("-",HTM_E.span(attrs,"N/A")))
         else:
-            self.handle_content(node, par)
+            self.handle_content(node, out)
 
-            
-    def make_mf_row(self, mf, prefix, managers, defval, par):
+#### UUUUUU            
+    def make_mf_row(self, mf, prefix, managers, defval, out):
         """
-        
-        :param
-        :param
-        :returns
+        :param  mf:
+        :param  prefix:
+        :param  managers:
+        :param  defval:
+        :param  par:
         """
         mf_num = str(self.get_global_index(mf))
         mf_id = self.derive_id(mf)
-        tr = adopt(par, HTM_E.tr())
+        tr = adopt(out, HTM_E.tr())
         tr.append(HTM_E.td(HTM_E.a(def_attr(mf_id),prefix)))
         td=adopt(tr, HTM_E.td({"style":"text-align:left"}))
         self.apply_templates_single(mf.find("cc:text",NS), td)
@@ -3497,8 +3367,8 @@ security policies map to the security objectives.""")
     def get_first_section_with_title(self, title):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         possibles=self.root.xpath("//*[@title='"+title+"']|//sec:"+title.replace(' ','_'), namespaces=NS)
@@ -3509,51 +3379,51 @@ security policies map to the security objectives.""")
     def set_shortcut(self, node):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         self.shortcut = node
 
-    def make_xref_mf(self, id, parent):
+    def make_xref_mf(self, id, out):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
-        parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
+        out.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
 
-    def make_xref_generic(self, target, parent, ref, deftext=""):
+    def make_xref_generic(self, target, out, ref, deftext=""):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
-        a_el=adopt(parent, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
+        a_el=adopt(out, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
         if not self.handle_content(ref, a_el):
             self.add_text(a_el, deftext)
 
-    # def make_xref_section(self, id, parent):
-    #     parent.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
+    # def make_xref_section(self, id, out):
+    #     out.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
-    def make_xref_bibentry(self, node, parent):
+    def make_xref_bibentry(self, node, out):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         txt = "["+node.find("./cc:tag", NS).text+"]"
         anchor="#"+node.attrib["id"]
-        parent.append(E.a(txt, href=anchor))
+        out.append(E.a(txt, href=anchor))
 
     def make_xref_feature(self, target, out, ref=None):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         refid = self.derive_id(target)
@@ -3563,8 +3433,8 @@ security policies map to the security objectives.""")
     def make_xref_selectable(self, target, out, ref):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         refid = self.derive_id(target)
@@ -3581,54 +3451,54 @@ security policies map to the security objectives.""")
 
     
     # M
-    def make_xref(self, target, parent, ref=None):
+    def make_xref(self, target, out, ref=None):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         if not hasattr(target, "tag"):
-            self.broken_refs.add( (target, adopt(parent, HTM_E.a()), ref) )
+            self.broken_refs.add( (target, adopt(out, HTM_E.a()), ref) )
         elif target.tag == CC+"entry":
-            self.make_xref_bibentry(target, parent)
+            self.make_xref_bibentry(target, out)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
             theid= target.attrib["id"]
-            self.pkgs[theid].make_xref_edoc(parent)
+            self.pkgs[theid].make_xref_edoc(out)
         elif target.tag == CC+"f-element":
             ccid=self.get_ccid_for_ccel(target)
             id=self.derive_id(target)
-            parent.append(HTM_E.a({"href":"#"+id}, ccid))
+            out.append(HTM_E.a({"href":"#"+id}, ccid))
         elif target.tag == CC+"selectable":
-            self.make_xref_selectable(target, parent, ref)
+            self.make_xref_selectable(target, out, ref)
         elif target.tag == CC+"feature":
-            self.make_xref_feature(target, parent, ref)
+            self.make_xref_feature(target, out, ref)
         else:
-            self.broken_refs.add( (self.derive_id(target), adopt(parent, HTM_E.a()), ref) )
+            self.broken_refs.add( (self.derive_id(target), adopt(out, HTM_E.a()), ref) )
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
-        #     self.make_xref_section(pp_util.localtag(target.tag), parent)
+        #     self.make_xref_section(pp_util.localtag(target.tag), out)
         # elif target.tag == CC+"section":
-        #     self.make_xref_section(target.attrib["id"], parent)
+        #     self.make_xref_section(target.attrib["id"], out)
         # elif target.tag == CC+"management-function":
-        #     self.make_xref_mf(self.derive_id(target), parent)
+        #     self.make_xref_mf(self.derive_id(target), out)
         # elif target.tag == CC+"test":
-        #     self.make_xref_generic(target, parent, ref, "")
+        #     self.make_xref_generic(target, out, ref, "")
         # elif target.tag == CC+"figure":
-        #     self.make_xref_generic(target, parent, ref, "figure")
+        #     self.make_xref_generic(target, out, ref, "figure")
         # elif target.tag == CC+"ctr":
-        #     self.make_xref_generic(target, parent, ref, "")
+        #     self.make_xref_generic(target, out, ref, "")
         # elif target.tag == CC+"appendix":
-        #     self.make_xref_generic(target, parent, ref, "Appendix")
+        #     self.make_xref_generic(target, out, ref, "Appendix")
         # elif target.tag == CC+"equation":
-        #     self.make_xref_generic(target, parent, ref, "equation")
+        #     self.make_xref_generic(target, out, ref, "equation")
         # else:
         #     raise Exception("Cannot reference: " + target.tag + " " + target.text)
 
     def is_base(self, attr):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
@@ -3654,8 +3524,8 @@ security policies map to the security objectives.""")
     def handle_rules_appendix(self, out):
         """
         
-        :param
-        :param
+        :outam
+        :outam
         :returns
         """
         rules = self.rfa("//cc:rule")
@@ -3683,9 +3553,7 @@ security policies map to the security objectives.""")
     def apply_use_case_templates(self,nodes, out):
         """
         
-        :param
-        :param
-        :returns
+                        :returns
         """
         for node in nodes:
             if is_comment(node):
@@ -3712,9 +3580,7 @@ security policies map to the security objectives.""")
     def and_use_case(self, and_el, out):
         """
         
-        :param
-        :param
-        :returns
+                        :returns
         """
         for child in and_el:
             print("Anding :"+ child.tag)
@@ -3728,9 +3594,7 @@ security policies map to the security objectives.""")
     def or_use_case(self, or_el, out):
         """
         
-        :param
-        :param
-        :returns
+                        :returns
         """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         table_out = adopt(out, HTM_E.table(table_attrs,
@@ -3745,9 +3609,7 @@ security policies map to the security objectives.""")
     def doc_use_case(self, doc_el, out):
         """
         
-        :param
-        :param
-        :returns
+                        :returns
         """
         doc_id = doc_el.attrib["ref"]
         print("Get_product: " + doc_id)
@@ -3796,8 +3658,6 @@ security policies map to the security objectives.""")
     def refid_use_case(self, refid_el, out):
         """
         
-        :param
-        :param
         :returns
         """
         refid=refid_el.text
@@ -3877,9 +3737,7 @@ security policies map to the security objectives.""")
     def then_usecase(self, then_el, out):
         """
         
-        :param
-        :param
-        :returns
+                        :returns
         """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         if_el = then_el.xpath("preceding-sibling::cc:if[1]", namespaces=NS)
@@ -3920,3 +3778,4 @@ security policies map to the security objectives.""")
   #     </xsl:for-each>
   #   </table>
   # </xsl:template>
+
