@@ -13,12 +13,21 @@ SEC="{"+NS['sec']+"}"
 HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 append_text=pp_util.append_text
-# Represents external documents. Both those defined by XML and those defined just with the
-# tag
-class Edoc:
-#            basedep_sfrs = self.rx("//cc:f-component[cc:depends/@*='"+id+"']")
 
+class Edoc:
+    """
+    Represents external documents. Both those defined by XML and those 
+    defined just with the tag.
+    """
+
+    
     def __init__(self, node, workdir):
+        """
+        Constructor
+
+        :param node: Either a cc:base-pp or cc:include-pkg element.
+        :param workdir: The directory where the document can be found
+        """
         self.orig = node
         if self.orig.tag==CC+"base-pp":
             self.doctype = "Protection Profile"
@@ -40,39 +49,85 @@ class Edoc:
         self.are_sfrs_sorted = False
 
     def get_orig_node(self):
+        """
+        Retrieves the original node that references this edoc.
+
+        :returns A cc:base-pp or cc:include-pkg element.
+        """
         return self.orig
         
     def get_product(self):
+        """ 
+        Get's the product (singular) represented by this edoc.
+        
+        :returns A string
+        """
         return derive_product(self.el_with_meta)
     
     def get_products(self):
+        """
+        Get's the product class represented by this edoc.
+
+        :returns A string
+        """
         return derive_products(self.el_with_meta)
 
+    
     def add_base_dependent_sfr(self,bsfr):
+        """
+        Associates an SFR with this base.
+
+        :param bsfr: A cc:f-component element
+        """
         if self.is_modified(bsfr, self.root):
             self.mod_sfrs.append(bsfr)
         else:
             self.add_sfrs.append(bsfr)
         
     def sort_sfrs(self):
+        """
+        Sorts the SFRs that are associated with this edoc.
+        """
         self.mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
     def short(self):
+        """
+        Gets the short name of this edoc.
+
+        :return A short string that references this document.
+        """
         return derive_short(self.el_with_meta)
 
     def get_title(self):
+        """
+        Gets the  formal name of this edoc.
+
+        :return A string with the title of this document
+        """
+        
         ret=""
         if self.el_with_meta.find("cc:cPP", NS) is not None:
             ret="Collaborative "
         ret+= derive_title(self.el_with_meta, self.doctype)
         return ret 
-        
+
+
     def make_xref_edoc(self, out):
+        """
+        Makes an anchored reference,with short name, to this document.
+
+        :param out: The HTML output node.
+        """
         url=self.orig.find("cc:url", NS).text
         out.append(HTM_E.a({"href":url}, self.short()))
 
     def make_xref_selectable(self, sel, out):
+        """
+        Makes a reference to a selectable in this document.
+
+        :param
+        """
         ancestor = pp_util.get_meaningful_ancestor(self.root, sel.attrib["id"])
     
         readable = sel.find("cc:readable", NS)

@@ -3339,15 +3339,18 @@ security policies map to the security objectives.""")
         else:
             self.handle_content(node, out)
 
-#### UUUUUU            
+
     def make_mf_row(self, mf, prefix, managers, defval, out):
         """
-        :param  mf:
-        :param  prefix:
-        :param  managers:
-        :param  defval:
-        :param  par:
+        Writes out a row in the managment function table.
+
+        :param  mf: cc:management-function element
+        :param  prefix: The string that is prepended the the title
+        :param  managers: A set of cc:manager elements that hand this
+        :param  defval: String representing the default value
+        :param  out: The HTML output node
         """
+        
         mf_num = str(self.get_global_index(mf))
         mf_id = self.derive_id(mf)
         tr = adopt(out, HTM_E.tr())
@@ -3364,56 +3367,48 @@ security policies map to the security objectives.""")
             td=adopt(tr, HTM_E.td())
             self.make_mf_val(val, tagnode,td)
 
-    def get_first_section_with_title(self, title):
-        """
-        
-        :outam
-        :outam
-        :returns
-        """
-        possibles=self.root.xpath("//*[@title='"+title+"']|//sec:"+title.replace(' ','_'), namespaces=NS)
-        if possibles is None or len(possibles)==0:
-            return None
-        return possibles[0]
             
     def set_shortcut(self, node):
         """
+        Sets the shortcut (the element referred to by '<_/>')
         
-        :outam
-        :outam
-        :returns
+        :param node: The element to set to the shortcut
         """
         self.shortcut = node
 
-    def make_xref_mf(self, id, out):
-        """
         
-        :outam
-        :outam
-        :returns
-        """
-        out.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
+    # def make_xref_mf(self, id, out):
+    #     """
+        
+    #     :param id: The ID of the management fuction
+    #     :param out: The output node
+    #     :returns
+    #     """
 
-    def make_xref_generic(self, target, out, ref, deftext=""):
-        """
+    #     out.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
+
+    # def make_xref_generic(self, target, out, ref, deftext=""):
+    #     """
+    #     Creates a a generic
+
         
-        :outam
-        :outam
-        :returns
-        """
-        a_el=adopt(out, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
-        if not self.handle_content(ref, a_el):
-            self.add_text(a_el, deftext)
+    #     :outam
+    #     :outam
+    #     :returns
+    #     """
+    #     a_el=adopt(out, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
+    #     if not self.handle_content(ref, a_el):
+    #         self.add_text(a_el, deftext)
 
     # def make_xref_section(self, id, out):
     #     out.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
 
     def make_xref_bibentry(self, node, out):
         """
-        
-        :outam
-        :outam
-        :returns
+        Writes out a cross-reference to an entry in the bibliography.
+
+        :param node: The bibiography element that is being cross-referenced.
+        :param out: The HTML output node.
         """
         txt = "["+node.find("./cc:tag", NS).text+"]"
         anchor="#"+node.attrib["id"]
@@ -3421,10 +3416,11 @@ security policies map to the security objectives.""")
 
     def make_xref_feature(self, target, out, ref=None):
         """
-        
-        :outam
-        :outam
-        :returns
+        Writes out a cross-reference to an implementation-dependent thing.
+
+        :param target: The element being cross-referenced.
+        :param out: The HTML output node.
+        :param ref: The element doing the cross-reference (if there is one)
         """
         refid = self.derive_id(target)
         a_out = adopt(out, HTM_E.a({"href":"#"+refid}, target.attrib["title"]))
@@ -3432,10 +3428,11 @@ security policies map to the security objectives.""")
         
     def make_xref_selectable(self, target, out, ref):
         """
-        
-        :outam
-        :outam
-        :returns
+        Writes out a cross-reference to a selectable.
+
+        :param target: The element being cross-referenced.
+        :param out: The HTML output node.
+        :param ref: The element doing the cross-reference.
         """
         refid = self.derive_id(target)
         a_out = adopt(out, HTM_E.a({"href":"#"+refid}))
@@ -3450,13 +3447,14 @@ security policies map to the security objectives.""")
 
 
     
-    # M
+
     def make_xref(self, target, out, ref=None):
         """
-        
-        :outam
-        :outam
-        :returns
+        Writes a cross-reference out.
+
+        :param target: The element being cross-referenced.
+        :param out: The HTML output node.
+        :param ref: The element doing the cross-reference (or None).
         """
         if not hasattr(target, "tag"):
             self.broken_refs.add( (target, adopt(out, HTM_E.a()), ref) )
@@ -3494,17 +3492,15 @@ security policies map to the security objectives.""")
         # else:
         #     raise Exception("Cannot reference: " + target.tag + " " + target.text)
 
-    def is_base(self, attr):
-        """
+    
+    # def is_base(self, attr):
+    #     """
         
-        :outam
-        :outam
-        :returns
-        """
-        b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
-        if b_el is not None:
-            raise Exception("Should not have a base")
-        return False
+    #     """
+    #     b_el = self.rf("//cc:base-pp[@id='"+attr+"']")
+    #     if b_el is not None:
+    #         raise Exception("Should not have a base")
+    #     return False
         
     # def show_package(self, node):
     #     ret+="<a href=\""+node.attrib["url"]+"\">"
@@ -3520,14 +3516,15 @@ security policies map to the security objectives.""")
     #     ret+=version
     #     ret+="</a> Conformant"
 
-        
+
+    
     def handle_rules_appendix(self, out):
         """
-        
-        :outam
-        :outam
-        :returns
+        Writes out an appendix for rules.
+
+        :param out: The HTML output node.
         """
+        
         rules = self.rfa("//cc:rule")
         if len(rules)==0:
             return
@@ -3552,8 +3549,11 @@ security policies map to the security objectives.""")
 
     def apply_use_case_templates(self,nodes, out):
         """
-        
-                        :returns
+        This is like the 'usecase' mode in XSL. It only applies 
+        the templates to the tags recognized in the usecase structure.
+
+        :param nodes: The usecase elements.
+        :param out: The HTML output node.
         """
         for node in nodes:
             if is_comment(node):
@@ -3579,8 +3579,10 @@ security policies map to the security objectives.""")
             
     def and_use_case(self, and_el, out):
         """
+        Writes out cc:and in usecases.
         
-                        :returns
+        :param and_el: An cc:and element
+        :param out: The HTML output node.
         """
         for child in and_el:
             print("Anding :"+ child.tag)
@@ -3593,8 +3595,10 @@ security policies map to the security objectives.""")
 
     def or_use_case(self, or_el, out):
         """
+        Writes out a cc:or element in usecases.
         
-                        :returns
+        :param or_el: An cc:or element
+        :param out: The HTML output node.
         """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         table_out = adopt(out, HTM_E.table(table_attrs,
@@ -3608,8 +3612,10 @@ security policies map to the security objectives.""")
 
     def doc_use_case(self, doc_el, out):
         """
+        Writes out a cc:doc element in usecases.
         
-                        :returns
+        :param doc_el: An cc:doc element
+        :param out: The HTML output node.
         """
         doc_id = doc_el.attrib["ref"]
         print("Get_product: " + doc_id)
@@ -3657,8 +3663,10 @@ security policies map to the security objectives.""")
 
     def refid_use_case(self, refid_el, out):
         """
+        Writes out a cc:refid element in usecases.
         
-        :returns
+        :param refid_el: A cc:refid element
+        :param out: The HTML output node.
         """
         refid=refid_el.text
         target = self.rf("//cc:*[@id='"+refid+"']")
@@ -3736,8 +3744,10 @@ security policies map to the security objectives.""")
 
     def then_usecase(self, then_el, out):
         """
+        Writes out a cc:then (and its cc:if element) element in usecases.
         
-                        :returns
+        :param refid_el: A cc:refid element
+        :param out: The HTML output node.
         """
         table_attrs = {"class":"uc_table_or", "style":"border: 1px solid black"}
         if_el = then_el.xpath("preceding-sibling::cc:if[1]", namespaces=NS)
