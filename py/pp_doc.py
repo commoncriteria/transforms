@@ -10,50 +10,83 @@ SR_TITLE="Security Requirements"
 SFR_TITLE="Security Functional Requirements"
 SAR_TITLE="Security Assurance Requirements"
 class pp_doc(generic_pp_doc.generic_pp_doc):
+    """
+    Represents a Protection Profile Document.
+    """
     def __init__(self, root, workdir, boilerplate):
+        """
+        Creates a Protection Profile structure
+
+        :param  root: The ElementTree node that's the root.
+        :param  workdir: The directory where representations of 
+        bases and packages are saved. They must have a name with
+        the 'id' followed by '.xml'.
+        :param  boilerplate: The root ElementTree of
+        the boilerplate structure.
+        """
         super().__init__(root, workdir, boilerplate)
         self.modules={}
         for mod_node in self.rfa("//cc:module"):
             self.modules[mod_node.attrib["id"]]=edoc.Edoc(mod_node, workdir)
 
-    def apply_template_to_element(self, node, parent):
+    def apply_template_to_element(self, node, out):
+        """
+        Applies the templates to a node. It hooks generic_pp_doc's
+        method of the same name.
+
+        :param node: The ElementTree element to process
+        :param out: The HTML output node.
+        """
         if node.tag == "{https://niap-ccevs.org/cc/v1}PP":
-            return self.template_pp(node, parent)
+            self.template_pp(node, out)
         else:
-            return super().apply_template_to_element(node, parent)
+            super().apply_template_to_element(node, out)
 
 
-    def consistency_rationale(self, par):
-        par.append(self.sec({"id":"mod-conrat"},"Consistency Rationale"))
+    def consistency_rationale(self, out):
+        """
+        Writes out a consistency rational section.
+        :param out: The HTML output node.
+        """
+        out.append(self.sec({"id":"mod-conrat"},"Consistency Rationale"))
         self.end_section()
 
  
-    def handle_security_requirements(self, par):
+    def handle_security_requirements(self, out):
+        """
+        Writes out the SFR section.
+        
+        :param out: The HTML output node.
+        """
         firstfcomp=self.rf("//cc:f-component")
         sr_sec = firstfcomp.xpath("ancestor::*[3]")[0]
         attrs={"id":self.derive_id(sr_sec)}
         title=self.get_section_title(sr_sec)
-        adopt(par, self.sec(title, attrs))
+        adopt(out, self.sec(title, attrs))
         div = generic_pp_doc.get_convention_explainer()
         div.text= "This chapter describes the security requirements which have to be fulfilled by the product under evaluation."+\
             "Those requirements comprise functional components from Part 2 and assurance components from Part 3 of [CC]."+div.text
-        par.append(div)
+        out.append(div)
         sfr_sec = firstfcomp.xpath("ancestor::*[2]")[0]
         attrs={"id":self.derive_id(sfr_sec)}
         title=self.get_section_title(sfr_sec)
-        adopt(par, self.sec(title, attrs))
+        adopt(out, self.sec(title, attrs))
         secs_no_fcomps = sfr_sec.xpath(".//sec:*[not(.//cc:f-component)]|.//cc:section[not(.//cc:f-component)]", namespaces=NS)
-        self.apply_templates(secs_no_fcomps, par)
-        self.handle_sparse_sfrs(self.man_sfrs, par, "man_sfrs")
-        print("Finished SFRs")
-        self.objectives_to_requirements(par)
+        self.apply_templates(secs_no_fcomps, out)
+        self.handle_sparse_sfrs(self.man_sfrs, out, "man_sfrs")
+        self.objectives_to_requirements(out)
         self.end_section()
-        self.handle_sars(par)
+        self.handle_sars(out)
         self.end_section()
         
 
 
     def handle_sars(self, out):
+        """
+        Writes out the SAR section.
+        
+        :param out: The HTML output node.
+        """
         firstfcomp=self.rf("//cc:f-component")
         sfr_sec = firstfcomp.xpath("ancestor::*[2]")[0]
         sfr_id = self.derive_id(sfr_sec)
@@ -103,28 +136,38 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         
 
         
-    def template_pp(self, node, parent):
+    def template_pp(self, node, out):
+        """
+        Handles the root PP node.
+
+        :param out: The HTML output node.
+        """
         first_intro=self.find_first_section_with_title("Introduction")
-        self.apply_templates_single(first_intro,parent)
-        self.apply_templates(self.find_sections_with_title("Conformance Claims"),parent)
-        self.apply_templates(self.find_sections_with_title("Security Problem Description"),parent)
-        self.apply_templates(self.find_sections_with_title("Security Objectives"),parent)
-        self.handle_security_requirements(parent)
-#        self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"),parent)
-#        self.consistency_rationale(parent)
+        self.apply_templates_single(first_intro,out)
+        self.apply_templates(self.find_sections_with_title("Conformance Claims"),out)
+        self.apply_templates(self.find_sections_with_title("Security Problem Description"),out)
+        self.apply_templates(self.find_sections_with_title("Security Objectives"),out)
+        self.handle_security_requirements(out)
+#        self.apply_templates(self.rx("//*[@title='Security Requirements']|sec:Security_Requirements"),out)
+#        self.consistency_rationale(out)
         self.start_appendixes()
-        self.handle_optional_requirements(parent)
-        self.handle_selection_based_requirements(node, parent)
-        self.handle_ext_comp_defs(parent)
-        self.maybe_make_usecase_appendixes(parent)
-        self.apply_templates(self.rfa("//cc:appendix"), parent)
-        self.create_acronym_listing(parent)
-        self.create_bibliography(parent)
-
-
-        
+        self.handle_optional_requirements(out)
+        self.handle_selection_based_requirements(node, out)
+        self.handle_ext_comp_defs(out)
+        self.maybe_make_usecase_appendixes(out)
+        self.apply_templates(self.rfa("//cc:appendix"), out)
+        self.create_acronym_listing(out)
+        self.create_bibliography(out)
 
     def add_optional_appendix_explainer(self, out, opt_id, obj_id, impl_id):
+        """
+        Writes out the optional appendixes.
+
+        :param out: The HTML output node.
+        :param  opt_id: The ID of the optional section
+        :param  obj_id: The ID of the objective section
+        :param  impl_id: The ID of the implementation section.
+        """
         out.append(HTM_E.p("""Requirements As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP. This appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP. However, applied modules, packages and/or use cases may refine specific requirements as mandatory."""))
         out_p = adopt(out, HTM_E.p("The first type ("))
         self.make_xref(opt_id, out_p)
@@ -137,14 +180,16 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.add_text(out_p,") are dependent on the TOE implementing a particular function. If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the evaluated configuration. ")
         
     def doctype(self):
-        if self.rf(".//cc:cPP") is None:
-            return "Protection Profile"
-        else:
-            return "Collaborative Protection Profile"
+        """
+        Get the documentation type, long version
+        :returns "Protection Profile"
+        """
+        return "Protection Profile"
 
     def doctype_short(self):
-        if self.rf(".//cc:cPP") is None:
-            return " PP"
-        else:
-            return "cPP"
+        """
+        Get the documentation type, short version
+        :returns "PP"
+        """
+        return "PP"
 

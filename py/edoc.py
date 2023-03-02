@@ -88,6 +88,7 @@ class Edoc:
         """
         Sorts the SFRs that are associated with this edoc.
         """
+        
         self.mod_sfrs.sort(key=lambda x: x.attrib["cc-id"])
         self.add_sfrs.sort(key=lambda x: x.attrib["cc-id"])
 
@@ -97,6 +98,7 @@ class Edoc:
 
         :return A short string that references this document.
         """
+        
         return derive_short(self.el_with_meta)
 
     def get_title(self):
@@ -115,21 +117,24 @@ class Edoc:
 
     def make_xref_edoc(self, out):
         """
-        Makes an anchored reference,with short name, to this document.
+        Writes out an anchored reference ,with short name,
+        to this document.
 
         :param out: The HTML output node.
         """
+        
         url=self.orig.find("cc:url", NS).text
         out.append(HTM_E.a({"href":url}, self.short()))
 
     def make_xref_selectable(self, sel, out):
         """
-        Makes a reference to a selectable in this document.
+        Writes out a reference to a selectable in this document.
 
-        :param
+        :param sel: The selectable to be referenced.
+        :param out: The HTML output node.
         """
+        
         ancestor = pp_util.get_meaningful_ancestor(self.root, sel.attrib["id"])
-    
         readable = sel.find("cc:readable", NS)
         snip = sel.find("cc:snip", NS)
         if readable is not None:
@@ -140,10 +145,17 @@ class Edoc:
             pp_util.append_text(out, sel.text)
         pp_util.append_text(out, " from ") 
         self.make_xref_sub("", out, target_el=ancestor)
-
-        
             
     def make_xref_sub(self, target_id, out, target_el=None):
+        """
+        Writes out an cross-reference to something in
+        this element.
+
+        :param  target_id: The targeted ID 
+        :param out: The HTML output node.
+        :param  target_el: A targeted element. If it's none,
+        it will attempt to find it.
+        """
         if target_el == None:
             target_el = self.root.find(".//cc:*[@id='"+target_id+"']", NS)
         if target_el is None:
@@ -189,6 +201,15 @@ class Edoc:
         # parent.append(node)
         
     def is_modified(self, sfr, broot):
+        """
+        Returns whether the SFR is modified by this base.
+
+        :param  sfr: The cc:f-component elements
+        :param  broot: The root of the base element.
+        :returns A true if the base has an element with the same
+        cc-id and iteration combo.
+        """
+        
         cc_id = sfr.attrib["cc-id"]
         xp_iter=""
         if "iteration" in sfr.attrib:
@@ -207,15 +228,32 @@ class Edoc:
         return False
 
 def derive_product(node):
+    """
+    Derives the product name.
+
+    :param node: XML Element with the product_class attribute
+    (usually the base-pp element or root element)
+    """
     return node.find("cc:product_class", NS).text
     
 def derive_products(node):
+    """
+    Derives the product of a plural number of products.
+
+    :param node: XML Element with the product_class attribute
+    (usually the base-pp element or root element)
+    """
     plural=node.find("cc:plural", NS)
     if plural is not None:
         return plural.text
     return derive_product(node)+"s"
 
 def derive_version_and_date(node):
+    """
+    Figures out the date and version for the document.
+
+    :param node: The root node or the base-pp node.
+    """
     ver=node.find("cc:version", NS)
     if ver is not None:
         return [ver.text]
@@ -232,7 +270,14 @@ def derive_version_and_date(node):
     return ret
 
 def is_newer(ver1, ver2):
-# Returns True if ver1 is newer than ver2
+    """
+    Returns True if ver1 is newer than ver2 when they're 
+    in version = Digit ("." Digit )*
+    
+    :param ver1: A String with version information
+    :param ver2: A String with version information
+    """
+    
     if ver2 == "":
         return False
     ver1_nums = ver1.split(".")
@@ -255,15 +300,38 @@ def is_newer(ver1, ver2):
         
 
 def is_cpp(node):
+    """
+    Figures out whether the node pertains to a 
+    collaborative PP.
+
+    :param node: The root node or the base-pp node.
+    """
     return node.find("cc:cPP", NS) is not None
 
 def derive_title(node, doctype):
+    """
+    Figures out the title of this doucment.
+    collaborative PP.
+
+    :param node: The root node or the base-pp node.
+    :param doctype: A String for the document type
+    """
     title = node.find("cc:title", NS)
+    colb = ""
+    if is_cpp(node):
+        colb="Collaborative "
     if title is not None:
         return title.text
-    return doctype + " for " + derive_products(node) 
+    return colb+doctype + " for " + derive_products(node) 
 
 def derive_short(node):
+    """
+    Figures out whether the node pertains to a 
+    collaborative PP.
+
+    :param node: The root node or the base-pp node.
+    :param doctype: A String for the document type
+    """
     short = node.find("cc:short", NS)
     if short is not None:
         return short.text
