@@ -1686,7 +1686,7 @@ class generic_pp_doc(object):
             "the "+DT+": if certain selections are made, then additional "+\
             "requirements below must be included."
         
-    def handle_selection_based_requirements(self, node, par):
+    def handle_selection_based_requirements(self, par):
         """
         Creates an appendix for selection-based requirements
 
@@ -2859,7 +2859,7 @@ security policies map to the security objectives.""")
              or tag==CC+"SOEs":
             self.template_assumptions_cclaims_threats_OSPs_SOs_SOEs(node, out)
         elif tag==CC+"sfrs":
-            self.template_sfrs(node, out)
+            self.template_sfrs(out)
         elif tag in DONT_PROCESS:
             return
         elif tag in TRANSPARENT:

@@ -7,29 +7,48 @@ from lxml.builder import ElementMaker
 HTM_E=ElementMaker(namespace=None,
                    nsmap={None: "http://www.w3.org/1999/xhtml"})
 
-def debug_text(stringy):
-    if stringy is not None:
-        return stringy
-    else:
-        return ""
-    
 def debug_node(node):
+    """ 
+    Converts a node into a debug string.
+
+    :param node: The node to convert.
+    :returns A string value of the node.
+    """
     tag =node.tag
-    text = "<"+tag+">"+debug_text(node.text)
+    text = "<"+tag+">"+NoneStr(node.text)
     for child in node:
         text += debug_node(child)
-        text += debug_text(child.tail)
+        text += NoneStr(child.tail)
     return text+"</"+tag+">"
         
 
 def get_HTM_E():
+    """ 
+    Gets the HTML element creator
+
+    :returns The HTML element creator.
+    """
     return HTM_E
 
 def adopt(parent, child):
+    """
+    Appends a child to a parent
+
+    :param parent:
+    :param  child:
+    :returns 
+    """
     parent.append(child)
     return child
 
 def append_text(node, text):
+    """
+    Appends text to a node, after
+    all the children.
+    :param node:
+    :param  text:
+    :returns
+    """
     if text == None:
         return
     if len(node)==0:
@@ -45,6 +64,11 @@ def append_text(node, text):
 
     
 def get_meaningful_ancestor(root, refid):
+    """
+    :param root:
+    :param  refid:
+    :returns 
+    """
     ret = root.xpath(".//cc:f-element[.//@id='"+refid+"']|.//cc:choice[.//@id='"+refid+"']|.//cc:feature[.//@id='"+refid+"']", namespaces=NS)
     if len(ret) != 1:
         raise Exception("Should only be one thing")
@@ -57,42 +81,86 @@ NS = {'cc': "https://niap-ccevs.org/cc/v1",
       'htm': "http://www.w3.org/1999/xhtml"}
 
 def log(msg):
+    """
+    :param msg:
+    :returns 
+    """
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
 def make_attr_safe(attr):
+    """
+    :param attr:
+    :returns 
+    """
     ret = attr.replace('&', '&amp;')
     return ret.replace('"', '&quot;')
 
 def localtag(tag):
+    """
+    :param tag:
+    :returns 
+    """
     return  tag.split("}")[-1]
 
 def get_attr_or(node, attr, default=""):
+    """
+    :
+    :param node:
+    :param  attr:
+    :param  default="":
+    :returns 
+    """
     if attr in node.attrib:
         return node.attrib[attr]
     return default
 
 def maybe_add_attr(attrs, node, attr, default=None):
+    """
+    :param attrs:
+    :param  node:
+    :param  attr:
+    :param  default=None:
+    :returns 
+    """
     if attr in node.attrib:
         attrs[attr]=node.attrib[attr]
     elif default is not None:
         attrs[attr]=default
 
 def is_attr(node, attr, val):
+    """
+    :param node:
+    :param  attr:
+    :param  val:
+    :returns 
+    """
     if attr not in node.attrib:
         return False
     return node.attrib[attr] == val
 
 def make_wrappable(text):
+    """
+    :param text:
+    :returns 
+    """
 #    return text.replace("_", "_|")
     return text.replace("_", "_\u200b")
 
 def NoneStr(text):
+    """
+    :param text:
+    :returns 
+    """
     if text is None:
         return ""
     return text
 
 def flatten(el):
+    """
+    :param el:
+    :returns 
+    """
     ret = NoneStr(el.text)
     for subel in el:
         ret += flatten(subel)
@@ -100,9 +168,16 @@ def flatten(el):
     return " ".join(ret.split())
         
 def ccver():
+    """
+    :returns 
+    """
     return "Version 3.1, Revision 5"
 
 def add_js(parent):
+    """
+    :param parent:
+    :returns 
+    """
     E=ElementMaker()
     parent.append( E.script(
         {"src":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML",

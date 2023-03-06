@@ -104,7 +104,11 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         self.make_xref(threatsec,par)
         self.add_text(par, ". The Security Functional Requirements (SFRs) in section ")
         self.make_xref(sfr_sec, par)
-        self.add_text(par, """ are a formal instantiation of the Security Objectives. The PP identifies the Security Assurance Requirements (SARs) to frame the extent to which the evaluator assesses the documentation applicable for the evaluation and performs independent testing.""")
+        self.add_text(par, """ are a formal instantiation of the 
+        Security Objectives. The PP identifies the Security 
+        Assurance Requirements (SARs) to frame the extent to which 
+        the evaluator assesses the documentation applicable for the 
+        evaluation and performs independent testing.""")
         par = adopt(out, HTM_E.p("This section lists the set of "+\
                                  "Security Assurance Requirements (SARs) from Part 3 of the Common "+\
                                  "Criteria for Information Technology Security Evaluation, Version 3."+\
@@ -152,7 +156,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
 #        self.consistency_rationale(out)
         self.start_appendixes()
         self.handle_optional_requirements(out)
-        self.handle_selection_based_requirements(node, out)
+        self.handle_selection_based_requirements(out)
         self.handle_ext_comp_defs(out)
         self.maybe_make_usecase_appendixes(out)
         self.apply_templates(self.rfa("//cc:appendix"), out)
@@ -168,16 +172,35 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         :param  obj_id: The ID of the objective section
         :param  impl_id: The ID of the implementation section.
         """
-        out.append(HTM_E.p("""Requirements As indicated in the introduction to this PP, the baseline requirements (those that must be performed by the TOE) are contained in the body of this PP. This appendix contains three other types of optional requirements that may be included in the ST, but are not required in order to conform to this PP. However, applied modules, packages and/or use cases may refine specific requirements as mandatory."""))
+        out.append(HTM_E.p("""Requirements As indicated in the 
+        introduction to this PP, the baseline requirements 
+        (those that must be performed by the TOE) are contained in the
+        body of this PP. This appendix contains three other types of 
+        optional requirements that may be included in the ST, but are 
+        not required in order to conform to this PP. However, applied modules, 
+        packages and/or use cases may refine specific requirements as mandatory."""))
         out_p = adopt(out, HTM_E.p("The first type ("))
         self.make_xref(opt_id, out_p)
-        self.add_text(out_p, ") are strictly optional requirements that are independent of the TOE implementing any function. If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to include the SFRs in the ST, but are not required in order to conform to this PP.")
+        self.add_text(out_p, """) are strictly optional requirements that are 
+        independent of the TOE implementing any function. If the TOE 
+        fulfills any of these requirements or supports a certain 
+        functionality, the vendor is encouraged to include the SFRs 
+        in the ST, but are not required in order to conform to this PP.""")
         out_p = adopt(out, HTM_E.p("The second type ("))
         self.make_xref(obj_id, out_p)
-        self.add_text(out_p,") are objective requirements that describe security functionality not yet widely available in commercial technology. The requirements are not currently mandated in the body of this PP, but will be included in the baseline requirements in future versions of this PP. Adoption by vendors is encouraged and expected as soon as possible.")
+        self.add_text(out_p,""") are objective requirements that 
+        describe security functionality not yet widely available in 
+        commercial technology. The requirements are not currently 
+        mandated in the body of this PP, but will be included in the 
+        baseline requirements in future versions of this PP. 
+        Adoption by vendors is encouraged and expected as soon as 
+        possible.""")
         out_p = adopt(out, HTM_E.p("The third type ("))
         self.make_xref(impl_id, out_p)
-        self.add_text(out_p,") are dependent on the TOE implementing a particular function. If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the evaluated configuration. ")
+        self.add_text(out_p,""") are dependent on the TOE implementing 
+        a particular function. If the TOE fulfills any of these 
+        requirements, the vendor must either add the related SFR or 
+        disable the functionality for the evaluated configuration. """)
         
     def doctype(self):
         """

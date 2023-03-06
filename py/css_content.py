@@ -1,4 +1,10 @@
+
 def fx_common_css():
+     """
+     Repo of common CSS rules.
+
+     :returns A string of common CSS rules.
+     """
      return """#toc a{
         display: block;
     }

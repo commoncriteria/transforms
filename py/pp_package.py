@@ -12,7 +12,7 @@ class pp_package(generic_pp_doc.generic_pp_doc):
 
     def apply_template_to_element(self, node, parent):
         if node.tag == generic_pp_doc.CC+"Package":
-            return self.template_package(node, parent)
+            return self.template_package(parent)
         elif node.tag == generic_pp_doc.CC+"componentsneeded":
             self.template_componentsneeded(node, parent)
         else:
@@ -29,13 +29,13 @@ class pp_package(generic_pp_doc.generic_pp_doc):
             self.handle_content(comp.find("cc:notes", NS), td)
 
         
-    def template_package(self, node, parent):
+    def template_package(self, parent):
         self.apply_templates(self.rx("//*[@title='Introduction']|sec:Introduction"),parent)
         self.apply_templates(self.rx("//*[@title='Conformance Claims']|sec:Conformance_Claims"),parent)
         self.handle_requirements(parent)
         self.start_appendixes()
         self.handle_optional_requirements(parent)
-        self.handle_selection_based_requirements(node, parent)
+        self.handle_selection_based_requirements(parent)
         # self.handle_ext_comp_defs(parent)
         self.apply_templates(self.rfa("//cc:appendix"), parent)
         self.create_acronym_listing(parent)
