@@ -2014,7 +2014,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             </element>
           </zeroOrMore>
         </element>
-      </oneOrMore>
+    </oneOrMore>
+    <optional>
+      <element name="release-notes">
+	<ref name="basic-content-pat"/>
+      </element>
+    </optional>
   </define>
 	
   <define name="consistency-rationale">

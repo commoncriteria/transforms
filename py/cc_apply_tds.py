@@ -3,10 +3,14 @@ import sys
 import pathlib
 #import xml.etree.ElementTree as ET
 import lxml.etree as ET
+# from lxml.builder import ElementMaker
 
+# EM=ElementMaker(namespace=None,  nsmap={None: "https://niap-ccevs.org/cc/v1",
+#                                          "htm":"http://www.w3.org/1999/xhtml"})
+HTM="http://www.w3.org/1999/xhtml"
 default_ns = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
-      'htm': "http://www.w3.org/1999/xhtml"}
+      'htm': HTM}  
 
 def get_num(fullpath):
     path = pathlib.Path(fullpath)
@@ -20,19 +24,59 @@ def log(msg):
     sys.stderr.write(msg)
     sys.stderr.write("\n")
 
+def get_release_notes(root):
+    ret = root.find(".//cc:release-notes",default_ns)
+    if ret is not None:
+        log("It's not None")
+        return ret
+    revhist = root.find(".//cc:RevisionHistory", default_ns)
+    if revhist is None:
+        return None
+    parent = revhist.xpath("ancestor::cc:*[1]", namespaces=default_ns)[0]
+    index = parent.index(revhist)
+    ret = ET.Element("{"+default_ns["cc"]+"}release-notes")    
+    parent.insert(index+1, ret)
+    return ret 
 
+def maybe_append_el(parent, child):
+    if parent is not None:
+        parent.append(child)
+    return  child
+
+TD_ATTRS={"class":"td-"}
+
+def add_td_to_release_notes(relnote, td):
+    log("HERE")
+    for decision_el in td.findall("./cc:", default_ns):
+        log("HERE")
+    # for decision_el in td.findall("./cc:technical-decisions/cc:decision", default_ns):
+        # if "url" in decision_el:
+        #     newchild = ET.Element("{"+HTM+"}a", TD_ATTRS)
+        # else:
+        #     newchild = ET.Element("{"+HTM+"}div", TD_ATTRS)
+        # newchild.text = decision_el.attrib["id"]
+        # relnote.append(newchild)
+        
 def apply_tds(main_path, tds):
     doc = ET.parse(main_path)
     root = doc.getroot()
     parent_map = {c: p for p in root.iter() for c in p}
+    relnote = get_release_notes(root)
+    el = ET.Element("{"+default_ns["htm"]+"}h3", nsmap=default_ns)
+    el.text= "TDs Applied"
+    el = maybe_append_el(relnote, el)
+    
+
+
     ET.register_namespace('cc',"https://niap-ccevs.org/cc/v1")
     ET.register_namespace('sec',"https://niap-ccevs.org/cc/v1/section")
     ET.register_namespace('h', "http://www.w3.org/1999/xhtml")
     # Need to sort
     tds.sort(key=get_num)
     for td_path in tds:
-        log("Parsing: "+td_path)
         td = ET.parse(td_path).getroot()
+        add_td_to_release_notes(relnote, td)
+      
         ns_el = td.find(".//cc:xpath_namespaces",default_ns)
         if ns_el is None:
             ns = default_ns

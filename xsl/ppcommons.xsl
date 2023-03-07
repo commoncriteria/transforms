@@ -1115,6 +1115,7 @@ The following sections list Common Criteria and technology terms used in this do
        </tr><xsl:text>&#xa;</xsl:text>
      </xsl:for-each>
     </table>
+    <xsl:apply-templates select="//cc:release-notes"/>
     <h2>Contents</h2>
     <div class="toc" id="toc"/>
   </xsl:template>
