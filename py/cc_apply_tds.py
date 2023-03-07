@@ -46,16 +46,15 @@ def maybe_append_el(parent, child):
 TD_ATTRS={"class":"td-"}
 
 def add_td_to_release_notes(relnote, td):
-    log("HERE")
-    for decision_el in td.findall("./cc:", default_ns):
+    for decision_el in td.findall(".//cc:decision", default_ns):
         log("HERE")
-    # for decision_el in td.findall("./cc:technical-decisions/cc:decision", default_ns):
-        # if "url" in decision_el:
-        #     newchild = ET.Element("{"+HTM+"}a", TD_ATTRS)
-        # else:
-        #     newchild = ET.Element("{"+HTM+"}div", TD_ATTRS)
-        # newchild.text = decision_el.attrib["id"]
-        # relnote.append(newchild)
+        
+        if "url" in decision_el:
+            newchild = ET.Element("{"+HTM+"}a", TD_ATTRS)
+        else:
+            newchild = ET.Element("{"+HTM+"}div", TD_ATTRS)
+        newchild.text = decision_el.attrib["id"]
+        relnote.append(newchild)
         
 def apply_tds(main_path, tds):
     doc = ET.parse(main_path)
