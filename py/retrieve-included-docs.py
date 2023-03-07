@@ -49,10 +49,12 @@ def download_url(url, path):
 def get_effective_doc(url, branch, fpath):
     workdir = tempfile.TemporaryDirectory()
     abspath = os.path.abspath(fpath)
-    commands = ("cd "+workdir.name +
+    commands = ("set -x; cd "+workdir.name +
                 " && git clone --depth 1 --branch " + branch + " --recursive " + url +
+                " && git pull origin " + branch + 
                 " && cd * && " +
                 " (unset PP_XML; EFF_XML=\"" + abspath + "\"  make effective)")
+    print("Comamnds: " + commands)
     os.system(commands)
 
 
