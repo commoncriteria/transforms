@@ -10,7 +10,9 @@
     #toc a{
         display: block;
     }
-
+    .td-{
+        display: block;
+    }
     svg{
       width: 100%;
     }

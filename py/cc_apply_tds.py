@@ -12,10 +12,23 @@ default_ns = {'cc': "https://niap-ccevs.org/cc/v1",
       'sec': "https://niap-ccevs.org/cc/v1/section",
       'htm': HTM}  
 
+def extract_first_number(phrase):
+    ret=""
+    for aa in phrase:
+        if aa.isdigit():
+            ret+=aa
+        elif ret != "":
+            return ret
+    return ret
+
+    
 def get_num(fullpath):
     path = pathlib.Path(fullpath)
+    stem = path.stem
+    num = extract_first_number(stem)
     try:
-        return int( path.stem )
+        ret = int( num )
+        return ret
     except ValueError:
         return sys.maxsize
 #        return 99999
@@ -45,16 +58,18 @@ def maybe_append_el(parent, child):
 
 TD_ATTRS={"class":"td-"}
 
+# TDs should really been in their own namespace
+# as this decision could stomp things if "decision" was an
+# element in the main CC documents.
 def add_td_to_release_notes(relnote, td):
     for decision_el in td.findall(".//cc:decision", default_ns):
-        log("HERE")
-        
         if "url" in decision_el:
             newchild = ET.Element("{"+HTM+"}a", TD_ATTRS)
         else:
             newchild = ET.Element("{"+HTM+"}div", TD_ATTRS)
         newchild.text = decision_el.attrib["id"]
-        relnote.append(newchild)
+        log(newchild.text)
+        relnote.insert(1, newchild)
         
 def apply_tds(main_path, tds):
     doc = ET.parse(main_path)
@@ -98,7 +113,6 @@ def apply_tds(main_path, tds):
                 kid_cache = []
                 for kid in list(parent):
                     if kid == replaced:
-                        log("Adding: " )
                         for newkids in list(xpath_spec):
                             kid_cache.append(newkids)
                     else:
