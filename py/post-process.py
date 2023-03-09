@@ -9,7 +9,7 @@ with XSLT).
 import re
 import sys
 import string
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 from xml.sax.saxutils import quoteattr, escape
 
 
@@ -74,9 +74,7 @@ class State:
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
         self.is_handling_first_abbrs = handle_abbrs  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
-        self.test_number_stack = [0]
-
-        self.fix_test_numbers(root)
+        self.fix_test_numbers()
         self.sort_it_out() 
         self.fix_indices()
         self.fix_index_refs()
@@ -87,17 +85,32 @@ class State:
         self.build_termtable()
         self.fix_refs_to_main_doc()
 
-    def fix_test_numbers(self, elem):
+
+        
+    def fix_test_numbers(self):
+        for eapane in self.root.xpath(".//*[@class='activity_pane_body' and .//@class='test-']"):
+            for el in eapane:
+                if "class" in el.attrib\
+                   and ( el.attrib["class"]=="component-activity-header" or\
+                         el.attrib["class"]=="element-activity-header"):
+                    prefix=el.text
+                    self.test_number_stack=[0]
+                else:
+                    self.fix_test_numbers_recur(el, prefix)
+        pass
+        
+    def fix_test_numbers_recur(self, elem, prefix):        
         if "class" in elem.attrib and "test-" in elem.attrib["class"]:
             new_num=self.test_number_stack.pop() + 1
             self.test_number_stack.append(new_num)
-            test_label = "Test "+".".join(map(str, self.test_number_stack))
+            test_label = "Test "+prefix + ":" +".".join(map(str, self.test_number_stack))
+            print(test_label)
             elem[0].text = test_label
             self.test_number_stack.append(0)
             
 
         for kid in elem:
-            self.fix_test_numbers(kid)
+            self.fix_test_numbers_recur(kid, prefix)
 
         if "class" in elem.attrib and "test-" in elem.attrib["class"]:
             self.test_number_stack.pop()
@@ -119,7 +132,7 @@ class State:
     def create_classmapping(self):
         self.classmap = {}
         for el in self.root.findall(".//*[@class]"):
-            classes = el.attrib["class"].split(",")                   
+            classes = el.attrib["class"].split(" ")
             for clazz in classes: #                                   # Go through all the classes the element is a part of
                 if clazz in self.classmap: #                          # If we already have this class in the classmap
                     clazzset = self.classmap[clazz]                   # Grab the old
@@ -139,10 +152,11 @@ class State:
             return []
 
     def cross_reference_cc_items(self):
-        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded","defined"}:
+        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded"}:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
                     term = el.attrib["id"]
+                    print("Adding: " + term)
                     self.add_to_regex(term)
                     wrappable = term.replace("_", "_\u200B")
                     if not term == wrappable:
@@ -207,6 +221,7 @@ class State:
                 regex_str = "(?<!-)\\b(" + "|".join(self.key_terms) + ")\\b"
                 if self.abbr_def:
                     regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
+                print("Regex String: "+ regex_str)
                 self.regex = re.compile(regex_str)
         except re.error:
             warn("Failed to compile regular expression: " +

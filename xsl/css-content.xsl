@@ -70,7 +70,7 @@
        max-width: 15px;
     }
 
-    a.definition{
+    a.defined{
       color: inherit;
       text-decoration: inherit;
     }
