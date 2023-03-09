@@ -103,7 +103,7 @@ def apply_tds(main_path, tds):
                 matches = root.xpath(xpath, namespaces=ns)
                 #                replaced = root.find(xpath, ns)
                 if not len(matches)==1:
-                    log("Found "+ str(len(replaced))+ " nodes using:::"  + xpath + "::: Expected 1")
+                    log("Found "+ str(len(matches))+ " nodes using:::"  + xpath + "::: Expected 1")
                     continue
                 replaced = matches[0]
                 parent = parent_map[replaced]
