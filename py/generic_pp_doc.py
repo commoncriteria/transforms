@@ -33,6 +33,29 @@ SVG_E=ElementMaker()
 HTM_E=pp_util.get_HTM_E()
 adopt=pp_util.adopt
 
+def get_attr_or(el, attrname, default=None):
+    if el is not None and attrname in el.attrib:
+        return el.attrib[attrname]
+    return default
+
+def find_fix(xpath, docroot, el):
+    target = docroot.xpath(xpath)
+    if len(target)==0:
+        return False
+    parent = target[0]
+    ctr_el = parent[0]
+    el.text = ctr_el.text
+    return True
+
+def dynref(id, prefix="", suffix=""):
+    return HTM_E.a({"href":"#"+id}, prefix, dynref_num(id), suffix)
+
+def dynref_num(id):
+    """ 
+    This is only going to make the counter part.
+    """
+    return HTM_E.span({"data-target":id, "class":"dynref"})
+
 def attrs(clazz,id=None):
     """
     Populates new dictionary with class and maybe id attributes
@@ -341,7 +364,7 @@ class generic_pp_doc(object):
         self.counters={}
         
         # Keeping: tuple( target_node, output anchor, element , 
-        self.broken_refs=set()
+        # self.broken_refs=set()
 
 
     def maybe_make_usecase_appendixes(self, out):
@@ -837,54 +860,73 @@ class generic_pp_doc(object):
     # </html>
 
 
-            
-
-    def fix_numbered_xrefs(self, doc):
+    def fix_dynrefs(self , same_doc, other_doc, root=None,):
         """
         Fixes numbered xrefs in a doc
 
         :param doc: The document in question
         """
-        
-        for broken_ref in self.broken_refs:
-            self.fix_xref(doc, broken_ref[0], broken_ref[1], broken_ref[2])
-
-    def fix_xref(self, doc, refid, link, ref):
+        if root==None:
+            root = same_doc
+        if auto_xref.has_class(root.attrib, "dynref"):
+            xpath=".//*[@id='"+root.attrib["data-target"]+"']"
+            if not find_fix(xpath, same_doc, root): 
+                if find_fix(xpath, other_doc, root):
+                    parent = root.xpath("ancestor::*[1]")[0]
+                    parent.tag = "span"
+                    
+        for child in root:
+            self.fix_dynrefs(same_doc, other_doc, child)
+            
+    def fix_numbered_xrefs(self, main, sd):
         """
-        Fixes the content of an anchor that points to something else.
+        Fixes numbered xrefs in a doc
 
-        :param  doc: Root node of the HTML document
-        :param  refid: The ID that is the target of the link
-        :param  link: The output link.
-        :param  ref: The input XML node that created the xref.
-        It can be None if it's programmatically generated.
+        :param doc: The document in question
         """
+        self.fix_dynrefs(main, sd)
+        self.fix_dynrefs(sd, main)
+        pass
+
+
+        # for broken_ref in self.broken_refs:
+        #     self.fix_xref(doc, broken_ref[0], broken_ref[1], broken_ref[2])
+
+    # def fix_xref(self, doc, refid, link, ref):
+    #     """
+    #     Fixes the content of an anchor that points to something else.
+
+    #     :param  doc: Root node of the HTML document
+    #     :param  refid: The ID that is the target of the link
+    #     :param  link: The output link.
+    #     :param  ref: The input XML node that created the xref.
+    #     It can be None if it's programmatically generated.
+    #     """
         
-        link.attrib["href"]="#"+refid
-        reffed = doc.find(".//*[@id='"+refid+"']")
-        # It's possible that this item might
-        # be in the companion document. Like the SD
-        # is pointing back to the main document or
-        # vice-versa.
-        if reffed is None:
-            print("Could not find dynamic reference: '" + refid+"'")
-            return
-        label_node = reffed.find("./*[@class='dynid_']")
-        if label_node is None:
-            text = pp_util.flatten(reffed)
-        else:
-            text = pp_util.flatten(label_node)
-        pp_util.append_text(link,text)
+    #     link.attrib["href"]="#"+refid
+    #     reffed = doc.find(".//*[@id='"+refid+"']")
+    #     # It's possible that this item might
+    #     # be in the companion document. Like the SD
+    #     # is pointing back to the main document or
+    #     # vice-versa.
+    #     if reffed is None:
+    #         print("Could not find dynamic reference: '" + refid+"'")
+    #         return
+    #     label_node = reffed.find("./*[@class='dynid_']")
+    #     if label_node is None:
+    #         text = pp_util.flatten(reffed)
+    #     else:
+    #         text = pp_util.flatten(label_node)
+    #     pp_util.append_text(link,text)
 
     def to_html(self):
         main = self.to_main()
         sd = self.to_sd()
 
-        self.fix_numbered_xrefs(main)
+        self.fix_numbered_xrefs(main, sd)
         self.xreffer.add_discoverable_xrefs(main)
         convert_none_text_to_emptys(main)
 
-        self.fix_numbered_xrefs(sd)
         self.xreffer.add_discoverable_xrefs(sd)
         convert_none_text_to_emptys(sd)
 
@@ -2170,9 +2212,11 @@ security policies map to the security objectives.""")
             self.apply_templates(usecase.findall("./cc:description",NS), dd)
             config = node.find("./cc:config", NS)
             if config is not None:
-                dd.append(HTM_E.p("For changes to included SFRs, selections, and assignments required for this use case, see", HTM_E.a({"href":"#appendix-"+id, "class":"dynref"}),"."))
+                dd.append(HTM_E.p("For changes to included SFRs, selections, and assignments required for this use case, see",
+                                  dynref("appendix-"+id, "section "), "."))
             ctr += 1
 
+            
     def handle_felement(self, fel_el,  out):
         """
         Writes out an f-element
@@ -3443,7 +3487,20 @@ security policies map to the security objectives.""")
             self.handle_content(target, a_out)
 
 
-    
+
+            
+    def make_xref_ctr(self, target, out, ref):
+        prefix = get_attr_or(target, "prefix")
+        prefix = get_attr_or(ref, "prefix", prefix)
+        if prefix is None:
+            prefix = get_attr_or(ref, "ctr-type", "")
+        suffix = ""
+        suffix = get_attr_or(target, "suffix", suffix)
+        suffix = get_attr_or(ref, "suffix", suffix)
+
+        out.append(dynref(target.attrib["id"],prefix=prefix, suffix=suffix))
+
+        
 
     def make_xref(self, target, out, ref=None):
         """
@@ -3454,7 +3511,7 @@ security policies map to the security objectives.""")
         :param ref: The element doing the cross-reference (or None).
         """
         if not hasattr(target, "tag"):
-            self.broken_refs.add( (target, adopt(out, HTM_E.a()), ref) )
+            out.append(dynref(target))
         elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, out)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
@@ -3468,8 +3525,11 @@ security policies map to the security objectives.""")
             self.make_xref_selectable(target, out, ref)
         elif target.tag == CC+"feature":
             self.make_xref_feature(target, out, ref)
+        elif target.tag == CC+"ctr":
+            self.make_xref_ctr(target, out, ref)
         else:
-            self.broken_refs.add( (self.derive_id(target), adopt(out, HTM_E.a()), ref) )
+            out.append(dynref(self.derive_id(target), ""))
+            # self.broken_refs.add( (self.derive_id(target), , ref) )
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
         #     self.make_xref_section(pp_util.localtag(target.tag), out)
         # elif target.tag == CC+"section":

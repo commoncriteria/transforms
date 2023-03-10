@@ -109,10 +109,14 @@ class auto_xreffer:
            node.tag == "head" or node.tag == "script"  or\
            node.tag == "svg"  or node.tag == "th": 
             return True
-        if "class" in node.attrib and node.attrib["class"]:
-            classes = node.attrib["class"].split(" ")
-            if "term" in classes:
-                return True
+
+        if has_class(node.attrib, "term"):
+            return True
+
+        # if "class" in node.attrib and node.attrib["class"]:
+        #     classes = node.attrib["class"].split(" ")
+        #     if "term" in classes:
+                # return True
         return False
 
     def make_disco_link(self, id, matchtext):
@@ -127,13 +131,11 @@ class auto_xreffer:
         
         attrs={"class":"discovered", "href":"#"+id}
         full_el = self.root.find(".//*[@id='long_"+id+"']")
-        print("Looking for long_"+id)
         if full_el is not None:
             attrs["class"]="discovered abbr"
             attrs["title"]=full_el.text
         return HTM_E.a(attrs, matchtext)
     
-
 
     
     def add_discoverable_xrefs(self, node):

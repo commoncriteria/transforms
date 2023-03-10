@@ -182,7 +182,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             add_text(out," as a whole and evaluated against the  " + short + ".")
             add_text(out," The following sections describe any modifications that the ST author must make to the SFRs")
             add_text(out," defined in the "+short+" in addition to what is mandated by ")
-            out.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"section "))
+            out.append(generic_pp_doc.dynref("man-sfrs",prefix="section"))
             add_text(out,".")
             
         out.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
