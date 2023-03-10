@@ -45,11 +45,8 @@ def make_mod(path, pp_path, sd_path):
     # write_out_doc(newdoc, pp_path+".html")
     # return 
    
-    html_doc = pp.to_html()
-
-    
+    html_doc,sd = pp.to_html()
     write_out_doc(html_doc, pp_path)
-    sd = pp.to_sd()
     write_out_doc(sd, sd_path)
 
     

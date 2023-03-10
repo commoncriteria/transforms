@@ -9,6 +9,9 @@ adopt=pp_util.adopt
 SR_TITLE="Security Requirements"
 SFR_TITLE="Security Functional Requirements"
 SAR_TITLE="Security Assurance Requirements"
+
+add_text=pp_util.append_text
+
 class pp_doc(generic_pp_doc.generic_pp_doc):
     """
     Represents a Protection Profile Document.
@@ -99,12 +102,12 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         par = adopt(out, HTM_E.p("The Security Objectives for the TOE in section"))
         secobjs=self.find_first_section_with_title("Security Objectives")
         self.make_xref(secobjs,par)
-        self.add_text(par," were constructed to address threats identified in section ")
+        add_text(par," were constructed to address threats identified in section ")
         threatsec=self.find_first_section_with_title("Threats")
         self.make_xref(threatsec,par)
-        self.add_text(par, ". The Security Functional Requirements (SFRs) in section ")
+        add_text(par, ". The Security Functional Requirements (SFRs) in section ")
         self.make_xref(sfr_sec, par)
-        self.add_text(par, """ are a formal instantiation of the 
+        add_text(par, """ are a formal instantiation of the 
         Security Objectives. The PP identifies the Security 
         Assurance Requirements (SARs) to frame the extent to which 
         the evaluator assesses the documentation applicable for the 
@@ -116,7 +119,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
                                  "Individual evaluation activities to be performed are specified in "+\
                                  "both "))
         self.make_xref(sfr_sec, par)#Section 5.1
-        self.add_text(par," as well as in this section.")
+        add_text(par," as well as in this section.")
         par = adopt(out, HTM_E.p("After the ST has been approved for "+\
                                  "evaluation, the Information Technology Security Evaluation "+\
                                  "Facility (ITSEF) will obtain the TOE, supporting environmental IT, "+\
@@ -125,7 +128,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
                                  "SARs. The ITSEF also performs the evaluation activities contained "+\
                                  "within "))
         self.make_xref(sfr_sec,par) # Section 5
-        self.add_text(par,", which are intended to be an interpretation of the "+\
+        add_text(par,", which are intended to be an interpretation of the "+\
                       "other CEM assurance requirements as they apply to the specific "+\
                       "technology instantiated in the TOE. The evaluation activities that "+\
                       "are captured in Section 5 also provide clarification as to what the "+\
@@ -181,14 +184,14 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         packages and/or use cases may refine specific requirements as mandatory."""))
         out_p = adopt(out, HTM_E.p("The first type ("))
         self.make_xref(opt_id, out_p)
-        self.add_text(out_p, """) are strictly optional requirements that are 
+        add_text(out_p, """) are strictly optional requirements that are 
         independent of the TOE implementing any function. If the TOE 
         fulfills any of these requirements or supports a certain 
         functionality, the vendor is encouraged to include the SFRs 
         in the ST, but are not required in order to conform to this PP.""")
         out_p = adopt(out, HTM_E.p("The second type ("))
         self.make_xref(obj_id, out_p)
-        self.add_text(out_p,""") are objective requirements that 
+        add_text(out_p,""") are objective requirements that 
         describe security functionality not yet widely available in 
         commercial technology. The requirements are not currently 
         mandated in the body of this PP, but will be included in the 
@@ -197,7 +200,7 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         possible.""")
         out_p = adopt(out, HTM_E.p("The third type ("))
         self.make_xref(impl_id, out_p)
-        self.add_text(out_p,""") are dependent on the TOE implementing 
+        add_text(out_p,""") are dependent on the TOE implementing 
         a particular function. If the TOE fulfills any of these 
         requirements, the vendor must either add the related SFR or 
         disable the functionality for the evaluated configuration. """)

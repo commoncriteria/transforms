@@ -8,6 +8,7 @@ HTM_E=pp_util.get_HTM_E()
 
 adopt=pp_util.adopt
 
+add_text=pp_util.append_text
 
 class ppmod(generic_pp_doc.generic_pp_doc):
     def __init__(self, root, workdir, boilerplate):
@@ -127,11 +128,11 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             self.handle_basepp(base ,out)
         out.append(self.sec({"id":"man-sfrs"},"TOE Security Functional Requirements"))
         if len(self.man_sfrs)>0:
-            self.add_text(out,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
+            add_text(out,"The following section describes the SFRs that must be satisfied by any TOE that claims conformance to this PP-Module."+
                              "These SFRs must be claimed regardless of which PP-Configuration is used to define the TOE.")
             self.handle_sparse_sfrs(self.man_sfrs, out, "man_sfrs")
         else:
-            self.add_text(out," This PP-Module does not define any mandatory SFRs.")
+            add_text(out," This PP-Module does not define any mandatory SFRs.")
         self.end_section()
 
     # Not sure if this should be handled this way. We're missing
@@ -174,21 +175,21 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         short=base.short()
         out.append(self.sec({"id":"secreq-"+id},short+" Security Functional Requirements Direction"))
         if not self.apply_templates_single(node.find("cc:sec-func-req-dir", generic_pp_doc.NS), out):
-            self.add_text(out,"In a PP-Configuration that includes the ")
-            self.add_text(out,short)
-            self.add_text(out,",the TOE is expected to rely on some of the security functions implemented by the")
-            self.add_text(out,base.get_product())
-            self.add_text(out," as a whole and evaluated against the  " + short + ".")
-            self.add_text(out," The following sections describe any modifications that the ST author must make to the SFRs")
-            self.add_text(out," defined in the "+short+" in addition to what is mandated by ")
+            add_text(out,"In a PP-Configuration that includes the ")
+            add_text(out,short)
+            add_text(out,",the TOE is expected to rely on some of the security functions implemented by the")
+            add_text(out,base.get_product())
+            add_text(out," as a whole and evaluated against the  " + short + ".")
+            add_text(out," The following sections describe any modifications that the ST author must make to the SFRs")
+            add_text(out," defined in the "+short+" in addition to what is mandated by ")
             out.append(HTM_E.a({"class":"dynref","href":"#man-sfrs"},"section "))
-            self.add_text(out,".")
+            add_text(out,".")
             
         out.append(self.sec({"id":"modsfr-"+id},"Modified SFRs"))
-        self.add_text(out,"The SFRs listed in this section are defined in the "+short +\
+        add_text(out,"The SFRs listed in this section are defined in the "+short +\
                 " and are relevant to the secure operation of the TOE.")
         if len(base.mod_sfrs)==0:
-            self.add_text(out," This PP-Module does not modify any SFRs defined by the " + short  + ".")
+            add_text(out," This PP-Module does not modify any SFRs defined by the " + short  + ".")
         else:
             self.handle_sparse_sfrs(base.mod_sfrs ,out, id+"__mod_sfrs")
         self.end_section()
@@ -196,10 +197,10 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(self.rfa("//cc:base-pp"))>1:
             out.append(self.sec({"id":"addsfr-"+id},"Additional SFRs"))
             if len(base.add_sfrs)>0:
-                self.add_text(out,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
+                add_text(out,"This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the "+short+" is claimed as the Base-PP.")
                 self.handle_sparse_sfrs(base.add_sfrs, out, id+"__add_sfrs")
             else:
-                self.add_text(out,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
+                add_text(out,"This PP-Module does not define any additional SFRs for any PP-Configuration where the "+short+" is claimed as the Base-PP.")
             self.end_section()
         self.end_section()
     
@@ -278,24 +279,24 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         out.append(self.sec({"id":"conreq-"+id}, 
                             "Consistency of Requirements"))
         self.handle_content(base.find("./cc:con-req", generic_pp_doc.NS), out)
-        self.add_text(out,"This PP-Module identifies several SFRs from the")
+        add_text(out,"This PP-Module identifies several SFRs from the")
         edoc.make_xref_edoc(out)
-        self.add_text(out," that are needed to support "+self.rf("cc:product_class").text)
-        self.add_text(out," functionality.")
-        self.add_text(out," This is considered to be consistent because the functionality provided by the")
+        add_text(out," that are needed to support "+self.rf("cc:product_class").text)
+        add_text(out," functionality.")
+        add_text(out," This is considered to be consistent because the functionality provided by the")
         edoc.make_xref_edoc(out)
-        self.add_text(out," is being used for its intended purpose.")
+        add_text(out," is being used for its intended purpose.")
         if len(edoc.mod_sfrs)>0:
-            self.add_text(out," The PP-Module also identifies a number of modified SFRs from the")
+            add_text(out," The PP-Module also identifies a number of modified SFRs from the")
             edoc.make_xref_edoc(out)
             if len(edoc.add_sfrs)>0:
-                self.add_text(out,"as well as new SFRs ")
-            self.add_text(out,"that are used entirely to provide functionality for "+edoc.get_products())
+                add_text(out,"as well as new SFRs ")
+            add_text(out,"that are used entirely to provide functionality for "+edoc.get_products())
         elif len(edoc.add_sfrs)>0:
-            self.add_text(out," The PP-Module identifies new SFRs that are used entirely to provide")
-            self.add_text(out," functionality for "+  edoc.get_products() + ".")
-        self.add_text(out," The rationale for why this does not conflict with the claims")
-        self.add_text(out," defined by the "+ edoc.short()+" are as follows:")
+            add_text(out," The PP-Module identifies new SFRs that are used entirely to provide")
+            add_text(out," functionality for "+  edoc.get_products() + ".")
+        add_text(out," The rationale for why this does not conflict with the claims")
+        add_text(out," defined by the "+ edoc.short()+" are as follows:")
         table = adopt(out, HTM_E.table())
         table.append(HTM_E.tr(HTM_E.th("PP-Module Requirement"),
                               HTM_E.th("Consistency Rationale")))
@@ -354,9 +355,9 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         self.handle_content(base.find("./cc:con-obj",generic_pp_doc.NS), p_el)
         sos_des = self.rfa("//cc:SO[cc:description]")
         if len(sos_des):
-            self.add_text(p_el, "The objectives for the TOEs are consistent with the ")
+            add_text(p_el, "The objectives for the TOEs are consistent with the ")
             edoc.make_xref_edoc(p_el)
-            self.add_text(p_el, " based on the following rationale:")
+            add_text(p_el, " based on the following rationale:")
             table=adopt(out, HTM_E.table())
             table.append(HTM_E.tr(HTM_E.th("PP-Module TOE Objective"), HTM_E.th("Consistency Rationale")))
             self.handle_consistency_rows(base, sos_des, table)
@@ -365,7 +366,7 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(soes)>0:
             p_el = adopt(out, HTM_E.p("The objectives for the TOE's OE are consistent with the "))
             edoc.make_xref_edoc(p_el)
-            self.add_text(p_el, " based on the following rationale:")
+            add_text(p_el, " based on the following rationale:")
             table = adopt(out, HTM_E.table())
             table.append(HTM_E.tr(HTM_E.th("PP-Module OE Objective"), HTM_E.th("Consistency Rationale")))
             self.handle_consistency_rows(base,soes, table)
@@ -432,28 +433,28 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if len(self.bases)==1:
             for base_id in self.bases:
                 base = self.bases[base_id]
-            self.add_text(pp ,"base ")
+            add_text(pp ,"base ")
             base.make_xref_edoc(pp)
             # <x:apply-templates mode="short" select="//cc:base-pp"/>
-            self.add_text(pp," to which it must claim conformance.  ")
-            self.add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
-            self.add_text(pp,"inherently evaluated against this Base-PP as well.  ")
-            self.add_text(pp,"The  ")
+            add_text(pp," to which it must claim conformance.  ")
+            add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
+            add_text(pp,"inherently evaluated against this Base-PP as well.  ")
+            add_text(pp,"The  ")
             base.make_xref_edoc(pp)
-            self.add_text(pp," includes a number of Evaluation Activities associated with both SFRs and SARs. ")
-            self.add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
-            self.add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
-            self.add_text(pp,"The evaluation laboratory will evaluate the TOE against the Base-PP ")
+            add_text(pp," includes a number of Evaluation Activities associated with both SFRs and SARs. ")
+            add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
+            add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
+            add_text(pp,"The evaluation laboratory will evaluate the TOE against the Base-PP ")
         else:
-            self.add_text(pp,"base-PP to which it must claim conformance. ")
-            self.add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
-            self.add_text(pp,"inherently evaluated against the Base-PP as well. ")
-            self.add_text(pp,"The Base-PP includes a number of Evaluation Activities associated with both SFRs and SARs. ")
-            self.add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
-            self.add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
-            self.add_text(pp,"The evaluation laboratory will evaluate the TOE against the chosen Base-PP ")
+            add_text(pp,"base-PP to which it must claim conformance. ")
+            add_text(pp,"It is important to note that a TOE that is evaluated against the PP-Module is ")
+            add_text(pp,"inherently evaluated against the Base-PP as well. ")
+            add_text(pp,"The Base-PP includes a number of Evaluation Activities associated with both SFRs and SARs. ")
+            add_text(pp,"Additionally, the PP-Module includes a number of SFR-based Evaluation Activities  ")
+            add_text(pp,"that similarly refine the SARs of the Base-PPs. ")
+            add_text(pp,"The evaluation laboratory will evaluate the TOE against the chosen Base-PP ")
 
-        self.add_text(pp,"and supplement that evaluation with the necessary SFRs that are taken from the PP-Module. ")
+        add_text(pp,"and supplement that evaluation with the necessary SFRs that are taken from the PP-Module. ")
         self.end_section()
         
         
@@ -475,7 +476,10 @@ class ppmod(generic_pp_doc.generic_pp_doc):
         if title=="Security Functional Requirements":
             self.template_sfrs(out)
         elif title=="Organizational Security Policies":
-            out.append(HTM_E.p("An organization deploying the TOE is expected to satisfy the organizational security policy listed below in addition to all organizational security policies defined by the claimed Base-PP."))
+            out.append(HTM_E.p("""An organization deploying the TOE is 
+            expected to satisfy the organizational security policy 
+            listed below in addition to all organizational security 
+            policies defined by the claimed Base-PP."""))
         elif title=="Security Requirements":
             out.append(generic_pp_doc.get_convention_explainer())
         else:
@@ -512,16 +516,19 @@ class ppmod(generic_pp_doc.generic_pp_doc):
             base = self.bases[base_id]
             li_el = adopt(ul_el, HTM_E.li())
             base.make_xref_edoc(li_el)
-        wurds="""This SD is mandatory for evaluations of TOEs that claim conformance to a 
-PP-Configuration that includes the PP-Module for :"""
+        wurds="""This SD is mandatory for evaluations of TOEs that 
+        claim conformance to a PP-Configuration that includes the 
+        PP-Module for :"""
         out.append(HTM_E.p(wurds))
         products = self.derive_plural()
         version = edoc.derive_version_and_date(self.root)[0]
         out.append(HTM_E.ul(HTM_E.li(products+", Version "+version)))
-        out.append(HTM_E.p("""As such it defines Evaluation Activities for the functionality described in
- the PP-Module as well as any impacts to the Evaluation Activities to the Base-PP(s) it modifies."""))
-        return
-        
+        out.append(HTM_E.p("""As such it defines Evaluation 
+        Activities for the functionality described 
+        in the PP-Module as well as any impacts to the Evaluation Activities 
+        to the Base-PP(s) it modifies."""))
+
+
     def doctype_short(self):
         """
         Gets a string version of the type of document.

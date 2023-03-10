@@ -10,6 +10,8 @@ import pp_util
 from pp_util import log
 import auto_xref
 
+add_text=pp_util.append_text
+
 
 NS = edoc.NS
 CC="{"+NS['cc']+"}"
@@ -358,13 +360,13 @@ class generic_pp_doc(object):
             out.append(self.sec({"id":"app-"+uc_id+"-"}, usecase.attrib["title"]))
             config_in = usecase.find("./cc:config", NS)
             if config_in is None:
-                self.add_text(out, "The use case ")
+                add_text(out, "The use case ")
                 self.make_xref(uc_id, out)
-                self.add_text(out," makes no changes to the base requirements.")
+                add_text(out," makes no changes to the base requirements.")
             else:
-                self.add_text(out, "The configuration for ")
+                add_text(out, "The configuration for ")
                 self.make_xref(uc_id, out)
-                self.add_text(out," modifies the base requirements as follows:")
+                add_text(out," modifies the base requirements as follows:")
                 out_div = adopt(out, HTM_E.div())
                 self.apply_use_case_templates(config_in, out_div)
             self.end_section()
@@ -492,19 +494,6 @@ class generic_pp_doc(object):
                 plural=term.attrib["plural"]
                 self.abbrs[plural]=term.attrib["full"]
                 self.register_keyterm(plural, "long_abbr_"+abbr)
-            
-    def add_text(self, node, text):
-        """
-        Appends texts to a node.
-
-        :param node: The output XML node in question.
-        :param text: A string to add.
-        :returns
-        """
-        
-        pp_util.append_text(node,text)
-
-
 
         
     def categorize_sfrs(self):
@@ -608,9 +597,6 @@ class generic_pp_doc(object):
         self.end_section()
         self.start_appendixes()
         self.create_bibliography(body)
-        self.fix_numbered_xrefs(body)
-        self.xreffer.add_discoverable_xrefs(body, self.abbrs)
-        convert_none_text_to_emptys(body)
         return ret
 
 
@@ -643,7 +629,7 @@ class generic_pp_doc(object):
         ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM workunits 
         that are performed in Section """))
         self.make_xref("eas_for_sars-", out_p)
-        self.add_text(out_p, ".")
+        add_text(out_p, ".")
         #    <a href="#sar_aas" class="dynref"></a>
         out.append(HTM_E.p("""Regarding design descriptions (designated 
         by the subsections labeled TSS, as 
@@ -725,7 +711,7 @@ class generic_pp_doc(object):
             HTM_E.img({"src":"images/niaplogo.png","alt":"NIAP"}),
             HTM_E.hr({"width":"50%"}),
             HTM_E.noscript(HTM_E.h1({"style":"text-align:center; border-style: dashed; border-width: medium; border-color: red;"},"This page is best viewed with JavaScript enabled!")),HTM_E.br())
-        self.add_text(div, self.title())
+        add_text(div, self.title())
         div.append(HTM_E.br())
         version_date = edoc.derive_version_and_date(self.root)
         pp_util.append_text(div, "Version: "+version_date[0])
@@ -889,19 +875,21 @@ class generic_pp_doc(object):
         else:
             text = pp_util.flatten(label_node)
         pp_util.append_text(link,text)
-            
-    def to_html(self):
-        """
-        Generates the main document from the input XML.
 
-        :returns The root element of the main HTML document
-        """
+    def to_html(self):
+        main = self.to_main()
+        sd = self.to_sd()
+
+        self.fix_numbered_xrefs(main)
+        self.xreffer.add_discoverable_xrefs(main, self.abbrs)
+        convert_none_text_to_emptys(main)
+
+        self.fix_numbered_xrefs(sd)
+        self.xreffer.add_discoverable_xrefs(sd, self.abbrs)
+        convert_none_text_to_emptys(sd)
+
         
-        doc = self.start()
-        self.fix_numbered_xrefs(doc)
-        self.xreffer.add_discoverable_xrefs(doc, self.abbrs)
-        convert_none_text_to_emptys(doc)
-        return doc
+        return main, sd
     
     def rf(self, findexp):
         """
@@ -1000,7 +988,7 @@ class generic_pp_doc(object):
         table=adopt(par,HTM_E.table())
         caption=adopt(table,HTM_E.caption())
         self.create_ctr("Table", "t-obj-map", caption, "Table ")
-        self.add_text(caption, "SFR Rationale")
+        add_text(caption, "SFR Rationale")
         table.append(HTM_E.tr( HTM_E.th("Objective"), HTM_E.th("Addressed by"), HTM_E.th("Rationale")))
         prev_parent = None
         for addr_by in addr_bys:
@@ -1020,8 +1008,9 @@ class generic_pp_doc(object):
             self.handle_content(rational[0], td)
         self.end_section()
 
-            
-    def start(self):
+        
+        
+    def to_main(self):
         """
         Builds an HTML skeleton for the main document.
 
@@ -1073,7 +1062,7 @@ class generic_pp_doc(object):
         div.append(HTM_E.img(attrs))
         div.append(HTM_E.br())
         self.create_ctr("figure", id, div, "Figure ")
-        self.add_text(div, el.attrib["title"])
+        add_text(div, el.attrib["title"])
 
 
     def get_text_or(self, xpath, default=""):
@@ -1224,14 +1213,14 @@ class generic_pp_doc(object):
         """
         
         if node is None:
-            self.add_text(out, defcon)
+            add_text(out, defcon)
             return False
         if node.text is None and len(node)==0:
             return False
-        self.add_text(out, node.text)
+        add_text(out, node.text)
         for child in node:
             self.apply_templates_single(child,out)
-            self.add_text(out,child.tail)
+            add_text(out,child.tail)
         return True
             
     def handle_section(self, node, title, id, parent):
@@ -1311,18 +1300,18 @@ class generic_pp_doc(object):
         pks = self.rfa("//cc:include-pkg")
         ctr=len(pks)
         if ctr == 0:
-            self.add_text(dd, "does not claim conformance to any packages")
+            add_text(dd, "does not claim conformance to any packages")
         else:
             lagsep=""
             for pk in pks:
                 ctr=ctr-1
-                self.add_text(dd, lagsep)
+                add_text(dd, lagsep)
                 lagsep=","
                 if ctr==2 :
                     lagsep="and"
                 self.make_xref_edoc(pk, dd)
-            self.add_text("conformant")
-        self.add_text(dd,".")
+            add_text("conformant")
+        add_text(dd,".")
 
 
         
@@ -1344,7 +1333,7 @@ class generic_pp_doc(object):
         elif title=="Security Objectives for the Operational Environment":
             self.handle_security_objectives_operational_environment(out)
         elif title=="Assumptions":
-            self.add_text(out, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
+            add_text(out, "These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the security functionality specified in the "+self.doctype_short()+" can be provided by the TOE. If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to provide all of its security functionality.")
         elif title=="Validation Guidelines":
             self.handle_rules_appendix(out) 
     
@@ -1399,13 +1388,13 @@ class generic_pp_doc(object):
         """
         
         par.append(self.sec({"id":"ext-comp-defs-bg-"},"Extended Components Table"))
-        self.add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
+        add_text(par,"All extended components specified in the "+self.doctype()+" are listed in this table:")
         par.append(HTM_E.br())
         # b_el = adopt(par, HTM_E.div({"class":"table_caption"}))
         table = adopt(par, HTM_E.table({"class":"sort_kids_"}))
         caption = adopt(table, HTM_E.caption())
         self.create_ctr("Table","t-ext-comp_map-", caption, "Table ")
-        self.add_text(caption, "Extended Component Definitions")
+        add_text(caption, "Extended Component Definitions")
         table.append(HTM_E.tr({"data-sortkey":"#1"},
                               HTM_E.th("Functional Class"),
                               HTM_E.th("Functional Components")))
@@ -1438,7 +1427,7 @@ class generic_pp_doc(object):
         if self.rf("//cc:ext-comp-def") is None:
             return 
         par.append(self.sec({"id":"ext-comp-defs"},"Extended Component Definitions"))
-        self.add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
+        add_text(par, "This appendix contains the definitions for all extended requirements specified in the " + self.doctype()+".\n")
 
         ecdsecs = self.rx("//*[cc:ext-comp-def]")
         ecdsecs.sort(key=lambda sec: sec.attrib["title"])
@@ -1455,7 +1444,7 @@ class generic_pp_doc(object):
             classid = sec.attrib["title"].split(")")[0].split("(")[1]
             span=adopt(par, HTM_E.span({"data-sortkey":sec.attrib["title"]}))
             span.append(self.sec({"id":"ext-comp-"+classid},sec.attrib["title"]))
-            self.add_text(span, "This "+self.doctype() +\
+            add_text(span, "This "+self.doctype() +\
                           " defines the following extended components as part of the "+\
                           classid + " class originally defined by CC Part 2:" )
 
@@ -1564,7 +1553,7 @@ class generic_pp_doc(object):
         out.append(self.sec(attrs, "Implementation-based Requirements"))
         features=self.rfa("//cc:feature")
         if len(features)==0:
-            self.add_text(out, "This "+self.doctype_short()+" does not define any Implementation-based SFRs.\n")
+            add_text(out, "This "+self.doctype_short()+" does not define any Implementation-based SFRs.\n")
         for feature in features:
             out.append(self.sec(feature.attrib["title"]))
             self.handle_content(feature,out)
@@ -1602,7 +1591,7 @@ class generic_pp_doc(object):
         """
         
         if len(sfrs)==0:
-            self.add_text(out, none_msg)
+            add_text(out, none_msg)
         else:
             if audittype is not None:
                 self.create_audit_table_section(title, audittype, out)
@@ -1626,7 +1615,7 @@ class generic_pp_doc(object):
         # attrset=attrs(None,title.replace(" ","-")+"-")
         attrset={"id":idval}
         par.append(self.sec(attrset,title+" Requirements"))
-        self.add_text(par, preamble)
+        add_text(par, preamble)
         none_msg = "This "+self.doctype_short()+" does not define any "+title+" SFRs.\n"
         self.handle_sfr_section(sfrs, none_msg, audittype, title, par, idval)
         self.end_section()
@@ -1718,9 +1707,9 @@ security objectives for the environment.
         
         soes=self.rfa("//cc:SOE")
         if len(soes)>0:
-            self.add_text(out,generic_pp_doc.OE_PREAMBLE)
+            add_text(out,generic_pp_doc.OE_PREAMBLE)
         else:
-            self.add_text(out, "This "+self.doctype()+" does not define any objectives for the OE.")
+            add_text(out, "This "+self.doctype()+" does not define any objectives for the OE.")
 
         
     def create_ctr(self, ctrtype, id ,parent, prefix, sep=": ", child=None):
@@ -1743,7 +1732,7 @@ security objectives for the environment.
                           HTM_E.span({"class":"counter"},ctrcount)
                           )
         parent.append(span)
-        self.add_text(span, sep)
+        add_text(span, sep)
         self.handle_content(child, span)
         
     def handle_conformance_statement(self, out):
@@ -1824,12 +1813,12 @@ security objectives for the environment.
         :param out: The HTML output element
         """
         
-        self.add_text(out, """This section describes how the assumptions, threats, and organizational 
+        add_text(out, """This section describes how the assumptions, threats, and organizational 
 security policies map to the security objectives.""")
         table = adopt(out, HTM_E.table())
         caption = adopt(table, HTM_E.caption())
         self.create_ctr("Table","t-sec-obj-rat-", caption, "Table ")
-        self.add_text(caption, "Security Objectives Rationale")
+        add_text(caption, "Security Objectives Rationale")
         tr = adopt(table, HTM_E.tr({"class":"header"}))
         tr.append(HTM_E.td("Threat, Assumption, or OSP"))
         tr.append(HTM_E.td("Security Objectives"))
@@ -1894,7 +1883,7 @@ security policies map to the security objectives.""")
                 self.apply_templates(defined.findall("./cc:description",NS), dd)
                 self.apply_templates(defined.findall("./cc:appnote",NS), dd)
         else:
-            self.add_text(out, "This document does not define any additional " + pp_util.localtag(node.tag))
+            add_text(out, "This document does not define any additional " + pp_util.localtag(node.tag))
             
         
     def template_xref(self, node, out):
@@ -2038,7 +2027,7 @@ security policies map to the security objectives.""")
         divy = HTM_E.div({"class":"no-link"})
         out.append(divy)
         divy.append(self.sec({"id":"glossary"}, "Terms"))
-        self.add_text(divy,"The following sections list Common Criteria and technology terms used in this document.")
+        add_text(divy,"The following sections list Common Criteria and technology terms used in this document.")
         divy.append(self.sec({"id":"cc-terms"},"Common Criteria Terms"))
         tabley = HTM_E.table()
         divy.append(tabley)
@@ -2071,9 +2060,9 @@ security policies map to the security objectives.""")
         id=full.replace(" ", "_")
         td = adopt(tr, HTM_E.td())
         div = adopt(td, HTM_E.div({"id":id}))
-        self.add_text(div, full)
+        add_text(div, full)
         if "abbr" in node.attrib:
-            self.add_text(div, " ("+node.attrib["abbr"]+")")
+            add_text(div, " ("+node.attrib["abbr"]+")")
         deftd = adopt(tr, HTM_E.td())
         self.handle_content(node, deftd)
 
@@ -2125,7 +2114,7 @@ security policies map to the security objectives.""")
         features=depends_ids[2]
         externals=depends_ids[3]
         bases=depends_ids[4]
-        self.add_text(out, words)
+        add_text(out, words)
         if len(choices)>0:
             self.add_refs(choices, out);
             out.append(HTM_E.div("choices are made"))
@@ -2236,17 +2225,17 @@ security policies map to the security objectives.""")
         :returns
         """
         if node in self.sel_sfrs:
-            self.add_text(out, "This is a selection-based component. Its inclusion depends upon selection from:")
+            add_text(out, "This is a selection-based component. Its inclusion depends upon selection from:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
                 fcomp = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']") 
                 if len(fcomp)>0:
-                    self.add_text(out, " " + self.fel_cc_id(fcomp[0]))
+                    add_text(out, " " + self.fel_cc_id(fcomp[0]))
             if is_optional(node):
-                self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
+                add_text(out, "This component may also be optionally be included in the ST as if optional.")
         elif node in self.obj_sfrs:
-            self.add_text(out,"This is an objective component.")
+            add_text(out,"This is an objective component.")
         elif node in self.opt_sfrs:
-            self.add_text(out, "This is an optional component.")
+            add_text(out, "This is an optional component.")
         return None
 
 
@@ -2260,16 +2249,16 @@ security policies map to the security objectives.""")
         :returns
         """
         if node in self.sel_sfrs:
-            self.add_text(out, "The inclusion of this selection-based component depends upon selection in:")
+            add_text(out, "The inclusion of this selection-based component depends upon selection in:")
             for dependsId in node.xpath("cc:depends/@*", namespaces=NS):
                 fels = self.rx("//cc:f-element[.//cc:selectable//@id='"+dependsId+"']")
                 if len(fels)==1:
-                    self.add_text(out, " " + self.fel_cc_id(fels[0]))
+                    add_text(out, " " + self.fel_cc_id(fels[0]))
                 else:
                     print("WARNING: Failed to find exactly one element that contains a selectable with the id: "+dependsId)
-            self.add_text(out, ".")
+            add_text(out, ".")
             if is_optional(node):
-                self.add_text(out, "This component may also be optionally be included in the ST as if optional.")
+                add_text(out, "This component may also be optionally be included in the ST as if optional.")
 
                 
     
@@ -2300,7 +2289,7 @@ security policies map to the security objectives.""")
         out.append(HTM_E.a(attrs,"Rule #"+ruleindex))
         desc = rule.find("cc:description", NS)
         if desc is not None:
-            self.add_text(out, ": ")
+            add_text(out, ": ")
             self.handle_content(desc, out)
         
     def add_rules(self, fel_el, out):
@@ -2656,7 +2645,6 @@ security policies map to the security objectives.""")
             title=el.find("cc:title",NS).text
             if title.startswith("The developer shall"):
                 ret["D"].append(el)
-                print("Adding to developer")
             elif title.startswith("The evaluator shall"):
                 ret["E"].append(el)
             else:
@@ -2913,10 +2901,10 @@ security policies map to the security objectives.""")
         id=self.derive_id(node)
         eq_out = HTM_E.td("$$")
         self.handle_content(node, eq_out)
-        self.add_text(eq_out, "$$")
+        add_text(eq_out, "$$")
         ctr_out = HTM_E.td("(")
         self.create_ctr("equation", id, ctr_out, "", sep="")
-        self.add_text(ctr_out,")")
+        add_text(ctr_out,")")
         out.append(HTM_E.table({"class":"equation_"},
             HTM_E.tr(eq_out, ctr_out)
             ))
@@ -2980,8 +2968,8 @@ security policies map to the security objectives.""")
             adopt(li, HTM_E.a(atts, "Test "+title))
             dependses = test.findall("cc:depends", NS)
             if len(dependses)>0:
-                self.add_text(li, "[conditional,aaaa]")
-            self.add_text(li, ":")
+                add_text(li, "[conditional,aaaa]")
+            add_text(li, ":")
             self.handle_content(test, li)
 
     def get_title_n_sfrs(self, thistable):
@@ -3109,9 +3097,9 @@ security policies map to the security objectives.""")
             decider=nodein
         if is_optional(decider):
             out.append(HTM_E.b("[selection"))
-            self.add_text(out, ": ")
+            add_text(out, ": ")
             self.handle_content(nodein, out)
-            self.add_text(out, ", "+nowords)
+            add_text(out, ", "+nowords)
             out.append(HTM_E.b("]"))
         else:
             self.handle_content(nodein, out)
@@ -3193,7 +3181,7 @@ security policies map to the security objectives.""")
         # count = str(self.get_next_counter(ctrtype))
         # span = adopt(par, HTM_E.span({"class":"ctr","data-counter-type":"ct-"+ctrtype,
         #                               "id":id}, ))
-        # self.add_text(span,self.get_pre(node))
+        # add_text(span,self.get_pre(node))
         # span.append(HTM_E.span({"class":"counter"}, id))
         # self.handle_content(node, span)
 
@@ -3227,12 +3215,12 @@ security policies map to the security objectives.""")
         :param out: The HTML output node
         """
         id=self.derive_id(node)
-        self.add_text(out,"[")
+        add_text(out,"[")
         out.append(HTM_E.b("assignment"))
-        self.add_text(out,": ")
+        add_text(out,": ")
         span=adopt(out, HTM_E.span({"class":"assignable-content","id":id}))
         self.handle_content(node, span)
-        self.add_text(out,"]")
+        add_text(out,"]")
 
     # def template_appendix(self, node, out):
     #     id=self.derive_id(node)
@@ -3251,11 +3239,11 @@ security policies map to the security objectives.""")
         :param  out: The HTML node to write to
         """
         if not is_in_choice(node):
-            self.add_text(out,"[")
+            add_text(out,"[")
             out.append(HTM_E.b("selection"))
             if node.find("cc:onlyone", NS) is not None:
                 out.append(HTM_E.b(", choose one of"))
-            self.add_text(out, ": ")
+            add_text(out, ": ")
             
         sep=", "
         extraclass=""
@@ -3273,13 +3261,13 @@ security policies map to the security objectives.""")
             if is_in_choice(node) and sels_left==0 and sep==", ":
                 lagsep=lagsep+"or "
             id = self.derive_id(selectable)
-            self.add_text(out,lagsep)
+            add_text(out,lagsep)
             lagsep=sep
                 
             span = adopt(out,HTM_E.span({"class":"selectable-content"+extraclass, "id":id}))
             self.handle_content(selectable, span)
         if not is_in_choice(node):
-            self.add_text(out,"]")
+            add_text(out,"]")
  #                   <li style="{@style}"><xsl:apply-templates select="." mode="handle_sel"/></li>
  #                   </xsl:for-each></ul>
  #    </xsl:when>
@@ -3398,7 +3386,7 @@ security policies map to the security objectives.""")
     #     """
     #     a_el=adopt(out, HTM_E.a({"href":"#"+target.attrib["id"],"class":"dynref"}))
     #     if not self.handle_content(ref, a_el):
-    #         self.add_text(a_el, deftext)
+    #         add_text(a_el, deftext)
 
     # def make_xref_section(self, id, out):
     #     out.append(HTM_E.a({"href":"#"+id,"class":"dynref"},"section "))
@@ -3632,10 +3620,10 @@ security policies map to the security objectives.""")
         else:
             print("Target is " + target.tag)
         target_edoc.make_xref_edoc(out)
-        self.add_text(out, " include ")
+        add_text(out, " include ")
         for sub in doc_el:
             target_edoc.make_xref_sub(sub.text, out)
-        self.add_text(out, " in the ST. ")
+        add_text(out, " in the ST. ")
             
 
 
@@ -3683,21 +3671,21 @@ security policies map to the security objectives.""")
         if target.tag == CC+"module":
             out_div = adopt(out,HTM_E.div({"class":"uc module"},start+"nclude the "))
             self.make_xref(target, out)
-            self.add_text(out_div, " module in the ST ")
+            add_text(out_div, " module in the ST ")
         elif target.tag == CC+"selectable":
             out_div = adopt(out,HTM_E.div({"class":"uc selectable"},start+"nclude "))
             self.make_xref(target, out_div)
             print("HANDLING ANCESTORS")
-            self.add_text(out_div, " selectable in the ST ")
+            add_text(out_div, " selectable in the ST ")
         elif target.tag == CC+"f-component":
             out_div = adopt(out,HTM_E.div({"class":"uc fcomp"},start+"nclude "))
             self.make_xref(target, out_div)
-            self.add_text(out_div, " in the ST ")
+            add_text(out_div, " in the ST ")
         elif target.tag == CC+"management-function":
             print("HANDLING ANCESTORS")
             out_div = adopt(out,HTM_E.div({"class":"uc mf"},start+"nclude "))
             self.make_xref(target, out_div)
-            self.add_text(out_div, " in the ST ")
+            add_text(out_div, " in the ST ")
         else:
             raise Exception("Can't handle: " +target.tag + " : " + refid)
   #           <xsl:template match="cc:ref-id" mode="use-case">
