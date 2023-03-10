@@ -337,7 +337,7 @@ class generic_pp_doc(object):
         #        self.test_number_stack = [0]
         self.register_threats_assumptions_objectives_policies()
         self.register_sfrs()
-        self.register_abbrs()
+        # self.register_abbrs()
         self.counters={}
         
         # Keeping: tuple( target_node, output anchor, element , 
@@ -403,8 +403,8 @@ class generic_pp_doc(object):
             self.counters[ctr_type]=1
             return 1
 
-    def register_keyterm(self, term, id):
-        self.xreffer.register_keyterm(term, id)
+    # def register_keyterm(self, term, id):
+    #     self.xreffer.register_keyterm(term, id)
         
     def register_sfrs(self):
         """
@@ -414,10 +414,10 @@ class generic_pp_doc(object):
         
         for fcomp in self.root.findall(".//cc:f-component", NS):
             id = self.fcomp_cc_id(fcomp)
-            self.register_keyterm(id,id)
+            # self.register_keyterm(id,id)
             for fel in fcomp.findall(".//cc:f-element", NS):
                 felid=self.fel_cc_id(fel)
-                self.register_keyterm(felid.upper(), felid)
+                # self.register_keyterm(felid.upper(), felid)
 
                 
     def get_all_abbr_els(self):
@@ -441,7 +441,7 @@ class generic_pp_doc(object):
             +self.rfa("//cc:SO")+self.rfa("//cc:SOE")+self.rfa("//cc:OSP"):
             if aa.find("cc:description", NS) is not None:
                 ccname = aa.attrib["name"]
-                self.register_keyterm(ccname, ccname)
+                # self.register_keyterm(ccname, ccname)
 
     def get_ccid_for_ccel(self, ccel_el):
         """
@@ -479,21 +479,21 @@ class generic_pp_doc(object):
         return self.node_to_ccid[ccel_el]
         
                 
-    def register_abbrs(self):
-        """
-        Registers all the abberviations used in this document
-        both in the user-provided XML and the boilerplate
-        with the automatic cross-referencer.
-        """
+    # def register_abbrs(self):
+    #     """
+    #     Registers all the abberviations used in this document
+    #     both in the user-provided XML and the boilerplate
+    #     with the automatic cross-referencer.
+    #     """
         
-        for term in self.get_all_abbr_els():
-            abbr = term.attrib["abbr"]
-            self.register_keyterm(abbr, "long_abbr_"+abbr)
-            self.abbrs[abbr]=term.attrib["full"]
-            if "plural" in term.attrib:
-                plural=term.attrib["plural"]
-                self.abbrs[plural]=term.attrib["full"]
-                self.register_keyterm(plural, "long_abbr_"+abbr)
+    #     for term in self.get_all_abbr_els():
+    #         abbr = term.attrib["abbr"]
+    #         self.register_keyterm(abbr, "long_abbr_"+abbr)
+    #         self.abbrs[abbr]=term.attrib["full"]
+    #         if "plural" in term.attrib:
+    #             plural=term.attrib["plural"]
+    #             self.abbrs[plural]=term.attrib["full"]
+    #             self.register_keyterm(plural, "long_abbr_"+abbr)
 
         
     def categorize_sfrs(self):
@@ -881,11 +881,11 @@ class generic_pp_doc(object):
         sd = self.to_sd()
 
         self.fix_numbered_xrefs(main)
-        self.xreffer.add_discoverable_xrefs(main, self.abbrs)
+        self.xreffer.add_discoverable_xrefs(main)
         convert_none_text_to_emptys(main)
 
         self.fix_numbered_xrefs(sd)
-        self.xreffer.add_discoverable_xrefs(sd, self.abbrs)
+        self.xreffer.add_discoverable_xrefs(sd)
         convert_none_text_to_emptys(sd)
 
         
@@ -1763,10 +1763,10 @@ security objectives for the environment.
         for entry in entries:
             keyterm= "["+entry.find("cc:tag", NS).text+"]"
             entry_id = self.derive_id(entry)            
-            self.register_keyterm(keyterm, entry_id)
+            # self.register_keyterm(keyterm, entry_id)
             
             tr = adopt(table, HTM_E.tr())
-            tr.append(HTM_E.td( HTM_E.span({"id":entry_id},keyterm)))
+            tr.append(HTM_E.td( HTM_E.span({"id":entry_id, "class":"definition"},keyterm)))
 
             td = adopt(tr, HTM_E.td())
             self.handle_content(entry.find("cc:description",NS), td)
@@ -1798,9 +1798,11 @@ security objectives for the environment.
                 continue
             tr = adopt(table, HTM_E.tr())
 
-            attrs = {"class":"term", "id":"abbr_"+abbr}
-            # pp_util.maybe_add_attr(attrs, term_el, "plural")
-            # pp_util.maybe_add_attr(attrs, term_el, "lower")
+            attrs = {"class":"abbr definition", "id":"abbr_"+abbr}
+            if "plural" in term_el.attrib:
+                attrs["data-others"]=term_el.attrib["plural"]
+            if "others" in term_el.attrib:
+                attrs["data-others"]=term_el.attrib["others"]
             tr.append(HTM_E.td(HTM_E.span(attrs, abbr)))
             tr.append(HTM_E.td(HTM_E.span({"id":"long_abbr_"+abbr}, full)))
         self.end_section()
@@ -1862,8 +1864,11 @@ security policies map to the security objectives.""")
         out.append(HTM_E.p("This information benefits systems engineering activities which call for inclusion of particular "+
                            "security controls. Evaluation against the "+self.doctype_short()+" provides evidence that these controls are present "+
                            "and have been evaluated."))
-       
-        
+
+    # Don't know if it makes sens for the cclaims to be in this with the others.
+    # The definition class means that the text content of the
+    # can be discovered by the cross-referencer and should
+    # point to the 'id' attribute.
     def template_assumptions_cclaims_threats_OSPs_SOs_SOEs(self, node, out):
         """
         Creates a definition list for assumptions, claims, threats, OSPs, SOs, or SOEs.
@@ -1878,7 +1883,7 @@ security policies map to the security objectives.""")
             for defined in defs:
                 classtype=pp_util.localtag(defined.tag)
                 name= defined.attrib["name"]
-                dl.append(HTM_E.dt({"class":classtype+" defined","id":name}, name))
+                dl.append(HTM_E.dt({"class":classtype+" definition","id":name}, name))
                 dd = adopt(dl, HTM_E.dd())
                 self.apply_templates(defined.findall("./cc:description",NS), dd)
                 self.apply_templates(defined.findall("./cc:appnote",NS), dd)
@@ -2181,8 +2186,9 @@ security policies map to the security objectives.""")
         div_fel=adopt(out, HTM_E.div({"class":"element"}))
         reqid=self.derive_id(fel_el)
         div_fel.append(
-            HTM_E.div({"class":"formal_id","id":reqid},
-                      HTM_E.a({"href":"#"+formal_id,"class":"abbr"}, formal_id))
+            HTM_E.a({"id":formal_id,\
+                     "href":"#"+formal_id,\
+                     "class":"felement definition"}, formal_id)
         )
         div_reqdesc = adopt(div_fel, HTM_E.div({"class":"reqdesc"}))
         title=fel_el.find("cc:title", NS)
@@ -2316,8 +2322,11 @@ security policies map to the security objectives.""")
         :param out: The HTML output node.
         """
         formal = self.fcomp_cc_id(node)
-        div = adopt(out, HTM_E.div({"class":"comp", "id":formal}))
-        div.append(HTM_E.h4(formal + " "+ node.attrib["name"]))
+        div = adopt(out, HTM_E.div({"class":"comp"}))
+        div.append(
+            HTM_E.h4(
+                HTM_E.span({"id":formal, "class":"definition"}, formal),
+                " "+node.attrib["name"]))
         status_el = HTM_E.div({"class":"statustag"})
         self.get_fcomp_status(node, status_el)
         if not is_empty(status_el):

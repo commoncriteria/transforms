@@ -117,11 +117,15 @@ def get_attr_or(node, attr, default=""):
 
 def maybe_add_attr(attrs, node, attr, default=None):
     """
+    If the attribute exists in the nodes attributes,
+    add it to the attrs dictionary.
+    If not and default is not None, add the default
+    to the attrs dictionary.
+
     :param attrs:
     :param  node:
     :param  attr:
     :param  default=None:
-    :returns 
     """
     if attr in node.attrib:
         attrs[attr]=node.attrib[attr]
