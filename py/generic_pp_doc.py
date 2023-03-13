@@ -2980,11 +2980,14 @@ security policies map to the security objectives.""")
         else:
             ance =testnode.xpath("ancestor::cc:f-element", namespaces=NS)[0]
             cc_id=self.fel_cc_id(ance)
-        ctr=1
-        self.derive_test_title_recur(aa_el, cc_id+"#")
+
+        # This is numbering elements.
+        print("CC_id " + cc_id)
+        stack=[0]
+        self.derive_test_title_recur(aa_el, cc_id+":", stack)
         return self.test_titles[testnode]
 
-    def derive_test_title_recur(self, node, prefix, stack=[0]):
+    def derive_test_title_recur(self, node, prefix, stack):
         """
         Assigns titles to all test elements in a subtree.
 
@@ -2992,6 +2995,9 @@ security policies map to the security objectives.""")
         :param  prefix: The prefix to assign to all nodes in this subtree.
         :param  stack: An integer array that serves as a stack.
         """
+        print("Test Derive: "+node.tag)
+        print("Prefix: "+prefix)
+        print("Stack is " + str(stack))
         if node.tag==CC+"test":
             new_num=stack.pop() + 1
             stack.append(new_num)
