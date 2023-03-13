@@ -51,9 +51,9 @@ def get_effective_doc(url, branch, fpath):
     abspath = os.path.abspath(fpath)
     commands = ("set -x; cd "+workdir.name +
                 " && git clone --depth 1 --branch " + branch + " --recursive " + url +
+                " && cd *" +
                 " && git pull origin " + branch + 
-                " && cd * && " +
-                " (unset PP_XML; EFF_XML=\"" + abspath + "\"  make effective)")
+                " && (unset PP_XML; EFF_XML=\"" + abspath + "\"  make effective)")
     print("Comamnds: " + commands)
     os.system(commands)
 
