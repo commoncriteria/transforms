@@ -48,7 +48,7 @@ def find_fix(xpath, docroot, el):
     return True
 
 def dynref(id, prefix="", suffix=""):
-    return HTM_E.a({"href":"#"+id}, prefix, dynref_num(id), suffix)
+    return HTM_E.a({"href":"#"+id}, prefix+" ", dynref_num(id), suffix)
 
 def dynref_num(id):
     """ 
@@ -1930,7 +1930,7 @@ security policies map to the security objectives.""")
                 self.apply_templates(defined.findall("./cc:description",NS), dd)
                 self.apply_templates(defined.findall("./cc:appnote",NS), dd)
         else:
-            add_text(out, "This document does not define any additional " + pp_util.localtag(node.tag))
+            add_text(out, "This document does not define any additional " + pp_util.localtag(node.tag)+".")
             
         
     def template_xref(self, node, out):
@@ -3493,7 +3493,7 @@ security policies map to the security objectives.""")
         prefix = get_attr_or(target, "prefix")
         prefix = get_attr_or(ref, "prefix", prefix)
         if prefix is None:
-            prefix = get_attr_or(ref, "ctr-type", "")
+            prefix = get_attr_or(target, "ctr-type", "")
         suffix = ""
         suffix = get_attr_or(target, "suffix", suffix)
         suffix = get_attr_or(ref, "suffix", suffix)
