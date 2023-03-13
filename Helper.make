@@ -321,6 +321,7 @@ diff: $(PP_RELEASE_HTML)
 		git clone --recursive --branch $$aa https://github.com/commoncriteria/$${orig##*/};\
                 cd $$orig; [ -r "$(DIFF_USER_MAKE)" ] && cp "$(DIFF_USER_MAKE)" $(TMP)/$$aa/$${orig##*/}; cd -;\
 		cd $${orig##*/};\
+		git pull origin $$aa;\
 		TRANS=transforms make release;\
 		OLD=$$(pwd)/$(PP_RELEASE_HTML);\
 		cd $$orig;\
