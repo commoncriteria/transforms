@@ -67,7 +67,10 @@ def add_td_to_release_notes(relnote, td):
             newchild = ET.Element("{"+HTM+"}a", TD_ATTRS)
         else:
             newchild = ET.Element("{"+HTM+"}div", TD_ATTRS)
+        
         newchild.text = decision_el.attrib["id"]
+        if "date" in  decision_el.attrib:
+            newchild.text+= " ("+ decision_el.attrib["date"]+")"
         log(newchild.text)
         relnote.insert(1, newchild)
         
