@@ -62,11 +62,11 @@ def fx_common_css():
        max-width: 15px;
     }
 
-    a.def_{
+    a.definition{
       color: inherit;
       text-decoration: inherit;
     }
-    a.def_:hover{
+    a.definition:hover{
       color:blue;
     } 
 

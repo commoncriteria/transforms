@@ -211,7 +211,7 @@ def def_attr(id):
     :param id: Unique id of node
     :returns Dictionary of attributes
     """
-    return {"id":id, "class":"def_", "href":"#"+id}
+    return {"id":id, "class":"definition", "href":"#"+id}
 
 defargs={'fill':'black',
          'font-size':'15'}
@@ -3019,7 +3019,8 @@ security policies map to the security objectives.""")
             test_id=self.derive_id(test)
             title = self.get_test_title(test)
             # self.register_keyterm( title, test_id)
-            atts=attrs("test- def_", test_id)
+            atts=attrs("test- definition", test_id)
+            atts["href"]="#"+test_id
             adopt(li, HTM_E.a(atts, "Test "+title))
             dependses = test.findall("cc:depends", NS)
             if len(dependses)>0:
