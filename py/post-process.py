@@ -99,7 +99,7 @@ class State:
                     self.fix_test_numbers_recur(el, prefix)
         pass
         
-    def fix_test_numbers_recur(self, elem, prefix):        
+    def fix_test_numbers_recur(self, elem, prefix):
         if "class" in elem.attrib and "test-" in elem.attrib["class"]:
             new_num=self.test_number_stack.pop() + 1
             self.test_number_stack.append(new_num)
@@ -156,7 +156,6 @@ class State:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
                     term = el.attrib["id"]
-                    print("Adding: " + term)
                     self.add_to_regex(term)
                     wrappable = term.replace("_", "_\u200B")
                     if not term == wrappable:
@@ -221,7 +220,6 @@ class State:
                 regex_str = "(?<!-)\\b(" + "|".join(self.key_terms) + ")\\b"
                 if self.abbr_def:
                     regex_str= "("+"|".join(self.abbr_def)+")|" + regex_str
-                print("Regex String: "+ regex_str)
                 self.regex = re.compile(regex_str)
         except re.error:
             warn("Failed to compile regular expression: " +
