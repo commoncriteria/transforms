@@ -137,7 +137,8 @@ class pp_doc(generic_pp_doc.generic_pp_doc):
         sar=self.find_first_section_with_title(SAR_TITLE)
         self.apply_templates(sar.xpath("cc:section[not(.//cc:a-component)]|sec:*[not(.//cc:a-component)]", namespaces=generic_pp_doc.NS), par)
         afrs = self.rx("//cc:a-component")
-        self.handle_sparse_sfrs(afrs, par, "sars")
+#        self.handle_sparse_sfrs(afrs, par, "sars")
+        self.handle_sparse_sfrs(afrs, par)
         self.end_section()
         
         

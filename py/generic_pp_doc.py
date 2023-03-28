@@ -21,8 +21,8 @@ DONT_PROCESS={CC+"f-component",CC+"ext-comp-def",CC+"base-pp",CC+"depends",CC+"o
               CC+"TSS",CC+"Tests",CC+"Guidance", CC+"KMD", CC+"no-tests", CC+"a-component",
               CC+"f-element", CC+"a-element",CC+"audit-event", CC+"consistency-rationale",
               CC+"comp-lev", CC+"management", CC+"audit", CC+"dependencies", CC+"objective",
-              CC+"optional", CC+"depends", CC+"ext-comp-def-title",CC+"elev"}
-TRANSPARENT={CC+"aactivity", CC+"text",CC+"description", CC+"choice"}
+              CC+"optional", CC+"depends", CC+"ext-comp-def-title",CC+"elev", CC+"also"}
+TRANSPARENT={CC+"aactivity", CC+"text",CC+"description", CC+"choice", CC+"summary"}
 
 # SVG_NS="http://www.w3.org/2000/svg"
 # SVG="{%s}"%SVG_NS
@@ -39,10 +39,14 @@ def get_attr_or(el, attrname, default=None):
     return default
 
 def find_fix(xpath, docroot, el):
+    print("Xpath is " + xpath)
     target = docroot.xpath(xpath)
     if len(target)==0:
         return False
     parent = target[0]
+    print(pp_util.debug_node(parent))
+    if len(parent)==0:
+        return False
     ctr_el = parent[0]
     el.text = ctr_el.text
     return True
@@ -591,7 +595,8 @@ class generic_pp_doc(object):
 
 
 
-
+    def sd_sars(self, out):
+        pass
             
     def to_sd(self):
         """
@@ -874,6 +879,8 @@ class generic_pp_doc(object):
                 if find_fix(xpath, other_doc, root):
                     parent = root.xpath("ancestor::*[1]")[0]
                     parent.tag = "span"
+                else:
+                    print("Failed to find a reference to: " + root.attrib["data-target"])
                     
         for child in root:
             self.fix_dynrefs(same_doc, other_doc, child)
@@ -2258,7 +2265,16 @@ security policies map to the security objectives.""")
                     self.set_shortcut(mf)
                     note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
                     self.make_xref(mf, note_head)
-                    self.handle_content(mf.find("cc:app-note", NS), div_reqdesc)
+                    #-- This handle app-notes
+                    app_note_el = mf.find("cc:app-note", NS)
+                    also_els = app_note_el.findall("cc:also", NS)
+                    if len(also_els)>0:
+                        shortcuts = set()
+                        shortcuts.add(mf)
+                        for also_el in also_els:
+                            shortcuts.add(self.rf(also_el.attrib["ref-id"]))
+                        self.set_shortcut(shortcuts)
+                    self.handle_content(app_note_el, div_reqdesc)
 
         rule_out = HTM_E.span()
         self.add_rules(fel_el, rule_out)
@@ -2824,7 +2840,7 @@ security policies map to the security objectives.""")
         return self.rx(xpath)
 
     
-    def handle_sparse_sfrs(self, sfrs, out, sfr_category, is_sd=False):
+    def handle_sparse_sfrs(self, sfrs, out, sfr_category=None, is_sd=False):
         """
         Converts a group of SFRs to HTML equivalent. Putting section
         headers in and grouping the SFRs appropriately underthem.
@@ -2834,12 +2850,15 @@ security policies map to the security objectives.""")
         :param sfr_category: A string reflecting the type of sfrs (e.g. optional, sel-based)
         :param is_sd: Boolean whether it's being called to write to a SD
         """
-
+        if sfr_category is None:
+            id_suffix = ""
+        else:
+            id_suffix = "__" + sfr_category
         titles={}
         for sfr in sfrs:
             sec = sfr.find("..")
             title = self.get_section_title(sec)
-            id = self.derive_id(sec)+"__" + sfr_category
+            id = self.derive_id(sec)+id_suffix
             if title not in titles:
                 if len(titles)>0:
                     self.end_section()
@@ -3513,7 +3532,20 @@ security policies map to the security objectives.""")
         :param out: The HTML output node.
         :param ref: The element doing the cross-reference (or None).
         """
+        print("TTT " + "|"+str(target)+"|" + str(type(target)))
         if not hasattr(target, "tag"):
+            if isinstance(target,str):
+                targetnode = self.rf("//cc:*[@id='"+target+"']")
+                if targetnode != None:
+                    self.make_ref(targetnode, out, ref)
+            else:
+                try:
+                    for single_target in target:
+                        print("I'm here")
+                        self.make_xref(single_target, out, ref)
+                        return
+                except TypeError:
+                    pass
             out.append(dynref(target))
         elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, out)
