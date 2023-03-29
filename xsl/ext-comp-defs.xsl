@@ -157,9 +157,9 @@ Contains transforms for extended component definitions
          </p>
          <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
          <div style="margin-left: 1em;">
-           <table style="width: 100%"><tr>
-             <td>Hierarchical to:</td>
-	     <td><xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
+           <table class="ecd_heir_dep" style="width: 100%"><tr>
+             <td style="whitespace: nowrap">Hierarchical to:</td>
+	     <td style="width: 100%"><xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
              <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/></td>
 	   </tr><tr style="background-color: inherit">
 	   <td>Dependencies to:</td>
