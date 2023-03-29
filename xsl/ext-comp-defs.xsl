@@ -157,12 +157,16 @@ Contains transforms for extended component definitions
          </p>
          <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
          <div style="margin-left: 1em;">
-         <p>Hierarchical to: <xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
-            <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/>
-         </p>
-         <p>Dependencies to: <xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
-            <xsl:apply-templates select="cc:dependencies" mode="reveal"/>
-         </p>
+           <table style="width: 100%"><tr>
+             <td>Hierarchical to:</td>
+	     <td><xsl:if test="not(cc:heirarchical-to)">No other components.</xsl:if>
+             <xsl:apply-templates select="cc:heirarchical-to" mode="reveal"/></td>
+	   </tr><tr style="background-color: inherit">
+	   <td>Dependencies to:</td>
+	   <td><xsl:if test="not(cc:dependencies)">No dependencies.</xsl:if>
+           <xsl:apply-templates select="cc:dependencies" mode="reveal"/></td>
+	 </tr></table>
+
 
          <xsl:for-each select="cc:f-element">
             <xsl:variable name="reqid"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
