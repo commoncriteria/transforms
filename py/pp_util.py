@@ -15,11 +15,14 @@ def debug_node(node):
     :returns A string value of the node.
     """
     tag =node.tag
-    text = "<"+tag+">"+NoneStr(node.text)
+    ret = "<"+tag+""
+    for attr in node.attrib:
+        ret += " " + attr + "='"+node.attrib[attr]+"'"
+    ret += ">"+NoneStr(node.text)
     for child in node:
-        text += debug_node(child)
-        text += NoneStr(child.tail)
-    return text+"</"+tag+">"
+        ret += debug_node(child)
+        ret += NoneStr(child.tail)
+    return ret+"</"+tag+">"
         
 
 def get_HTM_E():

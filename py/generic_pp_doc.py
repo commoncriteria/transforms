@@ -2276,16 +2276,17 @@ security policies map to the security objectives.""")
                 adopt(div_reqdesc,HTM_E.div("Function-specific Application Notes"))
                 for mf in mfs:
                     self.set_shortcut(mf)
-                    note_head = adopt(div_reqdesc,HTM_E.div({"class":"mf-spec-note"}))
-                    self.make_xref(mf, note_head)
+                    note_head = adopt(div_reqdesc,HTM_E.p({"class":"mf-spec-note"}))
+#                    self.make_xref(mf, note_head)
                     #-- This handle app-notes
                     app_note_el = mf.find("cc:app-note", NS)
                     also_els = app_note_el.findall("cc:also", NS)
                     if len(also_els)>0:
-                        shortcuts = set()
-                        shortcuts.add(mf)
+                        shortcuts = []
+                        shortcuts.append(mf)
                         for also_el in also_els:
-                            shortcuts.add(self.rf(also_el.attrib["ref-id"]))
+                            a_id = also_el.attrib["ref-id"]
+                            shortcuts.append(self.rf("//cc:management-function[@id='"+a_id+"']"))
                         self.set_shortcut(shortcuts)
                     self.handle_content(app_note_el, div_reqdesc)
 
@@ -3392,7 +3393,7 @@ security policies map to the security objectives.""")
         deffy  = node.attrib["default"]
         for mf in node.findall("./cc:management-function", NS):
             ctr+=1
-            self.make_mf_row(mf, prefix+str(ctr), managers, deffy, table)
+            self.make_mf_row(mf, prefix, managers, deffy, table)
 
 
     def make_mf_val(self, tag, node, out):
@@ -3427,11 +3428,12 @@ security policies map to the security objectives.""")
         :param  out: The HTML output node
         """
         
-        mf_num = str(self.get_global_index(mf))
+#        mf_num = str(self.get_global_index(mf))
         mf_id = self.derive_id(mf)
         tr = adopt(out, HTM_E.tr())
         td_id = adopt(tr, HTM_E.td())
         self.create_ctr(prefix,mf_id, td_id, prefix, sep="")
+        print("Prefix is " + prefix)
         # (HTM_E.td(HTM_E.a(def_attr(mf_id),prefix)))
         td=adopt(tr, HTM_E.td({"style":"text-align:left"}))
         self.apply_templates_single(mf.find("cc:text",NS), td)
@@ -3455,15 +3457,15 @@ security policies map to the security objectives.""")
         self.shortcut = node
 
         
-    # def make_xref_mf(self, id, out):
-    #     """
+    def make_xref_mf(self, target, out, ref=None):
+        """
         
-    #     :param id: The ID of the management fuction
-    #     :param out: The output node
-    #     :returns
-    #     """
-
-    #     out.append(HTM_E.a({"href":"#"+id,"class":"dynref"}))
+        :param target: The targeted node
+        :param out: The output node
+        """
+        dynref_el = dynref(self.derive_id(target))
+        out.append(dynref_el)
+        
 
     # def make_xref_generic(self, target, out, ref, deftext=""):
     #     """
@@ -3524,7 +3526,11 @@ security policies map to the security objectives.""")
             self.handle_content(target, a_out)
 
 
-
+    def make_xref_figure(self, target, out, ref):
+        prefix= get_attr_or(ref, "prefix", "figure ")
+        out.append(dynref(target.attrib["id"], prefix=prefix))
+            
+        
             
     def make_xref_ctr(self, target, out, ref):
         prefix = get_attr_or(target, "prefix")
@@ -3554,13 +3560,22 @@ security policies map to the security objectives.""")
                     self.make_ref(targetnode, out, ref)
             else:
                 try:
-                    for single_target in target:
-                        print("I'm here")
-                        self.make_xref(single_target, out, ref)
-                        return
+                    sep=" "
+                    
+                    while(len(target)>1):
+                        add_text(out, sep)
+                        nextref = target.pop(0)
+                        out.append(dynref(nextref.attrib["id"]))
+                        sep=", "
+                    add_text(out, ", and ")
+                    out.append(dynref(target[0].attrib["id"]))
+                    return
                 except TypeError:
+                    print("Typed out")
                     pass
-            out.append(dynref(target))
+#            out.append(dynref(target))
+        elif target.tag == CC+"figure":
+            self.make_xref_figure(target, out, ref)
         elif target.tag == CC+"entry":
             self.make_xref_bibentry(target, out)
         elif target.tag == CC+"base-pp" or target.tag == CC+"include-pkg":
@@ -3576,8 +3591,12 @@ security policies map to the security objectives.""")
             self.make_xref_feature(target, out, ref)
         elif target.tag == CC+"ctr":
             self.make_xref_ctr(target, out, ref)
+        elif target.tag == CC+"management-function":
+            self.make_xref_mf(target, out, ref)
+            
         else:
-            out.append(dynref(self.derive_id(target), ""))
+            dynref_el = dynref(self.derive_id(target), "")
+            out.append(dynref_el)
             # self.broken_refs.add( (self.derive_id(target), , ref) )
         # if target.tag.startswith("{https://niap-ccevs.org/cc/v1/section}"):
         #     self.make_xref_section(pp_util.localtag(target.tag), out)
@@ -3800,7 +3819,6 @@ security policies map to the security objectives.""")
             self.make_xref(target, out_div)
             add_text(out_div, " in the ST ")
         elif target.tag == CC+"management-function":
-            print("HANDLING ANCESTORS")
             out_div = adopt(out,HTM_E.div({"class":"uc mf"},start+"nclude "))
             self.make_xref(target, out_div)
             add_text(out_div, " in the ST ")
