@@ -39,13 +39,12 @@ def get_attr_or(el, attrname, default=None):
     return default
 
 def find_fix(xpath, docroot, el):
-    print("Xpath is " + xpath)
     target = docroot.xpath(xpath)
     if len(target)==0:
         return False
     parent = target[0]
-    print(pp_util.debug_node(parent))
     if len(parent)==0:
+        print("Can't find child")
         return False
     ctr_el = parent[0]
     el.text = ctr_el.text
@@ -596,7 +595,20 @@ class generic_pp_doc(object):
 
 
     def sd_sars(self, out):
-        pass
+        out.append(self.sec({"id":"eas_for_sars-"}, "Evaluation Activities for SARs"))
+        out.append(HTM_E.p("""The sections below specify EAs for the Security Assurance Requirements
+        (SARs) included in the related cPPs (see section 1.1 above). The EAs in
+        Section 2 (Evaluation Activities for SFRs), Section 3 (Evaluation Activities
+        for Optional Requirements), and Section 4 (Evaluation Activities for
+        Selection-Based Requirements) are an interpretation of the more general CEM
+        assurance requirements as they apply to the specific technology area of the
+        TOE."""))
+
+        out.append(HTM_E.p("""In this section, each SAR that is contained in the cPP is listed, and the EAs
+        that are not associated with an SFR are captured here, or a reference is made
+        to the CEM, and the evaluator is expected to perform the CEM work units.
+        """))
+        self.end_section()
             
     def to_sd(self):
         """
@@ -874,13 +886,14 @@ class generic_pp_doc(object):
         if root==None:
             root = same_doc
         if auto_xref.has_class(root.attrib, "dynref"):
-            xpath=".//*[@id='"+root.attrib["data-target"]+"']"
+            target_id = root.attrib["data-target"]
+            xpath=".//*[@id='"+ target_id +"']"
             if not find_fix(xpath, same_doc, root): 
                 if find_fix(xpath, other_doc, root):
                     parent = root.xpath("ancestor::*[1]")[0]
                     parent.tag = "span"
                 else:
-                    print("Failed to find a reference to: " + root.attrib["data-target"])
+                    print("Failed to find a reference to: " + target_id)
                     
         for child in root:
             self.fix_dynrefs(same_doc, other_doc, child)
@@ -3417,7 +3430,9 @@ security policies map to the security objectives.""")
         mf_num = str(self.get_global_index(mf))
         mf_id = self.derive_id(mf)
         tr = adopt(out, HTM_E.tr())
-        tr.append(HTM_E.td(HTM_E.a(def_attr(mf_id),prefix)))
+        td_id = adopt(tr, HTM_E.td())
+        self.create_ctr(prefix,mf_id, td_id, prefix, sep="")
+        # (HTM_E.td(HTM_E.a(def_attr(mf_id),prefix)))
         td=adopt(tr, HTM_E.td({"style":"text-align:left"}))
         self.apply_templates_single(mf.find("cc:text",NS), td)
         for manager in managers:
@@ -3532,7 +3547,6 @@ security policies map to the security objectives.""")
         :param out: The HTML output node.
         :param ref: The element doing the cross-reference (or None).
         """
-        print("TTT " + "|"+str(target)+"|" + str(type(target)))
         if not hasattr(target, "tag"):
             if isinstance(target,str):
                 targetnode = self.rf("//cc:*[@id='"+target+"']")
