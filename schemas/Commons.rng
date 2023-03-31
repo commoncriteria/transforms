@@ -375,6 +375,16 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
             </choice>
          </attribute>
        </choice>
+       <optional>
+	 <attribute name="prefix">
+	   <a:documentation> Text prepended to the dynamic content.</a:documentation>
+	 </attribute>
+       </optional>
+       <optional>
+	 <attribute name="suffix">
+	   <a:documentation> Text appended to the dynamic content.</a:documentation>
+	 </attribute>
+       </optional>
     </element>
   </define>
 

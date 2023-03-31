@@ -181,12 +181,14 @@ def sec_impl(outline, is_appendix, toc, h_el):
     h_el.tag="h"+str(depth)
     outline[-1]=outline[-1]+1
 
-    prefix=""
+    prefix = ""
+    prevtext = ""
     if is_appendix:
         ctr=base_10_to_alphabet(outline[0])
         if len(outline)==1:
             prefix = "Appendix "
-            ctr=ctr + " - " + NBSP
+            ctr=ctr
+            prevtext = " - " + NBSP
         else:
             ctr+="."+ ".".join(map(str, outline[1:]))
     else:
@@ -198,7 +200,7 @@ def sec_impl(outline, is_appendix, toc, h_el):
     toc_entry=""
     for aa in range(depth):
         toc_entry += NBSP+ NBSP
-    prevtext = h_el.text
+    prevtext += h_el.text
     toc_entry +=  prefix + ctr + NBSP+ NBSP + NBSP + prevtext
     h_el.text = prefix
     adopt(h_el, HTM_E.span({"class":"ctr"},ctr)).tail = " " + prevtext
@@ -3540,9 +3542,49 @@ security policies map to the security objectives.""")
         suffix = ""
         suffix = get_attr_or(target, "suffix", suffix)
         suffix = get_attr_or(ref, "suffix", suffix)
-
         out.append(dynref(target.attrib["id"],prefix=prefix, suffix=suffix))
 
+
+    def make_xref_appendix(self, target, out, ref=None):
+        prefix = get_attr_or(ref, "prefix", " Appendix - ")
+        suffix = get_attr_or(ref, "suffix", " - "+ target.attrib["title"])
+        dynref_el = dynref(self.derive_id(target), prefix=prefix, suffix=suffix)
+        out.append(dynref_el)
+
+
+    def make_xref_new_section(self, target, out, ref=None):
+        prefix = get_attr_or(ref, "prefix", " Section ")
+        if ref is not None and "prefix" in ref.attrib:
+            prefix = ref.attrib["prefix"]
+        else:
+            prefix = "Section "
+            
+        if ref is not None and "suffix" in ref.attrib:
+            suffix = ref.attrib["suffix"]
+        elif "title" in target.attrib:
+            suffix = target.attrib["title"]
+        else:
+            suffix = self.derive_id(target).replace("_", " ")
+            
+        dynref_el = dynref(self.derive_id(target), prefix=prefix, suffix=suffix)
+        out.append(dynref_el)
+        
+    def make_xref_classic_section(self, target, out, ref=None):
+        prefix = get_attr_or(ref, "prefix", " Section ")
+        if ref is not None and "prefix" in ref.attrib:
+            prefix = ref.attrib["prefix"]
+        else:
+            prefix = "Section "
+            
+        if ref is not None and "suffix" in ref.attrib:
+            suffix = ref.attrib["suffix"]
+        elif "title" in target.attrib:
+            suffix = " "+target.attrib["title"]
+        else:
+            suffix = " "+self.derive_id(target).replace("_", " ")
+            
+        dynref_el = dynref(self.derive_id(target), prefix=prefix, suffix=suffix)
+        out.append(dynref_el)
         
 
     def make_xref(self, target, out, ref=None):
@@ -3593,7 +3635,12 @@ security policies map to the security objectives.""")
             self.make_xref_ctr(target, out, ref)
         elif target.tag == CC+"management-function":
             self.make_xref_mf(target, out, ref)
-            
+        elif target.tag == CC+"appendix":
+            self.make_xref_appendix(target, out, ref)
+        elif target.tag == CC+"section":
+            self.make_xref_classic_section(target, out,ref)
+        elif target.tag.startswith(SEC):
+            self.make_xref_new_section(target, out,ref)
         else:
             dynref_el = dynref(self.derive_id(target), "")
             out.append(dynref_el)
