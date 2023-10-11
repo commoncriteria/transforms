@@ -203,7 +203,7 @@
 					<xsl:apply-templates select=".//cc:sel-sfrs//cc:f-element"/>
 					<xsl:if test="//cc:obj-sfrs//cc:f-element"><tr><td colspan="3">Objective SFRs</td></tr></xsl:if>
 					<xsl:apply-templates select=".//cc:obj-sfrs//cc:f-element"/>
-					<xsl:if test="//cc:impl-dep-sfrs//cc:f-element"><tr><td colspan="3">Implementation Dependent SFRs</td></tr></xsl:if>
+					<xsl:if test="//cc:impl-dep-sfrs//cc:f-element"><tr><td colspan="3">Feature-based SFRs</td></tr></xsl:if>
 					<xsl:apply-templates select=".//cc:imp-dep-sfrs//cc:f-element"/>
 
 					

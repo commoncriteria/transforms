@@ -375,7 +375,7 @@
       </xsl:if>
       <xsl:if test="@status='feat-based'">
         <div class="statustag">
-          <i><b>This is an implementation-based component.
+          <i><b>This is a feature-based component.
                 Its inclusion in depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends/@*">
@@ -383,7 +383,7 @@
                       <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
-                as described in Appendix A: Implementation-based Requirements.
+                as described in Appendix A: Feature-based Requirements.
                <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
@@ -636,7 +636,7 @@
           <xsl:apply-templates select="cc:description"/>
   	  <!-- First just output the name of the SFR associated with each feature.  -->
           <p>
-	  If this is implemented by the TOE, the following requirements must be included in the ST:
+	  If this feature is implemented by the TOE, the following requirements must be claimed by the ST:
             <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each></ul>
@@ -677,8 +677,8 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-based Requirements</h1>
-                Implementation-based Requirements <xsl:call-template name="imple_text"/>
+                <h1 id="impl-reqs" class="indexable" data-level="A">Feature-based Requirements</h1>
+                Feature-based Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>
