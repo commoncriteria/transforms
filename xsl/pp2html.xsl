@@ -649,11 +649,12 @@
     <xsl:template name="handle-features">
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="oneIfApp">0<!--<xsl:if test="$appendicize='on'">1</xsl:if>--></xsl:variable>  -->
-          <xsl:variable name="level" select="2+$oneIfApp"/>
+<!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
+<!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
+          <xsl:variable name="level" select="3"/>
 
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
-          <xsl:apply-templates select="cc:description"/>
+          <xsl:apply-templates select="cc:description"/><br/>
   	  <!-- First just output the name of the SFR associated with each feature.  -->
           <p>
 	  If this feature is implemented by the TOE, the following requirements must be claimed by the ST:
