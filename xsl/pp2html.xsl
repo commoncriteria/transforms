@@ -463,6 +463,17 @@
               </ul>
             </div>
           </xsl:if>
+		  <!-- For feat-based SFRs -->
+          <xsl:if test="//cc:feature[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+              <b><i>This component must be included in the ST if the TOE implements any of the following features:</i></b><br/>
+              <ul>
+                <xsl:for-each select="//cc:feature[.//@id = current()/cc:depends/@*]">
+                  <li><b><i> <a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+                </xsl:for-each>
+              </ul>
+            </div>
+          </xsl:if>
 	  <xsl:if test="//cc:f-component[.//@id = current()/cc:depends/@*]">
             <div class="statustag">
                <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
@@ -497,6 +508,14 @@
              <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
              <ul>
                <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
+                 <li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+               </xsl:for-each>
+             </ul>
+           </xsl:if>
+           <xsl:if test="//cc:feature[.//@id = current()/cc:depends/@*]">
+             <p/><b><i>This component must be included in the ST if the TOE implements any of the following features:</i></b><br/>
+             <ul>
+               <xsl:for-each select="//cc:feature[.//@id = current()/cc:depends/@*]">
                  <li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
                </xsl:for-each>
              </ul>
@@ -677,7 +696,7 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="impl-reqs" class="indexable" data-level="A">QQQFeature-based Requirements</h1>
+                <h1 id="impl-reqs" class="indexable" data-level="A">Feature-based Requirements</h1>
                 Feature-based Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
@@ -734,9 +753,9 @@
 	      </xsl:otherwise>
 	    </xsl:choose>
         </xsl:if>
-        <xsl:choose>
+<!--    <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
-          <xsl:otherwise> 
+          <xsl:otherwise> -->
             <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
                 <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
@@ -747,8 +766,8 @@
      <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
               <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
             </xsl:for-each>
-          </xsl:otherwise>
-        </xsl:choose>
+       <!--   </xsl:otherwise>  -->
+<!--        </xsl:choose>   -->
      </xsl:otherwise>
    </xsl:choose>
    <!-- </xsl:otherwise></xsl:choose> -->
