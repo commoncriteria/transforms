@@ -1100,7 +1100,7 @@ The following sections list Common Criteria and technology terms used in this do
     </div>
     <xsl:apply-templates select="//cc:foreword"/>
 
-    <h2 style="page-break-before:always;">Revision Flerm History</h2>
+    <h2 style="page-break-before:always;">Revision History</h2>
     <table>
      <tr class="header">
        <th>Version</th>
