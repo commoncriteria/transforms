@@ -647,13 +647,12 @@
   <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
   <!-- Reworked this so it would display in the section where the festures are defined rather than in the appendix. -->
     <xsl:template name="handle-features">
+	  <xsl:call-template name="imple_text/>
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
 <!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
 <!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
           <xsl:variable name="level" select="3"/>
-
-		  <xsl:call-template name="imple_text/>
 
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/><br/>
