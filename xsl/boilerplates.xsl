@@ -279,8 +279,8 @@ This PP-Module does not define any objectives for the OE.
   </xsl:template>
 
   <xsl:template name="imple_text">
-		Appendix <xsl:call-template name="ref-impl-reqs"/> defines Feature-based requirements.  
-		These requirements must be claimed if the TOE implements particular product features. 
+		Appendix <xsl:call-template name="ref-impl-reqs"/> defines requirements that must be claimed in the ST  
+		if the TOE implements particular product features. 
 		For this technology type, the following product features require the claiming of additional SFRs:
   </xsl:template>
   
