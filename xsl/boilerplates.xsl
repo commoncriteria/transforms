@@ -279,8 +279,9 @@ This PP-Module does not define any objectives for the OE.
   </xsl:template>
 
   <xsl:template name="imple_text">
-	If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the
-	  evaluated configuration. 
+		Appendix <xsl:call-template name="ref-impl-reqs"/> defines Feature-based requirements.  
+		These requirements must be claimed if the TOE implements particular product features. 
+		For this technology type, the following product features require the claiming of additional SFRs:
   </xsl:template>
   
 
