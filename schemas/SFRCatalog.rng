@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="https://niap-ccevs.org/cc/v1"
+         xmlns:sec="https://niap-ccevs.org/cc/v1/section"
+         xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         xmlns:htm="http://www.w3.org/1999/xhtml"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         >
+
+
+<!-- ################################# -->
+<!--            START                  -->
+<!-- ################################# -->
+  <start>
+    <element name="SFRCatalog">
+      <a:documentation>Root element for SFR Catalog XML document</a:documentation>
+      <ref name="CatReference"/>
+<!--      <ref name="CatRevisionHistory"/>
+      <ref name="CatForeword"/>
+      <ref name="CatIntroductionChapter"/>
+      <ref name="CatOverviewChapter"/>
+      <ref name="Chapters"/>
+      <ref name="sfr-section"/>
+      <ref name="Chapters"/>
+      <ref name="appendices-pat"/>
+      <ref name="bibliography"/>  -->
+   </element>
+  </start>
+  
+  <!-- Document outline:
+    Title page
+	Contents
+	Introduction
+		purpose
+		intended audience
+		references
+		terms & defs
+		abbreviations
+	Overview
+		organization of the document
+		how to use the document
+		typographical conventions
+	sfrs
+		for each sfr
+			Title
+			PP-Author Guidance
+			Hierarchy and dependencies
+			SFR Text
+			App notes
+			audit events
+			management functions
+			EAs
+	Appendixes
+		ECD stuff for EXT requirements
+		Essays about things like password-based key derivation
+-->			
+
+
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+      <choice>
+        <element name="componentsneeded">
+          <oneOrMore>
+            <element name="componentneeded">
+              <optional><ref name="id-attr"/></optional>
+              <element name="componentid">
+                <ref name="comp-id-upper-respat"/>
+              </element>
+              <ref name="depends-pat"/> 
+              <element name="notes">
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+     </choice>
+    </define>
+
+
+  <define name="CatReference">
+      <element name="CatReference">
+        <a:documentation>
+          Information about the document that appears on the title page.
+        </a:documentation>
+        <element name="CatTitle">
+            <a:documentation>Title of this document</a:documentation>
+            <text/>
+        </element>
+        <element name="CatVersion">
+            <a:documentation>
+				Version of the catalog.
+            </a:documentation>
+            <data type="NMTOKEN"/>
+        </element>
+        <element name="CatAuthor">
+			<a:documentation>
+              Organization that developed this SFR catalog.
+            </a:documentation>
+            <text/>
+        </element>
+        <element name="CatPubDate">
+            <a:documentation>
+              Date of publication for this catalog.
+            </a:documentation>
+            <data type="date"/>
+        </element>
+      </element>
+  </define> 
+
+  <define name="CatRevisionHistory">
+    <oneOrMore>
+        <element name="RevisionHistory">
+          <a:documentation>Documents the major changes to releases.</a:documentation>
+          <zeroOrMore>
+            <element name="entry">
+              <a:documentation>Container for individual revisions.</a:documentation>
+              <element name="version">
+                <a:documentation>Text describing the revision.</a:documentation>
+                <text/>
+              </element>
+              <element name="date">
+                <a:documentation>Date of the revision.</a:documentation>
+                <data type="date"/>
+              </element>
+              <element name="subject">
+                <a:documentation>Description of the revision.</a:documentation>
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </zeroOrMore>
+        </element>
+    </oneOrMore>
+    <optional>
+      <element name="release-notes">
+	<ref name="basic-content-pat"/>
+      </element>
+    </optional>
+  </define>
+
+ <define name="CatForeword">
+    <optional>
+      <element name="foreword">
+        <a:documentation>Flexible section for a foreword.</a:documentation>
+        <zeroOrMore><ref name="html-element"/></zeroOrMore>
+      </element>
+    </optional>
+  </define>   
+   
+  <define name="CatIntroductionChapter">
+<!--  	Introduction
+		purpose
+		intended audience
+		references
+		terms & defs
+		abbreviations
+-->   
+      <element name="CatIntroduction">
+        <ref name="section"/>   <!-- Purpose -->
+        <ref name="section"/>   <!-- Intended audience -->
+        <ref name="section"/>   <!-- References -->
+        <ref name="tech-terms"/>
+        <ref name="section"/>   <!-- abbreviations -->
+        <zeroOrMore> 
+			<ref name="section"/> 
+		</zeroOrMore>
+      </element>
+  </define>
+
+  <define name="CatOverviewChapter">
+<!--  	organization of the document
+		how to use the document
+		typographical conventions
+-->   
+      <element name="CatOverview">
+        <ref name="section"/>   <!-- doc organization -->
+        <ref name="section"/>   <!-- how to use the document -->
+        <ref name="section"/>   <!-- typographical conventions -->
+        <zeroOrMore> 
+			<ref name="section"/> 
+		</zeroOrMore>
+      </element>
+  </define>
+   
+
+</grammar>
