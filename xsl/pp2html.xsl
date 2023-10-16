@@ -646,8 +646,8 @@
        Of course, nobody tells me this so it took a while to debug.   -->
   <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
   <!-- Reworked this so it would display in the section where the festures are defined rather than in the appendix. -->
-    <xsl:template name="handle-features">
-	  <xsl:call-template name="imple_text/>
+    <xsl:template name="handle-features">	
+		<xsl:call-template name="imple_text"/>
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
 <!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
