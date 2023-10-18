@@ -61,6 +61,8 @@
   <!--                 -->
   <!-- ############### -->
   <xsl:template name="cat-body-begin">
+
+<!--
     <xsl:if test="//cc:comment">
       <div id="commmentbox-">
 	<xsl:for-each select="//cc:comment">
@@ -69,15 +71,15 @@
 	</xsl:for-each>
       </div>
     </xsl:if>
-      
+-->      
     
-    <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="$title"/></h1>
+    <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="//cc:CatReference/cc:CatTitle"/></h1>
     <noscript>
       <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
           >This page is best viewed with JavaScript enabled!</h1>
     </noscript>
     <div class="center">
-      <img src="images/cclogo.png" alt="CC Logo"/> <br/>
+      <img style="max-width:100%;" src="images/cclogo.png" alt="CC Logo"/> <br/>
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
       Version: <xsl:value-of select="//cc:CatReference/cc:CatVersion"/><br/>
       <xsl:value-of select="//cc:CatReference/cc:CatPubDate"/><br/>
