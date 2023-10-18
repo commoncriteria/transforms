@@ -1,4 +1,5 @@
 
 RNG_FILE ?= transforms/schemas/SFRCatalog.rng
-include $(TRANS)/Helper.make
+PP2HTML_XSL= $(TRANS)/xsl/cat2html.xsl
 
+include $(TRANS)/Helper.make
