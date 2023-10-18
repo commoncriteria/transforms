@@ -54,7 +54,7 @@
 		ECD stuff for EXT requirements
 		Essays about things like password-based key derivation
 -->			
-
+<!--
 
   <include href="Commons.rng">
     <define name="custom-basic-content-pat">
@@ -147,19 +147,12 @@
   </define>   
    
   <define name="CatIntroductionChapter">
-<!--  	Introduction
-		purpose
-		intended audience
-		references
-		terms & defs
-		abbreviations
--->   
       <element name="CatIntroduction">
-        <ref name="section"/>   <!-- Purpose -->
-        <ref name="section"/>   <!-- Intended audience -->
-        <ref name="section"/>   <!-- References -->
+        <ref name="section"/>   
+        <ref name="section"/>   
+        <ref name="section"/>   
         <ref name="tech-terms"/>
-        <ref name="section"/>   <!-- abbreviations -->
+        <ref name="section"/>   
         <zeroOrMore> 
 			<ref name="section"/> 
 		</zeroOrMore>
@@ -170,16 +163,16 @@
 <!--  	organization of the document
 		how to use the document
 		typographical conventions
--->   
+->   
       <element name="CatOverview">
-        <ref name="section"/>   <!-- doc organization -->
-        <ref name="section"/>   <!-- how to use the document -->
-        <ref name="section"/>   <!-- typographical conventions -->
+        <ref name="section"/>   <!-- doc organization ->
+        <ref name="section"/>   <!-- how to use the document ->
+        <ref name="section"/>   <!-- typographical conventions ->
         <zeroOrMore> 
 			<ref name="section"/> 
 		</zeroOrMore>
       </element>
   </define>
-   
+-->
 
 </grammar>
