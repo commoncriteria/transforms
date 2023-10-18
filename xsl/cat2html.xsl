@@ -82,11 +82,12 @@
     <div class="center">
 		<img style="max-width:100%;" src="images/cclogo.png" alt="CC Logo"/> <br/>
 		<!-- Might think about getting rid of this and just making it part of the foreword -->
-		<p style="font-size:12px; "><b>Version:</b> <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></p>
 		<br/><br/>
-		<p style="font-size:12px; "><b><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></b></p>
+		<p style="font-size:16px; "><b>Version: </b> <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></p>
 		<br/><br/>
-		<p style="font-size:16px; "><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b></p>
+		<p style="font-size:16px; "><b><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></b></p>
+		<br/><br/>
+		<p style="font-size:24px; "><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b></p>
 		<br/>
     </div>
 
@@ -106,9 +107,6 @@
 			</tr><xsl:text>&#xa;</xsl:text>
 		</xsl:for-each>
     </table>
-
-	<!-- Release notes (optional) -->
-    <xsl:apply-templates select="//cc:release-notes"/>
 
 	<!-- Table of contents: I assume this is auto-generated later. -->
     <h2>Contents</h2>
