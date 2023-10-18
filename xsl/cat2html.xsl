@@ -83,7 +83,7 @@
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
       <br/><h2>Version: <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></h2><br/><br/>
       <h2><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></h2><br/><br/>
-      <h2><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></h2></b><br/>
+      <h2><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b></h2><br/>
     </div>
 
 <!--
