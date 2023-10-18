@@ -81,9 +81,9 @@
     <div class="center">
       <img style="max-width:100%;" src="images/cclogo.png" alt="CC Logo"/> <br/>
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
-      Version: <xsl:value-of select="//cc:CatReference/cc:CatVersion"/><br/>
-      <xsl:value-of select="//cc:CatReference/cc:CatPubDate"/><br/>
-      <b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b><br/>
+      <br/><h2>Version: <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></h2><br/><br/>
+      <h2><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></h2><br/><br/>
+      <h2><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></h2></b><br/>
     </div>
 
 <!--

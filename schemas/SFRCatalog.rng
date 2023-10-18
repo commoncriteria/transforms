@@ -15,9 +15,8 @@
     <element name="SFRCatalog">
       <a:documentation>Root element for SFR Catalog XML document</a:documentation>
       <ref name="CatReference"/>
-<!--      <ref name="CatRevisionHistory"/>
-      <ref name="CatForeword"/>
-      <ref name="CatIntroductionChapter"/>
+      <ref name="CatRevisionHistory"/>
+<!--      <ref name="CatIntroductionChapter"/>
       <ref name="CatOverviewChapter"/>
       <ref name="Chapters"/>
       <ref name="sfr-section"/>
@@ -75,7 +74,7 @@
         </element>
      </choice>
     </define>
-
+-->
 
   <define name="CatReference">
       <element name="CatReference">
@@ -107,6 +106,7 @@
       </element>
   </define> 
 
+<!--
   <define name="CatRevisionHistory">
     <oneOrMore>
         <element name="RevisionHistory">
@@ -136,15 +136,10 @@
       </element>
     </optional>
   </define>
+-->
+<!--
 
- <define name="CatForeword">
-    <optional>
-      <element name="foreword">
-        <a:documentation>Flexible section for a foreword.</a:documentation>
-        <zeroOrMore><ref name="html-element"/></zeroOrMore>
-      </element>
-    </optional>
-  </define>   
+
    
   <define name="CatIntroductionChapter">
       <element name="CatIntroduction">
