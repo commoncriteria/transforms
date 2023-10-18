@@ -15,7 +15,7 @@
     <element name="SFRCatalog">
       <a:documentation>Root element for SFR Catalog XML document</a:documentation>
       <ref name="CatReference"/>
-      <ref name="CatRevisionHistory"/>
+      <ref name="RevisionHistory"/>
 <!--      <ref name="CatIntroductionChapter"/>
       <ref name="CatOverviewChapter"/>
       <ref name="Chapters"/>
@@ -28,6 +28,7 @@
   
   <!-- Document outline:
     Title page
+	Revision History & Release Notes
 	Contents
 	Introduction
 		purpose
@@ -107,7 +108,7 @@
   </define> 
 
 <!--
-  <define name="CatRevisionHistory">
+  <define name="RevisionHistory">
     <oneOrMore>
         <element name="RevisionHistory">
           <a:documentation>Documents the major changes to releases.</a:documentation>

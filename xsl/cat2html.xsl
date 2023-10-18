@@ -73,40 +73,47 @@
     </xsl:if>
 -->      
     
+	<!-- Title Page -->
     <h1 class="title" style="page-break-before:auto;"><xsl:value-of select="//cc:CatReference/cc:CatTitle"/></h1>
     <noscript>
-      <h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
+		<h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;"
           >This page is best viewed with JavaScript enabled!</h1>
     </noscript>
     <div class="center">
-      <img style="max-width:100%;" src="images/cclogo.png" alt="CC Logo"/> <br/>
-	<!-- Might think about getting rid of this and just making it part of the foreword -->
-      <br/><h2>Version: <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></h2><br/><br/>
-      <h2><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></h2><br/><br/>
-      <h2><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b></h2><br/>
+		<img style="max-width:100%;" src="images/cclogo.png" alt="CC Logo"/> <br/>
+		<!-- Might think about getting rid of this and just making it part of the foreword -->
+		<p style="font-size:12px; "><b>Version:</b> <xsl:value-of select="//cc:CatReference/cc:CatVersion"/></p>
+		<br/><br/>
+		<p style="font-size:12px; "><b><xsl:value-of select="//cc:CatReference/cc:CatPubDate"/></b></p>
+		<br/><br/>
+		<p style="font-size:16px; "><b><xsl:value-of select="//cc:CatReference/cc:CatAuthor"/></b></p>
+		<br/>
     </div>
 
-<!--
+	<!-- Revision History -->
     <h2 style="page-break-before:always;">Revision History</h2>
     <table>
-     <tr class="header">
-       <th>Version</th>
-       <th>Date</th>
-       <th>Comment</th>
-     </tr>
-     <xsl:for-each select="//cc:RevisionHistory/cc:entry">
-       <tr>
-         <td> <xsl:value-of select="cc:version"/> </td>
-         <td> <xsl:value-of select="cc:date"/> </td>
-         <td> <xsl:apply-templates select="cc:subject"/> </td>
-       </tr><xsl:text>&#xa;</xsl:text>
-     </xsl:for-each>
+		<tr class="header">
+			<th>Version</th>
+			<th>Date</th>
+			<th>Comment</th>
+		</tr>
+		<xsl:for-each select="//cc:RevisionHistory/cc:entry">
+			<tr>
+				<td> <xsl:value-of select="cc:version"/> </td>
+				<td> <xsl:value-of select="cc:date"/> </td>
+				<td> <xsl:apply-templates select="cc:subject"/> </td>
+			</tr><xsl:text>&#xa;</xsl:text>
+		</xsl:for-each>
     </table>
+
+	<!-- Release notes (optional) -->
     <xsl:apply-templates select="//cc:release-notes"/>
+
+	<!-- Table of contents: I assume this is auto-generated later. -->
     <h2>Contents</h2>
     <div class="toc" id="toc"/>
 	
--->
   </xsl:template>
 
 
