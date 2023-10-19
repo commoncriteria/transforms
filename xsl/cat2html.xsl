@@ -124,6 +124,24 @@
 	</xsl:template>
 	
 	
+	<!-- Terms -->
+	<!-- Display terms in the intro, usually section 1.4 -->
+	<xsl:template match="cc:cat-terms">
+		<xsl:param name="num" select="2"/>
+			<div class="no-link">
+			<h2 id='glossary' class='indexable' data-level='{$num}'>Terms</h2>
+			The following section lists terms used in this document.
+			<table style="width: 100%">
+				<xsl:for-each select="cc:term[text()]">
+					<xsl:sort select="@full"/>
+					<xsl:call-template name="glossary-entry"/>
+				</xsl:for-each>
+			</table>
+		</div>
+	</xsl:template>
+
+-->
+	
 </xsl:stylesheet>
 
 

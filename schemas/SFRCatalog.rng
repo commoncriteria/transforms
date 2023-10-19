@@ -54,6 +54,7 @@
 			EAs
 	Appendixes
 		ECD stuff for EXT requirements
+		Reference to all the standards 
 		Essays about things like password-based key derivation
 -->			
 <!--
@@ -154,6 +155,13 @@
 		</zeroOrMore>
       </element>
   </define>
+
+	<!-- List of terms in Terms and Definitions section -->
+	<define name="cat-terms">
+		<zeroOrMore>
+			<ref name="term"/>
+		</zeroOrMore>
+	</define>
 
 <!--
 
