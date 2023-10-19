@@ -17,8 +17,8 @@
 		<ref name="CatReference"/>
 		<ref name="RevisionHistory"/>      
 		<ref name="CatPreferences"/> 
+		<ref name="CatIntroductionChapter"/>
 <!--
-	  <ref name="CatIntroductionChapter"/>
       <ref name="CatOverviewChapter"/>
       <ref name="Chapters"/>
       <ref name="sfr-section"/>
@@ -125,22 +125,37 @@
 		</element>
 	</define>
 
-<!--
-
-
    
   <define name="CatIntroductionChapter">
-      <element name="CatIntroduction">
-        <ref name="section"/>   
-        <ref name="section"/>   
-        <ref name="section"/>   
-        <ref name="tech-terms"/>
-        <ref name="section"/>   
+  	<a:documentation>
+		Sections:
+			purpose
+			intended audience
+			references
+			terms & defs
+			abbreviations		
+	</a:documentation>
+	
+	<!-- Introduction -->
+	<element name="section">
+         <attribute name="title"><value>Introduction</value></attribute>
+         <attribute name="id"/>
+        <ref name="cat-introduction-content"/>
+    </element>   
+
+	<define name="cat-introduction-content">
+        <ref name="section"/>   <!-- Purpose -->
+        <ref name="section"/>   <!-- Intended audience -->
+        <ref name="section"/>   <!-- references -->
+        <ref name="section"/> 	<!-- terms and definitions -->
+        <ref name="section"/>   <!-- abbreviations -->
         <zeroOrMore> 
-			<ref name="section"/> 
+			<ref name="section"/> <!-- any other sections -->
 		</zeroOrMore>
       </element>
   </define>
+
+<!--
 
   <define name="CatOverviewChapter">
 <!--  	organization of the document

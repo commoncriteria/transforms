@@ -116,11 +116,13 @@
 
 
 
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:SFRCatalog"/>    <!-- For now just eat this -->
-  
+	<!-- ############### -->
+	<!--                 -->
+	<!-- ############### -->
+	<xsl:template match="cc:SFRCatalog">
+		<xsl:apply-templates select="cc:section"/>
+	</xsl:template>
+	
 	
 </xsl:stylesheet>
 
