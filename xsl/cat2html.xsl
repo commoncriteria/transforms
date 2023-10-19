@@ -140,6 +140,11 @@
 		</div>
 	</xsl:template>
 	
+	<xsl:template match="cc:cat-acronyms">
+		<xsl:call-template name="acronyms"/>
+	</xsl:template>
+
+	
 </xsl:stylesheet>
 
 

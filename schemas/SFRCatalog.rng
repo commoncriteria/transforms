@@ -148,8 +148,8 @@
         <ref name="section"/>   <!-- Purpose -->
         <ref name="section"/>   <!-- Intended audience -->
         <ref name="section"/>   <!-- references -->
-        <ref name="section"/> 	<!-- terms and definitions -->
-        <ref name="section"/>   <!-- abbreviations -->
+        <ref name="cat-terms"/> <!-- terms and definitions -->
+        <ref name="cat-acronyms"/>   <!-- abbreviations -->
         <zeroOrMore> 
 			<ref name="section"/> <!-- any other sections -->
 		</zeroOrMore>
