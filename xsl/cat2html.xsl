@@ -127,23 +127,55 @@
 	<!-- Terms -->
 	<!-- Display terms in the intro, usually section 1.4 -->
 	<xsl:template match="cc:cat-terms">
-		<xsl:param name="num" select="2"/>
+<!--		<xsl:param name="num" select="2"/>
 			<div class="no-link">
 			<h2 id='glossary' class='indexable' data-level='{$num}'>Terms</h2>
-			The following section lists terms used in this document.
+			The following section lists terms used in this document.   -->
 			<table style="width: 100%">
 				<xsl:for-each select="cc:term[text()]">
 					<xsl:sort select="@full"/>
 					<xsl:call-template name="glossary-entry"/>
 				</xsl:for-each>
 			</table>
-		</div>
-	</xsl:template>
-	
-	<xsl:template match="cc:cat-acronyms">
-		<xsl:call-template name="acronyms"/>
+<!--		</div>  -->
 	</xsl:template>
 
+	<!-- Acronyms -->
+	<xsl:template match="cc:cat-acronyms">
+		<xsl:call-template name="cat-acronym-table"/>
+	</xsl:template>
+
+	<xsl:template name="cat-acronym-table">
+		<table>
+			<tr class="header">
+				<th>Acronym</th>
+				<th>Meaning</th>
+			</tr>
+
+			<xsl:for-each select="//cc:cat-terms/cc:term[@abbr]">
+				<xsl:sort select="translate(@abbr,$lower, $upper)"/>
+				<tr>
+					<td>
+						<xsl:element name="span">
+							<xsl:attribute name="class">term</xsl:attribute>
+							<xsl:attribute name="id">abbr_<xsl:value-of select="@abbr"/></xsl:attribute>
+							<xsl:apply-templates select="@plural" mode="passthru-data-attr"/>
+							<xsl:apply-templates select="@lower"  mode="passthru-data-attr"/>
+							<xsl:value-of select="@abbr"/>
+						</xsl:element>
+					</td>
+					<td>
+						<span id="long_abbr_{@abbr}"><xsl:value-of select="@full"/></span>
+					</td>
+				</tr>
+				<xsl:text>&#10;</xsl:text>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="@*" mode="passthru-data-attr">
+		<xsl:attribute name="data-{name()}"><xsl:value-of select="."/></xsl:attribute>
+	</xsl:template>
 	
 </xsl:stylesheet>
 
