@@ -13,10 +13,12 @@
 <!-- ################################# -->
   <start>
     <element name="SFRCatalog">
-      <a:documentation>Root element for SFR Catalog XML document</a:documentation>
-      <ref name="CatReference"/>
-      <ref name="RevisionHistory"/>
-<!--      <ref name="CatIntroductionChapter"/>
+		<a:documentation>Root element for SFR Catalog XML document</a:documentation>
+		<ref name="CatReference"/>
+		<ref name="RevisionHistory"/>      
+		<ref name="CatPreferences"/> 
+<!--
+	  <ref name="CatIntroductionChapter"/>
       <ref name="CatOverviewChapter"/>
       <ref name="Chapters"/>
       <ref name="sfr-section"/>
@@ -105,39 +107,24 @@
             <data type="date"/>
         </element>
       </element>
-  </define> 
+	</define> 
+  
+	<define name="CatPreferences">
+		<element name="CatPreferences">
+			<a:documentation>
+				A place to define preferences for catalog output.
+				"audit-events-in-sfrs": Audit events are defined in the SFRs rather than in a separate table.
+					For catalogs, this element must always be included.
+				"display-audit-with-sfrs": Audit events are displayed with the SFRs rather than in a separate table.
+					For catalogs, this element must always be included.
+			</a:documentation>
+			<interleave>
+				<element name="display-audit-with-sfrs"><empty/></element>  
+				<element name="audit-events-in-sfrs"><empty/></element>
+			</interleave>
+		</element>
+	</define>
 
-<!--
-  <define name="RevisionHistory">
-    <oneOrMore>
-        <element name="RevisionHistory">
-          <a:documentation>Documents the major changes to releases.</a:documentation>
-          <zeroOrMore>
-            <element name="entry">
-              <a:documentation>Container for individual revisions.</a:documentation>
-              <element name="version">
-                <a:documentation>Text describing the revision.</a:documentation>
-                <text/>
-              </element>
-              <element name="date">
-                <a:documentation>Date of the revision.</a:documentation>
-                <data type="date"/>
-              </element>
-              <element name="subject">
-                <a:documentation>Description of the revision.</a:documentation>
-                <ref name="basic-content-pat"/>
-              </element>
-            </element>
-          </zeroOrMore>
-        </element>
-    </oneOrMore>
-    <optional>
-      <element name="release-notes">
-	<ref name="basic-content-pat"/>
-      </element>
-    </optional>
-  </define>
--->
 <!--
 
 
