@@ -17,11 +17,10 @@
 		<ref name="CatReference"/>
 		<ref name="RevisionHistory"/>      
 		<ref name="CatPreferences"/> 
-		<ref name="CatIntroductionChapter"/>
-		<ref name="CatOverviewChapter"/>
+		<ref name="CatIntroduction"/>
+		<ref name="CatOverview"/>
+		<ref name="CatSFRs"/>
 <!--
-      <ref name="Chapters"/>
-      <ref name="sfr-section"/>
       <ref name="Chapters"/>
       <ref name="appendices-pat"/>
       <ref name="bibliography"/>  -->
@@ -127,7 +126,7 @@
 	</define>
 
 	<!-- Introduction -->
-	<define name="CatIntroductionChapter">
+	<define name="CatIntroduction">
 		<a:documentation>
 			Sections:
 				purpose
@@ -164,7 +163,7 @@
 	</define>
 
 	<!-- 2.0 Overview  --> 
-	<define name="CatOverviewChapter">
+	<define name="CatOverview">
 		<a:documentation>
 			Sections: 
 				organization of the document
@@ -188,5 +187,63 @@
 			<ref name="section"/> 
 		</zeroOrMore>
 	</define>
+	
+	<!-- SFRs -->
+	<define name="CatSFRs">
+		
+		<element name="section">
+			<attribute name="title"><value>Security Functional Requirements</value></attribute>
+			<attribute name="id"/>
+			<ref name="cat-sfr-content"/>
+		</element>
+	</define>
+	
+	<define name="cat-sfr-content">
+		<a:documentation>
+			Intro text
+				for each class
+					Zero or more family behaviors
+					for each sfr
+						Title
+						PP-Author Guidance
+						Hierarchy and dependencies
+						SFR Text
+						App notes
+						audit events
+						management functions
+						EAs
+		</a:documentation>
+		<oneOrMore>
+			<element name="section">
+				<attribute name="title"/>
+				<optional><attribute name="id"/></optional>
+				<ref name="cat-sfr-sections-content-pat"/>
+			</element>
+		</oneOrMore>	
+	</define>
+
+ 
+   <define name="cat-sfr-sections-content-pat">
+		<a:documentation>
+			Section for a class.
+				Optional text.
+				Optional family behavior sections.
+				For each SFR....
+		</a:documentation>
+		<optional>   <!-- family behavior -->
+			<element name="class-description">
+				<ref name="basic-content-pat"/>
+			</element>
+		</optional>
+		<ref name="basic-content-pat"/>
+		<oneOrMore>
+			<choice>
+				<ref name="f-component-pattern"/>  <!-- cat-f-component-pattern -->
+				<ref name="ext-comp-def-pat"/>
+			</choice>
+		</oneOrMore>
+		<ref name="basic-content-pat"/>
+  </define>
+
 
 </grammar>
