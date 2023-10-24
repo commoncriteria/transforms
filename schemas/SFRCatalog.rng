@@ -18,8 +18,8 @@
 		<ref name="RevisionHistory"/>      
 		<ref name="CatPreferences"/> 
 		<ref name="CatIntroductionChapter"/>
+		<ref name="CatOverviewChapter"/>
 <!--
-      <ref name="CatOverviewChapter"/>
       <ref name="Chapters"/>
       <ref name="sfr-section"/>
       <ref name="Chapters"/>
@@ -126,23 +126,24 @@
 		</element>
 	</define>
 
-   
-  <define name="CatIntroductionChapter">
-  	<a:documentation>
-		Sections:
-			purpose
-			intended audience
-			references
-			terms & defs
-			abbreviations		
-	</a:documentation>
-	
 	<!-- Introduction -->
-	<element name="section">
-         <attribute name="title"><value>Introduction</value></attribute>
-         <attribute name="id"/>
-        <ref name="cat-introduction-content"/>
-    </element>   
+	<define name="CatIntroductionChapter">
+		<a:documentation>
+			Sections:
+				purpose
+				intended audience
+				references
+				terms & defs
+				abbreviations		
+		</a:documentation>
+	
+		<!-- Introduction -->
+		<element name="section">
+			 <attribute name="title"><value>Introduction</value></attribute>
+			 <attribute name="id"/>
+			<ref name="cat-introduction-content"/>
+		</element>  
+	</define>
 
 	<define name="cat-introduction-content">
         <ref name="section"/>   <!-- Purpose -->
@@ -153,8 +154,7 @@
         <zeroOrMore> 
 			<ref name="section"/> <!-- any other sections -->
 		</zeroOrMore>
-      </element>
-  </define>
+	</define>
 
 	<!-- List of terms in Terms and Definitions section -->
 	<define name="cat-terms">
@@ -163,22 +163,30 @@
 		</zeroOrMore>
 	</define>
 
-<!--
+	<!-- 2.0 Overview  --> 
+	<define name="CatOverviewChapter">
+		<a:documentation>
+			Sections: 
+				organization of the document
+				how to use the document
+				typographical conventions
+		</a:documentation>
+	
+		<!-- Overview -->
+		<element name="section">
+			<attribute name="title"><value>Overview</value></attribute>
+			<attribute name="id"/>
+			<ref name="cat-overview-content"/>
+		</element>   
+	</define>
 
-  <define name="CatOverviewChapter">
-<!--  	organization of the document
-		how to use the document
-		typographical conventions
-->   
-      <element name="CatOverview">
-        <ref name="section"/>   <!-- doc organization ->
-        <ref name="section"/>   <!-- how to use the document ->
-        <ref name="section"/>   <!-- typographical conventions ->
-        <zeroOrMore> 
+	<define name="cat-overview-content">
+		<ref name="section"/>   <!-- doc organization -->
+		<ref name="section"/>   <!-- how to use the document -->
+		<ref name="section"/>   <!-- typographical conventions -->
+		<zeroOrMore> 
 			<ref name="section"/> 
 		</zeroOrMore>
-      </element>
-  </define>
--->
+	</define>
 
 </grammar>
