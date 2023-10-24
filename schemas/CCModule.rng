@@ -24,7 +24,7 @@
       <ref name="SecObjChapter"/>
       <ref name="sec-req"/>
       <ref name="appendices-pat"/>
-      <ref name="implements-pat"/>
+      <ref name="implements-pat"/>   <!-- Features should be specified in Intro, not appendix -->
       <ref name="bibliography"/>
     </element>
   </start>
