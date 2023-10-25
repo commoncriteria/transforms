@@ -190,7 +190,6 @@
 	
 	<!-- SFRs -->
 	<define name="CatSFRs">
-		
 		<element name="section">
 			<attribute name="title"><value>Security Functional Requirements</value></attribute>
 			<attribute name="id"/>
@@ -219,7 +218,7 @@
 				<optional><attribute name="id"/></optional>
 				<choice>
 					<ref name="cat-sfr-sections-content-pat"/>
-					<ref name="basic-content-pat"/>
+					<ref name="section"/>
 				</choice>
 			</element>
 		</oneOrMore>	
@@ -241,12 +240,53 @@
 		<ref name="basic-content-pat"/>
 		<oneOrMore>
 			<choice>
-				<ref name="f-component-pattern"/>  <!-- cat-f-component-pattern -->
+				<ref name="cat-f-component-pattern"/> 
 				<ref name="ext-comp-def-pat"/>
 			</choice>
 		</oneOrMore>
 		<ref name="basic-content-pat"/>
   </define>
+
+	<define name="cat-f-component-pattern">
+		<element name="cat-f-component">
+			<a:document>
+				Specifies a component in a catalog.
+			</a:document>
+			<ref name="f-comp-content-pat"/>
+			<choice>
+				<!-- Choice of status -->
+				<!-- If the status is objective, it must have a targetdate(?) -->
+				<ref name="f-comp-sel-based-parts"/>	      
+	      
+				<!-- The status could also be optional or nothing (which is indicated here) -->
+				<optional>
+				  <attribute name="status">
+					<a:documentation>
+					  Denotes the status of a requirement.
+					</a:documentation>
+					<choice>
+					  <value>optional</value>
+				  <value>objective</value>
+				  <value>invisible</value>
+					</choice>
+				  </attribute>
+				  <zeroOrMore>
+					<ref name="depends-pat"/>
+				  </zeroOrMore>
+				</optional>
+			</choice>
+
+<!--      <ref name="depends-pat"/>   -->
+			<optional><ref name="importable-pat"/></optional>
+			<optional><ref name="exportable-pat"/></optional>
+			<optional><ref name="note"/></optional>
+			<optional><ref name="consistency-rationale"/></optional>
+			<optional><ref name="ext-comp-extra-pat"/></optional>
+			<optional><ref name="description"/></optional>
+			<ref name="f-elements-pat"/>
+			<ref name="audit-events-pat"/>
+		</element>
+	</define>
 
 
 </grammar>
