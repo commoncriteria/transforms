@@ -48,9 +48,9 @@
 			Hierarchy and dependencies
 			SFR Text
 			App notes
+			EAs
 			audit events
 			management functions
-			EAs
 	Appendixes
 		ECD stuff for EXT requirements
 		Reference to all the standards 
@@ -217,7 +217,10 @@
 			<element name="section">
 				<attribute name="title"/>
 				<optional><attribute name="id"/></optional>
-				<ref name="cat-sfr-sections-content-pat"/>
+				<choice>
+					<ref name="cat-sfr-sections-content-pat"/>
+					<ref name="basic-content-pat"/>
+				</choice>
 			</element>
 		</oneOrMore>	
 	</define>
