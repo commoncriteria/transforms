@@ -180,49 +180,11 @@
 	<!-- cat-f-component -->
 	<xsl:template match="cc:cat-f-component">
 		<xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
-
 		<div class="comp" id="{$full_id}">
-		<h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
-		<xsl:if test="@status='objective'">
-        <div class="statustag">
-          <i><b> This is an objective component.
-          <xsl:if test="@targetdate">
-            It is scheduled to be mandatory for products entering evaluation after
-            <xsl:value-of select="@targetdate"/>.
-          </xsl:if>
-          </b></i>
-        </div>
-      </xsl:if>
-      <xsl:if test="@status='sel-based'">
-        <div class="statustag">
-          <b><i>This is a selection-based component. Its inclusion depends upon selection from
-	  <xsl:call-template name="handle_thing_with_depends"/>
-          </i></b>
-        </div>
-      </xsl:if>
-      <xsl:if test="@status='feat-based'">
-        <div class="statustag">
-          <i><b>This is an implementation-based component.
-                Its inclusion in depends on whether the TOE implements one or more of the following features:
-                <ul>
-                  <xsl:for-each select="cc:depends/@*">
-                    <xsl:variable name="ref-id" select="."/>
-                      <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
-                  </xsl:for-each>
-                </ul>
-                as described in Appendix A: Implementation-based Requirements.
-               <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
-        </b></i>
-        </div>
-      </xsl:if>
-      <xsl:if test="@status='optional'">
-        <div class="statustag">
-          <i><b>This is an optional component. However, applied modules or packages might redefine it as mandatory.</b></i>
-        </div>
-      </xsl:if>
-     <xsl:apply-templates/>
-        <xsl:call-template name="f-comp-activities"/>
-    </div>	
+			<h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
+			<xsl:apply-templates/>
+			<xsl:call-template name="f-comp-activities"/>
+		</div>	
 	</xsl:template>
 	
 	
