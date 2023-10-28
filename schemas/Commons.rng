@@ -1858,18 +1858,32 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="implements-pat">
     <optional>
-      <element name="implements">
-        <a:documentation>
-          Maps features to Implementation-dependent requiremetns
-        </a:documentation>
-        <oneOrMore>
-          <element name="feature">
-            <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <ref name="description"/>
-          </element>
-        </oneOrMore>
-      </element>
+		<choice>
+			<element name="implements">
+				<a:documentation>
+					Maps features to Implementation-dependent requiremetns
+				</a:documentation>
+				<oneOrMore>
+				<element name="feature">
+					<ref name="id-attr"/>
+					<ref name="title-attr"/>
+					<ref name="description"/>
+				</element>
+				</oneOrMore>
+			</element>
+			<element name="features">
+				<a:documentation>
+					Maps features to Implementation-dependent requiremetns
+				</a:documentation>
+				<oneOrMore>
+				<element name="feature">
+					<ref name="id-attr"/>
+					<ref name="title-attr"/>
+					<ref name="description"/>
+				</element>
+				</oneOrMore>
+			</element>
+		</choice>
     </optional>
   </define>
 

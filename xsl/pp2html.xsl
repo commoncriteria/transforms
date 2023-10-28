@@ -647,8 +647,8 @@
   <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
   <!-- Reworked this so it would display in the section where the festures are defined rather than in the appendix. -->
     <xsl:template name="handle-features">	
-		<xsl:call-template name="imple_text"/>
-       <xsl:for-each select="//cc:implements/cc:feature">
+<!--		<xsl:call-template name="imple_text"/>  -->
+       <xsl:for-each select="//cc:features/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
 <!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
 <!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
@@ -674,10 +674,42 @@
         </xsl:for-each>
     </xsl:template>
 
+    <xsl:template name="handle-features-old">	
+		<xsl:call-template name="imple_text"/>
+       <xsl:for-each select="//cc:implements/cc:feature">
+          <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
+          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable> 
+          <xsl:variable name="level" select="2+$oneIfApp"/> 
+          <xsl:variable name="level" select="3"/>
 
-  <xsl:template match="cc:implements">
+          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
+          <xsl:apply-templates select="cc:description"/><br/>
+  	  <!-- First just output the name of the SFR associated with each feature.  -->
+          <p>
+	  If this feature is implemented by the TOE, the following requirements must be claimed by the ST:
+            <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
+	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
+	    </xsl:for-each></ul>
+          </p>
+          
+	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
+          <xsl:if test="$appendicize='on'">
+             <xsl:for-each select="//cc:f-component/cc:depends[@*=$fid]/../..">
+                <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
+                <xsl:apply-templates select="cc:f-component[cc:depends/@*=$fid]" mode="appendicize-nofilter"/>
+             </xsl:for-each>
+          </xsl:if>  
+        </xsl:for-each>
+    </xsl:template>
+
+
+  <xsl:template match="cc:features">
     <xsl:call-template name="handle-features"/>
   </xsl:template> 
+  
+  <xsl:template match="cc:implements">
+	<xsl:call-template name="handle-features-old"/>
+  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
