@@ -375,7 +375,7 @@
       </xsl:if>
       <xsl:if test="@status='feat-based'">
         <div class="statustag">
-          <i><b>This is a feature-based component.
+          <i><b>This is a implementation-dependent component.
                 Its inclusion in depends on whether the TOE implements one or more of the following features:
                 <ul>
                   <xsl:for-each select="cc:depends/@*">
@@ -383,7 +383,7 @@
                       <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
-                as described in Appendix A: Feature-based Requirements.
+                as described in Appendix A.3: Implementation-dependent Requirements.
                <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
@@ -648,7 +648,7 @@
   <!-- Reworked this so it would display in the section where the festures are defined rather than in the appendix. -->
     <xsl:template name="handle-features">	
 <!--		<xsl:call-template name="imple_text"/>  -->
-       <xsl:for-each select="//cc:features/cc:feature">
+       <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
 <!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
 <!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
@@ -674,41 +674,10 @@
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template name="handle-features-old">	
-		<xsl:call-template name="imple_text"/>
-       <xsl:for-each select="//cc:implements/cc:feature">
-          <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable> 
-          <xsl:variable name="level" select="2+$oneIfApp"/> 
-          <xsl:variable name="level" select="3"/>
 
-          <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
-          <xsl:apply-templates select="cc:description"/><br/>
-  	  <!-- First just output the name of the SFR associated with each feature.  -->
-          <p>
-	  If this feature is implemented by the TOE, the following requirements must be claimed by the ST:
-            <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
-	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
-	    </xsl:for-each></ul>
-          </p>
-          
-	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
-          <xsl:if test="$appendicize='on'">
-             <xsl:for-each select="//cc:f-component/cc:depends[@*=$fid]/../..">
-                <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
-                <xsl:apply-templates select="cc:f-component[cc:depends/@*=$fid]" mode="appendicize-nofilter"/>
-             </xsl:for-each>
-          </xsl:if>  
-        </xsl:for-each>
-    </xsl:template>
-
-
-  <xsl:template match="cc:features">
-    <xsl:call-template name="handle-features"/>
-  </xsl:template> 
   
   <xsl:template match="cc:implements">
-	<xsl:call-template name="handle-features-old"/>
+	<xsl:call-template name="handle-features"/>
   </xsl:template>
 
   <!-- ############### -->
@@ -736,8 +705,8 @@
             </xsl:when>
             <xsl:otherwise>
 				<!-- I don't think this code is ever reached. -->
-                <h1 id="impl-reqs" class="indexable" data-level="A">Feature-based Requirements</h1>
-                Feature-based Requirements <xsl:call-template name="imple_text"/>
+                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-dependent Requirements</h1>
+                Implementation-dependent Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>

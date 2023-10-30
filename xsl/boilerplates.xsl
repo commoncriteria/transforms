@@ -273,7 +273,7 @@ This PP-Module does not define any objectives for the OE.
 	  the future. Adoption by vendors is encouraged, but claiming these SFRs is not required in order to conform to this
 	  <xsl:call-template name="doctype-short"/>.<br/><br/>
 
-  The third type, defined in Appendix <xsl:call-template name="ref-impl-reqs"/>, are Feature-based requirements.
+  The third type, defined in Appendix <xsl:call-template name="ref-impl-reqs"/>, are Implementation-dependent requirements.
 	If the TOE implements the product features associated with the listed SFRs, either the SFRs must be claimed
 	or the product features must be disabled in the evaluated ocnfiguration. 
   </xsl:template>

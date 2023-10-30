@@ -1856,37 +1856,21 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <element name="ref-id"><text/></element>
   </define>
 
-	<!-- This can be either the <implements> or <features> construct -->
-	<!-- implements is for the appendix and will be dperecated.  -->
-	<!-- features is for the introduction -->
+	<!-- Features mapped to implementation-dependent SFRs -->
   <define name="implements-pat">
     <optional>
-		<choice>
-			<element name="implements">
-				<a:documentation>
-					Maps features to Implementation-dependent requiremetns
-				</a:documentation>
-				<oneOrMore>
-				<element name="feature">
-					<ref name="id-attr"/>
-					<ref name="title-attr"/>
-					<ref name="description"/>
-				</element>
-				</oneOrMore>
+		<element name="implements">
+			<a:documentation>
+				Maps features to Implementation-dependent requiremetns
+			</a:documentation>
+			<oneOrMore>
+			<element name="feature">
+				<ref name="id-attr"/>
+				<ref name="title-attr"/>
+				<ref name="description"/>
 			</element>
-			<element name="features">
-				<a:documentation>
-					Maps features to Implementation-dependent requiremetns
-				</a:documentation>
-				<oneOrMore>
-				<element name="feature">
-					<ref name="id-attr"/>
-					<ref name="title-attr"/>
-					<ref name="description"/>
-				</element>
-				</oneOrMore>
-			</element>
-		</choice>
+			</oneOrMore>
+		</element>
     </optional>
   </define>
 

@@ -31,7 +31,7 @@
       <ref name="SecurityRequirementsChapter"/>
       <ref name="Chapters"/>
       <ref name="appendices-pat"/>
-      <ref name="implements-pat"/>   <!-- Features should be specified in Intro, not appendix -->
+<!--      <ref name="implements-pat"/> -->  <!-- Features should be specified in Intro, not appendix -->
       <ref name="bibliography"/>
       <!-- This is where we can store extra css -->
       <optional>

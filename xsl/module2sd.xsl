@@ -222,7 +222,7 @@ guidance, and testing.</p>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
      </x:choose>
      
-   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Feature-based SFRs</h2>  
+   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Implementation-dependent SFRs</h2>  
      <x:choose>
       <x:when test="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='feat-based']">
         <x:for-each select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='feat-based']/..">
@@ -233,7 +233,7 @@ guidance, and testing.</p>
           <x:apply-templates select="cc:f-component[not(@status='invisible') and /cc:Module]"/>
         </x:for-each>
       </x:when>
-      <x:otherwise>The PP-Module does not define any feature-based requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any implementation-dependent requirements.</x:otherwise>
     </x:choose>
 
 
