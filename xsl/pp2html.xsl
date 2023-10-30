@@ -660,13 +660,8 @@
           <p>
 	  If this feature is implemented by the TOE, the following requirements must be claimed by the ST:
             <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
-				<li><b><xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable></b>
-				<div class="comp" id="{$full_id}">
-					<xsl:value-of select="concat($full_id, '      ', @name)"/>
-				</div></li>
-
-<!--	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>  -->
-	    </xsl:for-each></ul>
+				<li><b><xsl:apply-templates select="." mode="getId"/></b></li>
+			</xsl:for-each></ul>
           </p>
    <!--       
 		<xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
