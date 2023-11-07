@@ -398,8 +398,15 @@
     </div>
   </xsl:template>
 
+	<!-- Appendicize for all Module SFRs except for those in additional-sfrs under a base-PP -->
+	<!-- This change Nov 2023 -->
   <xsl:template match="/cc:Module//cc:f-component">
-    <xsl:apply-templates select="." mode="appendicize-nofilter"/>
+	<xsl:when test="ancestor::cc:additional-sfrs">
+		<xsl:apply-templates select="." mode="addnl-sfrs"/>
+	</xsl:when>
+	<xsl:otherwise>
+		<xsl:apply-templates select="." mode="appendicize-nofilter"/>
+	</xsl:otherwise>
   </xsl:template>
 
   <!-- ############### -->
@@ -433,6 +440,12 @@
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
+
+  <xsl:template match="cc:f-component" mode="addnl-sfrs">
+  <!-- in addnl-sfrs mode, display all SFRs in the main body-->
+      <xsl:apply-templates select="." mode="appendicize-nofilter" />
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->
