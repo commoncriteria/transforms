@@ -430,24 +430,25 @@
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-	<b>in appendicise</b>
+	<b>in appendicise </b>
 <!--    <xsl:if test="not(@status)">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
 -->
 	<xsl:choose>
-		<xsl:when test="not(@status)">
-			<b>no status detected</b>
-			<xsl:apply-templates select="." mode="appendicize-nofilter" />
-		</xsl:when>
 		<xsl:when test="ancestor::cc:additional-sfrs">
 			<b>additional-sfr element detected</b>
 			<xsl:apply-templates select="." mode="addnl-sfrs"/>
+		</xsl:when>
+		<xsl:when test="not(@status)">
+			<b>no status detected</b>
+			<xsl:apply-templates select="." mode="appendicize-nofilter" />
 		</xsl:when>
 		<xsl:otherwise>
 			<b>falling through appendicize</b>
 		</xsl:otherwise>
 	</xsl:choose>
+	<b>leaving appendecize</b>
   </xsl:template>
 
   <xsl:template match="cc:f-component" mode="addnl-sfrs">
