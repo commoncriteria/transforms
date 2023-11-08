@@ -431,18 +431,24 @@
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
 	<b>in appendicise </b>
-	<!-- Traditional mandatory requirements -->
-    <xsl:if test="not(@status)">
-	  <b>no status detected</b>
-      <xsl:apply-templates select="." mode="appendicize-nofilter" />
-    </xsl:if>
+	<xsl:choose>
 
-	<!-- Any requirement with a status in an additional-sfrs element -->
-	<xsl:if test="ancestor::cc:additional-sfrs">
-			<b>additional-sfr element detected</b>
-			<xsl:apply-templates select="." mode="addnl-sfrs"/>
-	</xsl:if>
+		<!-- Any requirement in an additional-sfrs element regardless of status -->
+		<xsl:when test="ancestor::cc:additional-sfrs">
+				<b>additional-sfr element detected</b>
+				<xsl:apply-templates select="." mode="addnl-sfrs"/>
+		</xsl:when>
 
+		<!-- Traditional mandatory requirements -->
+		<xsl:when test="not(@status)">
+			<b>no status detected</b>
+			<xsl:apply-templates select="." mode="appendicize-nofilter" />
+		</xsl:when>
+
+		<xsl:otherwise>
+			<b>This should never happen.</b>
+		</xsl:otherwise>
+	</xsl:choose>
 	<b>leaving appendecize</b>
   </xsl:template>
 
