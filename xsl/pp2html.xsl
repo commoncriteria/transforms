@@ -401,11 +401,14 @@
 	<!-- Appendicize for all Module SFRs except for those in additional-sfrs under a base-PP -->
 	<!-- This change Nov 2023 -->
   <xsl:template match="/cc:Module//cc:f-component">
+	<b>component in a module</b>
 	<xsl:choose>
 		<xsl:when test="ancestor::cc:additional-sfrs">
+			<b>going to additional SFRs</b>
 			<xsl:apply-templates select="." mode="addnl-sfrs"/>
 		</xsl:when>
 		<xsl:otherwise>
+			<b>going to nofilter</b>
 			<xsl:apply-templates select="." mode="appendicize-nofilter"/>
 		</xsl:otherwise>
 	</xsl:choose>
@@ -442,6 +445,7 @@
     <xsl:if test="not(@status)">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
+	<b>component had a status, skipped</b>
   </xsl:template>
 
   <xsl:template match="cc:f-component" mode="addnl-sfrs">
