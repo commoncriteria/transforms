@@ -438,6 +438,7 @@
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
+	<b>appendicise</b>
     <xsl:if test="not(@status)">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
@@ -445,6 +446,7 @@
 
   <xsl:template match="cc:f-component" mode="addnl-sfrs">
   <!-- in addnl-sfrs mode, display all SFRs in the main body-->
+	<b>addnl-sfrs</b>
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
   </xsl:template>
 
@@ -457,7 +459,7 @@
     
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
-
+	<b>Appendecize-nofilter</b>
       <xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
         <div class="statustag">
           <i><b>
