@@ -428,27 +428,18 @@
   <!-- ############### -->
   <!--  F-components for release l      -->
   <!-- ############### -->
+  
+  <!-- This template is executed for modules, but it appears that non-mandatory 
+	SFRs have already been filtered out. rmc 11/8/23 -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-	<b>in appendicise </b>
-	<xsl:choose>
+	<b>in appendecize: </b>
 
-		<!-- Any requirement in an additional-sfrs element regardless of status -->
-		<xsl:when test="ancestor::cc:additional-sfrs">
-				<b>additional-sfr element detected</b>
-				<xsl:apply-templates select="." mode="addnl-sfrs"/>
-		</xsl:when>
-
-		<!-- Traditional mandatory requirements -->
-		<xsl:when test="not(@status)">
-			<b>no status detected</b>
+		<xsl:if test="(not(@status)) or ancestor::cc:additional-sfrs">
+			<b>test passed</b>
 			<xsl:apply-templates select="." mode="appendicize-nofilter" />
-		</xsl:when>
+		</xsl:if>
 
-		<xsl:otherwise>
-			<b>This should never happen.</b>
-		</xsl:otherwise>
-	</xsl:choose>
 	<b>leaving appendecize</b>
   </xsl:template>
 
@@ -828,6 +819,7 @@
     <xsl:variable name="level" select="$lmod+count(ancestor::*)"/>
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
+	<b>section with fcomp</b>
     <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)]">
       <xsl:element name="h{$level}">
         <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
