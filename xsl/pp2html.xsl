@@ -398,20 +398,9 @@
     </div>
   </xsl:template>
 
-	<!-- Appendicize for all Module SFRs except for those in additional-sfrs under a base-PP -->
-	<!-- This change Nov 2023 -->
+	<!-- This template never seems to match -->
   <xsl:template match="/cc:Module//cc:f-component">
-	<b>component in a module</b>
-	<xsl:choose>
-		<xsl:when test="ancestor::cc:additional-sfrs">
-			<b>going to additional SFRs</b>
-			<xsl:apply-templates select="." mode="addnl-sfrs"/>
-		</xsl:when>
-		<xsl:otherwise>
-			<b>going to nofilter</b>
-			<xsl:apply-templates select="." mode="appendicize-nofilter"/>
-		</xsl:otherwise>
-	</xsl:choose>
+		<xsl:apply-templates select="." mode="appendicize-nofilter"/>
   </xsl:template>
 
   <!-- ############### -->
@@ -441,16 +430,29 @@
   <!-- ############### -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-	<b>appendicise</b>
-    <xsl:if test="not(@status)">
+	<b>in appendicise</b>
+<!--    <xsl:if test="not(@status)">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
-	<b>component had a status, skipped</b>
+-->
+	<xsl:choose>
+		<xsl:when test="not(@status)">
+			<b>no status detected</b>
+			<xsl:apply-templates select="." mode="appendicize-nofilter" />
+		</xsl:when>
+		<xsl:when test="ancestor::cc:additional-sfrs">
+			<b>additional-sfr element detected</b>
+			<xsl:apply-templates select="." mode="addnl-sfrs"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<b>falling through appendicize</b>
+		</xsl:otherwise>
+	</xsl:choose>
   </xsl:template>
 
   <xsl:template match="cc:f-component" mode="addnl-sfrs">
   <!-- in addnl-sfrs mode, display all SFRs in the main body-->
-	<b>addnl-sfrs</b>
+	<b>in addnl-sfrs</b>
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
   </xsl:template>
 
@@ -463,7 +465,7 @@
     
     <div class="comp" id="{$full_id}">
       <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
-	<b>Appendecize-nofilter</b>
+	<b>in Appendecize-nofilter</b>
       <xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
         <div class="statustag">
           <i><b>
