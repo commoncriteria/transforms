@@ -672,7 +672,7 @@
   <xsl:template match="cc:ext-comp-extra-pat"/>
  
  <!-- ############### -->
-  <!--                 -->
+  <!--                 --> 
   <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
        Of course, nobody tells me this so it took a while to debug.   -->
   <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
@@ -694,7 +694,7 @@
             <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each></ul>
-          </p>
+          </p> 
    <!--       
 		<xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
 
