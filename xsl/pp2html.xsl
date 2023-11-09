@@ -383,7 +383,7 @@
                       <li><a href="#{$ref-id}"><xsl:value-of select="//cc:feature[@id=$ref-id]/@title"/></a></li>
                   </xsl:for-each>
                 </ul>
-                as described in Appendix A: Implementation-based Requirements.
+                as described in Appendix A.3: Implementation-based Requirements.
                <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
@@ -400,7 +400,7 @@
 
 	<!-- This template never seems to match -->
   <xsl:template match="/cc:Module//cc:f-component">
-		<xsl:apply-templates select="." mode="appendicize-nofilter"/>
+    <xsl:apply-templates select="." mode="appendicize-nofilter"/>
   </xsl:template>
 
   <!-- ############### -->
@@ -434,11 +434,10 @@
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
   <!-- Except when in an additionsl-sfrs element in a module rmc, 11/8/23 -->
-		<xsl:if test="(not(@status)) or ancestor::cc:additional-sfrs">
-			<xsl:apply-templates select="." mode="appendicize-nofilter" />
-		</xsl:if>
+    <xsl:if test="(not(@status)) or ancestor::cc:additional-sfrs">
+      <xsl:apply-templates select="." mode="appendicize-nofilter" />
+    </xsl:if>
   </xsl:template>
-
 
   <!-- ############### -->
   <!--                 -->
@@ -447,19 +446,19 @@
     <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
     
     <div class="comp" id="{$full_id}">
-		<h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
+      <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
 
 		<!-- Objective SFRs with a target date -->
-		<xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
-			<div class="statustag">
-				<i><b>
-					This objective component is scheduled to be mandatory for
-					products entering evaluation after
-					<xsl:value-of select="@targetdate"/>.
-				</b></i>
-			</div>
-		</xsl:if>
-
+      <xsl:if test="(@status='objective' or ancestor::cc:obj-sfrs) and @targetdate">
+        <div class="statustag">
+          <i><b>
+              This objective component is scheduled to be mandatory for
+              products entering evaluation after
+              <xsl:value-of select="@targetdate"/>.
+          </b></i>
+          </div>
+      </xsl:if>
+      
 		<!-- Objective SFRs in the Additional SFRs section of a PP-Module -->
 		<xsl:if test="@status='objective' and ancestor::cc:additional-sfrs">
 			<div class="statustag">
@@ -468,84 +467,105 @@
 				</b></i>
 			</div>
 		</xsl:if>
-
+      
 		<!-- Optional requirements. We need to decide whether use-case-based requirements 
 			belong here or in with sel-based. Now they can go either way.
 			Same with dependencies on other SFRs. -->
-		<xsl:if test="@status='optional' or ancestor::cc:opt-sfrs">
-			<xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
-				<div class="statustag">
-					<b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
-					<ul>
-						<xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
-							<li><b><i> <a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
-						</xsl:for-each>
-					</ul>
-				</div>
-			</xsl:if>
-			<xsl:if test="//cc:f-component[.//@id = current()/cc:depends/@*]">
-				<div class="statustag">
-					<p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
-					<ul>
-						<xsl:for-each select="//cc:f-component[.//@id = current()/cc:depends/@*]">
-							<li><b><i><a href="#{@id}"><xsl:apply-templates select="." mode="getId"/></a></i></b></li>
-						</xsl:for-each>
-					</ul>
-				</div>
+      <xsl:if test="@status='optional' or @status="feat-based" or ancestor::cc:opt-sfrs">
+          <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+              <b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
+              <ul>
+                <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
+                  <li><b><i> <a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+                </xsl:for-each>
+              </ul>
+            </div>
+          </xsl:if>
+
+		  <!-- For feat-based SFRs -->
+          <xsl:if test="//cc:feature[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+              <b><i>This component must be included in the ST if the TOE implements any of the following features:</i></b><br/>
+              <ul>
+                <xsl:for-each select="//cc:feature[.//@id = current()/cc:depends/@*]">
+                  <li><b><i> <a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+                </xsl:for-each>
+              </ul>
+            </div>
+          </xsl:if>
+		            
+	  <xsl:if test="//cc:f-component[.//@id = current()/cc:depends/@*]">
+            <div class="statustag">
+               <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
+               <ul>
+                 <xsl:for-each select="//cc:f-component[.//@id = current()/cc:depends/@*]">
+			<li><b><i><a href="#{@id}"><xsl:apply-templates select="." mode="getId"/></a></i></b></li>
+                 </xsl:for-each>
+               </ul>
+             </div>
            </xsl:if>
         </xsl:if>
-		
+        
 		<!-- Optional SFRs in the Additional SFRs section of a PP-Module -->
 		<xsl:if test="@status='optional' and ancestor::cc:additional-sfrs">
 			<div class="statustag">
 				<b><i>This component is optional and may be claimed at the ST-Author's discretion.</i></b>
 			</div>
 		</xsl:if>
-		
-		<!-- Selection-based SFRs. All cases. -->
-		<xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
-			<div class="statustag">
-			<xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
-				<b><i>The inclusion of this selection-based component depends upon selection in
-				<xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
-					<xsl:apply-templates select="." mode="getId"/>
-					<xsl:call-template name="commaifnotlast"/>
-				</xsl:for-each>
-				<xsl:variable name="fcomp" select="."/>
-				<!-- Go through the referenced bases -->
-				<xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
-					<xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
-					<xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
-						<xsl:apply-templates select="." mode="make_xref"/>
-					</xsl:for-each>
-					from <xsl:apply-templates select="." mode="make_xref"/>
-				</xsl:for-each>.
-				</i></b>
-			</xsl:if>
-			<xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
-				<p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
-				<ul>
-					<xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
-						<li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
-					</xsl:for-each>
-				</ul>
-			</xsl:if>
-			<xsl:if test="//cc:f-component[@id = current()/cc:depends/@*]">
-				<p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
-				<ul>
-					<xsl:for-each select="//cc:f-component[@id = current()/cc:depends/@*]">
-						<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
-					</xsl:for-each>
-				</ul>
-			</xsl:if>
-			<xsl:if test="cc:depends/cc:optional">
-				<p><i><b>This component may also be included in the ST as if optional.</b></i></p>
-			</xsl:if>
-			</div>
+
+		<!-- Selection-based SFRs. All cases. -->        
+      <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
+        <div class="statustag">
+	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
+          <b><i>The inclusion of this selection-based component depends upon selection in
+           <xsl:for-each select="//cc:f-element[.//@id = current()/cc:depends[not(cc:external-doc)]/@*]">
+                <xsl:apply-templates select="." mode="getId"/>
+                <xsl:call-template name="commaifnotlast"/>
+           </xsl:for-each>
+           <xsl:variable name="fcomp" select="."/>
+           <!-- Go through the referenced bases -->
+           <xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
+             <xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
+             <xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
+               <xsl:apply-templates select="." mode="make_xref"/>
+             </xsl:for-each>
+             from <xsl:apply-templates select="." mode="make_xref"/>
+           </xsl:for-each>.
+           </i></b>
 		</xsl:if>
+           <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
+             <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
+             <ul>
+               <xsl:for-each select="//cc:usecase[.//@id = current()/cc:depends/@*]">
+                 <li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+               </xsl:for-each>
+             </ul>
+           </xsl:if>
+           <xsl:if test="//cc:feature[.//@id = current()/cc:depends/@*]">
+             <p/><b><i>This component must be included in the ST if the TOE implements any of the following features:</i></b><br/>
+             <ul>
+               <xsl:for-each select="//cc:feature[.//@id = current()/cc:depends/@*]">
+                 <li><b><i><a href="#{@id}"><xsl:value-of select="@title"/></a></i></b></li>
+               </xsl:for-each>
+             </ul>
+           </xsl:if>
+                      
+	  <xsl:if test="//cc:f-component[@id = current()/cc:depends/@*]">
+               <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
+               <ul>
+                 <xsl:for-each select="//cc:f-component[@id = current()/cc:depends/@*]">
+			<li><b><i><xsl:apply-templates select="." mode="getId"/></i></b></li>
+                 </xsl:for-each>
+               </ul>
+           </xsl:if>
+           <xsl:if test="cc:depends/cc:optional">
+		   <p><i><b>This component may also be included in the ST as if optional.</b></i></p>
+           </xsl:if>
+          </div>
+      </xsl:if>
         <xsl:apply-templates/>
-		
-		<xsl:if test="not( (/cc:Module or //cc:cPP) and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
+      <xsl:if test="not( (/cc:Module or //cc:cPP) and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
     </div>
   </xsl:template>
 
@@ -656,32 +676,46 @@
   <!-- Note: In the worksheet branch the ref-id of a depends tag is an attribute, but at some point that changed to a tag in the master.
        Of course, nobody tells me this so it took a while to debug.   -->
   <!-- TODO: Check the logic behind the ref-id: it only supports one ref-id right now.-->
+  <!-- Reworked this so it would display in the section where the festures are defined rather than in the appendix. -->
     <xsl:template name="handle-features">
+<!--		<xsl:call-template name="imple_text"/>  -->
        <xsl:for-each select="//cc:implements/cc:feature">
           <xsl:variable name="fid"><xsl:value-of select="@id"/></xsl:variable>
-          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>
-          <xsl:variable name="level" select="2+$oneIfApp"/>
+<!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
+<!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
 
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
-          <xsl:apply-templates select="cc:description"/>
+          <xsl:apply-templates select="cc:description"/><br/>
   	  <!-- First just output the name of the SFR associated with each feature.  -->
           <p>
-	  If this is implemented by the TOE, the following requirements must be included in the ST:
+	  If this feature is implemented by the TOE, the following requirements must be claimed in the ST:
             <ul> <xsl:for-each select="//cc:f-component[cc:depends/@*=$fid]"> 
 	       <li><b><xsl:apply-templates select="." mode="getId"/></b></li>
 	    </xsl:for-each></ul>
           </p>
+   <!--       
+		<xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
+    <div class="comp" id="{$full_id}">
+      <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
+   
+	-->  
           
 	  <!-- Then each SFR in full. Note if an SFR is invoked by two features it will be listed twice. -->  
-          <xsl:if test="$appendicize='on'">
+<!--          <xsl:if test="$appendicize='on'">
              <xsl:for-each select="//cc:f-component/cc:depends[@*=$fid]/../..">
                 <h3 id="{@id}-impl" class="indexable" data-level="{$level+1}"><xsl:value-of select="@title" /></h3>
                 <xsl:apply-templates select="cc:f-component[cc:depends/@*=$fid]" mode="appendicize-nofilter"/>
              </xsl:for-each>
-          </xsl:if>
+          </xsl:if>   -->
         </xsl:for-each>
     </xsl:template>
 
+
+  
+  <xsl:template match="cc:implements">
+	<xsl:call-template name="handle-features"/>
+  </xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -707,8 +741,9 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-based Requirements</h1>
-                Implementation-based Requirements <xsl:call-template name="imple_text"/>
+				<!-- I don't think this code is ever reached. -->
+                <h1 id="impl-reqs" class="indexable" data-level="A">Implementation-dependent Requirements</h1>
+                Implementation-dependent Requirements <xsl:call-template name="imple_text"/>
                 <xsl:call-template name="handle-features"/>
             </xsl:otherwise>
         </xsl:choose>
@@ -764,9 +799,9 @@
 	      </xsl:otherwise>
 	    </xsl:choose>
         </xsl:if>
-        <xsl:choose>
+<!--        <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
-          <xsl:otherwise> 
+          <xsl:otherwise>   -->
             <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
                 <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
@@ -777,8 +812,8 @@
      <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
               <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
             </xsl:for-each>
-          </xsl:otherwise>
-        </xsl:choose>
+<!--          </xsl:otherwise>   -->
+<!--        </xsl:choose>   -->
      </xsl:otherwise>
    </xsl:choose>
    <!-- </xsl:otherwise></xsl:choose> -->
@@ -833,8 +868,7 @@
     <xsl:variable name="level" select="$lmod+count(ancestor::*)"/>
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-	<!-- rmc 11/8/23: Added the ancestor condition to allow display of conditional and optional SFRs in additional-sfrs alements -->
-    <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)] or ancestor::cc:additional-sfrs">
+    <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)]">
       <xsl:element name="h{$level}">
         <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
         <xsl:attribute name="class">indexable</xsl:attribute>
@@ -842,7 +876,7 @@
         <xsl:value-of select="$title" />
       </xsl:element>
       <xsl:apply-templates mode="hook" select="."/>
-	  <!-- rmc 11/8/23: added ancestor condition -->
+    	  <!-- rmc 11/8/23: added ancestor condition -->
       <xsl:if test="$appendicize = 'on' or ancestor::cc:additional-sfrs">
         <xsl:apply-templates mode="appendicize" />
       </xsl:if>

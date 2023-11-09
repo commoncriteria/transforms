@@ -31,7 +31,7 @@
       <ref name="SecurityRequirementsChapter"/>
       <ref name="Chapters"/>
       <ref name="appendices-pat"/>
-      <ref name="implements-pat"/>
+<!--      <ref name="implements-pat"/> -->  <!-- Features should be specified in Intro, not appendix -->
       <ref name="bibliography"/>
       <!-- This is where we can store extra css -->
       <optional>
@@ -486,12 +486,14 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             </a:documentation>
             <data type="date"/>
           </element>
-          <element name="Keywords">
-            <a:documentation>
-              NOT USED. A list of keywords associated with this document.
-            </a:documentation>
-            <text/>
-          </element>
+          <optional>
+		    <element name="Keywords">
+              <a:documentation>
+                NOT USED. A list of keywords associated with this document.
+              </a:documentation>
+              <text/>
+            </element>
+		   </optional>
         </element>
       </element>
   </define> 

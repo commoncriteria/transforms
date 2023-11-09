@@ -23,8 +23,8 @@
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="sec-req"/>
-      <ref name="appendices-pat">
-<!--      <ref name="implements-pat"/>  --> <!-- These should be defined in the intro -->
+      <ref name="appendices-pat"/>
+<!--      <ref name="implements-pat"/>  -->
       <ref name="bibliography"/>
     </element>
   </start>
@@ -348,18 +348,18 @@ The name or cc-id of the aspect that is being overwritten by the content of this
     </choice></zeroOrMore>
   </define>
 
-	<define name="base-specific-sfrs-content">
+  <define name="base-specific-sfrs-content">
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
-			<element name="f-component">
-				<a:document>Specifies a component under Security Functional Requirements section.</a:document>
-				<optional>
-					<attribute name="notnew">
-						<a:document>Inclusion of this attribute signifies that this item should be omitted from the extended component definitions.</a:document>
-						<value>true</value>
-					</attribute>
-				</optional>
-				<optional>
+          <element name="f-component">
+	    <a:document>
+	      Specifies a component under Security Functional Requirements section..
+            </a:document>
+            <optional><attribute name="notnew">
+              <a:document>Inclusion of this attribute signifies that this item should be omitted from the extended component definitions.</a:document>
+              <value>true</value>
+            </attribute></optional>
+   				<optional>
 					<attribute name="status">						
 						<choice>
 							<value>optional</value>
@@ -369,17 +369,18 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 						</choice>	
 					</attribute>
 				</optional>
-				<ref name="f-comp-content-pat"/>
-				<ref name="depends-pat"/>
-				<optional><ref name="note"/></optional>
-				<ref name="consistency-rationale"/>
-				<ref name="ext-comp-extra-pat"/>
-				<optional><ref name="description"/></optional>
-				<ref name="f-elements-pat"/>
-				<ref name="audit-events-pat"/>
-			</element>
-		</oneOrMore>      
-	</define>
+            <ref name="f-comp-content-pat"/>
+	    <ref name="depends-pat"/>
+	    <optional><ref name="note"/></optional>
+            <ref name="consistency-rationale"/>
+            <ref name="ext-comp-extra-pat"/>
+	    <optional><ref name="description"/></optional>
+            <ref name="f-elements-pat"/>
+            <ref name="audit-events-pat"/>
+	  </element>
+	</oneOrMore>
+        
+ </define>
  
 
   <define name="from">

@@ -29,7 +29,7 @@
       <ref name="SecurityRequirementsChapter"/>
       <ref name="Chapters"/>
       <ref name="appendices-pat"/>
-      <ref name="implements-pat"/>
+<!--      <ref name="implements-pat"/>  -=->
       <ref name="bibliography"/>
       <!-- This is where we can store extra css -->
       <optional>

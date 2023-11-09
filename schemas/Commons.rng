@@ -1856,20 +1856,21 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <element name="ref-id"><text/></element>
   </define>
 
+	<!-- Features mapped to implementation-dependent SFRs -->
   <define name="implements-pat">
     <optional>
-      <element name="implements">
-        <a:documentation>
-          Maps features to Implementation-dependent requiremetns
-        </a:documentation>
-        <oneOrMore>
-          <element name="feature">
-            <ref name="id-attr"/>
-            <ref name="title-attr"/>
-            <ref name="description"/>
-          </element>
-        </oneOrMore>
-      </element>
+		<element name="implements">
+			<a:documentation>
+				Maps features to Implementation-dependent requiremetns
+			</a:documentation>
+			<oneOrMore>
+			<element name="feature">
+				<ref name="id-attr"/>
+				<ref name="title-attr"/>
+				<ref name="description"/>
+			</element>
+			</oneOrMore>
+		</element>
     </optional>
   </define>
 
