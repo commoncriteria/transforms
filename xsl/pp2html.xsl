@@ -684,6 +684,8 @@
 <!--          <xsl:variable name="oneIfApp">0<xsl:if test="$appendicize='on'">1</xsl:if></xsl:variable>  -->
 <!--          <xsl:variable name="level" select="2+$oneIfApp"/>  -->
 
+          <xsl:variable name="level" select="3"/>
+
           <h3 class="indexable" data-level="{$level}" id="{@id}"><xsl:value-of select="@title"/></h3>
           <xsl:apply-templates select="cc:description"/><br/>
   	  <!-- First just output the name of the SFR associated with each feature.  -->
