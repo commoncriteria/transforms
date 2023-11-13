@@ -141,7 +141,7 @@
 	  <!-- This needs to handle the case where there are no events rmc, 11/13/23 -->
 	  <!-- Also, there we should not be including auditable events from another document. -->
 	  <!-- For now the kludge is to do this only for PPs and cPPs until it can be deleted. -->
-	 <xsl:if test="ancestor::cc:PP or ancestor::c:cPP">
+	 <xsl:if test="ancestor::cc:PP or ancestor::cc:cPP">
 		<xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
 			<tr data-sortkey="{@id}__{@ref}">
 			<td colspan="3">
