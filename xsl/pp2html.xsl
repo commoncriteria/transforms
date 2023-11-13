@@ -433,8 +433,9 @@
 	SFRs have already been filtered out elsewhere. rmc 11/8/23 -->
   <xsl:template match="cc:f-component" mode="appendicize">
   <!-- in appendicize mode, don't display objective/sel-based/optional/feat-based in main body-->
-  <!-- Except when in an additionsl-sfrs element in a module rmc, 11/8/23 -->
-    <xsl:if test="(not(@status)) or ancestor::cc:additional-sfrs">
+  <!-- Except when in an additional-sfrs element in a module rmc, 11/8/23 -->
+  <!-- or when in the impl-dep-sfrs section of a module main body, 11/13/23 --> 
+    <xsl:if test="(not(@status)) or ancestor::cc:additional-sfrs or ancestor::cc:impl-dep-sfrs">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
   </xsl:template>
@@ -871,6 +872,7 @@
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
 	<!-- rmc 11/8/23: added ancestor condition to display headers when in additional-sfrs section -->
+	<!-- The header needs to be displayed also for feat-based SFRs in the body of a Module as well -->
     <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)] or ancestor::cc:additional-sfrs or ancestor::cc:impl-dep-sfrs">
       <xsl:element name="h{$level}">
         <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
