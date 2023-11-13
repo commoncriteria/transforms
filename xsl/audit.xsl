@@ -138,20 +138,29 @@
 	</xsl:if>
       </xsl:for-each>
       <!-- Goes through each external document -->
-      <xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
-	<tr data-sortkey="{@id}__{@ref}"><td colspan="3">
-	  From <xsl:apply-templates select="." mode="make_xref"/>
-	</td></tr>
+	  <!-- This needs to handle the case where there are no events rmc, 11/13/23 -->
+	  <!-- Also, there we should not be including auditable events from another document. -->
+	  <!-- For now the kludge is to do this only for PPs and cPPs until it can be deleted. -->
+	 <xsl:if test="ancestor::cc:PP or ancestor::c:cPP">
+		<xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
+			<tr data-sortkey="{@id}__{@ref}">
+			<td colspan="3">
+				From <xsl:apply-templates select="." mode="make_xref"/>
+			</td>
+			</tr>
 
-	<xsl:variable name="listy"><xsl:for-each select="//cc:audit-event[@table=$thistable and parent::cc:external-doc/@ref=current()/@id]/@ref-cc-id"><xsl:value-of select="."/>,</xsl:for-each>
-	</xsl:variable>
-	<xsl:call-template name="external-gatherer">
-	  <xsl:with-param name="listy" select="$listy"/>
-	  <xsl:with-param name="table" select="$thistable"/>
-	  <xsl:with-param name="ext_id" select="@id"/>
-	</xsl:call-template>
-      </xsl:for-each>
-      
+			<xsl:variable name="listy">
+				<xsl:for-each select="//cc:audit-event[@table=$thistable and parent::cc:external-doc/@ref=current()/@id]/@ref-cc-id">
+					<xsl:value-of select="."/>,</xsl:for-each>
+			</xsl:variable>
+			<xsl:call-template name="external-gatherer">
+				<xsl:with-param name="listy" select="$listy"/>
+				<xsl:with-param name="table" select="$thistable"/>
+				<xsl:with-param name="ext_id" select="@id"/>
+			</xsl:call-template>
+		</xsl:for-each>   
+	</xsl:if>
+
     </table>
   </xsl:template>
 
