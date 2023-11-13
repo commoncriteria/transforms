@@ -472,7 +472,7 @@
 		<!-- Optional requirements. We need to decide whether use-case-based requirements 
 			belong here or in with sel-based. Now they can go either way.
 			Same with dependencies on other SFRs. -->
-      <xsl:if test="@status='optional' or @status='feat-based' or ancestor::cc:opt-sfrs">
+      <xsl:if test="@status='optional' or @status='feat-based' or ancestor::cc:opt-sfrs or ancestor::cc:impl-dep-sfrs">
           <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
             <div class="statustag">
               <b><i>This component must be included in the ST if any of the following use cases are selected:</i></b><br/>
