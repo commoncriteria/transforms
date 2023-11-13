@@ -870,8 +870,8 @@
     <xsl:variable name="level" select="$lmod+count(ancestor::*)"/>
     <!-- the "if" statement is to not display  headers when there are no
     subordinate mandatory components to display in the main body (when in "appendicize" mode) -->
-	<!-- rmc 11/8/23: added ancestor condition -->
-    <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)] or ancestor::cc:additional-sfrs">
+	<!-- rmc 11/8/23: added ancestor condition to display headers when in additional-sfrs section -->
+    <xsl:if test="$appendicize!='on' or .//cc:f-component[not(@status)] or ancestor::cc:additional-sfrs or ancestor::cc:impl-dep-sfrs">
       <xsl:element name="h{$level}">
         <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
         <xsl:attribute name="class">indexable</xsl:attribute>
