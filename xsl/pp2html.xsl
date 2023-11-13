@@ -880,7 +880,7 @@
       </xsl:element>
       <xsl:apply-templates mode="hook" select="."/>
     	  <!-- rmc 11/8/23: added ancestor condition -->
-      <xsl:if test="$appendicize = 'on' or ancestor::cc:additional-sfrs">
+      <xsl:if test="$appendicize = 'on' or ancestor::cc:additional-sfrs or ancestor::cc:impl-dep-sfrs">
         <xsl:apply-templates mode="appendicize" />
       </xsl:if>
       <xsl:if test="$appendicize != 'on'">
