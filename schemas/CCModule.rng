@@ -337,6 +337,11 @@ The name or cc-id of the aspect that is being overwritten by the content of this
         <ref name="optional-id"/>
         <ref name="base-specific-sfrs-content"/>
       </element>
+      <element name="section">     <!-- 20231211 rmc to allow audit table -->
+        <attribute name="title"/>
+        <ref name="optional-id"/>
+  	    <ref name="audit-table-pat"/>   
+      </element>
       <element>
         <anyName><except>
           <nsName ns="https://niap-ccevs.org/cc/v1"/>
@@ -349,7 +354,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
   </define>
 
   <define name="base-specific-sfrs-content">
-	    <optional><ref name="audit-table-pat"/></optional>   <!-- 20231211 rmc to allow audit table -->
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
           <element name="f-component">
