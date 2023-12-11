@@ -328,11 +328,10 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
   <x:template match="sec:*|cc:section" mode="sd_sections">
-	<x:choose>
- 	  <x:if test="not (@title='Auditable Events for Additional SFRs')"/> 
+    <x:if test="not (@title='Auditable Events for Additional SFRs')"/> 
 		<x:apply-templates select="." mode="make_header"/>
 		<x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
-	  </x:if>
+	</x:if>
   </x:template>
 
 
