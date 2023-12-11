@@ -286,7 +286,6 @@ guidance, and testing.</p>
 
     <x:choose>
       <x:when test="($none-msg='') and (count($f-comps//cc:f-component[not(@status='invisible')])=0)"/>
-	  <x:when test="$f-comps/cc:section[@title='Auditable Events for Additional SFRs']"/>  <!-- Skip audit events section -->
       <x:otherwise>
         <x:element name="h3">
           <x:attribute name="class">indexable</x:attribute>
@@ -295,6 +294,7 @@ guidance, and testing.</p>
           <x:value-of select="$title"/> SFRs
         </x:element>
         <x:choose>
+		  <x:when test="$f-comps/cc:section[@title='Auditable Events for Additional SFRs']"/>  <!-- Skip audit events section -->
           <x:when test="$f-comps//cc:f-component[not(@status='invisible')]"><x:apply-templates select="$f-comps" mode="sd_sections"/></x:when>
           <x:otherwise><x:value-of select="$none-msg"/></x:otherwise>
         </x:choose>
