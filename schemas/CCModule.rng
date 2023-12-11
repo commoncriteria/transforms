@@ -349,6 +349,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
   </define>
 
   <define name="base-specific-sfrs-content">
+	    <zeroOrMore><ref name="section"/></zeroOrMore>   <!-- 20231211 rmc to allow audit table -->
         <ref name="ext-comp-def-pat"/>
         <oneOrMore>
           <element name="f-component">
