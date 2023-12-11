@@ -64,11 +64,11 @@
   <define name="SecProbDesChapter">
     <choice>
       <element name="section">
-        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <attribute name="title"><value>Security Problem Definition</value></attribute>
         <ref name="optional-id"/>
         <ref name="prob-des-content"/>
       </element>
-      <element name="sec:Security_Problem_Description">
+      <element name="sec:Security_Problem_Definition">
         <ref name="prob-des-content"/>
       </element>
       <element ns="https://niap-ccevs.org/cc/v1/section">
@@ -76,7 +76,7 @@
           <nsName ns="https://niap-ccevs.org/cc/v1"/>
           <nsName ns="http://www.w3.org/1999/xhtml"/>
         </except></anyName>
-        <attribute name="title"><value>Security Problem Description</value></attribute>
+        <attribute name="title"><value>Security Problem Definition</value></attribute>
         <ref name="prob-des-content"/>
       </element>
     </choice>
