@@ -222,7 +222,7 @@ guidance, and testing.</p>
       <x:otherwise>The PP-Module does not define any objective requirements.</x:otherwise>
      </x:choose>
      
-   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Implementation-based SFRs</h2>  
+   <h2 class="indexable" data-level="1" id="impl-sfrs-">Evaluation Activities for Implementation-dependent SFRs</h2>  
      <x:choose>
       <x:when test="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]|/cc:PP//cc:f-component[@status='feat-based']">
         <x:for-each select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]/..|/cc:PP//cc:f-component[@status='feat-based']/..">
@@ -233,7 +233,7 @@ guidance, and testing.</p>
           <x:apply-templates select="cc:f-component[not(@status='invisible') and /cc:Module]"/>
         </x:for-each>
       </x:when>
-      <x:otherwise>The PP-Module does not define any implementation-based requirements.</x:otherwise>
+      <x:otherwise>The PP-Module does not define any implementation-dependent requirements.</x:otherwise>
     </x:choose>
 
 
@@ -249,6 +249,7 @@ guidance, and testing.</p>
   <!-- ############### -->
    <x:template name="handle-bases">
     <!-- Run through all the base modules -->
+	
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-{@id}">
 	<x:apply-templates mode="expanded" select="."/>
@@ -327,8 +328,10 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
   <x:template match="sec:*|cc:section" mode="sd_sections">
-    <x:apply-templates select="." mode="make_header"/>
-    <x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
+    <x:if test="not(@title='Auditable Events for Additional SFRs')"> 
+		<x:apply-templates select="." mode="make_header"/>
+		<x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
+	</x:if>
   </x:template>
 
 

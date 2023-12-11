@@ -46,7 +46,8 @@
 	<ref name="cc-terms"/>
         <ref name="tech-terms"/>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
-        <optional> <ref name="usecases-section"/></optional>
+        <optional> <ref name="usecases-section"/> </optional>
+		<optional> <ref name="features-section"/> </optional>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
   </define>
 
@@ -89,4 +90,47 @@
       </oneOrMore>
     </element>
   </define>
+  
+   <define name="features-section">
+   <choice>
+     <element name="section">
+       <attribute name="title"/>
+       <optional><attribute name="id"/></optional>
+        <ref name="features-section-content"/>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <optional><attribute name="title"/></optional>
+        <ref name="features-section-content"/>
+      </element>
+    </choice>
+  </define>
+
+  <define name="features-section-content">
+    <ref name="basic-content-pat"/>
+	<element name="implements">
+		<a:documentation>
+			Wrapper element for features. Features are product capabilities that cause implementation-dependent 
+			SFRs to be included in the ST if the TOE implements them. These are called optional SFRs in CC2022,
+			but we distinguish these truly (strictly) optional SFRs.
+			Implementation-dependent SFRs should have a dependency on one or more of the features listed below.
+		</a:documentation>
+		<oneOrMore>
+			<element name="feature">
+				<ref name="id-attr"/>
+				<ref name="title-attr"/>
+				<ref name="description"/>
+			</element>
+		</oneOrMore>
+    </element>
+  </define>
+
+  
+  
+  
 </grammar>

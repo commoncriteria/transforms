@@ -262,12 +262,12 @@
 	  </xsl:call-template>
 	</tr>
 	<tr>
-	  <th colspan="2"> Implementation-based SFRs</th>
+	  <th colspan="2"> Implementation-dependent SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
 	  <xsl:with-param name="id" select="$base/@id"/>
 	    <xsl:with-param name="none-msg">
-	      This PP-Module does not define any Implementation-based requirements.
+	      This PP-Module does not define any Implementation-dependent requirements.
 	    </xsl:with-param>
 	  </xsl:call-template>
 	</tr>
@@ -365,7 +365,9 @@
     <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
     <h3 id="addsfr-{@id}" class="indexable" data-level="3"> Additional SFRs</h3>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
-      This section defines additional SFRs that must be added to the TOE boundary in order to implement the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
+      This section defines additional SFRs that must be added to the TOE boundary in order to implement
+	  the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is 
+	  claimed as the Base-PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>

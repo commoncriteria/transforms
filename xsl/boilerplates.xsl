@@ -261,28 +261,29 @@ This PP-Module does not define any objectives for the OE.
     <h1 id="opt-app" class="indexable" data-level="A">Optional Requirements</h1>
     As indicated in the introduction to this <xsl:call-template name="doctype-short"/>, the baseline requirements (those that must be
 	  performed by the TOE) are contained in the body of this <xsl:call-template name="doctype-short"/>.
-    This appendix contains three other types of optional requirements that may be included in the ST, but are not required in order
-	  to conform to this <xsl:call-template name="doctype-short"/>.
-    However, applied modules, packages and/or use cases may refine specific requirements as mandatory. <br/><br/>
+    This appendix contains three other types of optional requirements:<br/><br/>
 
-   The first type (<xsl:call-template name="ref-strict-optional"/>) are strictly optional requirements that are independent of the
-	  TOE implementing any function.
-   If the TOE fulfills any of these requirements or supports a certain functionality, the vendor is encouraged to include the SFRs
-	  in the ST, but are not required in order to conform to this <xsl:call-template name="doctype-short"/>.<br/><br/>
+   The first type, defined in Appendix <xsl:call-template name="ref-strict-optional"/>, are strictly optional requirements.
+   If the TOE meets any of these requirements the vendor is encouraged to claim the associated SFRs
+	  in the ST, but doing so is not required in order to conform to this <xsl:call-template name="doctype-short"/>.<br/><br/>
 
-  The second type (<xsl:call-template name="ref-obj-reqs"/>) are objective requirements that describe security functionality not yet 
-	  widely available in commercial technology.
-   The requirements are not currently mandated in the body of this <xsl:call-template name="doctype-short"/>, but will be included in
-	  the baseline requirements in future versions of this <xsl:call-template name="doctype-short"/>. Adoption by vendors is
-	  encouraged and expected as soon as possible.<br/><br/>
+  The second type, defined in Appendix <xsl:call-template name="ref-obj-reqs"/>, are objective requirements. These describe security functionality that is not yet 
+	  widely available in commercial technology. 
+   Objective requirements are not currently mandated by this <xsl:call-template name="doctype-short"/>, but will be mandated in
+	  the future. Adoption by vendors is encouraged, but claiming these SFRs is not required in order to conform to this
+	  <xsl:call-template name="doctype-short"/>.<br/><br/>
 
-  The third type (<xsl:call-template name="ref-impl-reqs"/>) <xsl:call-template name="imple_text"/>
+  The third type, defined in Appendix <xsl:call-template name="ref-impl-reqs"/>, are Implementation-dependent requirements.
+	If the TOE implements the product features associated with the listed SFRs, either the SFRs must be claimed
+	or the product features must be disabled in the evaluated ocnfiguration. 
   </xsl:template>
 
   <xsl:template name="imple_text">
-are dependent on the TOE implementing a particular function.
-If the TOE fulfills any of these requirements, the vendor must either add the related SFR or disable the functionality for the
-	  evaluated configuration. 
+		Appendix <xsl:call-template name="ref-impl-reqs"/> defines requirements that must be claimed in the ST  
+		if the TOE implements particular product features. 
+		For this technology type, the following product features require the claiming of additional SFRs:
   </xsl:template>
+  
+
 
 </xsl:stylesheet>
