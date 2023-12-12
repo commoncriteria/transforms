@@ -1757,6 +1757,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
  
   <define name="external-document-pat">
     <ref name="id-attr"/>
+	<!-- Add name and short as optional attributes -->
     <choice>
       <ref name="recognized-xml"/>
       <ref name="non-native-doc"/>
@@ -1766,6 +1767,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
   <define name="recognized-xml">
+	<optional><attribute name="name"/></optional>
+	<optional><attribute name="short"/></optional>
     <element name="git">
        <element name="url"><data type="string"></data></element>
        <element name="branch"><data type="string"></data></element>
