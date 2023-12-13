@@ -32,7 +32,7 @@
 
   <xsl:template name="doctype-short" match="cc:doctype-short">
 	<xsl:choose>
-		<xsl:when test="$doctype='Package'">PP-Package</xsl:when>
+		<xsl:when test="$doctype='Package'">Functional Package</xsl:when>
                 <xsl:when test="$doctype='Module'">PP-Module</xsl:when>
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
