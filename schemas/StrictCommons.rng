@@ -15,6 +15,23 @@
   <include href="Commons.rng">
   </include>
 
+<define name="PreferencesEtc">
+  <a:documentation>A place for declarations and preferences</a:documentation>
+    <optional> <ref name="pp-preferences-pat"/> </optional>
+  </define>
+     
+   <define name="pp-preferences-pat">
+    <element name="pp-preferences">
+      <a:documentation>
+         A place to define preferences for PP output.
+      </a:documentation>
+      <interleave>
+        <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
+        <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
+		<optional><element name="using-cc2022"><empty/></element></optional>
+      </interleave>
+    </element>
+  </define> 
 
 
    <define name="Introduction">
