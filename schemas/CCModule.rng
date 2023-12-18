@@ -18,6 +18,7 @@
       <ref name="pp-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
       <ref name="packages"/>
+      <ref name="PreferencesEtc"/>
       <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
