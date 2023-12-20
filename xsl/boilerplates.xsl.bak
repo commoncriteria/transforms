@@ -12,7 +12,11 @@
   <!-- Eat all individual ones that turn off boilerplating -->
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
+<<<<<<< HEAD
+ <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
+=======
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
+>>>>>>> bc7722b29aec7f195fa98bb2baead723dd7f3312
 	<xsl:choose>
 		<xsl:when test="//cc:using-cc2022">
 			<p>This appendix lists requirements that should be considered satisfied by products
@@ -34,8 +38,17 @@
 			security controls. Evaluation against the <xsl:call-template name="doctype-short"/> provides evidence that these controls are present 
 			and have been evaluated.</p>
 		</xsl:otherwise>
-	</xsl:choose></xsl:template>
+	</xsl:choose>
+</xsl:template>
 
+ 
+
+
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> bc7722b29aec7f195fa98bb2baead723dd7f3312
   
   <xsl:template mode="hook"
     match="/cc:*[@boilerplate='yes']//*[@title='Terms']|/cc:*//sec:Terms[not(@boilerplate='no') and not(@title)]"> 
@@ -129,14 +142,18 @@
   </xsl:template>
 
 
+<<<<<<< HEAD
  <!-- ############## -->
+=======
+  <!-- ############## -->
+>>>>>>> bc7722b29aec7f195fa98bb2baead723dd7f3312
    <xsl:template  name="verrev">
 		<xsl:choose>
 			<xsl:when test="//cc:using-cc2022">CC:2022 Rev. 1</xsl:when>
 			<xsl:otherwise>Version 3.1, Revision 5</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
   <!-- ############## -->
   <xsl:template name="format-of-document">
     <section title="Format of this Document" id="docformat">
