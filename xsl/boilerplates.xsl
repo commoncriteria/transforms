@@ -140,7 +140,7 @@
 		<xsl:choose>
 			<xsl:when test="//cc:using-cc2022">CC:2022 Rev. 1</xsl:when>
 			<xsl:otherwise>Version 3.1, Revision 5</xsl:otherwise>
-		<xsl:choose>
+		</xsl:choose>
 	</xsl:template>
 
   <!-- ############## -->
