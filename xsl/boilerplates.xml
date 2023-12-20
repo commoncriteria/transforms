@@ -71,6 +71,28 @@
           </h:ul></description>
       </entry>
    </empty>
+
+   <empty id="cc2022-docs">
+      <entry id="bibCC">
+        <tag>CC</tag>
+        <description>Common Criteria for Information Technology Security Evaluation - <h:ul>
+            <h:li><h:a href="https://www.commoncriteriaportal.org/files/ccfiles/CC2022PART1R1.pdf">Part 1: 
+				Introduction and general model</h:a>, CCMB-2022-11-001, CC:2022, Revision 1, Novemeber 2022.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CC2022PART2R1.pdf">Part 2: 
+				Security functional requirements</h:a>, CCMB-2022-11-002, CC:2022, Revision 1, November 2022.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CC2022PART3R1.pdf">Part 3: 
+                Security assurance requirements</h:a>, CCMB-2022-11-003, CC:2022, Revision 1, November 2022.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CC2022PART4R1.pdf">Part 4: 
+                Framework for the specification of evaluation methods and activities</h:a>, CCMB-2022-11-004, CC:2022, Revision 1, November 2022.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CC2022PART5R1.pdf">Part 3: 
+                 Pre-defined packages of security requirements</h:a>, CCMB-2022-11-005, CC:2022, Revision 1, November 2022.</h:li>
+            <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CEM2022R1.pdf">
+                 Evaluation methodology</h:a>, CCMB-2022-11-006, CC:2022, Revision 1, November 2022.</h:li>
+          </h:ul></description>
+      </entry>
+   </empty>
+
+
  
    <empty id="a-group">
       <a-stuff type="D">Developer action</a-stuff>
