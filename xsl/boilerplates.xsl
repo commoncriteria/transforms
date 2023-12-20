@@ -69,25 +69,25 @@
   <xsl:template 
       match="/cc:PP[@boilerplate='yes']//*[@title='Conformance Claims' and not(@boilerplate='no')]|//sec:Conformance_Claims[not(@boilerplate='no')]"
 		mode="hook">
-    <dl>
-        <dt>Conformance Statement</dt>
-        <dd><xsl:choose><xsl:when test="//cc:Module">
-          <p>This PP-Module inherits exact conformance as required from the specified
-          Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-based
-          SFRs, and Optional SFRs (dated May 2017).</p>
-          <p>The following PPs and PP-Modules are allowed to be specified in a 
-            PP-Configuration with this PP-Module. <ul>
-            <xsl:for-each select="//cc:base-pp">
-              <li><xsl:apply-templates select="." mode="make_xref"/></li>
-            </xsl:for-each>
-          </ul>
-          </p>
-          </xsl:when><xsl:otherwise>
-	  <htm:p>
-            An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
-            as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 
-            Optional SFRs (dated May 2017).
-	  </htm:p>
+			<dl>
+				<dt>Conformance Statement</dt>
+				<dd><xsl:choose><xsl:when test="//cc:Module">
+					<p>This PP-Module inherits exact conformance as required from the specified
+						Base-PP and as defined in the CC and CEM addenda for Exact Conformance, Selection-based
+						SFRs, and Optional SFRs (dated May 2017).</p>
+					<p>The following PPs and PP-Modules are allowed to be specified in a 
+						PP-Configuration with this PP-Module. <ul>
+					<xsl:for-each select="//cc:base-pp">
+						<li><xsl:apply-templates select="." mode="make_xref"/></li>
+					</xsl:for-each>
+					</ul>
+					</p>
+				</xsl:when><xsl:otherwise>
+				<htm:p>
+				An ST must claim exact conformance to this <xsl:call-template name="doctype-short"/>, 
+				as defined in the CC and CEM addenda for Exact Conformance, Selection-based SFRs, and 
+				Optional SFRs (dated May 2017).
+		</htm:p>
           <xsl:if test="/cc:PP//cc:module">
 	    <htm:p>
               The following PP-Modules are allowed to be specified in a PP-Configuration with this PP.
@@ -136,7 +136,12 @@
 
 
   <!-- ############## -->
-   <xsl:template  name="verrev">Version 3.1, Revision 5</xsl:template>
+   <xsl:template  name="verrev">
+		<xsl:choose>
+			<xsl:when test="//cc:using-cc2022">CC:2022 Rev. 1</xsl:when>
+			<xsl:otherwise>Version 3.1, Revision 5</xsl:otherwise>
+		<xsl:choose>
+	</xsl:template>
 
   <!-- ############## -->
   <xsl:template name="format-of-document">
