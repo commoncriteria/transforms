@@ -13,15 +13,34 @@
   <xsl:template match="//cc:*[@boilerplate='no']" priority="1.0" mode="hook"/>
 
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
-	<p>This appendix lists requirements that should be considered satisfied by products
-	successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
-	explicitly as SFRs and should not be included in the ST. They are not included as 
-	standalone SFRs because it would increase the time, cost, and complexity of evaluation.
-	This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
-	<p>This information benefits systems engineering activities which call for inclusion of particular
-	security controls. Evaluation against the <xsl:call-template name="doctype-short"/> provides evidence that these controls are present 
-	and have been evaluated.</p>
+	<xsl:choose>
+		<xsl:when test="//cc:using-cc2022">
+			<p>This appendix lists requirements that should be considered satisfied by products
+			successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
+			explicitly as SFRs and should not be included in the ST. They are not included as 
+			standalone SFRs because it would increase the time, cost, and complexity of evaluation.
+			This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.3 Dependencies between components.</p>
+			<p>This information benefits systems engineering activities which call for inclusion of particular
+			security controls. Evaluation against the <xsl:call-template name="doctype-short"/> provides evidence that these controls are present 
+			and have been evaluated.</p>
+		</xsl:when>
+		<xsl:otherwise>
+			<p>This appendix lists requirements that should be considered satisfied by products
+			successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
+			explicitly as SFRs and should not be included in the ST. They are not included as 
+			standalone SFRs because it would increase the time, cost, and complexity of evaluation.
+			This approach is permitted by <a href="#bibCC">[CC]</a> Part 1, 8.2 Dependencies between components.</p>
+			<p>This information benefits systems engineering activities which call for inclusion of particular
+			security controls. Evaluation against the <xsl:call-template name="doctype-short"/> provides evidence that these controls are present 
+			and have been evaluated.</p>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
+
+ 
+
+
+
 
   
   <xsl:template mode="hook"
