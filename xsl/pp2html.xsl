@@ -165,6 +165,13 @@
 					<td><xsl:apply-templates select="cc:description"/></td>
 				</tr>
 			</xsl:for-each>
+			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc2022-cem']/cc:entry">
+				<xsl:sort/>
+				<tr>
+					<td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+					<td><xsl:apply-templates select="cc:description"/></td>
+				</tr>
+			</xsl:for-each>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc-docs']/cc:entry">

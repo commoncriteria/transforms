@@ -86,12 +86,19 @@
                 Framework for the specification of evaluation methods and activities</h:a>, CCMB-2022-11-004, CC:2022, Revision 1, November 2022.</h:li>
             <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CC2022PART5R1.pdf">Part 3: 
                  Pre-defined packages of security requirements</h:a>, CCMB-2022-11-005, CC:2022, Revision 1, November 2022.</h:li>
+          </h:ul></description>
+      </entry>
+   </empty>
+
+   <empty id="cc2022-cem">
+      <entry id="bibCEM">
+        <tag>CEM</tag>
+        <description>Common Methodology for Information Technology Security Evaluation - <h:ul>
             <h:li><h:a href="http://www.commoncriteriaportal.org/files/ccfiles/CEM2022R1.pdf">
                  Evaluation methodology</h:a>, CCMB-2022-11-006, CC:2022, Revision 1, November 2022.</h:li>
           </h:ul></description>
       </entry>
    </empty>
-
 
  
    <empty id="a-group">
