@@ -78,9 +78,10 @@
   <!-- ############### -->
   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
     <xsl:value-of select="@name"/>
-    <xsl:if test="cc:from">
-		<xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
-		(from <xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>)
+<!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
+    <xsl:if test="cc:from"> 
+	    <xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
+	    (from <xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>)
 	</xsl:if>
   </xsl:template>
  
