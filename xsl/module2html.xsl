@@ -151,7 +151,7 @@
       <p>
       <xsl:apply-templates select="./cc:con-obj"/>
       <xsl:if test="//cc:SO[cc:description]">
-	  The objectives for the TOEs are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
+	  The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
       <table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SO[cc:description]">
 	<xsl:call-template name="consistency-row">
