@@ -337,7 +337,7 @@
   <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
     <h2 id="secreq-{@id}" class="indexable" data-level="2">
-      <xsl:apply-templates mode="short" select="."/>
+      <xsl:apply-templates mode="expanded" select="."/>
        Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
