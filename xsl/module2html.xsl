@@ -186,7 +186,6 @@
       <xsl:if test="//cc:SOE">
 	  The objectives for the TOE's OE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
       <table>
-      <table>
   		<caption>
 			<xsl:call-template name="ctr-xsl">
                 <xsl:with-param name="ctr-type">Table</xsl:with-param>
@@ -233,7 +232,6 @@
           The rationale for why this does not conflict with the claims
       defined by the
       <xsl:apply-templates mode="short" select="."/> are as follows:
-      <table>
       <table>
   		<caption>
 			<xsl:call-template name="ctr-xsl">
