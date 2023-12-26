@@ -148,13 +148,13 @@ Contains transforms for extended component definitions
          <xsl:variable name="upId"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
          <h4>Management: <xsl:value-of select="$upId"/></h4>
          <p><xsl:if test="not(cc:management)">There are no management functions foreseen.</xsl:if>
-<!--		    <xsl:if test="cc:management=''">There are no management functions foreseen.</xsl:if>   -->
+		    <xsl:if test="cc:management=''">There are no management functions foreseen.</xsl:if>  
             <xsl:apply-templates select="cc:management" mode="reveal"/>
          </p>
 
          <h4>Audit: <xsl:value-of select="$upId"/></h4>
          <p><xsl:if test="not(cc:audit)">There are no audit events foreseen.</xsl:if>
-<!--		    <xsl:if test="cc:audit=''">There are no audit events foreseen.</xsl:if>   -->
+	    <xsl:if test="cc:audit=''">There are no audit events foreseen.</xsl:if>  
             <xsl:apply-templates select="cc:audit" mode="reveal"/>
          </p>
          <h4><xsl:value-of select="$upId"/><xsl:text> </xsl:text><xsl:value-of select="@name"/></h4>
