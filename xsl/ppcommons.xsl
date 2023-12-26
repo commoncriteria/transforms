@@ -1141,6 +1141,12 @@ The following sections list Common Criteria and technology terms used in this do
   <!--            -->
   <xsl:template name="acronym-table">
     <table>
+  		<caption>
+			<xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-acronyms'"/>
+			</xsl:call-template>: Acronyms
+		</caption>
       <tr class="header">
         <th>Acronym</th>
         <th>Meaning</th>
