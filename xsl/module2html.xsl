@@ -139,7 +139,14 @@
 <!--      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
       <xsl:apply-templates mode="short" select="."/> as follows: -->
       <xsl:apply-templates select="./cc:con-sec-prob"/>
-      <table><tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
+      <table>
+  		<caption>
+			<xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-con-sec-prob-def'"/>
+			</xsl:call-template>: Consistency of Security Problem Definition (<xsl:apply-templates select="." mode="short"/> base)
+		</caption>
+	  <tr><th>PP-Module Threat, Assumption, OSP</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:threat[cc:description]|//cc:assumption[cc:description]|//cc:OSP[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -156,7 +163,14 @@
       <xsl:apply-templates select="./cc:con-obj"/>
       <xsl:if test="//cc:SO[cc:description]">
 	  The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
-      <table><tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
+      <table>
+  		<caption>
+			<xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-con-objs'"/>
+			</xsl:call-template>: Consistency of Objectives (<xsl:apply-templates select="." mode="short"/> base)
+		</caption>
+	  <tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SO[cc:description]">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -171,7 +185,15 @@
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
 	  The objectives for the TOE's OE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
-      <table><tr><th>PP-Module OE Objective</th><th>Consistency Rationale</th></tr>
+      <table>
+      <table>
+  		<caption>
+			<xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-con-oe-objs'"/>
+			</xsl:call-template>: Consistency of OE Objectives (<xsl:apply-templates select="." mode="short"/> base)
+		</caption>
+	  <tr><th>PP-Module OE Objective</th><th>Consistency Rationale</th></tr>
       <xsl:for-each select="//cc:SOE">
 	<xsl:call-template name="consistency-row">
 	  <xsl:with-param name="base" select="$base"/>
@@ -212,6 +234,13 @@
       defined by the
       <xsl:apply-templates mode="short" select="."/> are as follows:
       <table>
+      <table>
+  		<caption>
+			<xsl:call-template name="ctr-xsl">
+                <xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-con-reqs'"/>
+			</xsl:call-template>: Consistency of Requirements (<xsl:apply-templates select="." mode="short"/> base)
+		</caption>
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
 	<tr> <th colspan="2"> Modified SFRs</th></tr>
 	<xsl:call-template name="req-con-rat-sec">
