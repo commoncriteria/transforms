@@ -154,7 +154,11 @@
   <xsl:template name="bibliography">
     <h1 id="appendix-bibliography" class="indexable" data-level="A">Bibliography</h1>
     <table>
-      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
+      <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="'t-biblio'"/>
+	      </xsl:call-template>: Bibliography</caption>	
+	      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
 	  <xsl:choose>
 		<xsl:when test="//cc:using-cc2022">
