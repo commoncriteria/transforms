@@ -453,7 +453,7 @@
   <!-- Except when in an additional-sfrs element in a module rmc, 11/8/23 -->
   <!-- or when in the impl-dep-sfrs section of a module main body, 11/13/23 --> 
   <!-- Added the not draft test (20231229) to stop dulpicate addnl-sfrs in the non-release build.
-       Not sure why this works.   -->
+       Not sure why this works. -->
     <xsl:if test="((not(@status))or ancestor::cc:additional-sfrs or ancestor::cc:impl-dep-sfrs) and ($release!='draft')">
       <xsl:apply-templates select="." mode="appendicize-nofilter" />
     </xsl:if>
