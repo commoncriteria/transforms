@@ -1360,7 +1360,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
      <choice>
       <element name="section">
         <attribute name="title"><value>Organizational Security Policies</value></attribute>
-	<attribute name="id"/>
+		<attribute name="id"/>
+        <ref name="boilerplate-no-attr"/>
         <ref name="OSPs"/>
       </element>
       <element name="sec:Organizational_Security_Policies">
