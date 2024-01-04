@@ -124,16 +124,142 @@
     <x:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[local-name()=$cat]">
       <div class="eacategory"><x:value-of select="$cat"/></div>
       <div class="ea">
-	<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]"/>
+	<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]" mode="comp-ea"/>
       </div>
     </x:if>
   </x:template>
 
+<!-- Component-level no-tests EAs -->
+<xsl:template match="cc:no-tests">
+   <xsl:choose>
+	<xsl:when test=".=''">
+		TODO: You need to explain the lack of EAs for this component!!!!
+	</xsl:when>
+	<xsl:otherwise>
+		<xsl:apply-templates/><br/><br/>
+	</xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+
+<!-- Element-level no-tests EAs -->
+<xsl:template match="cc:no-tests" mode="single-cat">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			TODO: You need to explain the lack of EAs for this element!!!!<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates/><br/><br/>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+  <!-- Component-level TSS EAs -->
+  <xsl:template match="cc:TSS" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no TSS evaluation activities for this component beyond what is specified in ASE_TSS.1 and ASE_TSS.2.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+  
+  <!-- Element-level TSS EAs -->
+  <xsl:template match="cc:TSS" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no TSS evaluation activities for this element beyond what is specified in ASE_TSS.1 and ASE_TSS.2.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+ <!-- Component-level Guidance EAs -->
+  <xsl:template match="cc:Guidance" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no Guidance evaluation activities for this component beyond what is specified in AGD_OPE.1.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+ <!-- Element-level Guidance EAs -->
+  <xsl:template match="cc:Guidance" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no Guidance evaluation activities for this element beyond what is specified in AGD_OPE.1.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+  
+<!-- Component-level KMD EAs -->
+  <xsl:template match="cc:KMD" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no KMD evaluation activities for this component.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+<!-- Element-level KMD EAs -->
+  <xsl:template match="cc:KMD" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no KMD evaluation activities for this element.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+<!-- Component-level Test EAs -->
+ <xsl:template match="cc:Tests" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no test activities for this component.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+<!-- Element-level Test EAs -->
+ <xsl:template match="cc:Tests" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no test activities for this element.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+  
+
   <!-- ############### -->
-  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
+<!--  <xsl:template match="cc:TSS|cc:Guidance|cc:KMD|cc:Tests" mode="single-cat">
     <div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <div class="ea"><xsl:apply-templates/></div>
   </xsl:template>
+-->
 
   <!-- ############### -->
   <!--                 -->

@@ -242,7 +242,7 @@
       <a:documentation>
         Section to define the items references.
       </a:documentation>
-      <oneOrMore>
+      <zeroOrMore>
         <choice>
           <element name="cc-entry">
             <a:documentation>
@@ -266,7 +266,7 @@
           </element>
           
         </choice>
-      </oneOrMore>
+      </zeroOrMore>
     </element>
   </define>
 

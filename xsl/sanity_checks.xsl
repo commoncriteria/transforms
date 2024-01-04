@@ -30,11 +30,11 @@
 	</xsl:message>
       </xsl:if>
     </xsl:for-each>
-    <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
+<!--    <xsl:for-each select="//cc:TSS[.='']|//cc:Guidance[.='']|//cc:KMD[.='']|//cc:Tests[.='']">
       <xsl:message>* Error: Illegal empty <xsl:value-of select="local-name()"/> element at:
         <xsl:call-template name="genPath"/>
       </xsl:message>
-    </xsl:for-each>
+    </xsl:for-each>  -->
     <xsl:if test="//cc:comment">
       <xsl:message>* Warning: This document still has at least one comment.</xsl:message>
     </xsl:if>
