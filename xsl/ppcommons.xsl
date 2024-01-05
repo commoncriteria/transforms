@@ -118,6 +118,8 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
+  
+   <!-- For Component-level EAs -->
    <x:template name="collect-cat">
     <x:param name="cat"/>
 
@@ -141,11 +143,14 @@
    </xsl:choose>
 </xsl:template>
 
-<!-- Element-level no-tests EAs -->
+<!-- Element-level and Management function no-tests EAs -->
 <xsl:template match="cc:no-tests" mode="single-cat">
     <xsl:choose>
-		<xsl:when test=".=''">
+		<xsl:when test=".='' and not(ancestor::cc:management-function)">
 			TODO: You need to explain the lack of EAs for this element!!!!<br/><br/>
+		</xsl:when>
+		<xsl:when test=".='' and ancestor::cc:management-function">
+			TODO: You need to explain the lack of EAs for this mnagement function!!!!<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates/><br/><br/>
@@ -165,7 +170,7 @@
 	</xsl:choose>
   </xsl:template>
   
-  <!-- Element-level TSS EAs -->
+  <!-- Element-level & Managament Function TSS EAs -->
   <xsl:template match="cc:TSS" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
@@ -190,12 +195,15 @@
 	</xsl:choose>
   </xsl:template>
 
- <!-- Element-level Guidance EAs -->
+ <!-- Element-level & Managament Function Guidance EAs -->
   <xsl:template match="cc:Guidance" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
-		<xsl:when test=".=''">
+		<xsl:when test=".='' and not(ancestor::cc:management-function)">
 			There are no Guidance evaluation activities for this element beyond what is specified in AGD_OPE.1.<br/><br/>
+		</xsl:when>
+		<xsl:when test=".='' and ancestor::cc:management-function">
+			There are no Guidance evaluation activities for this management function beyond what is specified in AGD_OPE.1.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -215,7 +223,7 @@
 	</xsl:choose>
   </xsl:template>
 
-<!-- Element-level KMD EAs -->
+<!-- Element-level & Managament Function KMD EAs -->
   <xsl:template match="cc:KMD" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
@@ -240,7 +248,7 @@
 	</xsl:choose>
   </xsl:template>
 
-<!-- Element-level Test EAs -->
+<!-- Element-level & Managament Function Test EAs -->
  <xsl:template match="cc:Tests" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
