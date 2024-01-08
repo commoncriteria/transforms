@@ -257,8 +257,7 @@
       <a:documentation>
 	Holds information specifict to a base PP.
       </a:documentation>
-		<ref name="base-pp-document-pat"/>
-<!--    <ref name="external-document-pat"/>  -->
+    <ref name="external-document-pat"/>
 	<optional><element name="cPP"><empty/></element></optional>
     <optional>
          <element name="sec-func-req-dir">
@@ -331,27 +330,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
       </zeroOrMore>
     </element>
   </define>
-
- <!-- Pattern for referencing the Base PP in Modules in the base-pp element -->
-  <!-- Attributes are now required -->
-  <!-- The git element should be used for the recognized XML case, which is the normal case -->
-  <!--   it should be omitted only for non-NIAP documents like NDcPP -->
-  <!-- The got element refers to the github repo and the current released branch. -->
-  <!-- The url element referes to the document on the NIAP website -->
-  <define name="base-pp-document-pat">
-	<ref name="id-attr"/>
-	<attribute name="name"/>
-	<attribute name="short"/>
-	<attribute name="product"/>
-	<attribute name="version"/>
-	<optional><attribute name="plural"/></optional>
-    <optional><element name="git">
-       <element name="url"><data type="string"></data></element>
-       <element name="branch"><data type="string"></data></element>
-    </element></optional>
-    <element name="url"><text/></element>
-  </define>
-
 
   <define name="base-specific-sfrs">
     <zeroOrMore><choice>
