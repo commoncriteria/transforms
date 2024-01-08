@@ -417,24 +417,6 @@
     </optional>
   </define>
   
-   
-         
-  <define name="pp-pref-pat">
-    <element name="pp-pref">
-      <a:documentation>
-         Declarations and definition of global variables.
-      </a:documentation>
-      <attribute name="name">
-         <a:documentation>Name of the preference.</a:documentation>
-         <choice>
-               <value>display-audit-with-sfrs</value>    <!-- Display audit events with SFRs -->
-               <value>audit-events-in-sfrs</value>       <!-- Audit events are defined with the SFRs, vs. in tables -->
-          </choice>
-      </attribute>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define> 
-
  
   <define name="PPReference">
       <element name="PPReference">
