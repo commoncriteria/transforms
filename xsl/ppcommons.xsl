@@ -713,7 +713,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:otherwise>
       <xsl:for-each select="cc:selectable|cc:not-selectable">
 	<xsl:apply-templates mode="handle_sel" select="."/><xsl:call-template name="commaifnotlast"/>
-	<xsl:text> </xsl:text>
+<!--	<xsl:text> </xsl:text>   -->
       </xsl:for-each>
     </xsl:otherwise>
  </xsl:choose>]</xsl:template>
