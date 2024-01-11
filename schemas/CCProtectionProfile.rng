@@ -380,7 +380,8 @@
           A readable title for this component
         </a:document>
       </attribute>
-      <ref name="basic-content-pat"/>
+		<optional><attribute name="status"><value>optional</value></attribute></optional>
+		<ref name="basic-content-pat"/>
       <optional>
         <element name="summary">
           <a:documentation>
