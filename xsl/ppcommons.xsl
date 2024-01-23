@@ -552,6 +552,11 @@ The following sections list Common Criteria and technology terms used in this do
       <a href="#bibCC">[CC]</a>
   </xsl:template>
 
+  <xsl:template match="cc:xref[@g='CEM']">
+      <a href="#bibCEM">[CEM]</a>
+  </xsl:template>
+
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->

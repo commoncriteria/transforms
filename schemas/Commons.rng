@@ -328,6 +328,7 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
            <choice>
              <value>glossary</value>
              <value>CC</value>
+             <value>CEM</value>
              <value>t-audit-mandatory</value>
              <value>t-audit-optional</value>
              <value>t-audit-objective</value>
