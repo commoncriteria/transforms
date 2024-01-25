@@ -162,7 +162,7 @@
   <xsl:template match="cc:TSS" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
-			There are no TSS evaluation activities for this component beyond what is specified in ASE_TSS.1 and ASE_TSS.2.<br/>
+			There are no additional TSS evaluation activities for this component.<br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -175,10 +175,10 @@
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
-			There are no TSS evaluation activities for this element beyond what is specified in ASE_TSS.1 and ASE_TSS.2.<br/><br/>
+			There are no additional TSS evaluation activities for this element.<br/><br/>
 		</xsl:when>
 		<xsl:when test=".='' and ancestor::cc:management-function">
-			There are no TSS evaluation activities for this management function beyond what is specified in ASE_TSS.1 and ASE_TSS.2.<br/><br/>
+			There are no additional TSS evaluation activities for this management function.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -190,7 +190,7 @@
   <xsl:template match="cc:Guidance" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
-			There are no Guidance evaluation activities for this component beyond what is specified in AGD_OPE.1.<br/>
+			There are no additional Guidance evaluation activities for this component.<br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -203,10 +203,10 @@
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
-			There are no Guidance evaluation activities for this element beyond what is specified in AGD_OPE.1.<br/><br/>
+			There are no additional Guidance evaluation activities for this element.<br/><br/>
 		</xsl:when>
 		<xsl:when test=".='' and ancestor::cc:management-function">
-			There are no Guidance evaluation activities for this management function beyond what is specified in AGD_OPE.1.<br/><br/>
+			There are no additional Guidance evaluation activities for this management function.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -218,7 +218,7 @@
   <xsl:template match="cc:KMD" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
-			There are no KMD evaluation activities for this component.<br/>
+			There are no additional KMD evaluation activities for this component.<br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -231,10 +231,10 @@
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
-			There are no KMD evaluation activities for this element.<br/><br/>
+			There are no additional KMD evaluation activities for this element.<br/><br/>
 		</xsl:when>
 		<xsl:when test=".='' and ancestor::cc:management-function">
-			There are no KMD evaluation activities for this management function.<br/><br/>
+			There are no additional KMD evaluation activities for this management function.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
