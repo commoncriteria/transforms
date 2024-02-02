@@ -23,6 +23,10 @@
       <ref name="IntroductionChapter"/>
       <ref name="CClaimsChapter"/>
       <ref name="Chapters"/>
+      <optional>
+	     <ref name="SecProbDesChapter"/>
+         <ref name="SecObjChapter"/>
+	  </optional>
       <ref name="sfr-section"/>
       <ref name="Chapters"/>
       <ref name="appendices-pat"/>
