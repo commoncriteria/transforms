@@ -341,7 +341,8 @@
   
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:a-component">
+  <!-- Handle Mandatory SARs -->
+  <xsl:template match="cc:a-component[not(@status='optional')">
     <div class="comp" id="{translate(@cc-id, $lower, $upper)}">
       <h4>
         <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
@@ -358,6 +359,34 @@
     </div>
   </xsl:template>
 
+<!-- Handle Optional SARs that belong in Appendix A.1 -->
+<!-- This should only happen when status="optional" -->
+  <xsl:template match="cc:a-component[@status='optional']" mode="a-comp-to-appendix">
+    <xsl:variable name="full_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
+
+    <div class="comp" id="{$full_id}">
+      <h4><xsl:value-of select="concat($full_id, ' ', @name)"/></h4>
+
+		<!-- Optional SAR -->
+      <xsl:if test="@status='optional'">
+			<div class="statustag">
+				<b><i>This SAR is optional and may be claimed at the ST-Author's discretion.</i></b>
+			</div>
+          </xsl:if>
+        <xsl:apply-templates/>
+			  <xsl:variable name="comp" select="."/>
+      <xsl:for-each select="document('boilerplates.xml')//cc:empty[@id='a-group']/cc:a-stuff">
+         <xsl:variable name="type" select="@type"/>
+         <h4> <xsl:apply-templates/> elements: </h4>
+         <xsl:apply-templates select="$comp/cc:a-element[@type=$type]" mode="a-element"/>
+      </xsl:for-each> 
+      <xsl:call-template name="f-comp-activities"/>
+    </div>
+  </xsl:template>
+
+<!-- Should never happen, so eat them -->
+  <xsl:template match="cc:a-component[not(@status='optional')]" mode="a-comp-to-appendix"/>
+  <xsl:template match="cc:a-component[@status='optional']"/>
 
   <!-- ########################################
        Consume invisible f-component
@@ -794,7 +823,7 @@
     </xsl:element>
     <xsl:apply-templates select="document('boilerplates.xml')//cc:*[@tp=$type]/cc:description"/>
     <xsl:choose>
-      <xsl:when test="count(//cc:f-component[@status=$type])=0">
+      <xsl:when test="count(//cc:f-component[@status=$type])=0 and count(//cc:a-component[@status=$type])=0">
          <p>This <xsl:call-template name="doctype-short"/> does not define any 
             <xsl:value-of select="$nicename"/> requirements.</p>
       </xsl:when>
@@ -824,6 +853,20 @@
 <!--        <xsl:choose>
           <xsl:when test="$type='feat-based'"><xsl:call-template name="handle-features"/></xsl:when>
           <xsl:otherwise>   -->
+		  
+		  <!-- Handle optional SARs -->
+		  <xsl:for-each select="//*[cc:a-component/@status = $type]">
+              <xsl:element name="h{$sublevel}">
+                <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
+                <xsl:attribute name="class">indexable</xsl:attribute>
+                <xsl:attribute name="data-level"><xsl:value-of select="$sublevel"/></xsl:attribute>
+                <xsl:value-of select="@title"/>
+              </xsl:element>
+     <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
+              <xsl:apply-templates select="cc:a-component[@status=$type]" mode="a-comp-to-appendix"/>
+            </xsl:for-each>
+		  
+		    <!-- Handle SFRs that belong in Appendixes -->
             <xsl:for-each select="//*[cc:f-component/@status = $type]">
               <xsl:element name="h{$sublevel}">
                 <xsl:attribute name="id"><xsl:value-of select="concat(@id,'-',$type)"/></xsl:attribute>
@@ -834,6 +877,7 @@
      <!--         <h3 id="{@id}-obj" class="indexable" data-level="3"><xsl:value-of select="@title" /></h3 -->
               <xsl:apply-templates select="cc:f-component[@status=$type]" mode="appendicize-nofilter"/>
             </xsl:for-each>
+			
 <!--          </xsl:otherwise>   -->
 <!--        </xsl:choose>   -->
      </xsl:otherwise>
