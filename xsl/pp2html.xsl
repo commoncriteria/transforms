@@ -342,7 +342,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- Handle Mandatory SARs -->
-  <xsl:template match="cc:a-component[not(@status='optional')">
+  <xsl:template match="cc:a-component[not(@status='optional')]">
     <div class="comp" id="{translate(@cc-id, $lower, $upper)}">
       <h4>
         <xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ' ')"/>
