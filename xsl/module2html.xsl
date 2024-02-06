@@ -45,6 +45,7 @@
     <xsl:call-template name="bibliography"/>
   </xsl:template>
 
+<!-- Unused 
   <xsl:template name="sars">
       <xsl:call-template name="make_header">
 	    <xsl:with-param name="title" select="'TOE Security Assurance Requirements'"/>
@@ -73,6 +74,8 @@
 		with the necessary SFRs that are taken from this PP-Module.
 	  </xsl:otherwise></xsl:choose>
   </xsl:template>
+  -->
+  
   <!-- ############### -->
   <!--   Overwrites template from pp2html.xsl -->
   <!-- ############### -->
@@ -461,6 +464,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
   </xsl:template>
 
+  <!-- Handle contents of <mod-sars> section -->
   <xsl:template name="mod-sars">
 	  <xsl:if test="//cc:mod-sars">		  
 	    <h2 id="mod-sars" class="indexable" data-level="2">TOE Security Assurance Requirements</h2>
@@ -480,13 +484,40 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 	  </xsl:if>
   </xsl:template>
 
+  <!-- ######################### -->
+  <!-- ######################### -->
+  <!-- This is necessary for correct numbering of Sections in the mod-sars -->
+  <xsl:template match="cc:mod-sars/cc:section[cc:a-component]">
+    <xsl:param name="lmod" select="'0'"/>
 
-  <xsl:template match="cc:opt-sfrs|cc:obj-sfrs|cc:sel-sfrs|cc:impl-dep-sfrs" mode="app-sfr-sec">
+    <xsl:call-template name="section-with-acomp">
+      <xsl:with-param name="title" select="@title"/>
+      <xsl:with-param name="id" select="@id"/>
+      <xsl:with-param name="lmod" select="$lmod"/>
+    </xsl:call-template>
+  </xsl:template>
+  
+  <xsl:template name="section-with-acomp">
+    <xsl:param name="title"/>
+    <xsl:param name="id"/> 
+    <xsl:param name="lmod"/>
+    <xsl:variable name="level" select="$lmod+count(ancestor::*)"/>
+      <xsl:element name="h{$level}">
+        <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+        <xsl:attribute name="class">indexable</xsl:attribute>
+        <xsl:attribute name="data-level"><xsl:value-of select="$lmod+count(ancestor::*)"/></xsl:attribute>
+        <xsl:value-of select="$title" />
+      </xsl:element>
+      <xsl:apply-templates mode="hook" select="."/>
+      <xsl:apply-templates />
+  </xsl:template>
+
+	<!-- Appendix SFRs (objective, selection-based, imple-dep) -->
+  <xsl:template match="cc:obj-sfrs|cc:sel-sfrs|cc:impl-dep-sfrs" mode="app-sfr-sec">
     <xsl:variable name="level"
       select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@level"/>
     <xsl:variable name="name"
       select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@name"/>
-
    
     <xsl:element name="h{$level}">
       <xsl:attribute name="id"><xsl:value-of select="local-name()"/></xsl:attribute>
@@ -502,6 +533,35 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
        <xsl:with-param name="lmod" select="$level - 2"/>
     </xsl:apply-templates>
   </xsl:template>
+
+	<!-- Special case for Optional SFRs and Optional SARs --> 
+	<!-- In a module, Optional SARs must be specified in the opt-sfrs section -->
+	<!-- and they have to appear in Appendix A.1 -->
+  <xsl:template match="cc:opt-sfrs" mode="app-sfr-sec">
+    <xsl:variable name="level"
+      select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@level"/>
+    <xsl:variable name="name"
+      select="document('boilerplates.xml')//cc:mod-appendix/*[local-name()=local-name(current())]/@name"/>
+   
+    <xsl:element name="h{$level}">
+      <xsl:attribute name="id"><xsl:value-of select="local-name()"/></xsl:attribute>
+      <xsl:attribute name="class"><xsl:value-of select="'indexable'"/></xsl:attribute>
+      <xsl:attribute name="data-level"><xsl:value-of select="$level"/></xsl:attribute>
+      <xsl:value-of select="$name"/> Requirements
+    </xsl:element>
+
+    <xsl:if test="not(.//cc:f-component) and not(.//cc:a-component)">
+     <p>This PP-Module does not define any 
+       <xsl:value-of select="$name"/>        SFRs or SARs.</p>
+    </xsl:if>
+	
+    <xsl:apply-templates>
+       <xsl:with-param name="lmod" select="$level - 2"/>
+    </xsl:apply-templates>
+
+  </xsl:template>
+
+
 
   <!-- ############### -->
   <!--      -->
