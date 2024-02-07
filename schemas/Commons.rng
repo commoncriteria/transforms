@@ -1541,28 +1541,77 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
 
-
-
   <define name="cclaims-content-pat">
-      <a:documentation>
-      </a:documentation>
-     <ref name="boilerplate-no-attr"/>
-      <optional>
-        <element name="cclaims">
-          <a:documentation>
-          </a:documentation>
-          <oneOrMore>
-            <element name="cclaim">
-              <a:documentation>
-              </a:documentation>
-              <attribute name="name"/>
-              <ref name="description"/>
-            </element>
-          </oneOrMore>
-        </element>
-      </optional>
+    <a:documentation>
+    </a:documentation>
+    <ref name="boilerplate-no-attr"/>
+	<optional>
+		<ref name="cclaims-info-pat"/>
+	</optional>
+	<optional>
+		<element name="cclaims">
+			<a:documentation>
+			</a:documentation>
+			<oneOrMore>
+				<element name="cclaim">
+					<a:documentation>
+					</a:documentation>
+					<attribute name="name"/>
+					<ref name="description"/>
+				</element>
+			</oneOrMore>
+		</element>
+	 </optional>
   </define>
 
+  <define name="cclaims-info-pat">
+	<a:documentation>
+		Information for filling out the Conformance Claims section.
+	</a:documentation>
+	<element name="CClaimsInfo">
+		<attribute name="for"><value>PP</value></attribute>
+		<element name="cclaim-info">
+			<attribute name="type"><value>st-conf</value></attribute>
+			<choice>
+				<value>exact</value>
+				<value>strict</value>
+				<value>demonstrable</value>
+			</choice>
+		</element>
+		<element name="cclaim-info">
+			<attribute name="type"><value>part2-conf</value></attribute>
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cclaim-info">
+			<attribute name="type"><value>part3-conf</value></attribute>
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cclaim-info">
+			<attribute name="type"><value>pp-conf</value></attribute>
+			<zeroOrMore>
+				<ref name="external-document-pat"/>
+			</zeroOrMore>
+		</element>
+		<element name="cclaim-info">
+			<attribute name="type"><value>pp-config-with</value></attribute>
+			<zeroOrMore>
+				<ref name="external-document-pat"/>
+			</zeroOrMore>
+		</element>
+		<element name="cclaim-info">
+			<attribute name="type"><value>pkg-claim</value></attribute>
+			<zeroOrMore>
+				<ref name="include-pkg-pat"/>
+			</zeroOrMore>
+		</element>
+	</element>
+  </define>
 
 
   <define name="management-function-set">
