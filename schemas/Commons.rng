@@ -1569,73 +1569,46 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		Information for filling out the Conformance Claims section.
 	</a:documentation>
 	<element name="CClaimsInfo">
-		<oneOrMore>
-		<element name="cclaim-info">
+		<element name="cc-version">
 			<choice>
-				<group>
-					<attribute name="st-conf">
-						<choice>
-							<value>exact</value>
-							<value>strict</value>
-							<value>demonstrable</value>
-						</choice>
-					</attribute>
-					<empty/>
-				</group>
-				<group>
-					<attribute name="part2-conf">
-						<choice>
-							<value>extended</value>
-							<value>conformant</value>
-						</choice>
-					</attribute>
-					<empty/>
-				</group>
-				<group>
-					<attribute name="part3-conf">
-						<choice>
-							<value>extended</value>
-							<value>conformant</value>
-						</choice>
-					</attribute>
-					<empty/>
-				</group>
-				<group>
-					<attribute name="pp-conf">
-						<choice>
-							<value>yes</value>
-							<value>no</value>
-						</choice>
-					</attribute>
-					<zeroOrMore>
-						<ref name="external-document-pat"/>
-					</zeroOrMore>
-				</group>
-				<group>
-					<attribute name="pp-config-with">
-						<choice>
-							<value>yes</value>
-							<value>no</value>
-						</choice>
-					</attribute>
-					<zeroOrMore>
-						<ref name="external-document-pat"/>
-					</zeroOrMore>
-				</group>
-				<group>
-					<attribute name="pkg-claim">
-						<choice>
-							<value>yes</value>
-							<value>no</value>
-						</choice>
-					</attribute>
-					<zeroOrMore>
-						<ref name="include-pkg-pat"/>
-					</zeroOrMore>
-				</group>
+				<value>cc-20222</value>
+				<value>cc-31r5</value>
 			</choice>
 		</element>
-		</oneOrMore>
+		<element name="cc-st-conf">
+			<choice>
+				<value>exact</value>
+				<value>strict</value>
+				<value>demonstrable</value>
+			</choice>
+		</element>
+		<element name="cc-pt2-conf">
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cc-pt3-conf">
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cc-pp-conf">
+			<zeroOrMore>
+				<ref name="external-document-pat"/>
+			</zeroOrMore>
+		</element>
+		<element name="cc-pp-config-with">
+			<zeroOrMore>
+				<ref name="external-document-pat"/>
+			</zeroOrMore>
+		</element>
+		<element name="cc-pkg-claim">
+			<zeroOrMore>
+				<ref name="include-pkg-pat"/>
+			</zeroOrMore>
+		</element>
 	</element>
   </define>
 
