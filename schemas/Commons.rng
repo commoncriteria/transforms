@@ -1595,19 +1595,28 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			</choice>
 		</element>
 		<element name="cc-pp-conf">
-			<zeroOrMore>
-				<ref name="external-document-pat"/>
-			</zeroOrMore>
+			<choice>
+				<oneOrMore>
+					<ref name="external-document-pat"/>
+				</oneOrMore>
+				<empty/>
+			</choice>
 		</element>
 		<element name="cc-pp-config-with">
-			<zeroOrMore>
-				<ref name="external-document-pat"/>
-			</zeroOrMore>
+			<choice>
+				<oneOrMore>
+					<ref name="external-document-pat"/>
+				</oneOrMore>
+				<empty/>
+			</choice>
 		</element>
 		<element name="cc-pkg-claim">
-			<zeroOrMore>
-				<ref name="include-pkg-pat"/>
-			</zeroOrMore>
+			<choice>
+				<oneOrMore>
+					<ref name="include-pkg-pat"/>
+				</oneOrMore>
+				<empty/>
+			</choice>
 		</element>
 	</element>
   </define>
