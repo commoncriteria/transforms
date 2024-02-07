@@ -1624,7 +1624,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<choice>
 					<value>yes</value>
 					<value>no</value>
-				<choice>
+				</choice>
 			</attribute>
 			<zeroOrMore>
 				<ref name="include-pkg-pat"/>
