@@ -1569,43 +1569,63 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		Information for filling out the Conformance Claims section.
 	</a:documentation>
 	<element name="CClaimsInfo">
-		<attribute name="for"><value>PP</value></attribute>
 		<element name="cclaim-info">
-			<attribute name="type"><value>st-conf</value></attribute>
-			<choice>
-				<value>exact</value>
-				<value>strict</value>
-				<value>demonstrable</value>
-			</choice>
+			<attribute name="st-conf">
+				<choice>
+					<value>exact</value>
+					<value>strict</value>
+					<value>demonstrable</value>
+				</choice>
+			</attribute>
+			<empty/>
 		</element>
 		<element name="cclaim-info">
-			<attribute name="type"><value>part2-conf</value></attribute>
-			<choice>
-				<value>extended</value>
-				<value>conformant</value>
-			</choice>
+			<attribute name="part2-conf">
+				<choice>
+					<value>extended</value>
+					<value>conformant</value>
+				</choice>
+			</attribute>
+			<empty/>
 		</element>
 		<element name="cclaim-info">
-			<attribute name="type"><value>part3-conf</value></attribute>
-			<choice>
-				<value>extended</value>
-				<value>conformant</value>
-			</choice>
+			<attribute name="part3-conf">
+				<choice>
+					<value>extended</value>
+					<value>conformant</value>
+				</choice>
+			</attribute>
+			<empty/>
 		</element>
 		<element name="cclaim-info">
-			<attribute name="type"><value>pp-conf</value></attribute>
+			<attribute name="pp-conf">
+				<choice>
+					<value>yes</value>
+					<value>no</value>
+				</choice>
+			</attribute>
 			<zeroOrMore>
 				<ref name="external-document-pat"/>
 			</zeroOrMore>
 		</element>
 		<element name="cclaim-info">
-			<attribute name="type"><value>pp-config-with</value></attribute>
+			<attribute name="pp-config-with">
+				<choice>
+					<value>yes</value>
+					<value>no</value>
+				</choice>
+			</attribute>
 			<zeroOrMore>
 				<ref name="external-document-pat"/>
 			</zeroOrMore>
 		</element>
 		<element name="cclaim-info">
-			<attribute name="type"><value>pkg-claim</value></attribute>
+			<attribute name="pkg-claim">
+				<choice>
+					<value>yes</value>
+					<value>no</value>
+				<choice>
+			</attribute>
 			<zeroOrMore>
 				<ref name="include-pkg-pat"/>
 			</zeroOrMore>
