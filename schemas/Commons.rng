@@ -1571,7 +1571,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	<element name="CClaimsInfo">
 		<attribute name="cc-version">
 			<choice>
-				<value>cc-2022</value>
+				<value>cc-2022r1</value>
 				<value>cc-31r5</value>
 			</choice>
 		</attribute>

@@ -133,7 +133,26 @@
 		<dt>Conformance Statement</dt>
 		<dd>An ST must claim <xsl:value-of select="//cc:CClaimsInfo/cc:cc-st-conf"/> conformance 
 		 to this <xsl:call-template name="doctype-short"/>.</dd>
-		<dd><xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-conf-stmt-bp-pp']"/></dd>
+		<p>
+			The evaluation methods used for evaluating the TOE are a combination of the workunits 
+			defined in <xref to="bibCEM"/> as well as the Evaluation Activities for ensuring that individual SFRs 
+			and SARs have a sufficient level of supporting evidence in the Security Target and guidance 
+			documentation and have been sufficiently tested by the laboratory as part of completing 
+			ATE_IND.1. Any functional packages this PP claims similarly contain their own Evaluation 
+			Activities that are used in this same manner.
+		</p>
+		<dt>CC Conformance Claims</dt>
+		<dd>This <xsl:call-template name="doctype-short"/> is conformant to 
+			Part 2 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt2-conf"/>) and
+			Part 3 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt3-conf"/>)
+			<xsl:choice>
+			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
+				of Common Criteria CC:2022, Revision 1.
+			</xsl:when>
+			<xsl:otherwise>
+				of Common Criteria Version 3.1, Revision 5.
+			</xsl:otherwise>
+			</xsl:choice></dd>
 	</dl>
 
 </xsl:template>
