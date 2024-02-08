@@ -145,14 +145,14 @@
 		<dd>This <xsl:call-template name="doctype-short"/> is conformant to 
 			Part 2 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt2-conf"/>) and
 			Part 3 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt3-conf"/>)
-			<xsl:choice>
+			<xsl:choose>
 			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 				of Common Criteria CC:2022, Revision 1.
 			</xsl:when>
 			<xsl:otherwise>
 				of Common Criteria Version 3.1, Revision 5.
 			</xsl:otherwise>
-			</xsl:choice></dd>
+			</xsl:choose></dd>
 	</dl>
 
 </xsl:template>
