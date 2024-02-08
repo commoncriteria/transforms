@@ -1569,12 +1569,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		Information for filling out the Conformance Claims section.
 	</a:documentation>
 	<element name="CClaimsInfo">
-		<element name="cc-version">
+		<attribute name="cc-version">
 			<choice>
-				<value>cc-20222</value>
+				<value>cc-2022</value>
 				<value>cc-31r5</value>
 			</choice>
-		</element>
+		</attribute>
+		<optional><attribute name="cc-approach">
+			<choice>
+				<value>direct-rationale</value>
+				<value>standard</value>
+			</choice>
+		</attribute></optional>
 		<element name="cc-st-conf">
 			<choice>
 				<value>exact</value>
@@ -1594,28 +1600,53 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>conformant</value>
 			</choice>
 		</element>
-		<element name="cc-pp-conf">
+		<optional><element name="cc-pp-conf">
 			<zeroOrMore>
 				<element name="PP-ref"><ref name="external-document-pat"/></element>
 			</zeroOrMore>
-		</element>
-		<element name="cc-pp-config-with">
+		</element></optional>
+		<optional><element name="cc-pp-config-with">
 			<zeroOrMore>
 				<choice>
 					<element name="PP-ref"><ref name="external-document-pat"/></element>
 					<element name="Mod-ref"><ref name="external-document-pat"/></element>
 				</choice>
 			</zeroOrMore>
-		</element>
-		<element name="cc-pkg-claim">
-			<choice>
-				<oneOrMore>
-					<ref name="include-pkg-pat"/>
-				</oneOrMore>
-				<empty/>
-			</choice>
-		</element>
+		</element></optional>
+		<optional><element name="cc-pkg-claim">
+			<zeroOrMore>
+				<ref name="pkg-claim"/>
+			</zeroOrMore>
+		</element></optional>
+		<optional><element name="cc-eval-methods">
+			<zeroOrMore>
+				<element name="EM-ref"><ref name="external-document-pat"/></element>
+			</zeroOrMore>
+		</element></optional>		
 	</element>
+  </define>
+
+  <define name="pkg-claim">
+	<choice>
+		<element name="FP-ref"><ref name="external-document-pat"/>
+			<attribute name="conf">
+				<choice>
+					<value>conformant</value>
+					<value>augmented</value>
+					<value>tailored</value>
+				</choice>
+			</attribute>
+		</element>
+		<element name="AP-ref"><ref name="external-document-pat"/>
+			<attribute name="conf">
+				<choice>
+					<value>conformant</value>
+					<value>augmented</value>
+					<value>tailored</value>
+				</choice>
+			</attribute>
+		</element>
+	</choice>
   </define>
 
 
