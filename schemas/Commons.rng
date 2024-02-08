@@ -1600,24 +1600,24 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>conformant</value>
 			</choice>
 		</element>
-		<optional><element name="cc-pp-conf">
+		<element name="cc-pp-conf">
 			<zeroOrMore>
-				<element name="PP-ref"><ref name="external-document-pat"/></element>
+				<element name="PP-ref"><text/></element>
 			</zeroOrMore>
-		</element></optional>
-		<optional><element name="cc-pp-config-with">
+		</element>
+		<element name="cc-pp-config-with">
 			<zeroOrMore>
 				<choice>
-					<element name="PP-ref"><ref name="external-document-pat"/></element>
-					<element name="Mod-ref"><ref name="external-document-pat"/></element>
+					<element name="PP-ref"><text/></element>
+					<element name="Mod-ref"><text/></element>
 				</choice>
 			</zeroOrMore>
-		</element></optional>
-		<optional><element name="cc-pkg-claim">
+		</element>
+		<element name="cc-pkg-claim">
 			<zeroOrMore>
 				<ref name="pkg-claim"/>
 			</zeroOrMore>
-		</element></optional>
+		</element>
 		<optional><element name="cc-eval-methods">
 			<zeroOrMore>
 				<element name="EM-ref"><ref name="external-document-pat"/></element>
@@ -1628,7 +1628,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="pkg-claim">
 	<choice>
-		<element name="FP-ref"><ref name="external-document-pat"/>
+		<element name="FP-ref"><text/>
 			<attribute name="conf">
 				<choice>
 					<value>conformant</value>
@@ -1637,7 +1637,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				</choice>
 			</attribute>
 		</element>
-		<element name="AP-ref"><ref name="external-document-pat"/>
+		<element name="AP-ref"><text/>
 			<attribute name="conf">
 				<choice>
 					<value>conformant</value>
