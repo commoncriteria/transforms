@@ -128,6 +128,16 @@
      </dl>
   </xsl:template>
 
+<xsl:template match="//cc:CClaimsInfo">
+	<dl>
+		<dt>Conformance Statement</dt>
+		<dd>An ST must claim <xsl:value-of select="//cc:CClaimsInfo/cc:cc-st-conf"/> conformance 
+		 to this <xsl:call-template name="doctype-short"/>.</dd>
+	</dl>
+
+</xsl:template>
+
+
 
  <!-- ############## -->
    <xsl:template  name="verrev">
