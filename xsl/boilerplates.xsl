@@ -133,6 +133,7 @@
 		<dt>Conformance Statement</dt>
 		<dd>An ST must claim <xsl:value-of select="//cc:CClaimsInfo/cc:cc-st-conf"/> conformance 
 		 to this <xsl:call-template name="doctype-short"/>.</dd>
+		<dd><xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-conf-stmt-bp-pp']"/></dd>
 	</dl>
 
 </xsl:template>
