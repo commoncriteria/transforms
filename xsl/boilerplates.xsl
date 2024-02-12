@@ -156,7 +156,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<ul>
-					<xsl:for-each select="//cc://cc:CClaimsInfo/cc:pp-conf/cc:PP-cc-ref">
+					<xsl:for-each select="//cc:CClaimsInfo/cc:pp-conf/cc:PP-cc-ref">
 						<li><xsl:value-of select="."/></li>
 					</xsl:for-each>
 					</ul>
