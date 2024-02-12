@@ -180,9 +180,7 @@
 				</dd>
 			</xsl:otherwise>
 			</xsl:choose>
-			</dd>
 			
-		
 		<dt>Package Claim</dt>
 		
 		<dd>
