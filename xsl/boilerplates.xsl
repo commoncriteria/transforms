@@ -173,7 +173,7 @@
 				<dd>The following PPs and PP-Modules are allowed to be specified in a 
 					PP-Configuration with this <xsl:call-template name="doctype-short"/>.
 					<ul>
-					<xsl:for-each select="//cc://cc:CClaimsInfo/cc:pp-config-with/cc:*">
+					<xsl:for-each select="//cc:CClaimsInfo/cc:pp-config-with/cc:*">
 						<li><xsl:value-of select="."/></li>
 					</xsl:for-each>
 					</ul>
