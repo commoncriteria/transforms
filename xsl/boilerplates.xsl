@@ -149,6 +149,39 @@
 			</xsl:choose></dd>
 			
 		<dt>PP Claim</dt>
+			<dd><xsl:choose>
+				<xsl:when test="//cc:CClaimsInfo/cc:pp-conf=''">
+					This <xsl:call-template name="doctype-short"/> does not claim conformance to 
+					any Protection Profile.
+				</xsl:when>
+				<xsl:otherwise>
+					<ul>
+					<xsl:for-each select="//cc://cc:CClaimsInfo/cc:pp-conf/cc:PP-cc-ref">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+					</ul>
+				</xsl:otherwise>
+				</xsl:choose>
+			</dd>
+			
+			<xsl:choose>
+			<xsl:when test="//cc:CClaimsInfo/cc:pp-config-with=''">
+					<dd>There are no PPs or PP-Modules that are allowed in a PP-Configuration 
+					with this <xsl:call-template name="doctype-short"/>.</dd>
+			</xsl:when>
+			<xsl:otherwise>
+				<dd>The following PPs and PP-Modules are allowed to be specified in a 
+					PP-Configuration with this <xsl:call-template name="doctype-short"/>.
+					<ul>
+					<xsl:for-each select="//cc://cc:CClaimsInfo/cc:pp-config-with/cc:*">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+					</ul>
+				</dd>
+			</xsl:otherwise>
+			</xsl:choose>
+			</dd>
+			
 		
 		<dt>Package Claim</dt>
 		
