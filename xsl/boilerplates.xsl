@@ -148,7 +148,7 @@
 			</xsl:otherwise>
 			</xsl:choose></dd>
 			
-		<dt>PP Claim</dt>
+		<dt>PP Claim</dt><p/>
 			<dd><xsl:choose>
 				<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-conf=''">
 					This <xsl:call-template name="doctype-short"/> does not claim conformance to 
@@ -162,7 +162,7 @@
 					</ul>
 				</xsl:otherwise>
 				</xsl:choose>
-			</dd>
+			</dd><p/>
 			
 			<xsl:choose>
 			<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-config-with=''">
