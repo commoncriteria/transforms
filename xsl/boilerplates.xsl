@@ -229,6 +229,11 @@
 				</ul>
 			</dd>
 		</xsl:if>
+
+		<xsl:if test="//cc:CClaimsInfo/cc:cc-claims-addnl-info">
+			<dt>Additional Information</dt><p/>
+			<dd><xsl:value-of select="cc:ClaimsInfo/cc:cc-claims-addnl-info"/></dd>
+		</xsl:if>
 	</dl>
 
 </xsl:template>
