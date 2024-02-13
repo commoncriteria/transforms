@@ -106,8 +106,7 @@
 		to claim for the sake of conformance. An ST that claims one or more of these functional 
 		packages may include any non-mandatory SFRs that are appropriate to claim based on the 
 		capabilities of the TSF and on any triggers for their inclusion based inherently on the SFR 
-		selections made. All security requirements in these packages are intended to satisfy 
-		the O.PROTECTED_COMMS TOE security objective of this PP.
+		selections made. 
 	</empty>
  
    <empty id="a-group">
