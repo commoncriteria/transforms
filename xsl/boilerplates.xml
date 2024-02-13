@@ -102,7 +102,7 @@
 
 			
 	<empty id="cc2022-ppclaim-bp-pp">
-		The functional packages to which the PP conforms include SFRs that are not mandatory 
+		The functional packages to which the PP conforms may include SFRs that are not mandatory 
 		to claim for the sake of conformance. An ST that claims one or more of these functional 
 		packages may include any non-mandatory SFRs that are appropriate to claim based on the 
 		capabilities of the TSF and on any triggers for their inclusion based inherently on the SFR 
