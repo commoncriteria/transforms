@@ -181,7 +181,7 @@
 			</xsl:otherwise>
 			</xsl:choose>
 			
-		<dt>Package Claim</dt>
+		<dt>Package Claim</dt><p/>
 			<xsl:choose>
 			<xsl:when test="//cc:CClaimsInfo/cc:cc-pkg-claim=''">
 					<dd>This <xsl:call-template name="doctype-short"/> is not conformant to any 
@@ -211,9 +211,17 @@
 			</xsl:otherwise>
 			</xsl:choose>
 
-		<!--
-		<dt>Evaluation Methods</dt>
-		-->
+		<xsl:if test="//cc:CClaimsInfo/cc:cc-eval-methods">
+			<dt>Evaluation Methods</dt><p/>
+			<dd>This <xsl:call-template name="doctype-short"/> incorporates evaluation activies 
+				from the following Evaluation Methods documents:
+				<ul>
+					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-eval-methods/cc:EM-cc-ref">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+				</ul>
+			</dd>
+		</xsl:if>
 	</dl>
 
 </xsl:template>

@@ -1620,7 +1620,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		</element>
 		<optional><element name="cc-eval-methods">
 			<zeroOrMore>
-				<element name="EM-cc-ref"><ref name="external-document-pat"/></element>
+				<element name="EM-cc-ref"><text/></element>
 			</zeroOrMore>
 		</element></optional>		
 	</element>
