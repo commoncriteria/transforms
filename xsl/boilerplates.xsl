@@ -182,10 +182,38 @@
 			</xsl:choose>
 			
 		<dt>Package Claim</dt>
-		
-		<dd>
-			<xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-ppclaim-bp-pp']"/>
-		</dd>
+			<xsl:choose>
+			<xsl:when test="//cc:CClaimsInfo/cc:cc-pkg-claim=''">
+					<dd>This <xsl:call-template name="doctype-short"/> is not conformant to any 
+						Functional or Assurance Packages.</dd>
+			</xsl:when>
+			<xsl:otherwise>
+				<dd><ul>
+				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)='0'"> 
+					<li>This <xsl:call-template name="doctype-short"/> does not conform to any 
+						functional packages.</li>
+				</xsl:if>
+				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
+
+				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
+					<li>This <xsl:call-template name="doctype-short"/> does not conform to any 
+						assurance packages.</li>
+				</xsl:if>
+				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
+				</ul></dd><p/>
+				<dd>
+					<xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-ppclaim-bp-pp']"/>
+				</dd>
+			</xsl:otherwise>
+			</xsl:choose>
+
+		<!--
+		<dt>Evaluation Methods</dt>
+		-->
 	</dl>
 
 </xsl:template>
