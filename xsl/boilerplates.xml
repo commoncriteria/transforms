@@ -99,14 +99,7 @@
       </entry>
    </empty>
 
-	<empty id="cc2022-conf-stmt">
-			The evaluation methods used for evaluating the TOE are a combination of the workunits 
-			defined in [<h:a href="#bibCEM">CEM</h:a>] as well as the Evaluation Activities for ensuring that individual SFRs 
-			and SARs have a sufficient level of supporting evidence in the Security Target and guidance 
-			documentation and have been sufficiently tested by the laboratory as part of completing 
-			ATE_IND.1. Any functional packages this PP claims similarly contain their own Evaluation 
-			Activities that are used in this same manner.
-	</empty>		
+
 			
 	<empty id="cc2022-ppclaim-bp-pp">
 		The functional packages to which the PP conforms include SFRs that are not mandatory 

@@ -135,7 +135,7 @@
 		 to this <xsl:call-template name="doctype-short"/>.</dd>
 		<p/>
 			<dd>The evaluation methods used for evaluating the TOE are a combination of the workunits 
-			defined in <a href="#bibCEM">[CEM]</a>] as well as the Evaluation Activities for ensuring that individual SFRs 
+			defined in <a href="#bibCEM">[CEM]</a> as well as the Evaluation Activities for ensuring that individual SFRs 
 			and SARs have a sufficient level of supporting evidence in the Security Target and guidance 
 			documentation and have been sufficiently tested by the laboratory as part of completing 
 			ATE_IND.1. Any functional packages this PP claims similarly contain their own Evaluation 
