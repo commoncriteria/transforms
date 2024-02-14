@@ -201,7 +201,8 @@
 						functional packages.</li>
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
-					<li><xsl:value-of select="."/></li>
+					<li>This <xsl:call-template name="doctype-short"/> is 
+					    <xsl:value-of select="."/> <xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
@@ -209,7 +210,8 @@
 						assurance packages.</li>
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
-					<li><xsl:value-of select="."/></li>
+					<li>This <xsl:call-template name="doctype-short"/> is 
+					    <xsl:value-of select="."/> <xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 				</ul></dd><p/>
 				<dd>
