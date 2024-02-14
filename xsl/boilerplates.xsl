@@ -202,7 +202,7 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-					    <xsl:value-of select="."/> <xsl:value-of select="@conf"/>.</li>
+					    <xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
@@ -211,7 +211,7 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-					    <xsl:value-of select="."/> <xsl:value-of select="@conf"/>.</li>
+					    <xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 				</ul></dd><p/>
 				<dd>
