@@ -1541,13 +1541,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>
 
 
-
-
   <define name="cclaims-content-pat">
       <a:documentation>
       </a:documentation>
      <ref name="boilerplate-no-attr"/>
-      <optional>
+	 <optional>
+		<ref name="cclaims-info-pat"/>
+	 </optional>
+     <optional>
         <element name="cclaims">
           <a:documentation>
           </a:documentation>
@@ -1563,6 +1564,93 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </optional>
   </define>
 
+<define name="cclaims-info-pat">
+	<a:documentation>
+		Information for filling out the Conformance Claims section.
+	</a:documentation>
+	<element name="CClaimsInfo">
+		<attribute name="cc-version">
+			<choice>
+				<value>cc-2022r1</value>
+				<value>cc-31r5</value>
+			</choice>
+		</attribute>
+		<optional><attribute name="cc-approach">
+			<choice>
+				<value>direct-rationale</value>
+				<value>standard</value>
+			</choice>
+		</attribute></optional>
+		<element name="cc-st-conf">
+			<choice>
+				<value>exact</value>
+				<value>strict</value>
+				<value>demonstrable</value>
+			</choice>
+		</element>
+		<element name="cc-pt2-conf">
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cc-pt3-conf">
+			<choice>
+				<value>extended</value>
+				<value>conformant</value>
+			</choice>
+		</element>
+		<element name="cc-pp-conf">
+			<zeroOrMore>
+				<element name="PP-cc-ref"><text/></element>
+			</zeroOrMore>
+		</element>
+		<element name="cc-pp-config-with">
+			<zeroOrMore>
+				<choice>
+					<element name="PP-cc-ref"><text/></element>
+					<element name="Mod-cc-ref"><text/></element>
+				</choice>
+			</zeroOrMore>
+		</element>
+		<element name="cc-pkg-claim">
+			<zeroOrMore>
+				<ref name="pkg-claim"/>
+			</zeroOrMore>
+		</element>
+		<optional><element name="cc-eval-methods">
+			<zeroOrMore>
+				<element name="EM-cc-ref"><text/></element>
+			</zeroOrMore>
+		</element></optional>		
+		<optional><element name="cc-claims-addnl-info">
+			<text/>
+		</element></optional>		
+	</element>
+  </define>
+
+  <define name="pkg-claim">
+	<choice>
+		<element name="FP-cc-ref"><text/>
+			<attribute name="conf">
+				<choice>
+					<value>conformant</value>
+					<value>augmented</value>
+					<value>tailored</value>
+				</choice>
+			</attribute>
+		</element>
+		<element name="AP-cc-ref"><text/>
+			<attribute name="conf">
+				<choice>
+					<value>conformant</value>
+					<value>augmented</value>
+					<value>tailored</value>
+				</choice>
+			</attribute>
+		</element>
+	</choice>
+  </define>
 
 
   <define name="management-function-set">

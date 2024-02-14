@@ -161,7 +161,7 @@
 	      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
 	  <xsl:choose>
-		<xsl:when test="//cc:using-cc2022">
+		<xsl:when test="//cc:using-cc2022|//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc2022-docs']/cc:entry|document('boilerplates.xml')//*[@id='cc2022-cem']/cc:entry">
 				<xsl:sort/>
 				<tr>

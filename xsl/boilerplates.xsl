@@ -14,7 +14,7 @@
 
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
 	<xsl:choose>
-		<xsl:when test="//cc:using-cc2022">
+		<xsl:when test="//cc:using-cc2022|//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 			<p>This appendix lists requirements that should be considered satisfied by products
 			successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
 			explicitly as SFRs and should not be included in the ST. They are not included as 
@@ -128,11 +128,123 @@
      </dl>
   </xsl:template>
 
+<xsl:template match="//cc:CClaimsInfo">
+	<dl>
+		<dt>Conformance Statement</dt><p/>
+		<dd>An ST must claim <xsl:value-of select="//cc:CClaimsInfo/cc:cc-st-conf"/> conformance 
+		 to this <xsl:call-template name="doctype-short"/>.</dd>
+		<p/>
+			<dd>The evaluation methods used for evaluating the TOE are a combination of the workunits 
+			defined in <a href="#bibCEM">[CEM]</a> as well as the Evaluation Activities for ensuring that individual SFRs 
+			and SARs have a sufficient level of supporting evidence in the Security Target and guidance 
+			documentation and have been sufficiently tested by the laboratory as part of completing 
+			ATE_IND.1. Any functional packages this PP claims similarly contain their own Evaluation 
+			Activities that are used in this same manner.
+			</dd>
+<!--		<dd><xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-conf-stmt']"/></dd>  -->
+		<dt>CC Conformance Claims</dt><p/>
+		<dd>This <xsl:call-template name="doctype-short"/> is conformant to 
+			Part 2 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt2-conf"/>) and
+			Part 3 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt3-conf"/>)
+			<xsl:choose>
+			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
+				of Common Criteria CC:2022, Revision 1.
+			</xsl:when>
+			<xsl:otherwise>
+				of Common Criteria Version 3.1, Revision 5.
+			</xsl:otherwise>
+			</xsl:choose></dd>
+			
+		<dt>PP Claim</dt><p/>
+			<dd><xsl:choose>
+				<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-conf=''">
+					This <xsl:call-template name="doctype-short"/> does not claim conformance to 
+					any Protection Profile.
+				</xsl:when>
+				<xsl:otherwise>
+					<ul>
+					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-conf/cc:PP-cc-ref">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+					</ul>
+				</xsl:otherwise>
+				</xsl:choose>
+			</dd><p/>
+			
+			<xsl:choose>
+			<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-config-with=''">
+					<dd>There are no PPs or PP-Modules that are allowed in a PP-Configuration 
+					with this <xsl:call-template name="doctype-short"/>.</dd>
+			</xsl:when>
+			<xsl:otherwise>
+				<dd>The following PPs and PP-Modules are allowed to be specified in a 
+					PP-Configuration with this <xsl:call-template name="doctype-short"/>.
+					<ul>
+					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+					</ul>
+				</dd>
+			</xsl:otherwise>
+			</xsl:choose>
+			
+		<dt>Package Claim</dt><p/>
+			<xsl:choose>
+			<xsl:when test="//cc:CClaimsInfo/cc:cc-pkg-claim=''">
+					<dd>This <xsl:call-template name="doctype-short"/> is not conformant to any 
+						Functional or Assurance Packages.</dd>
+			</xsl:when>
+			<xsl:otherwise>
+				<dd><ul>
+				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)='0'"> 
+					<li>This <xsl:call-template name="doctype-short"/> does not conform to any 
+						functional packages.</li>
+				</xsl:if>
+				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
+
+				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
+					<li>This <xsl:call-template name="doctype-short"/> does not conform to any 
+						assurance packages.</li>
+				</xsl:if>
+				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
+					<li><xsl:value-of select="."/></li>
+				</xsl:for-each>
+				</ul></dd><p/>
+				<dd>
+					<xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-ppclaim-bp-pp']"/>
+				</dd>
+			</xsl:otherwise>
+			</xsl:choose>
+
+		<xsl:if test="//cc:CClaimsInfo/cc:cc-eval-methods">
+			<dt>Evaluation Methods</dt><p/>
+			<dd>This <xsl:call-template name="doctype-short"/> incorporates evaluation activies 
+				from the following Evaluation Methods documents:
+				<ul>
+					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-eval-methods/cc:EM-cc-ref">
+						<li><xsl:value-of select="."/></li>
+					</xsl:for-each>
+				</ul>
+			</dd>
+		</xsl:if>
+
+		<xsl:if test="//cc:CClaimsInfo/cc:cc-claims-addnl-info">
+			<dt>Additional Information</dt><p/>
+			<dd><xsl:value-of select="//cc:CClaimsInfo/cc:cc-claims-addnl-info"/>
+			</dd>
+		</xsl:if>
+	</dl>
+
+</xsl:template>
+
+
 
  <!-- ############## -->
    <xsl:template  name="verrev">
 		<xsl:choose>
-			<xsl:when test="//cc:using-cc2022">CC:2022 Rev. 1</xsl:when>
+			<xsl:when test="//cc:using-cc2022|//cc:CClaimsInfo[@cc-version='cc-2022r1']">CC:2022 Rev. 1</xsl:when>
 			<xsl:otherwise>Version 3.1, Revision 5</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
