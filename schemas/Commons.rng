@@ -1292,9 +1292,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="threat-name-attr"/>
       <optional><ref name="id-attr"/></optional>
       <ref name="origin-pat"/>
-      <oneOrMore>
+      <optional><oneOrMore>            <!-- Made optional for DirRat approach -->
         <ref name="objective-refer"/>
-      </oneOrMore>
+      </oneOrMore></optional>
     </element>
   </define>
 
