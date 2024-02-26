@@ -289,19 +289,41 @@
   <xsl:template name="sec_obj_rat">
     <xsl:param name="id"/>
 
-    <h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
-    This section describes how the assumptions, threats, and organizational 
-    security policies map to the security objectives.
+	<xsl:choose>
+	<xsl:when test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+		<h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+		This section describes how the assumptions and organizational 
+		security policies map to operational environment security objectives.
+	</xsl:when>
+	<xsl:otherwise>
+		<h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+		This section describes how the assumptions, threats, and organizational 
+		security policies map to the security objectives.
+	</xsl:otherwise>
+	</xsl:choose>
+	
     <table>
       <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="'t-sec-obj-rat'"/>
 	      </xsl:call-template>: Security Objectives Rationale</caption>
+	<xsl:choose>
+	<xsl:when test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+      <tr class="header">
+        <td>Assumption or OSP</td>
+        <td>Security Objectives</td>
+        <td>Rationale</td>
+      </tr>
+	</xsl:when>
+	<xsl:otherwise>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
+	</xsl:otherwise>
+	</xsl:choose>
+	
       <xsl:for-each 
           select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
