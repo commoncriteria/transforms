@@ -962,7 +962,6 @@ Modification definition. This text goes in the
     </optional>
   </define>
 
-  <!-- Get rid of the status attribute. It seems like it is duplicative. -->
   <define name="f-component-pattern">
     <element name="f-component">
       <a:document>
@@ -995,8 +994,9 @@ Modification definition. This text goes in the
 
 
 <!--      <ref name="depends-pat"/>   -->
-	    <optional><ref name="importable-pat"/></optional>
-	    <optional><ref name="exportable-pat"/></optional>
+      <optional><ref name="threat-rat-pat"/></optional>
+	    <optional><ref name="importable-pat"/></optional>  <!-- These might go -->
+	    <optional><ref name="exportable-pat"/></optional>  <!-- These might go -->
       <optional><ref name="note"/></optional>
       <optional><ref name="consistency-rationale"/></optional>
       <optional><ref name="ext-comp-extra-pat"/></optional>
@@ -2147,5 +2147,17 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		  <ref name="ref-ids-pat"/>
 	   </element>
 	</define>  
+	
+	<define name="threat-rat-pat">
+		<a:documentation>
+			Reference to a threat that this SFR helps to satify. 
+			Used only in Direct Rationale docs.
+		</a:documentation>
+		<element name="threat-rationale">
+			<attribute name="threat"><ref name="threat-name-attr"/></attribute>
+			<text/>
+		</element>
+	</define>
+	
 	
 </grammar>
