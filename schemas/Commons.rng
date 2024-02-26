@@ -1581,6 +1581,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>standard</value>
 			</choice>
 		</attribute></optional>
+		<optional><attribute name="display">
+			<choice>
+				<value>yes</value>
+				<value>no</value>
+			</choice>
+		</attribute></optional>
 		<element name="cc-st-conf">
 			<choice>
 				<value>exact</value>

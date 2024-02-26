@@ -128,7 +128,8 @@
      </dl>
   </xsl:template>
 
-<xsl:template match="//cc:CClaimsInfo">
+<xsl:template match="//cc:CClaimsInfo[not(@display='no')]">
+    <!-- Display if display attribute is not no. Otherwise the info is used but not displayed. -->
 	<dl>
 		<dt>Conformance Statement</dt><p/>
 		<dd>An ST must claim <xsl:value-of select="//cc:CClaimsInfo/cc:cc-st-conf"/> conformance 
