@@ -242,15 +242,26 @@
   <!--   2. In each f-component using the threat-rationale tag. In this case there 
             must be no objective-refer or addressed-by tags with the threat  -->
   <xsl:template match="cc:threats">
-    <xsl:choose> <xsl:when test="cc:*[cc:description]">
+    <xsl:choose> 
+	<xsl:when test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
+		  
+		  <!-- If the addressed-by method is used, output the SFRs and rationales -->
+		  <dl>
+			<xsl:for-each select="//cc:*[cc:addressed-by]">
+               <xsl:apply-templates select="../@name"/> 
+               <xsl:apply-templates select="following-sibling::cc:rationale[1]"/>
+			</xsl:for-each>
+		  </dl>
         </dl>
-    </xsl:when><xsl:otherwise>
+    </xsl:when>
+	<xsl:otherwise>
       This document does not define any additional <xsl:value-of select="local-name()"/>.
-    </xsl:otherwise> </xsl:choose>
+    </xsl:otherwise> 
+	</xsl:choose>
   </xsl:template>
 
 
