@@ -219,10 +219,11 @@
       <xsl:apply-templates select="cc:appnote"/>
     </dd>
  </xsl:template>
+
 	
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
+  <xsl:template match="cc:assumptions|cc:cclaims|cc:OSPs|cc:SOs|cc:SOEs">
     <xsl:choose> <xsl:when test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">
@@ -233,6 +234,26 @@
       This document does not define any additional <xsl:value-of select="local-name()"/>.
     </xsl:otherwise> </xsl:choose>
   </xsl:template>
+
+  <!-- For standard rationale, threats are handled here as always, and          
+       there are objective-refer tags in each threat tag.  -->
+  <!-- For direct rationale, there are two ways to map the SFRs to threats -->
+  <!--   1. In the threats section using the addressed-by tag (with no objective-refer tags) -->
+  <!--   2. In each f-component using the threat-rationale tag. In this case there 
+            must be no objective-refer or addressed-by tags with the threat  -->
+  <xsl:template match="cc:threats">
+    <xsl:choose> <xsl:when test="cc:*[cc:description]">
+        <dl>
+          <xsl:for-each select="cc:*[cc:description]">
+            <xsl:call-template name="defs-with-notes"/>
+          </xsl:for-each>
+        </dl>
+    </xsl:when><xsl:otherwise>
+      This document does not define any additional <xsl:value-of select="local-name()"/>.
+    </xsl:otherwise> </xsl:choose>
+  </xsl:template>
+
+
 
   <!-- ############### -->
   <!-- Handle's the sections that appear if the optional 

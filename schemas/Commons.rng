@@ -992,9 +992,8 @@ Modification definition. This text goes in the
         </optional>
       </choice>
 
-
 <!--      <ref name="depends-pat"/>   -->
-      <optional><ref name="threat-rat-pat"/></optional>
+      <optional><ref name="threat-rat-pat"/></optional>    <!-- For direct rationale -->
 	    <optional><ref name="importable-pat"/></optional>  <!-- These might go -->
 	    <optional><ref name="exportable-pat"/></optional>  <!-- These might go -->
       <optional><ref name="note"/></optional>
@@ -1292,9 +1291,24 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="threat-name-attr"/>
       <optional><ref name="id-attr"/></optional>
       <ref name="origin-pat"/>
-      <optional><oneOrMore>            <!-- Made optional for DirRat approach -->
-        <ref name="objective-refer"/>
-      </oneOrMore></optional>
+
+	  <!-- objective-refer for standard approach -->
+	  <choice>
+		<zeroOrMore>            <!-- Made optional for DirRat approach -->
+			<ref name="objective-refer"/>
+		</zeroOrMore>
+	  
+	  <!-- addressed-by for direct rationale -->
+		<zeroOrMore>
+			<element name="addressed-by">
+				<ref name="basic-content-pat"/>
+			</element>
+			<element name="rationale">
+				<ref name="basic-content-pat"/>
+			</element>
+		</zeroOrMore>
+	  </choice>
+	  <!-- If there are zero, then the threats must be defined in the SFRs -->
     </element>
   </define>
 
