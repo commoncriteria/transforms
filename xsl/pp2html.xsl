@@ -251,8 +251,8 @@
 		  
 		  <!-- If the addressed-by method is used, output the SFRs and rationales -->
 		  <dl>
-			<xsl:for-each select="//cc:*[cc:addressed-by]">
-               <xsl:apply-templates select="../@name"/> 
+			<xsl:for-each select="./cc:addressed-by">
+               <xsl:apply-templates select="./@name"/> 
                <xsl:apply-templates select="following-sibling::cc:rationale[1]"/>
 			</xsl:for-each>
 		  </dl>
