@@ -2168,7 +2168,11 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			Used only in Direct Rationale docs.
 		</a:documentation>
 		<element name="threat-rationale">
-			<attribute name="threat"><ref name="threat-name-attr"/></attribute>
+			<attribute name="threat">
+				<data type="string">
+					<param name="pattern">T\.[_A-Z0-9]+</param>
+				</data>
+			</attribute>
 			<text/>
 		</element>
 	</define>
