@@ -249,14 +249,11 @@
             <xsl:call-template name="defs-with-notes"/>
 
 			<xsl:if test="cc:addressed-by">
-				<p>Addressed by these SFRs:</p>
-				<dl>
+				Addressed by these SFRs:<br/>
 				<!-- If the addressed-by method is used, output the SFRs and rationales -->
 				<xsl:for-each select="cc:addressed-by">
-					<xsl:apply-templates select="."/><br/>
-					<xsl:apply-templates select="following-sibling::cc:rationale[1]"/><br/> 
+					<xsl:apply-templates select="."/>: <xsl:apply-templates select="following-sibling::cc:rationale[1]"/><br/> 
 				</xsl:for-each>
-				</dl>
 			</xsl:if>
           </xsl:for-each>
  	    </dl>
