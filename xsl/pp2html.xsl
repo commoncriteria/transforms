@@ -248,13 +248,14 @@
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
 
-            <p>Addressed by these SFRs:</p>
+            <dt>Addressed by these SFRs:</dt>
+			<dl>
 			<!-- If the addressed-by method is used, output the SFRs and rationales -->
 			<xsl:for-each select="cc:addressed-by">
-               <xsl:apply-templates select="@name"/> 
+               <xsl:apply-templates select="."/> 
 <!--               <xsl:apply-templates select="following-sibling::cc:rationale[1]"/>  -->
 			</xsl:for-each>
-
+            </dl>
           </xsl:for-each>
  	    </dl>
     </xsl:when>
