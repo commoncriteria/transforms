@@ -1010,6 +1010,7 @@
 
 
   <!-- ######################### -->
+  <!-- Standard appraoch version of SFR Rationale Section -->
   <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
@@ -1038,6 +1039,38 @@
       </table>
     </p>
   </xsl:template>
+
+  <!-- ######################### -->
+  <!-- Direct Rationale approach version of SFR Rationale Section -->
+  <!-- ######################### -->
+  <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="threat-req-map">
+    <p>The following rationale provides justification for each SFR for the TOE, 
+    showing that the SFRs are suitable to address the specified threats:<br/>
+      <table>
+        <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="'t-obj_map'"/>
+		</xsl:call-template>: SFR Rationale</caption>
+        <tr><th>Threat</th><th>Addressed by</th><th>Rationale</th></tr>
+        <xsl:for-each select="//cc:threat/cc:addressed-by">
+          <tr>
+	   <xsl:if test="not(preceding-sibling::cc:addressed-by)">
+
+             <xsl:attribute name="class">major-row</xsl:attribute>
+             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
+             <td rowspan="{$rowspan}">
+               <xsl:apply-templates mode="underscore_breaker" select="../@name"/><br/>
+             </td>
+           </xsl:if>
+           <td><xsl:apply-templates/></td>
+           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
+          </tr><xsl:text>&#xa;</xsl:text> 
+       
+        </xsl:for-each>
+      </table>
+    </p>
+  </xsl:template>
+
 
  
   <!-- ############### -->
@@ -1158,12 +1191,19 @@
        with additional extended functional components.
      </xsl:if>
      <xsl:apply-templates/>
-     <xsl:if test="/cc:PP">
+	 
+	 <!-- SFR Rationale Section for standard approach -->
+	 <xsl:if test="/cc:PP and not(//cc:CCClaimsInfo[@cc-approach='direct-rationale'])">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
        <xsl:call-template name="obj-req-map"/>
      </xsl:if>
-  </xsl:template>
 
+	<!-- SFR Rationale Section for Direct Rationale approach -->
+	 <xsl:if test="/cc:PP and //cc:CCClaimsInfo[@cc-approach='direct-rationale']">
+       <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+       <xsl:call-template name="threats-req-map"/>
+     </xsl:if>
+  </xsl:template>
 	
 </xsl:stylesheet>
 
