@@ -249,7 +249,7 @@
             <xsl:call-template name="defs-with-notes"/>
 
 			<xsl:if test="cc:addressed-by">
-				<dt>Addressed by these SFRs:</dt>
+				<dd><b>Addressed by these SFRs:</b></dd>
 				<!-- If the addressed-by method is used, output the SFRs and rationales -->
 				<xsl:for-each select="cc:addressed-by">
 					<dd><xsl:apply-templates select="."/>: <xsl:apply-templates select="following-sibling::cc:rationale[1]"/></dd>
@@ -1193,13 +1193,13 @@
      <xsl:apply-templates/>
 	 
 	 <!-- SFR Rationale Section for standard approach -->
-	 <xsl:if test="/cc:PP and not(//cc:CCClaimsInfo[@cc-approach='direct-rationale'])">
+	 <xsl:if test="/cc:PP and not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
        <xsl:call-template name="obj-req-map"/>
      </xsl:if>
 
 	<!-- SFR Rationale Section for Direct Rationale approach -->
-	 <xsl:if test="/cc:PP and //cc:CCClaimsInfo[@cc-approach='direct-rationale']">
+	 <xsl:if test="/cc:PP and //cc:CClaimsInfo[@cc-approach='direct-rationale']">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
        <xsl:call-template name="threats-req-map"/>
      </xsl:if>
