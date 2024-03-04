@@ -1201,7 +1201,7 @@
 	<!-- SFR Rationale Section for Direct Rationale approach -->
 	 <xsl:if test="/cc:PP and //cc:CClaimsInfo[@cc-approach='direct-rationale']">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
-       <xsl:call-template name="threats-req-map"/>
+       <xsl:call-template name="threat-req-map"/>
      </xsl:if>
   </xsl:template>
 	
