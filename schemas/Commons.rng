@@ -993,7 +993,6 @@ Modification definition. This text goes in the
       </choice>
 
 <!--      <ref name="depends-pat"/>   -->
-      <optional><ref name="threat-rat-pat"/></optional>    <!-- For direct rationale -->
 	    <optional><ref name="importable-pat"/></optional>  <!-- These might go -->
 	    <optional><ref name="exportable-pat"/></optional>  <!-- These might go -->
       <optional><ref name="note"/></optional>
@@ -2162,20 +2161,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 	   </element>
 	</define>  
 	
-	<define name="threat-rat-pat">
-		<a:documentation>
-			Reference to a threat that this SFR helps to satify. 
-			Used only in Direct Rationale docs.
-		</a:documentation>
-		<element name="threat-rationale">
-			<attribute name="threat">
-				<data type="string">
-					<param name="pattern">T\.[_A-Z0-9]+</param>
-				</data>
-			</attribute>
-			<text/>
-		</element>
-	</define>
 	
 	
 </grammar>

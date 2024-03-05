@@ -235,12 +235,13 @@
     </xsl:otherwise> </xsl:choose>
   </xsl:template>
 
+  <!-- Eat the threat-addr tags -->
+  <xsl:template match="cc:threat-addr"/>
+
   <!-- For standard rationale, threats are handled here as always, and          
        there are objective-refer tags in each threat tag.  -->
-  <!-- For direct rationale, there are two ways to map the SFRs to threats -->
-  <!--   1. In the threats section using the addressed-by tag (with no objective-refer tags) -->
-  <!--   2. In each f-component using the threat-rationale tag. In this case there 
-            must be no objective-refer or addressed-by tags with the threat  -->
+  <!-- For direct rationale, threats are mapped to SFRs in the threats section  -->
+  <!--   using the addressed-by tag (with no objective-refer tags) -->
   <xsl:template match="cc:threats">
     <xsl:choose> 
 	<xsl:when test="cc:*[cc:description]">
@@ -248,13 +249,14 @@
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
 
-			<xsl:if test="cc:addressed-by">
+			<!-- This should be true only for Direct Rationale -->
+			<!-- Uncomment this to display the SFRs with the threats -->
+<!--			<xsl:if test="cc:addressed-by">
 				<p/><dd><b>Addressed by these SFRs:</b></dd>
-				<!-- If the addressed-by method is used, output the SFRs and rationales -->
 				<xsl:for-each select="cc:addressed-by">
 					<dd><xsl:apply-templates select="."/>: <xsl:apply-templates select="following-sibling::cc:rationale[1]"/></dd>
 				</xsl:for-each>
-			</xsl:if>
+			</xsl:if>  -->
           </xsl:for-each>
  	    </dl>
     </xsl:when>
@@ -1200,8 +1202,9 @@
 
 	<!-- SFR Rationale Section for Direct Rationale approach -->
 	 <xsl:if test="/cc:PP and //cc:CClaimsInfo[@cc-approach='direct-rationale']">
-       <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
-       <xsl:call-template name="threat-req-map"/>
+		<h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+		<!-- Determine whether to use the <addressed-by> or <threat-addr> mechanism -->
+			<xsl:call-template name="threat-req-map"/>
      </xsl:if>
   </xsl:template>
 	
