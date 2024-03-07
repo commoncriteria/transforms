@@ -93,10 +93,19 @@
   <!--      -->
   <!-- ############### -->
   <xsl:template name="mod-obj-req-map">
-    <xsl:if test="//cc:SO/cc:addressed-by">
+  
+	<!-- Standard approach. Display objective to SFR mapping -->
+    <xsl:if test="//cc:SO/cc:addressed-by and not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
       <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
       <xsl:call-template name="obj-req-map"/>
     </xsl:if>
+
+    <!-- Direct rationale: Display threat to SFR mapping -->
+    <xsl:if test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+      <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
+      <xsl:call-template name="threat-req-map"/>
+    </xsl:if>
+
   </xsl:template> 
 
   <!-- ############### -->
