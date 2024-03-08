@@ -224,7 +224,7 @@
 			</xsl:otherwise>
 			</xsl:choose>
 
-		<xsl:if test="//cc:CClaimsInfo/cc:cc-eval-methods">
+		<xsl:if test="not(//cc:CClaimsInfo/cc:cc-eval-methods"='')>
 			<dt>Evaluation Methods</dt><p/>
 			<dd>This <xsl:call-template name="doctype-short"/> incorporates evaluation activies 
 				from the following Evaluation Methods documents:
