@@ -236,7 +236,7 @@
 			</dd>
 		</xsl:if>
 
-		<xsl:if test="//cc:CClaimsInfo/cc:cc-claims-addnl-info">
+		<xsl:if test="not(//cc:CClaimsInfo/cc:cc-claims-addnl-info='')">
 			<dt>Additional Information</dt><p/>
 			<dd><xsl:value-of select="//cc:CClaimsInfo/cc:cc-claims-addnl-info"/>
 			</dd>
