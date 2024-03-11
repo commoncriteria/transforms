@@ -302,12 +302,12 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
 	</a:documentation>
 	<ref name="basic-content-pat"/>
       </element>
-      <element name="con-obj">
+      <optional><element name="con-obj">
 	<a:documentation>
 	  Consistency argument for why this module does not violate the objectives described by the base PP.
 	</a:documentation>
 	<ref name="basic-content-pat"/>
-      </element>
+      </element></optional>
       <element name="con-op-en">
 	<a:documentation>
 	  Consistency argument for why this module does not violate the objectives for the optional environmnet described by the base PP.
