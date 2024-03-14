@@ -251,12 +251,13 @@
 
 			<!-- This should be true only for Direct Rationale -->
 			<!-- Uncomment this to display the SFRs with the threats -->
-			<xsl:if test="cc:addressed-by">
+			<!-- Otherwise they are displayed in the TOE SFR Rationale section -->
+<!--			<xsl:if test="cc:addressed-by">
 				<p/><dd><b>Addressed by these SFRs:</b></dd>
 				<xsl:for-each select="cc:addressed-by">
 					<dd><xsl:apply-templates select="."/>: <xsl:apply-templates select="following-sibling::cc:rationale[1]"/></dd>
-				</xsl:for-each>
-			</xsl:if> 
+				</xsl:for-each>  
+			</xsl:if>  -->
           </xsl:for-each>
  	    </dl>
     </xsl:when>
