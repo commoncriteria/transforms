@@ -153,22 +153,27 @@
 
   <define name="sec-obj-content">
     <ref name="basic-content-pat"/>
-    <choice>
-      <element name="section">
-        <a:documentation>
-	  Section describing the Security Objectives for the TOE.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
-	<ref name="optional-id"/>
-	<!-- Don't know if we need this -->
-	<ref name="basic-content-pat"/>
-	<ref name="SOs"/>
-      </element>
+    
+	<!-- TOE Security Objectives do not exist in Direct Rationale PPs -->
+	<optional>
+		<choice>
+			<element name="section">
+			<a:documentation>
+				Section describing the Security Objectives for the TOE.
+			</a:documentation>
+			<attribute name="title"><value>Security Objectives for the TOE</value></attribute>
+			<ref name="optional-id"/>
+			<!-- Don't know if we need this -->
+			<ref name="basic-content-pat"/>
+			<ref name="SOs"/>
+		</element>
       <element name="sec:Security_Objectives_for_the_TOE">
          <ref name="basic-content-pat"/>
 	<ref name="SOs"/>
       </element>
-    </choice>
+    </choice></optional>
+
+	<!-- Security Objectives for the Operational Environment -->	
     <choice>
       <element name="section">
 	<a:documentation>
@@ -184,6 +189,8 @@
 	<zeroOrMore> <ref name="SOEs"/> </zeroOrMore>
       </element>
     </choice>
+		
+	<!-- Security Objectives Rationale -->
     <choice> 
       <element name="section">
 	<a:documentation>
@@ -955,7 +962,6 @@ Modification definition. This text goes in the
     </optional>
   </define>
 
-  <!-- Get rid of the status attribute. It seems like it is duplicative. -->
   <define name="f-component-pattern">
     <element name="f-component">
       <a:document>
@@ -986,10 +992,9 @@ Modification definition. This text goes in the
         </optional>
       </choice>
 
-
 <!--      <ref name="depends-pat"/>   -->
-	    <optional><ref name="importable-pat"/></optional>
-	    <optional><ref name="exportable-pat"/></optional>
+	    <optional><ref name="importable-pat"/></optional>  <!-- These might go -->
+	    <optional><ref name="exportable-pat"/></optional>  <!-- These might go -->
       <optional><ref name="note"/></optional>
       <optional><ref name="consistency-rationale"/></optional>
       <optional><ref name="ext-comp-extra-pat"/></optional>
@@ -1285,9 +1290,24 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="threat-name-attr"/>
       <optional><ref name="id-attr"/></optional>
       <ref name="origin-pat"/>
-      <oneOrMore>
-        <ref name="objective-refer"/>
-      </oneOrMore>
+	  
+	  <!-- objective-refer for standard approach -->
+	  <choice>
+		<zeroOrMore>            <!-- Made optional for DirRat approach -->
+			<ref name="objective-refer"/>
+		</zeroOrMore>
+	  
+	  <!-- addressed-by for direct rationale -->
+		<zeroOrMore>
+			<element name="addressed-by">
+				<ref name="basic-content-pat"/>
+			</element>
+			<element name="rationale">
+				<ref name="basic-content-pat"/>
+			</element>
+		</zeroOrMore>
+	  </choice>
+	  <!-- If there are zero, then the threats must be defined in the SFRs -->
     </element>
   </define>
 

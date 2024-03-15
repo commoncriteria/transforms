@@ -93,10 +93,19 @@
   <!--      -->
   <!-- ############### -->
   <xsl:template name="mod-obj-req-map">
-    <xsl:if test="//cc:SO/cc:addressed-by">
+  
+	<!-- Standard approach. Display objective-to-SFR mapping -->
+    <xsl:if test="//cc:SO/cc:addressed-by and not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
       <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
       <xsl:call-template name="obj-req-map"/>
     </xsl:if>
+
+    <!-- Direct rationale: Display threat-to-SFR mapping -->
+    <xsl:if test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+      <h2 id="obj-req-map" class="indexable" data-level="2">TOE Security Functional Requirements Rationale</h2>
+      <xsl:call-template name="threat-req-map"/>
+    </xsl:if>
+
   </xsl:template> 
 
   <!-- ############### -->
@@ -159,31 +168,44 @@
       </table>
 
       <!-- #################### -->
-      <h3 id="conobj-{@id}" class="indexable" data-level="3">
-	Consistency of Objectives
-      </h3>
-      <p>
-      <xsl:apply-templates select="./cc:con-obj"/>
-      <xsl:if test="//cc:SO[cc:description]">
-	  The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
-      <table>
-  		<caption>
-			<xsl:call-template name="ctr-xsl">
-                <xsl:with-param name="ctr-type">Table</xsl:with-param>
-				<xsl:with-param name="id" select="'t-con-objs'"/>
-			</xsl:call-template>: Consistency of Objectives (<xsl:apply-templates select="." mode="short"/> base)
-		</caption>
-	  <tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
-      <xsl:for-each select="//cc:SO[cc:description]">
-	<xsl:call-template name="consistency-row">
-	  <xsl:with-param name="base" select="$base"/>
-	  <xsl:with-param name="orig" select="."/>
-	</xsl:call-template>
-      </xsl:for-each>
-      </table>
-      </xsl:if>
-      </p>
+	  <!-- If standard approach -->
+  	 <xsl:if test="not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
 
+      <h3 id="conobj-{@id}" class="indexable" data-level="3">
+			Consistency of Objectives
+		</h3>
+		<p>
+		<xsl:apply-templates select="./cc:con-obj"/>
+		<xsl:if test="//cc:SO[cc:description]">
+			The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
+			<table>
+				<caption>
+					<xsl:call-template name="ctr-xsl">
+						<xsl:with-param name="ctr-type">Table</xsl:with-param>
+						<xsl:with-param name="id" select="'t-con-objs'"/>
+					</xsl:call-template>: Consistency of Objectives (<xsl:apply-templates select="." mode="short"/> base)
+				</caption>
+				<tr><th>PP-Module TOE Objective</th><th>Consistency Rationale</th></tr>
+				<xsl:for-each select="//cc:SO[cc:description]">
+					<xsl:call-template name="consistency-row">
+						<xsl:with-param name="base" select="$base"/>
+						<xsl:with-param name="orig" select="."/>
+					</xsl:call-template>
+				</xsl:for-each>
+			</table>
+		</xsl:if>
+		</p>
+	  </xsl:if>
+
+	  <!-- if direct rationale -->
+ 	 <xsl:if test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+		<!-- header for OE objectives -->
+		<h3 id="conobj-{@id}" class="indexable" data-level="3">
+			Consistency of OE Objectives
+		</h3>
+	 </xsl:if>
+
+	  <!-- OE Objectives are displayed for either approach -->
       <p>
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">

@@ -220,6 +220,7 @@
     </dd>
  </xsl:template>
 	
+	
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
@@ -234,6 +235,40 @@
     </xsl:otherwise> </xsl:choose>
   </xsl:template>
 
+  <!-- Eat the threat-addr tags -->
+  <xsl:template match="cc:threat-addr"/>
+
+ <!-- For standard rationale, threats are handled here as always, and          
+       there are objective-refer tags in each threat tag.  -->
+  <!-- For direct rationale, threats are mapped to SFRs in the threats section  -->
+  <!--   using the addressed-by tag (with no objective-refer tags) -->
+  <xsl:template match="cc:threats">
+    <xsl:choose> 
+	<xsl:when test="cc:*[cc:description]">
+        <dl>
+          <xsl:for-each select="cc:*[cc:description]">
+            <xsl:call-template name="defs-with-notes"/>
+
+			<!-- This should be true only for Direct Rationale -->
+			<!-- Uncomment this to display the SFRs with the threats -->
+			<!-- Otherwise they are displayed in the TOE SFR Rationale section -->
+<!--			<xsl:if test="cc:addressed-by">
+				<p/><dd><b>Addressed by these SFRs:</b></dd>
+				<xsl:for-each select="cc:addressed-by">
+					<dd><xsl:apply-templates select="."/>: <xsl:apply-templates select="following-sibling::cc:rationale[1]"/></dd>
+				</xsl:for-each>  
+			</xsl:if>  -->
+          </xsl:for-each>
+ 	    </dl>
+    </xsl:when>
+	<xsl:otherwise>
+      This document does not define any additional <xsl:value-of select="local-name()"/>.
+    </xsl:otherwise> 
+	</xsl:choose>
+  </xsl:template>
+  
+  
+  
   <!-- ############### -->
   <!-- Handle's the sections that appear if the optional 
        appendices appear (i.e. if this is the release version -->
@@ -289,19 +324,41 @@
   <xsl:template name="sec_obj_rat">
     <xsl:param name="id"/>
 
-    <h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
-    This section describes how the assumptions, threats, and organizational 
-    security policies map to the security objectives.
+	<xsl:choose>
+	<xsl:when test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+		<h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+		This section describes how the assumptions and organizational 
+		security policies map to operational environment security objectives.
+	</xsl:when>
+	<xsl:otherwise>
+		<h2 id="{$id}" class="indexable,h2" data-level="2">Security Objectives Rationale</h2>   
+		This section describes how the assumptions, threats, and organizational 
+		security policies map to the security objectives.
+	</xsl:otherwise>
+	</xsl:choose>
+	
     <table>
       <caption><xsl:call-template name="ctr-xsl">
                <xsl:with-param name="ctr-type">Table</xsl:with-param>
 	       <xsl:with-param name="id" select="'t-sec-obj-rat'"/>
 	      </xsl:call-template>: Security Objectives Rationale</caption>
+	<xsl:choose>
+	<xsl:when test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
+      <tr class="header">
+        <td>Assumption or OSP</td>
+        <td>Security Objectives</td>
+        <td>Rationale</td>
+      </tr>
+	</xsl:when>
+	<xsl:otherwise>
       <tr class="header">
         <td>Threat, Assumption, or OSP</td>
         <td>Security Objectives</td>
         <td>Rationale</td>
       </tr>
+	</xsl:otherwise>
+	</xsl:choose>
+	
       <xsl:for-each 
           select="//cc:threat/cc:objective-refer | //cc:OSP/cc:objective-refer | //cc:assumption/cc:objective-refer">
         <tr>
@@ -956,6 +1013,7 @@
 
 
   <!-- ######################### -->
+  <!-- Standard approach version of SFR Rationale Section -->
   <!-- ######################### -->
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="obj-req-map">
     <p>The following rationale provides justification for each security objective for the TOE, 
@@ -985,7 +1043,38 @@
     </p>
   </xsl:template>
 
- 
+  <!-- ######################### -->
+  <!-- Direct Rationale approach version of SFR Rationale Section -->
+  <!-- ######################### -->
+  <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="threat-req-map">
+    <p>The following rationale provides justification for each SFR for the TOE, 
+    showing that the SFRs are suitable to address the specified threats:<br/>
+      <table>
+        <caption><xsl:call-template name="ctr-xsl">
+               <xsl:with-param name="ctr-type">Table</xsl:with-param>
+	       <xsl:with-param name="id" select="'t-obj_map'"/>
+		</xsl:call-template>: SFR Rationale</caption>
+        <tr><th>Threat</th><th>Addressed by</th><th>Rationale</th></tr>
+        <xsl:for-each select="//cc:threat/cc:addressed-by">
+          <tr>
+	   <xsl:if test="not(preceding-sibling::cc:addressed-by)">
+
+             <xsl:attribute name="class">major-row</xsl:attribute>
+             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
+             <td rowspan="{$rowspan}">
+               <xsl:apply-templates mode="underscore_breaker" select="../@name"/><br/>
+             </td>
+           </xsl:if>
+           <td><xsl:apply-templates/></td>
+           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
+          </tr><xsl:text>&#xa;</xsl:text> 
+       
+        </xsl:for-each>
+      </table>
+    </p>
+  </xsl:template>
+
+
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:ctr">
@@ -1104,12 +1193,20 @@
        with additional extended functional components.
      </xsl:if>
      <xsl:apply-templates/>
-     <xsl:if test="/cc:PP">
+	 	 
+	 <!-- SFR Rationale Section for standard approach -->
+	 <xsl:if test="/cc:PP and not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
        <h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
        <xsl:call-template name="obj-req-map"/>
      </xsl:if>
-  </xsl:template>
 
+	<!-- SFR Rationale Section for Direct Rationale approach -->
+	 <xsl:if test="/cc:PP and //cc:CClaimsInfo[@cc-approach='direct-rationale']">
+		<h3 id="obj-req-map" class="indexable" data-level="3">TOE Security Functional Requirements Rationale</h3>
+		<!-- Determine whether to use the <addressed-by> or <threat-addr> mechanism -->
+			<xsl:call-template name="threat-req-map"/>
+     </xsl:if>
+  </xsl:template>
 	
 </xsl:stylesheet>
 

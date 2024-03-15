@@ -128,6 +128,9 @@
      </dl>
   </xsl:template>
 
+<!-- Eat the CClaimsInfo element if it not to be displayed -->
+<xsl:template match="//cc:CClaimsInfo[@display='no']"/>
+
 <xsl:template match="//cc:CClaimsInfo[not(@display='no')]">
     <!-- Display if display attribute is not no. Otherwise the info is used but not displayed. -->
 	<dl>
