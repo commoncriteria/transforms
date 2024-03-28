@@ -809,6 +809,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="custom-basic-content-pat"/>
 	<ref name="rules"/>
 	<ref name="comment"/>
+	<ref name="implements-pat"/>
       </choice>
     </oneOrMore>
   </define>
