@@ -775,7 +775,7 @@ The following sections list Common Criteria and technology terms used in this do
 
 
 <!-- Eat roles element if not to be displayed here -->
-<!-- <xsl:template match="cc:roles[@display='no']"/> -->
+<xsl:template match="cc:roles[@display='no']"/>
 
 <!-- Display roles here -->
 <!-- <xsl:template match="cc:roles[not(@display='no')]">
