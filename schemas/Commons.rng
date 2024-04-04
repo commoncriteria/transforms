@@ -2039,7 +2039,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<attribute name="short"/>
 				<text/>
 			</element>
-		</OneOrMore>
+		</zeroOrMore>
 	</element>
   </define>
 
