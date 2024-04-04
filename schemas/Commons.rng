@@ -2029,10 +2029,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <!-- Management function roles. Should be defined in FMT_SMR -->
   <define name="roles-pat">
 	<element name="roles">
-		<attribute name="display">
+		<optional><attribute name="display">
 			<choice><value>yes</value><value>no</value></choice>
-		</attribute>
-		<oneOrMore>
+		</attribute></optional>
+		<zeroOrMore>
 			<element name="role">
 				<ref name="role-id-attr"/>
 				<attribute name="name"/>
