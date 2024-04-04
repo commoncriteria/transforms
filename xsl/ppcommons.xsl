@@ -787,6 +787,16 @@ The following sections list Common Criteria and technology terms used in this do
 </xsl:template>
 
 
+<!-- Display roles found elsewhere -->
+<xsl:template match="cc:roles[not(cc:role) and not(@display='no')]">
+	<ul>
+		<xsl:for-each select="//cc:roles/cc:role">
+			<li><b><xsl:value-of select="@name"/>:</b> <xsl:value-of select="."/></li>
+		</xsl:for-each>
+	</ul>
+</xsl:template>
+
+
 
 <!--
 
