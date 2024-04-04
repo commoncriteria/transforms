@@ -777,17 +777,16 @@ The following sections list Common Criteria and technology terms used in this do
 <!-- Eat roles element if not to be displayed here -->
 <xsl:template match="cc:roles[@display='no']"/>
 
-<!-- Display roles here -->
-<xsl:template match="cc:roles[not(@display='no')]">
-	<xsl:if test="./cc:role"> 
-		<ul>
-			<xsl:for-each select="./cc:role">
-				<li><xsl:value-of select="@name"/>: <xsl:value-of select="."/></li>
-			</xsl:for-each>
-		</ul>
-	</xsl:if> 
-	<!-- Later add case where roles are defined elsewhere (empty roles) -->
+<!-- Display this roles contruct -->
+<xsl:template match="cc:roles[cc:role and not(@display='no')]">
+	<ul>
+		<xsl:for-each select="./cc:role">
+			<li><b><xsl:value-of select="@name"/>:</b> <xsl:value-of select="."/></li>
+		</xsl:for-each>
+	</ul>
 </xsl:template>
+
+
 
 <!--
 
