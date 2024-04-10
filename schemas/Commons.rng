@@ -2030,15 +2030,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <!-- But really could be anywhere -->
   <define name="role-pat">
 		<element name="role">
-			<ref name="role-name-attr"/>
-			<attribute name="display-name"/>
+			<ref name="role-id-attr"/>
+			<attribute name="name"/>
 			<attribute name="short"/>
 			<text/>
 		</element>
   </define>
 
-  <define name="role-name-attr">
-    <attribute name="name">
+  <define name="role-id-attr">
+    <attribute name="rid">
       <data type="string">
         <param name="pattern">R\.[_A-Z0-9]+</param>
       </data>

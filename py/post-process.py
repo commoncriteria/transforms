@@ -152,7 +152,7 @@ class State:
             return []
 
     def cross_reference_cc_items(self):
-        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded", "role"}:
+        for clazz in {"assumption", "threat", "OSP", "SOE", "SO",  "componentneeded"}:
             for el in self.getElementsByClass(clazz):
                 if "id" in el.attrib:
                     term = el.attrib["id"]
