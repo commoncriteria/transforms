@@ -263,7 +263,7 @@
   <!--                 -->
   <!-- ############### -->
   <!-- Making a references is the same as getting they ID for these structures. -->
-  <xsl:template match="cc:threat|cc:assumption" mode="make_xref">
+  <xsl:template match="cc:threat|cc:assumption|cc:role" mode="make_xref">
      <xsl:value-of select="@name"/>
   </xsl:template>
 
