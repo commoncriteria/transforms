@@ -810,7 +810,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="rules"/>
 	<ref name="comment"/>
 	<ref name="implements-pat"/>
-	<ref name="roles-pat"/>
+	<ref name="role-pat"/>
       </choice>
     </oneOrMore>
   </define>
@@ -2027,20 +2027,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 -->
 
   <!-- Management function roles. Should be defined in FMT_SMR -->
-  <define name="roles-pat">
-	<element name="roles">
-		<optional><attribute name="display">
-			<choice><value>yes</value><value>no</value></choice>
-		</attribute></optional>
-		<zeroOrMore>
-			<element name="role">
-				<ref name="role-id-attr"/>
-				<attribute name="name"/>
-				<attribute name="short"/>
-				<text/>
-			</element>
-		</zeroOrMore>
-	</element>
+  <!-- But really could be anywhere -->
+  <define name="role-pat">
+		<element name="role">
+			<ref name="role-id-attr"/>
+			<attribute name="name"/>
+			<attribute name="short"/>
+			<text/>
+		</element>
   </define>
 
   <define name="role-id-attr">
