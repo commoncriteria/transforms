@@ -776,7 +776,7 @@ The following sections list Common Criteria and technology terms used in this do
 
 <!-- Display this roles contruct -->
 <xsl:template match="cc:role">
-	<b><span class="role" id="(@display-name)"><xsl:value-of select="@display-name"/></span> (<xsl:value-of select="@name"/>):</b> <xsl:value-of select="."/>
+	<b><span class="role" id="(@display-name)"><xsl:value-of select="@display-name"/> (<span class="role" id="(@name)"><xsl:value-of select="@name"/></span>):</b> <xsl:value-of select="."/>
 </xsl:template>
 
 
