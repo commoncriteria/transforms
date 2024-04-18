@@ -1537,6 +1537,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="assignable"/> -->
         <ref name="basic-content-pat"/>
         <ref name="management-function-set"/>
+		<ref name="mgmt-func-list-pat"/>
       </choice></oneOrMore>
     </element>
   </define>
@@ -1679,6 +1680,45 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		</element>
 	</choice>
   </define>
+
+
+
+
+  <!-- The new magagement functions construct -->
+  <!-- The idea is that the management functions are displayed in FMT_SMF  -->
+  <!-- and the mappings table is displayed in FMT_MOF -->
+  <define name="mgmt-func-list-pat">
+	<element name="mgmt-func-list">
+		<oneOrMore>
+			<ref name="mgmt-func-def-pat"/>
+		</oneOrMore>
+	</element>
+   </define>
+
+
+  <define name="mf-name-attr">
+    <attribute name="name">
+      <data type="string">
+        <param name="pattern">MF\.[_A-Z0-9]+</param>
+      </data>
+    </attribute>
+  </define>
+
+	
+  <!-- Definition of a single management function -->
+	
+   <define name="mgmt-func-def-pat">
+		<element name="mgmt-func-def">
+			<ref name="mf-name-attr"/>
+			<optional><ref name "depends-pat"/></optional>
+			<element name="text">
+				<ref name="basic-content-pat"/>
+			</element>
+			<optional><element name="aactivity">
+				<ref name="basic-content-pat"/>
+			</element></optional>
+		</element>
+   </define>
 
 
   <define name="management-function-set">
