@@ -2026,6 +2026,17 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   </define>   
 -->
 
+
+<!-- Management function roles -->
+<!-- Can be defined in Introduction or in FMT_SMR, but should at least be refrenced in FMT_SMR. -->
+  <define name="roles-pat">
+	<element name="roles">
+		<oneOrMore>
+			<ref name="role-pat"/>
+		</oneOrMore>
+	</element>
+  </define>
+
   <!-- Management function roles. Should be defined in FMT_SMR -->
   <!-- But really could be anywhere -->
   <define name="role-pat">
@@ -2033,7 +2044,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			<ref name="role-name-attr"/>
 			<attribute name="display-name"/>
 			<attribute name="short"/>
-			<text/>
+			<ref name="description"/>
 		</element>
   </define>
 

@@ -773,12 +773,24 @@ The following sections list Common Criteria and technology terms used in this do
        less than or equal to <xsl:value-of select="@lte"/>
   </xsl:template>
 
+<xsl:template match="cc:roles">
+    <dl>
+      <xsl:for-each select="cc:role">
+        <dt class="role defined" id="{@name}"><xsl:value-of select="@name"/> (<xsl:value-of select="@display-name"/>): </dt>
+        <dd>
+          <xsl:apply-templates select="cc:description"/>
+        </dd>
+      </xsl:for-each>
+    </dl>
+</xsl:template>
+
 
 <!-- Display this roles contruct -->
+<!--
 <xsl:template match="cc:role">
 	<b><xsl:value-of select="@display-name"/> (<span class="role defined" id="{@name}"><xsl:value-of select="@name"/></span>):</b> <xsl:value-of select="."/>
 </xsl:template>
-
+-->
 
 
 <!--
