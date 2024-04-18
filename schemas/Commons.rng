@@ -1710,7 +1710,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    <define name="mgmt-func-def-pat">
 		<element name="mgmt-func-def">
 			<ref name="mf-name-attr"/>
-			<optional><ref name "depends-pat"/></optional>
+			<optional><ref name="depends-pat"/></optional>
 			<element name="text">
 				<ref name="basic-content-pat"/>
 			</element>
