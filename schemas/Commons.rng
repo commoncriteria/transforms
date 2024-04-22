@@ -1699,7 +1699,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="mf-name-attr">
     <attribute name="name">
       <data type="string">
-        <param name="pattern">MF\.[_A-Z0-9]+</param>
+        <param name="pattern">M\.[_A-Z0-9]+</param>
       </data>
     </attribute>
   </define>
