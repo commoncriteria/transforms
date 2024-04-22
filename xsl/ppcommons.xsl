@@ -795,7 +795,7 @@ The following sections list Common Criteria and technology terms used in this do
 		<b>[selection:</b><br/><ul>
 			<xsl:for-each select="cc:mgmt-func-def">
 				<li class="mgmt-func defined" id="{@name}"><i><xsl:value-of select="@name"/>: 
-				<xsl:apply-templates select="cc:text"/></li>
+				<xsl:apply-templates select="cc:text"/></i></li>
 		</xsl:for-each></ul><br/><b>]</b>
 	</xsl:when>
 	
