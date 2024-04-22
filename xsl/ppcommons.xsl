@@ -790,20 +790,20 @@ The following sections list Common Criteria and technology terms used in this do
 	<!-- Sill need to handle mixed list of selections and bullets -->
 	<!-- And straight up bulleted list -->
 	
-	<!-- Audit events as list of selections -->
+	<!-- Management functions as list of selections -->
 	<xsl:when test="@display-in='selectable-list'">
 		<b>[selection:</b><br/><ul>
 			<xsl:for-each select="cc:mgmt-func-def">
 				<li><i>
-					<xsl:if test="@name">
-						<div class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: </div>
-					</xsl:if>
 					<xsl:apply-templates select="cc:text"/>
+					<xsl:if test="@name">
+						<span class="mgmt-func defined" id="{@name}">(<xsl:value-of select="@name"/>)</span>
+					</xsl:if>
 				</i></li>
 		</xsl:for-each></ul><br/><b>]</b>
 	</xsl:when>
 	
-	<!-- Display audit events in a table -->
+	<!-- Display management functions in a table -->
 	<xsl:when test="@display-in='table'">
 		<dl>
 			<xsl:for-each select="cc:mgmt-func-def">
