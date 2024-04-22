@@ -809,7 +809,7 @@ The following sections list Common Criteria and technology terms used in this do
 			<xsl:for-each select="cc:mgmt-func-def">
 				<dt><xsl:if test="@name">
 					<div class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: 
-				</xsl:if> </dt>
+				</xsl:if></dt>
 				<dd><xsl:apply-templates select="cc:text"/></dd>
 			</xsl:for-each>
 		</dl>
