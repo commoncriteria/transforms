@@ -794,8 +794,12 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='selectable-list'">
 		<b>[selection:</b><br/><ul>
 			<xsl:for-each select="cc:mgmt-func-def">
-				<li class="mgmt-func defined" id="{@name}"><i><xsl:value-of select="@name"/>: 
-				<xsl:apply-templates select="cc:text"/></i></li>
+				<li><i>
+					<xsl:if test="@name">
+						<div class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: </div>
+					</xsl:if>
+					<xsl:apply-templates select="cc:text"/>
+				</i></li>
 		</xsl:for-each></ul><br/><b>]</b>
 	</xsl:when>
 	
@@ -803,7 +807,9 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='table'">
 		<dl>
 			<xsl:for-each select="cc:mgmt-func-def">
-				<dt class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: </dt>
+				<dt><xsl:if test="@name">
+					<div class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: 
+				<xsl:if> </dt>
 				<dd><xsl:apply-templates select="cc:text"/></dd>
 			</xsl:for-each>
 		</dl>
