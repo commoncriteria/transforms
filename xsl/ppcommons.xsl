@@ -785,15 +785,31 @@ The following sections list Common Criteria and technology terms used in this do
 </xsl:template>
 
 <xsl:template match="cc:mgmt-func-list">
-    <dl>
-      <xsl:for-each select="cc:mgmt-func-def">
-        <dt class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: </dt>
-        <dd>
-          <xsl:apply-templates select="cc:text"/>
-        </dd>
-		<!-- Ignoring dependencies and EAs for now -->
-      </xsl:for-each>
-    </dl>
+	<xsl:choose>
+	
+	<!-- Sill need to handle mixed list of selections and bullets -->
+	<!-- And straight up bulleted list -->
+	
+	<!-- Audit events as list of selections -->
+	<xsl:when test="@display-in='selectable-list'">
+		<b>[selection:</b><br/><ul>
+			<xsl:for-each select="cc:mgmt-func-def">
+				<li class="mgmt-func defined" id="{@name}"><i><xsl:value-of select="@name"/>: 
+				<xsl:apply-templates select="cc:text"/></li>
+		</xsl:for-each></ul><br/><b>]</b>
+	</xsl:when>
+	
+	<!-- Display audit events in a table -->
+	<xsl:when test="@display-in='table'">
+		<dl>
+			<xsl:for-each select="cc:mgmt-func-def">
+				<dt class="mgmt-func defined" id="{@name}"><xsl:value-of select="@name"/>: </dt>
+				<dd><xsl:apply-templates select="cc:text"/></dd>
+			</xsl:for-each>
+		</dl>
+	</xsl:when>
+	</xsl:choose>
+	
 </xsl:template>
 
 
