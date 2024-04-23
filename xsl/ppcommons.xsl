@@ -791,6 +791,28 @@ The following sections list Common Criteria and technology terms used in this do
 	<!-- And straight up bulleted list -->
 
 	<!-- Management functions as bulleted list -->
+	<xsl:when test="@display-in='hybrid-list'">
+		<ul>
+			<xsl:for-each select="cc:mgmt-func-def">
+				<xsl:if test="(@display-as='first-selection')">
+					<b>[selection:</b><br/>
+				</xsl:if>
+				<li><i>
+					<xsl:apply-templates select="cc:text"/>
+					<xsl:if test="@name">
+						<span class="mgmt-func defined" id="{@name}"> (<xsl:value-of select="@name"/>)</span>
+					</xsl:if>
+				</i></li>
+				<xsl:if test="(@display-as='last-selection')">
+					<b>]</b><br/>
+				</xsl:if>
+			</xsl:for-each>
+		</ul><br/>
+		
+	</xsl:when>
+
+
+	<!-- Management functions as bulleted list -->
 	<xsl:when test="@display-in='bulleted-list'">
 		<ul>
 			<xsl:for-each select="cc:mgmt-func-def">

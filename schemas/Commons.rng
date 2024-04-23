@@ -1693,8 +1693,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			<choice>
 				<value>table</value>
 				<value>selectable-list</value>
-				<value>bulleted-list></value>
-				<value>hybrid-list></value>
+				<value>bulleted-list</value>
+				<value>hybrid-list</value>
 			</choice>
 		<oneOrMore>
 			<ref name="mgmt-func-def-pat"/>
@@ -1724,6 +1724,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<choice>
 					<value>exclusive</value>
 					<value>open</value>
+				</choice>
+			</attribute></optional>
+			<optional><attribute name="display-as">
+				<choice>
+					<value>first-selection</value>
+					<value>last-selection</value>
 				</choice>
 			</attribute></optional>
 			<optional><ref name="depends-pat"/></optional>
