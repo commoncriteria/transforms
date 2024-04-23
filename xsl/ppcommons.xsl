@@ -789,6 +789,21 @@ The following sections list Common Criteria and technology terms used in this do
 	
 	<!-- Sill need to handle mixed list of selections and bullets -->
 	<!-- And straight up bulleted list -->
+
+	<!-- Management functions as bulleted list -->
+	<xsl:when test="@display-in='bulleted-list'">
+		<ul>
+			<xsl:for-each select="cc:mgmt-func-def">
+				<li><i>
+					<xsl:apply-templates select="cc:text"/>
+					<xsl:if test="@name">
+						<span class="mgmt-func defined" id="{@name}"> (<xsl:value-of select="@name"/>)</span>
+					</xsl:if>
+				</i></li>
+			</xsl:for-each>
+		</ul><br/>
+	</xsl:when>
+
 	
 	<!-- Management functions as list of selections -->
 	<xsl:when test="@display-in='selectable-list'">
@@ -797,7 +812,7 @@ The following sections list Common Criteria and technology terms used in this do
 				<li><i>
 					<xsl:apply-templates select="cc:text"/>
 					<xsl:if test="@name">
-						<span class="mgmt-func defined" id="{@name}">(<xsl:value-of select="@name"/>)</span>
+						<span class="mgmt-func defined" id="{@name}"> (<xsl:value-of select="@name"/>)</span>
 					</xsl:if>
 				</i></li>
 		</xsl:for-each></ul><br/><b>]</b>

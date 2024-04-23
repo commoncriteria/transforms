@@ -1694,6 +1694,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>table</value>
 				<value>selectable-list</value>
 				<value>bulleted-list></value>
+				<value>hybrid-list></value>
 			</choice>
 		<oneOrMore>
 			<ref name="mgmt-func-def-pat"/>
