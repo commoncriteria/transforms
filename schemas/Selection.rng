@@ -88,12 +88,22 @@
         A grouping of selectable elements.
       </a:documentation>
       <optional>
-        <attribute name="onlyone">
-          <a:documentation>
-            Designates that at only one item may be selected.
-          </a:documentation>
-          <choice><value>yes</value></choice>
-        </attribute>
+		<choice>
+			<attribute name="onlyone">
+			  <a:documentation>
+				Designates that only one item may be selected.
+			  </a:documentation>
+			  <choice><value>yes</value></choice>
+			</attribute>
+
+			<attribute name="only-one">
+			  <choice><value>yes</value></choice>
+			</attribute>
+
+			<attribute name="choose-one-of">
+			  <choice><value>yes</value></choice>
+			</attribute>
+		</choice>
       </optional>
       <choice>
 	<ref name="selectables_classic_content"/>
