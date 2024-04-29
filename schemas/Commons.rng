@@ -1738,11 +1738,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			<element name="text">
 				<ref name="basic-content-pat"/>
 			</element>
-			<optional>
-				<element name="mf-app-note">
+			<zeroOrMore>
+				<element name="app-note">
+					<ref name="alsos"/>
 					<ref name="basic-content-pat"/>
 				</element>
-			</optional>
+			</zeroOrMore>
 			<optional>
 				<ref name="aactivity"/>
 			</optional>
