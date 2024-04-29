@@ -1720,6 +1720,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <!--     open: an open assignmane for additional management functions (an abomination) -->
    <define name="mgmt-func-def-pat">
 		<element name="mgmt-func-def">
+			<ref name="id-attr"/>
 			<optional><ref name="mf-name-attr"/></optional>
 			<optional><attribute name="type">
 				<choice>
