@@ -849,12 +849,17 @@ The following sections list Common Criteria and technology terms used in this do
 					<div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/>: 
 				</xsl:if> </dt>
 				<dd>
-					<xsl:if test="./cc:depends/cc:optional">
-						Optional
-					</xsl:if>
-					<xsl:if test="./cc:depends=''">
-						Mandatory
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="./cc:depends/cc:optional">
+							Optional
+						</xsl:when>
+						<xsl:when test="cc:depends/@*">
+							Depends on something
+						</xsl:when>
+						<xsl:otherwise>
+							Mandatory
+						</xsl:otherwise>
+					</xsl:choose>
 				</dd>
 				<dd><xsl:apply-templates select="cc:text"/></dd>
 			</xsl:for-each>
