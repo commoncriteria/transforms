@@ -1743,9 +1743,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 					<ref name="basic-content-pat"/>
 				</element>
 			</optional>
-			<optional><element name="aactivity">
-				<ref name="basic-content-pat"/>
-			</element></optional>
+			<optional>
+				<ref name="aactivity"/>
+			</optional>
 		</element>
    </define>
 
