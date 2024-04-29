@@ -1695,6 +1695,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>selectable-list</value>
 				<value>bulleted-list</value>
 				<value>hybrid-list</value>
+				<value>basic</value>
+				<value>not</value>
 			</choice>
 		</attribute>
 		<oneOrMore>

@@ -790,6 +790,7 @@ The following sections list Common Criteria and technology terms used in this do
 	<!-- Sill need to handle mixed list of selections and bullets -->
 	<!-- And straight up bulleted list -->
 
+
 	<!-- Management functions as bulleted list -->
 	<xsl:when test="@display-in='hybrid-list'">
 		<ul>
@@ -847,6 +848,14 @@ The following sections list Common Criteria and technology terms used in this do
 				<dt><xsl:if test="@name">
 					<div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/>: 
 				</xsl:if> </dt>
+				<dd>
+					<xsl:if test="./depends/optional">
+						<p>Optional</p>
+					</xsl:if>
+					<xsl:if test="./depends=''">
+						<p>Mandatory</p>
+					</xsl:if>
+				</dd>
 				<dd><xsl:apply-templates select="cc:text"/></dd>
 			</xsl:for-each>
 		</dl>
