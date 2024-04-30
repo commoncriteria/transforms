@@ -853,10 +853,10 @@ The following sections list Common Criteria and technology terms used in this do
 						<xsl:when test="./cc:depends">
 							Implemented:
 							<xsl:for-each select="./cc:depends">
-								<xsl:if test="./optional">
-									at the option of the ST-Author
+								<xsl:if test="./cc:optional">
+									at the option of the ST Author
 								</xsl:if>
-								<xsl:if test=".[@*]">
+								<xsl:if test="./@*">
 									<xsl:call-template name="depends-explainer">
 										<xsl:with-param name="words" select="'if'"/>
 									</xsl:call-template>
