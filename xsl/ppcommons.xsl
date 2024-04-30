@@ -851,8 +851,8 @@ The following sections list Common Criteria and technology terms used in this do
 				<dd>
 					<xsl:choose>
 						<xsl:when test="./cc:depends">
+							Implemented:
 							<xsl:for-each select="./cc:depends">
-								Implemented:
 								<xsl:if test="./optional">
 									at the option of the ST-Author
 								</xsl:if>
