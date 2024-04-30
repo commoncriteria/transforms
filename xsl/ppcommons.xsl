@@ -856,7 +856,7 @@ The following sections list Common Criteria and technology terms used in this do
 								<xsl:if test="./optional">
 									at the option of the ST-Author
 								</xsl:if>
-								<xsl:if test="./@*">
+								<xsl:if test=".[@*]">
 									<xsl:call-template name="depends-explainer">
 										<xsl:with-param name="words" select="'if'"/>
 									</xsl:call-template>
