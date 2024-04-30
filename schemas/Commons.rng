@@ -1736,7 +1736,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 					<value>last-selection</value>
 				</choice>
 			</attribute></optional>
-			<optional><ref name="depends-pat"/></optional>
+			<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
 			<element name="text">
 				<ref name="basic-content-pat"/>
 			</element>
