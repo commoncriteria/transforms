@@ -854,7 +854,10 @@ The following sections list Common Criteria and technology terms used in this do
 							Optional
 						</xsl:when>
 						<xsl:when test="cc:depends/@*">
-							Depends on something
+							<!-- This should probably be in a loop -->
+							<xsl:call-template name="depends-explainer">
+								<xsl:with-param name="words" select="'To be implemented if'"/>
+							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 							Mandatory
