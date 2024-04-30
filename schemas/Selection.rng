@@ -95,11 +95,6 @@
 			  </a:documentation>
 			  <choice><value>yes</value></choice>
 			</attribute>
-
-			<attribute name="only-one">
-			  <choice><value>yes</value></choice>
-			</attribute>
-
 			<attribute name="choose-one-of">
 			  <choice><value>yes</value></choice>
 			</attribute>
