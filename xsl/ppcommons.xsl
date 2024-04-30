@@ -850,14 +850,18 @@ The following sections list Common Criteria and technology terms used in this do
 				</xsl:if> </dt>
 				<dd>
 					<xsl:choose>
-						<xsl:when test="./cc:depends/cc:optional">
-							Optional
-						</xsl:when>
-						<xsl:when test="cc:depends/@*">
-							<!-- This should probably be in a loop -->
-							<xsl:call-template name="depends-explainer">
-								<xsl:with-param name="words" select="'To be implemented if'"/>
-							</xsl:call-template>
+						<xsl:when test="./cc:depends">
+							<xsl:for-each select="./cc:depends">
+								Implemented:
+								<xsl:if test="./optional">
+									at the option of the ST-Author
+								</xsl:if>
+								<xsl:if test="./@*">
+									<xsl:call-template name="depends-explainer">
+										<xsl:with-param name="words" select="'if'"/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
 						</xsl:when>
 						<xsl:otherwise>
 							Mandatory
