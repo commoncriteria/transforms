@@ -774,7 +774,7 @@ The following sections list Common Criteria and technology terms used in this do
   </xsl:template>
 
 <!-- Display the <roles> contents -->
-<xsl:template match="cc:roles[not @display]">
+<xsl:template match="cc:roles[not(@display)]">
     <dl>
       <xsl:for-each select="cc:role">
         <dt class="role defined" id="{@name}"><xsl:value-of select="@name"/> (<xsl:value-of select="@display-name"/>): </dt>
