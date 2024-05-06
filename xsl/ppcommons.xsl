@@ -860,7 +860,7 @@ The following sections list Common Criteria and technology terms used in this do
 					<td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td> 
 
 					<!-- Management Function description -->
-					<td style="text-align:left"><xsl:value-of select="./cc:text"/></td>
+					<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
 					
 					<!-- Dependencies -->
 					<xsl:choose>
