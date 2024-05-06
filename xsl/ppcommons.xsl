@@ -865,6 +865,14 @@ The following sections list Common Criteria and technology terms used in this do
 					<!-- Dependencies -->
 					<xsl:choose>
 						<xsl:when test="./cc:depends">
+							<xsl:choose>
+						
+							<!-- <depends/> -->
+							<xsl:when test="not(./@*)">
+								<td style="text-align:left">Mandatory</td>
+							</xsl:when>
+							
+							<xsl:otherwise>
 							<td style="text-align:left">
 								<xsl:for-each select="./cc:depends">
 
@@ -873,19 +881,17 @@ The following sections list Common Criteria and technology terms used in this do
 										Optional<htm:br/>
 									</xsl:if>
 
-									<!-- <depends/>  -->
-									<xsl:if test="not (./@*)">
-										Mandatory<htm:br/>
-									</xsl:if>
-
 									<!-- <depends on="something" ... />  -->
 									<xsl:if test="./@*">
+										Calling depends-explainer(<xsl:value-of select="./@*"/>)<htm:br/>
 										<xsl:call-template name="depends-explainer">
 											<xsl:with-param name="words" select="'if'"/>
 										</xsl:call-template><htm:br/>
 									</xsl:if>
 								</xsl:for-each>
 							</td>
+							</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<!-- No depends tag -->
