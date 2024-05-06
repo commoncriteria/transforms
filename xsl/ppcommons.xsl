@@ -861,12 +861,23 @@ The following sections list Common Criteria and technology terms used in this do
 
 					<!-- Management Function description -->
 					<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
-					
+
 					<!-- Dependencies -->
 					<xsl:choose>
 						<xsl:when test="./cc:depends">
-							<xsl:choose>
-						
+							<td style="text-align:left">
+								<xsl:call-template name="depends-explainer">
+									<xsl:with-param name="words" select="'if'"/>
+								</xsl:call-template>
+							</td>
+						</xsl:when>
+				
+						<xsl:otherwise>
+							<td style="text-align:left">Mandatory</td>
+						</xsl:otherwise>
+					</xsl:choose>
+
+<?ignore2					
 							<!-- <depends/> -->
 							<xsl:when test="not(./@*)">
 								<td style="text-align:left">Mandatory</td>
@@ -898,6 +909,7 @@ The following sections list Common Criteria and technology terms used in this do
 							<td style="text-align:left">Mandatory</td>
 						</xsl:otherwise>
 					</xsl:choose>
+?>	
 				</tr>
 			</xsl:for-each>
 		</table>
