@@ -860,12 +860,12 @@ The following sections list Common Criteria and technology terms used in this do
 					<td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td> 
 
 					<!-- Management Function description -->
-					<td><xsl:value-of select="./cc:text"/></td>
+					<td style="text-align:left"><xsl:value-of select="./cc:text"/></td>
 					
 					<!-- Dependencies -->
 					<xsl:choose>
 						<xsl:when test="./cc:depends">
-							<td>
+							<td style="text-align:left">
 								<xsl:for-each select="./cc:depends">
 									<xsl:if test="./cc:optional">
 										Optional<htm:br/>
@@ -879,7 +879,7 @@ The following sections list Common Criteria and technology terms used in this do
 							</td>
 						</xsl:when>
 						<xsl:otherwise>
-							<td>Mandatory</td>
+							<td style="text-align:left">Mandatory</td>
 						</xsl:otherwise>
 					</xsl:choose>
 				</tr>
