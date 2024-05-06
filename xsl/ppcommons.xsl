@@ -1230,8 +1230,6 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template name="depends-explainer">
     <xsl:param name="words" select="'The following content should be included if:'"/>
 
-	<p>In depends-explainer</p>
-
     <xsl:choose>
       <!-- When it depends on a choice -->
       <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
@@ -1247,13 +1245,9 @@ The following sections list Common Criteria and technology terms used in this do
       <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
       <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
 	  
-	  <p>depends-explainer::not self</p>
-	  
       <ul> <xsl:for-each select="cc:depends"><li>
         <xsl:variable name="uid" select="@*[1]"/>
-		
-		<p>depends-explainer(<xsl:value-of select="@*[1]"/></p>
-		
+	
 			<xsl:choose>
 			<xsl:when test="cc:external-doc">
 				<xsl:variable name="ref" select="cc:external-doc/@ref"/>
