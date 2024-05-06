@@ -1234,6 +1234,9 @@ The following sections list Common Criteria and technology terms used in this do
       <!--If we're not looking at a row. Not sure where @hide comes from -->
       <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
       <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
+	  
+	  <p>depends-explainer::not self</p>
+	  
       <ul> <xsl:for-each select="cc:depends"><li>
         <xsl:variable name="uid" select="@*[1]"/>
 		
