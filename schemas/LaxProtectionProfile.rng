@@ -62,7 +62,7 @@
       <choice>
 	<ref name="cc-terms"/>
 	<ref name="tech-terms"/>
-	<ref name="usecases"/>
+	<ref name="usecases-pat"/>
 	<element name="if-opt-app">
           <a:documentation>
 	    Content that only appears if the optional appendices exist.

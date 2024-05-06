@@ -810,6 +810,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="rules"/>
 	<ref name="comment"/>
 	<ref name="implements-pat"/>
+	<ref name="usecases-pat"/>
 	<ref name="roles-pat"/>
       </choice>
     </oneOrMore>
@@ -866,7 +867,7 @@ Grouping for Security Objective for the Operation Environment entries.
   </define>
 
 
-  <define name="usecases">
+  <define name="usecases-pat">
     <element name="usecases">
       <a:documentation>
         Wrapper element for uses cases.
