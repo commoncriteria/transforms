@@ -2103,9 +2103,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 <!-- Can be defined in Introduction or in FMT_SMR, but should at least be refrenced in FMT_SMR. -->
   <define name="roles-pat">
 	<element name="roles">
-		<optional><attribute name="display">
-			<value>no</value>
-		</attribute></optional>
 		<oneOrMore>
 			<ref name="role-pat"/>
 		</oneOrMore>
