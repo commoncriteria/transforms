@@ -867,9 +867,18 @@ The following sections list Common Criteria and technology terms used in this do
 						<xsl:when test="./cc:depends">
 							<td style="text-align:left">
 								<xsl:for-each select="./cc:depends">
+
+									<!-- <depends><optional/></depends>  -->
 									<xsl:if test="./cc:optional">
 										Optional<htm:br/>
 									</xsl:if>
+
+									<!-- <depends/>  -->
+									<xsl:if test="not (./@*)">
+										Mandatory<htm:br/>
+									</xsl:if>
+
+									<!-- <depends on="something" ... />  -->
 									<xsl:if test="./@*">
 										<xsl:call-template name="depends-explainer">
 											<xsl:with-param name="words" select="'if'"/>
@@ -879,6 +888,7 @@ The following sections list Common Criteria and technology terms used in this do
 							</td>
 						</xsl:when>
 						<xsl:otherwise>
+							<!-- No depends tag -->
 							<td style="text-align:left">Mandatory</td>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -1212,37 +1222,48 @@ The following sections list Common Criteria and technology terms used in this do
             <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
          </xsl:for-each>
       </xsl:when>
+	  
       <!--If we're not looking at a row. Not sure where @hide comes from -->
       <!-- <xsl:when test="cc:depends[not(@hide)] and not(self::htm:tr)"><xsl:value-of select="$words"/> -->
       <xsl:when test="not(self::htm:tr)"><xsl:value-of select="$words"/>
       <ul> <xsl:for-each select="cc:depends"><li>
         <xsl:variable name="uid" select="@*[1]"/>
-         <xsl:choose>
-	   <xsl:when test="cc:external-doc">
-	     <xsl:variable name="ref" select="cc:external-doc/@ref"/>
-	     <xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
+		
+		<p>depends-explainer(<xsl:value-of select="@*[1]"/></p>
+		
+			<xsl:choose>
+			<xsl:when test="cc:external-doc">
+				<xsl:variable name="ref" select="cc:external-doc/@ref"/>
+				<xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
 
-             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
-             </xsl:for-each>
-             is selected from 
-             <xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
-	   </xsl:when><xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
-             <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
-             </xsl:for-each>
-             is selected from 
-             <xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
-           </xsl:when> <xsl:when test="//cc:selectable[@id=$uid]">For 
-             <xsl:for-each select="@*">
-               <xsl:if test="position()!=1">/</xsl:if>
-             <xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
-             </xsl:for-each> TOEs
-         </xsl:when><xsl:otherwise>
-           the TOE implements 
-           <xsl:for-each select="@*">
-             <xsl:if test="position()!=1">, </xsl:if>
-             "<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
-           </xsl:for-each>
-         </xsl:otherwise></xsl:choose>
+				<xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
+				</xsl:for-each>
+				is selected from 
+				<xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
+			</xsl:when>
+			
+			<xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
+				<xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
+				</xsl:for-each>
+				is selected from 
+				<xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
+           </xsl:when> 
+
+		   <xsl:when test="//cc:selectable[@id=$uid]">For 
+				<xsl:for-each select="@*">
+					<xsl:if test="position()!=1">/</xsl:if>
+					<xsl:apply-templates select="//cc:selectable[./@id=current()]"/>
+				</xsl:for-each> TOEs
+			</xsl:when>
+			
+			<xsl:otherwise>
+				the TOE implements 
+				<xsl:for-each select="@*">
+					<xsl:if test="position()!=1">, </xsl:if>
+					"<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
+				</xsl:for-each>
+			</xsl:otherwise></xsl:choose>
+			
               <!-- This is a module piece... -->
       </li></xsl:for-each> </ul>
       </xsl:when></xsl:choose>
