@@ -846,34 +846,45 @@ The following sections list Common Criteria and technology terms used in this do
 	
 	<!-- Display management functions in a table -->
 	<xsl:when test="@display-in='table'">
-		<dl>
+		<table class="mfs" style="width: 100%;">
+			<tr class="header">
+				<td>ID</td>
+				<td>Management Function</td>
+				<td>Dependencies</td>
+			</tr>
+			
 			<xsl:for-each select="cc:mgmt-func-def">
-				<dt><xsl:if test="@name">
-					<div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/>: 
-				</xsl:if> </dt>
-				<dd>
+				<tr>
+
+					<!-- Manaqgement Funciton Name/ID -->
+					<td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td> 
+
+					<!-- Management Function description -->
+					<td><xsl:value-of select="./cc:text"/></td>
+					
+					<!-- Dependencies -->
 					<xsl:choose>
 						<xsl:when test="./cc:depends">
-							Implemented:
-							<xsl:for-each select="./cc:depends">
-								<xsl:if test="./cc:optional">
-									at the option of the ST Author
-								</xsl:if>
-								<xsl:if test="./@*">
-									<xsl:call-template name="depends-explainer">
-										<xsl:with-param name="words" select="'if'"/>
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
+							<td>
+								<xsl:for-each select="./cc:depends">
+									<xsl:if test="./cc:optional">
+										Optional<htm:br/>
+									</xsl:if>
+									<xsl:if test="./@*">
+										<xsl:call-template name="depends-explainer">
+											<xsl:with-param name="words" select="'if'"/>
+										</xsl:call-template><htm:br/>
+									</xsl:if>
+								</xsl:for-each>
+							</td>
 						</xsl:when>
 						<xsl:otherwise>
-							Mandatory
+							<td>Mandatory</td>
 						</xsl:otherwise>
 					</xsl:choose>
-				</dd>
-				<dd><xsl:apply-templates select="cc:text"/></dd>
+				</tr>
 			</xsl:for-each>
-		</dl>
+		</table>
 	</xsl:when>
 	</xsl:choose>
 	
