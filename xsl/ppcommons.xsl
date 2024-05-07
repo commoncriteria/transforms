@@ -856,7 +856,7 @@ The following sections list Common Criteria and technology terms used in this do
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
 
-					<!-- Manaqgement Function Name/ID -->
+					<!-- Manaqgement Functon Name/ID -->
 					<td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td> 
 
 					<!-- Management Function description -->
@@ -1237,7 +1237,7 @@ The following sections list Common Criteria and technology terms used in this do
 			</xsl:when>
 			
 			<!-- Empty depends tag: mandatory -->
-			<xsl:when test="$uid=''">
+			<xsl:when test="not(@*) and not(cc:optional) and not(cc:objective)">
 				Mandatory
 			</xsl:when>
 			
