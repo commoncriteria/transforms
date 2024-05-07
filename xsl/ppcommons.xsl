@@ -873,7 +873,7 @@ The following sections list Common Criteria and technology terms used in this do
 						</xsl:when>
 				
 						<xsl:otherwise>
-							<td style="text-align:left">Mandatory</td>
+							<td style="text-align:left"><ul><li>Mandatory</li></ul></td>
 						</xsl:otherwise>
 					</xsl:choose>
 				</tr>
