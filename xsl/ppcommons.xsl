@@ -1232,6 +1232,7 @@ The following sections list Common Criteria and technology terms used in this do
 
     <xsl:choose>
       <!-- When it depends on a choice -->
+	  <!-- Platform? -->
       <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
          <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
          <xsl:for-each select="cc:depends/@*">
@@ -1258,7 +1259,23 @@ The following sections list Common Criteria and technology terms used in this do
 				is selected from 
 				<xsl:apply-templates select="document($path)//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/> from  <xsl:apply-templates select="//*[@id=$ref]" mode="make_xref"/> 
 			</xsl:when>
+
+			<!-- <depends><optional/></depends> -->
+			<xsl:when test="cc:optional">
+				Optional
+			</xsl:when>
+
+			<!-- <depends><optional/></depends> -->
+			<xsl:when test="cc:objective">
+				Objective
+			</xsl:when>
 			
+			<!-- Empty depends tag: mandatory -->
+			<xsl:when test="$uid=''">
+				Mandatory
+			</xsl:when>
+			
+			<!-- selection -->
 			<xsl:when test="//cc:f-element//cc:selectable/@id=$uid">
 				<xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><xsl:apply-templates select="//cc:selectable[@id=current()]" mode="make_xref"/>
 				</xsl:for-each>
@@ -1266,6 +1283,7 @@ The following sections list Common Criteria and technology terms used in this do
 				<xsl:apply-templates select="//cc:f-element[.//cc:selectable/@id=$uid]" mode="getId"/>
            </xsl:when> 
 
+			<!-- selection -->
 		   <xsl:when test="//cc:selectable[@id=$uid]">For 
 				<xsl:for-each select="@*">
 					<xsl:if test="position()!=1">/</xsl:if>
@@ -1273,13 +1291,34 @@ The following sections list Common Criteria and technology terms used in this do
 				</xsl:for-each> TOEs
 			</xsl:when>
 			
-			<xsl:otherwise>
-				the TOE implements 
+			<!-- feature -->
+			<xsl:when test="//cc:feature[@id=$uid]">
+				The TOE implements the feature:
 				<xsl:for-each select="@*">
 					<xsl:if test="position()!=1">, </xsl:if>
-					"<xsl:value-of select="//cc:feature[@id=current()]/@title"/>"
+					<xsl:value-of select="//cc:feature[@id=current()]/@title"/>
 				</xsl:for-each>
-			</xsl:otherwise></xsl:choose>
+			</xsl:when>
+
+			<!-- use case -->
+			<xsl:when test="//cc:usecase[@id=$uid]">
+				The TOE implements the use case:
+				<xsl:for-each select="@*">
+					<xsl:if test="position()!=1">, </xsl:if>
+					<xsl:value-of select="//cc:usecase[@id=current()]/@title"/>
+				</xsl:for-each>
+			</xsl:when>
+
+			<!-- SFR -->
+			<xsl:otherwise>
+				The ST claims the SFR:
+				<xsl:for-each select="@*">
+					<xsl:if test="position()!=1">, </xsl:if>
+					<xsl:apply-templates select="//cc:f-component[.//cc:selectable/@id=$uid]" mode="getId"/>
+				</xsl:for-each>
+			</xsl:otherwise>
+			
+			</xsl:choose>
 			
               <!-- This is a module piece... -->
       </li></xsl:for-each> </ul>
