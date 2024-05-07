@@ -856,7 +856,7 @@ The following sections list Common Criteria and technology terms used in this do
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
 
-					<!-- Manaqgement Funciton Name/ID -->
+					<!-- Manaqgement Function Name/ID -->
 					<td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td> 
 
 					<!-- Management Function description -->
@@ -867,7 +867,7 @@ The following sections list Common Criteria and technology terms used in this do
 						<xsl:when test="./cc:depends">
 							<td style="text-align:left">
 								<xsl:call-template name="depends-explainer">
-									<xsl:with-param name="words" select="'if'"/>
+									<xsl:with-param name="words" select="''"/>
 								</xsl:call-template>
 							</td>
 						</xsl:when>
@@ -876,40 +876,6 @@ The following sections list Common Criteria and technology terms used in this do
 							<td style="text-align:left">Mandatory</td>
 						</xsl:otherwise>
 					</xsl:choose>
-
-<?ignore2					
-							<!-- <depends/> -->
-							<xsl:when test="not(./@*)">
-								<td style="text-align:left">Mandatory</td>
-							</xsl:when>
-							
-							<xsl:otherwise>
-							<td style="text-align:left">
-								<xsl:for-each select="./cc:depends">
-
-									<!-- <depends><optional/></depends>  -->
-									<xsl:if test="./cc:optional">
-										Optional<htm:br/>
-									</xsl:if>
-
-									<!-- <depends on="something" ... />  -->
-									<xsl:if test="./@*">
-										Calling depends-explainer(<xsl:value-of select="./@*"/>)<htm:br/>
-										<xsl:call-template name="depends-explainer">
-											<xsl:with-param name="words" select="'if'"/>
-										</xsl:call-template><htm:br/>
-									</xsl:if>
-								</xsl:for-each>
-							</td>
-							</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<!-- No depends tag -->
-							<td style="text-align:left">Mandatory</td>
-						</xsl:otherwise>
-					</xsl:choose>
-?>	
 				</tr>
 			</xsl:for-each>
 		</table>
@@ -1314,7 +1280,7 @@ The following sections list Common Criteria and technology terms used in this do
 				The ST claims the SFR:
 				<xsl:for-each select="@*">
 					<xsl:if test="position()!=1">, </xsl:if>
-					<xsl:apply-templates select="//cc:f-component[.//cc:selectable/@id=$uid]" mode="getId"/>
+					<xsl:apply-templates select="//cc:f-component[@id=$uid]" mode="getId"/>
 				</xsl:for-each>
 			</xsl:otherwise>
 			
