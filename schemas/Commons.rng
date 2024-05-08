@@ -1723,8 +1723,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <!--     open: an open assignmane for additional management functions (an abomination) -->
    <define name="mgmt-func-def-pat">
 		<element name="mgmt-func-def">
-			<ref name="id-attr"/>
-			<optional><ref name="mf-name-attr"/></optional>
+			<choice>
+				<ref name="id-attr"/>
+				<ref name="mf-name-attr"/>
+			</choice>
 			<optional><attribute name="type">
 				<choice>
 					<value>exclusive</value>
@@ -1754,6 +1756,8 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
    </define>
 
 
+
+  <!-- The old way -->
   <define name="management-function-set">
     <element name="management-function-set">
       <a:documentation>
@@ -2060,16 +2064,19 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </optional>
   </define>
 
+
+
   <define name="use-cases-pat">
     <zeroOrMore>
       <element name="use-case">
-        <ref name="id-attr"/>
+		<ref name="id-attr"/>
         <ref name="title-attr"/>
         <ref name="description"/>
         <optional><ref name="config"/></optional>
       </element>
     </zeroOrMore>
   </define>
+
   
   <define name="config">
     <element name="config">
