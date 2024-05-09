@@ -97,6 +97,31 @@
   </xsl:template> 
 
   
+<!-- Moved from pp2html -->  
+  <xsl:template name="underscore_breaker" mode="underscore_breaker" match="@*">
+    <xsl:param name="valu" select="."/>
+    <xsl:if test="string-length($valu) > 0">
+      <xsl:variable name="before" select="substring-before($valu, '_')"/>
+      <xsl:variable name="after"  select="substring-after($valu, '_')"/>
+      <xsl:choose><xsl:when test="string-length($before)+string-length($after) = 0">
+	<xsl:value-of select="$valu"/>
+      </xsl:when><xsl:otherwise>
+      <xsl:value-of select="substring-before($valu,'_')"/>_&#8203;<!--
+      --><xsl:call-template name="underscore_breaker"><xsl:with-param name="valu" select="substring-after($valu,'_')"/></xsl:call-template>
+      </xsl:otherwise></xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+
+  <!-- ############### -->
+  <!-- Moved from pp2html                -->
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP|cc:role|cc:mgmt-func-def" mode="get-representation">
+      <xsl:value-of select="@name"/>
+   </xsl:template>
+
+  
+  
+  
   <!-- ############### -->
   <!-- ############### -->
   <xsl:template name="f-comp-activities">
