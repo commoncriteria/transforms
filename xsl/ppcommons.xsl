@@ -848,21 +848,24 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='table'">
 		<table class="mfs" style="width: 100%;">
 			<tr class="header">
-				<tr><td>ID</td></tr>
-				<tr><td>Management Function</td>
-				    <td>Dependencies</td>
-					<td>Roles</td></tr>
-				<tr><td>App Note</td></tr>
+				<td>ID</td>
+				<td>Management Function</td>
+				<td>Dependencies</td>
+				<td>Roles</td>
+	<!--			<tr><td>App Note</td></tr>  -->
 			</tr>
 			
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
 
 					<!-- Manaqgement Functon Name/ID -->
-					<tr><td><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/></td></tr>
+					<td><xsl:call-template name="underscore_breaker">
+							<xsl:with-param name="valu"><div class="mgmt-func defined" id="{@name}"/><xsl:value-of select="@name"/>
+							</xsl:with-param></xsl:call-template>
+					</td>
 
 					<!-- Management Function description -->
-					<tr><td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
+					<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
 
 					<!-- Dependencies -->
 					<xsl:choose>
@@ -880,9 +883,9 @@ The following sections list Common Criteria and technology terms used in this do
 					</xsl:choose>
 					
 					<!-- Roles/Mappings -->
-					<td>Role/Mappings go here</td></tr>
+					<td>Role/Mappings go here</td>
 				</tr>
-				<tr><td>App Note goes here</td></tr>
+<!--				<tr><td>App Note goes here</td></tr>   -->
 			</xsl:for-each>
 		</table>
 	</xsl:when>
