@@ -861,8 +861,10 @@ The following sections list Common Criteria and technology terms used in this do
 					<!-- Manaqgement Functon Name/ID -->
 					<td><div class="mgmt-func defined" id="{@name}"/>
 						<xsl:call-template name="underscore_breaker">
-							<xsl:with-param name="valu"><xsl:value-of select="@name"/>
-							</xsl:with-param></xsl:call-template>
+							<xsl:with-param name="valu">
+								<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>
+					<!--		<xsl:value-of select="@name"/>   -->
+						</xsl:call-template>
 					</td>
 
 					<!-- Management Function description -->

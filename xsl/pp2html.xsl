@@ -299,7 +299,7 @@
 
   <!-- ############### -->
   <!--                 -->
-   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+   <xsl:template match="cc:threat|cc:assumption|cc:OSP|cc:role|cc:mgmt-func-def" mode="get-representation">
       <xsl:value-of select="@name"/>
    </xsl:template>
 

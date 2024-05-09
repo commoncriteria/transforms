@@ -54,7 +54,7 @@
           <xsl:call-template name="genPath"/>
        </xsl:message>
     </xsl:for-each>
-    <xsl:for-each select="//cc:title//cc:depends[not(parent::htm:tr)]|//cc:note//cc:depends">
+    <xsl:for-each select="//cc:title//cc:depends[not(parent::htm:tr) and not(parent::cc:mgmt-func-def)]|//cc:note//cc:depends">
        <xsl:message>* Warning: Potentially illegal 'depends' element.
           <xsl:call-template name="genPath"/>
        </xsl:message>
