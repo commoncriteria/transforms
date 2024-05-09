@@ -943,6 +943,13 @@ The following sections list Common Criteria and technology terms used in this do
           <b>Function-specific Application Notes:</b><br/><br/>
 	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
         </xsl:if>
+
+        <xsl:if test= "../cc:title/cc:mgmt-func-list//cc:app-note">
+          <br/><br/>
+          <b>Function-specific Application Notes:</b><br/><br/>
+	  <xsl:apply-templates select="../cc:title/cc:mgmt-func-list//cc:app-note"/>
+        </xsl:if>
+		
       </span>
   </xsl:template>
 
