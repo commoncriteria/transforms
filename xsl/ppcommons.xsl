@@ -859,7 +859,7 @@ The following sections list Common Criteria and technology terms used in this do
 				<tr>
 
 					<!-- Manaqgement Functon Name/ID -->
-					<td><div class="mgmt-func defined" id="{@name}"/>
+					<td>  <!-- <div class="mgmt-func defined" id="{@name}"/>  -->
 						<xsl:call-template name="underscore_breaker">
 							<xsl:with-param name="valu">
 								<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>
