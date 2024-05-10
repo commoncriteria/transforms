@@ -884,7 +884,7 @@ The following sections list Common Criteria and technology terms used in this do
 				<tr>
 
 					<!-- Manaqgement Functon Name/ID -->
-					<td rowspan="2"><div class="mgmt-func defined" id="{@name}"/>
+					<td><div class="mgmt-func defined" id="{@name}"/>
 						<xsl:call-template name="underscore_breaker">
 							<xsl:with-param name="valu" select="@name"/>
 					<!--			<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>   -->
@@ -916,12 +916,12 @@ The following sections list Common Criteria and technology terms used in this do
 					<xsl:choose>
 					<xsl:when test="./cc:app-note">
 						<tr style="border-bottom:1px solid black;">
-							<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
+							<td colspan="4" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
 						</tr> 
 					</xsl:when>
 					<xsl:otherwise>
 						<tr style="border-bottom:1px solid black;">
-							<td colspan="3" style="text-align:left"><b>Application Note: </b>None</td>
+							<td colspan="4" style="text-align:left"><b>Application Note: </b>None</td>
 						</tr>
 					</xsl:otherwise>
 					</xsl:choose>
