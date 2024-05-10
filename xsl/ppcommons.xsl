@@ -914,11 +914,11 @@ The following sections list Common Criteria and technology terms used in this do
 					<td>Role/Mappings go here</td>
 				</tr>
 				<xsl:choose>
-				<xsl:when test="./app-note">
-					<tr><td><xsl:get-value select="./app-note"/></td></tr> 
+				<xsl:when test="./cc:app-note">
+					<tr><td><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td></tr> 
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td>No AppNote</td></tr>
+					<tr><td><b>Application Note: </b>None</td></tr>
 				</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
