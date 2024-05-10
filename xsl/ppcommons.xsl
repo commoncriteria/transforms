@@ -871,7 +871,8 @@ The following sections list Common Criteria and technology terms used in this do
 	
 	<!-- Display management functions in a table -->
 	<xsl:when test="@display-in='table'">
-		<table class="mfs" style="width: 100%;">
+		<table style="width: 100%;">
+	<!--	<table class="mfs" style="width: 100%;">   -->
 			<tr class="header">
 				<td>ID</td>
 				<td>Management Function</td>
