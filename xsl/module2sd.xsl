@@ -412,7 +412,10 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
+	  <!--
 	    <li><x:apply-templates select="." mode="make_xref"/></li>
+		-->
+		<li><x:value-of select="@name"/>, version <x:value-of select="@version"/>.</li>
 	  </x:for-each>
 	</ul>
     <br/>
