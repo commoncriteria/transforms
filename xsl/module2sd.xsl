@@ -331,7 +331,7 @@ guidance, and testing.</p>
   <x:template match="sec:*|cc:section" mode="sd_sections">
     <x:if test="not(contains(@title, 'Auditable Events'))"> 
 		<x:apply-templates select="." mode="make_header">
-			<x:with-param name="level" select="'2'"/>
+			<x:with-param name="level" select="'3'"/>
 		</x:apply-templates>
 		<x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
 	</x:if>
