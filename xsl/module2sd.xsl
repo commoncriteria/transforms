@@ -252,7 +252,8 @@ guidance, and testing.</p>
 	
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-{@id}">
-	<x:apply-templates mode="expanded" select="."/>
+<!--	<x:apply-templates mode="expanded" select="."/>  -->
+	<x:value-of select="@name"/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
@@ -328,8 +329,10 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
   <x:template match="sec:*|cc:section" mode="sd_sections">
-    <x:if test="not(@title='Auditable Events for Additional SFRs')"> 
-		<x:apply-templates select="." mode="make_header"/>
+    <x:if test="not(contains(@title, 'Auditable Events'))"> 
+		<x:apply-templates select="." mode="make_header">
+			<x:with-param name="level" select="'2'"/>
+		</x:apply-templates>
 		<x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
 	</x:if>
   </x:template>
