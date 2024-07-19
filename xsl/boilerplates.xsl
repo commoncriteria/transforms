@@ -416,7 +416,7 @@ This PP-Module does not define any objectives for the OE.
 
   The third type, defined in Appendix <xsl:call-template name="ref-impl-reqs"/>, are Implementation-dependent requirements.
 	If the TOE implements the product features associated with the listed SFRs, either the SFRs must be claimed
-	or the product features must be disabled in the evaluated ocnfiguration. 
+	or the product features must be disabled in the evaluated configuration. 
   </xsl:template>
 
   <xsl:template name="imple_text">
