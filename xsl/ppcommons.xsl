@@ -884,14 +884,15 @@ The following sections list Common Criteria and technology terms used in this do
 				<tr>
 
 					<!-- Manaqgement Functon Name/ID -->
-					<td><div class="mgmt-func defined" id="{@name}"/>
+					<tr><td style="text-align:left"><div class="mgmt-func defined" id="{@name}"/>
 						<xsl:call-template name="underscore_breaker">
 							<xsl:with-param name="valu" select="@name"/>
 					<!--			<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>   -->
 					<!--		<xsl:value-of select="@name"/>   -->
 						</xsl:call-template>
-					</td>
+					</td></tr>
 
+					<tr>
 					<!-- Management Function description -->
 					<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
 
@@ -925,6 +926,7 @@ The following sections list Common Criteria and technology terms used in this do
 						</tr>
 					</xsl:otherwise>
 					</xsl:choose>
+					</tr>
 				</tr>
 			</xsl:for-each>
 		</table>
