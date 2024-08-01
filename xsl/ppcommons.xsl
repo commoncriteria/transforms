@@ -873,24 +873,27 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='table'">
 		<table style="width: 100%;">
 	<!--	<table class="mfs" style="width: 100%;">   -->
-			<tr class="header">
-				<td>ID</td>
-				<td>Management Function</td>
-				<td>Dependencies</td>
-				<td>Roles</td> 
-			</tr>
 			
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
 
 					<!-- Manaqgement Functon Name/ID -->
-					<tr><td style="text-align:left"><div class="mgmt-func defined" id="{@name}"/>
-						<xsl:call-template name="underscore_breaker">
-							<xsl:with-param name="valu" select="@name"/>
+					<tr>
+						<td style="text-align:left">ID: <div class="mgmt-func defined" id="{@name}"/>
+							<xsl:call-template name="underscore_breaker">
+								<xsl:with-param name="valu" select="@name"/>
 					<!--			<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>   -->
 					<!--		<xsl:value-of select="@name"/>   -->
-						</xsl:call-template>
-					</td></tr>
+							</xsl:call-template>
+						</td>
+					</tr>
+
+					<!-- Column headers -->
+					<tr class="header">
+						<td>Management Function</td>
+						<td>Dependencies</td>
+						<td>Roles</td> 
+					</tr>
 
 					<tr>
 					<!-- Management Function description -->
