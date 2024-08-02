@@ -932,7 +932,7 @@ The following sections list Common Criteria and technology terms used in this do
 							</tr>
 						</xsl:otherwise>
 						</xsl:choose>
-						<!-- </tr>   -->
+						<tr> <tr/>
 				</tr>
 			</xsl:for-each>
 		</table>
