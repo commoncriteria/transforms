@@ -879,7 +879,7 @@ The following sections list Common Criteria and technology terms used in this do
 
 					<!-- Manaqgement Functon Name/ID -->
 					<tr>
-						<td style="text-align:left">ID: <div class="mgmt-func defined" id="{@name}"/>
+						<td style="text-align:left"><b><div class="mgmt-func defined" id="{@name}"/></b>
 							<xsl:call-template name="underscore_breaker">
 								<xsl:with-param name="valu" select="@name"/>
 					<!--			<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>   -->
@@ -919,17 +919,18 @@ The following sections list Common Criteria and technology terms used in this do
 				<!--</tr> -->
 					<xsl:choose>
 					<xsl:when test="./cc:app-note">
-						<tr style="border-bottom:1px solid black;">
-							<td colspan="4" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
+						<tr style="border-bottom:4px solid black;">
+							<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
 						</tr> 
 					</xsl:when>
 					<xsl:otherwise>
-						<tr style="border-bottom:1px solid black;">
-							<td colspan="4" style="text-align:left"><b>Application Note: </b>None</td>
+						<tr style="border-bottom:4px solid black;">
+							<td colspan="3" style="text-align:left"><b>Application Note: </b>None</td>
 						</tr>
 					</xsl:otherwise>
 					</xsl:choose>
 					</tr>
+					<br/><br/>
 				</tr>
 			</xsl:for-each>
 		</table>
