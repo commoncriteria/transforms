@@ -923,12 +923,12 @@ The following sections list Common Criteria and technology terms used in this do
 						<xsl:choose>
 						<xsl:when test="./cc:app-note">
 							<tr style="border-bottom:4px solid black;">
-								<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/><br/><br/></td>
+								<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/><br/></td>
 							</tr> 
 						</xsl:when>
 						<xsl:otherwise>
 							<tr style="border-bottom:4px solid black;">
-								<td colspan="3" style="text-align:left"><b>Application Note: </b>None<br/><br/></td>
+								<td colspan="3" style="text-align:left"><b>Application Note: </b>None<br/></td>
 							</tr>
 						</xsl:otherwise>
 						</xsl:choose>
