@@ -916,7 +916,9 @@ The following sections list Common Criteria and technology terms used in this do
 					
 						<!-- Roles/Mappings -->
 						<td style="text-align:left">Role/Mappings go here</td>
+					</tr>
 
+					
 						<!-- App Notes -->
 						<xsl:choose>
 						<xsl:when test="./cc:app-note">
@@ -930,9 +932,9 @@ The following sections list Common Criteria and technology terms used in this do
 							</tr>
 						</xsl:otherwise>
 						</xsl:choose>
-						<br/>
-					</tr>
+						<!-- </tr>   -->
 				</tr>
+				<br/><br/>
 			</xsl:for-each>
 		</table>
 	</xsl:when>
