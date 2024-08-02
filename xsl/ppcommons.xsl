@@ -906,10 +906,9 @@ The following sections list Common Criteria and technology terms used in this do
 
 					<tr>
 						<!-- Dependencies -->
-						<b>Dependencies:</b>
 						<xsl:choose>
 							<xsl:when test="./cc:depends">
-								<td style="text-align:left">
+								<td style="text-align:left"><b>Dependencies:</b>
 									<xsl:call-template name="depends-explainer">
 										<xsl:with-param name="words" select="''"/>
 									</xsl:call-template>
@@ -917,7 +916,7 @@ The following sections list Common Criteria and technology terms used in this do
 							</xsl:when>
 				
 							<xsl:otherwise>
-								<td style="text-align:left"><ul><li>Mandatory</li></ul></td>
+								<td style="text-align:left"><ul><li>Dependencies: None (Mandatory)</li></ul></td>
 							</xsl:otherwise>
 						</xsl:choose>
 					</tr>
