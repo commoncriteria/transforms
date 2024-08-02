@@ -879,12 +879,12 @@ The following sections list Common Criteria and technology terms used in this do
 
 					<!-- Manaqgement Functon Name/ID -->
 					<tr>
-						<td style="text-align:left"><b><div class="mgmt-func defined" id="{@name}"/></b>
-							<xsl:call-template name="underscore_breaker">
+						<td style="text-align:left"><div class="mgmt-func defined" id="{@name}"/>
+							<b><xsl:call-template name="underscore_breaker">
 								<xsl:with-param name="valu" select="@name"/>
 					<!--			<xsl:apply-templates select="." mode="get-representation"/></xsl:with-param>   -->
 					<!--		<xsl:value-of select="@name"/>   -->
-							</xsl:call-template>
+							</xsl:call-template></b>
 						</td>
 					</tr>
 
@@ -896,41 +896,42 @@ The following sections list Common Criteria and technology terms used in this do
 					</tr>
 
 					<tr>
-					<!-- Management Function description -->
-					<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
+						<!-- Management Function description -->
+						<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
 
-					<!-- Dependencies -->
-					<xsl:choose>
-						<xsl:when test="./cc:depends">
-							<td style="text-align:left">
-								<xsl:call-template name="depends-explainer">
-									<xsl:with-param name="words" select="''"/>
-								</xsl:call-template>
-							</td>
-						</xsl:when>
+						<!-- Dependencies -->
+						<xsl:choose>
+							<xsl:when test="./cc:depends">
+								<td style="text-align:left">
+									<xsl:call-template name="depends-explainer">
+										<xsl:with-param name="words" select="''"/>
+									</xsl:call-template>
+								</td>
+							</xsl:when>
 				
-						<xsl:otherwise>
-							<td style="text-align:left"><ul><li>Mandatory</li></ul></td>
-						</xsl:otherwise>
-					</xsl:choose>
+							<xsl:otherwise>
+								<td style="text-align:left"><ul><li>Mandatory</li></ul></td>
+							</xsl:otherwise>
+						</xsl:choose>
 					
-					<!-- Roles/Mappings -->
-					<td style="text-align:left">Role/Mappings go here</td>
-				<!--</tr> -->
-					<xsl:choose>
-					<xsl:when test="./cc:app-note">
-						<tr style="border-bottom:4px solid black;">
-							<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
-						</tr> 
-					</xsl:when>
-					<xsl:otherwise>
-						<tr style="border-bottom:4px solid black;">
-							<td colspan="3" style="text-align:left"><b>Application Note: </b>None</td>
-						</tr>
-					</xsl:otherwise>
-					</xsl:choose>
+						<!-- Roles/Mappings -->
+						<td style="text-align:left">Role/Mappings go here</td>
+
+						<!-- App Notes -->
+						<xsl:choose>
+						<xsl:when test="./cc:app-note">
+							<tr style="border-bottom:4px solid black;">
+								<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/></td>
+							</tr> 
+						</xsl:when>
+						<xsl:otherwise>
+							<tr style="border-bottom:4px solid black;">
+								<td colspan="3" style="text-align:left"><b>Application Note: </b>None</td>
+							</tr>
+						</xsl:otherwise>
+						</xsl:choose>
+						<br/>
 					</tr>
-					<br/><br/>
 				</tr>
 			</xsl:for-each>
 		</table>
