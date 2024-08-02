@@ -891,7 +891,7 @@ The following sections list Common Criteria and technology terms used in this do
 					<!-- Column headers -->
 					<tr class="header">
 						<td>Management Function</td>
-						<td>Dependencies</td>
+						<!-- <td>Dependencies</td>  -->
 						<td>Roles</td> 
 					</tr>
 
@@ -899,7 +899,14 @@ The following sections list Common Criteria and technology terms used in this do
 						<!-- Management Function description -->
 						<td style="text-align:left"><xsl:apply-templates select="./cc:text"/></td>
 
+					
+						<!-- Roles/Mappings -->
+						<td style="text-align:left">Role/Mappings go here</td>
+					</tr>
+
+					<tr>
 						<!-- Dependencies -->
+						<b>Dependencies:</b>
 						<xsl:choose>
 							<xsl:when test="./cc:depends">
 								<td style="text-align:left">
@@ -913,9 +920,6 @@ The following sections list Common Criteria and technology terms used in this do
 								<td style="text-align:left"><ul><li>Mandatory</li></ul></td>
 							</xsl:otherwise>
 						</xsl:choose>
-					
-						<!-- Roles/Mappings -->
-						<td style="text-align:left">Role/Mappings go here</td>
 					</tr>
 
 					
@@ -923,16 +927,15 @@ The following sections list Common Criteria and technology terms used in this do
 						<xsl:choose>
 						<xsl:when test="./cc:app-note">
 							<tr style="border-bottom:4px solid black;">
-								<td colspan="3" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/><br/></td>
+								<td colspan="2" style="text-align:left"><b>Application Note: </b><xsl:apply-templates select="./cc:app-note"/><br/></td>
 							</tr> 
 						</xsl:when>
 						<xsl:otherwise>
 							<tr style="border-bottom:4px solid black;">
-								<td colspan="3" style="text-align:left"><b>Application Note: </b>None<br/></td>
+								<td colspan="2" style="text-align:left"><b>Application Note: </b>None<br/><br/></td>
 							</tr>
 						</xsl:otherwise>
 						</xsl:choose>
-						<tr> </tr>
 				</tr>
 			</xsl:for-each>
 		</table>
