@@ -872,17 +872,19 @@ The following sections list Common Criteria and technology terms used in this do
 	
 	<!-- Display management functions in a table -->
 	<xsl:when test="@display-in='table'">
+
+		<!-- If there are mof-actions, they should be defined here. -->
+		<xsl:if test="cc:mof-actions">
+			<ul>
+				<xsl:for-each select="cc:mof-action">
+					<li><xsl:value-of select="@title"/>: <xsl:value-of select="."/></li>
+				</xsl:for-each>
+			</ul>
+		</xsl:if>
+
 		<table style="width: 100%;">
 	<!--	<table class="mfs" style="width: 100%;">   -->
 	
-			<!-- If there are mof-actions, they should be defined here. -->
-			<xsl:if test="/cc:mof-actions">
-				<ul>
-					<xsl:for-each select="/cc:mof-action">
-						<li><xsl:value-of select="@title"/>: <xsl:value-of select="."/></li>
-					</xsl:for-each>
-				</ul>
-			</xsl:if>
 
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
