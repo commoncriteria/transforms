@@ -1539,6 +1539,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="basic-content-pat"/>
         <ref name="management-function-set"/>
 		<ref name="mgmt-func-list-pat"/>
+		<ref name="mof-actions"/>
       </choice></oneOrMore>
     </element>
   </define>
@@ -1755,6 +1756,25 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		</element>
    </define>
 
+
+  <!-- MOF -->
+  <define name="mof-actions">
+	<element name="mof-actions">
+		<oneOrMore>
+			<ref name="mof-action"/>
+		</oneOrMore>
+	</element>
+  </define>
+  
+  
+  <define name="mof-action">
+	<element name="mof-action">
+		<attribute name="title">
+			<data type="string"/>
+		</attribute>
+		<text/>
+	</element>
+  </define>
 
 
   <!-- The old way -->

@@ -811,6 +811,7 @@ The following sections list Common Criteria and technology terms used in this do
 </xsl:template>
 
 
+<xsl:template match="cc:mof-actions"/>
 
 <xsl:template match="cc:mgmt-func-list">
 	<xsl:choose>
@@ -873,7 +874,16 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='table'">
 		<table style="width: 100%;">
 	<!--	<table class="mfs" style="width: 100%;">   -->
-			
+	
+			<!-- If there are mof-actions, they should be defined here. -->
+			<xsl:if test="/cc:mof-actions">
+				<ul>
+					<xsl:for-each select="/cc:mof-action">
+						<li><xsl:value-of select="@title"/>: <xsl:value-of select="."/></li>
+					</xsl:for-each>
+				</ul>
+			</xsl:if>
+
 			<xsl:for-each select="cc:mgmt-func-def">
 				<tr>
 
@@ -916,7 +926,7 @@ The following sections list Common Criteria and technology terms used in this do
 							</xsl:when>
 				
 							<xsl:otherwise>
-								<td style="text-align:left"><ul><li>Dependencies: None (Mandatory)</li></ul></td>
+								<td style="text-align:left"><b>Dependencies:</b><ul><li>None (Mandatory)</li></ul></td>
 							</xsl:otherwise>
 						</xsl:choose>
 					</tr>
