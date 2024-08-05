@@ -874,9 +874,9 @@ The following sections list Common Criteria and technology terms used in this do
 	<xsl:when test="@display-in='table'">
 
 		<!-- If there are mof-actions, they should be defined here. -->
-		<xsl:if test="cc:mof-actions">
+		<xsl:if test="//cc:mof-actions">
 			<ul>
-				<xsl:for-each select="cc:mof-action">
+				<xsl:for-each select="//cc:mof-action">
 					<li><xsl:value-of select="@title"/>: <xsl:value-of select="."/></li>
 				</xsl:for-each>
 			</ul>
