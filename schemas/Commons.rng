@@ -812,7 +812,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="implements-pat"/>
 	<ref name="usecases-pat"/>
 	<ref name="roles-pat"/>
-	<ref nsme="mof-actions"/>
+	<ref name="mof-actions"/>
       </choice>
     </oneOrMore>
   </define>
