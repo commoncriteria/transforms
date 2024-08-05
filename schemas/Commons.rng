@@ -812,6 +812,7 @@ Grouping for Security Objective for the Operation Environment entries.
 	<ref name="implements-pat"/>
 	<ref name="usecases-pat"/>
 	<ref name="roles-pat"/>
+	<ref nsme="mof-actions"/>
       </choice>
     </oneOrMore>
   </define>
@@ -1539,7 +1540,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <ref name="basic-content-pat"/>
         <ref name="management-function-set"/>
 		<ref name="mgmt-func-list-pat"/>
-		<ref name="mof-actions"/>
       </choice></oneOrMore>
     </element>
   </define>
