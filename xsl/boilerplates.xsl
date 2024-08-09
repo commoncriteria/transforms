@@ -148,8 +148,12 @@
 <!--		<dd><xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-conf-stmt']"/></dd>  -->
 		<dt>CC Conformance Claims</dt><p/>
 		<dd>This <xsl:call-template name="doctype-short"/> is conformant to 
-			Part 2 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt2-conf"/>) and
-			Part 3 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt3-conf"/>)
+			Part 2 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt2-conf"/>) 
+			
+			<xsl:if test="not (//cc:Package)">
+			and Part 3 (<xsl:value-of select="//cc:CClaimsInfo/cc:cc-pt3-conf"/>)
+			</xsl:if>
+			
 			<xsl:choose>
 			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 				of Common Criteria CC:2022, Revision 1.
