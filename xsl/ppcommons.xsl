@@ -630,6 +630,15 @@ The following sections list Common Criteria and technology terms used in this do
         </td>
     </tr>
   </xsl:template>
+  
+ 
+  <!-- Component needed IDs should not be linked since they are in another document -->
+  <xsl:template match="cc:componentid">
+    <span class="no-link">
+        <xsl:apply-templates/>
+    </span>
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--                 -->

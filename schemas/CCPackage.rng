@@ -112,6 +112,9 @@
       </choice>
 <!--      <ref name="depends-pat"/>   -->
       <optional><ref name="note"/></optional>
+      <optional><ref name="consistency-rationale"/></optional>
+      <optional><ref name="ext-comp-extra-pat"/></optional>
+      <optional><ref name="description"/></optional>	
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
       <zeroOrMore><ref name="audit-table-pat"/></zeroOrMore>
