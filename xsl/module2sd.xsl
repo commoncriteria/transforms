@@ -252,7 +252,8 @@ guidance, and testing.</p>
 	
     <x:for-each select="//cc:base-pp">
       <h2 class="indexable" data-level="1" id="aa-{@id}">
-	<x:apply-templates mode="expanded" select="."/>
+		<!-- <x:apply-templates mode="expanded" select="."/>  -->
+		<x:value-of select="@name"/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
@@ -328,8 +329,17 @@ guidance, and testing.</p>
   <!--                 -->
   <!-- ############### -->
   <x:template match="sec:*|cc:section" mode="sd_sections">
-    <x:if test="not(@title='Auditable Events for Additional SFRs')"> 
-		<x:apply-templates select="." mode="make_header"/>
+
+	<!-- Old way: use fragile template -->
+    <!-- <x:if test="not(@title='Auditable Events for Additional SFRs')"> 
+		<x:apply-templates select="." mode="make_header"/>   -->
+
+	<!-- New way: Just use attributes -->
+	<x:if test="not(contains(@title, 'Auditable Events'))"> 
+		<x:apply-templates select="." mode="make_header">
+			<x:with-param name="level" select="'3'"/>
+		</x:apply-templates>	
+		
 		<x:apply-templates select="cc:f-component[not(@status='invisible')]|cc:a-component"/>
 	</x:if>
   </x:template>
@@ -412,7 +422,11 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
-	    <li><x:apply-templates select="." mode="make_xref"/></li>
+
+		<!-- Use the attributes (which are required) rather than the weird reference -->
+		<li><x:value-of select="@name"/>, version <x:value-of select="@version"/>.</li>
+		<!-- <li><x:apply-templates select="." mode="make_xref"/></li>  -->
+
 	  </x:for-each>
 	</ul>
     <br/>
