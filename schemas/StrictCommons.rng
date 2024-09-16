@@ -28,7 +28,7 @@
       <interleave>
         <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
         <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
-		<optional><element name="using-cc2022"><empty/></element></optional>
+<!--		<optional><element name="using-cc2022"><empty/></element></optional>   -->
       </interleave>
     </element>
   </define> 

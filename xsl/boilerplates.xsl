@@ -14,7 +14,7 @@
 
   <xsl:template match="/cc:*[@boilerplate='yes']//*[@title='Implicitly Satisfied Requirements']|/cc:*[@boilerplate='yes']//sec:Implicitly_Satisfied_Requirements" mode="hook">
 	<xsl:choose>
-		<xsl:when test="//cc:using-cc2022|//cc:CClaimsInfo[@cc-version='cc-2022r1']">
+		<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 			<p>This appendix lists requirements that should be considered satisfied by products
 			successfully evaluated against this <xsl:call-template name="doctype-short"/>. These requirements are not featured
 			explicitly as SFRs and should not be included in the ST. They are not included as 
@@ -254,7 +254,7 @@
  <!-- ############## -->
    <xsl:template  name="verrev">
 		<xsl:choose>
-			<xsl:when test="//cc:using-cc2022|//cc:CClaimsInfo[@cc-version='cc-2022r1']">CC:2022 Rev. 1</xsl:when>
+			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">CC:2022 Rev. 1</xsl:when>
 			<xsl:otherwise>Version 3.1, Revision 5</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
