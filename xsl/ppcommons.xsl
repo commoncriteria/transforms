@@ -292,6 +292,7 @@
        <h:br/>
   </xsl:template>
   
+  
   <!-- ############### -->
   <xsl:template match="cc:management-function/cc:app-note//cc:_">
     <xsl:apply-templates select="ancestor::cc:management-function[1]" mode="make_xref"/>        
@@ -825,7 +826,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:call-template name="handle-note-header"/>
      <span class="note">
         <xsl:apply-templates/>
-        <xsl:if test= "../cc:title/cc:management-function-set//cc:app-note">
+        <xsl:if test= "../cc:title/cc:management-function-set[not (@notes-in-table='yes')]//cc:app-note">
           <br/><br/>
           <b>Function-specific Application Notes:</b><br/><br/>
 	  <xsl:apply-templates select="../cc:title/cc:management-function-set//cc:app-note"/>
@@ -842,6 +843,12 @@ The following sections list Common Criteria and technology terms used in this do
         <td>#</td>
         <td>Management Function</td>
         <xsl:apply-templates select="./cc:manager"/>
+		
+		<!-- If notes are to be displayed in the table, we need another column -->
+		<xsl:if test="@notes-in-table='yes'">
+			<td>Application Notes</td>
+		</xsl:if>
+		
       </tr><xsl:text>&#xa;</xsl:text>
       <xsl:apply-templates select="./cc:management-function"/>
     </table>
@@ -896,38 +903,52 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:variable name="mf_num"><xsl:number count="//cc:management-function" level="any"/></xsl:variable>
     <xsl:variable name="mf_id"><xsl:apply-templates select="." mode="getId"/></xsl:variable>
     <tr id="{$mf_id}">
-      <td><xsl:value-of select="concat(ancestor::cc:management-function-set/@ctr-prefix,$mf_num)"/></td>
-      <td style="text-align:left">
-        <xsl:apply-templates select="cc:text"/>
-      </td>
-	<xsl:variable name="manfunc" select="."/>
-	<xsl:for-each select="../cc:manager">
-	  <xsl:variable name="id" select="@cid"/>
-	  <td>
-	    <xsl:choose>
-	      <!-- If we have something for that role -->
-	      <xsl:when test="$manfunc/*[@ref=$id]">
-		<xsl:choose>
-		  <!-- And it is explicit, put it in there -->
-		  <xsl:when test="$manfunc/*[@ref=$id]/node()">
-		    <xsl:apply-templates select="$manfunc/*[@ref=$id]/."/>
-		  </xsl:when>
-		  <xsl:otherwise>
-		    <xsl:call-template name="make-management-value">
-		      <xsl:with-param name="type"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>
-		    </xsl:call-template>
-		  </xsl:otherwise>
-		</xsl:choose>
-	      </xsl:when>
-	      <xsl:otherwise>
-		<xsl:call-template name="make-management-value">
-		  <xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
-		</xsl:call-template>
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </td>
-	</xsl:for-each>
-    </tr><xsl:text>&#xa;</xsl:text>
+		<td><xsl:value-of select="concat(ancestor::cc:management-function-set/@ctr-prefix,$mf_num)"/></td>
+		<td style="text-align:left">
+			<xsl:apply-templates select="cc:text"/>
+		</td>
+		<xsl:variable name="manfunc" select="."/>
+		<xsl:for-each select="../cc:manager">
+			<xsl:variable name="id" select="@cid"/>
+			<td>
+				<xsl:choose>
+					<!-- If we have something for that role -->
+					<xsl:when test="$manfunc/*[@ref=$id]">
+						<xsl:call-template name="make-management-value">
+							<xsl:with-param name="type"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>
+						</xsl:call-template>
+
+<!--
+						The schema allows only for <depends> tags here, so I don't know what 
+						this is all about. 
+						
+						<xsl:choose>
+							<xsl:when test="$manfunc/*[@ref=$id]/node()">
+								<xsl:apply-templates select="$manfunc/*[@ref=$id]/."/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="make-management-value">
+									<xsl:with-param name="type"><xsl:value-of select="name($manfunc/*[@ref=$id])"/></xsl:with-param>
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
+-->					
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="make-management-value">
+							<xsl:with-param name="type"><xsl:value-of select='../@default'/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+		</xsl:for-each>
+		<xsl:if test="//cc:management-function-set[@notes-in-table='yes'] and cc:app-note">
+			<td style="text-align:left">
+				<xsl:apply-templates select="cc:app-note"/>
+			</td>
+		</xsl:if>
+	</tr><xsl:text>&#xa;</xsl:text>
   </xsl:template>
 
 
@@ -937,9 +958,10 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template name="make-management-value">
     <xsl:param name="type"/>
     <xsl:choose>
-      <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional</span></div></xsl:when>
+      <xsl:when test="$type='O'"><div>O<span class="tooltiptext">Optional/Conditional</span></div></xsl:when>
       <xsl:when test="$type='M'"><div>M<span class="tooltiptext">Mandatory</span></div></xsl:when>
       <xsl:when test="$type='NA'"><div>-<span class="tooltiptext">N/A</span></div></xsl:when>
+      <xsl:when test="$type='X'"><div>X<span class="tooltiptext">Not permitted</span></div></xsl:when>
       <xsl:otherwise><xsl:message>DONTKNOWWHATIT IS:<xsl:value-of select="$type"/></xsl:message></xsl:otherwise>
     </xsl:choose>
   </xsl:template>

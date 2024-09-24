@@ -1698,6 +1698,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <value>_</value>
         </choice>
       </attribute>
+	  <optional><attribute name="notes-in-table">
+		<choice><value>no</value><value>yes</value></choice>
+		</attribute></optional>	  
       <optional><attribute name="ctr-prefix"/></optional>
       <oneOrMore>
         <element name="manager">
@@ -1727,6 +1730,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <optional>
             <ref name="id-attr"/>
           </optional>
+ 		  <zeroOrMore><ref name="depends-pat"/></zeroOrMore>
           <element name="text">
             <a:documentation>Describes the management function.</a:documentation>
             <ref name="basic-content-pat"/>
@@ -1739,11 +1743,16 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
               <element name="O">
                 <a:documentation>Indicates that this function is optional for this role</a:documentation>
                 <ref name="ref-attr"/>
+				<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
               </element>
               <element name="NA">
                <a:documentation>Indicates that this function is not applicable for this role</a:documentation>
                 <ref name="ref-attr"/>
               </element>
+              <element name="X">
+               <a:documentation>Indicates that this function is not permitted for this role</a:documentation>
+                <ref name="ref-attr"/>
+              </element>  
           </choice> </zeroOrMore>
           <zeroOrMore><element name="app-note">
             <a:documentation>Application Note content that is associated with this management function</a:documentation> 
