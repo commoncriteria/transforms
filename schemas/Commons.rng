@@ -819,7 +819,12 @@ Grouping for Security Objective for the Operation Environment entries.
       <optional><attribute name="id"/></optional>
       <optional><attribute name="style"/></optional>
       <optional><attribute name="class"/></optional>
-      <text/>
+		<oneOrMore>
+			<choice>
+				<text/>
+		        <ref name="html-element"/>
+			</choice>
+		</oneOrMore>
     </element>
   </define>
   
