@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns:sec="https://niap-ccevs.org/cc/v1/section" 
+    xmlns:h="http://www.w3.org/1999/xhtml" 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    ns="https://niap-ccevs.org/cc/v1" 
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  
+    <a:documentation>
+      This file defines the reformed Evaluation Activities structure.
+    </a:documentation>
+
+
+
+<define name="eactivity-pat">
+	<a:documentation>
+		Replaces the old aactivity construct. May apply to a component, element, or management function.
+			id attr is required.
+			ea-objective: descripion of objective of ea
+			ea-applies-to-ext: Ref to external component, element or mf that this EA applies to.(optional)
+			ea-depends: Ref to another EA that this EA depends on (optional)
+			ea-None or ea-body
+	</a:documentation>
+
+	<element name="eactivity">
+		<ref name="id-attr"/>
+		<ref name="ea-objective-pat"/>
+		<optional><ref name="ea-applies-to-ext-pat"/></optional>
+		<zeroOrMore>
+			<ref name="ea-depends-pat"/>
+		</zeroOrMore>
+		<choice>
+			<ref name="ea-None-pat"/>
+			<ref name="ea-body-pat"/>
+		</choice>
+		<optional><ref name="ea-rationale"/></optional>
+	</element>
+</define>		
+			
+
+<define name="ea-objective-pat"/>
+	<a:documentation>
+		CC:2022 says, "The objective of performing the evaluation activity shall be stated."
+	</a:documentation>
+	<element name="ea-objective">
+		<oneOrMore>
+			<choice>
+				<text/>
+		        <ref name="html-element"/>
+			</choice>
+		</oneOrMore>
+	</element>
+</define>
+
+
+<define name="ea-applies-to-ext-pat">
+	<a:documentation>
+		If the EA applies to SFRs or SARs in another document, the relationship should be specified here. 
+		So, this would generally be used only in Evaluation Methods documents or maybe catalogs.
+	</a:documentation>
+	<element name="ea-applies-to-ext">
+		<oneOrMore>
+			<ref name="external-ref-pat"/>
+		</oneOrMore>
+	</element>
+</define>
+
+
+<define name="ea-depends-pat">
+	<element name="ea-depends">
+        <a:documentation>
+            Indicates that the parent eactivity depends on some other eactivity.
+        </a:documentation>
+		<ref name="any-attributes"/>
+		<optional>
+			<element name="external-doc">
+				<a:documentation>
+					Referenced EAs must be in this doc.
+				</a:documentation>
+				<attribute name="ref">
+					<a:documentation>Points to the id of the external document</a:documentation>
+				</attribute>
+			</element>
+		</optional>
+	</element>
+</define>
+
+
+<define name="ea-None-pat">
+	<a:documentation>
+		Output custom message or boilerplate that there are no EAs for this SFR. 
+	</a:documentation>
+	<!-- element -->
+</define>
+
+<define name="ea-body-pat">
+	<a:documentation>
+		The meat of an EA. 
+	</a:documentation>
+</define>
+
+<define name="ea-rationale">
+	<a:documentation>
+		CC:2022 requires a rationale.
+	</a:documentation>
+	<!-- element -->
+</define>
+
+
+
+<!-- 
+ 
+        <choice>
+             <ea-None>Statement that there are no EAs for this component/element/management function.</ea-None>
+             <group>
+                 <ea-TSS>Information about this SFR that isn't already required by a SAR or something</ea-TSS>
+                 <ea-KMD>(optional)Information abut key management. This part of the TSS, but is usually not public</ea-KMD>
+                 <ea-Guidance>aka AGD. Guidance about this SFR that is already not required by a SAR or something.</ea-Guidance> 
+                 <ea-Tests>
+                     <ea-Tests-objective>(optional)
+                     <ea-test>
+                        <test-objective>(optional--but should be here or above)
+                        <ea-input>(format and content of inputs)
+                        <ea-tools>(tools needed)(optional)
+                        <ea-competencies>(optional)
+                        <ea-test-setup>(i necessary)
+                        <ea-steps>
+                        <ea-criteria>(for pass-fail)
+                        <ea-reporting>Content and Format of test evidence</ea-reporting>
+                     </ea-test>
+                     <ea-criteria>(for pass-fail)(optional at this level)
+                 </ea-Tests>
+             </group>
+        </choice>
+      </eactivity>
+-->
+  
+  
+<define name="test-obj-evi-pat">
+    <optional> <element name="test-obj">
+       <a:documentation>Describes the goal of the test </a:documentation>
+       <ref name="basic-content-pat"/>
+    </element> </optional>
+    <optional> <element name="evidence">
+       <a:documentation>Describes what body of evidence should look like from the lab.</a:documentation>
+       <ref name="basic-content-pat"/>
+    </element> </optional>
+  </define>
+
+  <define name="testlist">
+    <element name="testlist">
+      <a:documentation>
+        Defines a lists of tests to evaluate a requirement.
+      </a:documentation>
+      <oneOrMore>
+        <choice>
+          <ref name="basic-content-pat"/>
+          <element name="test">
+            <a:documentation>
+              Denotes a single test.
+            </a:documentation>
+	    <optional><ref name="id-attr"/></optional>
+	    <optional><element name="applies-if">
+	      <ref name="and-pat"/>
+	    </element></optional>
+             <oneOrMore>
+              <choice>
+                <ref name="basic-content-pat"/>
+                <ref name="testlist"/>
+                <ref name="steplist"/>
+              </choice>
+            </oneOrMore>
+            <ref name="test-obj-evi-pat"/>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="steplist">
+    <element name="steplist">
+      <a:documentation>
+        Defines a list of steps to perform a test.
+      </a:documentation>
+      <oneOrMore>
+        <choice>
+          <ref name="basic-content-pat"/>
+          <element name="step">
+            <a:documentation>
+              Denotes a single step.
+            </a:documentation>
+            <oneOrMore>
+              <choice>
+                <ref name="basic-content-pat"/>
+                <ref name="steplist"/>
+              </choice>
+            </oneOrMore>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  
+  <define name="aactivity">
+    <element name="aactivity">
+      <a:documentation>
+Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
+The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
+      </a:documentation>
+	<optional><attribute name="level">
+	  <a:documentation>aactivity elements without a level attribute are treated as component level activities.</a:documentation>
+	  <choice>
+	    <value>component</value>
+	    <value>element</value>
+	</choice></attribute></optional>
+	<ref name="alsos"/>
+      <ref name="basic-content-pat"/>
+      <choice>
+        <ref name="no-tests-pat"/>
+        <group>
+          <ref name="TSS"/>
+          <optional> <ref name="Guidance"/> </optional>
+          <optional> <ref name="KMD"/> </optional>
+          <optional> <ref name="Tests"/> </optional>
+        </group>
+        <group>
+          <ref name="Guidance"/>
+          <optional> <ref name="KMD"/> </optional>
+          <optional> <ref name="Tests"/> </optional>
+        </group>
+        <group>
+          <ref name="KMD"/>
+          <optional> <ref name="Tests"/> </optional>
+        </group>
+        <group>
+            <ref name="Tests"/>
+        </group>
+      </choice>
+    </element>
+  </define>
+
+  <define name="no-tests-pat">
+     <element name="no-tests">
+	<a:documentation>
+		Empty evaluation activity. The tag contents can be displayed.
+        </a:documentation>
+        <ref name="basic-content-pat"/>
+     </element>
+  </define>
+<!--	
+  <define name="aactivity-sar">
+      <element name="aactivity-sar">
+        <a:documentation>
+            Evaluation Activity for a SAR.
+        </a:documentation>
+        <ref name="basic-content-pat"/>
+      </element> 
+    </define>
+-->
+  <define name="TSS">
+    <element name="TSS">
+      <a:documentation>
+        Denotes a TSS section.
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+  <define name="KMD">
+    <element name="KMD">
+      <a:documentation>
+        Denotes a KMD section.
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+  <define name="Guidance">
+    <element name="Guidance">
+      <a:documentation>
+        Denotes a Guidance section.
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+	
+  <define name="Tests">
+    <element name="Tests">
+      <a:documentation>
+        Denotes a tests section.
+      </a:documentation>
+      <ref name="basic-content-pat"/>
+      <zeroOrMore><ref name="subaactivity"/></zeroOrMore>
+      <ref name="test-obj-evi-pat"/>
+      <ref name="basic-content-pat"/>
+    </element>
+  </define>
+  <define name="subaactivity">
+    <element name="subaactivity">
+      <optional><attribute name="ref"/></optional>
+      <ref name="basic-content-pat"/>
+   </element>
+  </define>
+
+	
+</grammar>
