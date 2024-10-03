@@ -16,20 +16,19 @@
 <define name="eactivity-pat">
 	<a:documentation>
 		Replaces the old aactivity construct. May apply to a component, element, or management function.
-			id attr is required.
+			id attr is required. (e.g. "ea-fcs-cop-1-skc-aes-cbc" "ea-mf-radio-control")
+			ea-applies-to: Ref to internal or external component, element, mf, or table row that this 
+				EA applies to.(optional). Mandatory for table rows and for external.
 			ea-objective: descripion of objective of ea
-			ea-applies-to-ext: Ref to external component, element or mf that this EA applies to.(optional)
-			ea-depends: Ref to another EA that this EA depends on (optional)
+			ea-dependency: Ref to other EAs that this EA depends on (optional)
 			ea-None or ea-body
 	</a:documentation>
 
 	<element name="eactivity">
 		<ref name="id-attr"/>
+		<zeroOrMore><ref name="ea-applies-to-pat"/></zeroOrMore>
 		<ref name="ea-objective-pat"/>
-		<optional><ref name="ea-applies-to-ext-pat"/></optional>
-		<zeroOrMore>
-			<ref name="ea-depends-pat"/>
-		</zeroOrMore>
+		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
 		<choice>
 			<ref name="ea-None-pat"/>
 			<ref name="ea-body-pat"/>
@@ -37,6 +36,19 @@
 		<optional><ref name="ea-rationale"/></optional>
 	</element>
 </define>		
+
+
+<define name="ea-applies-to-pat">
+	<a:documentation>
+		Use this tag to specify the entity that the EA applies to. Not needed if the EA is embedded.
+		Required for table rows and for Evaluation Methods or Catalog-style documents where the EAs 
+		appliy to entities in other documents.
+	</a:documentation>
+	<element name="ea-applies-to">
+		<ref name="ref-id"/>
+		<optional><ref name="external-ref-pat"/></optional>
+	</element>
+</define>
 			
 
 <define name="ea-objective-pat"/>
@@ -44,45 +56,18 @@
 		CC:2022 says, "The objective of performing the evaluation activity shall be stated."
 	</a:documentation>
 	<element name="ea-objective">
-		<oneOrMore>
-			<choice>
-				<text/>
-		        <ref name="html-element"/>
-			</choice>
-		</oneOrMore>
+		<ref name="words"/>
 	</element>
 </define>
 
 
-<define name="ea-applies-to-ext-pat">
-	<a:documentation>
-		If the EA applies to SFRs or SARs in another document, the relationship should be specified here. 
-		So, this would generally be used only in Evaluation Methods documents or maybe catalogs.
-	</a:documentation>
-	<element name="ea-applies-to-ext">
-		<oneOrMore>
-			<ref name="external-ref-pat"/>
-		</oneOrMore>
-	</element>
-</define>
-
-
-<define name="ea-depends-pat">
-	<element name="ea-depends">
+<define name="ea-dependency-pat">
+	<element name="ea-dependency">
         <a:documentation>
-            Indicates that the parent eactivity depends on some other eactivity.
+            Indicates that the eactivity depends on some other eactivity.
         </a:documentation>
-		<ref name="any-attributes"/>
-		<optional>
-			<element name="external-doc">
-				<a:documentation>
-					Referenced EAs must be in this doc.
-				</a:documentation>
-				<attribute name="ref">
-					<a:documentation>Points to the id of the external document</a:documentation>
-				</attribute>
-			</element>
-		</optional>
+		<ref name="ref-id"/>
+		<optional><ref name="external-document-pat"/></optional>
 	</element>
 </define>
 
@@ -91,34 +76,154 @@
 	<a:documentation>
 		Output custom message or boilerplate that there are no EAs for this SFR. 
 	</a:documentation>
-	<!-- element -->
+	<element name="ea-None">
+		<choice>
+			<empty/>
+			<ref name="words"/>
+		</choice>
+    </element>
 </define>
 
 <define name="ea-body-pat">
 	<a:documentation>
-		The meat of an EA. 
+		The meat of an EA.
+		TSS, Guidance, and Tests sections are mandatory, although may be empty.
+		KMD is optional, but also may be empty.
 	</a:documentation>
+	<ref name="ea-TSS"/>
+	<optional><ref name="ea-KMD"/></optional>
+	<ref name="ea-Guidance"/>
+	<ref name="ea-Tests"/>
 </define>
 
-<define name="ea-rationale">
+<define name="ea-TSS">
 	<a:documentation>
-		CC:2022 requires a rationale.
+		TSS section is mandatory, although may be empty.
 	</a:documentation>
-	<!-- element -->
+	<element name="ea-TSS">
+		<choice>
+			<empty/>
+			<ref name="words"/>
+		</choice>
+	</element>
+</define>
+
+
+<define name="ea-KMD">
+	<a:documentation>
+		KMD section is optional, and may be empty.
+	</a:documentation>
+	<element name="ea-KMD">
+		<choice>
+			<empty/>
+			<ref name="words"/>
+		</choice>
+	</element>
+</define>
+
+
+<define name="ea-Guidance">
+	<a:documentation>
+		Guidance section is mandatory, although may be empty.
+	</a:documentation>
+	<element name="ea-Guidance">
+		<choice>
+			<empty/>
+			<ref name="words"/>
+		</choice>
+	</element>
+</define>
+
+<define name="ea-Tests">
+	<a:documentation>
+		Test section is mandatory, although may be empty.
+	</a:documentation>
+	<element name="ea-Tests">
+		<choice>
+			<empty/>
+			<ref name="ea-Tests-pat"/>
+		</choice>
+	</element>
+</define>
+
+
+<define name="ea-Tests-pat">
+	<a:documentation>
+		Tests. Allow any combination of single tests and test lists.
+	</a:documentation>
+	<optional><ref name="ea-objective-pat"/></optional>
+	<oneOrMore>
+		<choice>
+			<ref name="ea-test-list-pat"/>
+			<ref name="ea-test-pat"/>
+		</choice>
+	</oneOrMore>
+	<optional><ref name="ea-criteria"></optional>
+</define>
+
+
+<define name="ea-test-list-pat">
+	<a:documentation>
+		List of tests. Id is optional. Probably need to do something about numbering.
+	</a:documentation>
+	<element name="ea-testlist">
+		<oneOrMore><ref name="ea-test-pat"/></oneOrMore>
+	</element>
+</define>
+
+<define name="ea-test-pat">
+	<a:documentation>
+		Individual tests. May have an id. 
+		Objective is optional.
+		A test is one or more steps that produce a result that can be compared againt
+		criteria to determine whether the criteria are met. That's why there are no
+		criteria for test lists. Each test in a test list must have criteria.
+	</a:documentation>
+	<element name="ea-test">
+		<optional><ref name="id-attr"/></optional>
+		
+		<!-- Objective of the test. Probably shouldn't be optional. -->
+		<optional><ref name="ea-objective-pat"/></optional>
+
+        <!-- Tools/competencies needed for the test. These could be at the Test level -->
+		<optional><ref name="ea-tools-pat"/></optional>
+        <optional><ref name="ea-competencies-pat"/></optional>
+
+		<!-- Format and content for inputs for this test -->
+        <ref name="ea-input-pat"/>
+
+		<!-- Setup. Probably should be mandatory -->
+        <ref name="ea-setup-pat"/>
+
+		<!-- Series of steps, or just some text -->
+		<choice>
+			<ref name="ea-steps-pat"/>
+			<ref name="ea-test-text"/>
+		</choice>
+
+		<!-- Pass/fail criteria -->
+        <ref name="ea-criteria-pat"/>  
+
+		<!-- Content and format for evidence -->
+        <ref name="ea-reporting-pat"/>    
+</define>
+
+
+<define name="ea-reporting-pat">
+	<a:documentation>
+		Content and format for evidence.
+		Probably needs more structure than this.
+	</a:documentation>
+	<element name="ea-reporting">
+		<words/>
+	</element>
 </define>
 
 
 
 <!-- 
  
-        <choice>
-             <ea-None>Statement that there are no EAs for this component/element/management function.</ea-None>
-             <group>
-                 <ea-TSS>Information about this SFR that isn't already required by a SAR or something</ea-TSS>
-                 <ea-KMD>(optional)Information abut key management. This part of the TSS, but is usually not public</ea-KMD>
-                 <ea-Guidance>aka AGD. Guidance about this SFR that is already not required by a SAR or something.</ea-Guidance> 
                  <ea-Tests>
-                     <ea-Tests-objective>(optional)
                      <ea-test>
                         <test-objective>(optional--but should be here or above)
                         <ea-input>(format and content of inputs)
@@ -131,11 +236,31 @@
                      </ea-test>
                      <ea-criteria>(for pass-fail)(optional at this level)
                  </ea-Tests>
-             </group>
-        </choice>
-      </eactivity>
 -->
   
+
+
+<define name="ea-rationale">
+	<a:documentation>
+		CC:2022 requires a rationale.
+	</a:documentation>
+	<element name="ea-rationale">
+		<ref name="words"/>
+	</element>
+</define>
+
+<define name="words">
+	<oneOrMore>
+		<choice>
+			<text/>
+	        <ref name="html-element"/>
+			<ref name="xref"/>
+		</choice>
+	</oneOrMore>
+</define>
+
+
+<!----- ------->
   
 <define name="test-obj-evi-pat">
     <optional> <element name="test-obj">
@@ -241,24 +366,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
-  <define name="no-tests-pat">
-     <element name="no-tests">
-	<a:documentation>
-		Empty evaluation activity. The tag contents can be displayed.
-        </a:documentation>
-        <ref name="basic-content-pat"/>
-     </element>
-  </define>
-<!--	
-  <define name="aactivity-sar">
-      <element name="aactivity-sar">
-        <a:documentation>
-            Evaluation Activity for a SAR.
-        </a:documentation>
-        <ref name="basic-content-pat"/>
-      </element> 
-    </define>
--->
+ 
   <define name="TSS">
     <element name="TSS">
       <a:documentation>
@@ -267,6 +375,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="basic-content-pat"/>
     </element>
   </define>
+  
   <define name="KMD">
     <element name="KMD">
       <a:documentation>
