@@ -103,7 +103,7 @@
 	<element name="ea-TSS">
 		<choice>
 			<empty/>
-			<ref name="words"/>
+			<ref name="basic-content-pat"/>
 		</choice>
 	</element>
 </define>
@@ -116,7 +116,7 @@
 	<element name="ea-KMD">
 		<choice>
 			<empty/>
-			<ref name="words"/>
+			<ref name="basic-content-pat"/>
 		</choice>
 	</element>
 </define>
@@ -129,7 +129,7 @@
 	<element name="ea-Guidance">
 		<choice>
 			<empty/>
-			<ref name="words"/>
+			<ref name="basic-content-pat"/>
 		</choice>
 	</element>
 </define>
@@ -152,21 +152,27 @@
 		Tests. Allow any combination of single tests and test lists.
 	</a:documentation>
 	<optional><ref name="ea-objective-pat"/></optional>
-	<oneOrMore>
-		<choice>
-			<ref name="ea-test-list-pat"/>
-			<ref name="ea-test-pat"/>
-		</choice>
-	</oneOrMore>
-	<optional><ref name="ea-criteria"></optional>
+	<optional><ref name="ea-tools-pat"/></optional>
+    <optional><ref name="ea-competencies-pat"/></optional>
+	<choice>
+		<ref name="ea-testlist-pat"/>
+		<ref name="ea-test-pat"/>
+	</choice>
+	<optional>
+		<ref name="ea-criteria-pat"/>
+		<ref name="ea-reporting-pat"/>
+	</optional>
 </define>
 
 
-<define name="ea-test-list-pat">
+<define name="ea-testlist-pat">
 	<a:documentation>
 		List of tests. Id is optional. Probably need to do something about numbering.
 	</a:documentation>
 	<element name="ea-testlist">
+		<optional><ref name="ea-objective-pat"/></optional>
+		<optional><ref name="ea-tools-pat"/></optional>
+        <optional><ref name="ea-competencies-pat"/></optional>
 		<oneOrMore><ref name="ea-test-pat"/></oneOrMore>
 	</element>
 </define>
@@ -182,23 +188,23 @@
 	<element name="ea-test">
 		<optional><ref name="id-attr"/></optional>
 		
-		<!-- Objective of the test. Probably shouldn't be optional. -->
-		<optional><ref name="ea-objective-pat"/></optional>
+		<!-- Objective of the test. -->
+		<ref name="ea-objective-pat"/>
 
-        <!-- Tools/competencies needed for the test. These could be at the Test level -->
+        <!-- Tools/competencies needed for the test. These could also be at the Tests level -->
 		<optional><ref name="ea-tools-pat"/></optional>
         <optional><ref name="ea-competencies-pat"/></optional>
-
-		<!-- Format and content for inputs for this test -->
-        <ref name="ea-input-pat"/>
 
 		<!-- Setup. Probably should be mandatory -->
         <ref name="ea-setup-pat"/>
 
+ 		<!-- Format and content for inputs for this test -->
+        <ref name="ea-input-pat"/>
+
 		<!-- Series of steps, or just some text -->
 		<choice>
 			<ref name="ea-steps-pat"/>
-			<ref name="ea-test-text"/>
+			<ref name="ea-test-spec-pat"/>
 		</choice>
 
 		<!-- Pass/fail criteria -->
@@ -207,6 +213,31 @@
 		<!-- Content and format for evidence -->
         <ref name="ea-reporting-pat"/>    
 </define>
+
+<define name="ea-test-spec-pat">
+	<a:documentation>
+		Test language for a single step.
+		Someday maybe this can be in a real test spec language someday.
+	</a:documentation>
+	<element name="ea-test-spec">
+		<optional><ref name="id-attr"/></optional>
+<!-- optional prev and next attributes ref - used only by steplist -->
+
+		<ref name="basic-content-pat"/>
+	</element>
+</define>
+
+<define name="ea-test-steps-pat">
+	<a:documentation>
+		A numbered list of steps.
+		Maybe a step should have an optional id and optional refs for prev and next.
+		That way we could continue numbering from the previous steplist.
+		Maybe this should be on the ea-test-spec.
+	</a:documentation>
+			
+
+</define>
+
 
 
 <define name="ea-reporting-pat">
@@ -220,24 +251,6 @@
 </define>
 
 
-
-<!-- 
- 
-                 <ea-Tests>
-                     <ea-test>
-                        <test-objective>(optional--but should be here or above)
-                        <ea-input>(format and content of inputs)
-                        <ea-tools>(tools needed)(optional)
-                        <ea-competencies>(optional)
-                        <ea-test-setup>(i necessary)
-                        <ea-steps>
-                        <ea-criteria>(for pass-fail)
-                        <ea-reporting>Content and Format of test evidence</ea-reporting>
-                     </ea-test>
-                     <ea-criteria>(for pass-fail)(optional at this level)
-                 </ea-Tests>
--->
-  
 
 
 <define name="ea-rationale">
@@ -262,16 +275,6 @@
 
 <!----- ------->
   
-<define name="test-obj-evi-pat">
-    <optional> <element name="test-obj">
-       <a:documentation>Describes the goal of the test </a:documentation>
-       <ref name="basic-content-pat"/>
-    </element> </optional>
-    <optional> <element name="evidence">
-       <a:documentation>Describes what body of evidence should look like from the lab.</a:documentation>
-       <ref name="basic-content-pat"/>
-    </element> </optional>
-  </define>
 
   <define name="testlist">
     <element name="testlist">
@@ -328,44 +331,7 @@
   </define>
 
   
-  <define name="aactivity">
-    <element name="aactivity">
-      <a:documentation>
-Element containing an Assurance Activity. TSS, Guidance, and Tests tags MUST now encapsulate (rather than precede) their content. 
-The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
-      </a:documentation>
-	<optional><attribute name="level">
-	  <a:documentation>aactivity elements without a level attribute are treated as component level activities.</a:documentation>
-	  <choice>
-	    <value>component</value>
-	    <value>element</value>
-	</choice></attribute></optional>
-	<ref name="alsos"/>
-      <ref name="basic-content-pat"/>
-      <choice>
-        <ref name="no-tests-pat"/>
-        <group>
-          <ref name="TSS"/>
-          <optional> <ref name="Guidance"/> </optional>
-          <optional> <ref name="KMD"/> </optional>
-          <optional> <ref name="Tests"/> </optional>
-        </group>
-        <group>
-          <ref name="Guidance"/>
-          <optional> <ref name="KMD"/> </optional>
-          <optional> <ref name="Tests"/> </optional>
-        </group>
-        <group>
-          <ref name="KMD"/>
-          <optional> <ref name="Tests"/> </optional>
-        </group>
-        <group>
-            <ref name="Tests"/>
-        </group>
-      </choice>
-    </element>
-  </define>
-
+ 
  
   <define name="TSS">
     <element name="TSS">
