@@ -217,27 +217,39 @@
 <define name="ea-test-spec-pat">
 	<a:documentation>
 		Test language for a single step.
-		Someday maybe this can be in a real test spec language someday.
+		Someday maybe this can be in a real test spec language.
 	</a:documentation>
 	<element name="ea-test-spec">
 		<optional><ref name="id-attr"/></optional>
-<!-- optional prev and next attributes ref - used only by steplist -->
-
+		<optional><attribute name="prev-step">
+			<a:documentation>
+				Ref to previous test step. Intended for steps separated by other words.
+			</a:documentation>
+		</attribute></optional>	
+		<optional><attribute name="next-step">
+			<a:documentation>
+				Ref to next test step. Intended for steps separated by other words that 
+				should have continuous numbering.
+			</a:documentation>
+		</attribute></optional>	
+		<!-- Words of the test step. Someday maybe in a test spec language -->
 		<ref name="basic-content-pat"/>
 	</element>
 </define>
 
+
 <define name="ea-test-steps-pat">
 	<a:documentation>
 		A numbered list of steps.
-		Maybe a step should have an optional id and optional refs for prev and next.
-		That way we could continue numbering from the previous steplist.
-		Maybe this should be on the ea-test-spec.
 	</a:documentation>
-			
-
+	<optional><ref name="basic-content-pat"/></optional>
+    <oneOrMore>
+        <choice>
+            <ref name="ea-test-spec-pat"/>
+            <ref name="ea-test-steps-pat"/>
+        </choice>
+    </oneOrMore>
 </define>
-
 
 
 <define name="ea-reporting-pat">
@@ -249,8 +261,6 @@
 		<words/>
 	</element>
 </define>
-
-
 
 
 <define name="ea-rationale">
@@ -276,35 +286,7 @@
 <!----- ------->
   
 
-  <define name="testlist">
-    <element name="testlist">
-      <a:documentation>
-        Defines a lists of tests to evaluate a requirement.
-      </a:documentation>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <element name="test">
-            <a:documentation>
-              Denotes a single test.
-            </a:documentation>
-	    <optional><ref name="id-attr"/></optional>
-	    <optional><element name="applies-if">
-	      <ref name="and-pat"/>
-	    </element></optional>
-             <oneOrMore>
-              <choice>
-                <ref name="basic-content-pat"/>
-                <ref name="testlist"/>
-                <ref name="steplist"/>
-              </choice>
-            </oneOrMore>
-            <ref name="test-obj-evi-pat"/>
-          </element>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
+  
 
   <define name="steplist">
     <element name="steplist">
@@ -328,53 +310,6 @@
         </choice>
       </oneOrMore>
     </element>
-  </define>
-
-  
- 
- 
-  <define name="TSS">
-    <element name="TSS">
-      <a:documentation>
-        Denotes a TSS section.
-      </a:documentation>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-  
-  <define name="KMD">
-    <element name="KMD">
-      <a:documentation>
-        Denotes a KMD section.
-      </a:documentation>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-  <define name="Guidance">
-    <element name="Guidance">
-      <a:documentation>
-        Denotes a Guidance section.
-      </a:documentation>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-	
-  <define name="Tests">
-    <element name="Tests">
-      <a:documentation>
-        Denotes a tests section.
-      </a:documentation>
-      <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="subaactivity"/></zeroOrMore>
-      <ref name="test-obj-evi-pat"/>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
-  <define name="subaactivity">
-    <element name="subaactivity">
-      <optional><attribute name="ref"/></optional>
-      <ref name="basic-content-pat"/>
-   </element>
   </define>
 
 	
