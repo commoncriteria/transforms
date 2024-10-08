@@ -24,6 +24,7 @@
   </define>
 -->
  <include href="Selection.rng"/>
+ <include href="EA.rng"/>
  
  <define name="project-notes">
     <optional><element name="project-notes">

@@ -19,7 +19,6 @@
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
-      <ref name="subaactivity-decl"/>
       <ref name="packages"/>
       <ref name="modules"/>
       <ref name="PreferencesEtc"/>
