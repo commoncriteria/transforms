@@ -48,18 +48,6 @@
     </attribute>
   </define>
 
- <define name="subaactivity-decl">
-   
-   <optional><element name="subaactivity-decl">
-     <oneOrMore>
-       <element name="val">
-         <ref name="id-attr"/>
-         <attribute name="full"/>
-         <text/>
-       </element>
-     </oneOrMore>
-    </element></optional>
- </define>
  
   <define name="SecProbDesChapter">
     <choice>
@@ -1007,6 +995,8 @@ Modification definition. This text goes in the
       <optional><ref name="description"/></optional>
       <ref name="f-elements-pat"/>
       <ref name="audit-events-pat"/>
+	  <optional><ref name="note"/></optional>
+	  <optional><ref name="eactivity"/></optional>
     </element>
   </define> 
 
@@ -1048,7 +1038,12 @@ Modification definition. This text goes in the
       <ref name="f-element-title"/>
 	  <optional><element name="ext-comp-def-title"><ref name="f-element-title"/></element></optional>
       <optional><ref name="note"/></optional>
-      <zeroOrMore><ref name="aactivity"/></zeroOrMore>
+	  <zeroOrMore>
+		<choice>
+			<ref name="aactivity"/>
+			<ref name="eactivity"/>
+		</choice>
+	   </zeroOrMore>
       <optional><ref name="rules"/></optional>
     </element>
   </define>
@@ -1266,16 +1261,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Denotes a tests section.
       </a:documentation>
       <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="subaactivity"/></zeroOrMore>
       <ref name="test-obj-evi-pat"/>
       <ref name="basic-content-pat"/>
     </element>
-  </define>
-  <define name="subaactivity">
-    <element name="subaactivity">
-      <optional><attribute name="ref"/></optional>
-      <ref name="basic-content-pat"/>
-   </element>
   </define>
 
   <define name="threats">
@@ -1718,7 +1706,14 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </oneOrMore>
       <oneOrMore>
         <choice> 
-          <element name="note"><element name="aactivity"><ref name="basic-content-pat"/></element></element>
+          <element name="note">
+			<choice>
+				<element name="aactivity">
+					<ref name="basic-content-pat"/>
+				</element>
+				<ref name="eactivity"/>
+			</choice>
+		  </element>
           <ref name="management-function"/>   
         </choice>
       </oneOrMore>
@@ -1760,7 +1755,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
             <ref name="basic-content-pat"/>
           </element></zeroOrMore>
 <!-- Cant use the regular aactivity unless we want it to include TSS/Tests (which we might) -->
-          <zeroOrMore><ref name="aactivity"/></zeroOrMore>
+          <zeroOrMore>
+			<choice>
+				<ref name="aactivity"/>
+				<ref name="eactivity"/>
+			</choice>
+		  </zeroOrMore>
        </element>
    </define>
 
