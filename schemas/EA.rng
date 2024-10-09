@@ -260,7 +260,7 @@
 		Probably needs more structure than this.
 	</a:documentation>
 	<element name="ea-reporting">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
@@ -270,7 +270,7 @@
 		Description of tools needed for testing.
 	</a:documentation>
 	<element name="ea-tools">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
@@ -280,7 +280,7 @@
 		Description of evaluator competencies required for testing.
 	</a:documentation>
 	<element name="ea-competencies">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
@@ -289,7 +289,7 @@
 		Description of input to the test or test step.
 	</a:documentation>
 	<element name="ea-input">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
@@ -298,7 +298,7 @@
 		Description of pass/fail criteria for test.
 	</a:documentation>
 	<element name="ea-criteria">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
@@ -309,7 +309,7 @@
 		Description of steps for setting up the test.
 	</a:documentation>
 	<element name="ea-setup">
-		<words/>
+		<ref name="words"/>
 	</element>
 </define>
 
