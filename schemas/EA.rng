@@ -46,7 +46,7 @@
 	</a:documentation>
 	<element name="ea-applies-to">
 		<ref name="ref-id"/>
-		<optional><ref name="external-doc-pat"/></optional>
+		<optional><ref name="external-document-pat"/></optional>
 	</element>
 </define>
 			
