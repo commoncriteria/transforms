@@ -203,7 +203,7 @@
 
 		<!-- Series of steps, or just some text -->
 		<choice>
-			<ref name="ea-steps-pat"/>
+			<ref name="ea-test-steps-pat"/>
 			<ref name="ea-test-spec-pat"/>
 		</choice>
 
@@ -212,6 +212,8 @@
 
 		<!-- Content and format for evidence -->
         <ref name="ea-reporting-pat"/>    
+	</element>
+		
 </define>
 
 <define name="ea-test-spec-pat">
@@ -331,35 +333,6 @@
 	</oneOrMore>
 </define>
 
-
-<!----- ------->
-  
-
-  
-
-  <define name="steplist">
-    <element name="steplist">
-      <a:documentation>
-        Defines a list of steps to perform a test.
-      </a:documentation>
-      <oneOrMore>
-        <choice>
-          <ref name="basic-content-pat"/>
-          <element name="step">
-            <a:documentation>
-              Denotes a single step.
-            </a:documentation>
-            <oneOrMore>
-              <choice>
-                <ref name="basic-content-pat"/>
-                <ref name="steplist"/>
-              </choice>
-            </oneOrMore>
-          </element>
-        </choice>
-      </oneOrMore>
-    </element>
-  </define>
 
 	
 </grammar>
