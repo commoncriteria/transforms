@@ -995,8 +995,8 @@ Modification definition. This text goes in the
       <optional><ref name="ext-comp-extra-pat"/></optional>
       <optional><ref name="description"/></optional>
       <ref name="f-elements-pat"/>
-      <ref name="audit-events-pat"/>
 	  <optional><ref name="note"/></optional>
+      <ref name="audit-events-pat"/>
 	  <optional><ref name="eactivity-pat"/></optional>
     </element>
   </define> 

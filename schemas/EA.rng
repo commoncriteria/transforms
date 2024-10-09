@@ -141,29 +141,44 @@
 	<element name="ea-Tests">
 		<choice>
 			<empty/>
-			<ref name="ea-testspecs-pat"/>
+			<group>
+				<optional><ref name="ea-objective-pat"/></optional>
+				<optional><ref name="ea-tools-pat"/></optional>
+				<optional><ref name="ea-competencies-pat"/></optional>
+				<oneOrMore><ref name="ea-Test-pat"/></oneOrMore>
+			</group>
 		</choice>
 	</element>
 </define>
 
 
-<define name="ea-testspecs-pat">
+<define name="ea-Test-pat">
 	<a:documentation>
 		Tests. Allow any combination of single tests and test lists.
+		This may ne conditional dependent on row selections, platforms, or whatever.
 	</a:documentation>
-	<optional><ref name="ea-objective-pat"/></optional>
-	<optional><ref name="ea-tools-pat"/></optional>
-    <optional><ref name="ea-competencies-pat"/></optional>
-	<choice>
-		<ref name="ea-testlist-pat"/>
-		<ref name="ea-test-pat"/>
-	</choice>
-	<optional>
-		<ref name="ea-criteria-pat"/>
-		<ref name="ea-reporting-pat"/>
-	</optional>
+	<element name="ea-Test">
+		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
+		<optional><ref name="ea-Test-title"/>
+		<optional><ref name="ea-objective-pat"/></optional>
+		<optional><ref name="ea-tools-pat"/></optional>
+		<optional><ref name="ea-competencies-pat"/></optional>
+		<choice>
+			<ref name="ea-testlist-pat"/>
+			<ref name="ea-test-pat"/>
+		</choice>
+		<optional>
+			<ref name="ea-criteria-pat"/>
+			<ref name="ea-reporting-pat"/>
+		</optional>
+	</element>
 </define>
 
+<define name="ea-test-title">
+	<element name="ea-test-title">
+		<ref name="basic-content-pat"/>
+	</element>
+</define>
 
 <define name="ea-testlist-pat">
 	<a:documentation>
