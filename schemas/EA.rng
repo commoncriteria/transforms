@@ -33,7 +33,7 @@
 			<ref name="ea-None-pat"/>
 			<ref name="ea-body-pat"/>
 		</choice>
-		<optional><ref name="ea-rationale"/></optional>
+		<optional><ref name="ea-rationale-pat"/></optional>
 	</element>
 </define>		
 
@@ -46,7 +46,7 @@
 	</a:documentation>
 	<element name="ea-applies-to">
 		<ref name="ref-id"/>
-		<optional><ref name="external-ref-pat"/></optional>
+		<optional><ref name="external-doc-pat"/></optional>
 	</element>
 </define>
 			
@@ -67,7 +67,7 @@
             Indicates that the eactivity depends on some other eactivity.
         </a:documentation>
 		<ref name="ref-id"/>
-		<optional><ref name="external-document-pat"/></optional>
+		<optional><ref name="external-document-pat"/></optional> 
 	</element>
 </define>
 
@@ -90,13 +90,13 @@
 		TSS, Guidance, and Tests sections are mandatory, although may be empty.
 		KMD is optional, but also may be empty.
 	</a:documentation>
-	<ref name="ea-TSS"/>
-	<optional><ref name="ea-KMD"/></optional>
-	<ref name="ea-Guidance"/>
-	<ref name="ea-Tests"/>
+	<ref name="ea-TSS-pat"/>
+	<optional><ref name="ea-KMD-pat"/></optional>
+	<ref name="ea-Guidance-pat"/>
+	<ref name="ea-Tests-pat"/>
 </define>
 
-<define name="ea-TSS">
+<define name="ea-TSS-pat">
 	<a:documentation>
 		TSS section is mandatory, although may be empty.
 	</a:documentation>
@@ -109,7 +109,7 @@
 </define>
 
 
-<define name="ea-KMD">
+<define name="ea-KMD-pat">
 	<a:documentation>
 		KMD section is optional, and may be empty.
 	</a:documentation>
@@ -122,7 +122,7 @@
 </define>
 
 
-<define name="ea-Guidance">
+<define name="ea-Guidance-pat">
 	<a:documentation>
 		Guidance section is mandatory, although may be empty.
 	</a:documentation>
@@ -134,20 +134,20 @@
 	</element>
 </define>
 
-<define name="ea-Tests">
+<define name="ea-Tests-pat">
 	<a:documentation>
 		Test section is mandatory, although may be empty.
 	</a:documentation>
 	<element name="ea-Tests">
 		<choice>
 			<empty/>
-			<ref name="ea-Tests-pat"/>
+			<ref name="ea-testspecs-pat"/>
 		</choice>
 	</element>
 </define>
 
 
-<define name="ea-Tests-pat">
+<define name="ea-testspecs-pat">
 	<a:documentation>
 		Tests. Allow any combination of single tests and test lists.
 	</a:documentation>
@@ -263,7 +263,56 @@
 </define>
 
 
-<define name="ea-rationale">
+<define name="ea-tools-pat">
+	<a:documentation>
+		Description of tools needed for testing.
+	</a:documentation>
+	<element name="ea-tools">
+		<words/>
+	</element>
+</define>
+
+
+<define name="ea-competencies-pat">
+	<a:documentation>
+		Description of evaluator competencies required for testing.
+	</a:documentation>
+	<element name="ea-competencies">
+		<words/>
+	</element>
+</define>
+
+<define name="ea-input-pat">
+	<a:documentation>
+		Description of input to the test or test step.
+	</a:documentation>
+	<element name="ea-input">
+		<words/>
+	</element>
+</define>
+
+<define name="ea-criteria-pat">
+	<a:documentation>
+		Description of pass/fail criteria for test.
+	</a:documentation>
+	<element name="ea-criteria">
+		<words/>
+	</element>
+</define>
+
+
+
+<define name="ea-setup-pat">
+	<a:documentation>
+		Description of steps for setting up the test.
+	</a:documentation>
+	<element name="ea-setup">
+		<words/>
+	</element>
+</define>
+
+
+<define name="ea-rationale-pat">
 	<a:documentation>
 		CC:2022 requires a rationale.
 	</a:documentation>
