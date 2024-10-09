@@ -51,7 +51,7 @@
 </define>
 			
 
-<define name="ea-objective-pat"/>
+<define name="ea-objective-pat">
 	<a:documentation>
 		CC:2022 says, "The objective of performing the evaluation activity shall be stated."
 	</a:documentation>
