@@ -216,6 +216,17 @@
 		
 </define>
 
+<define name="ea-test-steps-pat">
+	<a:documentation>
+		A numbered list of steps.
+	</a:documentation>
+	<optional><ref name="basic-content-pat"/></optional>
+    <oneOrMore>
+        <ref name="ea-test-spec-pat"/>
+    </oneOrMore>
+</define>
+
+
 <define name="ea-test-spec-pat">
 	<a:documentation>
 		Test language for a single step.
@@ -237,20 +248,6 @@
 		<!-- Words of the test step. Someday maybe in a test spec language -->
 		<ref name="basic-content-pat"/>
 	</element>
-</define>
-
-
-<define name="ea-test-steps-pat">
-	<a:documentation>
-		A numbered list of steps.
-	</a:documentation>
-	<optional><ref name="basic-content-pat"/></optional>
-    <oneOrMore>
-        <choice>
-            <ref name="ea-test-spec-pat"/>
-            <ref name="ea-test-steps-pat"/>
-        </choice>
-    </oneOrMore>
 </define>
 
 
