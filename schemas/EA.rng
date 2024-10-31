@@ -162,9 +162,12 @@
 			elsewhere in the document, or in another document.
 	</a:documentation>
 	<element name="ea-Test">
+		<attribute>
+			<optional><ref name="id-attr"/></optional>
+			<optional><ref name="title-attr"/></optional>
+		</attribute>
 		<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
 		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
-		<optional><ref name="ea-Test-title"/></optional>
 		<optional><ref name="ea-objective-pat"/></optional>
 		<optional><ref name="ea-tools-pat"/></optional>
 		<optional><ref name="ea-competencies-pat"/></optional>
@@ -179,11 +182,6 @@
 	</element>
 </define>
 
-<define name="ea-Test-title">
-	<element name="ea-test-title">
-		<ref name="basic-content-pat"/>
-	</element>
-</define>
 
 <define name="ea-testlist-pat">
 	<a:documentation>
