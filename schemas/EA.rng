@@ -156,8 +156,13 @@
 	<a:documentation>
 		Tests. Allow any combination of single tests and test lists.
 		This may ne conditional dependent on row selections, platforms, or whatever.
+		The depends-pat is used to indicate that the test is executed only if the 
+		   a particular feature is supported or a selection is made.
+		The ea-dependency-pat is used to specify that the Test depends on some other EA or test
+			elsewhere in the document, or in another document.
 	</a:documentation>
 	<element name="ea-Test">
+		<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
 		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
 		<optional><ref name="ea-Test-title"/></optional>
 		<optional><ref name="ea-objective-pat"/></optional>
