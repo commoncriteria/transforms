@@ -174,7 +174,7 @@
 	</element>
 </define>
 
-<define name="ea-test-title">
+<define name="ea-Test-title">
 	<element name="ea-test-title">
 		<ref name="basic-content-pat"/>
 	</element>
