@@ -159,7 +159,7 @@
 	</a:documentation>
 	<element name="ea-Test">
 		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
-		<optional><ref name="ea-Test-title"/>
+		<optional><ref name="ea-Test-title"/></optional>
 		<optional><ref name="ea-objective-pat"/></optional>
 		<optional><ref name="ea-tools-pat"/></optional>
 		<optional><ref name="ea-competencies-pat"/></optional>
