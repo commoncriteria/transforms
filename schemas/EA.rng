@@ -162,8 +162,8 @@
 			elsewhere in the document, or in another document.
 	</a:documentation>
 	<element name="ea-Test">
-		<optional><attribute><ref name="id-attr"/></attribute></optional>
-		<optional><attribute><ref name="title-attr"/></attribute></optional>
+		<optional><ref name="id-attr"/></optional>
+		<optional><ref name="title-attr"/></optional>
 		<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
 		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
 		<optional><ref name="ea-objective-pat"/></optional>
