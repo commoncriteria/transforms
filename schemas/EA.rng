@@ -61,6 +61,17 @@
 </define>
 
 
+<define name="ea-note-pat">
+	<a:documentation>
+		Something you feel you need to say.
+	</a:documentation>
+	<element name="ea-note">
+		<ref name="words"/>
+	</element>
+</define>
+
+
+
 <define name="ea-dependency-pat">
 	<element name="ea-dependency">
         <a:documentation>
@@ -166,6 +177,7 @@
 		<optional><ref name="title-attr"/></optional>
 		<zeroOrMore><ref name="depends-pat"/></zeroOrMore>
 		<zeroOrMore><ref name="ea-dependency-pat"/></zeroOrMore>
+		<zeroOrMore><ref name="ea-note-pat"/></zeroOrMore>
 		<optional><ref name="ea-objective-pat"/></optional>
 		<optional><ref name="ea-tools-pat"/></optional>
 		<optional><ref name="ea-competencies-pat"/></optional>
