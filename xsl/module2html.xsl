@@ -405,10 +405,21 @@
 
 
     <h3 id="modsfr-{@id}" class="indexable" data-level="3"> Modified SFRs </h3>
-    <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
+    <xsl:choose>
+	
+<!--
+	<xsl:when test="cc:modified-sfrs//cc:f-component">
       The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
     <xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
+-->
+	
+	<xsl:when test="cc:modified-sfrs//cc:base-sfr-modification">
+      The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
+    <xsl:apply-templates select="cc:modified-sfrs"/>
+    </xsl:when>
+	
+	
     <xsl:otherwise>
       This PP-Module does not modify any SFRs defined by the <xsl:apply-templates mode="short" select="."/>.
     </xsl:otherwise>
