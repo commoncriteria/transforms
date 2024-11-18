@@ -418,14 +418,10 @@
 -->
 	<xsl:when test="cc:modified-sfrs/cc:base-sfr-modification">
 		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
-		<xsl:variable name="base" select="."/>
 		<xsl:for-each select="./cc:modified-sfrs/cc:base-sfr-modification">
-			<xsl:apply-templates select=".">
-				<xsl:with-param name="base" select="$base"/>
-			</xsl:apply-templates>
+			Modified SFR: <xsl:value-of select="[@cc-id]"/>
 		</xsl:for-each>
     </xsl:when>
-	
 	
     <xsl:otherwise>
       This PP-Module does not modify any SFRs defined by the <xsl:apply-templates mode="short" select="."/>.
@@ -452,13 +448,6 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:if>
   </xsl:template>
 
-<xsl:template name="cc:base-sfr-modification">
-	<xsl:param name="base"/>
-
-	<!-- For now just display the name of the SFR -->
-	Modified SFR: <xsl:value-of select=".[@cc-id]"/>
-	
-</xsl:template>
 
 <!-- Eat matches, we have to call this one on purpose -->
 <xsl:template match="cc:base-sfr-modification"/>
