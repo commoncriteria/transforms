@@ -420,8 +420,7 @@
 	<xsl:when test="cc:modified-sfrs/cc:base-sfr-modification">
 		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
 		<xsl:for-each select="cc:modified-sfrs/cc:base-sfr-modification">
-			Modified SFR: 
-			<!-- <xsl:value-of select="[@cc-id]"/>  -->
+			Modified SFR: <xsl:value-of select="@cc-id"/>
 		</xsl:for-each>
     </xsl:when>
 	
