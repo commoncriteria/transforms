@@ -426,9 +426,9 @@
 			<h4 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h4>
 		
 			<xsl:for-each select="cc:base-sfr-spec">
-		
+			
 				<!-- Display SFR Name and Title -->
-				<div class="comp"> 
+				<div class="comp" id="@id">
   					<h4>
 						<xsl:choose>
 						<xsl:when test="@iteration">

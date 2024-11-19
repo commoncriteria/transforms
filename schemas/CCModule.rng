@@ -451,6 +451,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 			</attribute>
 		</optional>
 		<attribute name="title"/>
+		<ref name="id-attr"/>
 		
 		<a:documentation>
 			Text description of the modification.
