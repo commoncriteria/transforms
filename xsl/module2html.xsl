@@ -419,12 +419,14 @@
 
 	<xsl:when test="cc:modified-sfrs//cc:base-sfr-modification">
 		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
+
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
 			
 			<!-- Display section header -->
-			<xsl:apply-template select="."/>
+			There is a section header.
+<!--			<xsl:apply-template select="."/>   -->
 		
-			<xsl:for-each select="cc:modified-sfrs//cc:base-sfr-modification">
+			<xsl:for-each select="cc:base-sfr-modification">
 		
 				<!-- Might need to display Family section header -->
 				<!-- Identify the SFR -->
