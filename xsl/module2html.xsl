@@ -432,12 +432,12 @@
   					<h4>
 						<xsl:choose>
 						<xsl:when test="@iteration">
-							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),'/'"/>
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),'/')"/>
 							<xsl:value-of select="concat(translate(@iteration, $lower, $upper),': ')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': '"/>
-						</xsl:when>
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': ')"/>
+						</xsl:otherwise>
 						</xsl:choose>
 						<xsl:value-of select="@title"/>
 					</h4>
