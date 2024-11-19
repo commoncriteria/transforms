@@ -424,7 +424,7 @@
 			
 			<!-- Display section header -->
 			There is a section header.
-<!--			<xsl:apply-template select="."/>   -->
+			<xsl:apply-template select="."/> 
 		
 			<xsl:for-each select="cc:base-sfr-modification">
 		
