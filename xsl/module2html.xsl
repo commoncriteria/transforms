@@ -428,7 +428,7 @@
 			<xsl:for-each select="cc:base-sfr-spec">
 		
 				<!-- Display SFR Name and Title -->
-<!--				<div class="comp">   -->
+				<div class="comp"> 
   					<h4>
 						<xsl:choose>
 						<xsl:when test="@iteration">
@@ -445,7 +445,7 @@
 				<!-- Description of modification -->
 				<!-- Do something with the replacement spec -->
 
-<!--				</div>  -->
+				</div> 
 
 			</xsl:for-each>
 		</xsl:for-each>
