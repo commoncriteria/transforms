@@ -283,7 +283,7 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
 			SFRs that modify SFRs from the base PP.
 		</a:documentation>
 		<zeroOrMore>
-			<ref name="base-sfr-modification-pat"/>
+			<ref name="base-sfr-modification-class-pat"/>
 		</zeroOrMore>
       </element>
 	  
@@ -356,6 +356,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
   </define>
 
 
+
   <define name="base-specific-sfrs">
     <zeroOrMore><choice>
       <element name="section">
@@ -412,6 +413,22 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 	</oneOrMore>
         
  </define>
+
+ <define name="base-sfr-modification-class-pat">
+	<a:documentation>
+		Per Class. Section header is required.
+		Followed by one or more modified SFRs.
+	</a:documentation>
+    <element name="section">
+        <attribute name="title"/>
+        <ref name="optional-id"/>
+        <ref name="base-specific-sfrs-content"/>
+    </element>
+	<oneOrMore>
+		<ref name="base-sfr-modification-pat"/>
+	</oneOrMore>
+</define>
+
 
  <define name="base-sfr-modification-pat">
 	<a:documentation>
