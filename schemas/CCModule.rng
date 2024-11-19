@@ -422,11 +422,10 @@ The name or cc-id of the aspect that is being overwritten by the content of this
     <element name="section">
         <attribute name="title"/>
         <ref name="optional-id"/>
-        <ref name="base-specific-sfrs-content"/>
+		<oneOrMore>
+			<ref name="base-sfr-modification-pat"/>
+		</oneOrMore>
     </element>
-	<oneOrMore>
-		<ref name="base-sfr-modification-pat"/>
-	</oneOrMore>
 </define>
 
 
