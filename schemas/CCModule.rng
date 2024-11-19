@@ -433,7 +433,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 	<a:documentation>
 		An element for specifying modifications to a base-PP sfr from a Module.
 	</a:documentation>
-	<element name="base-sfr-modification">
+	<element name="base-sfr-spec">
 		<a:documentation>
 			ref attribute is id of f-component in the base-pp.
 			This shouldn't need to be an external reference since we alreay know the basepp.
@@ -450,6 +450,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 				</data>
 			</attribute>
 		</optional>
+		<attribute name="title"/>
 		
 		<a:documentation>
 			Text description of the modification.

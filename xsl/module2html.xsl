@@ -239,7 +239,7 @@
       <xsl:apply-templates mode="short" select="."/> is being used for its intended purpose.
       <xsl:choose>
 <!--        <xsl:when test='$base//cc:modified-sfrs//cc:f-element'>   -->
-        <xsl:when test='$base//cc:modified-sfrs//cc:base-sfr-modification'>
+        <xsl:when test='$base//cc:modified-sfrs//cc:base-sfr-spec'>
           The PP-Module also identifies a number of modified SFRs from the
           <xsl:apply-templates mode="short" select="."/>
           <xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
@@ -391,7 +391,6 @@
   <!-- #            Base-pp Template              # -->
   <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
-	<xsl:variable name="prod-short" select="@short"/>
     <h2 id="secreq-{@id}" class="indexable" data-level="2">
       <xsl:apply-templates mode="expanded" select="."/>
        Security Functional Requirements Direction
@@ -418,7 +417,7 @@
     </xsl:when>
 -->
 
-	<xsl:when test="cc:modified-sfrs//cc:base-sfr-modification">
+	<xsl:when test="cc:modified-sfrs//cc:base-sfr-spec">
 		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
 
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
@@ -426,11 +425,10 @@
 			<!-- Display section header -->
 			<h3 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h3>
 		
-			<xsl:for-each select="cc:base-sfr-modification">
+			<xsl:for-each select="cc:base-sfr-spec">
 		
-				<!-- Might need to display Family section header -->
-				<!-- Identify the SFR -->
-				Modified SFR: <xsl:value-of select="@cc-id"/><p/>
+				<!-- Display SFR Name and Title -->
+				<xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ': ')"/><p/>
 
 				<!-- Description of modification -->
 				<!-- Do something with the replacement spec -->
@@ -465,7 +463,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
 
 <!-- Eat matches, we have to call this one on purpose -->
-<xsl:template match="cc:base-sfr-modification"/>
+<xsl:template match="cc:base-sfr-spec"/>
 
 
   <!-- ############### -->
