@@ -430,9 +430,15 @@
 				<!-- Display SFR Name and Title -->
 <!--				<div class="comp">   -->
   					<h4>
-						<xsl:value-of select="translate(@cc-id, $lower, $upper)"/>
-						<xsl:if test="@iteration">: </xsl:if>
-						<xsl:if test="not(@iteration)"> </xsl:if>
+						<xsl:choice>
+						<xsl:when test="@iteration">
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),'/'"/>
+							<xsl:value-of select="concat(translate(@iteration, $lower, $upper),': ')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': '"/>
+						</xsl:when>
+						</xsl:choice>
 						<xsl:value-of select="@title"/>
 					</h4>
 
