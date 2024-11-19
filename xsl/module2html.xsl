@@ -391,6 +391,7 @@
   <!-- #            Base-pp Template              # -->
   <!-- ############################################ -->
   <xsl:template match="cc:base-pp">
+	<xsl:variable name="prod-short" select="@short"/>
     <h2 id="secreq-{@id}" class="indexable" data-level="2">
       <xsl:apply-templates mode="expanded" select="."/>
        Security Functional Requirements Direction
@@ -423,8 +424,7 @@
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
 			
 			<!-- Display section header -->
-			There is a section header.
-			<xsl:apply-template select="."/> 
+			<h3 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h3>
 		
 			<xsl:for-each select="cc:base-sfr-modification">
 		

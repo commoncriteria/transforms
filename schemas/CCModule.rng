@@ -416,12 +416,12 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 
  <define name="base-sfr-modification-class-pat">
 	<a:documentation>
-		Per Class. Section header is required.
+		Per Class. Section header is required with title and ID
 		Followed by one or more modified SFRs.
 	</a:documentation>
     <element name="section">
         <attribute name="title"/>
-        <ref name="optional-id"/>
+        <ref name="id-attr"/>
 		<oneOrMore>
 			<ref name="base-sfr-modification-pat"/>
 		</oneOrMore>
