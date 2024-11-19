@@ -428,13 +428,19 @@
 			<xsl:for-each select="cc:base-sfr-spec">
 		
 				<!-- Display SFR Name and Title -->
-				<h4>
-					<xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ': ')"/>
-					<xsl:value-of select="@title"/>
-				</h4>
+				<div class="comp">
+					<h4>
+						<xsl:value-of select="translate(@cc-id, $lower, $upper)"/>
+						<xsl:if test="@iteration">: </xsl:if>
+						<xsl:if test=" not @iteration"> </xsl:if>
+						<xsl:value-of select="@title"/>
+					</h4>
 
 				<!-- Description of modification -->
 				<!-- Do something with the replacement spec -->
+
+				</div>
+
 			</xsl:for-each>
 		</xsl:for-each>
     </xsl:when>
