@@ -423,12 +423,15 @@
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
 			
 			<!-- Display section header -->
-			<h3 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h3>
+			<h4 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h4>
 		
 			<xsl:for-each select="cc:base-sfr-spec">
 		
 				<!-- Display SFR Name and Title -->
-				<xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ': ')"/><p/>
+				<h4>
+					<xsl:value-of select="concat(translate(@cc-id, $lower, $upper), ': ')"/>
+					<xsl:value-of select="@title"/>
+				</h4>
 
 				<!-- Description of modification -->
 				<!-- Do something with the replacement spec -->
