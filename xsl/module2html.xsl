@@ -442,8 +442,10 @@
 						<xsl:value-of select="@title"/>
 					</h4>
 
-				<!-- Description of modification -->
-				<!-- Do something with the replacement spec -->
+					<!-- Description of modification -->
+					<xsl:apply-templates select="cc:description"/>
+					
+					<!-- Do nothing with the replacement spec -->
 
 				</div> 
 
