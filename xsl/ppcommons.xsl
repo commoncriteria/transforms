@@ -533,20 +533,21 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- Refs to all the pre-defined auto-generated tables   -->
   <!-- ################################################### -->
   <xsl:template match="cc:xref[@g='t-audit-optional' or @g='t-audit-objective' or 
-				@g='t-audit-sel-based' or @g='t-audit-impl-dep']">
+				@g='t-audit-sel-based' or @g='t-audit-impl-dep' or @g='t-audit-mandatory']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
       <xsl:with-param name="prefix" select="'Table '"/>
     </xsl:call-template>
   </xsl:template>
 
+<!--
 <xsl:template match="cc:xref[@g='t-audit-mandatory']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="'t-audit-mandatory'"/>
       <xsl:with-param name="prefix" select="'Table '"/>
     </xsl:call-template>
   </xsl:template>
-	
+-->	
 	
   <xsl:template match="cc:xref[@g='CC']">
       <a href="#bibCC">[CC]</a>
