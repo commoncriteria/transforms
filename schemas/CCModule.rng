@@ -281,10 +281,12 @@ Content for the Applicable Unmodified SFRs section. Replaces boilerplate content
       <element name="modified-sfrs">
 		<a:documentation>
 			SFRs that modify SFRs from the base PP.
+			For now we allow both the old way and the new way.
 		</a:documentation>
-		<zeroOrMore>
-			<ref name="base-sfr-modification-class-pat"/>
-		</zeroOrMore>
+		<choice>
+			<zeroOrMore><ref name="base-sfr-modification-class-pat"/></zeroOrMore>
+			<ref name="base-specific-sfrs"/>
+		</choice>
       </element>
 	  
       <element name="additional-sfrs">
