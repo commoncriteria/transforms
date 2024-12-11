@@ -239,16 +239,26 @@
       <xsl:apply-templates mode="short" select="."/> is being used for its intended purpose.
       <xsl:choose>
 <!--        <xsl:when test='$base//cc:modified-sfrs//cc:f-element'>   -->
-        <xsl:when test='$base//cc:modified-sfrs//cc:base-sfr-spec'>
-          The PP-Module also identifies a number of modified SFRs from the
-          <xsl:apply-templates mode="short" select="."/>
-          <xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
-            as well as new SFRs 
-          </xsl:if>
-          that are used entirely to provide functionality for
-	  <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
+        <xsl:when test='$base//cc:modified-sfrs/section/cc:base-sfr-spec'>
+			The PP-Module also identifies a number of modified SFRs from the
+			<xsl:apply-templates mode="short" select="."/>
+			<xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
+				as well as new SFRs 
+			</xsl:if>
+			that are used entirely to provide functionality for
+			<xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
         </xsl:when>
-        <xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
+        <xsl:when test='$base//cc:modified-sfrs/section/cc:f-component'>
+			The PP-Module also identifies a number of modified SFRs from the
+			<xsl:apply-templates mode="short" select="."/>
+			<xsl:if test='$base//cc:additional-sfrs//cc:f-element'>
+				as well as new SFRs 
+			</xsl:if>
+				that are used entirely to provide functionality for
+			<xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
+        </xsl:when>
+
+		<xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
             The PP-Module identifies new SFRs that are used entirely to provide
             functionality for
  	    <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
@@ -266,6 +276,8 @@
 			</xsl:call-template>: Consistency of Requirements (<xsl:apply-templates select="." mode="short"/> base)
 		</caption>
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
+
+	<!-- QQQQ Need to do something about this for new style modified SFRs -->
 	<tr> <th colspan="2"> Modified SFRs</th></tr>
 	<xsl:call-template name="req-con-rat-sec">
 	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component[not(@status='invisible')]"/>
@@ -410,14 +422,8 @@
     <h3 id="modsfr-{@id}" class="indexable" data-level="3"> Modified SFRs </h3>
     <xsl:choose>
 	
-<!--
-	<xsl:when test="cc:modified-sfrs//cc:f-component">
-      The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
-    <xsl:apply-templates select="cc:modified-sfrs"/>
-    </xsl:when>
--->
-
-	<xsl:when test="cc:modified-sfrs//cc:base-sfr-spec">
+    <!-- New atyle modified sfrs -->
+	<xsl:when test="cc:modified-sfrs/section/cc:base-sfr-spec">
 		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
 
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
@@ -451,6 +457,13 @@
 
 			</xsl:for-each>
 		</xsl:for-each>
+    </xsl:when>
+	
+	<!-- Old style modified SFRs -->
+	<xsl:when test="cc:modified-sfrs/section/cc:f-component">
+		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and 
+		relevant to the secure operation of the TOE.
+		<xsl:apply-templates select="cc:modified-sfrs"/>
     </xsl:when>
 	
     <xsl:otherwise>
