@@ -472,70 +472,59 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 <define name="sfr-modification-pat">
 	<choice>
 		<element name="replace">
-			<choice>
-				<element name="xpath-specified">
-					<attribute name="xpath">
-						<a:documentation>
-							Specifies an XPath expression to the element that should be replaced or whatever.
-						</a:documentation>
-					</attribute>
-					<ref name="anything"/>
-				</element>
-				<element name="id-specified">
-					<ref name="ref-attr"/>
-					<ref name="anything"/>
-				</element>
-			</choice>
+			<element name="xpath-specified">
+				<attribute name="xpath">
+					<a:documentation>
+						Specifies an XPath expression to the element that should be replaced or whatever.
+					</a:documentation>
+				</attribute>
+				<ref name="anything"/>
+			</element>
 		</element>
 
 		<element name="delete">
-			<choice>
-				<element name="xpath-specified">
-					<attribute name="xpath">
-						<a:documentation>
-							Specifies an XPath expression to the element that should be replaced or whatever.
-						</a:documentation>
-					</attribute>
-				</element>
-				<element name="id-specified">
-					<ref name="ref-attr"/>
-				</element>
-			</choice>
+			<element name="xpath-specified">
+				<attribute name="xpath">
+					<a:documentation>
+						Specifies an XPath expression to the element that should be replaced or whatever.
+					</a:documentation>
+				</attribute>
+			</element>
 		</element>
 
 		<element name="insert-before">
-			<choice>
-				<element name="xpath-specified">
-					<attribute name="xpath">
-						<a:documentation>
-							Specifies an XPath expression to the element that should be replaced or whatever.
-						</a:documentation>
-					</attribute>
-					<ref name="anything"/>
-				</element>
-				<element name="id-specified">
-					<ref name="ref-attr"/>
-					<ref name="anything"/>
-				</element>
-			</choice>
+			<element name="xpath-specified">
+				<attribute name="xpath">
+					<a:documentation>
+						Specifies an XPath expression to the element that should be replaced or whatever.
+					</a:documentation>
+				</attribute>
+				<ref name="anything"/>
+			</element>
 		</element>
 
 		<element name="insert-after">
-			<choice>
-				<element name="xpath-specified">
-					<attribute name="xpath">
-						<a:documentation>
-							Specifies an XPath expression to the element that should be replaced or whatever.
-						</a:documentation>
-					</attribute>
-					<ref name="anything"/>
-				</element>
-				<element name="id-specified">
-					<ref name="ref-attr"/>
-					<ref name="anything"/>
-				</element>
-			</choice>
+			<element name="xpath-specified">
+				<attribute name="xpath">
+					<a:documentation>
+						Specifies an XPath expression to the element that should be replaced or whatever.
+					</a:documentation>
+				</attribute>
+				<ref name="anything"/>
+			</element>
 		</element>
+		
+		<element name="set-status">
+			<attribute name="status"> 
+				<choice>
+					<value>optional</value>
+					<value>objective</value>
+					<value>feat-based</value>
+					<value>sel-based</value>
+				</choice>	
+			</attribute>
+		</element>
+
 	</choice>
 </define>
 
