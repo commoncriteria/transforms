@@ -247,6 +247,7 @@
           that are used entirely to provide functionality for
 	  <xsl:apply-templates mode="get_product_plural" select="/cc:Module"/>.
         </xsl:when>
+		
         <xsl:when test='$base//cc:additional-sfrs//cc:f-element'>
             The PP-Module identifies new SFRs that are used entirely to provide
             functionality for
@@ -265,15 +266,37 @@
 			</xsl:call-template>: Consistency of Requirements (<xsl:apply-templates select="." mode="short"/> base)
 		</caption>
 	<tr><th>PP-Module Requirement</th><th>Consistency Rationale</th></tr>
-	<tr> <th colspan="2"> Modified SFRs</th></tr>
-	<xsl:call-template name="req-con-rat-sec">
-	  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
-	  <xsl:with-param name="none-msg">
-	    This PP-Module does not modify any requirements when the
-	    <xsl:apply-templates mode="short" select="."/> is the base.
-	  </xsl:with-param>
-	</xsl:call-template>
+	
+    <!-- Modified SFRs -->
+	<xsl:choose>
+	
+	<!-- New style Modified SFRs -->
+	<xsl:when test="$base//cc:modified-sfrs//cc:base-sfr-spec">
+		<tr> <th colspan="2"> Modified SFRs</th></tr>
+		<xsl:call-template name="req-con-rat-sec-new-mod">
+			<xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:base-sfr-spec"/>
+			<xsl:with-param name="id" select="$base/@id"/>
+			<xsl:with-param name="none-msg">
+				This PP-Module does not modify any requirements when the
+				<xsl:apply-templates mode="short" select="."/> is the base.
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:when>
+
+	<!-- Old-style modified-sfrs -->
+	<xsl:otherwise>
+		<tr> <th colspan="2"> Modified SFRs</th></tr>
+		<xsl:call-template name="req-con-rat-sec">
+		  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component[not(@status='invisible')]"/>
+		  <xsl:with-param name="id" select="$base/@id"/>
+		  <xsl:with-param name="none-msg">
+			This PP-Module does not modify any requirements when the
+			<xsl:apply-templates mode="short" select="."/> is the base.
+		  </xsl:with-param>
+		</xsl:call-template>
+	</xsl:otherwise>
+	
+	</xsl:choose>
 
   	<tr>
 	    <th colspan="2"> Additional SFRs</th>
@@ -383,6 +406,56 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Consistency rationale table for new-style modified SFRs  --> 
+  <xsl:template name="req-con-rat-sec-new-mod">
+    <xsl:param name="f-comps"/>
+    <xsl:param name="id"/>
+    <xsl:param name="none-msg"/>
+    
+    <xsl:choose>
+      <xsl:when test="$f-comps">
+      	<xsl:for-each select="$f-comps"><tr>
+
+          <!-- Make the name from the cc-id and iteration -->
+		  <td><xsl:apply-templates mode="getId" select="."/></td>
+          <td><!--
+            <xsl:when test="@iteration and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
+              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
+            </xsl:when>
+            <xsl:when test="not(@iteration) and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
+<<<<<<< HEAD
+              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
+-->
+              <xsl:apply-templates select="cc:consistency-rationale/node()">
+                <xsl:with-param name="base" select="$id"/>
+              </xsl:apply-templates>
+            </td>
+         </tr></xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <tr><td colspan="2" style="text-align:center">
+          <xsl:value-of select="$none-msg"/>
+        </td></tr>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  
+ <xsl:template match="cc:base-sfr-spec" mode="getId">
+    <xsl:variable name="baseID">
+		<xsl:choose>
+			<xsl:when test="@iteration">
+				<xsl:value-of select="concat(@cc-id, concat('/', @iteration))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="@cc-id"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+    <xsl:value-of select="translate($baseID, $lower, $upper)"/>    
+  </xsl:template>
+
 
   <!-- ############################################ -->
   <!-- #            Base-pp Template              # -->
@@ -405,20 +478,66 @@
 
 
     <h3 id="modsfr-{@id}" class="indexable" data-level="3"> Modified SFRs </h3>
-    <xsl:choose><xsl:when test="cc:modified-sfrs//cc:f-component">
-      The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
-    <xsl:apply-templates select="cc:modified-sfrs"/>
+    <xsl:choose>
+
+    <!-- New style modified sfrs -->
+	<xsl:when test="cc:modified-sfrs//cc:base-sfr-spec">
+		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and relevant to the secure operation of the TOE.
+
+		<xsl:for-each select="cc:modified-sfrs/cc:section">
+			
+			<!-- Display section header -->
+			<h4 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h4>
+		
+			<xsl:for-each select="cc:base-sfr-spec">
+			
+				<!-- Display SFR Name and Title -->
+				<div class="comp" id="@id">
+  					<h4>
+						<xsl:choose>
+						<xsl:when test="@iteration">
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),'/')"/>
+							<xsl:value-of select="concat(translate(@iteration, $lower, $upper),': ')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': ')"/>
+						</xsl:otherwise>
+						</xsl:choose>
+						<xsl:value-of select="@title"/>
+					</h4>
+
+					<!-- Description of modification -->
+					<xsl:apply-templates select="cc:description"/>
+					
+					<!-- Do nothing with the replacement spec -->
+
+				</div> 
+
+			</xsl:for-each>
+		</xsl:for-each>
     </xsl:when>
+	
+	<!-- Old style modified SFRs -->
+	<xsl:when test="cc:modified-sfrs//cc:f-element">
+
+		The SFRs listed in this section are defined in the <xsl:apply-templates mode="short" select="."/> and 
+		relevant to the secure operation of the TOE.
+		<xsl:apply-templates select="cc:modified-sfrs"/>  
+
+    </xsl:when>
+	
     <xsl:otherwise>
       This PP-Module does not modify any SFRs defined by the <xsl:apply-templates mode="short" select="."/>.
     </xsl:otherwise>
     </xsl:choose>
+	
     <!--
 	 If we have only one base PP, we should hide this section (so says NIAP).
 	 In that case there shouldn't be any additional-sfrs (but for some
 	 reason we're allowing it).
     -->
 
+	<!-- Deal with Additional SFRs -->
     <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
     <h3 id="addsfr-{@id}" class="indexable" data-level="3"> Additional SFRs</h3>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
@@ -433,6 +552,11 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
     </xsl:choose>
     </xsl:if>
   </xsl:template>
+
+
+<!-- Eat matches, we have to call this one on purpose -->
+<xsl:template match="cc:base-sfr-spec"/>
+
 
   <!-- ############### -->
   <!--      -->
@@ -613,7 +737,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- ############### -->
   <!-- Handles replace elements     -->
   <!-- ############### -->
-
+<!--
   <xsl:template match="cc:modified-sfrs//cc:replace[cc:suppress-text]"/>
 
   <xsl:template match="cc:modified-sfrs//cc:replace[not(cc:suppress-text)]">
@@ -630,7 +754,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
 
 
   <xsl:template match="cc:replace[not(ancestor::cc:modified-sfrs)]"/>
-
+-->
 
   
   <!-- ############### -->
