@@ -223,7 +223,7 @@
 	
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:assumptions|cc:cclaims|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
+  <xsl:template match="cc:assumptions|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
     <xsl:choose> <xsl:when test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">

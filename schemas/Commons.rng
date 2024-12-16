@@ -1551,24 +1551,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="cclaims-content-pat">
       <a:documentation>
       </a:documentation>
-     <ref name="boilerplate-no-attr"/>
-	 <optional>
-		<ref name="cclaims-info-pat"/>
-	 </optional>
-     <optional>
-        <element name="cclaims">
-          <a:documentation>
-          </a:documentation>
-          <oneOrMore>
-            <element name="cclaim">
-              <a:documentation>
-              </a:documentation>
-              <attribute name="name"/>
-              <ref name="description"/>
-            </element>
-          </oneOrMore>
-        </element>
-      </optional>
+	 <!-- Allows some unnecessary text at the start of the section -->
+     <ref name="basic-content-pat"/>
+  	 <ref name="cclaims-info-pat"/>
   </define>
 
 <define name="cclaims-info-pat">
