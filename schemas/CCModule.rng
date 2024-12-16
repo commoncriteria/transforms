@@ -455,6 +455,15 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 		<attribute name="title"/>
 		<ref name="id-attr"/>
 		
+		<!-- Reference to document containing the SFR if it not the base PP -->
+		<!-- This is likely to be a Functional Package -->
+		<!-- Though I suppose it could be a catalog -->
+		<optional>
+			<element name="from-pkg">
+				<ref name="from-pkg-ref-pat"/>
+			</element>
+		</optional>
+
 		<!-- Consistency rationale is required -->
 		<ref name="consistency-rationale"/>
 		

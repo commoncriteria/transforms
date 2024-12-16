@@ -1889,6 +1889,25 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <ref name="depends-pat"/>
   </define>
 
+  <define name="from-pkg-ref-pat">
+	<attribute name="name"/>
+	<attribute name="short"/>
+	<attribute name="version"/>
+	
+	<!-- Not really optional, just accounting for the case where the FP is not in the github -->
+    <optional>
+		<element name="git">
+			<element name="url"><data type="string"></data></element>
+			<element name="branch"><data type="string"></data></element>
+		   <!--
+			<param name="pattern">https://raw.githubusercontent.com/commoncriteria/[\-_a-zA-Z0-9]+/[a-z0-9]+/input/[\-_A-Z0-9a-z]+\.xml</param>
+			-->
+		</element>
+	</optional>
+	
+  </define>
+
+
   <define name="recognized-xml">
 	<optional><attribute name="name"/></optional>
 	<optional><attribute name="short"/></optional>

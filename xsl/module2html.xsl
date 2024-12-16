@@ -417,15 +417,15 @@
       	<xsl:for-each select="$f-comps"><tr>
 
           <!-- Make the name from the cc-id and iteration -->
-		  <td><xsl:apply-templates mode="getId" select="."/></td>
-          <td><!--
-            <xsl:when test="@iteration and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]">
-              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and @iteration=current()/@iteration]"/>
-            </xsl:when>
-            <xsl:when test="not(@iteration) and //cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]">
-<<<<<<< HEAD
-              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
--->
+		  <td><xsl:apply-templates mode="getId" select="."/>
+		  
+			<!-- If the SFR is in a Package, we should specify that -->
+			<xsl:if test="./cc:from-pkg">
+				(from <xsl:value-of select="cc:from-pkg/@short"/> FP)
+			</xsl:if>
+		  
+		  </td>
+          <td>
               <xsl:apply-templates select="cc:consistency-rationale/node()">
                 <xsl:with-param name="base" select="$id"/>
               </xsl:apply-templates>
@@ -436,9 +436,9 @@
         <tr><td colspan="2" style="text-align:center">
           <xsl:value-of select="$none-msg"/>
         </td></tr>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+		</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
   
   
  <xsl:template match="cc:base-sfr-spec" mode="getId">
@@ -503,7 +503,14 @@
 							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': ')"/>
 						</xsl:otherwise>
 						</xsl:choose>
+						
+						<!-- Title of Modified SFR -->
 						<xsl:value-of select="@title"/>
+
+						<!-- If the SFR is in a Package, we should specify that -->
+						<xsl:if test="cc:from-pkg">
+							(from <xsl:value-of select="cc:from-pkg/@short"/> FP)
+						</xsl:if>
 					</h4>
 
 					<!-- Description of modification -->
