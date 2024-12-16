@@ -48,18 +48,6 @@
     </attribute>
   </define>
 
- <define name="subaactivity-decl">
-   
-   <optional><element name="subaactivity-decl">
-     <oneOrMore>
-       <element name="val">
-         <ref name="id-attr"/>
-         <attribute name="full"/>
-         <text/>
-       </element>
-     </oneOrMore>
-    </element></optional>
- </define>
  
   <define name="SecProbDesChapter">
     <choice>
@@ -1266,16 +1254,9 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         Denotes a tests section.
       </a:documentation>
       <ref name="basic-content-pat"/>
-      <zeroOrMore><ref name="subaactivity"/></zeroOrMore>
       <ref name="test-obj-evi-pat"/>
       <ref name="basic-content-pat"/>
     </element>
-  </define>
-  <define name="subaactivity">
-    <element name="subaactivity">
-      <optional><attribute name="ref"/></optional>
-      <ref name="basic-content-pat"/>
-   </element>
   </define>
 
   <define name="threats">

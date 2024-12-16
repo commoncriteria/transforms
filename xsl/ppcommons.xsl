@@ -371,17 +371,6 @@
 
    </x:template>
  
-  <!-- ############### -->
-  <!--                 -->
-  <!-- ############### -->
-  <xsl:template match="cc:subaactivity">
-    <div class="subaact">
-      <div class="subaact-header">
-        For <xsl:choose><xsl:when test="@ref"><xsl:value-of select="//cc:subaactivity-decl/cc:val[@id=current()/@ref]/@full"/></xsl:when><xsl:otherwise>all others</xsl:otherwise></xsl:choose>:
-      </div>
-      <xsl:apply-templates/>
-    </div>
-  </xsl:template>
 
 
   <!-- ############### -->
