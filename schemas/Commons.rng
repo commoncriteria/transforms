@@ -1552,6 +1552,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <a:documentation>
       </a:documentation>
 	 <!-- Allows some unnecessary text at the start of the section -->
+	 <ref name="boilerplate-no-attr"/>
      <ref name="basic-content-pat"/>
   	 <ref name="cclaims-info-pat"/>
   </define>
