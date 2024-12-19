@@ -1187,22 +1187,15 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
           <ref name="TSS"/>
           <optional> <ref name="Guidance"/> </optional>
           <optional><ref name="KMD"/></optional>
-		  <zeroOrMore><ref name="CustomEA-pat"/></zeroOrMore>
           <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
           <ref name="Guidance"/>
           <optional> <ref name="KMD"/> </optional>
-		  <zeroOrMore><ref name="CustomEA-pat"/></zeroOrMore>
           <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
           <ref name="KMD"/>
-		  <zeroOrMore><ref name="CustomEA-pat"/></zeroOrMore>
-          <optional> <ref name="Tests"/> </optional>
-        </group>
-        <group>
-		  <oneOrMore><ref name="CustomEA-pat"/></oneOrMore>
           <optional> <ref name="Tests"/> </optional>
         </group>
         <group>
@@ -1264,19 +1257,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
-  <define name="CustomEA-pat">
-    <element name="CustomEA">
-		<attribute name="name">
-			<data type="string">
-				<param name="pattern">[A-Za-z0-9_]+</param>
-			</data>
-		</attribute>
-      <a:documentation>
-         Custom EA category (e.g. KMD, Entropy, Isolation, etc.) defined by the PP Author. 
-      </a:documentation>
-      <ref name="basic-content-pat"/>
-    </element>
-  </define>
 
   <define name="Tests">
     <element name="Tests">
