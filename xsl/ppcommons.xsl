@@ -242,6 +242,35 @@
 	</xsl:choose>
   </xsl:template>
 
+<!-- Component-level CustomEA EAs -->
+  <xsl:template match="cc:CustomEA" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no additional <xsl:value-of select="@name"/> evaluation activities for this component.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+<!-- Element-level & Managament Function KMD EAs -->
+  <xsl:template match="cc:CustomEA" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".='' and not(ancestor::cc:management-function)">
+			There are no additional <xsl:value-of select="@name"/> evaluation activities for this element.<br/><br/>
+		</xsl:when>
+		<xsl:when test=".='' and ancestor::cc:management-function">
+			There are no additional <xsl:value-of select="@name"/> evaluation activities for this management function.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+
 <!-- Component-level Test EAs -->
  <xsl:template match="cc:Tests" mode="comp-ea">
     <xsl:choose>
