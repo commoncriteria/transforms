@@ -354,14 +354,15 @@ $(PP_RELEASE_HTML): $(PP2HTML_XSL) $(PPCOMMONS_XSL) $(PP_XML)
 	python3 $(TRANS)/py/anchorize-periods.py $(PP_RELEASE_HTML) $(PP_LINKABLE_HTML) || true
 	$(BUILD_SD)
 
-effective-html:
-	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
-	$(call DOIT,$(EFF_XML),$(PP2HTML_XSL),$(EFF_HTML),$(APP_PARM) $(FNL_PARM)) 
+# Commented out 20241223
+# effective-html:
+#	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
+#	$(call DOIT,$(EFF_XML),$(PP2HTML_XSL),$(EFF_HTML),$(APP_PARM) $(FNL_PARM)) 
 
 #$(EFF_XML): $(PP_XML) $(TDs)
 #- Target to make the effective PP (with TDs applied)
-effective:
-	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
+#effective:
+#	python3 $(TRANS)/py/cc_apply_tds.py $(PP_XML) $(TDs) >$(EFF_XML)
 #	$(call VALIDATOR,$(RNG_FILE),$(EFF_XML),&1)
 
 # Target to build the effective
