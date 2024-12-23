@@ -310,6 +310,7 @@ class State:
        
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
+        print("About to split elem.tag: elem.text: " + elem.text)
         tagr = elem.tag.split('}')
         noname = tagr[len(tagr)-1]
         # Breaks elements are converted to empty tags
@@ -330,7 +331,6 @@ class State:
         
         if elem.text:
             ret += self.handle_text(elem, elem.text)
-            print("elem.text:" + elem.text)
         for child in elem:
             ret += self.to_html_helper(child)
             if child.tail:
