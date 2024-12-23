@@ -184,7 +184,7 @@ class State:
 
     def add_to_inline_abbr_def(self, abbr, full):
         partial =  backslashify(full+" (" + abbr+")")
-        self.abbr_def.add(re.sub(r'\s+', '\\\s+', partial))
+#        self.abbr_def.add(re.sub(r'\s+', '\\\s+', partial))
 
         
     def build_termtable(self):
