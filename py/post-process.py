@@ -336,7 +336,6 @@ class State:
             if child.tail:
                 ret += self.handle_text(elem, child.tail)
         ret = ret + '</' + noname + '>'
-        print("helper returning:" + ret.text)
         self.ancestors.pop()
         return ret
 
