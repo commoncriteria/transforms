@@ -184,7 +184,7 @@ class State:
 
     def add_to_inline_abbr_def(self, abbr, full):
         partial =  backslashify(full+" (" + abbr+")")
-#        self.abbr_def.add(re.sub(r'\s+', '\\\s+', partial))
+        self.abbr_def.add(re.sub(r'\s+', '\\\s+', partial))
 
         
     def build_termtable(self):
@@ -330,6 +330,7 @@ class State:
         
         if elem.text:
             ret += self.handle_text(elem, elem.text)
+            print("elem.text:" + elem.text)
         for child in elem:
             ret += self.to_html_helper(child)
             if child.tail:
