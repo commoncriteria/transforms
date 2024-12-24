@@ -330,7 +330,7 @@ class State:
 
         
         if elem.text:
-            print("elem.text: " + elem.text)
+#            print("elem.text: " + elem.text)
             ret += self.handle_text(elem, elem.text)
         for child in elem:
             ret += self.to_html_helper(child)
