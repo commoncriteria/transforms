@@ -310,10 +310,8 @@ class State:
        
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
-        try:
-           tagr = elem.tag.split('}')
-        except AttributeError:
-           return ""
+        if isinstance(elem, ET._Comment): return ""
+        tagr = elem.tag.split('}')
         noname = tagr[len(tagr)-1]
         # Breaks elements are converted to empty tags
         if noname == "br":
@@ -332,6 +330,7 @@ class State:
 
         
         if elem.text:
+#            print("elem.text: " + elem.text)
             ret += self.handle_text(elem, elem.text)
         for child in elem:
             ret += self.to_html_helper(child)
@@ -340,7 +339,6 @@ class State:
         ret = ret + '</' + noname + '>'
         self.ancestors.pop()
         return ret
-
 #
 # Counters:
 #    Have 'class' attribute with value is 'ctr'
