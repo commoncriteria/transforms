@@ -487,7 +487,7 @@
                   </xsl:for-each>
                 </ul>
                 as described in Appendix A.3: Implementation-based Requirements.
-               <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
+               <xsl:if test="cc:depends/cc:optional or cc:depends/cc:objective"><p>This component may also be included in the ST as if optional.</p></xsl:if>
         </b></i>
         </div>
       </xsl:if>
@@ -525,7 +525,7 @@
       </xsl:for-each>
       from 
       <xsl:call-template name="make_xref"><xsl:with-param name="id" select="$doc_id"/></xsl:call-template></xsl:for-each>.
-      <xsl:if test="cc:depends/cc:optional"><p>This component may also be included in the ST as if optional.</p></xsl:if>
+      <xsl:if test="cc:depends/cc:optional or cc:depends/cc:objective"><p>This component may also be included in the ST as if optional.</p></xsl:if>
   </xsl:template>
 
   <!-- ############### -->
@@ -665,7 +665,7 @@
                  </xsl:for-each>
                </ul>
            </xsl:if>
-           <xsl:if test="cc:depends/cc:optional">
+           <xsl:if test="cc:depends/cc:optional or cc:depends/cc:objective">
 		   <p><i><b>This component may also be included in the ST as if optional.</b></i></p>
            </xsl:if>
           </div>
