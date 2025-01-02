@@ -126,7 +126,14 @@
     <x:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[local-name()=$cat]">
       <div class="eacategory"><x:value-of select="$cat"/></div>
       <div class="ea">
-	<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]" mode="comp-ea"/>
+		<x:choose>
+		<x:when test="$cat='CustomEA'">
+			<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:CustomEA[$cat=local-name()]" mode="comp-ea"/>		
+		</x:when>
+		<x:otherwise>
+			<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]" mode="comp-ea"/>
+		</x:otherwise>
+		</x:choose>
       </div>
     </x:if>
   </x:template>
@@ -247,7 +254,7 @@
   <xsl:template match="cc:CustomEA" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
-			There are no <xsl:vslue-of select="@name"/> evaluation activities for this component.<br/>
+			There are no <xsl:vslue-of select="./@name"> evaluation activities for this component.<br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -255,15 +262,15 @@
 	</xsl:choose>
   </xsl:template>
 
-<!-- Element-level & Managament Function KMD EAs -->
+<!-- Element-level & Managament Function CustomEA EAs -->
   <xsl:template match="cc:CustomEA" mode="single-cat">
-	<div class="eacategory"><xsl:value-of select="@name"/></div>
+	<div class="eacategory"><xsl:value-of select="./@name"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
-			There are no <xsl:vslue-of select="@name"/> evaluation activities for this element.<br/><br/>
+			There are no <xsl:vslue-of select="./@name"/> evaluation activities for this element.<br/><br/>
 		</xsl:when>
 		<xsl:when test=".='' and ancestor::cc:management-function">
-			There are no <xsl:vslue-of select="@name"/> evaluation activities for this management function.<br/><br/>
+			There are no <xsl:vslue-of select="./@name"/> evaluation activities for this management function.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
