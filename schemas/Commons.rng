@@ -522,7 +522,12 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
       </a:documentation>
       <optional><ref name="id-attr"/></optional>
       <!-- <ref name="basic-content-pat"/> -->
-      <text/>
+	  <oneOrMore>
+		<choice>
+			<text/>
+			<ref name="html-element"/>
+		</choice>
+	  </oneOrMore>
       <optional>
 	<choice>
 	  <ref name="int"/>
