@@ -128,7 +128,7 @@
       <div class="ea">
 		<x:choose>
 		<x:when test="$cat='CustomEA'">
-			<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:CustomEA[$cat=local-name()]" mode="comp-ea"/>		
+			<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:CustomEA" mode="comp-ea"/>		
 		</x:when>
 		<x:otherwise>
 			<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]" mode="comp-ea"/>
