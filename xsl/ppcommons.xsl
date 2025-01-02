@@ -254,7 +254,7 @@
   <xsl:template match="cc:CustomEA" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
-			There are no <xsl:vslue-of select="./@name"/> evaluation activities for this component.<br/>
+			There are no <xsl:value-of select="@name"/> evaluation activities for this component.<br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
@@ -264,13 +264,13 @@
 
 <!-- Element-level & Managament Function CustomEA EAs -->
   <xsl:template match="cc:CustomEA" mode="single-cat">
-	<div class="eacategory"><xsl:value-of select="./@name"/></div>
+	<div class="eacategory"><xsl:value-of select="@name"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
-			There are no <xsl:vslue-of select="./@name"/> evaluation activities for this element.<br/><br/>
+			There are no <xsl:value-of select="@name"/> evaluation activities for this element.<br/><br/>
 		</xsl:when>
 		<xsl:when test=".='' and ancestor::cc:management-function">
-			There are no <xsl:vslue-of select="./@name"/> evaluation activities for this management function.<br/><br/>
+			There are no <xsl:value-of select="@name"/> evaluation activities for this management function.<br/><br/>
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="ea"><xsl:apply-templates/></div>
