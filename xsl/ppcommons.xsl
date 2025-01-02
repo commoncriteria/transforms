@@ -257,7 +257,7 @@
 
 <!-- Element-level & Managament Function KMD EAs -->
   <xsl:template match="cc:CustomEA" mode="single-cat">
-	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+	<div class="eacategory"><xsl:value-of select="@name"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
 			There are no <xsl:vslue-of select="@name"/> evaluation activities for this element.<br/><br/>
