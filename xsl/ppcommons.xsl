@@ -242,6 +242,36 @@
 	</xsl:choose>
   </xsl:template>
 
+
+<!-- Component-level CustomEAs -->
+  <xsl:template match="cc:CustomEA" mode="comp-ea">
+    <xsl:choose>
+		<xsl:when test=".=''">
+			There are no <xsl:vslue-of select="@name"/> evaluation activities for this component.<br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+<!-- Element-level & Managament Function KMD EAs -->
+  <xsl:template match="cc:CustomEA" mode="single-cat">
+	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
+    <xsl:choose>
+		<xsl:when test=".='' and not(ancestor::cc:management-function)">
+			There are no <xsl:vslue-of select="@name"/> evaluation activities for this element.<br/><br/>
+		</xsl:when>
+		<xsl:when test=".='' and ancestor::cc:management-function">
+			There are no <xsl:vslue-of select="@name"/> evaluation activities for this management function.<br/><br/>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="ea"><xsl:apply-templates/></div>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:template>
+
+
 <!-- Component-level Test EAs -->
  <xsl:template match="cc:Tests" mode="comp-ea">
     <xsl:choose>
@@ -346,10 +376,11 @@
         <x:if test=".//cc:aactivity[not(@level='element')]">
           <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
           <x:apply-templates
-            select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:Tests)]"/>
+            select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:CustomEA or self::cc:Tests)]"/>
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'CustomEA'"/></x:call-template>	    
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
         </x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
