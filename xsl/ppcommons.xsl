@@ -252,6 +252,7 @@
 
 <!-- Component-level CustomEAs -->
   <xsl:template match="cc:CustomEA" mode="comp-ea">
+	<div class="eacategory"><xsl:value-of select="@name"/></div>
     <xsl:choose>
 		<xsl:when test=".=''">
 			There are no <xsl:value-of select="@name"/> evaluation activities for this component.<br/>
@@ -386,8 +387,8 @@
             select=".//cc:aactivity[not(@level='element')]/node()[not(self::cc:TSS or self::cc:Guidance or self::cc:KMD or self::cc:CustomEA or self::cc:Tests)]"/>
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'TSS'"/></x:call-template>	    
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'Guidance'"/></x:call-template>	    
-          <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	    
-          <x:call-template name="collect-cat"><x:with-param name="cat" select="'CustomEA'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'KMD'"/></x:call-template>	
+		  <x:call-template name="collect-cat"><x:with-param name="cat" select="'CustomEA'"/></x:call-template>	
           <x:call-template name="collect-cat"><x:with-param name="cat" select="'Tests'"/></x:call-template>	    
         </x:if>
    	<x:for-each select=".//cc:aactivity[@level='element']">
