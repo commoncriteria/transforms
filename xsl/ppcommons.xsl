@@ -124,7 +124,9 @@
     <x:param name="cat"/>
 
     <x:if test=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[local-name()=$cat]">
-      <div class="eacategory"><x:value-of select="$cat"/></div>
+	  <x:if test="$cat!='CustomEA'">
+		<div class="eacategory"><x:value-of select="$cat"/></div>
+	  </x:if>
       <div class="ea">
 		<x:choose>
 		<x:when test="$cat='CustomEA'">
