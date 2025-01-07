@@ -102,6 +102,7 @@
 					any Protection Profile.
 				</xsl:when>
 				<xsl:otherwise>
+					This PP claims conformance to the following Protection Profiles:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-conf/cc:PP-cc-ref">
 						<li><xsl:value-of select="."/></li>
@@ -118,7 +119,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<dd>The following PPs and PP-Modules are allowed to be specified in a 
-					PP-Configuration with this <xsl:call-template name="doctype-short"/>.
+					PP-Configuration with this <xsl:call-template name="doctype-short"/>:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
 						<li><xsl:value-of select="."/></li>
