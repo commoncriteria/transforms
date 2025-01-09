@@ -177,7 +177,10 @@
 		<p>
 		<xsl:apply-templates select="./cc:con-obj"/>
 		<xsl:if test="//cc:SO[cc:description]">
-			The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
+			<xsl:if test="not(./cc:con-obj)">
+				The objectives for the TOE are consistent with the <xsl:apply-templates mode="short" select="."/> 
+				based on the following rationale:
+			</xsl:if>
 			<table>
 				<caption>
 					<xsl:call-template name="ctr-xsl">
@@ -209,7 +212,10 @@
       <p>
       <xsl:apply-templates select="./cc:con-op-en"/>
       <xsl:if test="//cc:SOE">
-	  The objectives for the TOE's OE are consistent with the <xsl:apply-templates mode="short" select="."/> based on the following rationale:
+		<xsl:if test="not(./cc:con-op-en)">
+			The objectives for the TOE's OE are consistent with the <xsl:apply-templates mode="short" select="."/> 
+			based on the following rationale:
+		</xsl:if>
       <table>
   		<caption>
 			<xsl:call-template name="ctr-xsl">
