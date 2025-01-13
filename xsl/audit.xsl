@@ -137,10 +137,16 @@
 	    </xsl:apply-templates>
 	</xsl:if>
       </xsl:for-each>
+  
+	  <!-- Removed 20250113: rmc. This should never have existed as it supported the ability
+	       of PPs to add or modify audit events in external documents such as packages.
+           If a PP author needs to eliminate audit events, it can be done in FAU_GEN.1trough a selection
+		   or by iterating the Package SFR. -->
       <!-- Goes through each external document -->
 	  <!-- This needs to handle the case where there are no events rmc, 11/13/23 -->
 	  <!-- Also, there we should not be including auditable events from another document. -->
 	  <!-- For now the kludge is to do this only for PPs and cPPs until it can be deleted. -->
+	  <!--
 	 <xsl:if test="ancestor::cc:PP or ancestor::cc:cPP">
 		<xsl:for-each select="//cc:*[@id=//cc:external-doc[//cc:audit-event/@table=$thistable]/@ref]">
 			<tr data-sortkey="{@id}__{@ref}">
@@ -160,7 +166,7 @@
 			</xsl:call-template>
 		</xsl:for-each>   
 	</xsl:if>
-
+-->
     </table>
   </xsl:template>
 
