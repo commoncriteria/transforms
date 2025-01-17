@@ -76,6 +76,11 @@
   </xsl:template>
   -->
   
+     <!-- ########################################
+       Consume invisible f-component
+       ######################################## -->
+  <xsl:template match="cc:f-component[@status='invisible']"/>
+  
   <!-- ############### -->
   <!--   Overwrites template from pp2html.xsl -->
   <!-- ############### -->
