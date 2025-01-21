@@ -37,7 +37,14 @@
 <!--      <element name="keycol"><attribute name="assign"/><text/></element>  -->
       <oneOrMore><choice>
 <!--	<element name="reqtext"><text/></element>   -->
-	<element name="reqtext"><ref name="html-only-content"/></element>
+	<element name="reqtext">
+		<oneOrMore>
+			<choice>
+				<text/>
+		        <ref name="html-element"/>
+			</choice>
+		</oneOrMore>
+	</element>
 	<element name="assigncol"><text/></element>
     <element name="selectcol"><ref name="basic-content-pat"/></element>
 	<element name="textcol"><text/></element>
