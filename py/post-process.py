@@ -310,7 +310,11 @@ class State:
        
     def to_html_helper(self, elem):
         """Function that turns document in HTML"""
-        tagr = elem.tag.split('}')
+        # tagr = elem.tag.split('}')
+        try:
+           tagr = elem.tag.split('}')
+        except AttributeError:
+           return ""
         noname = tagr[len(tagr)-1]
         # Breaks elements are converted to empty tags
         if noname == "br":
