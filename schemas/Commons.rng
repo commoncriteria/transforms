@@ -179,17 +179,17 @@
     </choice>
 		
 	<!-- Security Objectives Rationale -->
-    <choice> 
+    <optional><choice> 
       <element name="section">
-	<a:documentation>
-	  Section describing the rationale for why this module's security objectives do not
-	  conflict with the base PPs.
-	</a:documentation>
-	<attribute name="title"><value>Security Objectives Rationale</value></attribute>
-	<ref name="optional-id"/>
+		<a:documentation>
+			Section describing the rationale for why this module's security objectives do not
+			conflict with the base PPs.
+		</a:documentation>
+		<attribute name="title"><value>Security Objectives Rationale</value></attribute>
+		<ref name="optional-id"/>
       </element>
       <element name="sec:Security_Objectives_Rationale"><empty/></element>
-    </choice>
+    </choice></optional>
   </define>
 
   <define name="appendices-pat">

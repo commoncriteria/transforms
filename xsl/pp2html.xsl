@@ -321,6 +321,8 @@
     </xsl:call-template>
   </xsl:template>
 
+<!-- Security Objectives Rationale Table -->
+
   <xsl:template name="sec_obj_rat">
     <xsl:param name="id"/>
 
