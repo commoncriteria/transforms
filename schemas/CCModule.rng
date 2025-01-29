@@ -537,6 +537,8 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 			</attribute>
 		</element>
 
+		<element name="no-change"/>
+
 	</choice>
 </define>
 
