@@ -529,6 +529,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 		<element name="set-status">
 			<attribute name="status"> 
 				<choice>
+					<value>mandatory</value>
 					<value>optional</value>
 					<value>objective</value>
 					<value>feat-based</value>
