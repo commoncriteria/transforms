@@ -537,7 +537,12 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 			</attribute>
 		</element>
 
-		<element name="no-change"/>
+		<element name="no-change">
+			<a:documentation>
+				Specifies that there are no changes to the SFR. Essentially a comment or no-op.
+			</a:documentation>
+			<empty/>
+		</element>
 
 	</choice>
 </define>
