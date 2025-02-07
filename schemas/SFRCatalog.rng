@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="https://niap-ccevs.org/cc/v1"
+         xmlns:sec="https://niap-ccevs.org/cc/v1/section"
+         xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         xmlns:htm="http://www.w3.org/1999/xhtml"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         >
+
+
+<!-- ################################# -->
+<!--            START                  -->
+<!-- ################################# -->
+  <start>
+    <element name="SFRCatalog">
+		<a:documentation>Root element for SFR Catalog XML document</a:documentation>
+		<attribute name="name"/>
+		<ref name="CatReference"/>
+		<ref name="RevisionHistory"/>      
+		<ref name="CatPreferences"/> 
+		<ref name="CatSFRs"/>
+<!--		<ref name="CatSARs"/>  -->		
+   </element>
+  </start>
+  
+ 
+  <include href="Commons.rng">
+    <define name="custom-basic-content-pat">
+      <choice>
+        <element name="componentsneeded">
+          <oneOrMore>
+            <element name="componentneeded">
+              <optional><ref name="id-attr"/></optional>
+              <element name="componentid">
+                <ref name="comp-id-upper-respat"/>
+              </element>
+              <ref name="depends-pat"/> 
+              <element name="notes">
+                <ref name="basic-content-pat"/>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+     </choice>
+    </define>
+  </include>
+
+  <define name="CatReference">
+      <element name="CatReference">
+        <a:documentation>
+          Information about the document that appears on the title page.
+        </a:documentation>
+        <element name="CatTitle">
+            <a:documentation>Title of this document</a:documentation>
+            <text/>
+        </element>
+        <element name="CatVersion">
+            <a:documentation>
+				Version of the catalog.
+            </a:documentation>
+            <data type="NMTOKEN"/>
+        </element>
+        <element name="CatAuthor">
+			<a:documentation>
+              Organization that developed this SFR catalog.
+            </a:documentation>
+            <text/>
+        </element>
+        <element name="CatPubDate">
+            <a:documentation>
+              Date of publication for this catalog.
+            </a:documentation>
+            <data type="date"/>
+        </element>
+      </element>
+	</define> 
+  
+	<define name="CatPreferences">
+		<element name="CatPreferences">
+			<a:documentation>
+				A place to define preferences for catalog output.
+				"audit-events-in-sfrs": Audit events are defined in the SFRs rather than in a separate table.
+					For catalogs, this element must always be included.
+				"display-audit-with-sfrs": Audit events are displayed with the SFRs rather than in a separate table.
+					For catalogs, this element must always be included.
+				"display-comp-rel-in-sfrs": Component relationships are displayed with the components. This should
+					always be included for catalogs.
+			</a:documentation>
+			<interleave>
+				<optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
+				<optional><element name="audit-events-in-sfrs"><empty/></element></optional> 
+				<optional><element name="display-comp-rel-in-sfrs"><empty/></element></optional> 
+			</interleave>
+		</element>
+	</define>
+
+	<!-- SFRs Section -->
+	<define name="CatSFRs">
+		<a:documentation>
+			Section containing all catalog SFRs
+			Series of Classes
+		</a:documentation>
+		
+		<element name="section">
+			 <attribute name="title"><value>Security Functional Requirements</value></attribute>
+			 <attribute name="id"/>
+			 <oneOrMore><ref name="CatClass"/></oneOrMore>
+		</element>  
+	</define>
+
+	
+	<define name="CatClass">
+		<a:documentation>
+			Section name should be e.g. Class FCS: Cryptographic Services
+			Contains a series of Families
+		</a:documentation>
+		<element name="section">
+			<attribute name="title"/>
+			<attribute name="id"/>		
+			<optional><ref name="ext-comp-class"/></optional>
+			<optional><ref name="cat-guidance-notes-class-pat"/></optional>
+			<oneOrMore><ref name="CatFamily"/></oneOrMore>
+		</element>
+	</define>
+
+	<define name="CatFamily">
+		<a:documentation>
+			A section for a Family. Contains a series of SFRs.
+			Family name is e.g. FCS_CKM regardless of whether it contains EXT sfrs.
+		</a:documentation>
+		<element name="section">
+			<attribute name="title"/>
+			<attribute name="id"/>		
+			<optional><ref name="ext-comp-def-pat"/></optional>
+			<optional><ref name="cat-guidance-notes-family-pat"/></optional>
+			<oneOrMore><ref name="CatSFR"/></oneOrMore>
+		</element>
+	</define>
+
+	<define name="CatSFR">
+		<a:documentation>
+			A section for a Component/SFR.
+		</a:documentation>
+		<element name="section">
+			<attribute name="title"/>
+			<attribute name="id"/>		
+			<optional><ref name="cat-guidance-notes-component-pat"/></optional>
+			<ref name="f-component-pattern"/>
+		</element>
+	</define>
+	
+	
+	<define name="cat-guidance-notes-class-pat">
+		<ref name="classic-section"/>
+	</define>
+		
+	<define name="cat-guidance-notes-family-pat">
+		<ref name="classic-section"/>
+	</define>
+
+	<define name="cat-guidance-notes-component-pat">
+		<ref name="basic-content-pat"/>
+	</define>
+
+
+
+</grammar>
