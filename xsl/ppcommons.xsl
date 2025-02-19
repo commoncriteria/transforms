@@ -46,7 +46,7 @@
  <!-- ############################################################
            Gets the ID for the f-component or f-element
        ############################################################-->
- <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl" mode="getId">
+ <xsl:template match="cc:f-component|cc:f-element|cc:f-component-decl|cc:base-sfr-spec" mode="getId">
     <xsl:variable name="iter"><xsl:choose>
       <xsl:when test="local-name()='f-component'"><xsl:value-of select="@iteration"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="../@iteration"/></xsl:otherwise>

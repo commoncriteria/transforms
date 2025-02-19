@@ -513,10 +513,18 @@
   <!--  Handle depends -->
   <!-- ############### -->
   <xsl:template name="handle_thing_with_depends">
-    <xsl:for-each select="//cc:f-element[.//cc:selectable[@id=current()/cc:depends[not(cc:external-doc)]/@*]]">
+    <xsl:for-each select="//cc:f-component/cc:f-element[.//cc:selectable[@id=current()/cc:depends[not(cc:external-doc)]/@*]]">
       <xsl:apply-templates select="." mode="getId"/>
       <xsl:call-template name="commaifnotlast"/>
     </xsl:for-each>
+	
+	<!-- Case where selectable is in a modified-sfr of a Module -->
+	<!-- There might not be an alement, but there must be a base-sfr-spec -->
+    <xsl:for-each select="//cc:base-sfr-spec[.//cc:selectable[@id=current()/cc:depends[not(cc:external-doc)]/@*]]">
+      <xsl:apply-templates select="." mode="getId"/>
+      <xsl:call-template name="commaifnotlast"/>
+    </xsl:for-each>
+	
     <!-- This is a little broken -->
     <xsl:for-each select="cc:depends[cc:external-doc]">
       <xsl:variable name="doc_id" select="cc:external-doc/@ref"/>
