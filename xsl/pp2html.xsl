@@ -331,9 +331,22 @@
 
   <!-- ############### -->
   <!--                 -->
+<!--
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
       <xsl:value-of select="@name"/>
    </xsl:template>
+-->
+  <!-- From modules. -->
+  <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
+    <xsl:value-of select="@name"/>
+<!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
+    <xsl:if test="cc:from"> 
+	    <xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
+	    (from <xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>)
+	</xsl:if>
+  </xsl:template>
+
+
 
   <!-- ############### -->
   <!--                 -->
@@ -1096,27 +1109,31 @@
   <xsl:template match="cc:*[@id='obj_map']" mode="hook" name="threat-req-map">
     <p>The following rationale provides justification for each SFR for the TOE, 
     showing that the SFRs are suitable to address the specified threats:<br/>
-      <table>
+    <table>
         <caption><xsl:call-template name="ctr-xsl">
-               <xsl:with-param name="ctr-type">Table</xsl:with-param>
-	       <xsl:with-param name="id" select="'t-obj_map'"/>
-		</xsl:call-template>: SFR Rationale</caption>
+				<xsl:with-param name="ctr-type">Table</xsl:with-param>
+				<xsl:with-param name="id" select="'t-obj_map'"/>
+			</xsl:call-template>: SFR Rationale</caption>
         <tr><th>Threat</th><th>Addressed by</th><th>Rationale</th></tr>
+			
         <xsl:for-each select="//cc:threat/cc:addressed-by">
-          <tr>
-	   <xsl:if test="not(preceding-sibling::cc:addressed-by)">
+			<tr>
+				<xsl:if test="not(preceding-sibling::cc:addressed-by)">
+					<xsl:attribute name="class">major-row</xsl:attribute>
+					<xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
+					<td rowspan="{$rowspan}">
+						<xsl:call-template name="underscore_breaker">
+							<xsl:with-param name="valu"><xsl:apply-templates select=".." mode="get-representation"/></xsl:with-param>
+						</xsl:call-template>
+					</td>
+				</xsl:if>
 
-             <xsl:attribute name="class">major-row</xsl:attribute>
-             <xsl:variable name="rowspan" select="count(../cc:addressed-by)"/>
-             <td rowspan="{$rowspan}">
-               <xsl:apply-templates mode="underscore_breaker" select="../@name"/><br/>
-             </td>
-           </xsl:if>
-           <td><xsl:apply-templates/></td>
-           <td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
-          </tr><xsl:text>&#xa;</xsl:text> 
-       
+				<td><xsl:apply-templates/></td>
+
+				<td><xsl:apply-templates select="following-sibling::cc:rationale[1]"/></td>
+			</tr><xsl:text>&#xa;</xsl:text> 
         </xsl:for-each>
+		
       </table>
     </p>
   </xsl:template>
