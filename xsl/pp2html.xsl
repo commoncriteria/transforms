@@ -161,15 +161,47 @@
 	      <tr class="header"> <th>Identifier</th> <th>Title</th> </tr>
       <xsl:apply-templates mode="hook" select="."/>
 	  <xsl:choose>
+	  
+		<!-- CC:2022 -->
 		<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
-			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc2022-docs']/cc:entry|document('boilerplates.xml')//*[@id='cc2022-cem']/cc:entry">
+			<xsl:variable name="errver">
+				<xsl:value-of select="//cc:CClaimsInfo/@cc-errata"/>
+			</xsl:variable>
+			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc2022-docs']/cc:entry|document('boilerplates.xml')//*[@id='cc2022-cem']/cc:entry|document('boilerplates.xml')//*[@id='cc2022-err']/cc:entry">
 				<xsl:sort/>
-				<tr>
-					<td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
-					<td><xsl:apply-templates select="cc:description"/></td>
-				</tr>
+				
+				<!-- Test for errata entries and select the right one -->
+				<xsl:choose>
+				<xsl:when test="@id='bibERRv10'">
+					<xsl:if test="$errver='v1.0'">
+						<tr>
+							<td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+							<td><xsl:apply-templates select="cc:description"/></td>
+						</tr>
+					</xsl:if>
+				</xsl:when>
+				
+				<xsl:when test="@id='bibERRv11'">
+					<xsl:if test="$errver='v1.1'">
+						<tr>
+							<td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+							<td><xsl:apply-templates select="cc:description"/></td>
+						</tr>
+					</xsl:if>
+				</xsl:when>
+
+				<!-- Non errata entries -->
+				<xsl:otherwise>
+					<tr>
+						<td><span id="{@id}">[<xsl:value-of select="cc:tag"/>]</span></td>
+						<td><xsl:apply-templates select="cc:description"/></td>
+					</tr>
+				</xsl:otherwise>
+				</xsl:choose>
 			</xsl:for-each>
 		</xsl:when>
+		
+		<!-- CC 3.5 -->
 		<xsl:otherwise>
 			<xsl:for-each select="//cc:bibliography/cc:entry|document('boilerplates.xml')//*[@id='cc-docs']/cc:entry">
 				<xsl:sort/>

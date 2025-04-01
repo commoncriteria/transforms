@@ -1601,6 +1601,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<value>cc-31r5</value>
 			</choice>
 		</attribute>
+		<optional><attribute name="cc-errata">
+			<choice>
+				<value>v1.0</value>
+				<value>v1.1</value>
+			</choice>
+		</attribute></optional>
 		<optional><attribute name="cc-approach">
 			<choice>
 				<value>direct-rationale</value>

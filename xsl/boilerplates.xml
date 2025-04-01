@@ -99,7 +99,23 @@
       </entry>
    </empty>
 
- 
+   <empty id="cc2022-err">
+      <entry id="bibERRv10">
+        <tag>ERR</tag>
+        <description><h:a href="https://www.commoncriteriaportal.org/files/ccfiles/CCMB-2024-02-001-v1_0-Final-Errata_Interpretation_CC_CEM_2022_Release%20Candidate.pdf">
+              Errata and Interpretation for CC:2022 (Release 1) and CEM:2022 (Release 1), Version 1.0</h:a>, 
+			  CCMB-2024-02-001, 1 February 2024.
+        </description>
+      </entry>
+      <entry id="bibERRv11">
+        <tag>ERR</tag>
+        <description><h:a href="https://www.commoncriteriaportal.org/files/ccfiles/CCMB-2024-002-v1_1-Errata_Interpretation_CC_CEM_2022.pdf">
+              Errata and Interpretation for CC:2022 (Release 1) and CEM:2022 (Release 1), Version 1.1</h:a>, 
+			  CCMB-2024-02-002, 22 July 2024.
+        </description>
+      </entry>
+   </empty>
+
  
  	<empty id="cc2022-ppclaim-bp-pp">
 		The functional packages to which the PP conforms may include SFRs that are not mandatory 
