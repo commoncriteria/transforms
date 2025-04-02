@@ -255,14 +255,16 @@
 	
   <!-- ############### -->
   <!--                 -->
-  <xsl:template match="cc:assumptions|cc:threats|cc:OSPs|cc:SOs|cc:SOEs">
-    <xsl:choose> <xsl:when test="cc:*[cc:description]">
+  <xsl:template match="cc:assumptions|cc:OSPs|cc:SOs|cc:SOEs">
+    <xsl:choose> 
+	<xsl:when test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
         </dl>
-    </xsl:when><xsl:otherwise>
+    </xsl:when>
+	<xsl:otherwise>
       This document does not define any additional <xsl:value-of select="local-name()"/>.
     </xsl:otherwise> </xsl:choose>
   </xsl:template>
@@ -276,10 +278,28 @@
   <!--   using the addressed-by tag (with no objective-refer tags) -->
   <xsl:template match="cc:threats">
     <xsl:choose> 
-	<xsl:when test="cc:*[cc:description]">
+	<xsl:when test="cc:threat">
         <dl>
-          <xsl:for-each select="cc:*[cc:description]">
-            <xsl:call-template name="defs-with-notes"/>
+			<xsl:for-each select="cc:threat">
+ 
+				<xsl:variable name="class" select="local-name()"/>
+				<dt class="{$class} defined" id="{@name}">
+					<xsl:apply-templates select="." mode="get-representation"/>
+				</dt>
+
+				<xsl:if test="cc:description">
+					<dd>
+					  <xsl:apply-templates select="cc:description"/>
+					</dd>
+				</xsl:if>
+				
+				<xsl:if test="not(cc:description) and cc:from">
+					<dd>
+						This threat from the above Base PP also applies to the functionality defined in this PP-Module.
+					</dd>
+				</xsl:if>
+
+<!--			<xsl:call-template name="defs-with-notes"/>   -->
 
 			<!-- This should be true only for Direct Rationale -->
 			<!-- Uncomment this to display the SFRs with the threats -->
@@ -294,7 +314,7 @@
  	    </dl>
     </xsl:when>
 	<xsl:otherwise>
-      This document does not define any additional <xsl:value-of select="local-name()"/>.
+      This document does not define any additional threats.
     </xsl:otherwise> 
 	</xsl:choose>
   </xsl:template>

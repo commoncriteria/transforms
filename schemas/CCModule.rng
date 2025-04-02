@@ -38,7 +38,10 @@
           <ref name="description"/>
           <optional><ref name="consistency-rationale"/></optional>
         </group>
-        <ref name="from"/>
+        <group>
+			<ref name="from"/>
+			<optional><ref name="description"/></optional>
+		</group>
       </choice>
     </define>
     
@@ -590,11 +593,13 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 </define>
 
 
- 
-
   <define name="from">
+    <a:documentation>
+		For specifying the base-pp origin of a threat addressed in a module.
+	</a:documentation>
     <element name="from">
        <attribute name="base"/>
+       <optional><ref name="description"/></optional>
     </element>
   </define>
 
