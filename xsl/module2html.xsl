@@ -508,7 +508,7 @@
 						<xsl:choose>
 						<xsl:when test="@iteration">
 							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),'/')"/>
-							<xsl:value-of select="concat(translate(@iteration, $lower, $upper),': ')"/>
+							<xsl:value-of select="concat(@iteration,': ')"/> 
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="concat(translate(@cc-id, $lower, $upper),': ')"/>
