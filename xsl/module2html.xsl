@@ -456,16 +456,18 @@
     <xsl:variable name="baseID">
 		<xsl:choose>
 			<xsl:when test="@iteration">
-				<xsl:value-of select="concat(@cc-id, concat('/', @iteration))"/>
+				<xsl:value-of select="concat(translate(@cc-id, $lower, $upper), concat('/', @iteration))"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="@cc-id"/>
+				<xsl:value-of select="translate(@cc-id, $lower, $upper)"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	
-    <xsl:value-of select="translate($baseID, $lower, $upper)"/>    
+    <xsl:value-of select="$baseID"/>    
   </xsl:template>
+
+
 
 
   <!-- ############################################ -->
