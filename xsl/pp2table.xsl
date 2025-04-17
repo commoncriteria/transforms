@@ -148,7 +148,7 @@
 					<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
 					<p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
 					<p/><xsl:if test="//cc:ReferenceTable/cc:dateTimeStamp">
-						<xsl:value-of select="current-dateTime()"/>
+						<xsl:value-of select="current-dateTime()"/> 
 					</xsl:if>
 					<p/><b><xsl:value-of select="//cc:PPAuthor"/></b>
 				</div>
