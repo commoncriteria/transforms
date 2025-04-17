@@ -647,7 +647,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 	  </a:documentation>
           <data type="date"/>
         </element>
-		<optional/><element name="dateTimeStamp"><empty/></element></optional>
+		<optional><element name="dateTimeStamp"><empty/></element></optional>
         <element name="Keywords">
 	  <a:documentation>
 	  </a:documentation>
