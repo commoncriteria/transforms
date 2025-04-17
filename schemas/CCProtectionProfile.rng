@@ -453,7 +453,7 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             </a:documentation>
             <data type="date"/>
           </element>
-		  <optional><element name="dateTimeStamp"><empty/></element></optional>
+<!--		  <optional><element name="dateTimeStamp"><empty/></element></optional>  -->
           <optional>
 		    <element name="Keywords">
               <a:documentation>
