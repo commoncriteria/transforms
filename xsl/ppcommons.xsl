@@ -1305,6 +1305,9 @@ The following sections list Common Criteria and technology terms used in this do
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
       Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
       <xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>
+   	  <p/><xsl:if test="//cc:ReferenceTable/cc:dateTimeStamp">
+			<xsl:value-of select="current-dateTime()"/>
+		</xsl:if>
       <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
     </div>
     <xsl:apply-templates select="//cc:foreword"/>
