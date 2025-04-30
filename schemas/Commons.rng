@@ -1530,6 +1530,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       <ref name="id-attr"/>
     </optional>
     <ref name="iteration-pat"/>
+	<ref name="extended-pat"/>
   </define>
 
   <define name="iteration-pat">
@@ -1543,6 +1544,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </attribute>
     </optional>
   </define>
+
+  <define name="extended-pat">
+    <optional>
+      <attribute name="extended">
+        <a:documentation>
+        </a:documentation>
+		<choice>
+			<value>yes</value>
+			<value>no</value>
+		</choice>
+      </attribute>
+    </optional>
+  </define>
+
 
   <define name="f-element-title">
     <element name="title">
