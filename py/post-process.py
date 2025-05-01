@@ -72,7 +72,7 @@ class State:
         self.plural_to_abbr = {}              # Map from plural abbreviations to abbreviation
         self.regex = None                     # Regex used to find things of interest in the documetn
         self.main_doc = main_doc              # Points to the main document (if we're processing an SD)
-        self.is_handling_first_abbrs = False  # Flag to say we're handling first abbreviations
+        self.is_handling_first_abbrs = handle_abbrs  # Flag to say we're handling first abbreviations
         self.abbr_def = set()                 # Set of all full in-text definitions of abbreviations
         self.fix_test_numbers()
         self.sort_it_out() 
