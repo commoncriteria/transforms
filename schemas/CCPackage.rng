@@ -106,6 +106,7 @@
             </a:documentation>
             <choice>
               <value>optional</value>
+              <value>invisible</value>
             </choice>
           </attribute>
         </optional>
