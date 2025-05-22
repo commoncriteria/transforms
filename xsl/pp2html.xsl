@@ -478,8 +478,9 @@
          <xsl:variable name="type" select="@type"/>
          <h4> <xsl:apply-templates/> elements: </h4>
          <xsl:apply-templates select="$comp/cc:a-element[@type=$type]" mode="a-element"/>
-      </xsl:for-each> 
-      <xsl:call-template name="f-comp-activities"/>
+      </xsl:for-each>
+      <xsl:if test="not( (/cc:Module or //cc:cPP) and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
+<!--      <xsl:call-template name="f-comp-activities"/>  -->
     </div>
   </xsl:template>
 
@@ -504,7 +505,8 @@
          <h4> <xsl:apply-templates/> elements: </h4>
          <xsl:apply-templates select="$comp/cc:a-element[@type=$type]" mode="a-element"/>
       </xsl:for-each> 
-      <xsl:call-template name="f-comp-activities"/>
+      <xsl:if test="not( (/cc:Module or //cc:cPP) and $release = 'final' )"><xsl:call-template name="f-comp-activities"/></xsl:if>
+<!--     <xsl:call-template name="f-comp-activities"/>  -->
     </div>
   </xsl:template>
 
@@ -565,7 +567,7 @@
         </div>
       </xsl:if>
      <xsl:apply-templates/>
-        <xsl:call-template name="f-comp-activities"/>
+     <xsl:call-template name="f-comp-activities"/>
     </div>
   </xsl:template>
 
