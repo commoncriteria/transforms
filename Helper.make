@@ -262,6 +262,13 @@ pp:$(PP_HTML)
 #EXTRA_CSS ?=
 #	$(XSL_EXE) --stringparam custom-css-file $(EXTRA_CSS) -o $(PP_HTML) $(PP2HTML_XSL) $(PP_XML)
 
+# cpp is same as module, but with appendicize on for all builds
+cpp-target:
+#       Download all remote base-pps
+	$(call DOIT_SD,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM),$(TRANS)/xsl/module2sd.xsl,$(SD_HTML))
+	$(call DOIT,$(PP_XML),$(PP2HTML_XSL),$(PP_HTML), $(APP_PARM))
+	python3 $(TRANS)/py/anchorize-periods.py $(PP_HTML) $(PP_LINKABLE_HTML) || true
+
 module-target:
 #       Download all remote base-pps
 	$(call DOIT_SD,$(PP_XML),$(PP2HTML_XSL),$(PP_RELEASE_HTML),$(FNL_PARM) $(APP_PARM),$(TRANS)/xsl/module2sd.xsl,$(SD_HTML))
