@@ -149,7 +149,7 @@
 						<img src="images/niaplogo.png" alt="NIAP Logo"/> 
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+			<br/><br/><br/><br/>    <!-- <img src="images/cclogo.png" alt="Common Criteria Logo"/> -->
 					</xsl:otherwise>
 					</xsl:choose>		
 					<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>

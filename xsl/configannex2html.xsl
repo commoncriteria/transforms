@@ -237,7 +237,7 @@
 				<img src="images/niaplogo.png" alt="NIAP" width="200" height="160"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<img src="images/cclogo.png" alt="CC" width="200" height="160"/>
+			<br/><br/><br/><br/>    <!-- <img src="images/cclogo.png" alt="Common Criteria Logo"/> -->
 			</xsl:otherwise>
 			</xsl:choose>		
           <h1 class="title"><b>Configuration Annex</b>

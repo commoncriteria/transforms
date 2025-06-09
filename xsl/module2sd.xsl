@@ -84,7 +84,7 @@ Transforms PP Modules into Support Documentation.
 			<img src="images/niaplogo.png" alt="NIAP Logo"/> 
 		</xsl:when>
 		<xsl:otherwise>
-			<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+			<br/><br/><br/><br/>    <!-- <img src="images/cclogo.png" alt="Common Criteria Logo"/> -->
 		</xsl:otherwise>
 		</xsl:choose>		
       <hr width="50%"/>
