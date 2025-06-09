@@ -1306,7 +1306,7 @@ The following sections list Common Criteria and technology terms used in this do
 			<img src="images/niaplogo.png" alt="NIAP Logo"/> 
 		</xsl:when>
 		<xsl:otherwise>
-			<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+			<br/><br/><br/><br/>    <!-- <img src="images/cclogo.png" alt="Common Criteria Logo"/> -->
 		</xsl:otherwise>
 		</xsl:choose>		
 		<br/>
