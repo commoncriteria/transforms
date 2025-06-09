@@ -1301,7 +1301,15 @@ The following sections list Common Criteria and technology terms used in this do
           >This page is best viewed with JavaScript enabled!</h1>
     </noscript>
     <div class="center">
-      <img src="images/niaplogo.png" alt="NIAP Logo"/> <br/>
+		<xsl:choose>
+		<xsl:when test="not (//cc:pp-preferences/cc:suppress-niap-logo)">
+			<img src="images/niaplogo.png" alt="NIAP Logo"/> 
+		</xsl:when>
+		<xsl:otherwise>
+			<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+		</xsl:otherwise>
+		</xsl:choose>		
+		<br/>
 	<!-- Might think about getting rid of this and just making it part of the foreword -->
       Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/><br/>
       <xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/><br/>

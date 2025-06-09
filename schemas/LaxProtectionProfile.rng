@@ -441,7 +441,8 @@
       </a:documentation>
       <interleave>
         <optional><element name="display-audit-with-sfrs"><empty/></element></optional>  
-        <optional><element name="audit-events-in-sfrs"   ><empty/></element></optional>
+        <optional><element name="audit-events-in-sfrs"><empty/></element></optional>
+        <optional><element name="suppress-niap-logo"><empty/></element></optional>
       </interleave>
     </element>
   </define> 

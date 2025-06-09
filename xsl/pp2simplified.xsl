@@ -151,7 +151,14 @@
 				</xsl:choose>
 
 				<div class="center">
-					<img src="images/niaplogo.png"/>
+					<xsl:choose>
+					<xsl:when test="not (//cc:pp-preferences/cc:suppress-niap-logo)">
+						<img src="images/niaplogo.png" alt="NIAP Logo"/> 
+					</xsl:when>
+					<xsl:otherwise>
+						<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+					</xsl:otherwise>
+					</xsl:choose>		
 					<p/>Version: <xsl:value-of select="//cc:ReferenceTable/cc:PPVersion"/>
 					<p/><xsl:value-of select="//cc:ReferenceTable/cc:PPPubDate"/>
 <!--					<p/><xsl:if test="//cc:ReferenceTable/cc:dateTimeStamp">

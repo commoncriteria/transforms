@@ -232,7 +232,14 @@
             >This page is best viewed with JavaScript enabled!</h1>
         </noscript>
           <br/>
-          <img src="images/niaplogo.png" alt="NIAP" width="200" height="160"/>
+			<xsl:choose>
+			<xsl:when test="not (//cc:pp-preferences/cc:suppress-niap-logo)">
+				<img src="images/niaplogo.png" alt="NIAP" width="200" height="160"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="images/cclogo.png" alt="CC" width="200" height="160"/>
+			</xsl:otherwise>
+			</xsl:choose>		
           <h1 class="title"><b>Configuration Annex</b>
           to the <p/>
           <b><xsl:value-of select="//co:ConfigAnnexReference/co:PPType"/> for

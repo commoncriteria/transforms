@@ -79,7 +79,14 @@ Transforms PP Modules into Support Documentation.
     <div style="text-align: center; margin-left: auto; margin-right: auto;">
       <h1 class="title" style="page-break-before:auto;">Supporting Document<br/>
         Mandatory Technical Document</h1>
-      <img src="images/niaplogo.png" alt="NIAP"/>
+		<xsl:choose>
+		<xsl:when test="not (//cc:pp-preferences/cc:suppress-niap-logo)">
+			<img src="images/niaplogo.png" alt="NIAP Logo"/> 
+		</xsl:when>
+		<xsl:otherwise>
+			<img src="images/cclogo.png" alt="Common Criteria Logo"/> 
+		</xsl:otherwise>
+		</xsl:choose>		
       <hr width="50%"/>
       <noscript><h1 style="text-align:center; border-style: dashed; border-width: medium; border-color: red;">This page is best viewed with JavaScript enabled!</h1></noscript><br/>
       <x:apply-templates select="/cc:*" mode="get_title"/><br/>
