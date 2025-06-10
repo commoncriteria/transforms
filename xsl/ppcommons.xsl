@@ -1123,6 +1123,9 @@ The following sections list Common Criteria and technology terms used in this do
        This should help the transition from output w/ polluted
        namespace to output all in htm namespace. For right now
        this is what we have.
+	   
+	   Side-effect appears to be drawing a box around platform-dependent tests
+	   because using class "dependent". Isn't that special.
   -->
   <xsl:template match="htm:*[./cc:depends]">
     <div class="dependent"><xsl:call-template name="depends-explainer"/>
@@ -1131,6 +1134,17 @@ The following sections list Common Criteria and technology terms used in this do
       </div>        
     </div>        
   </xsl:template>
+
+  <!-- Maybe this will draw boxes around platform-dependent tests in a test list.
+       It's worth a try -->
+  <xsl:template match="cc:testlist[./cc:depends]">
+    <div class="dependent"><xsl:call-template name="depends-explainer"/>
+       <div class="dependent-content">
+          <xsl:call-template name="handle-html"/>
+      </div>        
+    </div>        
+  </xsl:template>
+
 
   <xsl:template name="depends-explainer">
     <xsl:param name="words" select="'The following content should be included if:'"/>
