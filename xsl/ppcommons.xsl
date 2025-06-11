@@ -1135,9 +1135,9 @@ The following sections list Common Criteria and technology terms used in this do
     </div>        
   </xsl:template>
 
-  <!-- Maybe this will draw boxes around platform-dependent tests in a test list.
+  <!-- Maybe this will draw boxes around platform-dependent tests.
        It's worth a try -->
-  <xsl:template match="cc:testlist[./cc:depends]">
+  <xsl:template match="cc:test[./cc:depends]">
     <div class="dependent"><xsl:call-template name="depends-explainer"/>
        <div class="dependent-content">
           <xsl:call-template name="handle-html"/>
