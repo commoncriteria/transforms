@@ -590,7 +590,7 @@
     <xsl:for-each select="cc:depends[cc:external-doc]">
       <xsl:variable name="doc_id" select="cc:external-doc/@ref"/>
       <xsl:variable name="path" select="concat($work-dir,'/',$doc_id,'.xml')"/>
-
+work-dir of external doc = <xsl:value-of select="$work-dir"/>
       <xsl:for-each select="@*">
 	<xsl:variable name="refId" select="."/>
 	<xsl:apply-templates mode="make_xref" select="document($path)//cc:f-element[.//@id=$refId]"/><xsl:call-template name="commaifnotlast"/>
