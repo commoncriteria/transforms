@@ -39,7 +39,7 @@
           <optional><ref name="consistency-rationale"/></optional>
         </group>
         <group>
-			<ref name="from"/>
+			<oneOrMore><ref name="from"/></oneOrMore>
 			<optional><ref name="description"/></optional>
 		</group>
       </choice>
