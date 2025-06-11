@@ -88,14 +88,16 @@
     <xsl:value-of select="@name"/>
 <!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
    <xsl:if test="cc:from"> 
-   In mod2html
-		(from <xsl:for-each select="cc:from">
+			<xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
+			(from <xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/> )
+
+
+<!--		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
-<!--			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>  -->
-			<xsl:value-of select="//cc:base-pp[@id=$bid]/@short"/>
+			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/> 
 			<xsl:call-template name="commaifnotlast"/>
-		</xsl:for-each>)
+		</xsl:for-each>)-->
 	</xsl:if>
    </xsl:template>
 
