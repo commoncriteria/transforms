@@ -364,7 +364,7 @@
 		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
-			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>
+			<xsl:apply-templates mode="short" select="$bid"/>
 			<xsl:call-template name="commaifnotlast"/>
 		</xsl:for-each>)
 	</xsl:if>
