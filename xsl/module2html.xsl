@@ -88,11 +88,13 @@
     <xsl:value-of select="@name"/>
 <!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
    <xsl:if test="cc:from"> 
+		<xsl:variable name="set" select="cc:from"/>
+		<xsl:variable name="count" select="count($set)"/>
 		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
 			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>
-			<xsl:call-template name="commaifnotlast"/>
+			<xsl:if test="$count>2"><xsl:call-template name="commaifnotlast"/></xsl:if>
 		</xsl:for-each>)
 	</xsl:if>
    </xsl:template>
