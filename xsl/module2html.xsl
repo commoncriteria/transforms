@@ -87,16 +87,17 @@
   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
     <xsl:value-of select="@name"/>
 <!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
-    <xsl:if test="cc:from"> 
+   <xsl:if test="cc:from"> 
+   In mod2html
 		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="cc:from/@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
 <!--			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>  -->
-			<xsl:apply-templates mode="short" select="$bid"/>
+			<xsl:value-of select="//cc:base-pp[@id=$bid]/@short"/>
 			<xsl:call-template name="commaifnotlast"/>
 		</xsl:for-each>)
 	</xsl:if>
-  </xsl:template>
+   </xsl:template>
 
   <!-- ############### -->
   <!--      -->
