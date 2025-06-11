@@ -1168,7 +1168,7 @@ The following sections list Common Criteria and technology terms used in this do
 	   <xsl:when test="cc:external-doc">
 	     <xsl:variable name="ref" select="cc:external-doc/@ref"/>
 	     <xsl:variable name="path" select="concat($work-dir,'/',$ref,'.xml')"/>
-
+external doc path = <xsl:value-of select="$path"/>
              <xsl:for-each select="@*"><xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if><span class="no-link-sel"><xsl:apply-templates select="document($path)//cc:selectable[@id=current()]" mode="make_xref"/></span>
              </xsl:for-each>
              is selected from 
