@@ -242,11 +242,6 @@
       </xsl:for-each>
       </table>
       </xsl:if>
-	  <!-- Case where no SOEs defined and no con-op-en text provided. Spit out some boilerplate -->
-	  <xsl:if test="(not(./cc:con-op-en)) and (not(//cc:SOE))">
-			This PP-Module defines no environmental security objectives because the TOE's security environment 
-			is identical to that specified by the <xsl:apply-templates mode="short" select="."/>.
-	  </xsl:if>
       </p>
 
       <h3 id="conreq-{@id}" class="indexable" data-level="3">
