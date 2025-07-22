@@ -1152,7 +1152,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:choose>
       <!-- When it depends on a choice -->
       <xsl:when test="//cc:choice[@prefix]//@id=current()//cc:depends/@*">
-         <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/>
+         <xsl:value-of select="//cc:choice[.//@id=current()//cc:depends/@*]/@prefix"/><xsl:text> </xsl:text>
          <xsl:for-each select="cc:depends/@*">
             <xsl:if test="position()!=1">,<xsl:text> </xsl:text></xsl:if>
             <xsl:apply-templates select="//cc:selectable[./@id=current()]" mode="make_xref"/>
