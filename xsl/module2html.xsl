@@ -133,7 +133,6 @@
     <xsl:call-template name="secrectext"/>
     <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
-<!--    <xsl:call-template name="mod-sars"/> -->
   </xsl:template>
 
   <!-- ############### -->
@@ -660,7 +659,8 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- ######################### -->
   <!-- This is necessary for correct numbering of Sections in the mod-sars -->
   
-  <xsl:template match="cc:mod-sars/cc:section[cc:a-component]">
+<!--  <xsl:template match="cc:mod-sars/cc:section[cc:a-component]">   -->
+  <xsl:template match="cc:mod-sars/cc:section">
     <xsl:param name="lmod" select="'0'"/>
 
     <xsl:call-template name="section-with-acomp">
