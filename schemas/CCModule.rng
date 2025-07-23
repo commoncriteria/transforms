@@ -115,13 +115,13 @@
 	
 <define name="mod-sar-content">
     <ref name="basic-content-pat"/>
-    <zeroOrMore>
+    <oneOrMore>
      <choice>
       <element name="section">
         <attribute name="title"/>
         <attribute name="id"/>
-        <ref name="basic-content-pat"/>
-<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+        <optional><ref name="basic-content-pat"/></optional> 
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
       </element>   
       <element ns="https://niap-ccevs.org/cc/v1/section">
         <anyName>
@@ -131,11 +131,11 @@
           </except>
         </anyName>
         <attribute name="title"/>
-        <ref name="basic-content-pat"/>
-<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+        <optional><ref name="basic-content-pat"/></optional> 
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
       </element>
     </choice>
-   </zeroOrMore>
+   </oneOrMore>
   </define>	
 
   <define name="obj-sfrs">
