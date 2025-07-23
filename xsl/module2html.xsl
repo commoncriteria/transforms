@@ -659,6 +659,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
   <!-- ######################### -->
   <!-- ######################### -->
   <!-- This is necessary for correct numbering of Sections in the mod-sars -->
+  <!--
   <xsl:template match="cc:mod-sars/cc:section[cc:a-component]">
     <xsl:param name="lmod" select="'0'"/>
 
@@ -683,6 +684,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
       <xsl:apply-templates mode="hook" select="."/>
       <xsl:apply-templates />
   </xsl:template>
+-->
 
 	<!-- Appendix SFRs (objective, selection-based, imple-dep) -->
   <xsl:template match="cc:obj-sfrs|cc:sel-sfrs|cc:impl-dep-sfrs" mode="app-sfr-sec">

@@ -121,7 +121,7 @@
         <attribute name="title"/>
         <attribute name="id"/>
         <optional><ref name="basic-content-pat"/></optional> 
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+        <zeroOrMore><ref name="sar-content"/></zeroOrMore>
       </element>   
       <element ns="https://niap-ccevs.org/cc/v1/section">
         <anyName>
@@ -132,7 +132,7 @@
         </anyName>
         <attribute name="title"/>
         <optional><ref name="basic-content-pat"/></optional> 
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+        <zeroOrMore><ref name="sar-content"/></zeroOrMore>
       </element>
     </choice>
    </oneOrMore>
