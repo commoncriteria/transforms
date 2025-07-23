@@ -1591,6 +1591,46 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </element>
   </define>
 
+  <define name="a-elements">
+    <oneOrMore>
+      <element name="a-element">
+        <a:documentation>
+          Defines a functional requirement.
+        </a:documentation>
+        <optional>
+          <attribute name="id">
+            <a:documentation>
+              A document-wide unique ID 
+            </a:documentation>
+            <data type="string">
+              <param name="pattern">[\-a-zA-Z0-9]+</param>
+            </data>
+          </attribute>
+        </optional>
+        <attribute name="type">
+          <data type="string">
+            <param name="pattern">[DCE]</param>
+          </data>
+        </attribute>
+        <ref name="f-element-title"/>
+        <optional>
+          <ref name="note"/>
+        </optional>
+<!--
+        <optional>
+          <ref name="aactivity-sar"/>
+        </optional>-->
+        <optional>
+          <element name="aactivity">
+            <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
+            <ref name="basic-content-pat"/>
+          </element>
+        </optional>
+      </element>
+    </oneOrMore>
+  </define>
+
+
 
   <define name="iteration-pat">
     <optional>
