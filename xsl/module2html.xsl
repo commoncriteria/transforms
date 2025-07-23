@@ -35,7 +35,7 @@
     <xsl:apply-templates select="//*[@title='Security Requirements']|sec:Security_Requirements"/>
     <xsl:call-template name="mod-obj-req-map"/>
     <!-- <xsl:call-template name="sars"/> -->
-    <xsl:call-template name="mod-sars"/>
+    <!-- <xsl:call-template name="mod-sars"/>  -->
     <xsl:call-template name="consistency-rationale"/>
     <xsl:call-template name="opt-sfrs"/>
     <xsl:call-template name="sel-sfrs"/>
@@ -133,6 +133,7 @@
     <xsl:call-template name="secrectext"/>
     <xsl:apply-templates select="cc:base-pp"/>
     <xsl:call-template name="man-sfrs"/>
+    <xsl:call-template name="mod-sars"/>
   </xsl:template>
 
   <!-- ############### -->
