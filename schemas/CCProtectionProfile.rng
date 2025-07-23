@@ -340,38 +340,6 @@
     </oneOrMore>
   </define>
 
-   <define name="a-component-pattern">
-    <element name="a-component">
-      <a:document>
-        Specifies a component under Security Assurance Requirements section.
-      </a:document>
-      <attribute name="cc-id">
-        <data type="string">
-           <param name="pattern">a[a-z]{2}_[a-z0-9]{2,10}(_ext)?\.[0-9]</param>
-        </data>
-      </attribute>
-      <optional><ref name="id-attr"/></optional>
-      <attribute name="name">
-        <a:document>
-          A readable title for this component
-        </a:document>
-      </attribute>
-		<optional><attribute name="status"><value>optional</value></attribute></optional>
-		<ref name="basic-content-pat"/>
-      <optional>
-        <element name="summary">
-          <a:documentation>
-            Summary of this component.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-      </optional>
-
-      <oneOrMore>
-        <ref name="a-elements"/>
-      </oneOrMore>
-    </element>
-  </define>
 
   <define name="glossary-section">
     <element name="glossary">
