@@ -1046,6 +1046,31 @@ Modification definition. This text goes in the
     </element>
   </define>
 
+  <define name="sar-content">
+    <ref name="basic-content-pat"/>
+    <oneOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <attribute name="id"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>
+    </choice></oneOrMore>
+  </define>
+
+
+
   <define name="rules">
       <oneOrMore>
         <element name="rule">
@@ -1532,6 +1557,30 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <ref name="iteration-pat"/>
 	<ref name="extended-pat"/>
   </define>
+
+  <define name="sar-content">
+    <ref name="basic-content-pat"/>
+    <oneOrMore><choice>
+      <element name="section">
+        <attribute name="title"/>
+        <attribute name="id"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>   
+      <element ns="https://niap-ccevs.org/cc/v1/section">
+        <anyName>
+          <except>
+            <nsName ns="https://niap-ccevs.org/cc/v1"/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+          </except>
+        </anyName>
+        <attribute name="title"/>
+        <ref name="basic-content-pat"/>
+        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
+      </element>
+    </choice></oneOrMore>
+  </define>
+
 
   <define name="iteration-pat">
     <optional>
