@@ -44,6 +44,7 @@
 		</group>
       </choice>
     </define>
+
     
     <define name="custom-basic-content-pat">
       <element name="replace">
@@ -114,14 +115,16 @@
   </define>
 	
 <define name="mod-sar-content">
-    <ref name="basic-content-pat"/>
-    <zeroOrMore>
+	<oneOrMore><ref name="sar-content"/></oneOrMore>
+</define>
+
+<!--    <ref name="basic-content-pat"/>
+    <oneOrMore>
      <choice>
       <element name="section">
         <attribute name="title"/>
         <attribute name="id"/>
-        <ref name="basic-content-pat"/>
-<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+        <zeroOrMore><ref name="sar-content"/></zeroOrMore>
       </element>   
       <element ns="https://niap-ccevs.org/cc/v1/section">
         <anyName>
@@ -131,12 +134,12 @@
           </except>
         </anyName>
         <attribute name="title"/>
-        <ref name="basic-content-pat"/>
-<!--        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>  -->
+        <zeroOrMore><ref name="sar-content"/></zeroOrMore>
       </element>
     </choice>
-   </zeroOrMore>
+   </oneOrMore>
   </define>	
+-->
 
   <define name="obj-sfrs">
     <element name="obj-sfrs">

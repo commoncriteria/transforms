@@ -145,29 +145,6 @@
     </choice>
   </define>
 
-  <define name="sar-content">
-    <ref name="basic-content-pat"/>
-    <oneOrMore><choice>
-      <element name="section">
-        <attribute name="title"/>
-        <attribute name="id"/>
-        <ref name="basic-content-pat"/>
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
-      </element>   
-      <element ns="https://niap-ccevs.org/cc/v1/section">
-        <anyName>
-          <except>
-            <nsName ns="https://niap-ccevs.org/cc/v1"/>
-            <nsName ns="http://www.w3.org/1999/xhtml"/>
-          </except>
-        </anyName>
-        <attribute name="title"/>
-        <ref name="basic-content-pat"/>
-        <zeroOrMore><ref name="a-component-pattern"/></zeroOrMore>
-      </element>
-    </choice></oneOrMore>
-  </define>
-  
 
 <!-- <choice>
       <element name="section">
@@ -324,77 +301,6 @@
   </define>
 -->
   
-  <define name="a-elements">
-    <oneOrMore>
-      <element name="a-element">
-        <a:documentation>
-          Defines a functional requirement.
-        </a:documentation>
-        <optional>
-          <attribute name="id">
-            <a:documentation>
-              A document-wide unique ID 
-            </a:documentation>
-            <data type="string">
-              <param name="pattern">[\-a-zA-Z0-9]+</param>
-            </data>
-          </attribute>
-        </optional>
-        <attribute name="type">
-          <data type="string">
-            <param name="pattern">[DCE]</param>
-          </data>
-        </attribute>
-        <ref name="f-element-title"/>
-        <optional>
-          <ref name="note"/>
-        </optional>
-<!--
-        <optional>
-          <ref name="aactivity-sar"/>
-        </optional>-->
-        <optional>
-          <element name="aactivity">
-            <a:documentation>An Evaluation Activity for that applies to this requirement or possibly all previous requirements in this component.</a:documentation>
-            <ref name="basic-content-pat"/>
-          </element>
-        </optional>
-      </element>
-    </oneOrMore>
-  </define>
-
-   <define name="a-component-pattern">
-    <element name="a-component">
-      <a:document>
-        Specifies a component under Security Assurance Requirements section.
-      </a:document>
-      <attribute name="cc-id">
-        <data type="string">
-           <param name="pattern">a[a-z]{2}_[a-z0-9]{2,10}(_ext)?\.[0-9]</param>
-        </data>
-      </attribute>
-      <optional><ref name="id-attr"/></optional>
-      <attribute name="name">
-        <a:document>
-          A readable title for this component
-        </a:document>
-      </attribute>
-		<optional><attribute name="status"><value>optional</value></attribute></optional>
-		<ref name="basic-content-pat"/>
-      <optional>
-        <element name="summary">
-          <a:documentation>
-            Summary of this component.
-          </a:documentation>
-          <ref name="basic-content-pat"/>
-        </element>
-      </optional>
-
-      <oneOrMore>
-        <ref name="a-elements"/>
-      </oneOrMore>
-    </element>
-  </define>
 
   <define name="glossary-section">
     <element name="glossary">
