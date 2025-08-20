@@ -156,13 +156,20 @@
 
        <mt tp='optional'   nice='Strictly Optional'>
 		   <audit-table-explainer>
-<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+<h:p> The auditable events in the table below are included in a Security Target if both the associated
+ requirement is included and the incorporating PP or PP-Module supports audit event reporting through
+ FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+ <h:p>Note that, if "None" is not selected in the "Auditable Events" column, it should not be selected in the "Additional Audit Record Contents" column. 
+ Likewise, if "None" is selected in the "Auditable Events" column, it should also be selected in the "Additional Audit Record Contents" column.</h:p>
 		   </audit-table-explainer>   
        </mt>
        <mt tp='objective'  nice='Objective'>
 		   <audit-table-explainer>
-<h:p> The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
-		   </audit-table-explainer>   
+<h:p> The auditable events in the table below are included in a Security Target if both the associated
+ requirement is included and the incorporating PP or PP-Module supports audit event reporting through
+ FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+ <h:p>Note that, if "None" is not selected in the "Auditable Events" column, it should not be selected in the "Additional Audit Record Contents" column. 
+ Likewise, if "None" is selected in the "Auditable Events" column, it should also be selected in the "Additional Audit Record Contents" column.</h:p>		   </audit-table-explainer>   
        </mt>
        <mt tp='feat-based' nice='Implementation-dependent'>
 	   <audit-table-explainer><h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p></audit-table-explainer>   
@@ -179,8 +186,12 @@
  	</h:p>
 		 </description>
          <audit-table-explainer>
-         <h:p>The auditable events in the table below are included in a Security Target if both the associated requirement is included and the incorporating PP or PP-Module supports audit event reporting through FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
-         </audit-table-explainer>
+<h:p> The auditable events in the table below are included in a Security Target if both the associated
+ requirement is included and the incorporating PP or PP-Module supports audit event reporting through
+ FAU_GEN.1 and any other criteria in the incorporating PP or PP-Module are met.</h:p>
+ <h:p>Note that, if "None" is not selected in the "Auditable Events" column, it should not be selected in the "Additional Audit Record Contents" column. 
+ Likewise, if "None" is selected in the "Auditable Events" column, it should also be selected in the "Additional Audit Record Contents" column.</h:p>         
+ </audit-table-explainer>
 	   </mt>
 		   
 		   
