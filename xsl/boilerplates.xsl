@@ -259,32 +259,65 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     </xsl:choose>
   </xsl:template>
 
+<!-- Boilerplate for missing SPD and Objectives -->
+
   <xsl:template match="/cc:PP//*[./cc:OSPs]" mode="hook">
-<!--   <xsl:if test="not(.//cc:OSP)">
-   <p>    This PP defines no Organizational Security Policies.</p>
-   </xsl:if>  -->
+	<xsl:choose>
+		<xsl:when test="@boilerplate='no'"/>
+		<xsl:when test="not(.//cc:OSP)">
+			<p>This PP defines no Organizational Security Policies.</p>
+		</xsl:when>
+	</xsl:choose>
   </xsl:template>
 
-  <xsl:template match="/cc:Module//*[./cc:SOs]" mode="hook">
-   <!-- <xsl:if test="not(.//cc:SO)">
-   <p>    This PP-Module defines no additional Security Objectives.</p>
-   </xsl:if>  -->
+  <xsl:template match="/cc:PP//*[./cc:assumptions]" mode="hook">
+	<xsl:choose>
+		<xsl:when test="@boilerplate='no'"/>
+		<xsl:when test="not(.//cc:assumptions)">
+			<p>This PP defines no Assumptions.</p>
+		</xsl:when>
+	</xsl:choose>
   </xsl:template>
 
+  <xsl:template match="/cc:PP//*[./cc:SOs]" mode="hook">
+	<xsl:choose>
+		<xsl:when test="@boilerplate='no'"/>
+		<xsl:when test="not(.//cc:SOs)">
+			<p>This PP defines no Security Objectives.</p>
+		</xsl:when>
+	</xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="/cc:PP//*[./cc:SOEs]" mode="hook">
+	<xsl:choose>
+		<xsl:when test="@boilerplate='no'"/>
+		<xsl:when test="not(.//cc:SOEs)">
+			<p>This PP defines no Security Objectives for the Operational Environment.</p>
+		</xsl:when>
+	</xsl:choose>
+  </xsl:template>
 
   <xsl:template match="/cc:Module//*[./cc:OSPs]" mode="hook">
 	<xsl:choose>
 		<xsl:when test="@boilerplate='no'"/>
-		<xsl:otherwise>
-   <p>An organization deploying the TOE is
-      expected to satisfy the organizational security policy listed below in addition to all
-      organizational security policies defined by the claimed Base-PP. </p>
-        </xsl:otherwise>
+		<xsl:when test="not(.//cc:OSP)">
+			<p>This PP defines no Organizational Security Policies beyond those defined in the claimed Base-PP(s).</p>
+		</xsl:when>
+		<otherwise>
+		  <p>An organization deploying the TOE is expected to satisfy the organizational security policy 
+			listed below in addition to all organizational security policies defined by the claimed Base-PP(s). </p>
+		</otherwise>
 	</xsl:choose>
-<!--
-   <xsl:if test="not(.//cc:OSP)">
-   <p>    This PP-Module defines no additional Organizational Security Policies.</p>
-   </xsl:if>-->
+  </xsl:template>
+
+
+  <xsl:template match="/cc:Module//*[./cc:SOs]" mode="hook">
+	<xsl:choose>
+		<xsl:when test="@boilerplate='no'"/>
+		<xsl:when test="not(.//cc:SOs)">
+			<p>This PP defines no Security Objectives beyond those defined in the claimed Base-PP(s).</p>
+		</xsl:when>
+	</xsl:choose>
   </xsl:template>
 
 
@@ -293,14 +326,14 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
     <xsl:choose>
       <xsl:when test="@boilerplate='no'"/>
       <xsl:when test=".//cc:assumption">
-These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the
+<p>These assumptions are made on the Operational Environment (OE) in order to be able to ensure that the
 security functionality specified in the PP-Module can be provided by the TOE.
 If the TOE is placed in an OE that does not meet these assumptions, the TOE may no longer be able to
-provide all of its security functionality.
+provide all of its security functionality.</p>
       </xsl:when>
-<!--      <xsl:otherwise>
-This PP-Module defines no additional assumptions.
-      </xsl:otherwise>-->
+      <xsl:otherwise>
+		<p>This PP defines no Assumptions beyond those defined in the claimed Base-PP(s).</p>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -309,14 +342,14 @@ This PP-Module defines no additional assumptions.
     <xsl:choose>
       <xsl:when test="@boilerplate='no'"/>
       <xsl:when test=".//cc:SOEs">
-The OE of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
+<p>The OE of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
 The security objectives for the OE consist of a set of statements describing the goals that the OE should achieve.
 This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means.
-The assumptions identified in Section 3 are incorporated as security objectives for the environment.
+The assumptions identified in Section 3 are incorporated as security objectives for the environment.</p>
       </xsl:when>
-<!--      <xsl:otherwise>
-This PP-Module does not define any objectives for the OE.
-      </xsl:otherwise>  -->
+      <xsl:otherwise>
+		<p>This PP-Module does not define any Security Objectives for the Operational Environment beyond those defined in the claimed Base-PP(s).</p>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
