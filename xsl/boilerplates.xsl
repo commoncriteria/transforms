@@ -99,7 +99,7 @@
 			
 		<dt>PP Claim</dt><p/>
 			<dd><xsl:choose>
-				<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-conf=''">
+				<xsl:when test="not(normalize-space(//cc:CClaimsInfo/cc:cc-pp-conf))">
 					This <xsl:call-template name="doctype-short"/> does not claim conformance to 
 					any Protection Profile.
 				</xsl:when>
@@ -115,7 +115,7 @@
 			</dd><p/>
 			
 			<xsl:choose>
-			<xsl:when test="//cc:CClaimsInfo/cc:cc-pp-config-with=''">
+			<xsl:when test="not(normalize-space(//cc:CClaimsInfo/cc:cc-pp-config-with))">
 					<dd>There are no PPs or PP-Modules that are allowed in a PP-Configuration 
 					with this <xsl:call-template name="doctype-short"/>.</dd>
 			</xsl:when>
@@ -133,7 +133,7 @@
 			
 		<dt>Package Claim</dt><p/>
 			<xsl:choose>
-			<xsl:when test="//cc:CClaimsInfo/cc:cc-pkg-claim=''">
+			<xsl:when test="not(normalize-space(//cc:CClaimsInfo/cc:cc-pkg-claim))">
 					<dd>This <xsl:call-template name="doctype-short"/> is not conformant to any 
 						Functional or Assurance Packages.</dd>
 			</xsl:when>
@@ -307,15 +307,16 @@ This PP-Module defines no additional assumptions.
 <!-- #################### -->
   <xsl:template match="/cc:Module//cc:*[@title='Security Objectives for the Operational Environment']" mode="hook">
     <xsl:choose>
+      <xsl:when test="@boilerplate='no'"/>
       <xsl:when test=".//cc:SOEs">
 The OE of the TOE implements technical and procedural measures to assist the TOE in correctly providing its security functionality (which is defined by the security objectives for the TOE).
 The security objectives for the OE consist of a set of statements describing the goals that the OE should achieve.
 This section defines the security objectives that are to be addressed by the IT domain or by non-technical or procedural means.
 The assumptions identified in Section 3 are incorporated as security objectives for the environment.
       </xsl:when>
-      <xsl:otherwise>
+<!--      <xsl:otherwise>
 This PP-Module does not define any objectives for the OE.
-      </xsl:otherwise>
+      </xsl:otherwise>  -->
     </xsl:choose>
   </xsl:template>
 
