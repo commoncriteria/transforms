@@ -157,9 +157,11 @@
 					    <xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 				</ul></dd><p/>
+				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)!='0' or count(//cc:cc-pkg-claim/cc:AP-cc-ref)!='0'">
 				<dd>
 					<xsl:value-of select="document('boilerplates.xml')//cc:empty[@id='cc2022-ppclaim-bp-pp']"/>
 				</dd>
+				</xsl:if>
 			</xsl:otherwise>
 			</xsl:choose>
 
