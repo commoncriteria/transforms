@@ -341,7 +341,11 @@
   <xsl:template match="cc:package-usage-list">
 	<xsl:for-each select="./cc:package-usage">
 
-		Functional Package reference <xsl:value-of select="@ref"/><p/>
+		<xsl:variable name="pkg-ref" select="@ref"/>
+
+
+
+		Functional Package: <xsl:value-of select="$pkg-ref"/><p/>
 
 	</xsl:for-each>
   </xsl:template>
