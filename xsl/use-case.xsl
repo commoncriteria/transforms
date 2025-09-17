@@ -340,7 +340,9 @@
   
   <xsl:template match="cc:package-usage-list">
 	<xsl:for-each select="./cc:package-usage">
-		There is a package usage <p/>
+
+		Functional Package reference <xsl:value-of select="@ref"/><p/>
+
 	</xsl:for-each>
   </xsl:template>
   
