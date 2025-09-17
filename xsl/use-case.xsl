@@ -339,7 +339,9 @@
   <!-- ############### -->
   
   <xsl:template match="cc:package-usage-list">
-    There is a package usage list <p/>
+	<xsl:for-each select="./cc:package-usage">
+		There is a package usage <p/>
+	</xsl:for-each>
   </xsl:template>
   
   

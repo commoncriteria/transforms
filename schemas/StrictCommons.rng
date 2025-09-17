@@ -145,17 +145,17 @@
       <a:documentation>
         Wrapper element for package usage elements.
       </a:documentation>
-      <zeroOrMore>
+      <oneOrMore>
         <element name="package-usage">
           <a:documentation>
             A referrable section on how the protection profiled item is used.
           </a:documentation>
           <ref name="ref-attr"/>
-		  <oneOrMore>
+		  <zeroOrMore>
 			<ref name="usage-pat"/>
-		  </oneOrMore>
+		  </zeroOrMore>
         </element>
-      </zeroOrMore>
+      </oneOrMore>
     </element>
   </define>
 
