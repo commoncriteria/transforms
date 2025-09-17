@@ -345,9 +345,9 @@
 
 		Path to package: <xsl:value-of select="$inc-pkg/cc:git/cc:url"/><p/> 
 
-<!--		
-		id = <xsl:value-of select="$inc-pkg/@id"/>
--->		
+		
+		id = <xsl:value-of select="$inc-pkg[cc:git]/@id"/>
+		
 
 
 	</xsl:for-each>
