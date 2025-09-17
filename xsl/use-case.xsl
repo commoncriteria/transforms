@@ -347,7 +347,10 @@
 
 		
 		id = <xsl:value-of select="$inc-pkg[cc:git]/@id"/>
-		
+
+		<xsl:apply-template select="$inc-pkg" mode="show"/>
+
+		<!-- Need to get the last element of the cc:url and use that to compute -->
 
 
 	</xsl:for-each>
