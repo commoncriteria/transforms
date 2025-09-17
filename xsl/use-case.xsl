@@ -343,9 +343,13 @@
 
 		<xsl:variable name="pkg-ref" select="@ref"/>
 
+		<xsl:if test="//cc:include-pkg[@id=$pkg-ref]">
 
+			Functional Package matched: <xsl:value-of select="$pkg-ref"/><p/>
 
-		Functional Package: <xsl:value-of select="$pkg-ref"/><p/>
+		
+		</xsl:if>
+
 
 	</xsl:for-each>
   </xsl:template>
