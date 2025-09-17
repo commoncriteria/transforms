@@ -342,15 +342,9 @@
 	<xsl:for-each select="./cc:package-usage">
 		<xsl:variable name="pkg-ref" select="@ref"/>
 		<xsl:variable name="inc-pkg" select="//cc:include-pkg[@id=$pkg-ref]"/>
+		<xsl:variable name="path" select="concat($work-dir, '/', $inc-pkg/@id, '.xml')"/>
 
-		Path to package: <xsl:value-of select="$inc-pkg/cc:git/cc:url"/><p/> 
-
-		
-		id = <xsl:value-of select="$inc-pkg[cc:git]/@id"/>
-
-		<xsl:apply-template select="$inc-pkg" mode="show"/>
-
-		<!-- Need to get the last element of the cc:url and use that to compute -->
+		Path to package: <xsl:value-of select="$path"/><p/> 
 
 
 	</xsl:for-each>
