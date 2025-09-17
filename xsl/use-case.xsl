@@ -340,15 +340,12 @@
   
   <xsl:template match="cc:package-usage-list">
 	<xsl:for-each select="./cc:package-usage">
-
 		<xsl:variable name="pkg-ref" select="@ref"/>
-
-		<xsl:if test="//cc:include-pkg[@id=$pkg-ref]">
-
-			Functional Package matched: <xsl:value-of select="$pkg-ref"/><p/>
+		<xsl:variable name="inc-pkg" select="//cc:include-pkg[@id=$pkg-ref]"/>
+		<apply-template select="$inc-pkg" mode="show"/>
+		
 
 		
-		</xsl:if>
 
 
 	</xsl:for-each>
@@ -360,3 +357,25 @@
 </xsl:stylesheet>
 
 
+ <include-pkg id="pkg-ssh">
+    <git>
+      <url>https://github.com/commoncriteria/ssh</url>
+      <branch>release-2.0</branch>
+    </git>
+    <url>https://commoncriteria.github.io/ssh/release-2.0/ssh-release.html</url>
+  </include-pkg>
+  
+ <xsl:template match="cc:doc" mode="use-case">
+    <xsl:variable name="docpath"><xsl:value-of select="concat($work-dir,'/',@ref)"/>.xml</xsl:variable>
+    <xsl:variable name="docurl"><xsl:value-of select="//cc:*[@id=current()/@ref]/cc:url/text()"/></xsl:variable>
+    <xsl:variable name="name"><xsl:value-of select="document($docpath)//cc:PPTitle"/><xsl:if test="not(document($docpath)//cc:PPTitle)">PP-Module for <xsl:value-of select="document($docpath)/cc:Module/@name"/></xsl:if></xsl:variable>
+
+
+    <div class="uc_inc_pkg"> From the <a href="{$docurl}"><xsl:value-of select="$name"/></a>: </div>
+    <xsl:for-each select="cc:ref-id">
+      <xsl:call-template name="handle-ref-ext"> 
+        <xsl:with-param name="ref-id" select="text()"/>
+        <xsl:with-param name="root" select="document($docpath)/cc:*"/>
+      </xsl:call-template>
+    </xsl:for-each>
+  </xsl:template>
