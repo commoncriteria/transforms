@@ -347,6 +347,16 @@
     </a> Conformant</xsl:template>
 
   <!-- ############### -->
+<!--
+  <xsl:template match="cc:include-pkg[cc:git]" mode="get-name">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+	Path = <xsl:value-of select="$path"/><p/>
+
+  </xsl:template>
+-->
+
+
+  <!-- ############### -->
   <!--                 -->
 <!--
    <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
