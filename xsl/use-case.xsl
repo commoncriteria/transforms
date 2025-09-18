@@ -346,11 +346,18 @@
 		<xsl:variable name="pkg-name"><xsl:value-of select="document($docpath)//cc:PPTitle"/></xsl:variable>
 		<xsl:variable name="pkg-ver"><xsl:value-of select="document($docpath)//cc:PPVersion"/></xsl:variable>
 
-		<dt><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><br/></dt>
+		<dt><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><p/></dt>
 		<dd>
 		<xsl:for-each select="./cc:usage">
-			<xsl:value-of select="@title"/><p/>
+			<b><xsl:value-of select="@title"/></b><p/>
 			<xsl:apply-templates select="cc:description"/><p/>
+			
+			This doctype modifies selections and assignments within this Functional Package as follows:<br/>
+			<dd>
+			<xsl:for-each select="cc:config">
+				<xsl:call-template name="use-case-and"/>
+			</xsl:for-each>
+			</dd>
 		</xsl:for-each>
 		</dd>
 		
