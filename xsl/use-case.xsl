@@ -346,12 +346,14 @@
 		<xsl:variable name="pkg-name"><xsl:value-of select="document($docpath)//cc:PPTitle"/></xsl:variable>
 		<xsl:variable name="pkg-ver"><xsl:value-of select="document($docpath)//cc:PPVersion"/></xsl:variable>
 
-		<p/><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><br/>
-
+		<dt><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><br/></dt>
+		<dd>
 		<xsl:for-each select="./cc:usage">
 			<xsl:value-of select="@title"/><p/>
+			<xsl:apply-template select="./cc:description"/> 
 		</xsl:for-each>
-
+		</dd>
+		
 	</xsl:for-each>
   </xsl:template>
   
