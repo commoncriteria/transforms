@@ -350,7 +350,7 @@
 		<dd>
 		<xsl:for-each select="./cc:usage">
 			<xsl:value-of select="@title"/><p/>
-			<xsl:apply-template select="./cc:description"/> 
+			<xsl:apply-templates select="cc:description"/><p/>
 		</xsl:for-each>
 		</dd>
 		
