@@ -356,7 +356,7 @@
 				
 				This doctype modifies selections and assignments within this Functional Package as follows:<p/>
 				<dd>
-					<xsl:for-each select="cc:config/cc:ref-id">
+					<xsl:for-each select="cc:config//cc:ref-id">
 
 						<xsl:call-template name="use-case-and"/>
 						
