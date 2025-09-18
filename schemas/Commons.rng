@@ -1897,6 +1897,18 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </attribute>
   </define> 
 
+   <define name="pkg-ref-attr">
+    <attribute name="ref">
+      <a:documentation>ID respective manager</a:documentation>
+	  <choice>
+		<value>ssh</value>
+		<value>tls</value>
+		<value>X509</value>
+	  </choice>
+    </attribute>
+  </define> 
+
+
   <define name="optional-id">
     <optional><ref name="id-attr"/></optional>
   </define>

@@ -150,10 +150,10 @@
           <a:documentation>
             A referrable section on how the protection profiled item is used.
           </a:documentation>
-          <ref name="ref-attr"/>
-		  <zeroOrMore>
+          <ref name="pkg-ref-attr"/>
+		  <oneOrMore>
 			<ref name="usage-pat"/>
-		  </zeroOrMore>
+		  </oneOrMore>
         </element>
       </oneOrMore>
     </element>

@@ -344,9 +344,13 @@
 		<xsl:variable name="inc-pkg" select="//cc:include-pkg[@id=$pkg-ref]"/>
 		<xsl:variable name="docpath" select="concat($work-dir, '/', $inc-pkg/@id, '.xml')"/>
 		<xsl:variable name="pkg-name"><xsl:value-of select="document($docpath)//cc:PPTitle"/></xsl:variable>
+		<xsl:variable name="pkg-ver"><xsl:value-of select="document($docpath)//cc:PPVersion"/></xsl:variable>
 
-		Package: <xsl:value-of select="$pkg-name"/><p/> 
+		<p/><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><br/>
 
+		<xsl:for-each select="./cc:usage">
+			<xsl:value-of select="@title"/><p/>
+		</xsl:for-each>
 
 	</xsl:for-each>
   </xsl:template>
