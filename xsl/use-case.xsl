@@ -342,15 +342,15 @@
 	<xsl:for-each select="./cc:package-usage">
 		<xsl:variable name="pkg-ref" select="@ref"/>
 		<xsl:variable name="inc-pkg" select="//cc:include-pkg[@id=$pkg-ref]"/>
-		<xsl:variable name="path" select="concat($work-dir, '/', $inc-pkg/@id, '.xml')"/>
+		<xsl:variable name="docpath" select="concat($work-dir, '/', $inc-pkg/@id, '.xml')"/>
+		<xsl:variable name="pkg-name"><xsl:value-of select="document($docpath)//cc:PPTitle"/></xsl:variable>
 
-		Path to package: <xsl:value-of select="$path"/><p/> 
+		Package: <xsl:value-of select="$pkg-name"/><p/> 
 
 
 	</xsl:for-each>
   </xsl:template>
   
-  
-  
+   
   
 </xsl:stylesheet>
