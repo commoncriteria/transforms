@@ -1367,6 +1367,7 @@ The following sections list Common Criteria and technology terms used in this do
 		   </tr><xsl:text>&#xa;</xsl:text>
 		
 		</xsl:for-each>
+		</table>
 	</xsl:if>
 
     <xsl:apply-templates select="//cc:release-notes"/>
