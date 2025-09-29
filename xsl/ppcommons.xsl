@@ -1356,7 +1356,6 @@ The following sections list Common Criteria and technology terms used in this do
 		   <th>TD Number</th>
 		   <th>Date</th>
 		   <th>Subject and Link</th>
-		   <th>Subject and Link</th>
 		</tr>
 
 		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">
@@ -1364,10 +1363,8 @@ The following sections list Common Criteria and technology terms used in this do
 		   <tr>
 			 <td> <xsl:value-of select="cc:number"/> </td>
 			 <td> <xsl:value-of select="cc:date"/> </td>
-			 <td> <xsl:value-of select="cc:subject"/> </td> 
 			 <td> <xsl:apply-templates select="." mode="show-link"/> </td> 
 		   </tr><xsl:text>&#xa;</xsl:text>
-		
 		</xsl:for-each>
 		</table>
 	</xsl:if>
