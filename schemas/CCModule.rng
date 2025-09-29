@@ -659,6 +659,7 @@ The name or cc-id of the aspect that is being overwritten by the content of this
       </element>
     </element>
     <ref name="RevisionHistory"/>
+    <optional><ref name="TechnicalDecisionHistory"/></optional>
   </define>
 
 

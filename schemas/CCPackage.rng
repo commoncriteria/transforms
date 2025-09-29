@@ -18,6 +18,7 @@
       <ref name="project-notes"/>
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
+      <optional><ref name="TechnicalDecisionHistory"/></optional>
       <ref name="Foreword"/>
       <ref name="PreferencesEtc"/>
       <ref name="IntroductionChapter"/>

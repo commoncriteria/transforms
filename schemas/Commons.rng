@@ -2313,7 +2313,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 <a:documentation>Date of the TD.</a:documentation>
                 <data type="date"/>
               </element>
-              <element name="title">
+              <element name="subject">
                 <a:documentation>Title of the TD.</a:documentation>
                 <text/>
               </element>
