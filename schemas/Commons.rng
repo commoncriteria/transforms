@@ -2305,6 +2305,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
         <a:documentation>Documents Technical Decisions that apply to this releases.</a:documentation>
         <oneOrMore>
             <element name="TD">
+ 			  <attribute name="url"><data type="string"/></attribute>
               <element name="number">
                 <a:documentation>TD Number</a:documentation>
                 <text/>
@@ -2317,10 +2318,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
                 <a:documentation>Title of the TD.</a:documentation>
                 <text/>
               </element>
-   			  <element name="url">
-                <a:documentation>Link to TD on the public NIAP site.</a:documentation>
-				<data type="string"/>
-			  </element>
             </element>
         </oneOrMore>
     </element>

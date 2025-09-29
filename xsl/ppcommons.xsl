@@ -1359,7 +1359,7 @@ The following sections list Common Criteria and technology terms used in this do
 		</tr>
 
 		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">
-			<xsl:variable name="hyperlink"><xsl:value-of select="cc:url"/></xsl:variable>
+			<xsl:variable name="hyperlink"><xsl:value-of select="@url"/></xsl:variable>
 		   <tr>
 			 <td> <xsl:value-of select="cc:number"/> </td>
 			 <td> <xsl:value-of select="cc:date"/> </td>
