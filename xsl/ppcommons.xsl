@@ -1359,11 +1359,11 @@ The following sections list Common Criteria and technology terms used in this do
 		</tr>
 
 		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">
+			<xsl:variable name="link"><xsl:value-of select="cc:url"/></xsl:variable>
 		   <tr>
 			 <td> <xsl:value-of select="cc:number"/> </td>
 			 <td> <xsl:value-of select="cc:date"/> </td>
-			 <td> <xsl:apply-templates select="cc:subject"/> </td>
-			 
+			 <td> <a href="#link"><xsl:value-of select="cc:subject"/></a> </td> 
 		   </tr><xsl:text>&#xa;</xsl:text>
 		
 		</xsl:for-each>
