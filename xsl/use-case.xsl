@@ -354,19 +354,16 @@
 			<dd><b><xsl:value-of select="@title"/></b><p/>
 				<xsl:apply-templates select="cc:description"/><p/>
 				
-				This doctype modifies selections and assignments within this Functional Package as follows:<p/>
+<!--				This doctype modifies selections and assignments within this Functional Package as follows:<p/>
 				<dd>
 					<xsl:for-each select="cc:config//cc:ref-id">
 
 						<xsl:call-template name="use-case-and"/>
+					
 						
-						<!-- if it's a selection, then -->
-						<!-- get the selection from the package -->
-						<!-- must be selected, must not be selected -->
-						
-						<!-- if it's an assignment ?? -->
 					</xsl:for-each>
 				</dd>
+-->
 			</dd>
 		</xsl:for-each>
 	</xsl:for-each>
