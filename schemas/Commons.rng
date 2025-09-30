@@ -2287,6 +2287,34 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
       </element>
     </optional>
   </define>
+  
+  
+    <define name="TechnicalDecisionHistory">
+    <element name="TechnicalDecisionHistory">
+        <a:documentation>Documents Technical Decisions that apply to this releases.</a:documentation>
+        <oneOrMore>
+            <element name="TD">
+              <element name="number">
+                <a:documentation>TD Number</a:documentation>
+                <text/>
+              </element>
+              <element name="date">
+                <a:documentation>Date of the TD.</a:documentation>
+                <data type="date"/>
+              </element>
+              <element name="subject">
+                <a:documentation>Title of the TD.</a:documentation>
+                <text/>
+              </element>
+ 			  <element name="url">
+				<data type="string"/>
+			  </element>
+            </element>
+        </oneOrMore>
+    </element>
+  </define>
+
+  
 	
   <define name="consistency-rationale">
     <element name="consistency-rationale">
