@@ -332,6 +332,46 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> 
+  
+    <!-- ############### -->
+  <!--  Package Usage  -->
+  <!-- ############### -->
+  
+  <xsl:template match="cc:usage"/>
+  
+  <xsl:template match="cc:package-usage-list">
+	<xsl:for-each select="./cc:package-usage">
+		<xsl:variable name="pkg-ref" select="@ref"/>
+		<xsl:variable name="inc-pkg" select="//cc:include-pkg[@id=$pkg-ref]"/>
+		<xsl:variable name="docpath" select="concat($work-dir, '/', $inc-pkg/@id, '.xml')"/>
+		<xsl:variable name="pkg-name"><xsl:value-of select="document($docpath)//cc:PPTitle"/></xsl:variable>
+		<xsl:variable name="pkg-ver"><xsl:value-of select="document($docpath)//cc:PPVersion"/></xsl:variable>
+
+		<dt><b><xsl:value-of select="$pkg-name"/>, Version <xsl:value-of select="$pkg-ver"/></b><p/></dt>
+
+		<xsl:for-each select="./cc:usage">
+			<dd><b><xsl:value-of select="@title"/></b><p/>
+				<xsl:apply-templates select="cc:description"/><p/>
+				
+<!--				This doctype modifies selections and assignments within this Functional Package as follows:<p/>
+				<dd>
+					<xsl:for-each select="cc:config//cc:ref-id">
+
+						<xsl:call-template name="use-case-and"/>
+					
+						
+					</xsl:for-each>
+				</dd>
+-->
+			</dd>
+		</xsl:for-each>
+	</xsl:for-each>
+  </xsl:template>
+  
+   
+
+   
+  
 </xsl:stylesheet>
 
 

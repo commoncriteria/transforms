@@ -138,6 +138,7 @@
         <ref name="tech-terms"/>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
         <optional><ref name="usecases-section"/></optional>
+        <optional> <ref name="pkg-usage-section"/> </optional>
         <zeroOrMore> <ref name="section"/></zeroOrMore>
       </element>
   </define>
