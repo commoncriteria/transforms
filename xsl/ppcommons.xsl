@@ -39,6 +39,8 @@
       </xsl:call-template></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
+  <xsl:strip-space elements="cc:selectable cc:assignable cc:selectables"/>
+
   <!--##############################################
            Templates
       ##############################################-->
