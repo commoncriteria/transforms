@@ -256,18 +256,15 @@
   <!-- ############### -->
   <!--                 -->
   <xsl:template match="cc:assumptions|cc:OSPs|cc:SOs|cc:SOEs">
-    <xsl:choose> 
-	<xsl:when test="cc:*[cc:description]">
+	<xsl:if test="cc:*[cc:description]">
         <dl>
           <xsl:for-each select="cc:*[cc:description]">
             <xsl:call-template name="defs-with-notes"/>
           </xsl:for-each>
         </dl>
-    </xsl:when>
-	<xsl:otherwise>
-      This document does not define any additional <xsl:value-of select="local-name()"/>.
-    </xsl:otherwise> </xsl:choose>
+    </xsl:if>
   </xsl:template>
+
 
   <!-- Eat the threat-addr tags -->
   <xsl:template match="cc:threat-addr"/>

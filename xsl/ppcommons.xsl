@@ -1351,10 +1351,41 @@ The following sections list Common Criteria and technology terms used in this do
        </tr><xsl:text>&#xa;</xsl:text>
      </xsl:for-each>
     </table>
+	
+	<!-- TD History -->
+	<xsl:if test="//cc:TechnicalDecisionHistory">
+		<h2 style="page-break-before:always;">Technical Decisions Applied to this Document</h2>
+		<table>
+		 <tr class="header">
+		   <th>TD Number</th>
+		   <th>Date</th>
+		   <th>Subject and Link</th>
+		</tr>
+
+		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">
+			<xsl:variable name="hyperlink"><xsl:value-of select="cc:url"/></xsl:variable>
+		   <tr>
+			 <td> <xsl:value-of select="cc:number"/> </td>
+			 <td> <xsl:value-of select="cc:date"/> </td>
+			 <td> <xsl:apply-templates select="." mode="show-link"/> </td> 
+		   </tr><xsl:text>&#xa;</xsl:text>
+		</xsl:for-each>
+		</table>
+	</xsl:if>
+	
+	
     <xsl:apply-templates select="//cc:release-notes"/>
     <h2>Contents</h2>
     <div class="toc" id="toc"/>
   </xsl:template>
+
+  <xsl:template match="cc:TD" mode="show-link">
+    <xsl:element name="a">
+       <xsl:attribute name="href"><xsl:value-of select="cc:url"/></xsl:attribute>
+       <xsl:value-of select="cc:subject"/>
+    </xsl:element>
+  </xsl:template>
+
 
   <!-- ############### -->
   <!--            -->
