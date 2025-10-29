@@ -39,6 +39,10 @@
       </xsl:call-template></xsl:otherwise>
   </xsl:choose></xsl:variable>
 
+  <!-- Remove whitespace-only text nodes from within these elements. (Which was previoulsy causing
+   extra spaces in the HTML)-->
+  <xsl:strip-space elements="cc:selectable"/>
+
   <!--##############################################
            Templates
       ##############################################-->
