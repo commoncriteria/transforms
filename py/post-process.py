@@ -201,7 +201,6 @@ class State:
             longname = self.root.find(".//*[@id='long_abbr_"+term.text+"']")
             self.abbrs[term.text] = longname.text
             if self.is_handling_first_abbrs:
-                warn("Is handling first abbrs")
                 self.add_to_inline_abbr_def(term.text, longname.text)
                 fulldef = (longname.text + " ("+term.text+")").upper()
                 self.full_abbrs[fulldef] = term.text
