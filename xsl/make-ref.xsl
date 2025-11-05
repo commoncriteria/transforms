@@ -71,14 +71,25 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp[cc:git]|cc:include-pkg[cc:git]" mode="make_xref">
-      <a href="{cc:git/cc:url/text()}">
+  <xsl:template match="cc:base-pp[cc:git]" mode="make_xref">
+      <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
   </xsl:template> 
+ 
+  <xsl:template match="cc:include-pkg[cc:git]" mode="make_xref">
+		<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
+        <xsl:variable name="path" select="concat(cc:git/cc:url/text(),'/',cc:git/cc:branch/text(),'/','.xml')"/>
+        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
+        version 
+        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
+      </a>
+  </xsl:template> 
+ 
+ 
  
   <!-- ############### -->
   <!--                 -->
