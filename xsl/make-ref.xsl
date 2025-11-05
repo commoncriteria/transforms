@@ -81,12 +81,23 @@
   </xsl:template> 
  
   <xsl:template match="cc:include-pkg" mode="make_xref">
-    <a href="{cc:url/text()}">
 		<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
 		<xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
-		<xsl:value-of select="document($path)//cc:PPTitle/text()"/>, 
-		version <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-    </a>
+		<xsl:variable name="externalDoc" select="document($path)"/>
+
+		<xsl:choose>
+		<xsl:when test="$externalDoc">
+			<a href="{cc:url/text()}">
+				<xsl:value-of select="$externalDoc//cc:PPTitle/text()"/>, 
+				(<xsl:value-of select="$path"/>), 
+				version <xsl:value-of select="$externalDoc//cc:PPVersion/text()"/>
+			</a>
+		</xsl:when>
+		<xsl:otherwise>
+			ERROR: Invalid document reference, path: <xsl:value-of select="$path"/>
+		</xsl:otherwise>
+		</xsl:choose>
+
   </xsl:template> 
  
  
