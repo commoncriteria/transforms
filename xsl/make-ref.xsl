@@ -89,7 +89,6 @@
 		<xsl:when test="$externalDoc">
 			<a href="{cc:url/text()}">
 				<xsl:value-of select="$externalDoc//cc:PPTitle/text()"/>, 
-				(<xsl:value-of select="$path"/>), 
 				version <xsl:value-of select="$externalDoc//cc:PPVersion/text()"/>
 			</a>
 		</xsl:when>
