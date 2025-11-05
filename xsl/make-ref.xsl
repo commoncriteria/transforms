@@ -50,7 +50,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:module[@name]|cc:base-pp[@name]|cc:include-pkg[@name]" mode="make_xref">
+  <xsl:template match="cc:module[@name]|cc:base-pp[@name]" mode="make_xref">
       <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
   </xsl:template>
 
@@ -80,13 +80,14 @@
       </a>
   </xsl:template> 
  
-  <xsl:template match="cc:include-pkg[cc:git]" mode="make_xref">
-		<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
-        <xsl:variable name="path" select="concat(cc:git/cc:url/text(),'/',cc:git/cc:branch/text(),'/','.xml')"/>
+  <xsl:template match="cc:include-pkg" mode="make_xref">
+	<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
+    <xsl:variable name="path" select="concat(cc:git/cc:url/text(),'/',cc:git/cc:branch/text(),'/','.xml')"/>
+    <a href="{cc:url/text()}">
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-      </a>
+    </a>
   </xsl:template> 
  
  
