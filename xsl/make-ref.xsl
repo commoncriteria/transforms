@@ -81,16 +81,13 @@
   </xsl:template> 
  
   <xsl:template match="cc:include-pkg" mode="make_xref">
-	<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
-    <xsl:variable name="path" select="concat(cc:git/cc:url/text(),'/',cc:git/cc:branch/text(),'/','.xml')"/>
     <a href="{cc:url/text()}">
-<!--        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,  -->
-		<xsl:value-of select="$path"/>,
-        version 
-        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
+		<xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
+		<xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
+		<xsl:value-of select="document($path)//cc:PPTitle/text()"/>, 
+		version <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
     </a>
   </xsl:template> 
- 
  
  
   <!-- ############### -->
