@@ -597,7 +597,9 @@ The following sections list Common Criteria and technology terms used in this do
     </ul>
     </span>
   </xsl:template> -->
-  <xsl:template match="cc:testlist">
+
+
+  <!-- <xsl:template match="cc:testlist">
     <xsl:apply-templates select="cc:testlist-intro"/>
     <span class="testlist-">
     <ul>
@@ -605,10 +607,22 @@ The following sections list Common Criteria and technology terms used in this do
     </ul>
     </span>
   </xsl:template>
-
   <xsl:template match="cc:testlist-intro">
     <p><xsl:apply-templates/></p>
-  </xsl:template>
+  </xsl:template> -->
+
+  <xsl:template match="cc:testlist">
+    <!-- Process everything that's NOT a test element -->
+    <xsl:apply-templates select="node()[not(self::cc:test)]"/>
+    
+    <!-- Wrap only the test elements in a ul -->
+    <xsl:if test="cc:test">
+      <span class="testlist-"><ul>
+        <xsl:apply-templates select="cc:test"/>
+      </ul>
+      </span>
+    </xsl:if>
+  </xsl:template>  
 
   
   <!-- ############### -->
