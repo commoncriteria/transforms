@@ -597,9 +597,11 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:testlist">
-    <span class="testlist-"><ul>
-      <xsl:apply-templates select="cc:test"/>
-    </ul>
+    <span class="testlist-">
+      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test)]"/>
+      <ul>
+        <xsl:apply-templates select="cc:test"/>
+      </ul>
     </span>
   </xsl:template>
 
