@@ -598,12 +598,12 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <xsl:template match="cc:testlist">
     <span class="testlist-"><ul>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="cc:test"/>
     </ul>
     </span>
   </xsl:template>
 
-  
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
