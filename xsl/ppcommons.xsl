@@ -1363,6 +1363,7 @@ The following sections list Common Criteria and technology terms used in this do
 		   <th>TD Number</th>
 		   <th>Date</th>
 		   <th>Subject and Link</th>
+		   <th>Affected Elements</th>
 		</tr>
 
 		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">

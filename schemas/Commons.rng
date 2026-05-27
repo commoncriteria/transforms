@@ -2322,6 +2322,13 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
  			  <element name="url">
 				<data type="string"/>
 			  </element>
+			  <optional>
+				<element name="affects">
+					<zeroOrMore>
+						<ref name="ref-id"/>
+					</zeroOrMore>
+				</element>
+			  </optional>
             </element>
         </oneOrMore>
     </element>
