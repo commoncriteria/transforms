@@ -1335,6 +1335,9 @@ The following sections list Common Criteria and technology terms used in this do
 <!--   	  <p/><xsl:if test="//cc:ReferenceTable/cc:dateTimeStamp">
 			<xsl:value-of select="current-dateTime()"/>
 		</xsl:if>  -->
+		<xsl:if test="//cc:PPEffDate">
+			<xsl:value-of select="//cc:PPEffDate"><br/>
+		 </xsl:if>
       <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
     </div>
     <xsl:apply-templates select="//cc:foreword"/>
@@ -1363,7 +1366,6 @@ The following sections list Common Criteria and technology terms used in this do
 		   <th>TD Number</th>
 		   <th>Date</th>
 		   <th>Subject and Link</th>
-		   <th>Affected Elements</th>
 		</tr>
 
 		<xsl:for-each select="//cc:TechnicalDecisionHistory/cc:TD">
