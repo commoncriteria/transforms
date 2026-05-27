@@ -1336,7 +1336,7 @@ The following sections list Common Criteria and technology terms used in this do
 			<xsl:value-of select="current-dateTime()"/>
 		</xsl:if>  -->
 		<xsl:if test="//cc:ReferenceTable/cc:PPEffDate">
-			<xsl:value-of select="//cc:PPEffDate"/><br/>
+			TDs Applied Through: <xsl:value-of select="//cc:PPEffDate"/><br/>
 		 </xsl:if>
       <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
     </div>
