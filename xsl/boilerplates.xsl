@@ -90,7 +90,8 @@
 			<xsl:when test="//cc:CClaimsInfo[@cc-version='cc-2022r1']">
 				of Common Criteria CC:2022, Revision 1<!--
 				--><xsl:if test="//cc:CClaimsInfo[@cc-errata='v1.0']"> as corrected and interpreted in <a href="#bibERRv10">[ERR]</a>, Version 1.0</xsl:if><!--
-				--><xsl:if test="//cc:CClaimsInfo[@cc-errata='v1.1']"> as corrected and interpreted in <a href="#bibERRv11">[ERR]</a>, Version 1.1</xsl:if>.
+				--><xsl:if test="//cc:CClaimsInfo[@cc-errata='v1.1']"> as corrected and interpreted in <a href="#bibERRv11">[ERR]</a>, Version 1.1</xsl:if><!--
+				--><xsl:if test="//cc:CClaimsInfo[@cc-errata='v1.2']"> as corrected and interpreted in <a href="#bibERRv12">[ERR]</a>, Version 1.2</xsl:if>.
 			</xsl:when>
 			<xsl:otherwise>
 				of Common Criteria Version 3.1, Revision 5.
