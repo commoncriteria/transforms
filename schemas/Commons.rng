@@ -1720,6 +1720,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			<choice>
 				<value>v1.0</value>
 				<value>v1.1</value>
+				<value>v1.2</value>
 			</choice>
 		</attribute></optional>
 		<optional><attribute name="cc-approach">
@@ -1755,14 +1756,29 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		</element>
 		<element name="cc-pp-conf">
 			<zeroOrMore>
-				<element name="PP-cc-ref"><text/></element>
+				<element name="PP-cc-ref">
+					<choice>
+						<text/>
+						<ref name="external-document-pat"/>
+					</choice>
+				</element>
 			</zeroOrMore>
 		</element>
 		<element name="cc-pp-config-with">
 			<zeroOrMore>
 				<choice>
-					<element name="PP-cc-ref"><text/></element>
-					<element name="Mod-cc-ref"><text/></element>
+					<element name="PP-cc-ref">
+						<choice>
+							<text/>
+							<ref name="external-document-pat"/>
+						</choice>
+					</element>
+					<element name="Mod-cc-ref">
+						<choice>
+							<text/>
+							<ref name="external-document-pat"/>
+						</choice>
+					</element>
 				</choice>
 			</zeroOrMore>
 		</element>
@@ -1773,7 +1789,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		</element>
 		<optional><element name="cc-eval-methods">
 			<zeroOrMore>
-				<element name="EM-cc-ref"><text/></element>
+				<element name="EM-cc-ref">
+					<choice>
+						<text/>
+						<ref name="external-document-pat"/>
+					</choice>
+				</element>
 			</zeroOrMore>
 		</element></optional>		
 		<optional><element name="cc-claims-addnl-info">
@@ -1784,7 +1805,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 
   <define name="pkg-claim">
 	<choice>
-		<element name="FP-cc-ref"><text/>
+		<element name="FP-cc-ref">
 			<attribute name="conf">
 				<choice>
 					<value>conformant</value>
@@ -1792,8 +1813,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 					<value>tailored</value>
 				</choice>
 			</attribute>
+			<choice>
+				<text/>
+				<ref name="external-document-pat"/>
+			</choice>
 		</element>
-		<element name="AP-cc-ref"><text/>
+		<element name="AP-cc-ref">
 			<attribute name="conf">
 				<choice>
 					<value>conformant</value>
@@ -1801,6 +1826,10 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 					<value>tailored</value>
 				</choice>
 			</attribute>
+			<choice>
+				<text/>
+				<ref name="external-document-pat"/>
+			</choice>
 		</element>
 	</choice>
   </define>
