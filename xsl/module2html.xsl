@@ -505,7 +505,7 @@
 		<xsl:for-each select="cc:modified-sfrs/cc:section">
 			
 			<!-- Display section header -->
-			<h4 id="@id" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h4>
+			<h4 id="modsfr-{@id}" class="indexable" data-level="4"> <xsl:value-of select="@title"/> </h4>
 		
 			<xsl:for-each select="cc:base-sfr-spec">
 			
