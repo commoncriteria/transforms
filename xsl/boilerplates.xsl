@@ -108,7 +108,7 @@
 					This PP claims conformance to the following Protection Profiles:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-conf/cc:PP-cc-ref">
-						<li><xsl:apply-templates select="."/></li> 
+						<li><xsl:apply-templates mode="getId" select="."/></li> 
 <!--						<li><xsl:value-of select="."/></li>  -->
 					</xsl:for-each>
 					</ul>
@@ -126,7 +126,7 @@
 					PP-Configuration with this <xsl:call-template name="doctype-short"/>:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
-						<li><xsl:apply-templates select="."/></li> 
+						<li><xsl:apply-templates mode="getId" select="."/></li> 
 
 <!--						<li><xsl:value-of select="."/></li>  -->
 					</xsl:for-each>
@@ -149,7 +149,7 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-					    <xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
+					    <xsl:apply-templates mode="getId" select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
@@ -158,7 +158,7 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-					    <xsl:value-of select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
+					    <xsl:apply-templates mode="getId" select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 				</ul></dd><p/>
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)!='0' or count(//cc:cc-pkg-claim/cc:AP-cc-ref)!='0'">
