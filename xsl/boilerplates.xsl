@@ -132,14 +132,14 @@
 					PP-Configuration with this <xsl:call-template name="doctype-short"/>:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
-						<li><xsl:choose>
+						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-template select="./cc:cc-doc-ref"/>
+							<li><xsl:apply-template select="./cc:cc-doc-ref"/></li>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select="."/>
+							<li><xsl:apply-templates select="."/></li>
 						</xsl:otherwise>
-						</xsl:choose></li>
+						</xsl:choose>
 					</xsl:for-each>
 					</ul>
 				</dd>
