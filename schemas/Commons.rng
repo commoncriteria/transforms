@@ -2049,7 +2049,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
  
   <define name="external-document-pat">
     <ref name="id-attr"/>
-	<optional><attribute name="name"/>
+	<optional><attribute name="name"/></optional>
 	<optional><attribute name="version"/></optional>
 	<optional><attribute name="short"/></optional>
 	<optional><attribute name="product"/></optional>
