@@ -1837,7 +1837,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <!-- id attribute should be the repo name if there is one -->
   <define name="cc-doc-ref-pat">
 	<element name="cc-doc-ref">
-		<ref name="external-document-pat"/>
+		<ref name="id-attr"/>
+		<optional><attribute name="name"/></optional>
+		<optional><attribute name="version"/></optional>
+		<optional><attribute name="short"/></optional>
+		<optional><attribute name="product"/></optional>
+		<optional><attribute name="plural"/></optional>
+
+		<!-- Add name and short as optional attributes -->
+		<choice>
+		  <ref name="recognized-xml"/>
+		  <ref name="non-native-doc"/>
+		</choice>
+		<element name="url"><text/></element>
+		<ref name="depends-pat"/>
 	</element>
   </define>
 
@@ -2049,12 +2062,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
  
   <define name="external-document-pat">
     <ref name="id-attr"/>
-	<optional><attribute name="name"/></optional>
-	<optional><attribute name="version"/></optional>
-	<optional><attribute name="short"/></optional>
-	<optional><attribute name="product"/></optional>
-	<optional><attribute name="plural"/></optional>
-
 	<!-- Add name and short as optional attributes -->
     <choice>
       <ref name="recognized-xml"/>
