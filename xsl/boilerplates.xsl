@@ -135,8 +135,6 @@
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
 							<li><xsl:apply-templates select="./cc:cc-doc-ref"/></li>
-
-<!--							<li><xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/></li> -->
 						</xsl:when>
 						<xsl:otherwise>
 							<li><xsl:apply-templates select="."/></li>
@@ -147,7 +145,6 @@
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
 							<li><xsl:apply-templates select="./cc:cc-doc-ref"/></li>
-<!--							<li><xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/></li> -->
 						</xsl:when>
 						<xsl:otherwise>
 							<li><xsl:apply-templates select="."/></li>
@@ -177,7 +174,6 @@
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
 							<xsl:apply-templates select="./cc:cc-doc-ref"/>
-<!--							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/> -->
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -194,8 +190,6 @@
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
 							<xsl:apply-templates select="./cc:cc-doc-ref"/>
-
-<!--							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/> -->
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -220,8 +214,6 @@
 						<li><xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
 							<xsl:apply-templates select="./cc:cc-doc-ref"/>
-
-<!--							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/>. -->
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -242,7 +234,7 @@
 
 
 <xsl:template match="cc:cc-doc-ref">
-	<xsl:value-of select="@name"/>, Version <xsl:value-of select="@version"/>.
+	<xsl:value-of select="@name"/>, Version <xsl:value-of select="@version"/>
 </xsl:template>
 
 
