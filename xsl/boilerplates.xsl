@@ -108,8 +108,14 @@
 					This PP claims conformance to the following Protection Profiles:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-conf/cc:PP-cc-ref">
-						<li><xsl:apply-templates select="."/></li> 
-<!--						<li><xsl:value-of select="."/></li>  -->
+						<li><xsl:choose>
+						<xsl:when test="./cc:cc-doc-ref">
+							<xsl:apply-template select="./cc:cc-doc-ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="."/>
+						</xsl:otherwise>
+						</xsl:choose></li>
 					</xsl:for-each>
 					</ul>
 				</xsl:otherwise>
@@ -126,9 +132,14 @@
 					PP-Configuration with this <xsl:call-template name="doctype-short"/>:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
-						<li><xsl:apply-templates select="."/></li> 
-
-<!--						<li><xsl:value-of select="."/></li>  -->
+						<li><xsl:choose>
+						<xsl:when test="./cc:cc-doc-ref">
+							<xsl:apply-template select="./cc:cc-doc-ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="."/>
+						</xsl:otherwise>
+						</xsl:choose></li>
 					</xsl:for-each>
 					</ul>
 				</dd>
@@ -149,7 +160,14 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:FP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-						<xsl:apply-templates select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
+					<xsl:choose>
+						<xsl:when test="./cc:cc-doc-ref">
+							<xsl:apply-template select="./cc:cc-doc-ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="."/>
+						</xsl:otherwise>
+					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.
 				</xsl:for-each>
 
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
@@ -158,7 +176,14 @@
 				</xsl:if>
 				<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pkg-claim/cc:AP-cc-ref">
 					<li>This <xsl:call-template name="doctype-short"/> is 
-					    <xsl:apply-templates select="."/><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
+					<xsl:choose>
+						<xsl:when test="./cc:cc-doc-ref">
+							<xsl:apply-template select="./cc:cc-doc-ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="."/>
+						</xsl:otherwise>
+					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.
 				</xsl:for-each>
 				</ul></dd><p/>
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)!='0' or count(//cc:cc-pkg-claim/cc:AP-cc-ref)!='0'">
@@ -175,7 +200,14 @@
 				from the following Evaluation Methods documents:
 				<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-eval-methods/cc:EM-cc-ref">
-						<li><xsl:apply-templates select="."/></li>
+						<li><xsl:choose>
+						<xsl:when test="./cc:cc-doc-ref">
+							<xsl:apply-template select="./cc:cc-doc-ref"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="."/>
+						</xsl:otherwise>
+						</xsl:choose></li>
 					</xsl:for-each>
 				</ul>
 			</dd>
@@ -183,8 +215,7 @@
 
 		<xsl:if test="//cc:CClaimsInfo/cc:cc-claims-addnl-info">
 			<dt>Additional Information</dt><p/>
-			<dd><xsl:value-of select="//cc:CClaimsInfo/cc:cc-claims-addnl-info"/>
-			</dd>
+			<dd><xsl:value-of select="//cc:CClaimsInfo/cc:cc-claims-addnl-info"/></dd>
 		</xsl:if>
 	</dl>
 
