@@ -1843,12 +1843,12 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 		<optional><attribute name="short"/></optional>
 		<optional><attribute name="product"/></optional>
 		<optional><attribute name="plural"/></optional>
-
-		<!-- Add name and short as optional attributes -->
-		<choice>
-		  <ref name="recognized-xml"/>
-		  <ref name="non-native-doc"/>
-		</choice>
+		<optional>
+			<element name="git">
+				<element name="url"><data type="string"></data></element>
+				<element name="branch"><data type="string"></data></element>
+			</element>
+		</optional>
 		<element name="url"><text/></element>
 		<ref name="depends-pat"/>
 	</element>
