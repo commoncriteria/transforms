@@ -132,14 +132,14 @@
 					PP-Configuration with this <xsl:call-template name="doctype-short"/>:
 					<ul>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:*">
-						<xsl:choose>
+						<li><xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<li><xsl:apply-template select="./cc:cc-doc-ref"/></li>
+							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<li><xsl:apply-templates select="."/></li>
 						</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose></li>
 					</xsl:for-each>
 					</ul>
 				</dd>
@@ -162,7 +162,7 @@
 					<li>This <xsl:call-template name="doctype-short"/> is 
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-template select="./cc:cc-doc-ref"/>
+							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -178,7 +178,7 @@
 					<li>This <xsl:call-template name="doctype-short"/> is 
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-template select="./cc:cc-doc-ref"/>
+							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -202,7 +202,7 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-eval-methods/cc:EM-cc-ref">
 						<li><xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-template select="./cc:cc-doc-ref"/>
+							<xsl:value-of select="./cc:cc-doc-ref/@name"/>, Version <xsl:value-of select="./cc:cc-doc-ref/@version"/>.
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -221,10 +221,11 @@
 
 </xsl:template>
 
+<!--
 <xsl:template match="cc:cc-doc-ref">
 	<xsl:value-of select="@name"/>, Version <xsl:value-of select="@version"/>.
 </xsl:template>
-
+-->
 
 
  <!-- ############## -->
