@@ -167,7 +167,7 @@
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
 						</xsl:otherwise>
-					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.
+					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:AP-cc-ref)='0'"> 
@@ -183,7 +183,7 @@
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
 						</xsl:otherwise>
-					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.
+					</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="@conf"/>.</li>
 				</xsl:for-each>
 				</ul></dd><p/>
 				<xsl:if test="count(//cc:cc-pkg-claim/cc:FP-cc-ref)!='0' or count(//cc:cc-pkg-claim/cc:AP-cc-ref)!='0'">
