@@ -222,7 +222,7 @@
 </xsl:template>
 
 <xsl:template match="cc:cc-doc-ref">
-	<xsl:value-of select="@name">, Version <xsl:value-of select="@version">.
+	<xsl:value-of select="@name"/>, Version <xsl:value-of select="@version"/>.
 </xsl:template>
 
 
