@@ -597,6 +597,8 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:testlist">
+    <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
+
     <span class="testlist-">
       <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test)]"/>
       <ul>
