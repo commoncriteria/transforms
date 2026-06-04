@@ -1759,7 +1759,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<element name="PP-cc-ref">
 					<choice>
 						<text/>
-						<ref name="external-document-pat"/>
+						<ref name="cc-doc-ref-pat"/>
 					</choice>
 				</element>
 			</zeroOrMore>
@@ -1770,13 +1770,13 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 					<element name="PP-cc-ref">
 						<choice>
 							<text/>
-							<ref name="external-document-pat"/>
+							<ref name="cc-doc-ref-pat"/>
 						</choice>
 					</element>
 					<element name="Mod-cc-ref">
 						<choice>
 							<text/>
-							<ref name="external-document-pat"/>
+							<ref name="cc-doc-ref-pat"/>
 						</choice>
 					</element>
 				</choice>
@@ -1792,7 +1792,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<element name="EM-cc-ref">
 					<choice>
 						<text/>
-						<ref name="external-document-pat"/>
+						<ref name="cc-doc-ref-pat"/>
 					</choice>
 				</element>
 			</zeroOrMore>
@@ -1815,7 +1815,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			</attribute>
 			<choice>
 				<text/>
-				<ref name="external-document-pat"/>
+				<ref name="cc-doc-ref-pat"/>
 			</choice>
 		</element>
 		<element name="AP-cc-ref">
@@ -1828,10 +1828,30 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 			</attribute>
 			<choice>
 				<text/>
-				<ref name="external-document-pat"/>
+				<ref name="cc-doc-ref-pat"/>
 			</choice>
 		</element>
 	</choice>
+  </define>
+
+  <!-- id attribute should be the repo name if there is one -->
+  <define name="cc-doc-ref-pat">
+	<element name="cc-doc-ref">
+		<ref name="id-attr"/>
+		<optional><attribute name="name"/></optional>
+		<optional><attribute name="version"/></optional>
+		<optional><attribute name="short"/></optional>
+		<optional><attribute name="product"/></optional>
+		<optional><attribute name="plural"/></optional>
+		<optional>
+			<element name="git">
+				<element name="url"><data type="string"></data></element>
+				<element name="branch"><data type="string"></data></element>
+			</element>
+		</optional>
+		<element name="url"><text/></element>
+		<ref name="depends-pat"/>
+	</element>
   </define>
 
 
