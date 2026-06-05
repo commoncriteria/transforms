@@ -596,15 +596,29 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:testlist">
-    <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
-
+  <xsl:template name="render-testlist">
+    <xsl:param name="prefix-colon" select="'no'"/>
+    <xsl:if test="$prefix-colon='yes'">:</xsl:if>
     <span class="testlist-">
-      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test)]"/>
+      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test or self::cc:depends)]"/>
       <ul>
         <xsl:apply-templates select="cc:test"/>
       </ul>
     </span>
+  </xsl:template>
+
+  <xsl:template match="cc:testlist[cc:depends]">
+    <div class="dependent"><xsl:call-template name="depends-explainer"/>
+      <div class="dependent-content">
+        <xsl:call-template name="render-testlist"/>
+      </div>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="cc:testlist">
+    <xsl:call-template name="render-testlist">
+      <xsl:with-param name="prefix-colon" select="'yes'"/>
+    </xsl:call-template>
   </xsl:template>
 
 
