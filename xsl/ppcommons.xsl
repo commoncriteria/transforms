@@ -567,7 +567,8 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- Refs to all the pre-defined auto-generated tables   -->
   <!-- ################################################### -->
   <xsl:template match="cc:xref[@g='t-audit-optional' or @g='t-audit-objective' or 
-				@g='t-audit-sel-based' or @g='t-audit-impl-dep' or @g='t-audit-mandatory']">
+				@g='t-audit-sel-based' or @g='t-audit-impl-dep' or 
+				@g='t-audit-feat-based'or @g='t-audit-mandatory']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
       <xsl:with-param name="prefix" select="'Table '"/>
@@ -596,13 +597,17 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="cc:testlist">
-    <span class="testlist-"><ul>
-      <xsl:apply-templates/>
-    </ul>
+    <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
+
+    <span class="testlist-">
+      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test)]"/>
+      <ul>
+        <xsl:apply-templates select="cc:test"/>
+      </ul>
     </span>
   </xsl:template>
 
-  
+
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
@@ -1332,6 +1337,9 @@ The following sections list Common Criteria and technology terms used in this do
 <!--   	  <p/><xsl:if test="//cc:ReferenceTable/cc:dateTimeStamp">
 			<xsl:value-of select="current-dateTime()"/>
 		</xsl:if>  -->
+		<xsl:if test="//cc:ReferenceTable/cc:PPEffDate">
+			TDs Applied Through: <xsl:value-of select="//cc:PPEffDate"/><br/>
+		 </xsl:if>
       <b><xsl:value-of select="//cc:PPAuthor"/></b><br/>
     </div>
     <xsl:apply-templates select="//cc:foreword"/>

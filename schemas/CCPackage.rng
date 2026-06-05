@@ -17,8 +17,8 @@
       <ref name="pp-attributes"/>
       <ref name="project-notes"/>
       <ref name="PPReference"/>
-      <optional><ref name="TechnicalDecisionHistory"/></optional>
       <ref name="RevisionHistory"/>
+      <optional><ref name="TechnicalDecisionHistory"/></optional>
       <ref name="Foreword"/>
       <ref name="PreferencesEtc"/>
       <ref name="IntroductionChapter"/>
@@ -138,7 +138,7 @@
         <ref name="tech-terms"/>
         <zeroOrMore> <ref name="section"/> </zeroOrMore>
         <optional><ref name="usecases-section"/></optional>
-        <optional> <ref name="pkg-usage-section"/> </optional>
+<!--        <optional> <ref name="pkg-usage-section"/> </optional>  -->
         <zeroOrMore> <ref name="section"/></zeroOrMore>
       </element>
   </define>
@@ -259,13 +259,20 @@ It should be the version listed in the CCPart1/2/3 files consulted.
             </a:documentation>
             <data type="date"/>
           </element>
+          <optional><element name="PPEffDate">
+            <a:documentation>
+              Date of effective PP (date of latest applied TD).
+            </a:documentation>
+            <data type="date"/>
+          </element></optional>
+
 <!--		<optional><element name="dateTimeStamp"><empty/></element></optional>  -->
-          <element name="Keywords">
+          <optional><element name="Keywords">
             <a:documentation>
               NOT USED. A list of keywords associated with this document.
             </a:documentation>
             <text/>
-          </element>
+          </element></optional>
         </element>
       </element>
   </define> 
