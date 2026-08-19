@@ -55,7 +55,7 @@
       <xsl:choose><xsl:when test="//cc:a-component">FILL IN THIS BOILERPLATE TEXT</xsl:when>
 	  <xsl:otherwise>
       
-        This PP-Module does not define any SARs beyond those defined within the Base-PP<xsl:if test="count(//cc:base-pp)>1">s</xsl:if> to which it can
+        This PP-Module does not define any SARs beyond those defined within the base PP<xsl:if test="count(//cc:base-pp)>1">s</xsl:if> to which it can
 		claim conformance. It is important to note that a TOE that is evaluated against this PP-Module is
 		inherently evaluated against the 
 		<xsl:for-each select="//cc:base-pp">
@@ -68,9 +68,9 @@
 		  <xsl:when test="count(//cc:base-pp)=1">This PP includes</xsl:when>
 		  <xsl:otherwise>These PPs include </xsl:otherwise></xsl:choose> a
 		number of EAs associated with both Security Functional Requirements (SFRs) and SARs. Additionally, this
-		PP-Module includes a number of SFR-based EAs that similarly refine the SARs of the Base-PP<xsl:if test="count(//cc:base-pp)>1">s</xsl:if>.
+		PP-Module includes a number of SFR-based EAs that similarly refine the SARs of the base PP<xsl:if test="count(//cc:base-pp)>1">s</xsl:if>.
 		The
-		evaluation laboratory will evaluate the TOE against the chosen Base-PP and supplement that evaluation
+		evaluation laboratory will evaluate the TOE against the chosen base PP and supplement that evaluation
 		with the necessary SFRs that are taken from this PP-Module.
 	  </xsl:otherwise></xsl:choose>
   </xsl:template>
@@ -568,11 +568,11 @@
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
       This section defines additional SFRs that must be added to the TOE boundary in order to implement
 	  the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is 
-	  claimed as the Base-PP.
+	  claimed as the base PP.
       <xsl:apply-templates select="cc:additional-sfrs"/>
     </xsl:when>
     <xsl:otherwise>
-This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the Base-PP.
+This PP-Module does not define any additional SFRs for any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is claimed as the base PP.
     </xsl:otherwise>
     </xsl:choose>
     </xsl:if>
@@ -649,7 +649,7 @@ This PP-Module does not define any additional SFRs for any PP-Configuration wher
         		<xsl:apply-templates select="//cc:mod-sars"/>
 	      	</xsl:when>
 	    	<xsl:otherwise>
-			This PP-Module does not define any Security Assurance requirements. The SARs from the Base-PP must be satisfied.
+			This PP-Module does not define any Security Assurance requirements. The SARs from the base PP must be satisfied.
 	      </xsl:otherwise>
     	</xsl:choose>
 	  </xsl:if>

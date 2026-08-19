@@ -362,22 +362,22 @@ guidance, and testing.</p>
       <x:when test="count(//cc:base-pp)=1">
 	base <x:apply-templates mode="short" select="//cc:base-pp"/> to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
-	inherently evaluated against this Base-PP as well. 
+	inherently evaluated against this base PP as well. 
 	The <x:apply-templates mode="short" select="//cc:base-pp"/> 
         includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
-	that similarly refine the SARs of the Base-PPs.
-	The evaluation laboratory will evaluate the TOE against the Base-PP
+	that similarly refine the SARs of the base PPs.
+	The evaluation laboratory will evaluate the TOE against the base PP
       </x:when>
       <x:otherwise>
-	base-PP to which it must claim conformance.
+	base PP to which it must claim conformance.
 	It is important to note that a TOE that is evaluated against the PP-Module is
-	inherently evaluated against the Base-PP as well.
+	inherently evaluated against the base PP as well.
 
-	The Base-PP includes a number of Evaluation Activities associated with both SFRs and SARs.
+	The base PP includes a number of Evaluation Activities associated with both SFRs and SARs.
 	Additionally, the PP-Module includes a number of SFR-based Evaluation Activities 
-	that similarly refine the SARs of the Base-PPs.
-	The evaluation laboratory will evaluate the TOE against the chosen Base-PP
+	that similarly refine the SARs of the base PPs.
+	The evaluation laboratory will evaluate the TOE against the chosen base PP
       </x:otherwise>
     </x:choose>
     and supplement that evaluation with the necessary SFRs that are taken from the PP-Module.
@@ -426,7 +426,7 @@ guidance, and testing.</p>
     [CC] and to define functional and assurance requirements for them.
 
     <x:if test="//cc:base-pp">
-    The PP-Module is intended for use with the following Base-PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
+    The PP-Module is intended for use with the following base PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
 
@@ -442,7 +442,7 @@ guidance, and testing.</p>
 
     
     <ul><li><x:value-of select="concat($products,', Version ', //cc:ReferenceTable/cc:PPVersion)"/></li></ul>
-    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activities to the Base-PP(s) it modifies.
+    As such it defines Evaluation Activities for the functionality described in the PP-Module as well as any impacts to the Evaluation Activities to the base PP(s) it modifies.
     </x:if>
     </p>
     <p> 
@@ -565,7 +565,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
 	<x:value-of select="@name"/>
       </h4>
       <x:if test="ancestor::cc:modified-sfrs and not(.//cc:aactivity)">
-	There is no change to the Base-PP EAs for this SFR when this PP-Module is claimed.
+	There is no change to the base PP EAs for this SFR when this PP-Module is claimed.
       </x:if>
       <span class="activity_pane_body">
 	<x:apply-templates select="." mode="handle-activities"/>
@@ -577,7 +577,7 @@ Although Evaluation Activities are defined mainly for the evaluators to follow, 
  <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-   <x:template name="bases">Base-PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
+   <x:template name="bases">base PP<x:if test="/cc:PP/cc:module/cc:base-p[1]">s</x:if></x:template>
 
   <!-- We're explicity grabbing these all, so ground anytime we run into them -->
   <x:template match="cc:aactivity"/>

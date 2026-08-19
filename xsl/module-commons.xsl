@@ -64,7 +64,7 @@
       <xsl:for-each select="cc:depends/@*">
          <xsl:value-of select="//cc:base-pp[@id=current()]/@name"/>
       </xsl:for-each>
-      is a Base-PP:
+      is a base PP:
       <div name="base-dependent">
         <xsl:call-template name="handle-html"/>
       </div>

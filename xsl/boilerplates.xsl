@@ -350,11 +350,11 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
 	<xsl:choose>
 		<xsl:when test="@boilerplate='no'"/>
 		<xsl:when test="not(.//cc:OSP)">
-			<p>This PP defines no Organizational Security Policies beyond those defined in the claimed Base-PP(s).</p>
+			<p>This PP defines no Organizational Security Policies beyond those defined in the claimed base PP(s).</p>
 		</xsl:when>
 		<otherwise>
 		  <p>An organization deploying the TOE is expected to satisfy the organizational security policy 
-			listed below in addition to all organizational security policies defined by the claimed Base-PP(s). </p>
+			listed below in addition to all organizational security policies defined by the claimed base PP(s). </p>
 		</otherwise>
 	</xsl:choose>
   </xsl:template>
@@ -364,7 +364,7 @@ This PP-Module does not define any mandatory SFRs that apply regardless of the P
 	<xsl:choose>
 		<xsl:when test="@boilerplate='no'"/>
 		<xsl:when test="not(.//cc:SOs)">
-			<p>This PP defines no Security Objectives beyond those defined in the claimed Base-PP(s).</p>
+			<p>This PP defines no Security Objectives beyond those defined in the claimed base PP(s).</p>
 		</xsl:when>
 	</xsl:choose>
   </xsl:template>
@@ -381,7 +381,7 @@ If the TOE is placed in an OE that does not meet these assumptions, the TOE may 
 provide all of its security functionality.</p>
       </xsl:when>
       <xsl:otherwise>
-		<p>This PP defines no Assumptions beyond those defined in the claimed Base-PP(s).</p>
+		<p>This PP defines no Assumptions beyond those defined in the claimed base PP(s).</p>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -397,7 +397,7 @@ This section defines the security objectives that are to be addressed by the IT 
 The assumptions identified in Section 3 are incorporated as security objectives for the environment.</p>
       </xsl:when>
       <xsl:otherwise>
-		<p>This PP-Module does not define any Security Objectives for the Operational Environment beyond those defined in the claimed Base-PP(s).</p>
+		<p>This PP-Module does not define any Security Objectives for the Operational Environment beyond those defined in the claimed base PP(s).</p>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
