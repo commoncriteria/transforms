@@ -234,6 +234,37 @@
 </xsl:template>
 
 
+<!-- Display a reference to a PP, cPP, Module, FP, AP, or EM document -->
+<xsl:template match="cc:cc-doc-ref">
+
+	<xsl:choose>
+
+	<!-- If the entry has a name & version attribute, just dump them -->
+	<xsl:when test="@name and @version">
+		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
+
+<!--		<ref name="id-attr"/>
+		<optional><attribute name="name"/></optional>
+		<optional><attribute name="version"/></optional>
+		<optional><attribute name="short"/></optional>
+		<optional><attribute name="product"/></optional>
+		<optional><attribute name="plural"/></optional>
+		<optional>
+			<element name="git">
+				<element name="url"><data type="string"></data></element>
+				<element name="branch"><data type="string"></data></element>
+			</element>
+		</optional>
+		<element name="url"><text/></element>
+		<ref name="depends-pat"/>
+-->
+	</xsl:when>
+	<xsl:otherwise>
+		Otherwise
+	</xsl:otherwise>
+	</xsl:choose>
+</template>
+
 
  <!-- ############## -->
    <xsl:template  name="verrev">
