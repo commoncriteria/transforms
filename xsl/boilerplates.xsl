@@ -242,13 +242,9 @@
 	<!-- If the entry has a name & version attribute, just dump them -->
 	<xsl:when test="@name and @version">
 		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
+	</xsl:when>
 
 <!--		<ref name="id-attr"/>
-		<optional><attribute name="name"/></optional>
-		<optional><attribute name="version"/></optional>
-		<optional><attribute name="short"/></optional>
-		<optional><attribute name="product"/></optional>
-		<optional><attribute name="plural"/></optional>
 		<optional>
 			<element name="git">
 				<element name="url"><data type="string"></data></element>
@@ -258,9 +254,12 @@
 		<element name="url"><text/></element>
 		<ref name="depends-pat"/>
 -->
-	</xsl:when>
+	<xsl:when test="/cc:git">
+		<xsl:apply-templates select="." mode="make_xref"/>
+	</csl:when>
+	
 	<xsl:otherwise>
-		Otherwise
+		otherwise
 	</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
