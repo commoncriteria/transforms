@@ -707,9 +707,7 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 				<!-- Dependencies on selection in external documents -->
 				<!-- this will need to handle cc-doc-ref -->
 				<xsl:variable name="fcomp" select="."/>
-				<xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]
-										|//cc:include-pkg[@id=current()//cc:external-doc/@ref]
-										|//cc:cc-doc-ref[@id=current()//cc:external-doc/@ref]">
+				<xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
 					<xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
 					<li><b><i>
 					<xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">

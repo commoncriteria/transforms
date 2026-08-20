@@ -254,9 +254,9 @@
 		<element name="url"><text/></element>
 		<ref name="depends-pat"/>
 -->
-	<xsl:when test="/cc:git">
+	<xsl:when test="./cc:git">
 		<xsl:apply-templates select="." mode="make_xref"/>
-	</csl:when>
+	</xsl:when>
 	
 	<xsl:otherwise>
 		otherwise
