@@ -781,7 +781,12 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 -->
 	<xsl:when test="./cc:git">
 	    there is git
-		<xsl:apply-templates select="." mode="make_xref"/>
+		<xsl:variable name="path" select="./cc:git/cc:url/text()"/>
+        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
+        version 
+        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
+      </a>		
+		
 	</xsl:when>
 	
 	<xsl:otherwise>
