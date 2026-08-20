@@ -263,7 +263,7 @@
 		Otherwise
 	</xsl:otherwise>
 	</xsl:choose>
-</template>
+</xsl:template>
 
 
  <!-- ############## -->
