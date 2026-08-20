@@ -758,6 +758,37 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
   </xsl:template>
 
 
+
+<!-- Display a reference to a PP, cPP, Module, FP, AP, or EM document -->
+<xsl:template match="cc:cc-doc-ref">
+
+	<xsl:choose>
+
+	<!-- If the entry has a name & version attribute, just dump them -->
+	<xsl:when test="@name and @version">
+		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
+	</xsl:when>
+
+<!--		<ref name="id-attr"/>
+		<optional>
+			<element name="git">
+				<element name="url"><data type="string"></data></element>
+				<element name="branch"><data type="string"></data></element>
+			</element>
+		</optional>
+		<element name="url"><text/></element>
+		<ref name="depends-pat"/>
+-->
+	<xsl:when test="./cc:git">
+		<xsl:apply-templates select="." mode="make_xref"/>
+	</xsl:when>
+	
+	<xsl:otherwise>
+		otherwise
+	</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
   <!--########################################-->
   <!--########################################-->
   <xsl:template match="cc:f-element" >
