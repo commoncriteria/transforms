@@ -781,12 +781,14 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 -->
 	<xsl:when test="./cc:git">
 	    there is git
-		<xsl:variable name="path" select="./cc:git/cc:url/text()"/>
+		<xsl:variable name="branch" select="./cc:git/cc:branch/text()"/>
+		<xsl:variable name="path" select="concat(./cc:git/cc:url/text(),'/blob/',$branch,'/input/',$id,'.xml'"/>
+		Path = <xsl:value-of select="$path"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
         version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-      </a>		
-		
+	
+<!--		https://github.com/commoncriteria/mdm/blob/master/input/mdm.xml -->
 	</xsl:when>
 	
 	<xsl:otherwise>
