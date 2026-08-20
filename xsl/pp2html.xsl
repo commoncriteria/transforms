@@ -780,6 +780,7 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 		<ref name="depends-pat"/>
 -->
 	<xsl:when test="./cc:git">
+	    there is git
 		<xsl:apply-templates select="." mode="make_xref"/>
 	</xsl:when>
 	
