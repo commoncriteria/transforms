@@ -771,7 +771,7 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 
     <!-- If the entry has a git tag, use the git repo -->
 	<xsl:when test="./cc:git">
-		<xsl:apply-templates select="." mode="make_ref"/>
+		<xsl:apply-templates select="." mode="make_xref"/>
 	</xsl:when>
 	
 	<xsl:otherwise>
