@@ -77,6 +77,7 @@ if __name__ == "__main__":
     ctr = 1
     for pkg in root.findall(".//cc:include-pkg", ns)+\
                root.findall(".//cc:base-pp", ns)+\
+               root.findall(".//cc:cc-doc-ref", ns)+\
                root.findall(".//cc:module", ns):
         if "name" in pkg.attrib:
             continue

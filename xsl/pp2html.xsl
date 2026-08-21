@@ -769,30 +769,13 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
 	</xsl:when>
 
-<!--		<ref name="id-attr"/>
-		<optional>
-			<element name="git">
-				<element name="url"><data type="string"></data></element>
-				<element name="branch"><data type="string"></data></element>
-			</element>
-		</optional>
-		<element name="url"><text/></element>
-		<ref name="depends-pat"/>
--->
+    <!-- If the entry has a git tag, use the git repo -->
 	<xsl:when test="./cc:git">
-	    there is git
-		<xsl:variable name="branch" select="./cc:git/cc:branch/text()"/>
-		<xsl:variable name="path" select="concat(./cc:git/cc:url/text(),'/blob/',$branch,'/input/',$id,'.xml'"/>
-		Path = <xsl:value-of select="$path"/>
-        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
-        version 
-        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-	
-<!--		https://github.com/commoncriteria/mdm/blob/master/input/mdm.xml -->
+		<xsl:apply-templates select="." mode="make_ref"/>
 	</xsl:when>
 	
 	<xsl:otherwise>
-		otherwise
+		Unrecognized document.
 	</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
