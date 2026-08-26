@@ -84,6 +84,38 @@
 	<xsl:value-of select="@short"/>
 </xsl:template>
 
+
+<xsl:template match="cc:cc-doc-ref[cc:git]" mode="expanded">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+	<xsl:choose>
+		<xsl:when test="document($path)/cc:Module">PP-Module for</xsl:when>
+		<xsl:when test="document($path)/cc:Package">Functional Package for</xsl:when>
+		<xsl:when test="document($path)/cc:PP/cc:cPP">Collaborative Protection Profile for</xsl:when>
+		<xsl:otherwise>Protection Profile for</xsl:otherwise>
+	</xsl:choose>
+	<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
+    <x:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+</xsl:template>
+
+<xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="expanded">
+	<xsl:if test="@doctype='cPP'">Collaborative Protection Profile for</xsl:if>
+	<xsl:if test="@doctype='PP'">Protection Profile for</xsl:if>
+	<xsl:if test="@doctype='FP'">Functional Package for</xsl:if>
+	<xsl:if test="@doctype='PP-Module'">PP-Module for</xsl:if>
+	<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
+    <x:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+</xsl:template>
+
+<xsl:template match="cc:cc-doc-ref[cc:git]" mode="get_product_plural">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+	<xsl:value-of select="document($path)/cc:*/@target-products"/>
+</xsl:template>
+
+<xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="get_product_plural">
+	<xsl:value-of select="@plural"/>
+</xsl:template>
+
+
 <xsl:template match="cc:cc-doc-ref[cc:git]" mode="doctype">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 	<xsl:choose>

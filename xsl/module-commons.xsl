@@ -21,27 +21,25 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:git]" mode="expanded">
-    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
-
-    <xsl:if test="document($path)/cc:PP/cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
-    Protection Profile for<xsl:text> </xsl:text>
-    <xsl:apply-templates mode="get_product_plural" select="/cc:*"/>
+  <xsl:template match="cc:base-pp" mode="expanded">
+	<xsl:variable name="bid" select="@ref"/>
+	<xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="expanded"/>
   </xsl:template>
 
 
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[@name]" mode="short">
+<!--  <xsl:template match="cc:base-pp[@name]" mode="short">
     <xsl:value-of select="@short"/><xsl:choose>
        <xsl:when test="cc:cPP">c</xsl:when>
        <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
     </xsl:choose>PP</xsl:template>
-
+-->
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
+<!--
   <xsl:template match="cc:base-pp[@name]" mode="expanded">
     <xsl:if test="cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
     Protection Profile for<xsl:text> </xsl:text>
@@ -50,7 +48,7 @@
        <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
+-->
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 

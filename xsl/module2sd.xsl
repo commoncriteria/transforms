@@ -258,16 +258,15 @@ guidance, and testing.</p>
     <!-- Run through all the base modules -->
 	
     <x:for-each select="//cc:base-pp">
-      <h2 class="indexable" data-level="1" id="aa-{@id}">
-		<!-- <x:apply-templates mode="expanded" select="."/>  -->
-		<x:value-of select="@name"/>
+      <h2 class="indexable" data-level="1" id="aa-{@ref}">
+		<x:apply-templates mode="expanded" select="."/>
       </h2>
       The EAs defined in this section are only applicable in cases where the TOE claims conformance
       to a PP-Configuration that includes the <x:apply-templates select="." mode="short"/>.
      <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Modified</x:with-param>
 	<x:with-param name="f-comps" select="cc:modified-sfrs"/>
-	<x:with-param name="short" select="@id"/>
+	<x:with-param name="short" select="@ref"/>
 	<x:with-param name="none-msg">
 	  The PP-Module does not modify any requirements when the 
 	  <x:apply-templates select="." mode="short"/> is the base.
@@ -277,7 +276,7 @@ guidance, and testing.</p>
       <x:call-template name="sub-sfrs">
 	<x:with-param name="title">Additional</x:with-param>
 	<x:with-param name="f-comps" select="cc:additional-sfrs"/>
-	<x:with-param name="short" select="@id"/>
+	<x:with-param name="short" select="@ref"/>
 	<x:with-param name="none-msg"/>
       </x:call-template>
     </x:for-each>
@@ -429,11 +428,8 @@ guidance, and testing.</p>
     The PP-Module is intended for use with the following base PP<x:if test="count(//cc:base-pp)>1">s</x:if>:
         <ul>
 	  <x:for-each select="//cc:base-pp">
-
-		<!-- Use the attributes (which are required) rather than the weird reference -->
-		<li><x:value-of select="@name"/>, version <x:value-of select="@version"/>.</li>
-		<!-- <li><x:apply-templates select="." mode="make_xref"/></li>  -->
-
+		<x:variable name="bid" select="./@ref"/>
+		<li><x:apply-templates select="cc:cc-doc-ref[@id=$bid]" mode="make_xref"/></li>
 	  </x:for-each>
 	</ul>
     <br/>
