@@ -9,6 +9,18 @@
 
 
   <xsl:param name="work-dir" select="'../../output'"/>
+
+
+
+<!-- ################################################## --> 
+<!--                                                    -->
+<!-- ################################################## --> 
+<xsl:template match="cc:base-pp" mode="make_xref">
+	<xsl:variable name="bid" select="./@ref"/>
+    <xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid"] mode="make_xref"/>
+  </xsl:template>
+
+
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
@@ -51,11 +63,12 @@
 -->
 <!-- ################################################## --> 
 <!--                                                    -->
-<!-- ################################################## --> 
-  <xsl:template match="htm:*[./cc:depends/@*=//cc:base-pp/@id]">
+<!-- ################################################## --> QQQQQQQ
+  <xsl:template match="htm:*[./cc:depends/@*=//cc:base-pp/@ref]">
     <div class="dependent"> The following content should be included if:
       <xsl:for-each select="cc:depends/@*">
-         <xsl:value-of select="//cc:base-pp[@id=current()]/@name"/>
+	     <xsl:apply-template select="//cc:base-pp[@ref=current()]" mode="short"/>
+<!--         <xsl:value-of select="//cc:base-pp[@ref=current()]/@name"/>   -->
       </xsl:for-each>
       is a base PP:
       <div name="base-dependent">

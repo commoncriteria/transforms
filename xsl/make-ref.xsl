@@ -50,11 +50,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <!-- QQQQ -->
-<!--  <xsl:template match="cc:base-pp[@ref]" mode="make_xref">
-      <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
-  </xsl:template>
--->
+
  
   <!-- ############### -->
   <!--                 -->
