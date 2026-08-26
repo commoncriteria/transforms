@@ -218,7 +218,7 @@
 
 					
 					<xsl:for-each select="//cc:base-pp[.//f-element]">
-					  <tr><td colspan="3"><xsl:value-of select="@id"/></td></tr>
+					  <tr><td colspan="3"><xsl:value-of select="@ref"/></td></tr>
 					  <xsl:if test="cc:modified-sfrs//cc:f-element"><tr><td colspan="3">Modified SFRs</td></tr></xsl:if>
 					  <xsl:apply-templates select=".//cc:modified-sfrs//cc:f-element"/>
 					  <xsl:if test="cc:additional-sfrs//cc:f-element"><tr><td colspan="3">Additional SFRs</td></tr></xsl:if>
