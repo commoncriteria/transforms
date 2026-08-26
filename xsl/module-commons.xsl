@@ -12,6 +12,27 @@
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
+  <xsl:template match="cc:base-pp" mode="short">
+	<xsl:variable name="bid" select="@ref"/>
+	<xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="short"/><!--
+    -->
+	
+	<xsl:choose>
+	<xsl:when test="//cc:cc-doc-ref[@id=$bid] 
+
+    <xsl:variable name="path" select="concat($work-dir, '/', @ref, '.xml')"/>
+
+    <xsl:value-of select="document($path)/cc:PP/@short"/><!--
+    --><xsl:if test="not(document($path)/cc:PP/@short)"><!--
+      --><xsl:apply-templates mode="get_product_plural" select="/cc:*"/><!--
+    --></xsl:if><xsl:choose>
+       <xsl:when test="document($path)/cc:PP/cc:cPP">c</xsl:when>
+       <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
+    </xsl:choose>PP</xsl:template>
+
+
+
+
   <xsl:template match="cc:base-pp[cc:git]" mode="short">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 

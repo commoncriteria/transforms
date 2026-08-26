@@ -17,7 +17,6 @@
       <attribute name="name"/>
       <ref name="pp-attributes-pat"/>
       <ref name="PPRefAndRevision"/>
-      <ref name="packages"/>
       <ref name="PreferencesEtc"/>
       <ref name="Introduction"/>
       <ref name="CClaimsChapter"/>
@@ -263,8 +262,7 @@
       <a:documentation>
 	Holds information specifict to a base PP.
       </a:documentation>
-		<ref name="base-pp-document-pat"/>
-<!--    <ref name="external-document-pat"/>  -->
+		<ref name="ref-attr"/>
 	<optional><element name="cPP"><empty/></element></optional>
     <optional>
          <element name="sec-func-req-dir">
@@ -341,26 +339,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
         </element>
       </zeroOrMore>
     </element>
-  </define>
-
-<!-- Pattern for defining the Base PP in Modules -->
-  <!-- Attributes are now required -->
-  <!-- The git element should be used for the recognized XML case, which is the normal case -->
-  <!--   it should be omitted only for non-NIAP documents like NDcPP -->
-  <!-- The got element refers to the github repo and the current released branch. -->
-  <!-- The url element referes to the document on the NIAP website -->
-  <define name="base-pp-document-pat">
-	<ref name="id-attr"/>
-	<attribute name="name"/>
-	<attribute name="short"/>
-	<attribute name="product"/>
-	<attribute name="version"/>
-	<optional><attribute name="plural"/></optional>
-    <optional><element name="git">
-       <element name="url"><data type="string"></data></element>
-       <element name="branch"><data type="string"></data></element>
-    </element></optional>
-    <element name="url"><text/></element>
   </define>
 
 
@@ -465,8 +443,8 @@ The name or cc-id of the aspect that is being overwritten by the content of this
 		<!-- This is likely to be a Functional Package -->
 		<!-- Though I suppose it could be a catalog -->
 		<optional>
-			<element name="from-pkg">
-				<ref name="from-pkg-ref-pat"/>
+			<element name="from-doc">
+				<ref name="ref-attr"/>
 			</element>
 		</optional>
 
@@ -603,13 +581,6 @@ The name or cc-id of the aspect that is being overwritten by the content of this
     <element name="from">
        <attribute name="base"/>
        <optional><ref name="description"/></optional>
-    </element>
-  </define>
-
-  <define name="base-name">
-    <element name="base-name">
-      <a:documentation>	Variable that references the base name of the PP </a:documentation>
-      <empty/>
     </element>
   </define>
 

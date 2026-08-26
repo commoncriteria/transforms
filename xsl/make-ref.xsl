@@ -50,28 +50,16 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:module[@name]|cc:base-pp[@name]|cc:include-pkg[@name]" mode="make_xref">
+  <!-- QQQQ -->
+<!--  <xsl:template match="cc:base-pp[@ref]" mode="make_xref">
       <a href="{cc:url/text()}"><xsl:value-of select="concat(@name, ', version ', @version) "/></a>
   </xsl:template>
-
-  <xsl:template match="cc:module[not(@name)]" mode="make_xref">
-    <xsl:variable name="url"><xsl:value-of select="translate(cc:url/text(),' ','')"/></xsl:variable>
-    <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
-    <xsl:variable name="name" select="document($path)/cc:Module/@name"/>
-
-    <!-- cc:url/text() -->
-    <a href="{$url}">
-	<xsl:if test="not(starts-with($name,'PP-Module for '))">PP-Module for </xsl:if>
-        <xsl:value-of select="$name"/>,
-        version 
-        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-      </a>
-  </xsl:template> 
+-->
  
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:base-pp[cc:git]|cc:include-pkg[cc:git]|cc:cc-doc-ref[cc:git]" mode="make_xref">
+  <xsl:template match="cc:cc-doc-ref[cc:git]" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
         <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
@@ -79,6 +67,33 @@
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
   </xsl:template> 
+
+  <xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="make_xref">
+      <a href="{cc:url/text()}">
+		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
+      </a>
+  </xsl:template> 
+
+
+<xsl:template match="cc:cc-doc-ref[cc:git]" mode="short">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+    <xsl:value-of select="document($path)/cc:*/@short"/>
+</xsl:template>
+	
+<xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="short">
+	<xsl:value-of select="@short"/>
+</xsl:template>
+
+<xsl:template match="cc-doc-ref[cc:git]" mode="doctype">
+    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
+	<xsl:choose>
+		<xsl:when test="document($path)/cc:Module"> 
+			<xsl:value-of select="document($path)/cc:Module/@short"/> PP-Module
+		</xsl:when>
+		<xsl:when test="document($path)/cc:Package">
+			<xsl:value-of select="document($path)/cc:Package/@short"/> FP
+		</xsl:when>
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQ
  
   <!-- ############### -->
   <!--                 -->

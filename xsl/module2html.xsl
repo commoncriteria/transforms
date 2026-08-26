@@ -84,6 +84,9 @@
   <!-- ############### -->
   <!--   Overwrites template from pp2html.xsl -->
   <!-- ############### -->
+
+<!-- Gets the short name of the base PP given the id of the base PP from
+     the Conformance Claims section -->
   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
     <xsl:value-of select="@name"/>
 <!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
@@ -93,7 +96,7 @@
 		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
-			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>
+			<xsl:apply-templates mode="short" select="//cc:cc-doc-ref[@id=$bid]"/> PP
 			<xsl:if test="$count>2"><xsl:call-template name="commaifnotlast"/></xsl:if>
 		</xsl:for-each>)
 	</xsl:if>
@@ -131,7 +134,7 @@
     
     <h1 id="{$id}" class="indexable" data-level="1">Security Requirements</h1>
     <xsl:call-template name="secrectext"/>
-    <xsl:apply-templates select="cc:base-pp"/>
+    <xsl:apply-templates select="cc:base-pp"/>  QQQQ
     <xsl:call-template name="man-sfrs"/>
   </xsl:template>
 
@@ -141,7 +144,7 @@
   <xsl:template name="consistency-rationale">
     <h1 id="mod-conrat" class="indexable" data-level="1">Consistency Rationale</h1>
 
-    <xsl:for-each select="//cc:base-pp">
+    <xsl:for-each select="//cc:base-pp">  QQQQ
       <xsl:variable name="base" select="."/>
 
       <h2 id="conrat-{@id}" class="indexable" data-level="2">
@@ -403,7 +406,7 @@
 <<<<<<< HEAD
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
 -->
-            <xsl:when test="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]">
+            <xsl:when test="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]"> QQQQ
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]"/>
             </xsl:when>
             <xsl:otherwise>
