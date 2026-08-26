@@ -84,16 +84,20 @@
 	<xsl:value-of select="@short"/>
 </xsl:template>
 
-<xsl:template match="cc-doc-ref[cc:git]" mode="doctype">
+<xsl:template match="cc:cc-doc-ref[cc:git]" mode="doctype">
     <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
 	<xsl:choose>
-		<xsl:when test="document($path)/cc:Module"> 
-			<xsl:value-of select="document($path)/cc:Module/@short"/> PP-Module
-		</xsl:when>
-		<xsl:when test="document($path)/cc:Package">
-			<xsl:value-of select="document($path)/cc:Package/@short"/> FP
-		</xsl:when>
-QQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+		<xsl:when test="document($path)/cc:Module">PP-Module</xsl:when>
+		<xsl:when test="document($path)/cc:Package">FP</xsl:when>
+		<xsl:when test="document($path)/cc:PP/cc:cPP">cPP</xsl:when>
+		<xsl:otherwise>PP</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="doctype">
+	<xsl:value-of select="@doctype"/>
+</xsl:template>
+
  
   <!-- ############### -->
   <!--                 -->

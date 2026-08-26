@@ -1845,6 +1845,7 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
 				<attribute name="short"/>
 				<attribute name="product"/>
 				<attribute name="plural"/>
+				<attribute name="doctype"/>
 			</group>
 			<element name="git">
 				<element name="url"><data type="string"></data></element>
