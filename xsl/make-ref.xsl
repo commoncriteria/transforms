@@ -117,6 +117,8 @@
 	<xsl:choose>
 		<xsl:when test="document($path)/cc:Module">PP-Module</xsl:when>
 		<xsl:when test="document($path)/cc:Package">FP</xsl:when>
+		<xsl:when test="document($path)/cc:APackage">AP</xsl:when>		
+		<xsl:when test="document($path)/cc:EvalMeth">EM</xsl:when>		
 		<xsl:when test="document($path)/cc:PP/cc:cPP">cPP</xsl:when>
 		<xsl:otherwise>PP</xsl:otherwise>
 	</xsl:choose>
