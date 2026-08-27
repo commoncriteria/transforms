@@ -90,7 +90,7 @@
 		<xsl:otherwise>Protection Profile for</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
-    <x:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+    <xsl:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 <xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="expanded">
@@ -99,7 +99,7 @@
 	<xsl:if test="@doctype='FP'">Functional Package for</xsl:if>
 	<xsl:if test="@doctype='PP-Module'">PP-Module for</xsl:if>
 	<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
-    <x:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+    <xsl:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 <xsl:template match="cc:cc-doc-ref[cc:git]" mode="get_product_plural">
