@@ -63,7 +63,7 @@
 -->
 <!-- ################################################## --> 
 <!--                                                    -->
-<!-- ################################################## --> QQQQQQQ
+<!-- ################################################## --> 
   <xsl:template match="htm:*[./cc:depends/@*=//cc:base-pp/@ref]">
     <div class="dependent"> The following content should be included if:
       <xsl:for-each select="cc:depends/@*">
