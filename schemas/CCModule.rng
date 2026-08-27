@@ -602,6 +602,10 @@ The name or cc-id of the aspect that is being overwritten by the content of this
       <element name="ReferenceTable">
 	<a:documentation>
 	</a:documentation>
+          <element name="PPTitle">
+            <a:documentation>Title of this document</a:documentation>
+            <text/>
+          </element>
         <element name="PPVersion">
 	  <a:documentation>
 	  </a:documentation>
