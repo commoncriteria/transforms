@@ -328,23 +328,6 @@
     </xsl:if>
   </xsl:template>
 
-   <!-- ############### -->
-  <xsl:template match="cc:include-pkg[@short]" mode="show">
-    <xsl:element name="a">
-       <xsl:attribute name="href"><xsl:value-of select="@url"/></xsl:attribute>
-       <xsl:value-of select="@name"/>
-       <xsl:if test="@short"> (<xsl:value-of select="@short"/>)</xsl:if>
-       Package, version <xsl:value-of select="@version"/>
-    </xsl:element> Conformant</xsl:template>
-
-  
-  <!-- ############### -->
-  <xsl:template match="cc:include-pkg[cc:git]" mode="show">
-    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
-    <a href="{@url}">
-       <xsl:value-of select="document($path)//cc:PPTitle"/>, 
-       version <xsl:value-of select="document($path)//cc:PPVersion"/>
-    </a> Conformant</xsl:template>
 
   <!-- ############### -->
   <!--                 -->
@@ -693,6 +676,8 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 		<!-- Selection-based SFRs. All cases. -->        
       <xsl:if test="@status='sel-based' or ancestor::cc:sel-sfrs">
         <div class="statustag">
+		
+		<!-- dependency on selection -->
 	  <xsl:if test="//cc:selectable[@id = current()/cc:depends/@*]|current()/cc:depends/cc:external-doc">
           <b><i>The inclusion of this selection-based component depends upon selection in:</i></b>
            <ul>
@@ -705,9 +690,8 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 				</xsl:for-each>
 
 				<!-- Dependencies on selection in external documents -->
-				<!-- this will need to handle cc-doc-ref -->
 				<xsl:variable name="fcomp" select="."/>
-				<xsl:for-each select="//cc:base-pp[@id=current()//cc:external-doc/@ref]|//cc:include-pkg[@id=current()//cc:external-doc/@ref]">
+				<xsl:for-each select="//cc:cc-doc-ref[@id=current()//cc:external-doc/@ref]">
 					<xsl:variable name="path" select="concat($work-dir,'/',@id,'.xml')"/>
 					<li><b><i>
 					<xsl:for-each select="document($path)//cc:f-element[.//@id=$fcomp/cc:depends[cc:external-doc/@ref=current()/@id]/@*]">
@@ -719,6 +703,8 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
 				</xsl:for-each>
 			</ul>
 		</xsl:if>
+
+		<!-- Dependency on use case -->
            <xsl:if test="//cc:usecase[.//@id = current()/cc:depends/@*]">
              <p/><b><i>This component must also be included in the ST if any of the following use cases are selected:</i></b><br/>
              <ul>
@@ -735,7 +721,8 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
                </xsl:for-each>
              </ul>
            </xsl:if>
-                      
+                     
+			<!-- Dependency on SFR -->
 	  <xsl:if test="//cc:f-component[@id = current()/cc:depends/@*]">
                <p/><b><i>This component must be included in the ST if any of the following SFRs are included:</i></b><br/>
                <ul>
@@ -758,27 +745,6 @@ work-dir of external doc = <xsl:value-of select="$work-dir"/>
   </xsl:template>
 
 
-
-<!-- Display a reference to a PP, cPP, Module, FP, AP, or EM document -->
-<xsl:template match="cc:cc-doc-ref">
-
-	<xsl:choose>
-
-	<!-- If the entry has a name & version attribute, just dump them -->
-	<xsl:when test="@name and @version">
-		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
-	</xsl:when>
-
-    <!-- If the entry has a git tag, use the git repo -->
-	<xsl:when test="./cc:git">
-		<xsl:apply-templates select="." mode="make_xref"/>
-	</xsl:when>
-	
-	<xsl:otherwise>
-		Unrecognized document.
-	</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
 
   <!--########################################-->
   <!--########################################-->

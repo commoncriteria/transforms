@@ -127,6 +127,12 @@
 </xsl:template>
 
  
+<!-- Default behavior is to display a reference to a PP, cPP, Module, FP, AP, or EM document -->
+<xsl:template match="cc:cc-doc-ref">
+	<xsl:apply-templates select="." mode="make_xref"/>
+</xsl:template>
+ 
+ 
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
