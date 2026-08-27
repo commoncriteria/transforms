@@ -17,7 +17,7 @@
 <!-- ################################################## --> 
 <xsl:template match="cc:base-pp" mode="make_xref">
 	<xsl:variable name="bid" select="./@ref"/>
-    <xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid"] mode="make_xref"/>
+    <xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="make_xref"/>
   </xsl:template>
 
 
