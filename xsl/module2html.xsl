@@ -84,6 +84,9 @@
   <!-- ############### -->
   <!--   Overwrites template from pp2html.xsl -->
   <!-- ############### -->
+  
+<!-- Gets the short name of the base PP given the id of the base PP from
+     the Conformance Claims section -->  
   <xsl:template match="cc:threat|cc:assumption|cc:OSP" mode="get-representation">
     <xsl:value-of select="@name"/>
 <!--    <xsl:if test="cc:from"> (from <xsl:value-of select="cc:from/@base"/>)</xsl:if>   -->
@@ -93,7 +96,7 @@
 		(from <xsl:for-each select="cc:from">
 			<xsl:variable name="bid"><xsl:value-of select="@base"/></xsl:variable>
 			<xsl:if test="(position()=last()) and (position()>1)"> and </xsl:if>
-			<xsl:apply-templates mode="short" select="//cc:base-pp[@id=$bid]"/>
+			<xsl:apply-templates mode="short" select="//cc:cc-doc-ref[@id=$bid]"/> <xsl:apply-templates mode="doctype" select="//cc:cc-doc-ref[@id=$bid]"/>
 			<xsl:if test="$count>2"><xsl:call-template name="commaifnotlast"/></xsl:if>
 		</xsl:for-each>)
 	</xsl:if>
@@ -144,18 +147,18 @@
     <xsl:for-each select="//cc:base-pp">
       <xsl:variable name="base" select="."/>
 
-      <h2 id="conrat-{@id}" class="indexable" data-level="2">
+      <h2 id="conrat-{@ref}" class="indexable" data-level="2">
 	<xsl:apply-templates select="." mode="expanded"/>
       </h2>
 
       <!-- #################### -->
-      <h3 id="contoe-{@id}" class="indexable" data-level="3">
+      <h3 id="contoe-{@ref}" class="indexable" data-level="3">
 	Consistency of TOE Type
       </h3>
       <xsl:apply-templates select="./cc:con-toe"/>
 
       <!-- #################### -->
-      <h3 id="consecprob-{@id}" class="indexable" data-level="3">
+      <h3 id="consecprob-{@ref}" class="indexable" data-level="3">
 	Consistency of Security Problem Definition
       </h3>
 <!--      The threats, assumptions, and OSPs defined by this PP-Module (see section 3.1) supplement those defined in the
@@ -179,7 +182,11 @@
 
       <!-- #################### -->
 	  <!-- If standard approach -->
+	 	  <!-- Let's see if we can get rid of this -->
   	 <xsl:if test="not(//cc:CClaimsInfo[@cc-approach='direct-rationale'])">
+		Error: standard approach not supported.
+	 </xsl:if>
+<!--
 
       <h3 id="conobj-{@id}" class="indexable" data-level="3">
 			Consistency of Objectives
@@ -209,7 +216,7 @@
 		</xsl:if>
 		</p>
 	  </xsl:if>
-
+-->
 	  <!-- if direct rationale -->
  	 <xsl:if test="//cc:CClaimsInfo[@cc-approach='direct-rationale']">
 		<!-- header for OE objectives -->
@@ -291,7 +298,7 @@
 		<tr> <th colspan="2"> Modified SFRs</th></tr>
 		<xsl:call-template name="req-con-rat-sec-new-mod">
 			<xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:base-sfr-spec"/>
-			<xsl:with-param name="id" select="$base/@id"/>
+			<xsl:with-param name="id" select="$base/@ref"/>
 			<xsl:with-param name="none-msg">
 				This PP-Module does not modify any requirements when the
 				<xsl:apply-templates mode="short" select="."/> is the base.
@@ -304,7 +311,7 @@
 		<tr> <th colspan="2"> Modified SFRs</th></tr>
 		<xsl:call-template name="req-con-rat-sec">
 		  <xsl:with-param name="f-comps" select="$base/cc:modified-sfrs//cc:f-component[not(@status='invisible')]"/>
-		  <xsl:with-param name="id" select="$base/@id"/>
+		  <xsl:with-param name="id" select="$base/@ref"/>
 		  <xsl:with-param name="none-msg">
 			This PP-Module does not modify any requirements when the
 			<xsl:apply-templates mode="short" select="."/> is the base.
@@ -319,7 +326,7 @@
 	  </tr>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="$base/cc:additional-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not add any requirements when the
 	      <xsl:apply-templates mode="short" select="."/> is the base.
@@ -330,7 +337,7 @@
 	  <th colspan="2"> Mandatory SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:man-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Mandatory requirements.
 	    </xsl:with-param>
@@ -340,7 +347,7 @@
 	  <th colspan="2"> Optional SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:opt-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Optional requirements.
 	    </xsl:with-param>
@@ -350,7 +357,7 @@
 	  <th colspan="2"> Objective SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:obj-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Objective requirements.
 	    </xsl:with-param>
@@ -360,7 +367,7 @@
 	  <th colspan="2"> Implementation-dependent SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:impl-dep-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Implementation-dependent requirements.
 	    </xsl:with-param>
@@ -370,7 +377,7 @@
 	  <th colspan="2"> Selection-based SFRs</th>
 	  <xsl:call-template name="req-con-rat-sec">
 	    <xsl:with-param name="f-comps" select="//cc:sel-sfrs//cc:f-component[not(@status='invisible')]"/>
-	  <xsl:with-param name="id" select="$base/@id"/>
+	  <xsl:with-param name="id" select="$base/@ref"/>
 	    <xsl:with-param name="none-msg">
 	      This PP-Module does not define any Selection-based requirements.
 	    </xsl:with-param>
@@ -403,8 +410,8 @@
 <<<<<<< HEAD
               <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@cc-id and not(@iteration)]"/>
 -->
-            <xsl:when test="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]">
-              <xsl:apply-templates select="//cc:base-pp[@id=$id]//cc:con-mod[@ref=current()/@id]"/>
+            <xsl:when test="//cc:base-pp[@ref=$id]//cc:con-mod[@ref=current()/@id]">
+              <xsl:apply-templates select="//cc:base-pp[@ref=$id]//cc:con-mod[@ref=current()/@id]"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="cc:consistency-rationale/node()">
@@ -436,8 +443,10 @@
 		  <td><xsl:apply-templates mode="getId" select="."/>
 		  
 			<!-- If the SFR is in a Package, we should specify that -->
-			<xsl:if test="./cc:from-pkg">
-				(from <xsl:value-of select="cc:from-pkg/@short"/> FP)
+			<!-- ref attr points to doc in Conf Claims section. Usually an FP -->
+			<xsl:if test="./cc:from-doc">
+				(from <xsl:apply-templates select="cc:cc-doc-ref[@id=cc:from-doc/@ref]" mode="short"/><!--
+                 --><xsl::apply-templates select="cc:cc-doc-ref[@id=cc:from-doc/@ref]" mode="doctype"/>)
 			</xsl:if>
 		  
 		  </td>
@@ -486,8 +495,8 @@
     <xsl:if test="not(cc:sec-func-req-dir)">
       In a PP-Configuration that includes the <xsl:apply-templates mode="short" select="."/>,
       the TOE is expected to rely on some of the security functions implemented by the
-<!--      <xsl:apply-templates mode="get_product" select="/"/>   -->
-      <xsl:value-of select="@product"/>
+      <xsl:apply-templates mode="get_product" select="/cc:Module"/> 
+<!--      <xsl:value-of select="@product"/> -->
       as a whole and evaluated against the  <xsl:apply-templates mode="short" select="."/>.
       The following sections describe any modifications that the ST author must make to the SFRs
       defined in the <xsl:apply-templates mode="short" select="."/> in addition to what is mandated by <a class="dynref" href="#man-sfrs">Section </a>.
@@ -495,7 +504,7 @@
     <xsl:apply-templates select="cc:sec-func-req-dir"/>
 
 
-    <h3 id="modsfr-{@id}" class="indexable" data-level="3"> Modified SFRs </h3>
+    <h3 id="modsfr-{@ref}" class="indexable" data-level="3"> Modified SFRs </h3>
     <xsl:choose>
 
     <!-- New style modified sfrs -->
@@ -526,8 +535,9 @@
 						<xsl:value-of select="@title"/>
 
 						<!-- If the SFR is in a Package, we should specify that -->
-						<xsl:if test="cc:from-pkg">
-							(from <xsl:value-of select="cc:from-pkg/@short"/> FP)
+						<xsl:if test="cc:from-doc">
+							<xsl:variable name="doref" select="cc:from-doc/@ref"/>
+							(from <xsl:apply-templates select="cc:cc-doc-ref[@id=$docref]" mode="short"/> FP)
 						</xsl:if>
 					</h4>
 
@@ -564,7 +574,7 @@
 
 	<!-- Deal with Additional SFRs -->
     <xsl:if test="count(//cc:base-pp)>1 or cc:additional-sfrs//cc:f-component" >
-    <h3 id="addsfr-{@id}" class="indexable" data-level="3"> Additional SFRs</h3>
+    <h3 id="addsfr-{@ref}" class="indexable" data-level="3"> Additional SFRs</h3>
     <xsl:choose><xsl:when test="cc:additional-sfrs//cc:f-component">
       This section defines additional SFRs that must be added to the TOE boundary in order to implement
 	  the functionality in any PP-Configuration where the <xsl:apply-templates mode="short" select="."/> is 

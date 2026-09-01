@@ -19,8 +19,6 @@
       <ref name="PPReference"/>
       <ref name="RevisionHistory"/>
       <ref name="Foreword"/>
-      <ref name="packages"/>
-      <ref name="modules"/>
       <ref name="PreferencesEtc"/>
       <ref name="Chapters"/>
       <ref name="SecProbDesChapter"/>
@@ -80,13 +78,6 @@
     <optional> <ref name="pp-preferences-pat"/> </optional>
   </define>
   
-  <define name="modules">
-    <optional> <element name="modules"><optional><attribute name="required"/></optional>
-    <zeroOrMore>
-      <element name="module"><ref name="external-document-pat"/></element>
-    </zeroOrMore>
-   </element></optional>
-  </define>
   <define name="SecurityRequirementsChapter">
     <choice>
       <element name="section">

@@ -110,7 +110,7 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-conf/cc:PP-cc-ref">
 						<li><xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-template select="./cc:cc-doc-ref"/>
+							<xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -134,7 +134,7 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:PP-cc-ref">
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<li><xsl:apply-templates select="./cc:cc-doc-ref"/></li>
+							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/></li>
 						</xsl:when>
 						<xsl:otherwise>
 							<li><xsl:apply-templates select="."/></li>
@@ -144,7 +144,7 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:Mod-cc-ref">
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<li><xsl:apply-templates select="./cc:cc-doc-ref"/></li>
+							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/></li>
 						</xsl:when>
 						<xsl:otherwise>
 							<li><xsl:apply-templates select="."/></li>
@@ -173,7 +173,7 @@
 					<li>This <xsl:call-template name="doctype-short"/> is 
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-templates select="./cc:cc-doc-ref"/>
+							<xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -189,7 +189,7 @@
 					<li>This <xsl:call-template name="doctype-short"/> is 
 					<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-templates select="./cc:cc-doc-ref"/>
+							<xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
@@ -213,7 +213,7 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-eval-methods/cc:EM-cc-ref">
 						<li><xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<xsl:apply-templates select="./cc:cc-doc-ref"/>
+							<xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>

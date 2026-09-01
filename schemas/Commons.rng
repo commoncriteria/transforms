@@ -328,7 +328,6 @@ A comma deliminated list of CC Terms that should be suppressed. You can either
              <value>t-audit-optional</value>
              <value>t-audit-objective</value>
              <value>t-audit-sel-based</value>
-             <value>t-audit-impl-dep</value>
              <value>t-audit-feat-based</value>
              <value>optional-reqs</value>
              <value>objective-reqs</value>
@@ -1838,17 +1837,20 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
   <define name="cc-doc-ref-pat">
 	<element name="cc-doc-ref">
 		<ref name="id-attr"/>
-		<optional><attribute name="name"/></optional>
-		<optional><attribute name="version"/></optional>
-		<optional><attribute name="short"/></optional>
-		<optional><attribute name="product"/></optional>
-		<optional><attribute name="plural"/></optional>
-		<optional>
+		<choice>
+			<group>
+				<attribute name="name"/>
+				<attribute name="version"/>
+				<attribute name="short"/>
+				<attribute name="product"/>
+				<attribute name="plural"/>
+				<attribute name="doctype"/>
+			</group>
 			<element name="git">
 				<element name="url"><data type="string"></data></element>
 				<element name="branch"><data type="string"></data></element>
 			</element>
-		</optional>
+		</choice>				
 		<element name="url"><text/></element>
 		<ref name="depends-pat"/>
 	</element>
@@ -2036,28 +2038,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     </choice>
   </define>
 
-  <define name="packages">
-    <zeroOrMore> <ref name="include-pkg-pat"/></zeroOrMore>
-  </define> 
-
-  
-  <define name="include-pkg-pat">
-    <element name="include-pkg">
-      <a:documentation>
-        <![CDATA[
-		 Declarations of packages that are or may be included in the PP. There are three kinds:
-		 Mandatory: This is a package that is always included with the PP.
-		 <include-pkg name="pkg-name"/>
-          	 Feature-Based: Package is included if a feature is present in the TOE.
-		 <include-pkg name="pkg-name" type="impl-dep">
-                 <depends on=""/>    
-		 This is the text displayed for the ST author to indicate that the feature exists.
-		 </include-pkg>
-        ]]>
-      </a:documentation>
-      <ref name="external-document-pat"/>
-    </element>
-  </define>
 
  
   <define name="external-document-pat">
@@ -2071,23 +2051,6 @@ The page at http://commoncriteria.github.io/Encapsulator.html may be helpful.
     <ref name="depends-pat"/>
   </define>
 
-  <define name="from-pkg-ref-pat">
-	<attribute name="name"/>
-	<attribute name="short"/>
-	<attribute name="version"/>
-	
-	<!-- Not really optional, just accounting for the case where the FP is not in the github -->
-    <optional>
-		<element name="git">
-			<element name="url"><data type="string"></data></element>
-			<element name="branch"><data type="string"></data></element>
-		   <!--
-			<param name="pattern">https://raw.githubusercontent.com/commoncriteria/[\-_a-zA-Z0-9]+/[a-z0-9]+/input/[\-_A-Z0-9a-z]+\.xml</param>
-			-->
-		</element>
-	</optional>
-	
-  </define>
 
 
   <define name="recognized-xml">

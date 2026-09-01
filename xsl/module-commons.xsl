@@ -9,44 +9,49 @@
 
 
   <xsl:param name="work-dir" select="'../../output'"/>
-<!-- ################################################## --> 
+  
+  
+  
+  <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:git]" mode="short">
-    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
-
-    <xsl:value-of select="document($path)/cc:PP/@short"/><!--
-    --><xsl:if test="not(document($path)/cc:PP/@short)"><!--
-      --><xsl:apply-templates mode="get_product_plural" select="/cc:*"/><!--
-    --></xsl:if><xsl:choose>
-       <xsl:when test="document($path)/cc:PP/cc:cPP">c</xsl:when>
-       <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
-    </xsl:choose>PP</xsl:template>
-
-<!-- ################################################## --> 
-<!--                                                    -->
-<!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[cc:git]" mode="expanded">
-    <xsl:variable name="path" select="concat($work-dir, '/', @id, '.xml')"/>
-
-    <xsl:if test="document($path)/cc:PP/cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
-    Protection Profile for<xsl:text> </xsl:text>
-    <xsl:apply-templates mode="get_product_plural" select="/cc:*"/>
+<xsl:template match="cc:base-pp" mode="make_xref">
+	<xsl:variable name="bid" select="./@ref"/>
+    <xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="make_xref"/>
   </xsl:template>
 
 
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="cc:base-pp[@name]" mode="short">
-    <xsl:value-of select="@short"/><xsl:choose>
-       <xsl:when test="cc:cPP">c</xsl:when>
-       <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
-    </xsl:choose>PP</xsl:template>
+ <xsl:template match="cc:base-pp" mode="short">
+	<xsl:variable name="bid" select="@ref"/>
+	<xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="short"/>
+  </xsl:template>
+
 
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
+  <xsl:template match="cc:base-pp" mode="expanded">
+	<xsl:variable name="bid" select="@ref"/>
+	<xsl:apply-templates select="//cc:cc-doc-ref[@id=$bid]" mode="expanded"/>
+  </xsl:template>
+
+
+<!-- ################################################## --> 
+<!--                                                    -->
+<!-- ################################################## --> 
+<!--  <xsl:template match="cc:base-pp[@name]" mode="short">
+    <xsl:value-of select="@short"/><xsl:choose>
+       <xsl:when test="cc:cPP">c</xsl:when>
+       <xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
+    </xsl:choose>PP</xsl:template>
+--->
+<!-- ################################################## --> 
+<!--                                                    -->
+<!-- ################################################## --> 
+<!--
   <xsl:template match="cc:base-pp[@name]" mode="expanded">
     <xsl:if test="cc:cPP">Collaborative<xsl:text> </xsl:text></xsl:if>
     Protection Profile for<xsl:text> </xsl:text>
@@ -55,14 +60,15 @@
        <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
+--->
 <!-- ################################################## --> 
 <!--                                                    -->
 <!-- ################################################## --> 
-  <xsl:template match="htm:*[./cc:depends/@*=//cc:base-pp/@id]">
+  <xsl:template match="htm:*[./cc:depends/@*=//cc:base-pp/@ref]">
     <div class="dependent"> The following content should be included if:
       <xsl:for-each select="cc:depends/@*">
-         <xsl:value-of select="//cc:base-pp[@id=current()]/@name"/>
+	     <xsl:apply-template select="//cc:base-pp[@ref=current()]" mode="short"/>
+<!--         <xsl:value-of select="//cc:base-pp[@ref=current()]/@name"/>   -->
       </xsl:for-each>
       is a base PP:
       <div name="base-dependent">

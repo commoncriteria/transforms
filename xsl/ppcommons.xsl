@@ -567,7 +567,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- Refs to all the pre-defined auto-generated tables   -->
   <!-- ################################################### -->
   <xsl:template match="cc:xref[@g='t-audit-optional' or @g='t-audit-objective' or 
-				@g='t-audit-sel-based' or @g='t-audit-impl-dep' or 
+				@g='t-audit-sel-based' or  
 				@g='t-audit-feat-based'or @g='t-audit-mandatory']">
     <xsl:call-template name="make_ctr_ref">
       <xsl:with-param name="id" select="@g"/>
@@ -919,8 +919,7 @@ The following sections list Common Criteria and technology terms used in this do
   <!--                 -->
   <!-- ############### -->
   <xsl:template match="/cc:Module" mode="get_title">
-    PP-Module for <xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
-    <x:apply-templates mode="get_product_plural" select="/cc:Module"/></xsl:with-param></xsl:call-template>
+    <xsl:value-of select="//cc:PPTitle"/>
   </xsl:template>
 
   
