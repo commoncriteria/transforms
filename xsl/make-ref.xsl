@@ -104,7 +104,7 @@
 			<xsl:otherwise>Protection Profile for</xsl:otherwise>
 		</xsl:choose>
 		<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
-		<xsl:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+		<xsl:value-of select="document($path)/cc:*/@target-products"/></xsl:with-param></xsl:call-template>
 	</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -114,8 +114,9 @@
 	<xsl:if test="@doctype='PP'">Protection Profile for</xsl:if>
 	<xsl:if test="@doctype='FP'">Functional Package for</xsl:if>
 	<xsl:if test="@doctype='PP-Module'">PP-Module for</xsl:if>
-	<xsl:text> </xsl:text><xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
-    <xsl:apply-templates mode="get_product_plural" select="."/></xsl:with-param></xsl:call-template>
+	<xsl:text> </xsl:text>	
+	<xsl:call-template name="cap_first_letters"><xsl:with-param name="val">
+    <xsl:value-of select="./@plural"/></xsl:with-param></xsl:call-template>
 </xsl:template>
 
 <xsl:template match="cc:cc-doc-ref[cc:git]" mode="get_product_plural">
