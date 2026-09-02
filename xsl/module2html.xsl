@@ -490,7 +490,7 @@
   <xsl:template match="cc:base-pp">
     <h2 id="secreq-{@ref}" class="indexable" data-level="2">
 	  <xsl:variable name="bid" select="./@ref"/>
-      <xsl:apply-templates mode="expanded" select="//cc-doc-ref[@id=$bid]"/>
+      <xsl:apply-templates mode="expanded" select="//cc:cc-doc-ref[@id=$bid]"/>
        Security Functional Requirements Direction
     </h2>
     <xsl:if test="not(cc:sec-func-req-dir)">
