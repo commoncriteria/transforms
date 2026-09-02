@@ -58,15 +58,24 @@
   <xsl:template match="cc:cc-doc-ref[cc:git]" mode="make_xref">
       <a href="{cc:url/text()}">
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
-        <xsl:value-of select="document($path)//cc:PPTitle/text()"/>,
-        version 
+		<xsl:choose>
+			<xsl:when test="document($path)//cc:PPTitle">
+				<xsl:value-of select="document($path)//cc:PPTitle"/>
+			</xsl:when>
+			<xsl:otherwise>PP-Module for <!--
+			--><xsl:call-template name="cap_first_letters">
+				<xsl:with-param name="val"><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:Module"/></xsl:with-param>
+			</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+        Version 
         <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
   </xsl:template> 
 
   <xsl:template match="cc:cc-doc-ref[not(cc:git)]" mode="make_xref">
       <a href="{cc:url/text()}">
-		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>.
+		<xsl:value-of select="@name"/>, version <xsl:value-of select="@version"/>
       </a>
   </xsl:template> 
 

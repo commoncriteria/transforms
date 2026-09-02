@@ -115,7 +115,7 @@
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
 						</xsl:otherwise>
-						</xsl:choose></li>
+						</xsl:choose>.</li>
 					</xsl:for-each>
 					</ul>
 				</xsl:otherwise>
@@ -134,20 +134,20 @@
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:PP-cc-ref">
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/></li>
+							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>.</li>
 						</xsl:when>
 						<xsl:otherwise>
-							<li><xsl:apply-templates select="."/></li>
+							<li><xsl:apply-templates select="."/>.</li>
 						</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each>
 					<xsl:for-each select="//cc:CClaimsInfo/cc:cc-pp-config-with/cc:Mod-cc-ref">
 						<xsl:choose>
 						<xsl:when test="./cc:cc-doc-ref">
-							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/></li>
+							<li><xsl:apply-templates select="./cc:cc-doc-ref" mode="make_xref"/>.</li>
 						</xsl:when>
 						<xsl:otherwise>
-							<li><xsl:apply-templates select="."/></li>
+							<li><xsl:apply-templates select="."/>.</li>
 						</xsl:otherwise>
 						</xsl:choose>
 					</xsl:for-each>
@@ -218,7 +218,7 @@
 						<xsl:otherwise>
 							<xsl:apply-templates select="."/>
 						</xsl:otherwise>
-						</xsl:choose></li>
+						</xsl:choose>.</li>
 					</xsl:for-each>
 				</ul>
 			</dd>
