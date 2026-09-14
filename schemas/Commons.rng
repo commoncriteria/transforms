@@ -1075,6 +1075,7 @@ Modification definition. This text goes in the
       <a:documentation>
         Defines a lists of tests to evaluate a requirement.
       </a:documentation>
+	  <optional><element name="testlist-intro"><ref name="basic-content-pat"/></element></optional>
       <oneOrMore>
         <choice>
           <ref name="basic-content-pat"/>
@@ -1097,6 +1098,7 @@ Modification definition. This text goes in the
           </element>
         </choice>
       </oneOrMore>
+	  <optional><element name="testlist-outro"><ref name="basic-content-pat"/></element></optional>
     </element>
   </define>
 
