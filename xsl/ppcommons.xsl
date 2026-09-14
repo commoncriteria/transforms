@@ -129,6 +129,16 @@
 	<x:apply-templates select=".//cc:aactivity[not(@level='element') and not(ancestor::cc:management-function)]/cc:*[$cat=local-name()]" mode="comp-ea"/>
       </div>
     </x:if>
+	
+    <x:if test="./cc:eactivity/cc:*[local-name()=$cat]">
+      <div class="eacategory"><x:value-of select="$cat"/></div>
+      <div class="ea">
+	<x:apply-templates select="./cc:eactivity/cc:*[$cat=local-name()]" mode="comp-ea"/>
+      </div>
+    </x:if>
+
+
+	
   </x:template>
 
 <!-- Component-level no-tests EAs -->
@@ -159,7 +169,7 @@
   </xsl:template>
 
   <!-- Component-level TSS EAs -->
-  <xsl:template match="cc:TSS" mode="comp-ea">
+  <xsl:template match="cc:TSS or cc:ea-TSS" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
 			There are no additional TSS evaluation activities for this component.<br/>
@@ -171,7 +181,7 @@
   </xsl:template>
   
   <!-- Element-level & Managament Function TSS EAs -->
-  <xsl:template match="cc:TSS" mode="single-cat">
+  <xsl:template match="cc:TSS or cc:ea-TSS" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
@@ -187,7 +197,7 @@
   </xsl:template>
 
  <!-- Component-level Guidance EAs -->
-  <xsl:template match="cc:Guidance" mode="comp-ea">
+  <xsl:template match="cc:Guidance or cc:ea-Guidance" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
 			There are no additional Guidance evaluation activities for this component.<br/>
@@ -199,7 +209,7 @@
   </xsl:template>
 
  <!-- Element-level & Managament Function Guidance EAs -->
-  <xsl:template match="cc:Guidance" mode="single-cat">
+  <xsl:template match="cc:Guidance or cc:ea-Guidance" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
@@ -215,7 +225,7 @@
   </xsl:template>
   
 <!-- Component-level KMD EAs -->
-  <xsl:template match="cc:KMD" mode="comp-ea">
+  <xsl:template match="cc:KMD or cc:ea-KMD" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
 			There are no additional KMD evaluation activities for this component.<br/>
@@ -227,7 +237,7 @@
   </xsl:template>
 
 <!-- Element-level & Managament Function KMD EAs -->
-  <xsl:template match="cc:KMD" mode="single-cat">
+  <xsl:template match="cc:KMD or cc:ea-KMD" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
@@ -243,7 +253,7 @@
   </xsl:template>
 
 <!-- Component-level Test EAs -->
- <xsl:template match="cc:Tests" mode="comp-ea">
+ <xsl:template match="cc:Tests or cc:ea-Tests" mode="comp-ea">
     <xsl:choose>
 		<xsl:when test=".=''">
 			There are no test activities for this component.<br/>
@@ -255,7 +265,7 @@
   </xsl:template>
 
 <!-- Element-level & Managament Function Test EAs -->
- <xsl:template match="cc:Tests" mode="single-cat">
+ <xsl:template match="cc:Tests or cc:ea-Tests" mode="single-cat">
 	<div class="eacategory"><xsl:value-of select="local-name()"/></div>
     <xsl:choose>
 		<xsl:when test=".='' and not(ancestor::cc:management-function)">
@@ -339,9 +349,9 @@
   <x:template match="cc:endnote" mode="revealendnote">
   </x:template>
   <!-- ############### -->
-  <!--                 -->
+  <!-- Handle old-timey AAs -->
   <!-- ############### -->
-   <x:template match="cc:f-component | cc:a-component" mode="handle-activities">  
+   <x:template match="cc:f-component[.//cc:aactivity] | cc:a-component[.//cc:aactivity]" mode="handle-activities">  
 	<!-- Display component name -->
         <x:if test=".//cc:aactivity[not(@level='element')]">
           <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
@@ -370,6 +380,41 @@
 	</x:if>
 
    </x:template>
+
+  <!-- ############### -->
+  <!-- Handle new-fangled EAs -->
+  <!-- ############### -->
+   <x:template match="cc:f-component[.//cc:eactivity] | cc:a-component[.//cc:eactivity]" mode="handle-activities">  
+	    <!-- Component-level EAs -->
+        <x:if test="./cc:eactivity">
+          <div class="component-activity-header"><x:apply-templates select="." mode="getId"/></div>
+          <x:apply-templates select="./cc:eactivity/node()[not(self::cc:ea-TSS or self::cc:ea-Guidance or self::cc:ea-KMD or self::cc:ea-Tests)]"/>
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'ea-TSS'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'ea-Guidance'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'ea-KMD'"/></x:call-template>	    
+          <x:call-template name="collect-cat"><x:with-param name="cat" select="'ea-Tests'"/></x:call-template>	    
+        </x:if>
+		<!-- Element-level EAs -->
+		<x:for-each select="./cc:f-element/cc:eactivity">
+          <!-- Display the element name -->
+			<div class="element-activity-header"><x:apply-templates select=".." mode="getId"/></div>
+				<x:apply-templates mode="single-cat"/>
+		</x:for-each>
+		<!-- Management function EAs -->
+		<x:if test=".//cc:management-function/cc:eactivity">
+		<div class="management_function_activities">
+	    The following EAs correspond to specific management functions.
+	    <x:for-each select=".//cc:management-function[./cc:eactivity]">
+	      <div class="management_function_ea">
+			<x:apply-templates select="cc:eactivity" mode="manact"/>
+	      </div>
+	    </x:for-each>
+	  </div>
+	</x:if>
+
+   </x:template>
+
+
  
   <!-- ############### -->
   <!--                 -->
