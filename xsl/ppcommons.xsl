@@ -606,12 +606,12 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:param name="prefix-colon" select="'no'"/>
     <xsl:if test="$prefix-colon='yes'">:</xsl:if>
     <span class="testlist-">
-	  <xsl:if test="cc:testlist-intro"><xsl:apply-templates select="cc:testlist-intro"></xsl:if>
+	  <xsl:if test="cc:testlist-intro"><xsl:apply-templates select="cc:testlist-intro"/></xsl:if>
       <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test or self::cc:depends or self::cc:testlist-outro or self::cc:testlist-intro) ]"/>
       <ul>
         <xsl:apply-templates select="cc:test"/>
       </ul>
-	  <xsl:if test="cc:testlist-outro"><xsl:apply-templates select="cc:testlist-outro"></xsl:if>
+	  <xsl:if test="cc:testlist-outro"><xsl:apply-templates select="cc:testlist-outro"/></xsl:if>
     </span>
   </xsl:template>
 
