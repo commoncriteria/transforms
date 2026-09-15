@@ -1084,9 +1084,9 @@ Modification definition. This text goes in the
               Denotes a single test.
             </a:documentation>
 	    <optional><ref name="id-attr"/></optional>
-	    <optional><element name="applies-if">
-	      <ref name="and-pat"/>
-	    </element></optional>
+<!--	    <optional><element name="applies-if"> -->
+<!--	      <ref name="and-pat"/>  -->
+<!--	    </element></optional>  -->
              <oneOrMore>
               <choice>
                 <ref name="basic-content-pat"/>

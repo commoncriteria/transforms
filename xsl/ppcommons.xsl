@@ -623,7 +623,7 @@ The following sections list Common Criteria and technology terms used in this do
     </div>
   </xsl:template>
 
-  <xsl:template match="cc:testlist">
+  <xsl:template match="cc:testlist[not(cc:depends)]">
     <xsl:call-template name="render-testlist">
       <xsl:with-param name="prefix-colon" select="'yes'"/>
     </xsl:call-template>
@@ -640,7 +640,7 @@ The following sections list Common Criteria and technology terms used in this do
       <a id="{$id}" class="defined" href="#{$id}">
 	<!-- <xsl:apply-templates mode="make_xref" select="."/> -->
       </a>
-      <xsl:if test="cc:applies-if or cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
+      <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
       <xsl:apply-templates/>
     </li>
   </xsl:template>
