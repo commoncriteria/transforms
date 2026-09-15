@@ -21,6 +21,7 @@
       <ref name="Foreword"/>
       <ref name="PreferencesEtc"/>
       <ref name="Chapters"/>
+      <ref name="CClaimsChapter"/>
       <ref name="SecProbDesChapter"/>
       <ref name="SecObjChapter"/>
       <ref name="SecurityRequirementsChapter"/>
