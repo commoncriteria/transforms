@@ -291,7 +291,7 @@
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:management-function/cc:aactivity"  mode="manact">
+  <xsl:template match="cc:management-function/cc:aactivity or cc:management-function/cc:eactivity"  mode="manact">
     <b>Function<xsl:if test="cc:also">s</xsl:if><xsl:text> </xsl:text>
     <xsl:apply-templates select=".." mode="make_xref"/>
        <xsl:for-each select="cc:also"><xsl:variable name="ref-id" select="@ref-id"/><!--
@@ -322,7 +322,7 @@
   </xsl:template>
   
   <!-- ############### -->
-  <xsl:template match="cc:management-function/cc:aactivity/cc:_">
+  <xsl:template match="cc:management-function/cc:aactivity/cc:_ or cc:management-function/cc:eactivity/cc:_">
     <xsl:choose>
       <xsl:when test="ancestor::cc:management-function[1]/cc:also">
         <xsl:for-each select="ancestor::cc:*[1]/cc:also">
