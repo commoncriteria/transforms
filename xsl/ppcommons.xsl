@@ -607,7 +607,7 @@ The following sections list Common Criteria and technology terms used in this do
     <xsl:if test="$prefix-colon='yes'">:</xsl:if>
     <span class="testlist-">
 	  <xsl:if test="cc:testlist-intro"><br/><xsl:apply-templates select="cc:testlist-intro"/></xsl:if>
-      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test or self::cc:depends or self::cc:testlist-outro or self::cc:testlist-intro) ]"/>
+      <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test or self::cc:depends or self::cc:testlist-outro or self::cc:testlist-intro)]"/>
       <ul>
         <xsl:apply-templates select="cc:test"/>
       </ul>
@@ -633,17 +633,34 @@ The following sections list Common Criteria and technology terms used in this do
   <!-- ############### -->
   <!--                 -->
   <!-- ############### -->
-  <xsl:template match="cc:test">
+  <xsl:template match="cc:test[not(./cc:depends)]">
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
     
     <li class="test-">
       <a id="{$id}" class="defined" href="#{$id}">
 	<!-- <xsl:apply-templates mode="make_xref" select="."/> -->
       </a>
-      <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>:
+<!--      <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>: -->
       <xsl:apply-templates/>
     </li>
   </xsl:template>
+  
+    <!-- Maybe this will draw boxes around platform-dependent tests.
+       It's worth a try -->
+  <xsl:template match="cc:test[./cc:depends]">
+    <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
+    <li class="test-">
+      <a id="{$id}" class="defined" href="#{$id}"/>
+  	  <div class="dependent"><xsl:call-template name="depends-explainer"/>
+		<div class="dependent-content">
+			<xsl:call-template name="handle-html"/>
+		</div>        
+	  </div>
+<!--	  <xsl:apply-templates/>  -->
+    </li>	  
+  </xsl:template>
+
+  
   
   <!-- ############### -->
   <!--                 -->
@@ -1165,15 +1182,6 @@ The following sections list Common Criteria and technology terms used in this do
     </div>        
   </xsl:template>
 
-  <!-- Maybe this will draw boxes around platform-dependent tests.
-       It's worth a try -->
-  <xsl:template match="cc:test[./cc:depends]">
-    <div class="dependent"><xsl:call-template name="depends-explainer"/>
-       <div class="dependent-content">
-          <xsl:call-template name="handle-html"/>
-      </div>        
-    </div>        
-  </xsl:template>
 
 
   <xsl:template name="depends-explainer">
