@@ -625,7 +625,7 @@ The following sections list Common Criteria and technology terms used in this do
 
   <xsl:template match="cc:testlist[not(cc:depends)]">
     <xsl:call-template name="render-testlist">
-      <xsl:with-param name="prefix-colon" select="'yes'"/>
+      <xsl:with-param name="prefix-colon" select="'no'"/>
     </xsl:call-template>
   </xsl:template>
 
