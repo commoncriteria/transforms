@@ -609,7 +609,7 @@ The following sections list Common Criteria and technology terms used in this do
 	  <xsl:if test="cc:testlist-intro"><br/><xsl:apply-templates select="cc:testlist-intro"/></xsl:if>
       <xsl:apply-templates select="text()[normalize-space()]|*[not(self::cc:test or self::cc:depends or self::cc:testlist-outro or self::cc:testlist-intro)]"/>
       <ul>
-        <xsl:apply-templates select="cc:test"/>:<br/>
+        <xsl:apply-templates select="cc:test"/>
       </ul>
 	  <xsl:if test="cc:testlist-outro"><xsl:apply-templates select="cc:testlist-outro"/></xsl:if>
     </span>
@@ -639,7 +639,7 @@ The following sections list Common Criteria and technology terms used in this do
     <li class="test-">
       <a id="{$id}" class="defined" href="#{$id}">
 	<!-- <xsl:apply-templates mode="make_xref" select="."/> -->
-      </a>
+      </a>:<br/>
 <!--      <xsl:if test="cc:depends">[conditional, <xsl:call-template name="depends-explainer"><xsl:with-param name="words" select="'to be performed if'"/></xsl:call-template>]</xsl:if>: -->
       <xsl:apply-templates/>
     </li>
@@ -650,7 +650,7 @@ The following sections list Common Criteria and technology terms used in this do
   <xsl:template match="cc:test[./cc:depends]">
     <xsl:variable name="id"><xsl:apply-templates mode="getId" select="."/></xsl:variable>
     <li class="test-">
-      <a id="{$id}" class="defined" href="#{$id}"/>
+      <a id="{$id}" class="defined" href="#{$id}"/>:
   	  <div class="dependent"><xsl:call-template name="depends-explainer"/>
 		<div class="dependent-content">
 			<xsl:call-template name="handle-html"/>
