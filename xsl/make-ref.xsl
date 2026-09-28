@@ -64,9 +64,8 @@
 			</xsl:when>
 			<xsl:otherwise>PP-Module for <!--
 			--><xsl:call-template name="cap_first_letters">
-				<xsl:with-param name="val"><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:Module"/></xsl:with-param><!--
-			    -->, version <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
-			</xsl:call-template>
+				<xsl:with-param name="val"><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:Module"/></xsl:with-param>
+			</xsl:call-template>, version <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
 			</xsl:otherwise>
 		</xsl:choose>
       </a>
