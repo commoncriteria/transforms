@@ -60,16 +60,15 @@
         <xsl:variable name="path" select="concat('../../output/', @id, '.xml')"/>
 		<xsl:choose>
 			<xsl:when test="document($path)//cc:PPTitle">
-				<xsl:value-of select="document($path)//cc:PPTitle"/>
+				<xsl:value-of select="document($path)//cc:PPTitle"/>, version <xsl:value-of select="document($path)//cc:PPVersion"/>
 			</xsl:when>
 			<xsl:otherwise>PP-Module for <!--
 			--><xsl:call-template name="cap_first_letters">
-				<xsl:with-param name="val"><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:Module"/></xsl:with-param>
+				<xsl:with-param name="val"><xsl:apply-templates mode="get_product_plural" select="document($path)/cc:Module"/></xsl:with-param><!--
+			    -->, version <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
 			</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
-        Version 
-        <xsl:value-of select="document($path)//cc:PPVersion/text()"/>
       </a>
   </xsl:template> 
 
